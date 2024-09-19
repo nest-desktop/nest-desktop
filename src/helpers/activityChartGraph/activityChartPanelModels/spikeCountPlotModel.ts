@@ -1,16 +1,14 @@
 // spikeCountPlotModel.ts
 
-import { useAppStore } from "@/stores/appStore";
-import { TNode } from "@/types";
+import { useAppStore } from '@/stores/appStore';
+import { TNode, TParameter } from '@/types';
 
-import { deviation, max, mean, min, sum } from "../../../utils/array";
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { deviation, max, mean, min, sum } from '../../../utils/array';
+import { SpikeActivity } from '../../activity/spikeActivity';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { ActivityChartPanelModelParameter } from '../activityChartPanelModelParameter';
+import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -25,56 +23,49 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
 
     this.initParams([
       {
+        component: "tickSlider",
         id: "binSize",
-        component: "tickSlider",
-        label: "Bin size",
+        label: "bin size",
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
         unit: "ms",
-        value: 1,
+        value: 50,
       },
       {
-        _parent: this,
-        _value: "off",
-        id: "normalizedValue",
         component: "select",
+        id: "normalization",
         items: [
-          "off",
-          "firing rate [spikes/s]",
-          "min-max scale",
-          "lower-upper averages scale",
-          "standard score",
+          { title: "off" },
+          { title: "firing rate [spikes/s]" },
+          { title: "min-max scale" },
+          { title: "lower-upper averages scale" },
+          { title: "standard score" },
         ],
-        label: "Normalization",
-        get value(): string {
-          return this._value as string;
+        handleOnUpdate: (param: TParameter) => {
+          const p = param as ActivityChartPanelModelParameter;
+          const paramValue = p.value as string;
+          const isLowerUpper = paramValue.includes("lower-upper");
+          const params = p.activityChartPanelModel.params;
+          params.lowerUpperBinSize.visible = isLowerUpper;
+          params.horizontalLine.visible = isLowerUpper;
         },
-        set value(value: string) {
-          this._value = value;
-          const lowerUpperBinSize = this._parent?.params.lowerUpperBinSize;
-          if (lowerUpperBinSize) {
-            lowerUpperBinSize.visible = value.startsWith("lower-upper");
-          }
-          const horizontalLine = this._parent?.params.horizontalLine;
-          if (horizontalLine) {
-            horizontalLine.visible = value.startsWith("lower-upper");
-          }
-        },
+        label: "normalization",
+        value: "off",
       },
       {
-        id: "lowerUpperBinSize",
         component: "tickSlider",
-        label: "Bin size for lower-upper averages",
-        show: false,
+        id: "lowerUpperBinSize",
+        label: "bin size for lower-upper averages",
         ticks: [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000],
         unit: "ms",
         value: 1,
+        visible: false,
       },
       {
-        id: "horizontalLine",
         component: "checkbox",
-        label: "Horizontal line for time constant (63%)",
-        show: false,
+        id: "horizontalLine",
+        label: "horizontal line for time constant (63%)",
         value: false,
+        visible: false,
       },
     ]);
 
@@ -149,21 +140,21 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     const horizontalLine = this.params.horizontalLine.value as boolean;
 
     let y: number[];
-    if (normalization === "min-max scale") {
+    if (normalization.includes("min-max")) {
       const minVal = min(h) as number;
       const maxVal = max(h) as number;
       y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
-    } else if (normalization.startsWith("lower-upper")) {
+    } else if (normalization.includes("lower-upper")) {
       const hh: number[] = this.histogram(times, start, end, lowerUpperBinSize);
       const ratio = binSize / lowerUpperBinSize;
       const minVal = (min(hh) as number) * ratio;
       const maxVal = (max(hh) as number) * ratio;
       y = h.map((val: number) => (val - minVal) / (maxVal - minVal));
-    } else if (normalization === "standard score") {
+    } else if (normalization.includes("standard")) {
       const m = mean(h) as number;
       const std = deviation(h) as number;
       y = h.map((val: number) => (val - m) / std);
-    } else if (normalization.startsWith("firing rate")) {
+    } else if (normalization.includes("rate")) {
       y = h.map((val: number) => (val / nodeSizeTotal / binSize) * 1000);
     } else {
       y = h;
@@ -210,7 +201,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.title = "Time [ms]";
-    const ytitle = this.params[1].value as string;
+    const ytitle = this.params.normalization.value as string;
     this.panel.layout.yaxis.title =
       ytitle == "off"
         ? "Spike count"

@@ -25,12 +25,7 @@
           item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
         "
       >
-        <v-icon
-          :icon="item.icon.icon"
-          :class="item.icon.class"
-          class="ma-1"
-          size="large"
-        />
+        <v-icon class="ma-1" size="large" v-bind="item.icon" />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
@@ -88,10 +83,10 @@
     <div :key="projectStore.state.projectId">
       <template v-if="projectStore.state.controller.view === 'network'">
         <slot name="network">
-          <NetworkParamEditor :network="(project.network as BaseNetwork)">
+          <NetworkSpecEditor :network="(project.network as BaseNetwork)">
             <template #model><slot name="model" /></template>
             <template #nodes><slot name="nodes" /></template>
-          </NetworkParamEditor>
+          </NetworkSpecEditor>
         </slot>
       </template>
 
@@ -165,7 +160,7 @@ import { oneDark } from "@codemirror/theme-one-dark";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
-import NetworkParamEditor from "../network/NetworkParamEditor.vue";
+import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";

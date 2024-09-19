@@ -1,13 +1,10 @@
 // spikeTimesHistogramModel.ts
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { currentBackgroundColor } from "../../common/theme";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { SpikeActivity } from '../../activity/spikeActivity';
+import { currentBackgroundColor } from '../../common/theme';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(
@@ -21,8 +18,8 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
 
     this.initParams([
       {
-        id: "binSize",
         component: "tickSlider",
+        id: "binSize",
         label: "bin size",
         ticks: [5, 10, 20, 50, 100, 200, 500, 1000],
         unit: "ms",

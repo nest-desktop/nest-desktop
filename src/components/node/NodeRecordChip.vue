@@ -59,6 +59,7 @@ const colorSchemes = [
   "set1",
   "set2",
   "set3",
+  "spectral11",
   "tableau10",
   "google10c",
   "google20c",

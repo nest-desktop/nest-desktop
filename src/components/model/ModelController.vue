@@ -21,12 +21,7 @@
           item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
         "
       >
-        <v-icon
-          :icon="item.icon.icon"
-          :class="item.icon.class"
-          class="ma-1"
-          size="large"
-        />
+        <v-icon class="ma-1" size="large" v-bind="item.icon" />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
@@ -70,8 +65,8 @@
       />
 
       <v-list>
-        <v-list-subheader>Default parameters</v-list-subheader>
-        <ModelParamViewer
+        <v-list-subheader>Parameters</v-list-subheader>
+        <ParamViewer
           :key="index"
           :param="(param as TModelParameter)"
           v-for="(param, index) in modelParams"
@@ -80,7 +75,7 @@
 
       <v-list>
         <v-list-subheader>Recordables / States</v-list-subheader>
-        <ModelParamViewer
+        <ParamViewer
           :key="index"
           :param="(recordable as TModelParameter)"
           v-for="(recordable, index) in modelStore.model.recordables"
@@ -103,7 +98,7 @@
             .neurons"
         >
           <v-list :key="neuron.modelId" v-if="neuron.paramsVisible.length > 0">
-            <NodeParamEditor
+            <ParamEditor
               :key="index"
               :param="neuron.params[paramId]"
               v-for="(paramId, index) in neuron.paramsVisible"
@@ -124,7 +119,7 @@
         />
 
         <v-list>
-          <ModelParamEditor
+          <ParamEditor
             :key="index"
             :param="(param as TModelParameter)"
             v-for="(param, index) in modelParams"
@@ -173,8 +168,8 @@ import { json } from "@codemirror/lang-json";
 import { oneDark } from "@codemirror/theme-one-dark";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
-import ModelParamViewer from "./ModelParamViewer.vue";
-import NodeParamEditor from "../node/NodeParamEditor.vue";
+import ParamEditor from "../parameter/ParamEditor.vue";
+import ParamViewer from "../parameter/ParamViewer.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
@@ -185,7 +180,6 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
-import ModelParamEditor from "./ModelParamEditor.vue";
 const navStore = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
@@ -198,7 +192,17 @@ const modelJSON = computed(() =>
   JSON.stringify(modelStore.value.model.toJSON(), null, 2)
 );
 
-const controllerItems = [
+interface IControllerItem {
+  id: string;
+  icon: {
+    class?: string;
+    icon: string;
+  };
+  show?: string;
+  title: string;
+}
+
+const controllerItems: IControllerItem[] = [
   {
     id: "specs",
     icon: {
@@ -220,7 +224,7 @@ const controllerItems = [
     show: "dev",
     title: "View raw data",
   },
-  { id: "code", icon: { icon: "mdi:mdi-xml" } },
+  { id: "code", icon: { icon: "mdi:mdi-xml" }, title: "Edit code" },
   {
     id: "activity",
     icon: {

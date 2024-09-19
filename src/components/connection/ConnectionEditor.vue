@@ -22,33 +22,7 @@
 
         <v-spacer />
 
-        <v-menu>
-          <template #activator="{ props }">
-            <v-btn
-              class="rounded-circle"
-              color="primary"
-              icon="mdi:mdi-dots-vertical"
-              size="small"
-              v-bind="props"
-              variant="text"
-            />
-          </template>
-
-          <v-list density="compact">
-            <v-list-item
-              :icon="item.icon"
-              :key="index"
-              @click="item.onClick"
-              v-for="(item, index) in items"
-            >
-              <template #prepend>
-                <v-icon :icon="item.icon" />
-              </template>
-
-              {{ item.title }}
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <Menu :items class="rounded-circle" />
       </v-btn-group>
     </v-expansion-panel-title>
 
@@ -68,6 +42,7 @@ import { computed } from "vue";
 
 import ConnectionAvatar from "./ConnectionAvatar.vue";
 import ConnectionSpecEditor from "./ConnectionSpecEditor.vue";
+import Menu from "../common/Menu.vue";
 import SynapseSpecEditor from "../synapse/SynapseSpecEditor.vue";
 import { TConnection } from "@/types";
 
@@ -78,12 +53,12 @@ const synapse = computed(() => connection.value.synapse);
 const items = [
   {
     id: "connectionReset",
-    icon: "mdi:mdi-restart",
-    title: "Reset connection",
     onClick: () => {
       connection.value.reset();
       connection.value.synapse.reset();
     },
+    prependIcon: "mdi:mdi-restart",
+    title: "Reset connection",
   },
   // {
   //   id: "sourceSlice",
@@ -107,29 +82,29 @@ const items = [
   // },
   {
     id: "connectionReverse",
-    icon: "mdi:mdi-rotate-3d-variant",
-    title: "Reverse connection",
     onClick: () => {
       connection.value.reverse();
       connection.value.changes();
     },
+    prependIcon: "mdi:mdi-rotate-3d-variant",
+    title: "Reverse connection",
   },
   {
     id: "weightInverse",
-    icon: "mdi:mdi-contrast",
-    title: "Inverse synaptic weight",
     onClick: () => {
       connection.value.synapse.inverseWeight();
     },
+    prependIcon: "mdi:mdi-contrast",
+    title: "Inverse synaptic weight",
   },
   {
     id: "connectionDelete",
-    icon: "mdi:mdi-trash-can-outline",
-    title: "Delete connection",
     onClick: () => {
       connection.value.remove();
       // state.content = "connectionDelete";
     },
+    prependIcon: "mdi:mdi-trash-can-outline",
+    title: "Delete connection",
     append: true,
   },
 ];

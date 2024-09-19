@@ -1,5 +1,5 @@
 <template>
-  <div class="networkParamEditor">
+  <div class="networkEditor">
     <v-toolbar color="transparent" density="compact">
       <v-btn-toggle
         class="ma-2"

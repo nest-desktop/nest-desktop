@@ -1,12 +1,15 @@
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    activator="parent"
-    width="320"
-    v-model="state.show"
-  >
-    <v-card flat style="min-width: 300px">
-      <!-- <v-card-title class="pa-0">
+  <v-btn class="rounded-circle" icon size="small">
+    <v-icon icon="mdi:mdi-dots-vertical" />
+
+    <v-menu
+      :close-on-content-click="false"
+      activator="parent"
+      width="320"
+      v-model="state.show"
+    >
+      <v-card flat style="min-width: 300px">
+        <!-- <v-card-title class="pa-0">
         <v-row no-gutters>
           <v-col cols="12">
             <NodeModelSelect :node="node" />
@@ -14,49 +17,49 @@
         </v-row>
       </v-card-title> -->
 
-      <span v-if="state.content == undefined">
-        <v-list density="compact">
-          <v-list-item v-if="!node.model?.isRecorder">
-            <template #prepend>
-              <v-icon icon="mdi:mdi-contrast" />
-            </template>
+        <span v-if="state.content == undefined">
+          <v-list density="compact">
+            <v-list-item v-if="!node.model?.isRecorder">
+              <!-- <template #prepend>
+                <v-icon icon="mdi:mdi-contrast" />
+              </template> -->
 
-            <v-list-item-title>Set all synaptic weights</v-list-item-title>
-
-            <template #append>
-              <v-switch
+              <v-checkbox
                 :class="{
+                  'text-blue': node.view.state.synWeights === 'excitatory',
                   'text-red': node.view.state.synWeights === 'inhibitory',
                 }"
                 :indeterminate="!node.view.state.synWeights"
                 :model-value="node.view.state.synWeights"
                 @update:model-value="updateSynWeights"
-                class="pl-2"
-                color="nest-project"
                 density="compact"
-                false-icon="mdi:mdi-minus-circle"
+                false-icon="mdi:mdi-minus"
                 false-value="inhibitory"
                 hide-details
-                inset
-                true-icon="mdi:mdi-plus-circle"
+                indeterminate-icon="mdi:mdi-plus-minus-variant"
+                true-icon="mdi:mdi-plus"
                 true-value="excitatory"
-              />
-            </template>
-          </v-list-item>
+              >
+                <template #label>
+                  <span class="ml-7 text-primary">
+                    Set all synaptic weights
+                  </span>
+                </template>
+              </v-checkbox>
+            </v-list-item>
 
-          <v-list-item
-            :key="index"
-            :title="item.title"
-            @click="item.onClick"
-            v-for="(item, index) in items"
-            v-show="item.show()"
-          >
-            <template #append>
-              <template v-if="item.append">
-                <v-icon icon="mdi:mdi-menu-right" size="small" />
-              </template>
+            <v-list-item
+              :key="index"
+              v-bind="item"
+              v-for="(item, index) in items"
+              v-show="item.show()"
+            >
+              <template #append>
+                <template v-if="item.append">
+                  <v-icon icon="mdi:mdi-menu-right" size="small" />
+                </template>
 
-              <!-- <template v-if="item.input === 'checkbox'">
+                <!-- <template v-if="item.input === 'checkbox'">
                 <v-checkbox
                   :color="node.view.color"
                   :input-value="state[item.value]"
@@ -71,77 +74,80 @@
                   hide-details
                 />
               </template> -->
-            </template>
-
-            <template #prepend>
-              <v-icon :class="item.iconClass" :icon="item.icon" />
-            </template>
-          </v-list-item>
-        </v-list>
-      </span>
-
-      <span v-if="state.content === 'eventsExport'">
-        <v-card-text class="py-1 px-0">
-          <v-list dense>
-            <v-list-item @click="exportEvents('json')">
-              <template #prepend>
-                <v-icon icon="mdi:mdi-code-json" />
               </template>
-              <v-list-item-title>Export events to JSON file</v-list-item-title>
-            </v-list-item>
 
-            <v-list-item @click="exportEvents('csv')">
               <template #prepend>
-                <v-icon icon="mdi:mdi-file-delimited-outline" />
+                <v-icon v-bind="item.icon" />
               </template>
-              <v-list-item-title>Export events to CSV file</v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-card-text>
+        </span>
 
-        <v-card-actions>
-          <v-btn
-            @click="backMenu"
-            prepend-icon="mdi:mdi-menu-left"
-            text="back"
+        <span v-if="state.content === 'eventsExport'">
+          <v-card-text class="py-1 px-0">
+            <v-list dense>
+              <v-list-item @click="exportEvents('json')">
+                <template #prepend>
+                  <v-icon icon="mdi:mdi-code-json" />
+                </template>
+                <v-list-item-title
+                  >Export events to JSON file</v-list-item-title
+                >
+              </v-list-item>
+
+              <v-list-item @click="exportEvents('csv')">
+                <template #prepend>
+                  <v-icon icon="mdi:mdi-file-delimited-outline" />
+                </template>
+                <v-list-item-title>Export events to CSV file</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn
+              @click="backMenu"
+              prepend-icon="mdi:mdi-menu-left"
+              text="back"
+            />
+          </v-card-actions>
+        </span>
+
+        <span>
+          <v-dialog :value="state.dialog" width="80%">
+            <ModelDocumentation :modelId="node.modelId" />
+          </v-dialog>
+        </span>
+
+        <span v-if="state.content === 'nodeColor'">
+          <ColorPicker
+            :colorScheme="state.colorScheme"
+            @update:model-value="nodeColorChange()"
+            hide-inputs
+            v-model="node.view.color"
           />
-        </v-card-actions>
-      </span>
 
-      <span>
-        <v-dialog :value="state.dialog" width="80%">
-          <ModelDocumentation :modelId="node.modelId" />
-        </v-dialog>
-      </span>
-
-      <span v-if="state.content === 'nodeColor'">
-        <ColorPicker
-          :colorScheme="state.colorScheme"
-          @update:model-value="nodeColorChange()"
-          hide-inputs
-          v-model="node.view.color"
-        />
-
-        <v-select
-          :items="colorSchemes"
-          class="mx-2"
-          density="compact"
-          hide-details
-          v-model="state.colorScheme"
-        />
-
-        <v-card-actions>
-          <v-btn
-            @click="backMenu"
-            prepend-icon="mdi:mdi-menu-left"
-            text="back"
+          <v-select
+            :items="colorSchemes"
+            class="mx-2"
+            density="compact"
+            hide-details
+            v-model="state.colorScheme"
           />
-          <v-spacer />
-          <v-btn @click="resetColor" text="reset" />
-        </v-card-actions>
-      </span>
-    </v-card>
-  </v-menu>
+
+          <v-card-actions>
+            <v-btn
+              @click="backMenu"
+              prepend-icon="mdi:mdi-menu-left"
+              text="back"
+            />
+            <v-spacer />
+            <v-btn @click="resetColor" text="reset" />
+          </v-card-actions>
+        </span>
+      </v-card>
+    </v-menu>
+  </v-btn>
 </template>
 
 <script lang="ts" setup>
@@ -180,6 +186,7 @@ const colorSchemes = [
   "set1",
   "set2",
   "set3",
+  "spectral11",
   "tableau10",
   "google10c",
   "google20c",
@@ -198,8 +205,10 @@ const items = [
   //   title: "Edit parameters",
   // },
   {
-    icon: "mdi:mdi-reload",
-    iconClass: "mdi-flip-h",
+    icon: {
+      class: "mdi-flip-h",
+      icon: "mdi:mdi-reload",
+    },
     id: "resetParams",
     onClick: () => {
       node.value.resetParams();
@@ -210,8 +219,7 @@ const items = [
     title: "Reset all parameters",
   },
   {
-    icon: "mdi:mdi-axis-arrow",
-    iconClass: "",
+    prependIcon: "mdi:mdi-axis-arrow",
     id: "nodeSpatial",
     input: "switch",
     onClick: () => {
@@ -222,8 +230,7 @@ const items = [
     value: "spatialNode",
   },
   {
-    icon: "mdi:mdi-format-color-fill",
-    iconClass: "",
+    prependIcon: "mdi:mdi-format-color-fill",
     id: "nodeColor",
     onClick: () => {
       state.content = "nodeColor";
@@ -234,8 +241,7 @@ const items = [
     title: "Colorize node",
   },
   {
-    icon: "mdi:mdi-information-outline",
-    iconClass: "",
+    prependIcon: "mdi:mdi-information-outline",
     id: "modelDoc",
     onClick: () => {
       state.dialog = true;
@@ -244,8 +250,7 @@ const items = [
     title: "Model documentation",
   },
   {
-    icon: "mdi:mdi-content-copy",
-    iconClass: "",
+    prependIcon: "mdi:mdi-content-copy",
     id: "nodeClone",
     onClick: () => {
       node.value.clone();
@@ -266,8 +271,7 @@ const items = [
   //   title: "Set synaptic weights",
   // },
   {
-    icon: "mdi:mdi-download",
-    iconClass: "",
+    prependIcon: "mdi:mdi-download",
     id: "eventsExport",
     onClick: () => {
       state.content = "eventsExport";
@@ -280,8 +284,7 @@ const items = [
     append: true,
   },
   {
-    icon: "mdi:mdi-trash-can-outline",
-    iconClass: "",
+    prependIcon: "mdi:mdi-trash-can-outline",
     id: "nodeDelete",
     onClick: () => {
       createDialog({

@@ -8,38 +8,13 @@
       <v-list-item class="param pl-0 pr-1">
         <ValueSlider
           :model-value="(synapse.params.weight.state.value as number)"
-          :thumbColor="synapse.connection.sourceNode.view.color"
+          :thumb-color="synapse.connection.sourceNode.view.color"
           @update:model-value="update"
           v-bind="weightOptions"
         />
 
         <template #append>
-          <v-menu>
-            <template #activator="{ props }">
-              <v-btn
-                class="rounded-circle"
-                color="primary"
-                icon="mdi:mdi-dots-vertical"
-                size="small"
-                v-bind="props"
-                variant="text"
-              />
-            </template>
-
-            <v-list density="compact">
-              <v-list-item
-                :key="index"
-                @click="item.onClick"
-                v-for="(item, index) in items"
-              >
-                <template #prepend>
-                  <v-icon :icon="item.icon" />
-                </template>
-
-                {{ item.title }}
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <Menu :items />
         </template>
       </v-list-item>
     </v-list>
@@ -49,6 +24,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import Menu from "../common/Menu.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { TSynapse } from "@/types";
 
@@ -74,20 +50,20 @@ const weightOptions = {
 const items = [
   {
     id: "paramsReset",
-    icon: "mdi:mdi-restart",
-    title: "Reset synaptic weight",
     onClick: () => {
       synapse.value.reset();
     },
+    prependIcon: "mdi:mdi-restart",
+    title: "Reset synaptic weight",
     show: () => true,
   },
   {
     id: "weightInverse",
-    icon: "mdi:mdi-contrast",
-    title: "Inverse synaptic weight",
     onClick: () => {
       synapse.value.inverseWeight();
     },
+    prependIcon: "mdi:mdi-contrast",
+    title: "Inverse synaptic weight",
   },
 ];
 </script>

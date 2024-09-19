@@ -17,8 +17,7 @@
         <v-list density="compact">
           <v-list-item
             :key="index"
-            :title="item.title"
-            @click="item.onClick"
+            v-bind="item"
             v-for="(item, index) in items"
             v-show="item.show()"
           >
@@ -45,7 +44,7 @@
             </template>
 
             <template #prepend>
-              <v-icon :class="item.iconClass" :icon="item.icon" />
+              <v-icon v-bind="item.icon" />
             </template>
           </v-list-item>
         </v-list>
@@ -84,8 +83,10 @@ const state = reactive<{
 
 const items = [
   {
-    icon: "mdi:mdi-reload",
-    iconClass: "mdi-flip-h",
+    icon: {
+      class: "mdi-flip-h",
+      icon: "mdi:mdi-reload",
+    },
     id: "resetParams",
     onClick: () => {
       model.value.resetParams();
@@ -95,8 +96,7 @@ const items = [
     title: "Reset all parameters",
   },
   {
-    icon: "mdi:mdi-information-outline",
-    iconClass: "",
+    icon: { icon: "mdi:mdi-information-outline" },
     id: "modelDoc",
     onClick: () => {
       state.dialog = true;
@@ -105,8 +105,7 @@ const items = [
     title: "Model documentation",
   },
   {
-    icon: "mdi:mdi-trash-can-outline",
-    iconClass: "",
+    icon: { icon: "mdi:mdi-trash-can-outline" },
     id: "copyModelDelete",
     onClick: () => {
       createDialog({

@@ -1,19 +1,12 @@
 <template>
-  <v-menu activator="parent">
-    <v-list density="compact">
-      <v-list-item
-        :key="index"
-        v-bind="item"
-        v-for="(item, index) in menuItems"
-      />
-    </v-list>
-  </v-menu>
+  <Menu :items size="x-small" />
 </template>
 
 <script lang="ts" setup>
 import { computed, nextTick } from "vue";
 import { confirmDialog } from "vuetify3-dialog";
 
+import Menu from "../common/Menu.vue";
 import { TProject, TProjectProps } from "@/types";
 
 import { useRouter, useRoute } from "vue-router";
@@ -32,7 +25,7 @@ const projectDBStore = computed(
   () => appStore.currentSimulator.stores.projectDBStore
 );
 
-const menuItems = [
+const items = [
   {
     onClick: () => {
       projectDBStore.value.loadProject(project.value);
@@ -54,10 +47,10 @@ const menuItems = [
     title: "Save",
   },
   {
-    prependIcon: "mdi:mdi-reload",
     onClick: () => {
       projectDBStore.value.reloadProject(project.value);
     },
+    prependIcon: "mdi:mdi-reload",
     title: "Reload",
   },
   {

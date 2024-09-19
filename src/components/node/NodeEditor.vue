@@ -79,12 +79,9 @@
               </v-card>
             </v-menu>
 
-            <v-btn class="rounded-circle" icon size="small">
-              <v-icon icon="mdi:mdi-dots-vertical" />
-              <slot name="nodeMenu">
-                <NodeMenu :node />
-              </slot>
-            </v-btn>
+            <slot name="nodeMenu">
+              <NodeMenu :node />
+            </slot>
           </v-btn-group>
         </v-expansion-panel-title>
 
@@ -102,7 +99,7 @@
                 />
 
                 <template #append>
-                  <ParamMenu :items="popItems" />
+                  <Menu :items="popItems" />
                 </template>
               </v-list-item>
             </slot>
@@ -115,7 +112,8 @@
           </v-list>
 
           <v-list class="py-0">
-            <NodeParamEditor
+            <ParamEditor
+              :color="node.view.color"
               :key="index"
               :param="node.params[paramId]"
               v-for="(paramId, index) in node.paramsVisible"
@@ -141,12 +139,12 @@ import { computed, onMounted, reactive } from "vue";
 
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
+import Menu from "../common/Menu.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeModelSelect from "./NodeModelSelect.vue";
-import NodeParamEditor from "./NodeParamEditor.vue";
 import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
-import ParamMenu from "../parameter/ParamMenu.vue";
+import ParamEditor from "../parameter/ParamEditor.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { TModel, TNode } from "@/types";
 
@@ -165,8 +163,7 @@ const state = reactive<{
 
 const popItems = [
   {
-    icon: "mdi:mdi-reload",
-    iconClass: "mdi-flip-h",
+    icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       node.value.size = 1;
     },

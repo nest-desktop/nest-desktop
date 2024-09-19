@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel density="compact" elevation="1" tile>
+  <v-expansion-panel density="compact" flat tile>
     <v-expansion-panel-title>
       <v-row class="text-button">
         <NodeAvatar :node="layer.activity.recorder" />
@@ -8,22 +8,23 @@
         <v-spacer />
       </v-row>
 
-      <template #actions>
+      <!-- <template #actions>
         <v-icon
           @click.stop="() => (layer.state.visible = !layer.state.visible)"
           :icon="layer.state.visible ? 'mdi-eye' : 'mdi-eye-off'"
         />
-      </template>
+      </template> -->
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="px-1 py-0">
       <v-card flat tile>
         <v-select
           :items="layer.models"
+          @update:model-value="update"
           class="my-2"
           density="compact"
           hide-details
-          label="Select geometry model"
+          label="select geometry model"
           prepend-inner-icon="mdi-shape"
           return-object
           v-model="layer.modelSelected"
@@ -38,22 +39,16 @@
         <span v-if="layer.state.records.length > 0">
           <v-select
             :items="layer.state.records"
-            @change="
-              () => {
-                // panel.model.init();
-                layer.graph.update();
-              }
-            "
+            @update:model-value="update"
             attach
             chips
             class="pa-1 pt-3"
             density="compact"
             hide-details
             item-value="groupId"
-            label="Recorded events"
+            label="recorded events"
             persistent-hint
             return-object
-            size="small"
             v-model="layer.state.record"
           >
             <template #selection="{ item }">
@@ -73,93 +68,98 @@
             </template>
 
             <template #item="{ item }">
-              <v-chip
-                :color="item.raw.state.color"
-                class="mx-2"
-                label
-                size="small"
-              >
-                {{ item.raw.id }}
-              </v-chip>
-              <div style="font-size: 12px">
+              <v-list-item>
+                <template #prepend>
+                  <v-chip
+                    :color="item.raw.state.color"
+                    class="mx-2"
+                    label
+                    size="small"
+                  >
+                    {{ item.raw.id }}
+                  </v-chip>
+                </template>
                 {{ item.raw.label }}
                 <span v-if="item.raw.unit"> ({{ item.raw.unit }})</span>
-              </div>
+              </v-list-item>
             </template>
           </v-select>
         </span>
 
         <v-card flat tile v-if="layer.state.record">
-          <v-card-text class="px-1 py-0">
-            <v-row no-gutters>
-              <v-col class="py-0" cols="2">
-                <v-text-field
-                  :label="`min (${layer.state.record.unit})`"
-                  :step="0.1"
-                  hide-details
-                  style="font-size: 13px"
-                  type="number"
-                  v-model="layer.state.record.colorMap.min"
-                />
-              </v-col>
-              <v-spacer />
-              <v-col class="py-0" cols="6">
-                <v-select
-                  :items="colorScales"
-                  hide-details
-                  style="font-size: 13px"
-                  v-model="layer.state.record.colorMap.scale"
-                >
-                  <template #item="{ item }">
-                    <v-row style="width: 200px">
-                      <v-col class="py-0" cols="4">
-                        <img
-                          :src="require(`@/assets/img/colorscales/${item}.png`)"
-                          alt="colorscale"
-                          height="20"
-                          width="100%"
-                        />
-                      </v-col>
-                      <v-col class="py-0" cols="8">
-                        {{ item }}
-                      </v-col>
-                    </v-row>
-                  </template>
-                </v-select>
-              </v-col>
-              <v-spacer />
-              <v-col class="py-0" cols="2">
-                <v-text-field
-                  :label="`max (${layer.state.record.unit})`"
-                  :step="0.1"
-                  hide-details
-                  style="font-size: 13px"
-                  type="number"
-                  v-model="layer.state.record.colorMap.max"
-                />
-              </v-col>
-
-              <img
-                :src="
-                  require(`@/assets/img/colorscales/${layer.state.record.colorMap.scale}.png`)
-                "
-                alt="colorscale"
-                height="8"
-                width="100%"
-              />
-            </v-row>
-
-            <v-checkbox
-              color="accent"
+          <v-btn-group class="pt-2 px-1" style="width: 100%">
+            <v-text-field
+              :label="`min (${layer.state.record.unit})`"
+              :step="0.1"
+              @update:model-value="update"
               density="compact"
-              label="Reverse colormap"
-              v-model="layer.state.record.colorMap.reverse"
+              hide-details
+              style="flex-grow: 0"
+              tile
+              type="number"
+              v-model="layer.state.record.colorMap.min"
+              width="100"
             />
-          </v-card-text>
+
+            <v-select
+              :items="colorScales"
+              @update:model-value="update"
+              density="compact"
+              label="color map"
+              hide-details
+              tile
+              v-model="layer.state.record.colorMap.scale"
+            >
+              <template #item="{ item, props }">
+                <v-list-item v-bind="props">
+                  <template #append>
+                    <img
+                      :class="{ 'flip-h': layer.state.record.colorMap.reverse }"
+                      :src="imageUrl(item.value)"
+                      alt="img"
+                      height="12"
+                      width="72"
+                    />
+                  </template>
+                </v-list-item>
+              </template>
+
+              <template #append-inner>
+                <img
+                  :class="{ 'flip-h': layer.state.record.colorMap.reverse }"
+                  :src="imageUrl(layer.state.record.colorMap.scale)"
+                  alt="img"
+                  height="12"
+                  width="72"
+                />
+              </template>
+            </v-select>
+
+            <v-text-field
+              :label="`max (${layer.state.record.unit})`"
+              :step="0.1"
+              @update:model-value="update"
+              density="compact"
+              hide-details
+              tile
+              style="flex-grow: 0"
+              type="number"
+              v-model="layer.state.record.colorMap.max"
+              width="100"
+            />
+          </v-btn-group>
+
+          <v-checkbox
+            @update:model-value="update"
+            color="accent"
+            density="compact"
+            label="reverse colormap"
+            v-model="layer.state.record.colorMap.reverse"
+          />
         </v-card>
       </v-card>
 
-      <v-card flat rounded="0">
+      <!-- <v-card flat rounded="0">
         <v-card-text class="pa-0">
           <ValueSlider
             :max="10"
@@ -177,7 +177,7 @@
             label="Object opacity"
           />
         </v-card-text>
-      </v-card>
+      </v-card> -->
 
       <v-card
         flat
@@ -190,7 +190,7 @@
               :max="layer.graph.state.frames.sampleRate * 50"
               :min="0"
               :step="layer.graph.state.frames.sampleRate"
-              label="Trail length"
+              label="trail length"
               v-model="layer.state.trail.length"
             />
           </v-list-item>
@@ -198,7 +198,7 @@
           <v-list-item>
             <v-checkbox
               hide-details
-              label="Trail fading"
+              label="trail fading"
               v-model="layer.state.trail.fading"
             />
           </v-list-item>
@@ -209,7 +209,7 @@
               class="mt-2"
               density="compact"
               hide-details
-              label="Trail mode"
+              label="trail mode"
               v-model="layer.state.trail.mode"
             />
           </v-list-item>
@@ -218,21 +218,21 @@
 
       <v-card
         flat
-        subtitle="Box style"
+        subtitle="box style"
         v-if="layer.modelSelected?.value.includes('box')"
       >
         <v-card-text class="py-0">
           <v-checkbox
             hide-details
             density="compact"
-            label="Flatten height"
+            label="flatten height"
             v-model="layer.state.object.flatHeight"
           />
 
           <v-checkbox
             hide-details
             density="compact"
-            label="Flying planes"
+            label="flying planes"
             v-model="layer.state.object.flyingBoxes"
           />
         </v-card-text>
@@ -242,12 +242,15 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, nextTick } from "vue";
+
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { ActivityAnimationLayer } from "../../helpers/activityAnimationGraph/activityAnimationLayer";
 
-defineProps<{ layer: ActivityAnimationLayer }>();
+const props = defineProps<{ layer: ActivityAnimationLayer }>();
+const layer = computed(() => props.layer);
 
 const colorScales: String[] = [
   "BrBG",
@@ -289,4 +292,19 @@ const colorScales: String[] = [
   "Rainbow",
   "Sinebow",
 ];
+
+// https://stackoverflow.com/questions/66419471/vue-3-vite-dynamic-image-src
+const imageUrl = (name: string) =>
+  new URL(`/src/assets/img/colorscales/${name}.png`, import.meta.url).href;
+
+const update = () => {
+  nextTick(() => layer.value.renderFrame())
+}
 </script>
+
+<style lang="scss">
+.flip-h {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+</style

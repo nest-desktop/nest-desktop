@@ -13,7 +13,7 @@
               :title="tabItem.title"
               size="small"
             >
-              <v-icon :class="tabItem.iconClass" :icon="tabItem.icon" />
+              <v-icon v-bind="tabItem.icon" />
               <span class="text-no-wrap">{{ tabItem.label }}</span>
             </v-tab>
           </slot>
@@ -30,7 +30,8 @@
     <v-spacer />
 
     <NetworkHistory />
-    <slot name="prependBtn"></slot>
+
+    <slot name="prependBtn" />
 
     <SimulationButton
       :simulation="projectStore.state.project.simulation"
@@ -53,8 +54,9 @@ const projectStore = computed(
 
 const tabItems = [
   {
-    icon: "network:network",
-    iconClass: "",
+    icon: {
+      icon: "network:network",
+    },
     id: "networkEditor",
     label: "Editor",
     title: "Network editor",
@@ -63,8 +65,10 @@ const tabItems = [
     },
   },
   {
-    icon: "mdi:mdi-border-style",
-    iconClass: "mdi-flip-v",
+    icon: {
+      class: "mdi-flip-v",
+      icon: "mdi:mdi-border-style",
+    },
     id: "activityExplorer",
     label: "Explorer",
     title: "Activity explorer",
@@ -73,8 +77,7 @@ const tabItems = [
     },
   },
   {
-    icon: "mdi:mdi-book-open-outline",
-    iconClass: "",
+    icon: { icon: "mdi:mdi-book-open-outline" },
     id: "labBook",
     label: "Lab book",
     title: "Lab book",

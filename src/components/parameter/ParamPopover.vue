@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import ParameterSpecEditor from "./ParamSpecEditor.vue";
-import { Parameter } from "@/helpers/common/parameter";
+import { BaseParameter } from "@/helpers/common/parameter";
 
-defineProps<{ param: Parameter }>();
+defineProps<{ param: BaseParameter }>();
 </script>

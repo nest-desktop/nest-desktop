@@ -1,13 +1,5 @@
 <template>
-  <v-menu activator="parent">
-    <v-list density="compact">
-      <v-list-item
-        :key="index"
-        v-bind="item"
-        v-for="(item, index) in menuItems"
-      />
-    </v-list>
-  </v-menu>
+  <Menu :items size="x-small" />
 </template>
 
 <script lang="ts" setup>
@@ -20,6 +12,7 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useRouter, useRoute } from "vue-router";
+import Menu from "../common/Menu.vue";
 const router = useRouter();
 const route = useRoute();
 
@@ -32,7 +25,7 @@ const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
 );
 
-const menuItems = [
+const items = [
   {
     onClick: () => {
       modelDBStore.value.saveModel(model.value);

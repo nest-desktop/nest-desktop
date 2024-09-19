@@ -1,6 +1,6 @@
 // node.ts
 
-import { Parameter } from '@/helpers/common/parameter';
+import { BaseParameter } from '@/helpers/common/parameter';
 import { TElementType } from '@/helpers/model/model';
 import { ModelParameter } from '@/helpers/model/modelParameter';
 import { BaseNode, INodeProps } from '@/helpers/node/node';
@@ -55,7 +55,7 @@ export class NESTNode extends BaseNode {
 
     return this.network.modelsCopied.filter((model: NESTCopyModel) =>
       Object.values(model.params).some(
-        (param: Parameter) => param.value === this.view.label
+        (param: BaseParameter) => param.value === this.view.label
       )
     );
   }

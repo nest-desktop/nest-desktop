@@ -45,36 +45,12 @@
       </v-card>
     </v-menu>
 
-    <v-menu>
-      <template #activator="{ props }">
-        <v-btn
-          class="rounded-circle"
-          color="primary"
-          icon="mdi:mdi-dots-vertical"
-          size="small"
-          v-bind="props"
-          variant="text"
-        />
-      </template>
-
-      <v-list density="compact">
-        <v-list-item
-          :key="index"
-          :icon="item.icon"
-          @click="item.onClick"
-          v-for="(item, index) in items"
-        >
-          <template #prepend>
-            <v-icon :icon="item.icon" />
-          </template>
-          {{ item.title }}
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <Menu :items class="rounded-circle" />
   </v-btn-group>
 
   <v-list density="compact" v-if="connection.paramsVisible.length > 0">
-    <ConnectionParamEditor
+    <ParamEditor
+      :color="connection.sourceNode.view.color"
       :key="index"
       :param="param"
       v-for="(param, index) in connection.filteredParams"
@@ -85,7 +61,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ConnectionParamEditor from "./ConnectionParamEditor.vue";
+import Menu from "../common/Menu.vue";
+import ParamEditor from "../parameter/ParamEditor.vue";
 import { TConnection } from "@/types";
 
 const props = defineProps<{ connection: TConnection }>();
@@ -102,33 +79,19 @@ const rules = [
 const items = [
   {
     id: "connectionReset",
-    icon: "mdi:mdi-restart",
-    title: "Reset connection",
     onClick: () => {
       connection.value.reset();
     },
+    prependIcon: "mdi:mdi-restart",
+    title: "Reset connection",
   },
   {
     id: "connectionReverse",
-    icon: "mdi:mdi-rotate-3d-variant",
-    title: "Reverse connection",
     onClick: () => {
       connection.value.reverse();
     },
+    prependIcon: "mdi:mdi-rotate-3d-variant",
+    title: "Reverse connection",
   },
 ];
 </script>
-
-<!-- <style lang="scss">
-.conn-spec {
-  .menu {
-    opacity: 0;
-  }
-
-  &:hover {
-    .menu {
-      opacity: 1;
-    }
-  }
-}
-</style> -->

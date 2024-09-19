@@ -1,15 +1,12 @@
 // analogSignalPlotModel.ts
 
-import { TNode } from "@/types";
+import { TNode } from '@/types';
 
-import { currentBackgroundColor, currentColor } from "../../common/theme";
-import { NodeRecord } from "../../node/nodeRecord";
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  AnalogSignalPanelModel,
-  IAnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
+import { currentBackgroundColor, currentColor } from '../../common/theme';
+import { NodeRecord } from '../../node/nodeRecord';
+import { ActivityChartPanel, plotType } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
 
 export interface IAnalogSignalPlotModelProps
   extends IAnalogSignalPanelModelProps {}
@@ -32,14 +29,14 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
     this.initParams([
       {
-        id: "averageLine",
         component: "checkbox",
+        id: "averageLine",
         label: "average line",
         value: false,
       },
       {
-        id: "spikeThreshold",
         component: "checkbox",
+        id: "spikeThreshold",
         label: "spike threshold",
         value: false,
       },

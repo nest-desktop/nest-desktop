@@ -136,12 +136,13 @@
             </v-select>
           </span>
 
-          <ActivityChartPanelModelParamEditor
+          <ParamEditor
             :key="index"
             :model-value="param.value"
             :param
             @update:model-value="graph.update()"
-            v-for="(param, index) of panel.model.paramsAll"
+            hideMenu
+            v-for="(param, index) of panel.model.filteredParams"
           />
         </v-card-text>
       </Card>
@@ -154,13 +155,13 @@
 import { computed, nextTick } from "vue";
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
-import ActivityChartPanelModelParamEditor from "./ActivityChartPanelModelParamEditor.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import Card from "../common/Card.vue";
 import NodeRecordChip from "../node/NodeRecordChip.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
+import ParamEditor from "../parameter/ParamEditor.vue";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);

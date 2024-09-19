@@ -1,13 +1,13 @@
 // senderCVISIPlotModel.ts
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { currentBackgroundColor } from "../../common/theme";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { TParameter } from '@/types';
+
+import { SpikeActivity } from '../../activity/spikeActivity';
+import { currentBackgroundColor } from '../../common/theme';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { ActivityChartPanelModelParameter } from '../activityChartPanelModelParameter';
+import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
 
 export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -22,37 +22,32 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
 
     this.initParams([
       {
-        _parent: this,
-        _value: "bar",
-        id: "plotMode",
         component: "select",
+        id: "plotMode",
         items: ["lines", "lines+markers", "markers", "bar"],
         label: "Plot mode",
-        get value(): string {
-          return this._value as string;
-        },
-        set value(value: string) {
-          this._value = value;
-          const lineShape = this._parent?.params.lineShape;
-          if (lineShape) {
-            lineShape.visible = value.includes("lines");
-          }
+        value: "bar",
+        handleOnUpdate: (param: TParameter) => {
+          const p = param as ActivityChartPanelModelParameter;
+          const paramValue = p.value as string;
+          p.activityChartPanelModel.params.lineShape.visible =
+            paramValue.includes("lines");
         },
       },
       {
-        id: "lineShape",
         component: "select",
+        id: "lineShape",
         items: [
-          { text: "linear", value: "linear" },
-          { text: "spline", value: "spline" },
-          { text: "vertical-horizontal-vertical steps", value: "vhv" },
-          { text: "horizontal-vertical-horizontal steps", value: "hvh" },
-          { text: "vertical-horizontal steps", value: "vh" },
-          { text: "horizontal-vertical steps", value: "hv" },
+          { title: "linear", value: "linear" },
+          { title: "spline", value: "spline" },
+          { title: "vertical-horizontal-vertical steps", value: "vhv" },
+          { title: "horizontal-vertical-horizontal steps", value: "hvh" },
+          { title: "vertical-horizontal steps", value: "vh" },
+          { title: "horizontal-vertical steps", value: "hv" },
         ],
         label: "Line shape",
-        show: false,
         value: "linear",
+        visible: false,
       },
     ]);
 

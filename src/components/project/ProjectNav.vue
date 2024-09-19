@@ -48,7 +48,9 @@
         </v-row>
       </template>
 
-      <v-menu>
+      <Menu :items />
+
+      <!-- <v-menu>
         <template #activator="{ props }">
           <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
         </template>
@@ -60,7 +62,7 @@
             v-for="(item, index) in menuItems"
           />
         </v-list>
-      </v-menu>
+      </v-menu> -->
     </v-toolbar>
 
     <v-list
@@ -99,17 +101,10 @@
                 />
               </template>
 
-              <v-btn
+              <ProjectMenu
                 :color="isHovering ? 'primary' : 'transparent'"
-                @click.prevent
-                icon
-                size="x-small"
-                variant="text"
-              >
-                <v-icon icon="mdi:mdi-dots-vertical" />
-
-                <ProjectMenu :project />
-              </v-btn>
+                :project
+              />
             </template>
 
             <template #default v-if="project.state?.editMode">
@@ -175,6 +170,7 @@ import DeleteDialog from "../dialog/DeleteDialog.vue";
 import DialogTextField from "../dialog/DialogTextField.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
+import Menu from "../common/Menu.vue";
 import ProjectMenu from "./ProjectMenu.vue";
 
 import { useRouter } from "vue-router";
@@ -200,7 +196,7 @@ const projects = computed(() =>
 
 const search = ref("");
 
-const menuItems = [
+const items = [
   {
     onClick: () => {
       createDialog({

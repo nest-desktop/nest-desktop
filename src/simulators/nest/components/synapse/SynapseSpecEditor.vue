@@ -76,8 +76,9 @@
   </v-btn-group>
 
   <v-list density="compact" v-if="synapse.paramsVisible.length > 0">
-    <SynapseParamEditor
+    <ParamEditor
       :key="index"
+      :color="synapse.connection.sourceNode.view.color"
       :param
       v-for="(param, index) in synapse.filteredParams"
     />
@@ -87,7 +88,8 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import SynapseParamEditor from "./SynapseParamEditor.vue";
+import ParamEditor from "@/components/parameter/ParamEditor.vue";
+
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 
 const props = defineProps<{ synapse: NESTSynapse }>();

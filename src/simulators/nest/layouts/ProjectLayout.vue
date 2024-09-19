@@ -147,7 +147,7 @@
                 />
 
                 <template #append>
-                  <ParamMenu :items="getPopItems(node)" />
+                  <Menu :items="getPopItems(node)" />
                 </template>
               </v-list-item>
             </template>
@@ -194,9 +194,9 @@ import { computed, ref } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
+import Menu from "@/components/common/Menu.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
-import ParamMenu from "@/components/parameter/ParamMenu.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
@@ -223,15 +223,16 @@ const model = ref("");
 
 const getPopItems = (node: NESTNode) => [
   {
-    icon: "mdi:mdi-reload",
-    iconClass: "mdi-flip-h",
+    icon: {
+      icon: "mdi:mdi-reload",
+      class: "mdi-flip-h",
+    },
     onClick: () => (node.size = 1),
     title: "Set default size",
   },
   {
-    icon: "mdi:mdi-axis-arrow",
-    iconClass: "",
     onClick: () => node.toggleSpatial(),
+    prependIcon: "mdi:mdi-axis-arrow",
     title: "Toggle spatial mode",
   },
 ];

@@ -1,28 +1,21 @@
 // copyModel.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { UnwrapRef, reactive } from 'vue';
 
-import { BaseObj } from "@/helpers/common/base";
-import {
-  IParamProps,
-  Parameter,
-  TParamValue,
-} from "@/helpers/common/parameter";
-import {
-  IModelParamProps,
-  ModelParameter,
-} from "@/helpers/model/modelParameter";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { BaseObj } from '@/helpers/common/base';
+import { BaseParameter, IParamProps, TParamValue } from '@/helpers/common/parameter';
+import { IModelParamProps, ModelParameter } from '@/helpers/model/modelParameter';
+import { INodeRecordProps } from '@/helpers/node/nodeRecord';
+import { TModelDBStore } from '@/stores/model/defineModelDBStore';
 
-import { NESTConnection } from "../connection/connection";
-import { NESTNetwork } from "../network/network";
-import { NESTNode } from "../node/node";
-import { NESTCopyModelParameter } from "./copyModelParameter";
-import { NESTCopyModels } from "./copyModels";
-import { NESTModel } from "./model";
-import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
-import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTConnection } from '../connection/connection';
+import { NESTNetwork } from '../network/network';
+import { NESTNode } from '../node/node';
+import { NESTCopyModelParameter } from './copyModelParameter';
+import { NESTCopyModels } from './copyModels';
+import { NESTModel } from './model';
+import { NESTModelCompartmentParameter } from './modelCompartmentParameter';
+import { NESTModelReceptor } from './modelReceptor/modelReceptor';
 
 export interface INESTCopyModelProps {
   existing: string;
@@ -403,7 +396,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   isAssignedToWeightRecorder(node: NESTNode): boolean {
-    const weightRecorderParam: Parameter = this._params.weight_recorder;
+    const weightRecorderParam: BaseParameter = this._params.weight_recorder;
     return weightRecorderParam
       ? weightRecorderParam.value === node.view.label
       : false;

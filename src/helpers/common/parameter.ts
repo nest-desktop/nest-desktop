@@ -1,10 +1,12 @@
 // parameter.ts
 
-import { ILogObj, ISettingsParam } from "tslog";
-import { UnwrapRef, reactive } from "vue";
+import { ILogObj, ISettingsParam } from 'tslog';
+import { UnwrapRef, reactive } from 'vue';
 
-import { BaseObj } from "./base";
-import { IConfigProps } from "./config";
+import { TParameter } from '@/types';
+
+import { BaseObj } from './base';
+import { IConfigProps } from './config';
 
 interface IParamOptions {
   component?: string;
@@ -19,13 +21,15 @@ interface IParamOptions {
 }
 
 export interface IParamProps {
+  component?: string;
   disabled?: boolean;
   factors?: any[];
   format?: string;
+  handleOnUpdate?: (param: TParameter) => void;
   id: string;
   input?: string; // backward compatible
   inputLabel?: string;
-  items?: any[];
+  items?: string[] | Record<string, string>[];
   label?: string;
   max?: number;
   min?: number;
@@ -36,7 +40,6 @@ export interface IParamProps {
   type?: IParamType;
   unit?: string;
   value?: TParamValue;
-  component?: string;
   visible?: boolean;
 }
 
@@ -62,16 +65,17 @@ export interface IParamTypeSpec {
 
 export type TParamValue = boolean | number | string | (number | string)[];
 
-export class Parameter extends BaseObj {
+export class BaseParameter extends BaseObj {
   private _factors: string[] = []; // not functional yet
   private _format: string = "";
   private _id: string = "";
-  private _items: string[] = [];
+  private _items: string[] | Record<string, string>[] = [];
   private _label: string = "";
   private _max: number = 1;
   private _min: number = 0;
   private _readonly: boolean = false;
   private _rules: string[][] = [];
+  private _props: IParamProps;
   private _state: UnwrapRef<IParamState>;
   private _step: number = 1;
   private _ticks: (number | string)[] = [];
@@ -89,6 +93,7 @@ export class Parameter extends BaseObj {
       logger: { settings: { minLevel: 3, ...loggerProps } },
     });
 
+    this._props = paramProps;
     this.init(paramProps);
 
     this._state = reactive<IParamState>({
@@ -129,7 +134,7 @@ export class Parameter extends BaseObj {
     return this._type.id === "constant";
   }
 
-  get items(): string[] {
+  get items(): string[] | Record<string, string>[] {
     return this._items;
   }
 
@@ -191,7 +196,7 @@ export class Parameter extends BaseObj {
     this._min = value;
   }
 
-  get modelParam(): Parameter {
+  get modelParam(): BaseParameter {
     return this;
   }
 
@@ -231,6 +236,10 @@ export class Parameter extends BaseObj {
 
   get parent(): { changes: () => void; paramsVisible: string[] } {
     return { changes: () => {}, paramsVisible: [] };
+  }
+
+  get props(): IParamProps {
+    return this._props;
   }
 
   get readonly(): boolean {
@@ -305,6 +314,14 @@ export class Parameter extends BaseObj {
     return this._state.value;
   }
 
+  set value(value: TParamValue) {
+    this._state.value = value;
+    if (this.props.handleOnUpdate) {
+      this.props.handleOnUpdate(this);
+    }
+    this.changes();
+  }
+
   get valueFixed(): string {
     if (Array.isArray(this.value)) {
       return (
@@ -343,8 +360,8 @@ export class Parameter extends BaseObj {
   /**
    * Copy parameter component
    */
-  copy(): Parameter {
-    return new Parameter(this.toJSON());
+  copy(): BaseParameter {
+    return new BaseParameter(this.toJSON());
   }
 
   /**

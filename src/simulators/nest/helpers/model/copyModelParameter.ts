@@ -1,14 +1,14 @@
 // copyModelParameter.ts
 
-import { IParamProps, Parameter } from "@/helpers/common/parameter";
-import { ModelParameter } from "@/helpers/model/modelParameter";
-import { TModel } from "@/types";
+import { BaseParameter, IParamProps } from '@/helpers/common/parameter';
+import { ModelParameter } from '@/helpers/model/modelParameter';
+import { TModel } from '@/types';
 
-import { NESTCopyModel } from "./copyModel";
+import { NESTCopyModel } from './copyModel';
 
 export interface INESTCopyModelParamProps extends IParamProps {}
 
-export class NESTCopyModelParameter extends Parameter {
+export class NESTCopyModelParameter extends BaseParameter {
   private _copyModel: NESTCopyModel;
 
   constructor(model: NESTCopyModel, paramProps: INESTCopyModelParamProps) {

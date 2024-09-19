@@ -1,14 +1,11 @@
 // analogSignalHistogramModel.ts
 
-import { max, min } from "../../../utils/array";
-import { currentBackgroundColor } from "../../common/theme";
-import { NodeRecord } from "../../node/nodeRecord";
-import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  AnalogSignalPanelModel,
-  IAnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
+import { max, min } from '../../../utils/array';
+import { currentBackgroundColor } from '../../common/theme';
+import { NodeRecord } from '../../node/nodeRecord';
+import { ActivityChartPanel } from '../activityChartPanel';
+import { IActivityChartPanelModelData } from '../activityChartPanelModel';
+import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(
@@ -22,8 +19,8 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
 
     this.initParams([
       {
-        id: "bins",
         component: "tickSlider",
+        id: "bins",
         label: "number of bins",
         ticks: [1, 5, 10, 20, 50, 100, 200],
         value: 50,

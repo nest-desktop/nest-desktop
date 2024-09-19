@@ -8,7 +8,9 @@ import { IParamProps, TParamValue } from '../common/parameter';
 import { currentBackgroundColor } from '../common/theme';
 import { NodeRecord } from '../node/nodeRecord';
 import { ActivityChartPanel } from './activityChartPanel';
-import { ActivityChartPanelModelParameter } from './activityChartPanelModelParameter';
+import {
+    ActivityChartPanelModelParameter, IActivityChartPanelModelParamProps
+} from './activityChartPanelModelParameter';
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -52,20 +54,6 @@ export interface IActivityChartPanelModelData {
   };
   y: number[];
   yaxis?: string;
-}
-
-interface IActivityChartPanelModelParamProps {
-  _parent?: ActivityChartPanelModel;
-  _value?: string;
-  component: string;
-  id: string;
-  items?: string[] | Record<string, string>[];
-  label: string;
-  selected?: number[];
-  show?: boolean;
-  ticks?: number[];
-  unit?: string;
-  value: TParamValue;
 }
 
 export interface IActivityChartPanelModelProps {
@@ -150,6 +138,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   set data(value: IActivityChartPanelModelData[]) {
     this._data = value;
+  }
+
+  get filteredParams(): ActivityChartPanelModelParameter[] {
+    return this._state.paramsVisible.map((paramId) => this._params[paramId]);
   }
 
   /**
@@ -335,7 +327,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   initParams(paramsProps: IActivityChartPanelModelParamProps[]): void {
     paramsProps.forEach((paramProps: IActivityChartPanelModelParamProps) => {
       this.addParameter(paramProps);
-      this.params[paramProps.id].visible = true;
+      if (paramProps.visible != false) {
+        this.params[paramProps.id].visible = true;
+      }
     });
   }
 

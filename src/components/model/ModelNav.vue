@@ -77,20 +77,7 @@
         </v-row>
       </template>
 
-      <v-menu>
-        <template #activator="{ props }">
-          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
-        </template>
-
-        <v-list density="compact">
-          <v-list-item
-            :key="index"
-            :value="index"
-            v-bind="item"
-            v-for="(item, index) in menuItems"
-          />
-        </v-list>
-      </v-menu>
+      <Menu :items />
     </v-toolbar>
 
     <v-list class="pt-0" density="compact" lines="two" nav>
@@ -124,53 +111,15 @@
               v-bind="props"
             >
               <template #append>
-                <v-btn
+                <ModelMenu
                   :color="isHovering ? 'primary' : 'transparent'"
-                  @click.stop="(e: MouseEvent) => e.preventDefault()"
-                  class="list-item-menu"
-                  icon
-                  size="x-small"
-                  variant="text"
-                >
-                  <v-icon icon="mdi:mdi-dots-vertical" />
-
-                  <ModelMenu :model="(item as TModel)" />
-                </v-btn>
+                  :model="(item as TModel)"
+                />
               </template>
             </v-list-item>
           </v-hover>
         </template>
       </v-virtual-scroll>
-
-      <!-- <template v-for="(model, index) in models">
-        <v-hover v-slot="{ isHovering, props }">
-          <v-list-item
-            :key="index"
-            :subtitle="model.elementType"
-            :title="model.label || model.id"
-            :to="{
-              name: appStore.state.simulator + 'Model',
-              params: { modelId: model.id },
-            }"
-            v-bind="props"
-          >
-            <template #append>
-              <v-btn
-                :color="isHovering ? 'primary' : 'transparent'"
-                @click.stop="(e: MouseEvent) => e.preventDefault()"
-                class="list-item-menu"
-                icon
-                size="x-small"
-                variant="text"
-              >
-                <v-icon icon="mdi:mdi-dots-vertical" />
-
-                <ModelMenu :model />
-              </v-btn>
-            </template>
-          </v-list-item>
-        </v-hover>
-      </template> -->
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -187,6 +136,7 @@ import DeleteDialog from "../dialog/DeleteDialog.vue";
 import DialogTextField from "../dialog/DialogTextField.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
+import Menu from "../common/Menu.vue";
 import ModelMenu from "./ModelMenu.vue";
 
 import { useRouter } from "vue-router";
@@ -258,11 +208,9 @@ const elementTypes: TElementType[] = [
   "synapse",
 ];
 
-const menuItems = [
+const items = [
   {
     id: "import-dialog",
-    prependIcon: "mdi:mdi-import",
-    title: "Import",
     onClick: () => {
       createDialog({
         title: "",
@@ -276,11 +224,11 @@ const menuItems = [
         },
       });
     },
+    prependIcon: "mdi:mdi-import",
+    title: "Import",
   },
   {
     id: "export-dialog",
-    prependIcon: "mdi:mdi-export",
-    title: "Export",
     onClick: () => {
       createDialog({
         title: "",
@@ -296,11 +244,11 @@ const menuItems = [
         },
       });
     },
+    prependIcon: "mdi:mdi-export",
+    title: "Export",
   },
   {
     id: "delete-dialog",
-    prependIcon: "mdi:mdi-trash-can-outline",
-    title: "Delete",
     onClick: () => {
       createDialog({
         title: "",
@@ -316,6 +264,8 @@ const menuItems = [
         },
       });
     },
+    prependIcon: "mdi:mdi-trash-can-outline",
+    title: "Delete",
   },
 ];
 

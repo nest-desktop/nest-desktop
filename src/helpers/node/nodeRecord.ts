@@ -32,8 +32,8 @@ interface IColorMap {
 export class NodeRecord extends BaseObj {
   // private _activity: Activity;
   private _colorMap: IColorMap = {
-    max: -55,
-    min: -70,
+    max: -55.0,
+    min: -70.0,
     reverse: false,
     scale: "Spectral",
   };

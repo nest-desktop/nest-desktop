@@ -1,11 +1,15 @@
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    activator="parent"
-    v-model="state.show"
-  >
-    <v-card flat style="min-width: 300px">
-      <!-- <v-card-title class="pa-0">
+  <v-btn class="rounded-circle" icon size="small">
+    <v-icon icon="mdi:mdi-dots-vertical" />
+
+    <v-menu
+      :close-on-content-click="false"
+      activator="parent"
+      width="320"
+      v-model="state.show"
+    >
+      <v-card flat style="min-width: 300px">
+        <!-- <v-card-title class="pa-0">
         <v-row no-gutters>
           <v-col cols="12">
             <NodeModelSelect :node="node" />
@@ -13,100 +17,102 @@
         </v-row>
       </v-card-title> -->
 
-      <span v-if="state.content == undefined">
-        <v-list density="compact">
-          <v-list-item
-            :key="index"
-            :title="item.title"
-            @click="item.onClick"
-            v-for="(item, index) in items"
-            v-show="item.show()"
-          >
-            <template #append>
-              <template v-if="item.append">
-                <v-icon icon="mdi:mdi-menu-right" size="x-small" />
-              </template>
+        <span v-if="state.content == undefined">
+          <v-list density="compact">
+            <v-list-item
+              :key="index"
+              v-bind="item"
+              v-for="(item, index) in items"
+              v-show="item.show()"
+            >
+              <template #append>
+                <template v-if="item.append">
+                  <v-icon icon="mdi:mdi-menu-right" size="x-small" />
+                </template>
 
-              <!-- <template v-if="item.input === 'checkbox'">
+                <!-- <template v-if="item.input === 'checkbox'">
                 <v-checkbox
-                  :color="node.view.color"
+                :color="node.view.color"
                   :input-value="state[item.value]"
-                />
-              </template>
+                  />
+                </template>
 
-              <template v-if="item.input === 'switch'">
-                <v-switch
+                <template v-if="item.input === 'switch'">
+                  <v-switch
                   :color="node.view.color"
                   :value="state[item.value]"
                   dense
                   hide-details
-                />
-              </template> -->
-            </template>
-
-            <template #prepend>
-              <v-icon :class="item.iconClass" :icon="item.icon" />
-            </template>
-          </v-list-item>
-        </v-list>
-      </span>
-
-      <span v-if="state.content === 'eventsExport'">
-        <v-card-text class="py-1 px-0">
-          <v-list dense>
-            <v-list-item @click="exportEvents('json')">
-              <template #prepend>
-                <v-icon icon="mdi:mdi-code-json" />
+                  />
+                </template> -->
               </template>
-              <v-list-item-title>Export events to JSON file</v-list-item-title>
-            </v-list-item>
 
-            <v-list-item @click="exportEvents('csv')">
               <template #prepend>
-                <v-icon icon="mdi:mdi-file-delimited-outline" />
+                <v-icon v-bind="item.icon" />
               </template>
-              <v-list-item-title>Export events to CSV file</v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-card-text>
+        </span>
 
-        <v-card-actions>
-          <v-btn
-            @click="backMenu"
-            prepend-icon="mdi:mdi-menu-left"
-            text="back"
+        <span v-if="state.content === 'eventsExport'">
+          <v-card-text class="py-1 px-0">
+            <v-list dense>
+              <v-list-item @click="exportEvents('json')">
+                <template #prepend>
+                  <v-icon icon="mdi:mdi-code-json" />
+                </template>
+                <v-list-item-title>
+                  Export events to JSON file
+                </v-list-item-title>
+              </v-list-item>
+
+              <v-list-item @click="exportEvents('csv')">
+                <template #prepend>
+                  <v-icon icon="mdi:mdi-file-delimited-outline" />
+                </template>
+                <v-list-item-title>Export events to CSV file</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn
+              @click="backMenu"
+              prepend-icon="mdi:mdi-menu-left"
+              text="back"
+            />
+          </v-card-actions>
+        </span>
+
+        <span v-if="state.content === 'nodeColor'">
+          <ColorPicker
+            :colorScheme="state.colorScheme"
+            @update:model-value="nodeColorChange()"
+            hide-inputs
+            v-model="node.view.color"
           />
-        </v-card-actions>
-      </span>
 
-      <span v-if="state.content === 'nodeColor'">
-        <ColorPicker
-          :colorScheme="state.colorScheme"
-          @update:model-value="nodeColorChange()"
-          hide-inputs
-          v-model="node.view.color"
-        />
-
-        <v-select
-          :items="colorSchemes"
-          class="mx-2"
-          density="compact"
-          hide-details
-          v-model="state.colorScheme"
-        />
-
-        <v-card-actions>
-          <v-btn
-            @click="backMenu"
-            prepend-icon="mdi:mdi-menu-left"
-            text="back"
+          <v-select
+            :items="colorSchemes"
+            class="mx-2"
+            density="compact"
+            hide-details
+            v-model="state.colorScheme"
           />
-          <v-spacer />
-          <v-btn @click="resetColor" text="reset" />
-        </v-card-actions>
-      </span>
-    </v-card>
-  </v-menu>
+
+          <v-card-actions>
+            <v-btn
+              @click="backMenu"
+              prepend-icon="mdi:mdi-menu-left"
+              text="back"
+            />
+            <v-spacer />
+            <v-btn @click="resetColor" text="reset" />
+          </v-card-actions>
+        </span>
+      </v-card>
+    </v-menu>
+  </v-btn>
 </template>
 
 <script lang="ts" setup>
@@ -139,6 +145,7 @@ const colorSchemes = [
   "set1",
   "set2",
   "set3",
+  "spectral11",
   "tableau10",
   "google10c",
   "google20c",
@@ -146,8 +153,7 @@ const colorSchemes = [
 
 const items = [
   {
-    icon: "mdi:mdi-reload",
-    iconClass: "mdi-flip-h",
+    icon: { icon: "mdi:mdi-reload", class: "mdi-flip-h" },
     id: "paramsReset",
     onClick: () => {
       node.value.resetParams();
@@ -158,8 +164,7 @@ const items = [
     title: "Reset all parameters",
   },
   {
-    icon: "mdi:mdi-format-color-fill",
-    iconClass: "",
+    prependIcon: "mdi:mdi-format-color-fill",
     id: "nodeColor",
     onClick: () => {
       state.content = "nodeColor";
@@ -170,8 +175,7 @@ const items = [
     title: "Colorize node",
   },
   {
-    icon: "mdi:mdi-information-outline",
-    iconClass: "",
+    prependIcon: "mdi:mdi-information-outline",
     id: "modelDoc",
     onClick: () => {
       state.dialog = true;
@@ -180,8 +184,7 @@ const items = [
     title: "Model documentation",
   },
   {
-    icon: "mdi:mdi-content-copy",
-    iconClass: "",
+    prependIcon: "mdi:mdi-content-copy",
     id: "nodeClone",
     onClick: () => {
       node.value.clone();
@@ -192,8 +195,7 @@ const items = [
     title: "Clone node",
   },
   {
-    icon: "mdi:mdi-download",
-    iconClass: "",
+    prependIcon: "mdi:mdi-download",
     id: "eventsExport",
     onClick: () => {
       state.content = "eventsExport";
@@ -206,8 +208,7 @@ const items = [
     append: true,
   },
   {
-    icon: "mdi:mdi-trash-can-outline",
-    iconClass: "",
+    prependIcon: "mdi:mdi-trash-can-outline",
     id: "nodeDelete",
     onClick: () => {
       createDialog({

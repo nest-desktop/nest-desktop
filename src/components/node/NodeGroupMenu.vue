@@ -17,8 +17,7 @@
         <v-list density="compact">
           <v-list-item
             :key="index"
-            :title="item.title"
-            @click="item.onClick"
+            v-bind="item"
             v-for="(item, index) in items"
             v-show="item.show()"
           >
@@ -42,10 +41,6 @@
                   hide-details
                 />
               </template> -->
-            </template>
-
-            <template #prepend>
-              <v-icon :class="item.iconClass" :icon="item.icon" />
             </template>
           </v-list-item>
         </v-list>
@@ -94,32 +89,28 @@ const state = reactive<{
 
 const items = [
   {
-    icon: "mdi:mdi-format-color-fill",
-    iconClass: "",
+    append: true,
     id: "nodeGroupColor",
     onClick: () => {
       state.content = "nodeGroupColor";
       window.dispatchEvent(new Event("resize"));
     },
-    append: true,
+    prependIcon: "mdi:mdi-format-color-fill",
     show: () => true,
     title: "Colorize node",
   },
   {
-    icon: "mdi:mdi-content-copy",
-    iconClass: "",
     id: "nodeGroupClone",
     onClick: () => {
       nodeGroup.value.clone();
       nodeGroup.value.changes();
       closeMenu();
     },
+    prependIcon: "mdi:mdi-content-copy",
     show: () => true,
     title: "Clone node group",
   },
   {
-    icon: "mdi:mdi-trash-can-outline",
-    iconClass: "",
     id: "nodeGroupDelete",
     onClick: () => {
       createDialog({
@@ -136,6 +127,7 @@ const items = [
       });
       // state.content = "nodeDelete";
     },
+    prependIcon: "mdi:mdi-trash-can-outline",
     show: () => true,
     title: "Delete node group",
   },

@@ -1,13 +1,13 @@
 // nodeParameter.ts
 
-import { TNodeParameterParent } from "@/types";
+import { TNodeParameterParent } from '@/types';
 
-import { IParamProps, Parameter } from "../common/parameter";
-import { ModelParameter } from "../model/modelParameter";
+import { BaseParameter, IParamProps } from '../common/parameter';
+import { ModelParameter } from '../model/modelParameter';
 
 export interface INodeParamProps extends IParamProps {}
 
-export class NodeParameter extends Parameter {
+export class NodeParameter extends BaseParameter {
   public _node: TNodeParameterParent;
 
   constructor(node: TNodeParameterParent, paramProps: INodeParamProps) {

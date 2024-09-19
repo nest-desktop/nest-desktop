@@ -1,12 +1,12 @@
 // modelParameter.ts
 
-import { TModel } from "@/types";
+import { TModel } from '@/types';
 
-import { IParamProps, Parameter } from "../common/parameter";
+import { BaseParameter, IParamProps } from '../common/parameter';
 
 export interface IModelParamProps extends IParamProps {}
 
-export class ModelParameter extends Parameter {
+export class ModelParameter extends BaseParameter {
   private _model: TModel;
 
   constructor(model: TModel, paramProps: IModelParamProps) {
