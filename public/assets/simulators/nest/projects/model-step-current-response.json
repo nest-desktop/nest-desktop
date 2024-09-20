@@ -1,4 +1,5 @@
 {
+    "name": "step current response",
     "activityGraph": {
         "color": "trace",
         "panels": [
@@ -6,7 +7,7 @@
                 "model": {
                     "id": "analogSignalPlot",
                     "records": [
-                        "vm2.V_m"
+                        "vm1.V_m"
                     ]
                 }
             },
@@ -20,10 +21,6 @@
             }
         ]
     },
-    "createdAt": "2024-07-11T07:42:01.509Z",
-    "description": "",
-    "id": "aa1637e3-bd9d-47af-8356-7daa28eff008",
-    "name": "step current response",
     "network": {
         "connections": [
             {
@@ -40,7 +37,6 @@
                 "target": 1
             }
         ],
-        "models": [],
         "nodes": [
             {
                 "model": "dc_generator",
@@ -50,7 +46,7 @@
                         "y": 75
                     }
                 },
-                "size": 6,
+                "size": 11,
                 "params": [
                     {
                         "id": "amplitude",
@@ -68,7 +64,7 @@
                                 },
                                 {
                                     "id": "num",
-                                    "value": 6
+                                    "value": 11
                                 }
                             ]
                         }
@@ -84,14 +80,14 @@
                 ]
             },
             {
-                "model": "my_neuron",
+                "model": "iaf_psc_alpha",
                 "view": {
                     "position": {
                         "x": 175,
                         "y": 25
                     }
                 },
-                "size": 6
+                "size": 11
             },
             {
                 "model": "multimeter",
@@ -104,14 +100,7 @@
                 "params": [
                     {
                         "id": "interval",
-                        "value": 0.1,
-                        "rules": [
-                            [
-                                "value >= 0.1",
-                                "Small values generate many data points and can put quite a load on your browser.",
-                                "warning"
-                            ]
-                        ]
+                        "value": 0.5
                     }
                 ],
                 "records": [
@@ -133,14 +122,7 @@
                 "params": [
                     {
                         "id": "interval",
-                        "value": 0.1,
-                        "rules": [
-                            [
-                                "value >= 0.1",
-                                "Small values generate many data points and can put quite a load on your browser.",
-                                "warning"
-                            ]
-                        ]
+                        "value": 0.1
                     }
                 ]
             }
@@ -152,11 +134,7 @@
             "resolution": 0.1,
             "rngSeed": 1
         },
-        "time": 120,
-        "modules": [
-            "nestmlmodule"
-        ]
+        "time": 120
     },
-    "updatedAt": "2024-09-11T08:05:52.230Z",
-    "version": "4.0.0-beta10"
+    "version": "4.0.0"
 }
