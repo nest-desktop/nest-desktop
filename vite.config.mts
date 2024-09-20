@@ -14,6 +14,7 @@ import vue from "@vitejs/plugin-vue";
 // https://vitejs.dev/config/
 export default defineConfig((configEnv: { mode: string }) => ({
   build: {
+    assetsInclude: ["**/*.nestml"],
     // chunkSizeWarningLimit: 1000, // https://github.com/vitejs/vite/discussions/9440
     outDir: "./nest_desktop/app",
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
