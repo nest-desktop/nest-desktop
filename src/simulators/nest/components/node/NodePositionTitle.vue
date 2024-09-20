@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters v-if="nodeSpatial.positions">
+  <v-label class="px-1" style="width: 100%">
     Positions
     <v-spacer />
 
@@ -57,7 +57,7 @@
     >
       <v-icon icon="mdi:mdi-format-text-wrapping-wrap" size="small" />
     </v-chip>
-  </v-row>
+  </v-label>
 </template>
 
 <script lang="ts" setup>

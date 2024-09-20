@@ -13,6 +13,10 @@ import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
 
 interface IModelStoreState {
+  bottomNav: {
+    height: number;
+    active: boolean;
+  };
   controller: {
     open: boolean;
     view: string;
@@ -57,6 +61,10 @@ export function defineModelStore(
     props.simulator + "-model-view",
     () => {
       const state = reactive<IModelStoreState>({
+        bottomNav: {
+          height: 200,
+          active: false,
+        },
         controller: {
           open: false,
           view: "",

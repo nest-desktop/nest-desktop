@@ -111,6 +111,11 @@
               v-bind="props"
             >
               <template #append>
+                <v-chip
+                  :text="item.hash"
+                  size="x-small"
+                  v-if="appStore.state.devMode"
+                />
                 <ModelMenu
                   :color="isHovering ? 'primary' : 'transparent'"
                   :model="(item as TModel)"

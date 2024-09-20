@@ -28,15 +28,15 @@ const state = reactive<{
 }>({
   color: "primary",
   size: "default",
-  variant: "evelated",
+  variant: "elevated",
 });
 
 type variantTypes =
   | "elevated"
   | "flat"
-  | "text"
   | "outlined"
   | "plain"
+  | "text"
   | "tonal"
   | undefined;
 

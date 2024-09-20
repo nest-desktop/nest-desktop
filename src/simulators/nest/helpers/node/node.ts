@@ -1,21 +1,30 @@
 // node.ts
 
-import { BaseParameter } from '@/helpers/common/parameter';
-import { TElementType } from '@/helpers/model/model';
-import { ModelParameter } from '@/helpers/model/modelParameter';
-import { BaseNode, INodeProps } from '@/helpers/node/node';
-import { INodeParamProps, NodeParameter } from '@/helpers/node/nodeParameter';
-import { INodeRecordProps, NodeRecord } from '@/helpers/node/nodeRecord';
-import { onlyUnique, sortString } from '@/utils/array';
+import { BaseParameter } from "@/helpers/common/parameter";
+import { TElementType } from "@/helpers/model/model";
+import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
+import { onlyUnique, sortString } from "@/utils/array";
 
-import { NESTConnection } from '../connection/connection';
-import { NESTCopyModel } from '../model/copyModel';
-import { NESTModel } from '../model/model';
-import { NESTNetwork } from '../network/network';
-import { INESTNodeCompartmentProps, NESTNodeCompartment } from './nodeCompartment/nodeCompartment';
-import { INESTNodeReceptorProps, NESTNodeReceptor } from './nodeReceptor/nodeReceptor';
-import { INESTNodeSpatialProps, NESTNodeSpatial } from './nodeSpatial/nodeSpatial';
-import { NESTNodes } from './nodes';
+import { NESTConnection } from "../connection/connection";
+import { NESTCopyModel } from "../model/copyModel";
+import { NESTModel } from "../model/model";
+import { NESTNetwork } from "../network/network";
+import {
+  INESTNodeCompartmentProps,
+  NESTNodeCompartment,
+} from "./nodeCompartment/nodeCompartment";
+import {
+  INESTNodeReceptorProps,
+  NESTNodeReceptor,
+} from "./nodeReceptor/nodeReceptor";
+import {
+  INESTNodeSpatialProps,
+  NESTNodeSpatial,
+} from "./nodeSpatial/nodeSpatial";
+import { NESTNodes } from "./nodes";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -439,7 +448,7 @@ export class NESTNode extends BaseNode {
                   ...target.compartmentRecordables,
                   ...target.receptorRecordables,
                 ]
-              : [...target.model.recordables]
+              : [...target.model.state.recordables]
           ).flat();
         });
 

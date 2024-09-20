@@ -163,8 +163,13 @@ const projects: { id: string; name: string; icon: string }[] = [
     icon: "mdi-chart-line",
   },
   {
-    id: "model-spikes-up-down",
-    name: "spikes (up/down)",
+    id: "model-rate-response",
+    name: "rate response",
+    icon: "mdi-chart-line",
+  },
+  {
+    id: "model-spike-response",
+    name: "spike response",
     icon: "mdi-chart-line",
   },
   {

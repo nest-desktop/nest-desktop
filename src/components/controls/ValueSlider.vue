@@ -4,7 +4,7 @@
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi:mdi-plus"
-    class="py-1 mr-0 value-slider"
+    class="mx-1 py-1 value-slider"
     color="grey"
     hide-details="auto"
     prepend-icon="mdi:mdi-minus"

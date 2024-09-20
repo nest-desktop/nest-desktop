@@ -1,7 +1,7 @@
 <template>
   <v-range-slider
     :step="props.step"
-    class="py-2 range-slider align-center"
+    class="mx-1 py-1 range-slider align-center"
     color="grey"
     hide-details
     strict

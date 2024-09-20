@@ -36,7 +36,7 @@
 
       <v-col md="6">
         <v-card title="Backend">
-          <v-expansion-panels elevation="0" tile variant="accordion">
+          <v-expansion-panels elevation="0" variant="accordion">
             <v-expansion-panel>
               <v-expansion-panel-title>
                 Backend settings

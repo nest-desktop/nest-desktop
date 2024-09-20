@@ -6,7 +6,7 @@
     @click:append="increment"
     @click:prepend="decrement"
     append-icon="mdi:mdi-plus"
-    class="py-3 tick-slider"
+    class="mx-1 py-3 tick-slider"
     color="grey"
     hide-details
     prepend-icon="mdi:mdi-minus"

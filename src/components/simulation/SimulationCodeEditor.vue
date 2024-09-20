@@ -14,14 +14,14 @@
     <v-btn icon="mdi:mdi-dots-vertical" size="small" />
   </v-toolbar>
 
-  <v-btn
+  <!-- <v-btn
     :icon="state.disabled ? 'mdi:mdi-pencil-off' : 'mdi:mdi-pencil'"
     @click="state.disabled = !state.disabled"
     class="ma-2"
     size="small"
     style="position: absolute; right: 10px; z-index: 10"
     title="Edit mode"
-  />
+  /> -->
 
   <SimulationCodeMirror
     :disabled="state.disabled"
@@ -42,7 +42,7 @@ defineProps<{ simulation: TSimulation }>();
 const state = reactive<{
   disabled: boolean;
 }>({
-  disabled: true,
+  disabled: false,
 });
 
 const codeBlocks = [

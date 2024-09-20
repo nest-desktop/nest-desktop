@@ -23,22 +23,22 @@ export interface IModelProps extends IDoc {
 }
 
 interface IBaseModelState {
+  custom: boolean;
+  label: string;
   paramsVisible: string[];
+  recordables: INodeRecordProps[]; // recordables for multimeter
 }
 
 export type TElementType = "neuron" | "recorder" | "stimulator" | "synapse";
 
 export class BaseModel extends BaseObj {
   private _abbreviation: string;
-  private _custom: boolean = false;
   private _doc: IModelProps; // doc data of the database
   private _elementType: TElementType; // element type of the model
   private _favorite: boolean = false;
   private _id: string; // model id
-  private _label: string; // model label for view
   private _params: Record<string, ModelParameter> = {}; // model parameters
   private _project: TProject | undefined;
-  private _recordables: INodeRecordProps[] = []; // recordables for multimeter
   private _state: UnwrapRef<IBaseModelState>;
 
   constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
@@ -49,28 +49,23 @@ export class BaseModel extends BaseObj {
 
     this._doc = modelProps;
     this._id = modelProps.id || uuidv4().slice(0, 6);
-
     this._elementType = modelProps.elementType || "neuron";
 
-    this._label = modelProps.label || "";
     this._abbreviation = modelProps.abbreviation || "";
     this._favorite = modelProps.favorite || false;
 
-    this._state = reactive<IBaseModelState>({ paramsVisible: [] });
+    this._state = reactive<IBaseModelState>({
+      custom: false,
+      label: modelProps.label || "",
+      paramsVisible: [],
+      recordables: [],
+    });
 
     this.update(modelProps);
   }
 
   get abbreviation(): string {
     return this._abbreviation;
-  }
-
-  get custom(): boolean {
-    return this._custom;
-  }
-
-  set custom(value: boolean) {
-    this._custom = value;
   }
 
   get doc(): IModelProps {
@@ -143,14 +138,6 @@ export class BaseModel extends BaseObj {
     return this._elementType === "stimulator";
   }
 
-  get label(): string {
-    return this._label;
-  }
-
-  set label(value: string) {
-    this._label = value;
-  }
-
   get params(): Record<string, ModelParameter> {
     return this._params;
   }
@@ -174,10 +161,6 @@ export class BaseModel extends BaseObj {
 
   set project(value: TProject) {
     this._project = value;
-  }
-
-  get recordables(): INodeRecordProps[] {
-    return this._recordables;
   }
 
   get state(): UnwrapRef<IBaseModelState> {
@@ -269,7 +252,7 @@ export class BaseModel extends BaseObj {
       abbreviation: this._abbreviation,
       elementType: this._elementType,
       id: this._id,
-      label: this._label,
+      label: this.state.label,
       params: Object.values(this._params).map((param: ModelParameter) =>
         param.toJSON()
       ),
@@ -281,8 +264,8 @@ export class BaseModel extends BaseObj {
     }
 
     // Add the recordables if provided.
-    if (this.recordables.length > 0) {
-      modelProps.recordables = this.recordables.map(
+    if (this.state.recordables.length > 0) {
+      modelProps.recordables = this.state.recordables.map(
         (recordable: INodeRecordProps) => recordable
       );
     }
@@ -291,8 +274,8 @@ export class BaseModel extends BaseObj {
   }
 
   /**
-   * Update  a parameter.
-   * @param modelProps model object
+   * Update model.
+   * @param modelProps model props
    */
   update(modelProps: IModelProps): void {
     this.logger.trace("update:", modelProps.id);
@@ -309,6 +292,19 @@ export class BaseModel extends BaseObj {
     if (modelProps.params) {
       this.updateParameters(modelProps.params);
     }
+
+    this.updateHash();
+  }
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    this._updateHash({
+      label: this.state.label,
+      recordables: this.state.recordables,
+      params: this.paramsAll.map((param: ModelParameter) => param.hash),
+    });
   }
 
   /**
@@ -329,7 +325,7 @@ export class BaseModel extends BaseObj {
    * @param recordablesProps recordable or string props
    */
   updateRecordables(recordablesProps: (INodeRecordProps | string)[]): void {
-    this._recordables = recordablesProps.map(
+    this.state.recordables = recordablesProps.map(
       (recordableProps: INodeRecordProps | string) =>
         recordableProps instanceof Object
           ? recordableProps

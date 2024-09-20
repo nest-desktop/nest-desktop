@@ -52,7 +52,7 @@
               clearable
               density="compact"
               item-title="title"
-              item-value="uuid"
+              item-value="groupId"
               hide-details
               label="Recorded events"
               multiple
@@ -136,14 +136,17 @@
             </v-select>
           </span>
 
-          <ParamEditor
-            :key="index"
-            :model-value="param.value"
-            :param
-            @update:model-value="graph.update()"
-            hideMenu
-            v-for="(param, index) of panel.model.filteredParams"
-          />
+          <v-list>
+            <ParamListItem
+              :key="index"
+              :model-value="param.value"
+              :param
+              @update:model-value="graph.update()"
+              v-for="(param, index) of panel.model.filteredParams"
+            >
+              <template #append />
+            </ParamListItem>
+          </v-list>
         </v-card-text>
       </Card>
     </div>
@@ -161,7 +164,7 @@ import NodeRecordChip from "../node/NodeRecordChip.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import ParamEditor from "../parameter/ParamEditor.vue";
+import ParamListItem from "../parameter/ParamListItem.vue";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);

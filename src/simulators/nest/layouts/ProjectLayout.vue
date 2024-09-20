@@ -136,6 +136,7 @@
                   :nodeSpatial="node.spatial"
                   v-if="node.spatial.hasPositions"
                 />
+
                 <ValueSlider
                   :thumb-color="node.view.color"
                   @update:model-value="node.changes()"
@@ -147,7 +148,7 @@
                 />
 
                 <template #append>
-                  <Menu :items="getPopItems(node)" />
+                  <Menu :items="getPopItems(node)" size="x-small" />
                 </template>
               </v-list-item>
             </template>

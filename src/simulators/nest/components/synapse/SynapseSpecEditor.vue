@@ -76,7 +76,7 @@
   </v-btn-group>
 
   <v-list density="compact" v-if="synapse.paramsVisible.length > 0">
-    <ParamEditor
+    <ParamListItem
       :key="index"
       :color="synapse.connection.sourceNode.view.color"
       :param
@@ -88,7 +88,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import ParamEditor from "@/components/parameter/ParamEditor.vue";
+import ParamListItem from "@/components/parameter/ParamListItem.vue";
 
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 

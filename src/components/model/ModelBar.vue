@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="d-print-none" flat height="48">
+  <v-app-bar class="d-print-none" elevation="0" height="48">
     <v-tabs stacked>
       <slot name="prependTabs" />
 

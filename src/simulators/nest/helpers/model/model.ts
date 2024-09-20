@@ -6,6 +6,7 @@ import { IParamProps } from "@/helpers/common/parameter";
 import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { loadText } from "@/utils/fetch";
 
 import {
   INESTModelCompartmentParamProps,
@@ -31,7 +32,14 @@ export class NESTModel extends BaseModel {
 
   constructor(modelProps: INESTModelProps = {}) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
-    this.nestmlScript = modelProps.nestmlScript || "";
+    if (modelProps.nestmlScript) {
+      this._nestmlScript = modelProps.nestmlScript;
+    }
+    // else {
+    //   loadText(
+    //     "/assets/simulators/nest/nestml/iaf_psc_alpha_neuron.nestml"
+    //   ).then((text: string) => (this._nestmlScript = text));
+    // }
   }
 
   get compartmentParams(): Record<string, NESTModelCompartmentParameter> {
@@ -75,7 +83,6 @@ export class NESTModel extends BaseModel {
 
   set nestmlScript(value: string) {
     this._nestmlScript = value;
-    this.custom = this._nestmlScript.length > 0;
   }
 
   get receptors(): Record<string, NESTModelReceptor> {
@@ -129,7 +136,7 @@ export class NESTModel extends BaseModel {
     const modelProps: INESTModelProps = {
       elementType: this.elementType,
       id: this.id,
-      label: this.label,
+      label: this.state.label,
       params: Object.values(this.params).map((param: ModelParameter) =>
         param.toJSON()
       ),
@@ -141,8 +148,8 @@ export class NESTModel extends BaseModel {
     }
 
     // Add the recordables if provided.
-    if (this.recordables.length > 0) {
-      modelProps.recordables = this.recordables.map(
+    if (this.state.recordables.length > 0) {
+      modelProps.recordables = this.state.recordables.map(
         (recordable: INodeRecordProps) => recordable
       );
     }
@@ -198,6 +205,8 @@ export class NESTModel extends BaseModel {
     if (modelProps.receptors) {
       this.updateReceptors(modelProps.receptors);
     }
+
+    this.updateHash();
   }
 
   /**

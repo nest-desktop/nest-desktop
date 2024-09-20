@@ -38,7 +38,7 @@ export class PyNNModel extends BaseModel {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
-      label: this.label,
+      label: this.state.label,
       params: Object.values(this.params).map((param: ModelParameter) =>
         param.toJSON()
       ),
@@ -46,8 +46,8 @@ export class PyNNModel extends BaseModel {
     };
 
     // Add the recordables if provided.
-    if (this.recordables.length > 0) {
-      modelProps.recordables = this.recordables.map(
+    if (this.state.recordables.length > 0) {
+      modelProps.recordables = this.state.recordables.map(
         (recordable: any) => recordable.id
       );
     }

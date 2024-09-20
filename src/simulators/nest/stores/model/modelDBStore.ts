@@ -11,6 +11,7 @@ const modelAssets = [
   "hh_psc_alpha",
   "iaf_cond_alpha",
   "iaf_psc_alpha",
+  "inhomogeneous_poisson_generator",
   "multimeter",
   "noise_generator",
   "parrot_neuron",

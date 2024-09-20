@@ -1,13 +1,13 @@
 // nodeRecord.ts
 
-import * as d3 from 'd3';
-import { UnwrapRef, reactive } from 'vue';
+import * as d3 from "d3";
+import { UnwrapRef, reactive } from "vue";
 
-import { TNode } from '@/types';
+import { TNode } from "@/types";
 
-import { max, min } from '../../utils/array';
-import { Activity } from '../activity/activity';
-import { BaseObj } from '../common/base';
+import { max, min } from "../../utils/array";
+import { Activity } from "../activity/activity";
+import { BaseObj } from "../common/base";
 
 export interface INodeRecordProps {
   id: string;
@@ -16,27 +16,19 @@ export interface INodeRecordProps {
   label?: string;
   unit?: string;
 }
-
 interface INodeRecordState {
   color: string;
+  colorMap: {
+    min: number;
+    max: number;
+    reverse: boolean;
+    scale: string;
+  };
   traceColors: string[];
-}
-
-interface IColorMap {
-  min: number;
-  max: number;
-  reverse: boolean;
-  scale: string;
 }
 
 export class NodeRecord extends BaseObj {
   // private _activity: Activity;
-  private _colorMap: IColorMap = {
-    max: -55.0,
-    min: -70.0,
-    reverse: false,
-    scale: "Spectral",
-  };
   private _id: string;
   private _label: string;
   private _node: TNode;
@@ -61,6 +53,12 @@ export class NodeRecord extends BaseObj {
 
     this._state = reactive<INodeRecordState>({
       color: "",
+      colorMap: {
+        max: -55.0,
+        min: -70.0,
+        reverse: false,
+        scale: "Spectral",
+      },
       traceColors: [],
     });
 
@@ -81,10 +79,6 @@ export class NodeRecord extends BaseObj {
         return this._state.traceColors;
     }
     return this._state.color;
-  }
-
-  get colorMap(): IColorMap {
-    return this._colorMap;
   }
 
   get groupId(): string {
@@ -166,8 +160,8 @@ export class NodeRecord extends BaseObj {
    * Normalize value for color or height.
    */
   normalize(value: number): number {
-    const min: number = this._colorMap.min;
-    const max: number = this._colorMap.max;
+    const min: number = this._state.colorMap.min;
+    const max: number = this._state.colorMap.max;
     return (value - min) / (max - min);
   }
 
@@ -210,8 +204,8 @@ export class NodeRecord extends BaseObj {
     if (!this.hasEvent || !this.hasValues) return;
 
     const values = this.values;
-    this._colorMap.max = max(values);
-    this._colorMap.min = min(values);
+    this._state.colorMap.max = max(values);
+    this._state.colorMap.min = min(values);
   }
 
   updateTraceColors(): void {
@@ -236,10 +230,10 @@ export class NodeRecord extends BaseObj {
    * RGB color for a value in range [0 - 1].
    */
   valueColor(value: number): string {
-    const colorMap: string = `interpolate${this._colorMap.scale}`;
+    const colorMap: string = `interpolate${this._state.colorMap.scale}`;
     // @ts-ignore - Element implicitly has an 'any' type because expression of type 'string' can't be used to index type
     // 'typeof import("./node_modules/@types/d3/index")'.
     const colorScale = d3[colorMap];
-    return colorScale(this._colorMap.reverse ? 1 - value : value);
+    return colorScale(this._state.colorMap.reverse ? 1 - value : value);
   }
 }

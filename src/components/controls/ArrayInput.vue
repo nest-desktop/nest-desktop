@@ -2,13 +2,12 @@
   <v-textarea
     :rows="1"
     base-color="grey"
-    class="ma-1 array-input"
+    class="mx-1 array-input"
     color="grey"
     density="compact"
     hide-details
     v-model="value"
-  >
-  </v-textarea>
+  />
 </template>
 
 <script lang="ts" setup>

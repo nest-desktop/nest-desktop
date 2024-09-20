@@ -1,12 +1,15 @@
 // analogSignalPlotModel.ts
 
-import { TNode } from '@/types';
+import { TNode } from "@/types";
 
-import { currentBackgroundColor, currentColor } from '../../common/theme';
-import { NodeRecord } from '../../node/nodeRecord';
-import { ActivityChartPanel, plotType } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
+import { currentBackgroundColor, currentColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  AnalogSignalPanelModel,
+  IAnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 
 export interface IAnalogSignalPlotModelProps
   extends IAnalogSignalPanelModelProps {}
@@ -120,6 +123,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       legendgroup: record.groupId,
       line: {
         color: record.state.color,
+        dash: "dot",
         width: 1.5,
       },
       mode: "lines",

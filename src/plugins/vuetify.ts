@@ -84,6 +84,7 @@ export const vuetify = createVuetify({
     VTextField: { variant: "outlined" },
   },
   directives,
+  // theme: false,
   theme: {
     themes: {
       light: {

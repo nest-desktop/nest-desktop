@@ -1,16 +1,17 @@
 // activityChartPanelModel.ts
 
-import { UnwrapRef, reactive } from 'vue';
+import { UnwrapRef, reactive } from "vue";
 
-import { Activity } from '../activity/activity';
-import { BaseObj } from '../common/base';
-import { IParamProps, TParamValue } from '../common/parameter';
-import { currentBackgroundColor } from '../common/theme';
-import { NodeRecord } from '../node/nodeRecord';
-import { ActivityChartPanel } from './activityChartPanel';
+import { Activity } from "../activity/activity";
+import { BaseObj } from "../common/base";
+import { IParamProps, TParamValue } from "../common/parameter";
+import { currentBackgroundColor } from "../common/theme";
+import { NodeRecord } from "../node/nodeRecord";
+import { ActivityChartPanel } from "./activityChartPanel";
 import {
-    ActivityChartPanelModelParameter, IActivityChartPanelModelParamProps
-} from './activityChartPanelModelParameter';
+  ActivityChartPanelModelParameter,
+  IActivityChartPanelModelParamProps,
+} from "./activityChartPanelModelParameter";
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -202,7 +203,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   get recordsVisible(): NodeRecord[] {
     return this.records.filter((record: NodeRecord) =>
-      this._state.recordsVisible.includes(record.uuid)
+      this._state.recordsVisible.includes(record.groupId)
     );
   }
 
@@ -268,12 +269,12 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Get node record.
-   * @param uuid string
+   * @param groupId string
    * @returns node record object
    */
-  getNodeRecord(uuid: string): NodeRecord | undefined {
+  getNodeRecord(groupId: string): NodeRecord | undefined {
     return this.records.find(
-      (nodeRecord: NodeRecord) => nodeRecord.uuid === uuid
+      (nodeRecord: NodeRecord) => nodeRecord.groupId === groupId
     );
   }
 
@@ -346,7 +347,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   selectAllNodeRecords(): void {
     this._state.recordsVisible = this.records.map(
-      (record: NodeRecord) => record.uuid
+      (record: NodeRecord) => record.groupId
     );
   }
 
@@ -404,7 +405,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update active marker.
-   * @param record
+   * @param record node record object
    */
   updateActiveMarker(record?: NodeRecord): void {
     record;

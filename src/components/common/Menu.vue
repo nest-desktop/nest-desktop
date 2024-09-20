@@ -1,5 +1,12 @@
 <template>
-  <v-btn class="menu-btn" icon size="small" variant="text">
+  <v-btn
+    @click.prevent
+    @click.stop
+    class="menu-btn"
+    icon
+    size="small"
+    variant="text"
+  >
     <v-icon icon="mdi:mdi-dots-vertical" />
 
     <v-menu activator="parent">

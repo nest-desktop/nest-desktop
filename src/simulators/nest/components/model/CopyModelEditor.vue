@@ -109,7 +109,7 @@
       />
 
       <v-list class="py-0" v-if="model.paramsVisible.length > 0">
-        <ParamEditor
+        <ParamListItem
           :key="index"
           :param="model.params[paramId]"
           v-for="(paramId, index) in model.paramsVisible"
@@ -123,7 +123,7 @@
 import { computed, onMounted, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";
-import ParamEditor from "@/components/parameter/ParamEditor.vue";
+import ParamListItem from "@/components/parameter/ParamListItem.vue";
 
 import CopyModelMenu from "./CopyModelMenu.vue";
 import { NESTModel } from "../../helpers/model/model";

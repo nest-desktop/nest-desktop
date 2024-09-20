@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel density="compact" flat tile>
+  <v-expansion-panel density="compact" flat>
     <v-expansion-panel-title>
       <v-row class="text-button">
         <NodeAvatar :node="layer.activity.recorder" />
@@ -17,7 +17,7 @@
     </v-expansion-panel-title>
 
     <v-expansion-panel-text class="px-1 py-0">
-      <v-card flat tile>
+      <v-card flat>
         <v-select
           :items="layer.models"
           @update:model-value="update"
@@ -86,18 +86,18 @@
           </v-select>
         </span>
 
-        <v-card flat tile v-if="layer.state.record">
+        <v-card flat v-if="layer.state.record">
           <v-btn-group class="pt-2 px-1" style="width: 100%">
             <v-text-field
-              :label="`min (${layer.state.record.unit})`"
+              :label="`min [${layer.state.record.unit}]`"
               :step="0.1"
               @update:model-value="update"
               density="compact"
               hide-details
+              rounded="e-0"
               style="flex-grow: 0"
-              tile
               type="number"
-              v-model="layer.state.record.colorMap.min"
+              v-model="layer.state.record.state.colorMap.min"
               width="100"
             />
 
@@ -107,14 +107,14 @@
               density="compact"
               label="color map"
               hide-details
-              tile
-              v-model="layer.state.record.colorMap.scale"
+              rounded="0"
+              v-model="layer.state.record.state.colorMap.scale"
             >
               <template #item="{ item, props }">
                 <v-list-item v-bind="props">
                   <template #append>
                     <img
-                      :class="{ 'flip-h': layer.state.record.colorMap.reverse }"
+                      :class="{ 'flip-h': layer.state.record.state.colorMap.reverse }"
                       :src="imageUrl(item.value)"
                       alt="img"
                       height="12"
@@ -126,8 +126,8 @@
 
               <template #append-inner>
                 <img
-                  :class="{ 'flip-h': layer.state.record.colorMap.reverse }"
-                  :src="imageUrl(layer.state.record.colorMap.scale)"
+                  :class="{ 'flip-h': layer.state.record.state.colorMap.reverse }"
+                  :src="imageUrl(layer.state.record.state.colorMap.scale)"
                   alt="img"
                   height="12"
                   width="72"
@@ -136,15 +136,15 @@
             </v-select>
 
             <v-text-field
-              :label="`max (${layer.state.record.unit})`"
+              :label="`max [${layer.state.record.unit}]`"
               :step="0.1"
               @update:model-value="update"
               density="compact"
               hide-details
-              tile
+              rounded="s-0"
               style="flex-grow: 0"
               type="number"
-              v-model="layer.state.record.colorMap.max"
+              v-model="layer.state.record.state.colorMap.max"
               width="100"
             />
           </v-btn-group>
@@ -154,7 +154,7 @@
             color="accent"
             density="compact"
             label="reverse colormap"
-            v-model="layer.state.record.colorMap.reverse"
+            v-model="layer.state.record.state.colorMap.reverse"
           />
         </v-card>
       </v-card>

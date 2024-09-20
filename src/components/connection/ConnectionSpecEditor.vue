@@ -49,7 +49,7 @@
   </v-btn-group>
 
   <v-list density="compact" v-if="connection.paramsVisible.length > 0">
-    <ParamEditor
+    <ParamListItem
       :color="connection.sourceNode.view.color"
       :key="index"
       :param="param"
@@ -62,7 +62,7 @@
 import { computed } from "vue";
 
 import Menu from "../common/Menu.vue";
-import ParamEditor from "../parameter/ParamEditor.vue";
+import ParamListItem from "../parameter/ParamListItem.vue";
 import { TConnection } from "@/types";
 
 const props = defineProps<{ connection: TConnection }>();

@@ -150,7 +150,7 @@ export class NESTNodeCompartment {
   }
 
   get recordables(): INodeRecordProps[] {
-    const recordables = this._node.model.recordables.map(
+    const recordables = this._node.model.state.recordables.map(
       (recordable: INodeRecordProps) => ({
         ...recordable,
       })

@@ -38,7 +38,7 @@
                 />
               </template>
 
-              <v-card>
+              <v-card variant="outlined">
                 <v-card-text>
                   <v-checkbox
                     :disabled="node.model.isRecorder"
@@ -99,7 +99,7 @@
                 />
 
                 <template #append>
-                  <Menu :items="popItems" />
+                  <Menu :items="popItems" size="x-small" />
                 </template>
               </v-list-item>
             </slot>
@@ -112,7 +112,7 @@
           </v-list>
 
           <v-list class="py-0">
-            <ParamEditor
+            <ParamListItem
               :color="node.view.color"
               :key="index"
               :param="node.params[paramId]"
@@ -144,7 +144,7 @@ import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeMenu from "./NodeMenu.vue";
 import NodeModelSelect from "./NodeModelSelect.vue";
 import NodeRecordSelect from "@/components/node/NodeRecordSelect.vue";
-import ParamEditor from "../parameter/ParamEditor.vue";
+import ParamListItem from "../parameter/ParamListItem.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { TModel, TNode } from "@/types";
 

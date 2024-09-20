@@ -1,19 +1,26 @@
 // node.ts
 
-import { TModelDBStore } from '@/stores/model/defineModelDBStore';
-import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from '@/types';
+import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import {
+  TConnection,
+  TModel,
+  TNetwork,
+  TNode,
+  TNodes,
+  TSimulation,
+} from "@/types";
 
-import { onlyUnique, sortString } from '../../utils/array';
-import { Activity, IActivityProps } from '../activity/activity';
-import { AnalogSignalActivity } from '../activity/analogSignalActivity';
-import { SpikeActivity } from '../activity/spikeActivity';
-import { BaseObj } from '../common/base';
-import { BaseModel, TElementType } from '../model/model';
-import { ModelParameter } from '../model/modelParameter';
-import { NodeGroup } from './nodeGroup';
-import { INodeParamProps, NodeParameter } from './nodeParameter';
-import { INodeRecordProps, NodeRecord } from './nodeRecord';
-import { INodeViewProps, NodeView } from './nodeView';
+import { onlyUnique, sortString } from "../../utils/array";
+import { Activity, IActivityProps } from "../activity/activity";
+import { AnalogSignalActivity } from "../activity/analogSignalActivity";
+import { SpikeActivity } from "../activity/spikeActivity";
+import { BaseObj } from "../common/base";
+import { BaseModel, TElementType } from "../model/model";
+import { ModelParameter } from "../model/modelParameter";
+import { NodeGroup } from "./nodeGroup";
+import { INodeParamProps, NodeParameter } from "./nodeParameter";
+import { INodeRecordProps, NodeRecord } from "./nodeRecord";
+import { INodeViewProps, NodeView } from "./nodeView";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -722,7 +729,7 @@ export class BaseNode extends BaseObj {
     if (this.connections.length > 0) {
       if (this.model.isAnalogRecorder) {
         const recordablesNodes = this.targetNodes.map((target: TNode) =>
-          [...target.model.recordables].flat()
+          [...target.model.state.recordables].flat()
         );
 
         if (recordablesNodes.length > 0) {

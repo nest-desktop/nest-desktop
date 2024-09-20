@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
-      <v-icon icon="mdi:mdi-cloud-arrow-down-outline" size="small" />
+      <v-icon icon="mdi:mdi-github" size="small" />
       Fetch NESTML script from GitHub
 
       <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
@@ -56,7 +56,12 @@
         />
       </v-row>
 
-      <v-window style="max-height: 500px; overflow: auto">
+      <v-window
+        style="max-height: 500px; overflow: auto"
+        v-if="state.script.length > 0"
+      >
+        <v-row class="text-h6" no-gutters>Preview</v-row>
+
         <codemirror disabled v-model="state.script" />
       </v-window>
     </v-card-text>
