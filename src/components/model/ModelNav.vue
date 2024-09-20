@@ -103,7 +103,7 @@
           <v-hover v-slot="{ isHovering, props }">
             <v-list-item
               :subtitle="(item as TModel).elementType"
-              :title="(item as TModel).label || (item as TModel).id"
+              :title="(item as TModel).state.label || (item as TModel).id"
               :to="{
                 name: appStore.state.simulator + 'Model',
                 params: { modelId: (item as TModel).id },
@@ -167,13 +167,13 @@ const models = computed(() => {
     models = modelDBStore.value.state.models;
 
     if (state.source === "custom") {
-      models = models.filter((model: TModel) => model.custom);
+      models = models.filter((model: TModel) => model.state.custom);
     }
   }
 
   if (state.search) {
     models = models.filter((model: TModel) =>
-      model.label
+      model.state.label
         .toLocaleLowerCase()
         .includes(state.search ? state.search.toLocaleLowerCase() : "")
     );

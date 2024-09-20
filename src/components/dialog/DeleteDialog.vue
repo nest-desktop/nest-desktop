@@ -104,7 +104,7 @@ const update = (): void => {
   if (store.value.state.models) {
     store.value.state.models.forEach((model: TModel) => {
       state.items.push({
-        name: model.label as string,
+        name: model.state.label as string,
         props: model.toJSON(),
       });
     });

@@ -94,7 +94,7 @@
             v-for="(model, index) in stores.modelDBStore.state.models"
             :key="index"
             :subtitle="model.elementType"
-            :title="model.label"
+            :title="model.state.label"
             :to="{
               name: appStore.state.simulator + 'Model',
               params: { modelId: model.id },

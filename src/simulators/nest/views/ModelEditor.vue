@@ -17,7 +17,7 @@
             density="compact"
             hide-details
             label="Model label"
-            v-model="model.label"
+            v-model="model.state.label"
           />
         </v-col>
 
@@ -47,6 +47,7 @@
 </template>
 
 <script lang="ts" setup>
+import { AxiosError, AxiosResponse } from "axios";
 import { computed, reactive, watch } from "vue";
 
 import { TModelStore } from "@/stores/model/defineModelStore";

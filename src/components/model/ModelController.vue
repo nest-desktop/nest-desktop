@@ -130,7 +130,10 @@
           v-for="(param, index) in modelParams"
         >
           <template #append>
-            <Menu :items="paramMenuItems(param)" size="x-small" />
+            <Menu
+              :items="paramMenuItems(param as TModelParameter)"
+              size="x-small"
+            />
           </template>
         </ParamListItem>
       </v-list>
@@ -205,20 +208,19 @@ import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
-import { TModelParameter } from "@/types";
+import { TModelParameter, TNode } from "@/types";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
+import { TParamValue } from "@/helpers/common/parameter";
 const navStore = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
 
-const modelParams = computed(() =>
-  Object.values(modelStore.value.model.params)
-);
+const modelParams = computed(() => modelStore.value.model.paramsAll);
 
 const modelJSON = computed(() =>
   JSON.stringify(modelStore.value.model.toJSON(), null, 2)
@@ -271,7 +273,7 @@ const paramMenuItems = (param: TModelParameter) => [
   {
     icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
-      param.value = param.props.value;
+      param.value = param.props.value as TParamValue;
       param.changes();
     },
     title: "Reset value",
@@ -280,9 +282,9 @@ const paramMenuItems = (param: TModelParameter) => [
 
 const resetAllParamValues = () => {
   modelParams.value.forEach((param: TModelParameter) => {
-    param.value = param.props.value;
+    param.value = param.props.value as TParamValue;
   });
-  modelStore.model.changes();
+  modelStore.value.model.changes();
 };
 
 const updateCode = () => {
@@ -315,6 +317,24 @@ const dispatchWindowResize = () => {
 
 /**
  * Handle mouse move on resizing.
+ * @param e MouseEvent from which the y position is taken
+ */
+const handleBottomNavMouseMove = (e: MouseEvent) => {
+  modelStore.value.state.bottomNav.height = window.innerHeight - e.clientY;
+};
+
+/**
+ * Handle mouse up on resizing.
+ */
+const handleBottomNavMouseUp = () => {
+  navStore.state.resizing = false;
+  window.removeEventListener("mousemove", handleBottomNavMouseMove);
+  window.removeEventListener("mouseup", handleBottomNavMouseUp);
+  dispatchWindowResize();
+};
+
+/**
+ * Handle mouse move on resizing.
  * @param e MouseEvent from which the x position is taken
  */
 const handleRightNavMouseMove = (e: MouseEvent) => {
@@ -329,6 +349,15 @@ const handleRightNavMouseUp = () => {
   window.removeEventListener("mousemove", handleRightNavMouseMove);
   window.removeEventListener("mouseup", handleRightNavMouseUp);
   dispatchWindowResize();
+};
+
+/**
+ * Resize bottom nav.
+ */
+const resizeBottomNav = () => {
+  navStore.state.resizing = true;
+  window.addEventListener("mousemove", handleBottomNavMouseMove);
+  window.addEventListener("mouseup", handleBottomNavMouseUp);
 };
 
 /**

@@ -1,5 +1,5 @@
 <template>
-  <v-card :title="model.label" subtitle="model editor">
+  <v-card :title="model.state.label" subtitle="model editor">
     <v-card-text>
       <h3>Code template</h3>
       <codemirror

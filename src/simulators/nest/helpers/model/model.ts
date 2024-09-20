@@ -6,8 +6,8 @@ import { IParamProps } from "@/helpers/common/parameter";
 import { BaseModel, IModelProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import { loadText } from "@/utils/fetch";
 
+// import { loadText } from "@/utils/fetch";
 import {
   INESTModelCompartmentParamProps,
   NESTModelCompartmentParameter,

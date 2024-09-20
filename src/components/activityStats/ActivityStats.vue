@@ -37,7 +37,7 @@
             <v-row class="text-button">
               <NodeAvatar :node="activity.recorder" />
               <v-spacer />
-              {{ activity.recorder.model.label }}
+              {{ activity.recorder.model.state.label }}
               <v-spacer />
             </v-row>
           </v-expansion-panel-title>

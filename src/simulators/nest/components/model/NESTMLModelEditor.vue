@@ -38,11 +38,10 @@
 </template>
 
 <script lang="ts" setup>
-import { AxiosError, AxiosResponse } from "axios";
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import { TModelStore } from "@/stores/model/defineModelStore";
+// import { TModelStore } from "@/stores/model/defineModelStore";
 import { loadText } from "@/utils/fetch";
 
 import NESTMLScriptDialog from "../dialog/NESTMLScriptDialog.vue";
@@ -50,22 +49,23 @@ import NESTModuleCombobox from "../module/NESTModuleCombobox.vue";
 import { NESTModel } from "../../helpers/model/model";
 import { updateSimulationModules } from "../../stores/model/modelStore";
 
-import { useNESTModelStore } from "../../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
+// import { useNESTModelStore } from "../../stores/model/modelStore";
+// const modelStore: TModelStore = useNESTModelStore();
 
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
-import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
-const nestmlServerStore = useNESTMLServerStore();
+// import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
+// const nestmlServerStore = useNESTMLServerStore();
 
 const props = defineProps<{ model: NESTModel }>();
 const model = computed(() => props.model as NESTModel);
 
 const state = reactive<{
+  filename: string;
   selectedModules: IModule[];
-  filename: "";
 }>({
+  filename: "",
   selectedModules: moduleStore.state.modules.filter((module: IModule) =>
     module.models.includes(model.value.id)
   ),

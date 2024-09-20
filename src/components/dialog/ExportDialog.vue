@@ -117,7 +117,7 @@ const update = (): void => {
   if (props.model) {
     modelDBStore.value.state.models.forEach((model: TModel) => {
       const item: IExportProps = {
-        name: model.label,
+        name: model.state.label,
         props: model.toJSON(),
       };
 

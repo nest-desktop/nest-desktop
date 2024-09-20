@@ -296,7 +296,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
           this.network.project.modelDBStore.getModelsByElementType(elementType);
 
         const items = models.map((model: TModel) => ({
-          title: model.label,
+          title: model.state.label,
           value: model.id,
         }));
 

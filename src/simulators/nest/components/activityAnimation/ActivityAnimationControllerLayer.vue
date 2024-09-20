@@ -4,7 +4,7 @@
       <v-row class="text-button">
         <NodeAvatar :node="layer.activity.recorder" />
         <v-spacer />
-        {{ layer.activity.recorder.model.label }}
+        {{ layer.activity.recorder.model.state.label }}
         <v-spacer />
       </v-row>
 
