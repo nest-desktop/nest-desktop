@@ -123,8 +123,6 @@ const databaseTab = ref("project");
 
 const openExportDialog = () => {
   createDialog({
-    title: "",
-    text: "",
     customComponent: {
       component: ExportDialog,
       props: {},
@@ -132,13 +130,13 @@ const openExportDialog = () => {
     dialogOptions: {
       width: "1280px",
     },
+    text: "",
+    title: "",
   });
 };
 
 const openImportDialog = () => {
   createDialog({
-    title: "",
-    text: "",
     customComponent: {
       component: ImportDialog,
       props: {},
@@ -146,6 +144,8 @@ const openImportDialog = () => {
     dialogOptions: {
       width: "1280px",
     },
+    text: "",
+    title: "",
   });
 };
 </script>

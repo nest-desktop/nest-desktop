@@ -27,17 +27,19 @@
       />
 
       <template #extension>
-        <v-fab
-          @click="dialogNewModel()"
-          class="ms-4"
-          color="primary"
-          icon="mdi:mdi-plus"
-          location="bottom left"
-          size="40"
-          absolute
-          offset
-          title="Create a new model"
-        />
+        <slot name="newModel">
+          <v-fab
+            @click="dialogNewModel()"
+            class="ms-4"
+            color="primary"
+            icon="mdi:mdi-plus"
+            location="bottom left"
+            size="40"
+            absolute
+            offset
+            title="Create a new model"
+          />
+        </slot>
 
         <v-row class="ma-2" no-gutters>
           <v-spacer />
@@ -138,11 +140,11 @@ import { TModel } from "@/types";
 import { sortString } from "@/utils/array";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
-import DialogTextField from "../dialog/DialogTextField.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import Menu from "../common/Menu.vue";
 import ModelMenu from "./ModelMenu.vue";
+import TextFieldDialog from "../dialog/TextFieldDialog.vue";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -218,8 +220,6 @@ const items = [
     id: "import-dialog",
     onClick: () => {
       createDialog({
-        title: "",
-        text: "",
         customComponent: {
           component: ImportDialog,
           props: {},
@@ -227,6 +227,8 @@ const items = [
         dialogOptions: {
           width: "1280px",
         },
+        text: "",
+        title: "",
       });
     },
     prependIcon: "mdi:mdi-import",
@@ -236,8 +238,6 @@ const items = [
     id: "export-dialog",
     onClick: () => {
       createDialog({
-        title: "",
-        text: "",
         customComponent: {
           component: ExportDialog,
           props: {
@@ -247,6 +247,8 @@ const items = [
         dialogOptions: {
           width: "1280px",
         },
+        text: "",
+        title: "",
       });
     },
     prependIcon: "mdi:mdi-export",
@@ -256,8 +258,6 @@ const items = [
     id: "delete-dialog",
     onClick: () => {
       createDialog({
-        title: "",
-        text: "",
         customComponent: {
           component: DeleteDialog,
           props: {
@@ -267,6 +267,8 @@ const items = [
         dialogOptions: {
           width: "1280px",
         },
+        text: "",
+        title: "",
       });
     },
     prependIcon: "mdi:mdi-trash-can-outline",
@@ -276,16 +278,16 @@ const items = [
 
 const dialogNewModel = () => {
   createDialog({
-    title: "",
-    text: "",
     customComponent: {
-      component: DialogTextField,
+      component: TextFieldDialog,
       props: {
         title: "Create model",
         modelValue: "new model " + modelDBStore.value.state.models.length,
       },
     },
-  }).then((modelLabel: boolean | string) => {
+    text: "",
+    title: "",
+  }).then((modelLabel: string | undefined) => {
     if (modelLabel) {
       let modelId = modelLabel as string;
       const model = modelDBStore.value.newModel({

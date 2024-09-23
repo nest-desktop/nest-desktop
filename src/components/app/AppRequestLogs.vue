@@ -65,13 +65,13 @@
         class="pa-0"
         v-show="
           appStore.state.filterTag
-            ? log.type === appStore.state.filterTag
+            ? log.level === appStore.state.filterTag
             : true
         "
       >
         <v-toolbar color="transparent" density="compact">
           <template #prepend>
-            <v-icon :color="log.type" :icon="icons[log.type]" />
+            <v-icon :color="log.level" :icon="icons[log.level]" />
           </template>
 
           <v-toolbar-title
@@ -89,7 +89,7 @@
           </template>
         </v-toolbar>
 
-        <div class="px-4" v-html="log.text" />
+        <div class="px-4" v-html="log.htmlContent" />
 
         <v-divider class="my-1" />
       </v-list-item>

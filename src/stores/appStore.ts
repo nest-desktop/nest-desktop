@@ -18,7 +18,7 @@ export const useAppStore = defineStore(
       initialized: boolean;
       loading: boolean;
       logsOpen: boolean;
-      requestLogs: { date: string; text: string; type: string }[];
+      requestLogs: { date: string; htmlContent: string; level: string }[];
       simulator: string;
       simulatorVisible: string[];
       theme: string;
@@ -31,7 +31,7 @@ export const useAppStore = defineStore(
       initialized: false,
       loading: false,
       logsOpen: false,
-      requestLogs: [] as { date: string; text: string; type: string }[],
+      requestLogs: [] as { date: string; htmlContent: string; level: string }[],
       simulator: "nest",
       simulatorVisible: ["nest"],
       theme: "auto", // auto, light, dark

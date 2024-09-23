@@ -167,7 +167,7 @@ import { TProject } from "@/types";
 import { truncate } from "@/utils/truncate";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
-import DialogTextField from "../dialog/DialogTextField.vue";
+import TextFieldDialog from "../dialog/TextFieldDialog.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import Menu from "../common/Menu.vue";
@@ -200,8 +200,6 @@ const items = [
   {
     onClick: () => {
       createDialog({
-        title: "",
-        text: "",
         customComponent: {
           component: ImportDialog,
           props: {},
@@ -209,6 +207,8 @@ const items = [
         dialogOptions: {
           width: "1280px",
         },
+        text: "",
+        title: "",
       });
     },
     prependIcon: "mdi:mdi-import",
@@ -217,8 +217,6 @@ const items = [
   {
     onClick: () => {
       createDialog({
-        title: "",
-        text: "",
         customComponent: {
           component: ExportDialog,
           props: {},
@@ -226,6 +224,8 @@ const items = [
         dialogOptions: {
           width: "1280px",
         },
+        text: "",
+        title: "",
       });
     },
     prependIcon: "mdi:mdi-export",
@@ -234,8 +234,6 @@ const items = [
   {
     onClick: () => {
       createDialog({
-        title: "",
-        text: "",
         customComponent: {
           component: DeleteDialog,
           props: {
@@ -245,6 +243,8 @@ const items = [
         dialogOptions: {
           width: "1280px",
         },
+        text: "",
+        title: "",
       });
     },
     prependIcon: "mdi:mdi-trash-can-outline",
@@ -260,15 +260,15 @@ const items = [
 
 const openDialogNewProject = () => {
   createDialog({
-    title: "",
-    text: "",
     customComponent: {
-      component: DialogTextField,
+      component: TextFieldDialog,
       props: {
         title: "Create project",
         modelValue: "new_project_" + projectDBStore.value.state.projects.length,
       },
     },
+    text: "",
+    title: "",
   }).then((projectName: boolean | string) => {
     if (projectName) {
       router.push({

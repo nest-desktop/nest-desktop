@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { sortString } from "@/utils/array";
-import { notifyError } from "@/utils/dialog";
+import { notifyError } from "@/utils/notification";
 
 import { useNESTModelStore } from "../model/modelStore";
 

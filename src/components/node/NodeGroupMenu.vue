@@ -114,12 +114,12 @@ const items = [
     id: "nodeGroupDelete",
     onClick: () => {
       createDialog({
-        title: "Delete node group?",
-        text: "Are you sure to delete node group?",
         buttons: [
           { title: "no", key: "no" },
           { title: "yes", key: "yes" },
         ],
+        text: "Are you sure to delete node group?",
+        title: "Delete node group?",
       }).then((answer: string) => {
         if (answer === "yes") {
           nodeGroup.value.remove();

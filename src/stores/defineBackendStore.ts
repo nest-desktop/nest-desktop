@@ -5,9 +5,9 @@ import { Store, defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
 import { getBoolean } from "@/utils/boolean";
-import { notifyError, notifySuccess } from "@/utils/dialog";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
+import { notifyError, notifySuccess } from "@/utils/notification";
 
 export type TBackendStore = Store<string, any>;
 

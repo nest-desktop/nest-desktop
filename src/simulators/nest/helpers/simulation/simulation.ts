@@ -3,7 +3,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 
 import { BaseSimulation } from "@/helpers/simulation/simulation";
-import { notifyError } from "@/utils/dialog";
+import { notifyError } from "@/utils/notification";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";

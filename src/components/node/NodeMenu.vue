@@ -212,12 +212,12 @@ const items = [
     id: "nodeDelete",
     onClick: () => {
       createDialog({
-        title: "Delete node?",
-        text: "Are you sure to delete node?",
         buttons: [
           { title: "no", key: "no" },
           { title: "yes", key: "yes" },
         ],
+        text: "Are you sure to delete node?",
+        title: "Delete node?",
       }).then((answer: string) => {
         if (answer === "yes") {
           node.value.remove();

@@ -5,7 +5,7 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TProject, TSimulationCode } from "@/types";
 
-import { notifyError, notifySuccess } from "../../utils/dialog";
+import { notifyError, notifySuccess } from "../../utils/notification";
 import { BaseObj } from "../common/base";
 import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
 

@@ -51,7 +51,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { computed, reactive, watch } from "vue";
 
 import { TModelStore } from "@/stores/model/defineModelStore";
-import { notifyError, notifySuccess } from "@/utils/dialog";
+import { notifyError, notifySuccess } from "@/utils/notification";
 
 import NESTMLModelEditor from "../components/model/NESTMLModelEditor.vue";
 import { NESTModel } from "../helpers/model/model";

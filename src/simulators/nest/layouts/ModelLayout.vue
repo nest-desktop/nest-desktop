@@ -1,5 +1,19 @@
 <template>
-  <ModelNav />
+  <ModelNav>
+    <template #newModel>
+      <v-fab
+        @click="dialogNewModel()"
+        class="ms-4"
+        color="primary"
+        icon="mdi:mdi-plus"
+        location="bottom left"
+        size="40"
+        absolute
+        offset
+        title="Create a new model"
+      />
+    </template>
+  </ModelNav>
 
   <template v-if="modelStore.model">
     <ModelBar color="nest-model">
@@ -82,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from "vue";
+import { computed, nextTick, onMounted, watch } from "vue";
 
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
@@ -93,12 +107,50 @@ import { loadJSON } from "@/utils/fetch";
 import { INESTProjectProps, NESTProject } from "../helpers/project/project";
 import { NESTNode } from "../helpers/node/node";
 import { openNESTModuleDialog } from "../stores/moduleStore";
+import { createDialog } from "vuetify3-dialog";
+import NewModelDialog from "../components/dialog/NewModelDialog.vue";
+
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import {
   updateSimulationModules,
   useNESTModelStore,
 } from "../stores/model/modelStore";
+import { NESTModel } from "../helpers/model/model";
 const modelStore: TModelStore = useNESTModelStore();
+
+const modelDBStore = computed(
+  () => appStore.currentSimulator.stores.modelDBStore
+);
+
+const dialogNewModel = () => {
+  createDialog({
+    customComponent: {
+      component: NewModelDialog,
+      props: {
+        title: "Create NEST model",
+        modelValue: "new model " + modelDBStore.value.state.models.length,
+      },
+    },
+    text: "",
+    title: "",
+    // @ts-ignore
+  }).then((model: NESTModel | undefined) => {
+    if (model) {
+      modelDBStore.value.state.models.unshift(model);
+      nextTick(() => {
+        router.push({
+          name: appStore.state.simulator + "ModelEditor",
+          params: { modelId: model.id },
+        });
+      });
+    }
+  });
+};
 
 const loadProjectfromAssets = (): void => {
   if (modelStore.state.projectId) {

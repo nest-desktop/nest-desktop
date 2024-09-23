@@ -138,6 +138,10 @@ export class BaseModel extends BaseObj {
     return this._elementType === "stimulator";
   }
 
+  get label(): string {
+    return this._state.label;
+  }
+
   get params(): Record<string, ModelParameter> {
     return this._params;
   }

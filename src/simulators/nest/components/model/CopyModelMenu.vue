@@ -109,12 +109,12 @@ const items = [
     id: "copyModelDelete",
     onClick: () => {
       createDialog({
-        title: "Delete copied model?",
-        text: "Are you sure to delete copied model?",
         buttons: [
           { title: "no", key: "no" },
           { title: "yes", key: "yes" },
         ],
+        text: "Are you sure to delete copied model?",
+        title: "Delete copied model?",
       }).then((answer: string) => {
         if (answer === "yes") {
           model.value.remove();

@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
       <v-icon icon="mdi:mdi-github" size="small" />
-      Fetch NESTML script from GitHub
+      Load NESTML script from GitHub
 
       <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
     </v-card-title>
@@ -36,8 +36,8 @@
         />
 
         <v-select
-          :disabled="state.models.length === 0"
-          :items="state.models"
+          :disabled="state.modelFilenames.length === 0"
+          :items="state.modelFilenames"
           @update:model-value="fetchNESTMLScript"
           class="mx-2"
           density="compact"
@@ -45,23 +45,19 @@
           item-title="path"
           item-value="path"
           label="Select a nestml file"
-          v-model="state.model"
+          v-model="state.modelFilename"
         />
 
         <v-btn
           :disabled="!state.script"
           @click="loadNESTMLScript()"
           text="load"
-          title="Load nestml script"
+          title="Load NESTML script"
         />
       </v-row>
 
-      <v-window
-        style="max-height: 500px; overflow: auto"
-        v-if="state.script.length > 0"
-      >
-        <v-row class="text-h6" no-gutters>Preview</v-row>
-
+      <v-row class="text-h6" no-gutters>Preview</v-row>
+      <v-window style="max-height: 500px; overflow: auto">
         <codemirror disabled v-model="state.script" />
       </v-window>
     </v-card-text>
@@ -105,18 +101,20 @@ interface IGithubTree {
 const state = reactive<{
   elementType: string;
   elementTypes: IGithubTree[];
-  githubTag: string;
+  githubTag: string | undefined;
   githubTags: IGithubTree[];
-  model: string;
-  models: IGithubTree[];
+  modelFilename: string;
+  modelFilenames: IGithubTree[];
   script: string;
 }>({
   elementType: "",
   elementTypes: [],
-  githubTag: "v" + nestmlServerStore.state.response.data?.nestml || "",
+  githubTag: nestmlServerStore.state.response.data?.nestml
+    ? "v" + nestmlServerStore.state.response.data?.nestml
+    : undefined,
   githubTags: [],
-  model: "",
-  models: [],
+  modelFilename: "",
+  modelFilenames: [],
   script: "",
 });
 
@@ -130,8 +128,8 @@ function closeDialog(value?: Object) {
 
 const fetchElementTypes = () => {
   state.elementType = "";
-  state.model = "";
-  state.models = [];
+  state.modelFilename = "";
+  state.modelFilenames = [];
 
   nextTick(() => {
     axios
@@ -151,7 +149,7 @@ const fetchElementTypes = () => {
 
 const fetchGithubTags = async () => {
   state.elementType = "";
-  state.model = "";
+  state.modelFilename = "";
 
   return axios.get(`${githubAPI}/tags`).then((response: AxiosResponse) => {
     if (response.status === 200) {
@@ -165,7 +163,7 @@ const fetchModels = () => {
     const elementTypeTree = getTree(state.elementTypes, state.elementType);
     if (elementTypeTree) {
       axios.get(elementTypeTree.url).then((response: AxiosResponse) => {
-        state.models = response.data.tree;
+        state.modelFilenames = response.data.tree;
       });
     }
   });
@@ -173,7 +171,7 @@ const fetchModels = () => {
 
 const fetchNESTMLScript = () => {
   nextTick(() => {
-    const path = `${githubRaw}/${state.githubTag}/models/${state.elementType}/${state.model}`;
+    const path = `${githubRaw}/${state.githubTag}/models/${state.elementType}/${state.modelFilename}`;
     axios.get(path).then((response: AxiosResponse) => {
       if (response.status === 200 && response.data) {
         state.script = response.data;
@@ -186,14 +184,18 @@ const getTree = (trees: IGithubTree[], path: string) =>
   trees.find((tree: IGithubTree) => tree.path === path);
 
 const loadNESTMLScript = () => {
+  const modelId = state.modelFilename.split(".")[0];
   const elementType = state.elementType.slice(0, state.elementType.length - 1);
-  closeDialog({ script: state.script, elementType });
+  closeDialog({ elementType, modelId, script: state.script });
 };
 
 onMounted(() => {
   fetchGithubTags().then(() => {
     state.elementType = props.elementType + "s";
-    fetchElementTypes();
+
+    if (state.githubTag) {
+      fetchElementTypes();
+    }
   });
 });
 </script>

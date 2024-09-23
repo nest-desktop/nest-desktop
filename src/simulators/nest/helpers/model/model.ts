@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { IParamProps } from "@/helpers/common/parameter";
-import { BaseModel, IModelProps } from "@/helpers/model/model";
+import { BaseModel, IModelProps, TElementType } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
@@ -126,6 +126,30 @@ export class NESTModel extends BaseModel {
    */
   getCompartmentParameter(paramId: string): NESTModelCompartmentParameter {
     return this._compartmentParams[paramId];
+  }
+
+  /**
+   * Replace model id, also in NESTML script.
+   * @param modelLabel string
+   */
+  replaceModelId(modelLabel: string): void {
+    let modelId = modelLabel.replaceAll(" ", "_");
+    const elementType = modelId.split("_").pop();
+    if (elementType) {
+      const validElementType = ["neuron", "synapse"].includes(elementType);
+      if (validElementType) {
+        this.elementType = elementType as TElementType;
+      }
+      modelId += validElementType ? "" : "_" + this.elementType;
+    }
+
+    this.id = modelId;
+
+    if (this.nestmlScript.length > 0) {
+      // Replace model in NESTML script
+      const regex = /model\s\S+/gm;
+      this.nestmlScript = this.nestmlScript.replace(regex, `model ${this.id}:`);
+    }
   }
 
   /**

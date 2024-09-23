@@ -5,8 +5,8 @@ import { AxiosResponse } from "axios";
 import { IActivityProps } from "@/helpers/activity/activity";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { notifySuccess } from "@/utils/dialog";
 import { logger as mainLogger } from "@/utils/logger";
+import { notifySuccess } from "@/utils/notification";
 
 import insiteAccess from "../../stores/backends/insiteAccessStore";
 import { NESTProject } from "../project/project";
