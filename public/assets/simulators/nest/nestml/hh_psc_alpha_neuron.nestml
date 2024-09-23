@@ -1,4 +1,5 @@
 model hh_psc_alpha_neuron:
+
     state:
         V_m mV = -65 mV    # Membrane potential
         V_m_old mV = -65 mV    # Membrane potential at previous timestep for threshold check

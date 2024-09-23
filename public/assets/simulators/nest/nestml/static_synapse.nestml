@@ -1,4 +1,5 @@
 model static_synapse:
+
     parameters:
         w real = 1    # Synaptic weight
         d ms = 1 ms    # Synaptic transmission delay

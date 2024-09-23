@@ -1,4 +1,5 @@
 model iaf_cond_alpha_neuron:
+
     state:
         V_m mV = -70 mV     # Membrane potential
         refr_t ms = 0 ms    # Refractory period timer
