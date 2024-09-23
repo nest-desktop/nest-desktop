@@ -5,12 +5,6 @@ model iaf_psc_alpha_neuron:
         refr_t ms = 0 ms    # Refractory period timer
         is_refractory boolean = false
 
-    equations:
-        kernel I_kernel_inh = (e / tau_syn_inh) * t * exp(-t / tau_syn_inh)
-        kernel I_kernel_exc = (e / tau_syn_exc) * t * exp(-t / tau_syn_exc)
-        inline I pA = convolve(I_kernel_exc, exc_spikes) * pA - convolve(I_kernel_inh, inh_spikes) * pA + I_e + I_stim
-        V_m' = -(V_m - E_L) / tau_m + I / C_m
-
     parameters:
         C_m     pF = 250 pF       # Capacitance of the membrane
         tau_m   ms = 10 ms        # Membrane time constant
@@ -23,6 +17,12 @@ model iaf_psc_alpha_neuron:
 
         # constant external input current
         I_e pA = 0 pA
+
+    equations:
+        kernel I_kernel_inh = (e / tau_syn_inh) * t * exp(-t / tau_syn_inh)
+        kernel I_kernel_exc = (e / tau_syn_exc) * t * exp(-t / tau_syn_exc)
+        inline I pA = convolve(I_kernel_exc, exc_spikes) * pA - convolve(I_kernel_inh, inh_spikes) * pA + I_e + I_stim
+        V_m' = -(V_m - E_L) / tau_m + I / C_m
 
     input:
         exc_spikes <- excitatory spike
