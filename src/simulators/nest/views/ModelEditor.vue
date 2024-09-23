@@ -7,7 +7,7 @@
             density="compact"
             disabled
             hide-details
-            label="Model id"
+            label="model id"
             v-model="state.modelId"
           />
         </v-col>
@@ -16,7 +16,7 @@
           <v-text-field
             density="compact"
             hide-details
-            label="Model label"
+            label="model label"
             v-model="model.state.label"
           />
         </v-col>
@@ -117,6 +117,4 @@ watch(
     state.modelId = modelStore.state.modelId;
   }
 );
-
-// const items = ["neuron", "recorder", "stimulator", "synapse"];
 </script>

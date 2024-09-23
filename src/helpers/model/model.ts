@@ -198,6 +198,14 @@ export class BaseModel extends BaseObj {
   }
 
   /**
+   * Empty params.
+   */
+  emptyParams(): void {
+    this._state.paramsVisible = [];
+    this._params = {};
+  }
+
+  /**
    * Get the parameter of the model.
    * @param paramId ID of the searched parameter
    */

@@ -59,20 +59,20 @@
       />
 
       <v-list>
-        <v-list-subheader>Parameters</v-list-subheader>
-        <ParamViewer
-          :key="index"
-          :param="(param as TModelParameter)"
-          v-for="(param, index) in modelParams"
-        />
-      </v-list>
-
-      <v-list>
         <v-list-subheader>Recordables / States</v-list-subheader>
         <ParamViewer
           :key="index"
           :param="(recordable as TModelParameter)"
           v-for="(recordable, index) in modelStore.model.state.recordables"
+        />
+      </v-list>
+
+      <v-list>
+        <v-list-subheader>Parameters</v-list-subheader>
+        <ParamViewer
+          :key="index"
+          :param="(param as TModelParameter)"
+          v-for="(param, index) in modelParams"
         />
       </v-list>
     </template>

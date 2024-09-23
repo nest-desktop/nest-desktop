@@ -4,35 +4,33 @@
     @update:model-value="loadFromFile()"
     density="compact"
     hide-details
-    max-width="400"
     label="model template"
+    max-width="400"
     item-props="{ prependIcon: 'mdi:mdi-file-upload-outline' }"
-    v-model="modelId"
+    v-model="model.templateName"
   >
     <template #append-item>
       <v-list-item
         @click="loadFromGithub()"
         prepend-icon="mdi:mdi-github"
-        title="Load from Github"
+        title="load from Github"
       />
     </template>
   </v-select>
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { loadText } from "@/utils/fetch";
 
 import { NESTModel } from "../../helpers/model/model";
 import ImportNESTMLFromGithubDialog from "../dialog/ImportNESTMLFromGithubDialog.vue";
-import { TElementType } from "@/helpers/model/model";
 
 const emit = defineEmits(["update:model-value"]);
-const props = defineProps<{ model: NESTModel; modelValue?: string }>();
+const props = defineProps<{ model: NESTModel }>();
 
-const modelId = ref(props.modelValue || "");
 const model = computed(() => props.model as NESTModel);
 
 const items = [
@@ -45,12 +43,13 @@ const items = [
 
 const loadFromFile = () => {
   nextTick(() => {
-    loadText(`/assets/simulators/nest/nestml/${modelId.value}.nestml`).then(
-      (text: string) => {
-        model.value.nestmlScript = text;
-        emit("update:model-value");
-      }
-    );
+    loadText(
+      `/assets/simulators/nest/nestml/${model.value.templateName}.nestml`
+    ).then((text: string) => {
+      model.value.emptyParams();
+      model.value.nestmlScript = text;
+      emit("update:model-value");
+    });
   });
 };
 
@@ -69,9 +68,10 @@ const loadFromGithub = () => {
     // @ts-ignore
     (response: { elementType: string; modelId: string; script: string }) => {
       if (response) {
+        // model.value.elementType = response.elementType as TElementType;
+        model.value.templateName = response.modelId;
         model.value.nestmlScript = response.script;
-        model.value.elementType = response.elementType as TElementType;
-        modelId.value = response.modelId;
+        model.value.emptyParams();
         emit("update:model-value");
       }
     }
@@ -79,7 +79,7 @@ const loadFromGithub = () => {
 };
 
 onMounted(() => {
-  if (modelId.value) {
+  if (model.value.templateName && model.value.nestmlScript.length === 0) {
     loadFromFile();
   }
 });

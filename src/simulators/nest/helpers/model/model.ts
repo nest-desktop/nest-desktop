@@ -21,6 +21,7 @@ export interface INESTModelProps extends IModelProps {
   compartmentParams?: IParamProps[];
   receptors?: INESTModelReceptorProps[];
   nestmlScript?: string;
+  templateName?: string;
 }
 
 export class NESTModel extends BaseModel {
@@ -29,12 +30,17 @@ export class NESTModel extends BaseModel {
   private _compartmentParamsVisible: string[] = [];
   private _nestmlScript: string = "";
   private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
+  private _templateName: string = "iaf_psc_alpha_neuron";
 
   constructor(modelProps: INESTModelProps = {}) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
     if (modelProps.nestmlScript) {
       this._nestmlScript = modelProps.nestmlScript;
     }
+    if (modelProps.templateName) {
+      this._templateName = modelProps.templateName;
+    }
+
     // else {
     //   loadText(
     //     "/assets/simulators/nest/nestml/iaf_psc_alpha_neuron.nestml"
@@ -89,6 +95,14 @@ export class NESTModel extends BaseModel {
     return this._receptors;
   }
 
+  get templateName(): string {
+    return this._templateName;
+  }
+
+  set templateName(value: string) {
+    this._templateName = value;
+  }
+
   get weightRecorder(): boolean {
     return false;
   }
@@ -133,16 +147,17 @@ export class NESTModel extends BaseModel {
    * @param modelLabel string
    */
   replaceModelId(modelLabel: string): void {
-    let modelId = modelLabel.replaceAll(" ", "_");
-    const elementType = modelId.split("_").pop();
-    if (elementType) {
-      const validElementType = ["neuron", "synapse"].includes(elementType);
-      if (validElementType) {
-        this.elementType = elementType as TElementType;
+    if (this._templateName.length > 0) {
+      let elementType = this._templateName.split("_").pop() as TElementType;
+      if (["neuron", "synapse"].includes(elementType)) {
+        this.elementType = elementType;
       }
-      modelId += validElementType ? "" : "_" + this.elementType;
     }
 
+    let modelId = modelLabel.trimEnd().replaceAll(" ", "_");
+    if (!modelId.endsWith("_neuron") && !modelId.endsWith("_synapse")) {
+      modelId += "_" + this.elementType;
+    }
     this.id = modelId;
 
     if (this.nestmlScript.length > 0) {
@@ -195,6 +210,10 @@ export class NESTModel extends BaseModel {
     // Add NESTML script if provided.
     if (this._nestmlScript) {
       modelProps.nestmlScript = this._nestmlScript;
+    }
+
+    if (this._templateName) {
+      modelProps.templateName = this._templateName;
     }
 
     return modelProps;

@@ -17,14 +17,13 @@
             :model="(model as NESTModel)"
             @update:model-value="updateOnSelect"
             class="pt-1"
-            model-value="iaf_psc_alpha_neuron"
           />
         </v-col>
       </v-row>
 
-      <v-row class="text-h6" no-gutters>Preview</v-row>
+      <!-- <v-row class="text-h6" no-gutters>Preview</v-row> -->
       <v-window style="max-height: 500px; overflow: auto">
-        <codemirror disabled v-model="model.nestmlScript" />
+        <codemirror v-model="model.nestmlScript" />
       </v-window>
     </v-card-text>
 

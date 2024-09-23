@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
@@ -142,11 +142,9 @@ const dialogNewModel = () => {
   }).then((model: NESTModel | undefined) => {
     if (model) {
       modelDBStore.value.state.models.unshift(model);
-      nextTick(() => {
-        router.push({
-          name: appStore.state.simulator + "ModelEditor",
-          params: { modelId: model.id },
-        });
+      modelStore.state.modelId = model.id;
+      router.push({
+        name: appStore.state.simulator + "ModelRoot",
       });
     }
   });

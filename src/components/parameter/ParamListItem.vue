@@ -62,8 +62,11 @@
 
     <template v-else>
       <v-row class="pt-1" no-gutters>
-        <v-label>
-          {{ param.label || param.options.label || param.id }}
+        <v-label
+          :title="param.label || param.options.label"
+          class="text-truncate"
+        >
+          {{ param.label || param.options.label }}
         </v-label>
 
         <v-spacer />

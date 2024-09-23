@@ -1,7 +1,12 @@
 <template>
   <v-card class="my-2" flat>
     <v-toolbar color="transparent" density="compact">
-      <NESTMLModelSelect :model class="pt-1" />
+      <NESTMLModelSelect
+        :model
+        :model-value="model.templateName"
+        @update:model-value="updateOnSelect"
+        class="pt-1"
+      />
 
       <v-spacer />
 
@@ -10,6 +15,7 @@
         @update:model-value="updateModules()"
         chips
         class="pt-1"
+        label="module"
         max-width="400"
         multiple
         v-model="state.selectedModules"
@@ -75,6 +81,10 @@ const updateModules = () => {
       updateSimulationModules();
     });
   });
+};
+
+const updateOnSelect = () => {
+  model.value.replaceModelId(model.value.id);
 };
 
 onMounted(update);

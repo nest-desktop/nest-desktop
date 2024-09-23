@@ -1,9 +1,12 @@
 <template>
   <v-list-item class="paramViewer">
     <v-row no-gutters>
-      <span class="text-medium-emphasis">
-        {{ param.label || param.options?.label }}
-      </span>
+      <v-label :title="param.label || param.options?.label">
+        <div class="text-truncate">
+          {{ param.label || param.options?.label }}
+        </div>
+      </v-label>
+
       <v-spacer />
       {{ param.id }}:
       {{ param.value || param.options?.defaultValue }}
