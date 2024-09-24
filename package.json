@@ -22,10 +22,12 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.18.1",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.1",
     "@codemirror/state": "~6.4",
     "@codemirror/theme-one-dark": "~6.1",
+    "@codemirror/view": "^6.33.0",
     "@mdi/font": "~7.4",
     "axios": "~1.7",
     "codemirror": "~6.0",
