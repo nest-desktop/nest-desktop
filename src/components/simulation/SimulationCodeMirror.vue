@@ -11,10 +11,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
 import { TSimulation } from "@/types";
-import { codemirrorExtensions } from "@/plugins/codemirror";
+import { languagePython, autocompletion, oneDark } from "@/plugins/codemirror";
+import { darkMode } from "@/helpers/common/theme";
+
+import { Extension } from "@codemirror/state";
+import { simulationCodeError } from "@/plugins/codemirror";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -22,15 +26,21 @@ const appStore = useAppStore();
 const props = defineProps<{ simulation: TSimulation }>();
 const simulation = computed(() => props.simulation);
 
-const view = ref();
+const view = shallowRef();
 const state = reactive({
   cursor: { from: 0 },
   focused: false,
 });
 
-const extensions = codemirrorExtensions(
-  appStore.currentSimulator.completionSources
-);
+const extensions: Extension[] = [
+  languagePython(),
+  autocompletion({ override: appStore.currentSimulator.completionSources }),
+  simulationCodeError(simulation.value.state),
+];
+
+if (darkMode()) {
+  extensions.push(oneDark);
+}
 
 const handleReady = (payload: any) => {
   view.value = payload.view;
@@ -41,7 +51,7 @@ const updateView = (event: any) => {
 };
 
 watch(
-  () => props.simulation.code.script,
+  () => simulation.value.code.script,
   () => {
     if (!state.focused && state.cursor.from > 0) {
       nextTick(() => {
@@ -52,11 +62,27 @@ watch(
     }
   }
 );
+
+watch(
+  () => simulation.value.state.error,
+  () => view.value.dispatch()
+);
 </script>
 
 <style lang="scss">
 .px-1px {
   padding-left: 1px;
   padding-right: 1px;
+}
+
+.cm-errorLine {
+  background-color: rgba(
+    var(--v-theme-red),
+    var(--v-disabled-opacity)
+  ) !important;
+}
+
+.cm-panels-bottom {
+  padding: 4px;
 }
 </style>

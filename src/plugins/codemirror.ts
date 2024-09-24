@@ -4,11 +4,15 @@ import { basicSetup } from "codemirror";
 // import CodeMirror from "codemirror";
 import VueCodemirror from "vue-codemirror";
 
-import { darkMode } from "@/helpers/common/theme";
-import { CompletionSource, autocompletion } from "@codemirror/autocomplete";
+import { autocompletion } from "@codemirror/autocomplete";
+import { json } from "@codemirror/lang-json";
 import { python } from "@codemirror/lang-python";
-import { Compartment } from "@codemirror/state";
+import { Compartment, Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
+
+import { highlightLine } from "./codeMirrorExtensions/highlightLine";
+import { simulationCodeError } from "./codeMirrorExtensions/simulationCodeError";
+import { zebraStripes } from "./codeMirrorExtensions/zebraStripes";
 
 // import 'codemirror/mode/python/python.js';
 // import 'codemirror/addon/selection/active-line.js';
@@ -22,30 +26,23 @@ import { oneDark } from "@codemirror/theme-one-dark";
 
 export default VueCodemirror;
 
-// export function scrollTo(id: string, lineNumber: number) {
-//   const editor = CodeMirror.fromTextArea(document.getElementById(id), {
-//     mode: "xml",
-//     theme: "default",
-//     lineNumbers: true,
-//   });
-
-//   editor.setCursor(lineNumber);
-// }
-
-export function codemirrorExtensions(
-  completionSources: CompletionSource[] | null | undefined
-) {
+function languagePython(): Extension[] {
   const language = new Compartment();
-
-  const extensions = [
-    basicSetup,
-    language.of(python()),
-    autocompletion({ override: completionSources }),
-  ];
-
-  if (darkMode()) {
-    extensions.push(oneDark);
-  }
-
-  return extensions;
+  return [language.of(python())];
 }
+
+function languageJSON(): Extension[] {
+  const language = new Compartment();
+  return [language.of(json())];
+}
+
+export {
+  autocompletion,
+  basicSetup,
+  languageJSON,
+  languagePython,
+  oneDark,
+  zebraStripes,
+  highlightLine,
+  simulationCodeError,
+};

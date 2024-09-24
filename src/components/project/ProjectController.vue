@@ -130,10 +130,8 @@
 
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
-import { LanguageSupport } from "@codemirror/language";
+import { Extension } from "@codemirror/state";
 import { computed, nextTick } from "vue";
-import { json } from "@codemirror/lang-json";
-import { oneDark } from "@codemirror/theme-one-dark";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
@@ -145,6 +143,7 @@ import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
@@ -213,10 +212,10 @@ const controllerItems: IControllerItem[] = [
   },
 ];
 
-const extensions = [json()];
+const extensions: Extension[] = [languageJSON()];
 
 if (darkMode()) {
-  extensions.push(oneDark as LanguageSupport);
+  extensions.push(oneDark);
 }
 
 const dispatchWindowResize = () => {

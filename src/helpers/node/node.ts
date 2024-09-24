@@ -734,13 +734,9 @@ export class BaseNode extends BaseObj {
 
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled.filter(onlyUnique);
-
-          if (this.modelId === "voltmeter") {
-            recordables = recordables.filter((recordProps: INodeRecordProps) =>
-              ["V_m", "v"].includes(recordProps.id)
-            );
-          }
+          recordables = recordablesPooled
+            .filter((recordProps: INodeRecordProps) => recordProps)
+            .filter(onlyUnique);
 
           recordables.sort((a: { id: string }, b: { id: string }) =>
             sortString(a.id, b.id)

@@ -25,6 +25,10 @@ export interface ISimulationProps {
 
 interface ISimulationState {
   biologicalTime: number;
+  error: {
+    lineNumber: number;
+    message: string;
+  };
   running: boolean;
   timeInfo: Record<string, number>;
 }
@@ -53,6 +57,10 @@ export class BaseSimulation extends BaseObj {
     // Initialize simulation state.
     this._state = reactive<ISimulationState>({
       biologicalTime: 0,
+      error: {
+        lineNumber: -1,
+        message: "",
+      },
       running: false,
       timeInfo: {
         begin: 0,
@@ -131,6 +139,16 @@ export class BaseSimulation extends BaseObj {
   // }
 
   /**
+   * Reset error state.
+   */
+  resetErrorState(): void {
+    this._state.error = {
+      lineNumber: -1,
+      message: "",
+    };
+  }
+
+  /**
    * Reset simulation states.
    */
   resetState(): void {
@@ -143,6 +161,8 @@ export class BaseSimulation extends BaseObj {
       end: 0,
       stepSize: 1,
     };
+
+    this.resetErrorState();
   }
 
   /**
@@ -190,8 +210,13 @@ export class BaseSimulation extends BaseObj {
       .catch((error: AxiosError<any, any>) => {
         if ("response" in error && error.response?.data != undefined) {
           // The request made and the server responded.
-          if (typeof error.response.data === "string") {
-            notifyError(error.response.data);
+          const responseData = error.response.data;
+          if (typeof responseData === "string") {
+            notifyError(responseData);
+            this._state.error.message = responseData;
+          } else if ("message" in responseData) {
+            notifyError(responseData.message);
+            this._state.error = responseData;
           }
         } else if ("request" in error) {
           // The request was made but no response was received.

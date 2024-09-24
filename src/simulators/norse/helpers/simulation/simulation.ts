@@ -40,9 +40,7 @@ export class NorseSimulation extends BaseSimulation {
         return: "response",
       })
       .then((response: AxiosResponse<any, { data: any; status: number }>) => {
-        if (response.data.data == null) {
-          return response;
-        }
+        if (response.data.data == null) return response;
 
         let data: {
           events: any[];

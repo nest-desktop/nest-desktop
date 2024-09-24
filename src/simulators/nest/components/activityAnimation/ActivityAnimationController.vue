@@ -63,34 +63,36 @@
           </v-btn-group>
         </v-expansion-panel-title>
 
-        <v-expansion-panel-text class="ma-1">
-          <v-list>
-            <v-list-item>
+        <v-expansion-panel-text>
+          <v-list density="compact">
+            <v-list-item class="pa-0">
               <ValueSlider
                 :disabled="graph.state.nSamples === 0"
                 :max="graph.state.nSamples"
-                :min="0"
-                :readonly="graph.state.frames.speed !== 0"
+                :min="1"
+                class="mt-1"
                 label="Current time"
                 unit="ms"
-                v-model="graph.frameIdx"
+                v-model="graph.currentTime"
               />
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="pa-0">
               <ValueSlider
                 :max="60"
                 :min="1"
+                class="mt-1"
                 label="Frame rate"
                 unit="fps"
                 v-model="graph.state.frames.rate"
               />
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item class="pa-0">
               <ValueSlider
                 :max="20"
                 :min="1"
+                class="mt-1"
                 label="Grid divisions"
                 v-model="graph.state.grid.divisions"
               />

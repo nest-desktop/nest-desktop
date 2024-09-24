@@ -195,10 +195,8 @@
 
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
+import { Extension } from "@codemirror/state";
 import { computed, nextTick } from "vue";
-import { LanguageSupport } from "@codemirror/language";
-import { json } from "@codemirror/lang-json";
-import { oneDark } from "@codemirror/theme-one-dark";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import Menu from "../common/Menu.vue";
@@ -209,13 +207,14 @@ import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { TModelParameter, TNode } from "@/types";
+import { TParamValue } from "@/helpers/common/parameter";
+import { languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
-import { TParamValue } from "@/helpers/common/parameter";
 const navStore = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
@@ -301,10 +300,10 @@ const updateCode = () => {
 // CodeMirror
 //
 
-const extensions = [json()];
+const extensions: Extension[] = [languageJSON()];
 
 if (darkMode()) {
-  extensions.push(oneDark as LanguageSupport);
+  extensions.push(oneDark);
 }
 
 //

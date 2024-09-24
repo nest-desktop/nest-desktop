@@ -12,7 +12,7 @@ import { registerSimulators } from "@/simulators";
 import pinia from "@/stores";
 
 // Plugins
-import codeMirror from "./codemirror";
+import codeMirror, { basicSetup } from "./codemirror";
 import configs from "./configs";
 import { vuetify } from "./vuetify";
 import { loadFonts } from "./webfontloader";
@@ -48,5 +48,7 @@ export function registerPlugins(app: App) {
   });
 
   // Use codemirror
-  app.use(codeMirror);
+  app.use(codeMirror, {
+    extensions: [basicSetup],
+  });
 }

@@ -45,6 +45,15 @@ export class ActivityAnimationGraph {
     this._project = project;
   }
 
+  get currentTime(): number {
+    return this._state.frameIdx + 1;
+  }
+
+  set currentTime(value: number) {
+    this._state.frameIdx = value - 1;
+    this.renderFrameLayers();
+  }
+
   get frameIdx(): number {
     return this._state.frameIdx;
   }
@@ -196,7 +205,8 @@ export class ActivityAnimationGraph {
   update(): void {
     this._state.nSamples =
       this.project.simulation.state.biologicalTime *
-      this._state.frames.sampleRate;
+        this._state.frames.sampleRate -
+      1;
 
     // Update activity layers and frames.
     this.project.activities.all.forEach((activity: Activity) => {

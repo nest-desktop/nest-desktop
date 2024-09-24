@@ -454,7 +454,9 @@ export class NESTNode extends BaseNode {
 
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled.filter(onlyUnique);
+          recordables = recordablesPooled
+            .filter((recordProps: INodeRecordProps) => recordProps)
+            .filter(onlyUnique);
 
           if (this.modelId === "voltmeter") {
             recordables = recordables.filter((recordProps: INodeRecordProps) =>
