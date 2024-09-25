@@ -2,6 +2,7 @@
   <v-card :title="model.state.label" subtitle="model editor">
     <v-card-text>
       <h3>Code template</h3>
+
       <codemirror
         ref="codeMirror"
         style="font-size: 0.75rem; width: 100%"

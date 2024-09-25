@@ -44,7 +44,7 @@ const items = [
 const loadFromFile = () => {
   nextTick(() => {
     loadText(
-      `/assets/simulators/nest/nestml/${model.value.templateName}.nestml`
+      `assets/simulators/nest/models/nestml/${model.value.templateName}.nestml`
     ).then((text: string) => {
       model.value.emptyParams();
       model.value.nestmlScript = text;

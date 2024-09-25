@@ -22,7 +22,7 @@
       </v-row>
 
       <!-- <v-row class="text-h6" no-gutters>Preview</v-row> -->
-      <v-window style="max-height: 500px; overflow: auto">
+      <v-window style="max-height: 450px; overflow: auto">
         <codemirror v-model="model.nestmlScript" />
       </v-window>
     </v-card-text>

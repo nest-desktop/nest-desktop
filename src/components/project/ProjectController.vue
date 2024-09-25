@@ -143,7 +143,7 @@ import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
-import { languageJSON, oneDark } from "@/plugins/codemirror";
+import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
@@ -212,7 +212,7 @@ const controllerItems: IControllerItem[] = [
   },
 ];
 
-const extensions: Extension[] = [languageJSON()];
+const extensions: Extension[] = [basicSetup, languageJSON()];
 
 if (darkMode()) {
   extensions.push(oneDark);

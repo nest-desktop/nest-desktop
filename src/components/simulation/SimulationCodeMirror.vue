@@ -14,7 +14,12 @@
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
 import { TSimulation } from "@/types";
-import { languagePython, autocompletion, oneDark } from "@/plugins/codemirror";
+import {
+  autocompletion,
+  basicSetup,
+  languagePython,
+  oneDark,
+} from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { Extension } from "@codemirror/state";
@@ -33,6 +38,7 @@ const state = reactive({
 });
 
 const extensions: Extension[] = [
+  basicSetup,
   languagePython(),
   autocompletion({ override: appStore.currentSimulator.completionSources }),
   simulationCodeError(simulation.value.state),

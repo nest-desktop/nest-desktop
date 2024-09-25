@@ -40,12 +40,6 @@ export class NESTModel extends BaseModel {
     if (modelProps.templateName) {
       this._templateName = modelProps.templateName;
     }
-
-    // else {
-    //   loadText(
-    //     "/assets/simulators/nest/nestml/iaf_psc_alpha_neuron.nestml"
-    //   ).then((text: string) => (this._nestmlScript = text));
-    // }
   }
 
   get compartmentParams(): Record<string, NESTModelCompartmentParameter> {

@@ -208,7 +208,7 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { TModelParameter, TNode } from "@/types";
 import { TParamValue } from "@/helpers/common/parameter";
-import { languageJSON, oneDark } from "@/plugins/codemirror";
+import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
@@ -300,7 +300,7 @@ const updateCode = () => {
 // CodeMirror
 //
 
-const extensions: Extension[] = [languageJSON()];
+const extensions: Extension[] = [basicSetup, languageJSON()];
 
 if (darkMode()) {
   extensions.push(oneDark);
