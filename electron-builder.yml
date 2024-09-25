@@ -23,10 +23,11 @@ linux:
   desktop: nest-desktop
   synopsis: NEST Desktop
   target:
-    - AppImage
-    # - deb
-    # - flatpak
-    # - snap
+    - dir
+      # - AppImage
+      # - deb
+      # - flatpak
+      # - snap
 productName: nest-desktop
 snap:
   base: core22
