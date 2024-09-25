@@ -2,12 +2,12 @@ version: "3"
 
 services:
   nest-desktop:
-    image: docker-registry.ebrains.eu/nest/nest-desktop:4.0-beta6
+    image: nest/nest-desktop:4.0-beta11
     ports:
       - "54286:54286"
 
   nest-server:
-    image: nest/nest-simulator:3.8_rc1
+    image: nest/nest-simulator:3.8
     environment:
       NEST_CONTAINER_MODE: "nest-server"
     ports:
@@ -16,7 +16,7 @@ services:
       - nestmlmodules:/tmp/nestmlmodules
 
   nestml-server:
-    image: nest/nest-simulator:3.8_rc1
+    image: nest/nest-simulator:3.8
     environment:
       NEST_CONTAINER_MODE: "nestml-server"
     ports:
