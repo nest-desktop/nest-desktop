@@ -22,12 +22,12 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.18.1",
+    "@codemirror/autocomplete": "~6.18",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.1",
     "@codemirror/state": "~6.4",
     "@codemirror/theme-one-dark": "~6.1",
-    "@codemirror/view": "^6.33.0",
+    "@codemirror/view": "~6.33",
     "@mdi/font": "~7.4",
     "axios": "~1.7",
     "codemirror": "~6.0",
@@ -93,7 +93,8 @@
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: Use node LTS version (v20)",
-    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
+    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.",
+    "@codemirror/view >= 6.34: Theme not working"
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
