@@ -2,6 +2,7 @@
 
 import { AxiosError, AxiosResponse } from "axios";
 
+import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { notifyError, notifySuccess } from "@/utils/notification";
 
@@ -22,6 +23,7 @@ export const generateModels = (
 ): Promise<void> => {
   const nestmlServerStore = useNESTMLServerStore();
 
+  openLoading("Models are building... Please wait");
   return nestmlServerStore
     .axiosInstance()
     .post("/generateModels", {
@@ -44,6 +46,9 @@ export const generateModels = (
     })
     .catch((error: AxiosError) => {
       notifyError((error.response?.data || error.message) as string);
+    })
+    .finally(() => {
+      closeLoading();
     });
 };
 

@@ -1,5 +1,6 @@
 // activityGraph.ts
 
+import { openLoading } from "@/stores/appStore";
 import { TProject } from "@/types";
 
 import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
@@ -64,6 +65,7 @@ export class BaseActivityGraph extends BaseObj {
   update(): void {
     // if (this.project.activities.hash === this.dataHash) return;
 
+    openLoading("Activity visualizing...");
     this._activityChartGraph.update();
 
     this.updateHash();

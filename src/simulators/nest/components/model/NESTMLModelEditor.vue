@@ -23,14 +23,24 @@
     </v-toolbar>
 
     <v-card-text>
-      <codemirror v-model="model.nestmlScript" />
+      <codemirror :extensions v-model="model.nestmlScript" />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
+import { Extension } from "@codemirror/state";
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
+import { darkMode } from "@/helpers/common/theme";
+import {
+  basicSetup,
+  // languageNESTML,
+  // languageYAML,
+  oneDark,
+} from "@/plugins/codemirror";
+
+import NESTMLModelSelect from "./NESTMLModelSelect.vue";
 import NESTModuleCombobox from "../module/NESTModuleCombobox.vue";
 import { NESTModel } from "../../helpers/model/model";
 import { updateSimulationModules } from "../../stores/model/modelStore";
@@ -39,7 +49,6 @@ import { updateSimulationModules } from "../../stores/model/modelStore";
 // const modelStore: TModelStore = useNESTModelStore();
 
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
-import NESTMLModelSelect from "./NESTMLModelSelect.vue";
 const moduleStore = useNESTModuleStore();
 
 // import { useNESTMLServerStore } from "../../stores/backends/nestmlServerStore";
@@ -55,6 +64,12 @@ const state = reactive<{
     module.models.includes(model.value.id)
   ),
 });
+
+const extensions: Extension[] = [basicSetup];
+
+if (darkMode()) {
+  extensions.push(oneDark);
+}
 
 const update = () => {
   state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>

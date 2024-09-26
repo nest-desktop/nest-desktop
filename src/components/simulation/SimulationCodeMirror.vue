@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
 import { TSimulation } from "@/types";
@@ -21,8 +22,6 @@ import {
   oneDark,
 } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
-
-import { Extension } from "@codemirror/state";
 import { simulationCodeError } from "@/plugins/codemirror";
 
 import { useAppStore } from "@/stores/appStore";

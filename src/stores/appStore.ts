@@ -17,6 +17,7 @@ export const useAppStore = defineStore(
       filterTag: string;
       initialized: boolean;
       loading: boolean;
+      loadingText: string;
       logsOpen: boolean;
       requestLogs: { date: string; htmlContent: string; level: string }[];
       simulator: string;
@@ -30,6 +31,7 @@ export const useAppStore = defineStore(
       filterTag: "",
       initialized: false,
       loading: false,
+      loadingText: "Loading... Please wait",
       logsOpen: false,
       requestLogs: [] as { date: string; htmlContent: string; level: string }[],
       simulator: "nest",
@@ -143,3 +145,19 @@ export const useAppStore = defineStore(
     ],
   }
 );
+
+export const openLoading = (text: string) => {
+  const appStore = useAppStore();
+
+  appStore.state.loadingText = text;
+  appStore.state.loading = true;
+};
+
+export const closeLoading = () => {
+  const appStore = useAppStore();
+
+  appStore.state.loading = false;
+  setTimeout(() => {
+    appStore.state.loadingText = "";
+  }, 500);
+};

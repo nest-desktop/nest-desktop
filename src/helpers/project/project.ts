@@ -2,6 +2,7 @@
 
 import { nextTick } from "vue";
 
+import { closeLoading, openLoading } from "@/stores/appStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 import { useProjectViewStore } from "@/stores/project/projectViewStore";
@@ -319,21 +320,27 @@ export class BaseProject extends BaseObj {
     // Reset activities and activity graphs.
     this.activities.reset();
 
-    this._simulation.start().then((response: any) => {
-      if (
-        response == null ||
-        response.status !== 200 ||
-        response.data == null ||
-        !response.data.data
-      )
-        return;
+    openLoading("Simulating... Please wait");
+    this._simulation
+      .start()
+      .then((response: any) => {
+        if (
+          response == null ||
+          response.status !== 200 ||
+          response.data == null ||
+          !response.data.data
+        )
+          return;
 
-      // Update activities.
-      this.activities.update(response.data.data);
+        // Update activities.
+        this.activities.update(response.data.data);
 
-      // Commit network for the history.
-      this.networkRevision.commit();
-    });
+        // Commit network for the history.
+        this.networkRevision.commit();
+      })
+      .finally(() => {
+        closeLoading();
+      });
   }
 
   /**

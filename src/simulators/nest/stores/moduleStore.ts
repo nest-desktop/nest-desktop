@@ -31,7 +31,7 @@ export const useNESTModuleStore: TModuleStore = defineStore(
       installedModels: [],
       modules: [
         { models: [], name: "nestmlmodule" },
-        { models: [], name: "insitemodule" },
+        // { models: [], name: "insitemodule" },
       ],
     });
 

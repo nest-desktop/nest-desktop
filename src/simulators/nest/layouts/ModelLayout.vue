@@ -144,7 +144,10 @@ const dialogNewModel = () => {
       modelDBStore.value.state.models.unshift(model);
       modelStore.state.modelId = model.id;
       router.push({
-        name: appStore.state.simulator + "ModelRoot",
+        name: appStore.state.simulator + "ModelEditor",
+        params: {
+          modelId: model.id,
+        },
       });
     }
   });
