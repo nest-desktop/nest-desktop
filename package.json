@@ -1,6 +1,6 @@
 {
   "name": "nest-desktop",
-  "version": "4.0.0-beta11",
+  "version": "4.0.0-beta12",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for NEST Simulator and other simulators of spiking networks.",
   "author": {
@@ -46,7 +46,7 @@
     "pouchdb-upsert": "~2.2",
     "roboto-fontface": "*",
     "stats.js": "~0.17",
-    "three": "~0.168",
+    "three": "~0.169",
     "uuid": "~10.0",
     "vue": "~3.5",
     "vue-codemirror": "~6.1",
