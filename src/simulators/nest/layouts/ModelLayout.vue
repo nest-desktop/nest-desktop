@@ -97,6 +97,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, watch } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
@@ -104,11 +105,11 @@ import ModelNav from "@/components/model/ModelNav.vue";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { loadJSON } from "@/utils/fetch";
 
+import NewModelDialog from "../components/dialog/NewModelDialog.vue";
 import { INESTProjectProps, NESTProject } from "../helpers/project/project";
+import { NESTModel } from "../helpers/model/model";
 import { NESTNode } from "../helpers/node/node";
 import { openNESTModuleDialog } from "../stores/moduleStore";
-import { createDialog } from "vuetify3-dialog";
-import NewModelDialog from "../components/dialog/NewModelDialog.vue";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -120,8 +121,10 @@ import {
   updateSimulationModules,
   useNESTModelStore,
 } from "../stores/model/modelStore";
-import { NESTModel } from "../helpers/model/model";
 const modelStore: TModelStore = useNESTModelStore();
+
+import { useNESTModuleStore } from "../stores/moduleStore";
+const moduleStore = useNESTModuleStore();
 
 const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
@@ -138,11 +141,20 @@ const dialogNewModel = () => {
     },
     text: "",
     title: "",
-    // @ts-ignore
+    // @ts-ignore - Dialog only returns string.
   }).then((model: NESTModel | undefined) => {
     if (model) {
       modelDBStore.value.state.models.unshift(model);
       modelStore.state.modelId = model.id;
+
+      // Add model to first module.
+      if (
+        moduleStore.state.modules.length > 0 &&
+        !moduleStore.state.modules[0].models.includes(model.id)
+      ) {
+        moduleStore.state.modules[0].models.push(model.id);
+      }
+
       router.push({
         name: appStore.state.simulator + "ModelEditor",
         params: {
