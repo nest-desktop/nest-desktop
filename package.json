@@ -12,7 +12,7 @@
     "app:dev": "vite",
     "app:preview:AppImage": "./release/nest-desktop-*.AppImage",
     "build": "vue-tsc --noEmit && vite build",
-    "clean": "rm -rf build coverage dev-dist dist dist-electron nest_desktop.egg-info pydist release yarn-error.log",
+    "clean": "rm -rf build coverage dist dist-electron nest_desktop.egg-info pydist release yarn-error.log",
     "coverage": "vitest run --coverage",
     "dev": "vite",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
