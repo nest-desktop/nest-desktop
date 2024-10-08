@@ -8,13 +8,6 @@
       "id": "interval",
       "component": "tickSlider",
       "label": "time interval of recording",
-      "rules": [
-        [
-          "value >= 0.1",
-          "Small values generate many data points and can put quite a load on your browser.",
-          "warning"
-        ]
-      ],
       "ticks": [
         0.01,
         0.1,

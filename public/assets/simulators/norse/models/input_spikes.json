@@ -1,0 +1,21 @@
+{
+  "abbreviation": "is",
+  "codeTemplate": "{{ view.label }} = torch.zeros({{ simulation.time }}, {{ size }}){{ #params.spike_times.value }}\n{{ view.label }}[{{.}}] = 1{{ /params.spike_times.value }}",
+  "elementType": "stimulator",
+  "id": "input_spikes",
+  "label": "input spikes",
+  "params": [
+    {
+      "component": "arrayInput",
+      "id": "spike_times",
+      "label": "spike times",
+      "unit": "ms"
+    },
+    {
+      "component": "arrayInput",
+      "id": "spike_weights",
+      "label": "weights of spike",
+      "unit": "pA"
+    }
+  ]
+}

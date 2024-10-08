@@ -1,5 +1,6 @@
 {
   "abbreviation": "ac",
+  "codeTemplate": "",
   "elementType": "stimulator",
   "id": "ac_generator",
   "label": "alternating current",
