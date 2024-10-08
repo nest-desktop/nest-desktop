@@ -66,6 +66,10 @@ export class BaseModel extends BaseObj {
     return this._abbreviation;
   }
 
+  get custom(): boolean {
+    return false;
+  }
+
   get doc(): IModelProps {
     return this._doc;
   }

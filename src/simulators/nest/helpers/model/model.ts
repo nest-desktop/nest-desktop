@@ -55,7 +55,7 @@ export class NESTModel extends BaseModel {
   }
 
   get custom(): boolean {
-    return this.custom;
+    return this._custom;
   }
 
   get existing(): string {
