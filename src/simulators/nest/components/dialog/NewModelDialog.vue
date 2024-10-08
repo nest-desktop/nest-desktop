@@ -41,7 +41,7 @@ import NESTMLModelSelect from "../model/NESTMLModelSelect.vue";
 import { NESTModel } from "../../helpers/model/model";
 
 const props = defineProps<{ modelValue: string }>();
-const model = ref(new NESTModel());
+const model = ref(new NESTModel({ custom: true }));
 
 const emit = defineEmits(["closeDialog"]);
 const closeDialog = (response: boolean) => {

@@ -64,17 +64,17 @@
 
 <script setup lang="ts">
 import BackendSettings from "@/components/BackendSettings.vue";
+import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
-import { TBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
-const norseSimulatorStore: TBackendStore = useNorseSimulatorStore();
+const norseSimulatorStore: TStore = useNorseSimulatorStore();
 
 const refItems = [
   {
-    href: "https://norse.github.io/norse",
+    href: "https://github.io/norse",
     prependIcon: "mdi:mdi-github",
     title: "https://github.com/norse",
   },

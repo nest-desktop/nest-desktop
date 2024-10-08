@@ -1,7 +1,7 @@
 <template>
   <AppNavigation :navItems />
 
-  <v-main>
+  <v-main v-if="appStore.state.simulator === 'pynn'">
     <router-view />
   </v-main>
 </template>
@@ -10,13 +10,13 @@
 import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-import { TBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
-const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
+const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
 
 const navItems = [
   {

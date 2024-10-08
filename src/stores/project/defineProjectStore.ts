@@ -160,6 +160,20 @@ export function defineProjectStore(
     };
 
     /**
+     * Get route path of current model.
+     * @returns
+     */
+    const routeTo = (): { path: string } => ({
+      path:
+        "/" +
+        props.simulator +
+        "/project/" +
+        state.projectId +
+        "/" +
+        state.tab.view,
+    });
+
+    /**
      * Save current project.
      */
     const saveCurrentProject = (): void => {
@@ -203,7 +217,9 @@ export function defineProjectStore(
       isProjectSelected,
       loadProject,
       newProject,
+      props,
       reloadProject,
+      routeTo,
       saveCurrentProject,
       startSimulation,
       state,

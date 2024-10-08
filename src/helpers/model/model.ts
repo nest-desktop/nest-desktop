@@ -23,7 +23,6 @@ export interface IModelProps extends IDoc {
 }
 
 interface IBaseModelState {
-  custom: boolean;
   label: string;
   paramsVisible: string[];
   recordables: INodeRecordProps[]; // recordables for multimeter
@@ -55,7 +54,6 @@ export class BaseModel extends BaseObj {
     this._favorite = modelProps.favorite || false;
 
     this._state = reactive<IBaseModelState>({
-      custom: false,
       label: modelProps.label || "",
       paramsVisible: [],
       recordables: [],
@@ -136,10 +134,6 @@ export class BaseModel extends BaseObj {
    */
   get isStimulator(): boolean {
     return this._elementType === "stimulator";
-  }
-
-  get label(): string {
-    return this._state.label;
   }
 
   get params(): Record<string, ModelParameter> {

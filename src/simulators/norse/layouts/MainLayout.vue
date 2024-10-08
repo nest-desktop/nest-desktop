@@ -1,7 +1,7 @@
 <template>
   <AppNavigation :navItems />
 
-  <v-main>
+  <v-main v-if="appStore.state.simulator === 'norse'">
     <router-view />
   </v-main>
 </template>
@@ -10,13 +10,13 @@
 import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-import { TBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
-const norseSimulatorStore: TBackendStore = useNorseSimulatorStore();
+const norseSimulatorStore: TStore = useNorseSimulatorStore();
 
 const navItems = [
   {

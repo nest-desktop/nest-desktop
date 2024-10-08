@@ -1,193 +1,201 @@
 <template>
-  <ProjectNav />
+  <ProjectNav color="nest-project" />
 
-  <ProjectBar color="nest-project">
-    <template #activityExplorer>
-      <v-tab
-        :to="{
-          name: 'nestActivityExplorer',
-          params: { projectId: projectStore.state.projectId },
-        }"
-        title="Activity Explorer"
-        size="small"
-        stacked
-        value="explore"
-      >
-        <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
-        Explorer
-      </v-tab>
-
-      <v-btn
-        :disabled="!project.network.nodes.hasSomeSpatialNodes"
-        height="100%"
-        rounded="0"
-        variant="plain"
-        width="32"
-        style="min-width: 32px"
-      >
-        <v-icon icon="mdi:mdi-menu-down" />
-
-        <v-menu activator="parent">
-          <v-list density="compact">
-            <v-list-item
-              @click="() => (projectStore.state.tab.activityView = 'abstract')"
-            >
-              <template #prepend>
-                <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
-              </template>
-              abstract
-            </v-list-item>
-            <v-list-item
-              @click="() => (projectStore.state.tab.activityView = 'spatial')"
-              prepend-icon="mdi:mdi-axis-arrow"
-            >
-              spatial
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-btn>
-
-      <v-divider vertical />
-    </template>
-
-    <template #prependBtn>
-      <v-btn
-        @click="openNESTModuleDialog()"
-        prepend-icon="mdi:mdi-memory"
-        text="module"
-        title="Generate module"
-      />
-    </template>
-  </ProjectBar>
-
-  <ProjectController>
-    <template #activityController>
-      <ActivityChartController
-        :graph="project.activityGraph.activityChartGraph"
-        v-if="projectStore.state.tab.activityView === 'abstract'"
-      />
-      <template v-else-if="projectStore.state.tab.activityView === 'spatial'">
-        <ActivityAnimationController
-          :graph="project.activityGraph.activityAnimationGraph"
-        />
-
-        <v-expansion-panels>
-          <ActivityAnimationControllerLayer
-            :key="index"
-            :layer
-            v-for="(layer, index) in project.activityGraph
-              .activityAnimationGraph.layers"
-          />
-        </v-expansion-panels>
-      </template>
-    </template>
-
-    <template #model>
-      <span v-if="project.network.state.elementTypeIdx === 5">
-        <v-select
-          :items="project.modelDBStore.state.models"
-          class="ma-1"
-          density="compact"
-          flat
-          hide-details
-          item-title="label"
-          item-value="id"
-          label="Existing model"
-          prepend-icon="mdi:mdi-plus"
-          v-model="model"
+  <template
+    v-if="
+      projectStore.state.projectId && projectStore.props.simulator === 'nest'
+    "
+  >
+    <ProjectBar color="nest-project">
+      <template #activityExplorer>
+        <v-tab
+          :to="{
+            name: 'nestActivityExplorer',
+            params: { projectId: projectStore.state.projectId },
+          }"
+          title="Activity Explorer"
+          size="small"
+          stacked
+          value="explore"
         >
-          <template #append>
-            <v-btn
-              :disabled="model.length === 0"
-              @click="copyModel(model)"
-              text="copy"
-            />
-          </template>
-        </v-select>
-      </span>
+          <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
+          Explorer
+        </v-tab>
 
-      <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
-        <CopyModelEditor
-          :key="index"
-          :model="model"
-          v-for="(model, index) of project.network.modelsCopied.all"
+        <v-btn
+          :disabled="!project.network.nodes.hasSomeSpatialNodes"
+          height="100%"
+          rounded="0"
+          variant="plain"
+          width="32"
+          style="min-width: 32px"
+        >
+          <v-icon icon="mdi:mdi-menu-down" />
+
+          <v-menu activator="parent">
+            <v-list density="compact">
+              <v-list-item
+                @click="
+                  () => (projectStore.state.tab.activityView = 'abstract')
+                "
+              >
+                <template #prepend>
+                  <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
+                </template>
+                abstract
+              </v-list-item>
+              <v-list-item
+                @click="() => (projectStore.state.tab.activityView = 'spatial')"
+                prepend-icon="mdi:mdi-axis-arrow"
+              >
+                spatial
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-btn>
+
+        <v-divider vertical />
+      </template>
+
+      <template #prependBtn>
+        <v-btn
+          @click="openNESTModuleDialog()"
+          prepend-icon="mdi:mdi-memory"
+          text="module"
+          title="Generate module"
         />
-      </span>
-    </template>
+      </template>
+    </ProjectBar>
 
-    <template #nodes>
-      <div :key="project.network.nodes.length">
-        <div :key="index" v-for="(node, index) in project.network.nodes.all">
-          <NodeEditor :node="node" v-if="node.isNode">
-            <template #nodeMenu>
-              <NodeMenu :node />
-            </template>
+    <ProjectController>
+      <template #activityController>
+        <ActivityChartController
+          :graph="project.activityGraph.activityChartGraph"
+          v-if="projectStore.state.tab.activityView === 'abstract'"
+        />
+        <template v-else-if="projectStore.state.tab.activityView === 'spatial'">
+          <ActivityAnimationController
+            :graph="project.activityGraph.activityAnimationGraph"
+          />
 
-            <template #nodeModelSelect="{ selectState }">
-              <NodeModelSelect
-                :node
-                @openMenu="() => (selectState.menu = true)"
+          <v-expansion-panels>
+            <ActivityAnimationControllerLayer
+              :key="index"
+              :layer
+              v-for="(layer, index) in project.activityGraph
+                .activityAnimationGraph.layers"
+            />
+          </v-expansion-panels>
+        </template>
+      </template>
+
+      <template #model>
+        <span v-if="project.network.state.elementTypeIdx === 5">
+          <v-select
+            :items="project.modelDBStore.state.models"
+            class="ma-1"
+            density="compact"
+            flat
+            hide-details
+            item-title="label"
+            item-value="id"
+            label="Existing model"
+            prepend-icon="mdi:mdi-plus"
+            v-model="model"
+          >
+            <template #append>
+              <v-btn
+                :disabled="model.length === 0"
+                @click="copyModel(model)"
+                text="copy"
               />
             </template>
+          </v-select>
+        </span>
 
-            <template #popItem>
-              <v-list-item class="param pl-0 pr-1">
-                <NodePositionPopover
-                  :nodeSpatial="node.spatial"
-                  v-if="node.spatial.hasPositions"
+        <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
+          <CopyModelEditor
+            :key="index"
+            :model="model"
+            v-for="(model, index) of project.network.modelsCopied.all"
+          />
+        </span>
+      </template>
+
+      <template #nodes>
+        <div :key="project.network.nodes.length">
+          <div :key="index" v-for="(node, index) in project.network.nodes.all">
+            <NodeEditor :node="node" v-if="node.isNode">
+              <template #nodeMenu>
+                <NodeMenu :node />
+              </template>
+
+              <template #nodeModelSelect="{ selectState }">
+                <NodeModelSelect
+                  :node
+                  @openMenu="() => (selectState.menu = true)"
                 />
+              </template>
 
-                <ValueSlider
-                  :thumb-color="node.view.color"
-                  @update:model-value="node.changes()"
-                  id="n"
-                  input-label="n"
-                  label="population size"
-                  v-else
-                  v-model="node.size"
-                />
+              <template #popItem>
+                <v-list-item class="param pl-0 pr-1">
+                  <NodePositionPopover
+                    :nodeSpatial="node.spatial"
+                    v-if="node.spatial.hasPositions"
+                  />
 
-                <template #append>
-                  <Menu :items="getPopItems(node)" size="x-small" />
-                </template>
-              </v-list-item>
-            </template>
+                  <ValueSlider
+                    :thumb-color="node.view.color"
+                    @update:model-value="node.changes()"
+                    id="n"
+                    input-label="n"
+                    label="population size"
+                    v-else
+                    v-model="node.size"
+                  />
 
-            <template #connectionEditor>
-              <ConnectionEditor
-                :connection
-                :key="index"
-                v-for="(connection, index) in node.connections"
-              >
-                <template #panelTitle>
-                  <div
-                    class="d-flex flex-column justify-center align-center text-grey"
-                  >
-                    {{ connection.rule.value }}
-                    <div v-if="connection.view.connectOnlyNeurons()">
-                      {{ connection.synapse.modelId }}
+                  <template #append>
+                    <Menu :items="getPopItems(node)" size="x-small" />
+                  </template>
+                </v-list-item>
+              </template>
+
+              <template #connectionEditor>
+                <ConnectionEditor
+                  :connection
+                  :key="index"
+                  v-for="(connection, index) in node.connections"
+                >
+                  <template #panelTitle>
+                    <div
+                      class="d-flex flex-column justify-center align-center text-grey"
+                    >
+                      {{ connection.rule.value }}
+                      <div v-if="connection.view.connectOnlyNeurons()">
+                        {{ connection.synapse.modelId }}
+                      </div>
                     </div>
-                  </div>
-                </template>
+                  </template>
 
-                <template #synapseSpecEditor>
-                  <SynapseSpecEditor :synapse="connection.synapse" />
-                </template>
-              </ConnectionEditor>
-            </template>
-          </NodeEditor>
+                  <template #synapseSpecEditor>
+                    <SynapseSpecEditor :synapse="connection.synapse" />
+                  </template>
+                </ConnectionEditor>
+              </template>
+            </NodeEditor>
 
-          <NodeGroup :nodeGroup="node" v-else-if="node.isGroup" />
+            <NodeGroup :nodeGroup="node" v-else-if="node.isGroup" />
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
 
-    <template #simulationKernel>
-      <SimulationKernelEditor :simulation="project.simulation" />
-    </template>
-  </ProjectController>
+      <template #simulationKernel>
+        <SimulationKernelEditor :simulation="project.simulation" />
+      </template>
+    </ProjectController>
 
-  <router-view :key="projectStore.state.projectId" name="project" />
+    <router-view :key="projectStore.state.projectId" name="project" />
+  </template>
 </template>
 
 <script lang="ts" setup>

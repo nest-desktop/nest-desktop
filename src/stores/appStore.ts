@@ -146,13 +146,9 @@ export const useAppStore = defineStore(
   }
 );
 
-export const openLoading = (text: string) => {
-  const appStore = useAppStore();
-
-  appStore.state.loadingText = text;
-  appStore.state.loading = true;
-};
-
+/**
+ * Close loading.
+ */
 export const closeLoading = () => {
   const appStore = useAppStore();
 
@@ -160,4 +156,24 @@ export const closeLoading = () => {
   setTimeout(() => {
     appStore.state.loadingText = "";
   }, 500);
+};
+
+/**
+ * Set current simulator.
+ * @param name string
+ */
+export const setCurrentSimulator = (name: string) => {
+  const appStore = useAppStore();
+
+  appStore.state.simulator = name;
+};
+
+/**
+ * Open loading.
+ */
+export const openLoading = (text: string) => {
+  const appStore = useAppStore();
+
+  appStore.state.loadingText = text;
+  appStore.state.loading = true;
 };

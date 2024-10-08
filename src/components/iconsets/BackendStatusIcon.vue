@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { TBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 
 defineProps<{
-  backendStore: TBackendStore;
+  backendStore: TStore;
 }>();
 </script>

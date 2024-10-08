@@ -46,11 +46,11 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { isURL } from "@/utils/urls";
-import { TBackendStore } from "@/stores/defineBackendStore";
 import BackendStatusIcon from "./iconsets/BackendStatusIcon.vue";
+import { TStore } from "@/types";
+import { isURL } from "@/utils/urls";
 
-const props = defineProps<{ store: TBackendStore }>();
+const props = defineProps<{ store: TStore }>();
 const store = computed(() => props.store);
 
 const updateOnFocus = (focus: boolean) => {

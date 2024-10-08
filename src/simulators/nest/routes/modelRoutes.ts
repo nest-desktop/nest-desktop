@@ -1,50 +1,14 @@
 // modelRoutes.ts
 
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { modelBeforeEnter, modelRedirect } from "@/helpers/routes";
 import { TModelStore } from "@/stores/model/defineModelStore";
-import { logger as mainLogger } from "@/utils/logger";
 
-import { useNESTModelDBStore } from "../stores/model/modelDBStore";
 import { useNESTModelStore } from "../stores/model/modelStore";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "nest model route",
-});
-
-const modelBeforeEnter = (to: any) => {
-  logger.trace("before enter:", to.path);
-
-  let modelId: string;
-  if (to.params.modelId) {
-    modelId = to.params.modelId;
-  }
-
-  const path = to.path.split("/");
-  const view = path[path.length - 1] || "doc";
+const nestModelRedirect = (to: any) => {
+  modelRedirect(to);
 
   const modelStore: TModelStore = useNESTModelStore();
-  const modelDBStore: TModelDBStore = useNESTModelDBStore();
-
-  let intervalId: string | number | NodeJS.Timeout;
-  intervalId = setInterval(() => {
-    if (!modelDBStore.state.initialized) return;
-
-    modelStore.state.view = view;
-    clearInterval(intervalId);
-
-    modelStore.state.modelId = modelId;
-  }, 250);
-};
-
-const modelRedirect = (to: any) => {
-  logger.trace("redirect to model:", to.params.modelId);
-
-  const modelStore: TModelStore = useNESTModelStore();
-  if (to.params.modelId) {
-    modelStore.state.modelId = to.params.modelId;
-  }
-
   if (modelStore.model && !modelStore.model.isNeuron) {
     if (modelStore.state.view === "explore") {
       modelStore.state.view = "doc";
@@ -54,27 +18,24 @@ const modelRedirect = (to: any) => {
     }
   }
 
-  return {
-    path:
-      "/nest/model/" + modelStore.state.modelId + "/" + modelStore.state.view,
-  };
+  return modelStore.routeTo();
 };
 
 export default [
   {
     path: "",
     name: "nestModelRoot",
-    redirect: modelRedirect,
+    redirect: nestModelRedirect,
   },
   {
     path: ":modelId/",
-    redirect: modelRedirect,
+    redirect: nestModelRedirect,
     children: [
       {
         path: "",
         name: "nestModel",
         props: true,
-        redirect: modelRedirect,
+        redirect: nestModelRedirect,
       },
       {
         path: "doc",

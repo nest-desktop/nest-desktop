@@ -9,8 +9,8 @@
     <div @mousedown="resizeSidebar" class="resize-handle" />
 
     <v-toolbar
+      :color
       class="fixed-bar"
-      color="nest-model"
       density="compact"
       extended
       extension-height="36"
@@ -154,6 +154,8 @@ const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
 const navState = useNavStore();
+
+defineProps(["color"]);
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
 const modelDBStore = computed(

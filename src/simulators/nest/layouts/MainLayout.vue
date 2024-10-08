@@ -1,7 +1,7 @@
 <template>
   <AppNavigation :navItems />
 
-  <v-main>
+  <v-main v-if="appStore.state.simulator === 'nest'">
     <router-view />
   </v-main>
 </template>
@@ -11,8 +11,9 @@ import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-import { TBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 import { getParamFromURL } from "@/utils/paramQuery";
+
 import nestSimulator from "../stores/backends/nestSimulatorStore";
 
 import { useAppStore } from "@/stores/appStore";
@@ -57,9 +58,9 @@ onMounted(() => {
   }
 
   // Update and check backends.
-  Object.values(backends).forEach((backend: TBackendStore) => {
-    if (backend.state.response.status != 200) {
-      backend.update();
+  Object.values(backends).forEach((backendStore: TStore) => {
+    if (backendStore.state.response.status != 200) {
+      backendStore.update();
     }
   });
 

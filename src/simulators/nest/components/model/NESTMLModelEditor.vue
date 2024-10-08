@@ -1,5 +1,5 @@
 <template>
-  <v-card class="my-2" flat>
+  <v-card class="my-2" flat v-if="model.state.custom">
     <v-toolbar color="transparent" density="compact">
       <NESTMLModelSelect
         :model

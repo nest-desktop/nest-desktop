@@ -87,11 +87,11 @@
 import BackendSettings from "@/components/BackendSettings.vue";
 import StoreList from "@/components/StoreList.vue";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
-import { TBackendStore } from "@/stores/defineBackendStore";
+import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
+import { TStore } from "@/types";
 
 import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
-const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
+const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
 
 const refItems = [
   {

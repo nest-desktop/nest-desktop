@@ -1,11 +1,13 @@
 <template>
-  <ProjectNav />
+  <ProjectNav color="purple" />
 
-  <ProjectBar color="purple" />
+  <template v-if="projectStore.state.projectId">
+    <ProjectBar color="purple" />
 
-  <ProjectController />
+    <ProjectController />
 
-  <router-view :key="projectStore.state.projectId" name="project" />
+    <router-view :key="projectStore.state.projectId" name="project" />
+  </template>
 </template>
 
 <script lang="ts" setup>

@@ -128,6 +128,15 @@ export function defineModelStore(
       };
 
       /**
+       * Redirect to route path of current model.
+       * @returns
+       */
+      const routeTo = (): { path: string } => ({
+        path:
+          "/" + props.simulator + "/model/" + state.modelId + "/" + state.view,
+      });
+
+      /**
        * Save current model to the database.
        */
       const saveModel = (): void => {
@@ -188,6 +197,8 @@ export function defineModelStore(
         loadModel,
         model,
         newModel,
+        props,
+        routeTo,
         saveModel,
         startSimulation,
         state,

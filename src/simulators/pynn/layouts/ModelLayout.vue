@@ -1,11 +1,13 @@
 <template>
-  <ModelNav />
+  <ModelNav color="brown" />
 
-  <ModelBar color="brown" />
+  <template v-if="modelStore.state.modelId">
+    <ModelBar color="brown" />
 
-  <ModelController />
+    <ModelController />
 
-  <router-view :key="modelStore.state.modelId" name="model" />
+    <router-view :key="modelStore.state.modelId" name="model" />
+  </template>
 </template>
 
 <script lang="ts" setup>

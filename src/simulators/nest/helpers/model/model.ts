@@ -28,18 +28,17 @@ export class NESTModel extends BaseModel {
   private _compartmentParams: Record<string, NESTModelCompartmentParameter> =
     {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
+  private _custom: boolean = false;
   private _nestmlScript: string = "";
   private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
   private _templateName: string = "iaf_psc_alpha_neuron";
 
   constructor(modelProps: INESTModelProps = {}) {
     super(modelProps, { name: "NESTModel", simulator: "nest" });
-    if (modelProps.nestmlScript) {
-      this._nestmlScript = modelProps.nestmlScript;
-    }
-    if (modelProps.templateName) {
-      this._templateName = modelProps.templateName;
-    }
+
+    if (modelProps.nestmlScript) this._nestmlScript = modelProps.nestmlScript;
+    if (modelProps.templateName) this._templateName = modelProps.templateName;
+    if (modelProps.custom) this._custom = modelProps.custom;
   }
 
   get compartmentParams(): Record<string, NESTModelCompartmentParameter> {
@@ -53,6 +52,10 @@ export class NESTModel extends BaseModel {
   set compartmentParamsVisible(values: string[]) {
     this._compartmentParamsVisible = values;
     this.changes();
+  }
+
+  get custom(): boolean {
+    return this.custom;
   }
 
   get existing(): string {
@@ -178,6 +181,10 @@ export class NESTModel extends BaseModel {
 
     if (this.abbreviation) {
       modelProps.abbreviation = this.abbreviation;
+    }
+
+    if (this.custom) {
+      modelProps.custom = this.custom;
     }
 
     // Add the recordables if provided.

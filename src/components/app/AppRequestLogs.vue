@@ -83,7 +83,7 @@
           <template #append>
             <v-btn
               icon="mdi:mdi-close"
-              size="small"
+              size="x-small"
               @click="appStore.state.requestLogs.splice(index, 1)"
             />
           </template>

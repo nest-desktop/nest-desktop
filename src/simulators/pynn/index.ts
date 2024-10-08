@@ -1,8 +1,8 @@
 // pynn/index.ts
 
-import { TBackendStore } from "@/stores/defineBackendStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TStore } from "@/types";
 
 import { ISimulatorProps } from "../";
 import iconSet from "./components/iconSet";
@@ -37,7 +37,7 @@ export const pynn: ISimulatorProps = {
     };
 
     // Initialize backend PyNN Simulator
-    const pynnSimulatorStore: TBackendStore = usePyNNSimulatorStore();
+    const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
     pynnSimulatorStore.init();
 
     pynn.backends = {

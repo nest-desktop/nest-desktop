@@ -1,5 +1,5 @@
 <template>
-  <ModelNav>
+  <ModelNav color="nest-model">
     <template #newModel>
       <v-fab
         @click="dialogNewModel()"
@@ -15,7 +15,9 @@
     </template>
   </ModelNav>
 
-  <template v-if="modelStore.model">
+  <template
+    v-if="modelStore.model && modelStore.model.id === modelStore.state.modelId"
+  >
     <ModelBar color="nest-model">
       <template #modelExplorer>
         <v-tab

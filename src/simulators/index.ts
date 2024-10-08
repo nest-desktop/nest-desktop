@@ -12,7 +12,7 @@ import { Config } from "@/helpers/common/config";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
 import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
-import { TBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { CompletionSource } from "@codemirror/autocomplete";
 
@@ -26,7 +26,7 @@ const logger = mainLogger.getSubLogger({
 });
 
 export interface ISimulatorProps {
-  backends: Record<string, TBackendStore>;
+  backends: Record<string, TStore>;
   completionSources?: CompletionSource[];
   configNames: string[];
   databases: string[];
@@ -34,7 +34,7 @@ export interface ISimulatorProps {
   id: string;
   init: () => void;
   route: RouteRecordRaw;
-  stores: Record<string, TBackendStore>;
+  stores: Record<string, TStore>;
   theme: Record<string, string>;
   title: string;
   types: Record<string, any>;

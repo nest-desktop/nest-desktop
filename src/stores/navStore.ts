@@ -41,3 +41,8 @@ export const useNavStore: TNavStore = defineStore(
     ],
   }
 );
+
+export const closeNav = () => {
+  const navStore = useNavStore();
+  navStore.state.open = false;
+};

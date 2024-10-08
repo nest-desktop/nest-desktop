@@ -18,6 +18,7 @@
             hide-details
             label="model label"
             v-model="model.state.label"
+            v-if="model.state"
           />
         </v-col>
 
@@ -72,8 +73,6 @@ const state = reactive<{ modelId: string }>({
 });
 
 const saveModel = () => {
-  model.value.id = state.modelId;
-  modelStore.state.modelId = state.modelId;
   modelStore.saveModel();
 
   if (model.value.nestmlScript.length > 0) {

@@ -1,25 +1,17 @@
-/// index.ts
+// index.ts
 
 import { RouteRecordRaw } from "vue-router";
 
-import { useAppStore } from "@/stores/appStore";
-import { useNavStore } from "@/stores/navStore";
+import { setCurrentSimulator } from "@/stores/appStore";
+import { closeNav } from "@/stores/navStore";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
 
-const closeNav = () => {
-  const navStore = useNavStore();
-  navStore.state.open = false;
-};
-
 export default {
   path: "norse",
   name: "norseLayout",
-  beforeEnter: () => {
-    const appStore = useAppStore();
-    appStore.state.simulator = "norse";
-  },
+  beforeEnter: () => setCurrentSimulator("norse"),
   component: () => import("../layouts/MainLayout.vue"),
   children: [
     {
