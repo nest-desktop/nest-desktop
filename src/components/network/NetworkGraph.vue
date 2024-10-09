@@ -9,9 +9,8 @@
 
     <div style="width: 320px" v-if="graph">
       <NodeMenu
-        :model-value="graph.state.nodeMenu.open"
-        :node="(graph.state.nodeMenu.node as TNode)"
-        :offset="graph.state.nodeMenu.offset"
+        contextMenu
+        v-bind="graph.state.nodeMenu"
         v-if="graph.state.nodeMenu.node"
       />
     </div>

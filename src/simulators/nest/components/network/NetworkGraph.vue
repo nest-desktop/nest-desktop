@@ -8,10 +8,9 @@
     />
 
     <div style="width: 320px" v-if="graph">
-      <NodeMenu
-        :model-value="graph.state.nodeMenu.open"
-        :node="(graph.state.nodeMenu.node as NESTNode)"
-        :offset="graph.state.nodeMenu.offset"
+      <NESTNodeMenu
+        contextMenu
+        v-bind="graph.state.nodeMenu"
         v-if="graph.state.nodeMenu.node"
       />
     </div>
@@ -94,10 +93,9 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import NodeMenu from "../node/NodeMenu.vue";
 import { NESTNetwork } from "../../helpers/network/network";
 import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
-import { NESTNode } from "../../helpers/node/node";
+import NESTNodeMenu from "../node/NESTNodeMenu.vue";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

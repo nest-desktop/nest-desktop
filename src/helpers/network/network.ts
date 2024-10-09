@@ -159,6 +159,7 @@ export class BaseNetwork extends BaseObj {
    * Connect node components by user interaction.
    * @param sourceIdx node index
    * @param targetIdx node index
+   * @param weight synapse weight
    *
    * @remarks
    * When it connects to a recorder, it initializes activity graph.
@@ -170,6 +171,14 @@ export class BaseNetwork extends BaseObj {
       source: sourceIdx,
       target: targetIdx,
     });
+
+    if (
+      connection.sourceNode.isNode &&
+      connection.sourceNode.view.state.synWeights
+    ) {
+      connection.synapse.weightLabel =
+        connection.sourceNode.view.state.synWeights;
+    }
 
     // Trigger network change.
     this.changes();

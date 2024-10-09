@@ -16,9 +16,9 @@ import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 interface IBaseNetworkGraphState {
   hash: string;
   nodeMenu: {
+    modelValue: boolean;
     node: TNode | null;
-    offset: number[];
-    open: boolean;
+    target: number[];
   };
 }
 
@@ -49,9 +49,9 @@ export class BaseNetworkGraph extends BaseObj {
     this._state = reactive<IBaseNetworkGraphState>({
       hash: "",
       nodeMenu: {
+        modelValue: false,
         node: null,
-        offset: [0, 0],
-        open: false,
+        target: [0, 0], // "cursor" for v-menu doesn't work.
       },
     });
 
@@ -170,8 +170,8 @@ export class BaseNetworkGraph extends BaseObj {
    * Reset state of network graph.
    */
   reset(): void {
-    this._state.nodeMenu.open = false;
-    this._state.nodeMenu.offset = [0, 0];
+    this._state.nodeMenu.modelValue = false;
+    this._state.nodeMenu.target = [0, 0];
     this._state.nodeMenu.node = null;
   }
 

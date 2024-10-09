@@ -104,6 +104,7 @@ export class BaseSynapse extends BaseObj {
   set weightLabel(value: string) {
     this.weight =
       (value === "inhibitory" ? -1 : 1) * Math.abs(this.weight as number);
+    this.params.weight.visible = this.weight != 1;
   }
 
   /**

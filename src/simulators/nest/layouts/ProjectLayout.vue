@@ -125,9 +125,11 @@
       <template #nodes>
         <div :key="project.network.nodes.length">
           <div :key="index" v-for="(node, index) in project.network.nodes.all">
-            <NodeEditor :node="node" v-if="node.isNode">
+            <NodeEditor :node v-if="node.isNode">
               <template #nodeMenu>
-                <NodeMenu :node />
+                <slot name="nodeMenu">
+                  <NESTNodeMenu :node />
+                </slot>
               </template>
 
               <template #nodeModelSelect="{ selectState }">
@@ -204,6 +206,7 @@ import { computed, ref } from "vue";
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
+import NESTNodeMenu from "../components/node/NESTNodeMenu.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
@@ -215,7 +218,6 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
-import NodeMenu from "../components/node/NodeMenu.vue";
 import NodeModelSelect from "../components/node/NodeModelSelect.vue";
 import NodePositionPopover from "../components/node/NodePositionPopover.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";

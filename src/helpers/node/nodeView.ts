@@ -162,6 +162,16 @@ export class NodeView extends BaseObj {
     return this._state.synWeights || "excitatory";
   }
 
+  set synWeights(value: string) {
+    this._state.synWeights = value;
+    this._node.connectionsNeuronTargets.forEach((connection: TConnection) => {
+      connection.synapse.params.weight.value =
+        (this._state.synWeights === "inhibitory" ? -1 : 1) *
+        Math.abs(connection.synapse.params.weight.value as number);
+      connection.synapse.params.weight.visible = true;
+    });
+  }
+
   /**
    * Clean node.
    */

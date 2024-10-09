@@ -117,40 +117,6 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
-   * Connect node components by user interaction.
-   * @param sourceIdx node index
-   * @param targetIdx node index
-   *
-   * @remarks
-   * When it connects to a recorder, it initializes activity graph.
-   */
-  override connectNodes(sourceIdx: number, targetIdx: number): void {
-    this.logger.trace("connect nodes");
-
-    const connection: NESTConnection = this.connections.addConnection({
-      source: sourceIdx,
-      target: targetIdx,
-    });
-
-    if (
-      connection.sourceNode.isNode &&
-      connection.sourceNode.view.state.synWeights
-    ) {
-      connection.synapse.weightLabel =
-        connection.sourceNode.view.state.synWeights;
-    }
-
-    // Trigger network change.
-    this.changes();
-
-    // Initialize activity graph.
-    if (connection.view.connectRecorder()) {
-      connection.recorder.createActivity();
-      // this._project.initActivityGraph();
-    }
-  }
-
-  /**
    * Delete model component from the network.
    * @param model NEST copy model
    *

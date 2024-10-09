@@ -166,14 +166,6 @@ export class NESTSynapse extends BaseSynapse {
     );
   }
 
-  override get weight(): number {
-    let weight: any = this.params.weight;
-    if (weight && !weight.visible) {
-      weight = this.model.params.weight;
-    }
-    return weight ? weight.value : 1;
-  }
-
   /**
    * Add parameter component.
    * @param paramProps - synapse parameter props

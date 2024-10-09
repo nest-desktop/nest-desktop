@@ -1,15 +1,30 @@
 <template>
-  <v-btn class="rounded-circle" icon size="small">
-    <v-icon icon="mdi:mdi-dots-vertical" />
+  <v-menu :close-on-content-click="false" @focusout="closeMenu()">
+    <template #activator="{ props }">
+      <slot
+        name="activator"
+        v-bind="{
+            props: {
+              ...props,
+              onClick: () => (state.show = false),
+              onContextmenu: (e: any) => onContextmenuPipe(props.onClick, e),
+              tabindex: '0',
+            },
+          }"
+        v-if="contextMenu"
+      />
+      <v-btn
+        @click.stop
+        icon="mdi:mdi-dots-vertical"
+        size="small"
+        rounded="pill"
+        v-bind="props"
+        v-else
+      />
+    </template>
 
-    <v-menu
-      :close-on-content-click="false"
-      activator="parent"
-      width="320"
-      v-model="state.show"
-    >
-      <v-card flat style="min-width: 300px">
-        <!-- <v-card-title class="pa-0">
+    <v-card flat v-if="node">
+      <!-- <v-card-title class="pa-0">
         <v-row no-gutters>
           <v-col cols="12">
             <NodeModelSelect :node="node" />
@@ -17,20 +32,22 @@
         </v-row>
       </v-card-title> -->
 
-        <span v-if="state.content == undefined">
-          <v-list density="compact">
-            <v-list-item
-              :key="index"
-              v-bind="item"
-              v-for="(item, index) in items"
-              v-show="item.show()"
-            >
-              <template #append>
-                <template v-if="item.append">
-                  <v-icon icon="mdi:mdi-menu-right" size="x-small" />
-                </template>
+      <span v-if="state.content == undefined">
+        <v-list density="compact">
+          <slot name="prependItem" :node />
 
-                <!-- <template v-if="item.input === 'checkbox'">
+          <v-list-item
+            :key="index"
+            v-bind="item"
+            v-for="(item, index) in items"
+            v-show="item.show()"
+          >
+            <template #append>
+              <template v-if="item.append">
+                <v-icon icon="mdi:mdi-menu-right" size="x-small" />
+              </template>
+
+              <!-- <template v-if="item.input === 'checkbox'">
                 <v-checkbox
                 :color="node.view.color"
                   :input-value="state[item.value]"
@@ -45,85 +62,95 @@
                   hide-details
                   />
                 </template> -->
-              </template>
+            </template>
 
+            <template #prepend>
+              <v-icon v-bind="item.icon" />
+            </template>
+          </v-list-item>
+
+          <slot name="appendItem" :node />
+        </v-list>
+      </span>
+
+      <span v-if="state.content === 'eventsExport'">
+        <v-card-text class="py-1 px-0">
+          <v-list dense>
+            <v-list-item @click="exportEvents('json')">
               <template #prepend>
-                <v-icon v-bind="item.icon" />
+                <v-icon icon="mdi:mdi-code-json" />
               </template>
+              <v-list-item-title>
+                Export events to JSON file
+              </v-list-item-title>
+            </v-list-item>
+
+            <v-list-item @click="exportEvents('csv')">
+              <template #prepend>
+                <v-icon icon="mdi:mdi-file-delimited-outline" />
+              </template>
+              <v-list-item-title>Export events to CSV file</v-list-item-title>
             </v-list-item>
           </v-list>
-        </span>
+        </v-card-text>
 
-        <span v-if="state.content === 'eventsExport'">
-          <v-card-text class="py-1 px-0">
-            <v-list dense>
-              <v-list-item @click="exportEvents('json')">
-                <template #prepend>
-                  <v-icon icon="mdi:mdi-code-json" />
-                </template>
-                <v-list-item-title>
-                  Export events to JSON file
-                </v-list-item-title>
-              </v-list-item>
-
-              <v-list-item @click="exportEvents('csv')">
-                <template #prepend>
-                  <v-icon icon="mdi:mdi-file-delimited-outline" />
-                </template>
-                <v-list-item-title>Export events to CSV file</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              @click="backMenu"
-              prepend-icon="mdi:mdi-menu-left"
-              text="back"
-            />
-          </v-card-actions>
-        </span>
-
-        <span v-if="state.content === 'nodeColor'">
-          <ColorPicker
-            :colorScheme="state.colorScheme"
-            @update:model-value="nodeColorChange()"
-            hide-inputs
-            v-model="node.view.color"
+        <v-card-actions>
+          <v-btn
+            @click="backMenu"
+            prepend-icon="mdi:mdi-menu-left"
+            text="back"
           />
+        </v-card-actions>
+      </span>
 
-          <v-select
-            :items="colorSchemes"
-            class="mx-2"
-            density="compact"
-            hide-details
-            v-model="state.colorScheme"
+      <span v-if="state.content === 'nodeColor'">
+        <ColorPicker
+          :colorScheme="state.colorScheme"
+          @update:model-value="nodeColorChange()"
+          hide-inputs
+          v-model="node.view.color"
+        />
+
+        <v-select
+          :items="colorSchemes"
+          class="mx-2"
+          density="compact"
+          hide-details
+          v-model="state.colorScheme"
+        />
+
+        <v-card-actions>
+          <v-btn
+            @click="backMenu"
+            prepend-icon="mdi:mdi-menu-left"
+            text="back"
           />
-
-          <v-card-actions>
-            <v-btn
-              @click="backMenu"
-              prepend-icon="mdi:mdi-menu-left"
-              text="back"
-            />
-            <v-spacer />
-            <v-btn @click="resetColor" text="reset" />
-          </v-card-actions>
-        </span>
-      </v-card>
-    </v-menu>
-  </v-btn>
+          <v-spacer />
+          <v-btn @click="resetColor" text="reset" />
+        </v-card-actions>
+      </span>
+    </v-card>
+  </v-menu>
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, reactive } from "vue";
+import { computed, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { TNode } from "@/types";
+import { BaseNode } from "@/helpers/node/node";
 import ColorPicker from "../common/ColorPicker.vue";
 
-const props = defineProps<{ node: TNode }>();
-const node = computed(() => props.node);
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+const graph = computed(() => networkGraphStore.state.graph);
+
+const props = defineProps({
+  contextMenu: { default: false, type: Boolean },
+  node: BaseNode,
+});
+const node = computed(() => props.node as TNode);
+const contextMenu = computed(() => (props.contextMenu ? true : false));
 
 const state = reactive<{
   colorScheme: string;
@@ -175,15 +202,6 @@ const items = [
     title: "Colorize node",
   },
   {
-    prependIcon: "mdi:mdi-information-outline",
-    id: "modelDoc",
-    onClick: () => {
-      state.dialog = true;
-    },
-    show: () => node.value.modelId !== "voltmeter",
-    title: "Model documentation",
-  },
-  {
     prependIcon: "mdi:mdi-content-copy",
     id: "nodeClone",
     onClick: () => {
@@ -231,19 +249,18 @@ const items = [
 ];
 
 /**
- * Update colors of network and activity.
+ * Return to main menu content.
  */
-const nodeColorChange = () => {
-  node.value.changes();
-  nextTick(() => node.value.nodes.updateRecordsColor());
+const backMenu = () => {
+  state.content = undefined;
 };
 
 /**
- * Reset node color.
+ * Close menu.
  */
-const resetColor = () => {
-  node.value.view.color = "";
-  nodeColorChange();
+const closeMenu = () => {
+  state.content = undefined;
+  state.show = false;
 };
 
 /**
@@ -259,28 +276,27 @@ const exportEvents = (format: string = "json") => {
 };
 
 /**
- * Return to main menu content.
+ * Update colors of network and activity.
  */
-const backMenu = () => {
-  state.content = undefined;
+const nodeColorChange = () => {
+  node.value.changes();
+  nextTick(() => node.value.nodes.updateRecordsColor());
+
+  // Render network graph
+  graph.value?.updateHash();
 };
 
 /**
- * Close menu.
+ * Reset node color.
  */
-const closeMenu = () => {
-  state.content = undefined;
-  state.show = false;
+const resetColor = () => {
+  node.value.view.color = "";
+  nodeColorChange();
 };
 
-onMounted(() => {
-  closeMenu();
-});
+const onContextmenuPipe = (fn: (e: any) => void, e: any) => {
+  if (!contextMenu.value) return;
+  e.preventDefault();
+  fn(e);
+};
 </script>
-
-<style lang="scss">
-.synWeightButton {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  margin-left: 0.75em;
-}
-</style>
