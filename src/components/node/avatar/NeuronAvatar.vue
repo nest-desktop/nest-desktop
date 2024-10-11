@@ -1,7 +1,7 @@
 <template>
   <v-avatar class="neuron" rounded="0">
     <span :class="{ 'mt-2': weight === 'excitatory' }" class="label">
-      <slot></slot>
+      <slot />
     </span>
     <v-icon
       :color

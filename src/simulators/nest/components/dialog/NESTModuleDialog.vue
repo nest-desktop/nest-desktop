@@ -35,13 +35,21 @@
 
     <v-card-actions>
       <v-btn
+        append-icon="mdi:mdi-open-in-new"
+        href="https://nestml.readthedocs.io"
+        target="_blank"
+        text="help"
+        title="Doc about NESTML"
+      />
+
+      <v-spacer />
+      <v-btn
         :disabled="
           appStore.currentSimulator.backends.nestml.state.response.status != 200
         "
         @click="closeDialog(state.selectedModule)"
         text="Generate module"
       />
-
       <v-btn @click="closeDialog()" text="close" />
     </v-card-actions>
   </v-card>

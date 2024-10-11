@@ -56,7 +56,7 @@ export function defineProjectDBStore(
      * Add project to the list.
      * @param project project object or props
      */
-    const _addToList = (project: TProject | TProjectProps): void => {
+    const addToList = (project: TProject | TProjectProps): void => {
       state.projects.push(project);
     };
 
@@ -71,7 +71,7 @@ export function defineProjectDBStore(
       logger.trace("add project:", truncate(projectProps?.id));
 
       const project = new props.Project(projectProps);
-      _addToList(project);
+      addToList(project);
       return project;
     };
 
@@ -83,7 +83,7 @@ export function defineProjectDBStore(
     //   logger.trace("new project:");
 
     //   const project = Project();
-    //   _addToList(project);
+    //   addToList(project);
     //   return project;
     // };
 
@@ -179,23 +179,20 @@ export function defineProjectDBStore(
      * @param projectId project ID
      * @returns project object
      */
-    const getProject = (projectId: string = ""): Project => {
+    const getProject = (projectId: string = ""): Project | undefined => {
       logger.trace("get project:", truncate(projectId));
 
       let project: Project | TProjectProps | undefined;
 
-      if (!projectId || !hasProjectId(projectId)) {
-        project = addProject();
-        project.state.state.editMode = true;
-      } else {
+      if (projectId && hasProjectId(projectId)) {
         project = findProject(projectId);
 
         if (project && !isProjectLoaded(project)) {
           loadProject(project);
           project = findProject(projectId) as Project;
         }
+        return project;
       }
-      return project;
     };
 
     const getProjectIds = (): (string | undefined)[] =>
@@ -274,16 +271,15 @@ export function defineProjectDBStore(
       project: Project | TProjectProps
     ): Project | undefined => {
       logger.trace("load project:", truncate(project.id));
+      if (isProjectLoaded(project)) return project;
 
-      if (!project.docId) {
-        const projectIds = getProjectIds();
-        const projectIdx = projectIds.indexOf(project.id);
+      const projectIds = getProjectIds();
+      const projectIdx = projectIds.indexOf(project.id);
 
-        if (projectIdx === -1) return;
+      if (projectIdx === -1) return;
 
-        project = new props.Project(project);
-        state.projects[projectIdx] = project;
-      }
+      project = new props.Project(project);
+      state.projects[projectIdx] = project;
 
       return project;
     };
@@ -340,7 +336,8 @@ export function defineProjectDBStore(
         project.doc.hash = project.hash;
         project.state.checkChanges();
         // removeFromList(project);
-        // _addToList(project);
+        const projectIds = getProjectIds();
+        if (!projectIds.includes(project.id)) addToList(project);
       });
     };
 
@@ -397,6 +394,7 @@ export function defineProjectDBStore(
       getProject,
       getProjectIds,
       getProjectIdx,
+      hasProjectId,
       importProjects,
       importProjectsFromAssets,
       init,

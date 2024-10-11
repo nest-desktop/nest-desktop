@@ -17,6 +17,7 @@
           <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
             <v-btn
               @click.stop="node.toggleSelection()"
+              @click.right.prevent="node.unselect()"
               icon
               class="mx-4 rounded-circle"
               size="medium"
@@ -38,7 +39,7 @@
                 />
               </template>
 
-              <v-card variant="outlined">
+              <v-card>
                 <v-card-text>
                   <v-checkbox
                     :disabled="node.model.isRecorder"

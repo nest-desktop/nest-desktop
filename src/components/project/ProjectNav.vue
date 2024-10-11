@@ -29,7 +29,7 @@
 
       <template #extension>
         <v-fab
-          @click="openDialogNewProject()"
+          @click="newProjectRoute(router)"
           class="ms-4"
           color="primary"
           icon="mdi:mdi-plus"
@@ -73,6 +73,25 @@
       nav
     >
       <v-list-subheader inset />
+
+      <template
+        v-if="
+          projectStore.state.project &&
+          !projectStore.state.project.docId &&
+          projectStore.state.project.state?.editMode
+        "
+      >
+        <v-text-field
+          @click:append-inner="saveProject(projectStore.state.project)"
+          append-inner-icon="mdi:mdi-content-save-edit-outline"
+          autofocused
+          class="pb-1"
+          density="compact"
+          hide-details
+          label="Project name"
+          v-model="projectStore.state.project.name"
+        />
+      </template>
 
       <template v-for="(project, index) in projects.slice().reverse()">
         <v-hover v-slot="{ isHovering, props }">
@@ -125,8 +144,7 @@
             <template #default v-else-if="appStore.state.devMode">
               <v-list-item-title>
                 {{
-                  project.name ||
-                  "undefined project " + projectDBStore.getProjectIdx(project)
+                  project.name || "undefined project " + truncate(project.id)
                 }}
               </v-list-item-title>
               <v-list-item-subtitle>
@@ -142,8 +160,7 @@
             <template #default v-else>
               <v-list-item-title>
                 {{
-                  project.name ||
-                  "undefined project " + projectDBStore.getProjectIdx(project)
+                  project.name || "undefined project " + truncate(project.id)
                 }}
               </v-list-item-title>
               <v-list-item-subtitle>
@@ -167,7 +184,6 @@ import { TProject } from "@/types";
 import { truncate } from "@/utils/truncate";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
-import TextFieldDialog from "../dialog/TextFieldDialog.vue";
 import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import Menu from "../common/Menu.vue";
@@ -180,9 +196,14 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
+import { newProjectRoute } from "@/helpers/routes";
 const navStore = useNavStore();
 
 defineProps(["color"]);
+
+const projectStore = computed(
+  () => appStore.currentSimulator.stores.projectStore
+);
 
 const projectDBStore = computed(
   () => appStore.currentSimulator.stores.projectDBStore
@@ -260,27 +281,6 @@ const items = [
   // { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];
 
-const openDialogNewProject = () => {
-  createDialog({
-    customComponent: {
-      component: TextFieldDialog,
-      props: {
-        title: "Create project",
-        modelValue: "new_project_" + projectDBStore.value.state.projects.length,
-      },
-    },
-    text: "",
-    title: "",
-  }).then((projectName: boolean | string) => {
-    if (projectName) {
-      router.push({
-        name: appStore.state.simulator + "ProjectNew",
-        query: { name: projectName as string },
-      });
-    }
-  });
-};
-
 const dispatchWindowResize = () => {
   nextTick(() => window.dispatchEvent(new Event("resize")));
 };
@@ -317,8 +317,8 @@ const resizeSideNav = () => {
  * Save project.
  */
 const saveProject = (project: TProject) => {
-  project.state.state.editMode = false;
   projectDBStore.value.saveProject(project);
+  project.state.state.editMode = false;
 };
 </script>
 

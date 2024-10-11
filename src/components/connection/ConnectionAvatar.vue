@@ -2,6 +2,7 @@
   <div>
     <v-btn
       @click="connection.source.toggleSelection()"
+      @click.right.prevent="connection.source.unselect()"
       class="rounded-circle"
       icon
       size="small"
@@ -19,6 +20,7 @@
 
     <v-btn
       @click="connection.target.toggleSelection()"
+      @click.right.prevent="connection.target.unselect()"
       class="rounded-circle"
       icon
       size="small"

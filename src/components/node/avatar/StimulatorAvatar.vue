@@ -1,7 +1,7 @@
 <template>
   <v-avatar class="stimulator" rounded="0">
     <span class="label">
-      <slot></slot>
+      <slot />
     </span>
     <v-icon
       :color

@@ -1,5 +1,8 @@
 <template>
-  <Card :color="connection.sourceNode.view.color">
+  <Card
+    :color="connection.sourceNode.view.color"
+    style="border-width: 0 0 0 4px !important"
+  >
     <v-list density="compact">
       <slot name="prependItem" :connection />
 

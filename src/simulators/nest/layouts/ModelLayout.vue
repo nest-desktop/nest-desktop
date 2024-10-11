@@ -113,7 +113,8 @@ import { NESTModel } from "../helpers/model/model";
 import { NESTNode } from "../helpers/node/node";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
 const router = useRouter();
 
 import { useAppStore } from "@/stores/appStore";
@@ -126,6 +127,7 @@ import {
 const modelStore: TModelStore = useNESTModelStore();
 
 import { useNESTModuleStore } from "../stores/moduleStore";
+import { mountModelLayout } from "@/helpers/routes";
 const moduleStore = useNESTModuleStore();
 
 const modelDBStore = computed(
@@ -263,6 +265,7 @@ const projects: { id: string; name: string; icon: string }[] = [
 
 onMounted(() => {
   selectProject("model-step-current-up-down");
+  mountModelLayout({ route, router });
 });
 
 watch(() => modelStore.state.modelId, update);

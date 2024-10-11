@@ -28,9 +28,17 @@
     </v-card-text>
 
     <v-card-actions>
+      <v-btn
+        append-icon="mdi:mdi-open-in-new"
+        href="https://nestml.readthedocs.io"
+        target="_blank"
+        text="help"
+        title="Doc about NESTML"
+      />
+
       <v-spacer />
-      <v-btn @click="closeDialog(false)" text="cancel" title="Cancel" />
       <v-btn @click="closeDialog(true)" text="create" title="Create" />
+      <v-btn @click="closeDialog(false)" text="cancel" title="Cancel" />
     </v-card-actions>
   </v-card>
 </template>

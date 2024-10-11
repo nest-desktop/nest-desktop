@@ -6,8 +6,8 @@ export const confirmDialog = (props: {
 }): Promise<boolean> =>
   createDialog({
     buttons: [
-      { title: "yes", key: "yes" },
       { title: "no", key: "no" },
+      { title: "yes", key: "yes" },
     ],
     ...props,
   }).then((answer: string) => answer === "yes");

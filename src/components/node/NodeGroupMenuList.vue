@@ -1,5 +1,8 @@
 <template>
-  <Card :color="nodeGroup.view.color">
+  <Card
+    :color="nodeGroup.view.color"
+    style="border-width: 0 0 0 4px !important"
+  >
     <v-list density="compact">
       <v-list-item
         :key="index"

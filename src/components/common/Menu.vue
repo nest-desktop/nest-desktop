@@ -21,7 +21,7 @@
             v-for="(item, index) in items"
           >
             <template #prepend>
-              <v-icon v-bind="item.icon" />
+              <v-icon size="small" v-bind="item.icon" />
             </template>
           </v-list-item>
 

@@ -65,7 +65,7 @@ export function defineProjectStore(
         view: "",
         width: 480,
       },
-      project: new props.Project(),
+      project: new props.Project() as TProject,
       projectId: "",
       tab: {
         activityView: "abstract",
@@ -119,6 +119,8 @@ export function defineProjectStore(
     const loadProject = (projectId: string = ""): void => {
       logger.trace("load project:", truncate(projectId));
 
+      if (!projectDBStore.hasProjectId(projectId)) return;
+
       state.project = projectDBStore.getProject(projectId);
       state.projectId = state.project.id;
 
@@ -143,9 +145,11 @@ export function defineProjectStore(
     const newProject = (): void => {
       logger.trace("new project:");
 
-      const projectDBStore: TProjectStore = props.useProjectDBStore();
-      state.project = projectDBStore.newProject();
+      // const projectDBStore: TProjectStore = props.useProjectDBStore();
+      state.project = new props.Project();
+      // state.project = projectDBStore.newProject();
       state.projectId = state.project.id;
+      state.project.state.state.editMode = true;
     };
 
     /**

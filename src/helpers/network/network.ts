@@ -56,8 +56,11 @@ export class BaseNetwork extends BaseObj {
     this._project = project;
     this._state = new NetworkState(this);
 
-    this._nodes = new this.Nodes(this, networkProps.nodes);
-    this._connections = new this.Connections(this, networkProps.connections);
+    this._nodes = new this.Nodes(this, networkProps.nodes || []);
+    this._connections = new this.Connections(
+      this,
+      networkProps.connections || []
+    );
   }
 
   get Connections() {

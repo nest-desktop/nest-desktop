@@ -199,7 +199,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
@@ -212,6 +213,7 @@ import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { mountProjectLayout } from "@/helpers/routes";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
@@ -222,6 +224,9 @@ import SimulationKernelEditor from "../components/simulation/SimulationKernelEdi
 import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
 import { NESTNode } from "../helpers/node/node";
 import { openNESTModuleDialog } from "../stores/moduleStore";
+
+const router = useRouter();
+const route = useRoute();
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
@@ -245,4 +250,6 @@ const getPopItems = (node: NESTNode) => [
     title: "Toggle spatial mode",
   },
 ];
+
+onMounted(() => mountProjectLayout({ route, router }));
 </script>

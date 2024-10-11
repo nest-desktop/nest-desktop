@@ -22,11 +22,18 @@
     </v-tabs>
 
     <v-spacer />
-
-    <v-app-bar-title>
-      {{ projectStore.state.project.name }}
-    </v-app-bar-title>
-
+    <v-app-bar-title
+      :text="
+        projectStore.state.project.name ||
+        'undefined project ' + truncate(projectStore.state.project.id)
+      "
+      style="min-width: auto"
+    />
+    <!-- <v-btn
+      @click="() => (projectStore.state.project.state.state.editMode = true)"
+      icon="mdi:mdi-pencil"
+      size="x-small"
+    /> -->
     <v-spacer />
 
     <NetworkHistory />
@@ -46,6 +53,7 @@ import NetworkHistory from "../network/NetworkHistory.vue";
 import SimulationButton from "../simulation/SimulationButton.vue";
 
 import { useAppStore } from "@/stores/appStore";
+import { truncate } from "@/utils/truncate";
 const appStore = useAppStore();
 
 const projectStore = computed(
