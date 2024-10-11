@@ -2,15 +2,12 @@
 
 import { useAppStore } from "@/stores/appStore";
 
-export function currentBackgroundColor(): string {
-  return darkMode() ? "#121212" : "white";
-}
+export const currentBackgroundColor = (): string =>
+  darkMode() ? "#121212" : "white";
 
-export function currentColor(): string {
-  return darkMode() ? "white" : "#121212";
-}
+export const currentColor = (): string => (darkMode() ? "white" : "#121212");
 
-export function darkMode(): boolean {
+export const darkMode = (): boolean => {
   const appStore = useAppStore();
   return appStore.darkMode;
-}
+};

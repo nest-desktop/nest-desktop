@@ -44,9 +44,8 @@ const props = defineProps<{ modelValue: string }>();
 const model = ref(new NESTModel({ custom: true }));
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (response: boolean) => {
+const closeDialog = (response: boolean) =>
   emit("closeDialog", response ? model.value : undefined);
-};
 
 const updateModelId = (modelLabel: string) =>
   nextTick(() => model.value.replaceModelId(modelLabel));

@@ -114,9 +114,14 @@ export class NodeGraph extends BaseObj {
       event.preventDefault();
       this._networkGraph.workspace.reset();
 
-      this._networkGraph.state.nodeMenu.node = n as TNode;
-      this._networkGraph.state.nodeMenu.target = [event.clientX, event.clientY];
-      this._networkGraph.state.nodeMenu.modelValue = true;
+      this._networkGraph.openContextMenu(
+        [event.clientX, event.clientY],
+        n.isGroup
+          ? {
+              nodeGroup: n as NodeGroup,
+            }
+          : { node: n as TNode }
+      );
     });
   }
 

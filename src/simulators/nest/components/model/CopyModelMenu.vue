@@ -61,10 +61,10 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
-import { createDialog } from "vuetify3-dialog";
 
 import ModelDocumentation from "../../views/ModelDoc.vue";
 import { NESTCopyModel } from "../../helpers/model/copyModel";
+import { confirmDialog } from "@/helpers/common/confirmDialog";
 
 const props = defineProps<{ model: NESTCopyModel }>();
 const model = computed(() => props.model);
@@ -108,17 +108,11 @@ const items = [
     icon: { icon: "mdi:mdi-trash-can-outline" },
     id: "copyModelDelete",
     onClick: () => {
-      createDialog({
-        buttons: [
-          { title: "no", key: "no" },
-          { title: "yes", key: "yes" },
-        ],
+      confirmDialog({
         text: "Are you sure to delete copied model?",
         title: "Delete copied model?",
-      }).then((answer: string) => {
-        if (answer === "yes") {
-          model.value.remove();
-        }
+      }).then((answer: boolean) => {
+        if (answer) model.value.remove();
       });
     },
     show: () => true,

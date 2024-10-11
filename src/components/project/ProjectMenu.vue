@@ -4,10 +4,10 @@
 
 <script lang="ts" setup>
 import { computed, nextTick } from "vue";
-import { confirmDialog } from "vuetify3-dialog";
 
 import Menu from "../common/Menu.vue";
 import { TProject, TProjectProps } from "@/types";
+import { confirmDialog } from "@/helpers/common/confirmDialog";
 
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
@@ -84,9 +84,7 @@ const items = [
         text: "Are you sure to delete it?",
         title: "Delete project",
       }).then((answer: boolean) => {
-        if (answer) {
-          projectDBStore.value.deleteProject(project.value);
-        }
+        if (answer) projectDBStore.value.deleteProject(project.value);
       }),
     prependIcon: "mdi:mdi-trash-can-outline",
     title: "Delete",

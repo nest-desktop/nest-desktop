@@ -126,10 +126,8 @@
         <div :key="project.network.nodes.length">
           <div :key="index" v-for="(node, index) in project.network.nodes.all">
             <NodeEditor :node v-if="node.isNode">
-              <template #nodeMenu>
-                <slot name="nodeMenu">
-                  <NESTNodeMenu :node />
-                </slot>
+              <template #nodeMenuContent>
+                <NESTNodeMenuList :node />
               </template>
 
               <template #nodeModelSelect="{ selectState }">
@@ -206,7 +204,7 @@ import { computed, ref } from "vue";
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
-import NESTNodeMenu from "../components/node/NESTNodeMenu.vue";
+import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";

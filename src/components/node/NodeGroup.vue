@@ -37,16 +37,9 @@
 
         <v-spacer />
 
-        <v-btn
-          class="menu d-print-none ma-auto"
-          color="primary"
-          icon
-          size="small"
-          variant="text"
-        >
-          <v-icon icon="mdi:mdi-dots-vertical" />
-          <NodeGroupMenu :nodeGroup />
-        </v-btn>
+        <Menu>
+          <NodeGroupMenuList :nodeGroup />
+        </Menu>
       </v-row>
     </v-card-title>
 
@@ -74,8 +67,9 @@
 <script lang="ts" setup>
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
+import Menu from "../common/Menu.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
-import NodeGroupMenu from "./NodeGroupMenu.vue";
+import NodeGroupMenuList from "./NodeGroupMenuList.vue";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 defineProps<{ nodeGroup: NodeGroup }>();

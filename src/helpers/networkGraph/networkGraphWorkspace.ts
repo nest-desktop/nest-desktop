@@ -211,7 +211,6 @@ export class NetworkGraphWorkspace extends BaseObj {
    */
   reset(): void {
     this._handler.style("cursor", "default");
-    this._networkGraph.reset();
     this._nodeAddPanel.close();
     this._dragline.hide();
   }

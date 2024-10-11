@@ -122,9 +122,7 @@ const githubAPI = "https://api.github.com/repos/nest/nestml";
 const githubRaw = "https://raw.githubusercontent.com/nest/nestml";
 
 const emit = defineEmits(["closeDialog"]);
-function closeDialog(value?: Object) {
-  emit("closeDialog", value);
-}
+const closeDialog = (value?: Object) => emit("closeDialog", value);
 
 const fetchElementTypes = () => {
   state.elementType = "";

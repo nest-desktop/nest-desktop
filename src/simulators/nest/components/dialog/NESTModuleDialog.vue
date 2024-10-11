@@ -63,9 +63,8 @@ const state = reactive<{ selectedModule: IModule }>({
 });
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (module?: IModule | null) => {
+const closeDialog = (module?: IModule | null) =>
   emit("closeDialog", module ? module : false);
-};
 
 const fetchInstalledModels = () => {
   nextTick(() => {

@@ -4,15 +4,15 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
-import { confirmDialog } from "vuetify3-dialog";
 
+import Menu from "../common/Menu.vue";
 import { TModel } from "@/types";
+import { confirmDialog } from "@/helpers/common/confirmDialog";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useRouter, useRoute } from "vue-router";
-import Menu from "../common/Menu.vue";
 const router = useRouter();
 const route = useRoute();
 
@@ -54,12 +54,10 @@ const items = [
   {
     onClick: () =>
       confirmDialog({
-        text: "Are you sure to delete it?",
+        text: "Are you sure to delete model?",
         title: "Delete model",
       }).then((answer: boolean) => {
-        if (answer) {
-          modelDBStore.value.deleteModel(model.value);
-        }
+        if (answer) modelDBStore.value.deleteModel(model.value);
       }),
     prependIcon: "mdi:mdi-trash-can-outline",
     title: "Delete",

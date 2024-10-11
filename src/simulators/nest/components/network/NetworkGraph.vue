@@ -8,11 +8,23 @@
     />
 
     <div style="width: 320px" v-if="graph">
-      <NESTNodeMenu
-        contextMenu
-        v-bind="graph.state.nodeMenu"
-        v-if="graph.state.nodeMenu.node"
-      />
+      <ContextMenu
+        :target="graph ? graph.state.contextMenu.target : [0, 0]"
+        v-model="graph.state.contextMenu.modelValue"
+      >
+        <ConnectionMenuList
+          :connection="(graph.state.contextMenu.connection as NESTConnection)"
+          v-if="graph.state.contextMenu.connection"
+        />
+        <NESTNodeMenuList
+          :node="(graph.state.contextMenu.node as NESTNode)"
+          v-if="graph.state.contextMenu.node"
+        />
+        <NodeGroupMenuList
+          :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
+          v-if="graph.state.contextMenu.nodeGroup"
+        />
+      </ContextMenu>
     </div>
 
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
@@ -93,9 +105,15 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
+import ConnectionMenuList from "@/components/connection/ConnectionMenuList.vue";
+import ContextMenu from "@/components/common/ContextMenu.vue";
+import NESTNodeMenuList from "../node/NESTNodeMenuList.vue";
+import NodeGroupMenuList from "@/components/node/NodeGroupMenuList.vue";
+import { NESTConnection } from "../../helpers/connection/connection";
 import { NESTNetwork } from "../../helpers/network/network";
 import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
-import NESTNodeMenu from "../node/NESTNodeMenu.vue";
+import { NESTNode } from "../../helpers/node/node";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

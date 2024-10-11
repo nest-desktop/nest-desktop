@@ -79,9 +79,11 @@
               </v-card>
             </v-menu>
 
-            <slot name="nodeMenu">
-              <NodeMenu :node />
-            </slot>
+            <Menu>
+              <slot name="nodeMenuContent">
+                <NodeMenuList :node />
+              </slot>
+            </Menu>
           </v-btn-group>
         </v-expansion-panel-title>
 
@@ -143,11 +145,11 @@ import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import Menu from "../common/Menu.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
-import NodeMenu from "./NodeMenu.vue";
 import NodeModelSelect from "./NodeModelSelect.vue";
 import NodeRecordSelect from "./NodeRecordSelect.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
+import NodeMenuList from "./NodeMenuList.vue";
 
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node);

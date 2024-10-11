@@ -210,6 +210,18 @@ export class NodeGroupGraph {
       }
     });
 
+    /**
+     * Trigger node menu on right mouse click.
+     */
+    elem.on("contextmenu", (event: MouseEvent, nodeGroup: NodeGroup) => {
+      event.preventDefault();
+      this._networkGraph.workspace.reset();
+
+      this._networkGraph.openContextMenu([event.clientX, event.clientY], {
+        nodeGroup,
+      });
+    });
+
     // @ts-ignore - Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
     // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
     elem.call(dragging, null);

@@ -8,11 +8,23 @@
     />
 
     <div style="width: 320px" v-if="graph">
-      <NodeMenu
-        contextMenu
-        v-bind="graph.state.nodeMenu"
-        v-if="graph.state.nodeMenu.node"
-      />
+      <ContextMenu
+        :target="graph ? graph.state.contextMenu.target : [0, 0]"
+        v-model="graph.state.contextMenu.modelValue"
+      >
+        <ConnectionMenuList
+          :connection="(graph.state.contextMenu.connection as TConnection)"
+          v-if="graph.state.contextMenu.connection"
+        />
+        <NodeMenuList
+          :node="(graph.state.contextMenu.node as TNode)"
+          v-if="graph.state.contextMenu.node"
+        />
+        <NodeGroupMenuList
+          :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
+          v-if="graph.state.contextMenu.nodeGroup"
+        />
+      </ContextMenu>
     </div>
 
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
@@ -92,9 +104,13 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import NodeMenu from "../node/NodeMenu.vue";
+import ConnectionMenuList from "../connection/ConnectionMenuList.vue";
+import ContextMenu from "../common/ContextMenu.vue";
+import NodeGroupMenuList from "../node/NodeGroupMenuList.vue";
+import NodeMenuList from "../node/NodeMenuList.vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { TNetwork, TNode } from "@/types";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TConnection, TNetwork, TNode } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();

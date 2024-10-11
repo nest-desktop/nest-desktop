@@ -90,13 +90,13 @@
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
-import { createDialog } from "vuetify3-dialog";
 
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 import { TNode } from "@/types";
+import { confirmDialog } from "@/helpers/common/confirmDialog";
 import { downloadSVGImage } from "@/utils/download";
-import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 
 const graph = computed(() => networkGraphStore.state.graph);
@@ -128,17 +128,11 @@ const downloadNetworkGraph = () => {
  * Empty network.
  */
 const emptyNetwork = () => {
-  createDialog({
-    buttons: [
-      { title: "no", key: "no" },
-      { title: "yes", key: "yes" },
-    ],
+  confirmDialog({
     text: "Are you sure to delete all elements of this network?",
     title: "Empty network?",
-  }).then((answer: string) => {
-    if (answer === "yes") {
-      graph.value?.network.clear();
-    }
+  }).then((answer: boolean) => {
+    if (answer) graph.value?.network.clear();
   });
 };
 

@@ -421,9 +421,7 @@ const addProps = (
 };
 
 const emit = defineEmits(["closeDialog"]);
-function closeDialog(value?: string | boolean) {
-  emit("closeDialog", value);
-}
+const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
 /**
  * Get model from github.

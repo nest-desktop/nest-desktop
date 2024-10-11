@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-import { confirmDialog } from "vuetify3-dialog";
 import { nextTick, onMounted, reactive } from "vue";
 
+import { confirmDialog } from "./helpers/common/confirmDialog";
 import { logger as mainLogger } from "./utils/logger";
 
 import { useAppStore } from "./stores/appStore";
@@ -37,12 +37,10 @@ const updateAvailable = (event: { detail: ServiceWorkerRegistration }) => {
     nextTick(() => refreshApp());
   } else {
     confirmDialog({
-      title: "Info",
-      text: "An update is available. Confirm to refresh the app.",
-    }).then((answer) => {
-      if (answer) {
-        refreshApp();
-      }
+      title: "Update manager",
+      text: "An update is available. Do you want to refresh the app?",
+    }).then((answer: boolean) => {
+      if (answer) refreshApp();
     });
   }
 };

@@ -19,7 +19,5 @@ const props = defineProps<{ modelValue: string }>();
 const modelValue = ref(props.modelValue);
 
 const emit = defineEmits(["closeDialog"]);
-function closeDialog(value?: string) {
-  emit("closeDialog", value);
-}
+const closeDialog = (value?: string) => emit("closeDialog", value);
 </script>

@@ -434,7 +434,7 @@ export class BaseNode extends BaseObj {
    * Clone this node component.
    * @return cloned node component.
    */
-  clone(): TNode {
+  clone(_: boolean = true): TNode {
     this.logger.trace("clone");
 
     const nodeProps = this.toJSON();

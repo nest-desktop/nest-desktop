@@ -17,9 +17,7 @@ export class NodeGroup extends BaseObj {
   constructor(parent: TNodes, nodeGroupProps: INodeGroupProps) {
     super();
     this._parent = parent;
-    this._nodes = nodeGroupProps.nodes.map(
-      (idx: number) => this._parent.nodes[idx]
-    );
+    nodeGroupProps.nodes.forEach((idx: number) => this.addNode(idx));
 
     this._view = new NodeGroupView(this);
 
@@ -37,7 +35,8 @@ export class NodeGroup extends BaseObj {
   }
 
   get connectionsWithin(): TConnection[] {
-    const nodeIndices = this.nodes.map((node: NodeGroup | TNode) => node.idx);
+    const nodeIndices = this.nodesDeep.map((node) => node.idx);
+    nodeIndices.push(this.idx);
 
     return this.network.connections.all.filter(
       (connection: TConnection) =>
@@ -108,6 +107,23 @@ export class NodeGroup extends BaseObj {
     ) as NodeGroup[];
   }
 
+  get nodeIndicesDeep(): number[] {
+    return [
+      ...new Set(
+        this.nodes
+          .map((node: NodeGroup | TNode) => {
+            if (node.isGroup) {
+              const nodeGroup = node as NodeGroup;
+              return [nodeGroup.idx, nodeGroup.nodeIndicesDeep];
+            }
+            return [node.idx];
+          })
+          .flat()
+          .flat()
+      ),
+    ];
+  }
+
   get nodeItems(): TNode[] {
     return this._nodes.filter(
       (node: NodeGroup | TNode) => node.isNode
@@ -132,6 +148,13 @@ export class NodeGroup extends BaseObj {
 
   get nodes(): (NodeGroup | TNode)[] {
     return this._nodes;
+  }
+
+  get nodesDeep(): (NodeGroup | TNode)[] {
+    const nodeIndices = this.nodeIndicesDeep;
+    return this.parent.nodes.filter((node: NodeGroup | TNode) =>
+      nodeIndices.includes(node.idx)
+    );
   }
 
   get parent(): NodeGroup | TNodes {
@@ -161,6 +184,13 @@ export class NodeGroup extends BaseObj {
   }
 
   /**
+   * Add node.
+   */
+  addNode(idx: number): void {
+    this._nodes.push(this._parent.nodes[idx]);
+  }
+
+  /**
    * Observer for node group changes.
    *
    * @remarks
@@ -184,24 +214,37 @@ export class NodeGroup extends BaseObj {
    * Clone this node group component.
    * @return node group component.
    */
-  clone(): NodeGroup {
+  clone(withConnections: boolean = true): NodeGroup {
     this.logger.trace("clone");
 
-    const nodeIndices = Object.fromEntries(
-      this.nodes.map((node: NodeGroup | TNode) => [node.idx, node.clone().idx])
+    const nodeEntries: [number, number][] = this.nodes.map(
+      (node: NodeGroup | TNode) => [node.idx, node.clone(false).idx]
     );
+    const indicesNew = nodeEntries.map((idx: [number, number]) => idx[1]);
 
-    const connections = this.connectionsWithin;
-    connections.forEach((connection: TConnection) => {
-      const connectionProps = connection.toJSON();
-      connectionProps.source = nodeIndices[connectionProps.source];
-      connectionProps.target = nodeIndices[connectionProps.target];
-      this.network.connections.addConnection(connectionProps);
+    const nodeGroup = this.network.nodes.addNodeGroup({
+      ...this.toJSON(),
+      nodes: indicesNew,
     });
 
-    const nodeGroupProps = this.toJSON();
-    nodeGroupProps.nodes = Object.values(nodeIndices);
-    return this.network.nodes.addNodeGroup(nodeGroupProps);
+    if (withConnections) {
+      const indicesDeepOld = this.nodeIndicesDeep;
+      const indicesDeepNew = nodeGroup.nodeIndicesDeep;
+
+      const nodeIndices = Object.fromEntries(
+        indicesDeepOld.map((old, idx) => [old, indicesDeepNew[idx]])
+      );
+      nodeIndices[this.idx] = nodeGroup.idx;
+
+      this.connectionsWithin.forEach((connection: TConnection) => {
+        const connectionProps = connection.toJSON();
+        connectionProps.source = nodeIndices[connectionProps.source];
+        connectionProps.target = nodeIndices[connectionProps.target];
+        this.network.connections.addConnection(connectionProps);
+      });
+    }
+
+    return nodeGroup;
   }
 
   /**

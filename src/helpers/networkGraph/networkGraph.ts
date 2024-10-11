@@ -9,17 +9,20 @@ import { debounce } from "@/utils/events";
 import { BaseObj } from "../common/base";
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
 import { BaseNode } from "../node/node";
+import { NodeGroup } from "../node/nodeGroup";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 interface IBaseNetworkGraphState {
-  hash: string;
-  nodeMenu: {
+  contextMenu: {
+    connection: TConnection | null;
     modelValue: boolean;
     node: TNode | null;
-    target: number[];
+    nodeGroup: NodeGroup | null;
+    target: [x: number, y: number];
   };
+  hash: string;
 }
 
 export class BaseNetworkGraph extends BaseObj {
@@ -47,12 +50,14 @@ export class BaseNetworkGraph extends BaseObj {
     this._nodeGroupGraph = new NodeGroupGraph(this);
 
     this._state = reactive<IBaseNetworkGraphState>({
-      hash: "",
-      nodeMenu: {
+      contextMenu: {
+        connection: null,
         modelValue: false,
         node: null,
+        nodeGroup: null,
         target: [0, 0], // "cursor" for v-menu doesn't work.
       },
+      hash: "",
     });
 
     this._resizeObserver = new ResizeObserver(
@@ -155,6 +160,25 @@ export class BaseNetworkGraph extends BaseObj {
     );
   }
 
+  openContextMenu(
+    target: [number, number],
+    props: { connection?: TConnection; node?: TNode; nodeGroup?: NodeGroup }
+  ): void {
+    if (this._state.contextMenu.modelValue) {
+      this._state.contextMenu.modelValue = false;
+      setTimeout(() => this.openContextMenu(target, props), 200);
+      return;
+    }
+
+    this._state.contextMenu.connection =
+      (props.connection as TConnection) || null;
+    this._state.contextMenu.node = (props.node as TNode) || null;
+    this._state.contextMenu.nodeGroup = (props.nodeGroup as NodeGroup) || null;
+
+    this._state.contextMenu.target = target;
+    this._state.contextMenu.modelValue = true;
+  }
+
   /**
    * Render network graph.
    */
@@ -169,10 +193,8 @@ export class BaseNetworkGraph extends BaseObj {
   /**
    * Reset state of network graph.
    */
-  reset(): void {
-    this._state.nodeMenu.modelValue = false;
-    this._state.nodeMenu.target = [0, 0];
-    this._state.nodeMenu.node = null;
+  resetState(): void {
+    this._state.contextMenu.modelValue = false;
   }
 
   /**
