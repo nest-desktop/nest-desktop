@@ -9,6 +9,7 @@ import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
 import {
   fetchNESTMLModels,
   generateModels,
+  useNESTMLServerStore,
 } from "./backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./model/modelDBStore";
 
@@ -61,7 +62,8 @@ export const useNESTModuleStore: TModuleStore = defineStore(
       state.modules.find((module: IModule) => module.name === moduleName);
 
     const init = () => {
-      fetchInstalledModels();
+      const nestmlServerStore = useNESTMLServerStore();
+      if (nestmlServerStore.state.enabled) fetchInstalledModels();
     };
 
     const moduleNames = () =>
