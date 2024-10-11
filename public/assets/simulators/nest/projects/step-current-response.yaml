@@ -12,24 +12,24 @@ network:
           value: 600
       view:
         position:
-          x: 25
-          y: 75
+          x: -150
+          y: 25
     - model: iaf_psc_alpha
       params:
         - id: C_m
           value: 250
       view:
         position:
-          x: 175
-          y: 25
+          x: 0
+          y: -25
     - model: voltmeter
       params:
         - id: interval
           value: 0.1
       view:
         position:
-          x: 325
-          y: 75
+          x: 150
+          y: 25
   connections:
     - source: 0
       target: 1

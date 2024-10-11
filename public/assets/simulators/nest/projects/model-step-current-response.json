@@ -42,8 +42,8 @@
                 "model": "dc_generator",
                 "view": {
                     "position": {
-                        "x": 25,
-                        "y": 75
+                        "x": -150,
+                        "y": -25
                     }
                 },
                 "size": 11,
@@ -83,7 +83,7 @@
                 "model": "iaf_psc_alpha",
                 "view": {
                     "position": {
-                        "x": 175,
+                        "x": 0,
                         "y": 25
                     }
                 },
@@ -115,8 +115,8 @@
                 "model": "voltmeter",
                 "view": {
                     "position": {
-                        "x": 304.0999755859375,
-                        "y": -98.75
+                        "x": 150,
+                        "y": -25
                     }
                 },
                 "params": [

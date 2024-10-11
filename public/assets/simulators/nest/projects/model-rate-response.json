@@ -20,8 +20,8 @@
                 "model": "iaf_psc_alpha",
                 "view": {
                     "position": {
-                        "x": -166,
-                        "y": -195.25
+                        "x": -150,
+                        "y": -25
                     }
                 },
                 "size": 11
@@ -30,8 +30,8 @@
                 "model": "poisson_generator",
                 "view": {
                     "position": {
-                        "x": -262,
-                        "y": -274
+                        "x": 0,
+                        "y": 25
                     }
                 },
                 "size": 11,
@@ -70,8 +70,8 @@
                 ],
                 "view": {
                     "position": {
-                        "x": -52,
-                        "y": -243.25
+                        "x": 150,
+                        "y": -25
                     }
                 }
             }
