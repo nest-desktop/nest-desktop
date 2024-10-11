@@ -1,26 +1,29 @@
 <template>
-  <v-list density="compact">
-    <slot name="prependItem" :node />
+  <Card :color="node.view.color">
+    <v-list density="compact">
+      <slot name="prependItem" :node />
 
-    <v-list-item
-      :key="index"
-      v-bind="item"
-      v-for="(item, index) in items"
-      v-show="item.show ? item.show() : true"
-    >
-      <template #prepend v-if="item.icon">
-        <v-icon v-bind="item.icon" />
-      </template>
-    </v-list-item>
+      <v-list-item
+        :key="index"
+        v-bind="item"
+        v-for="(item, index) in items"
+        v-show="item.show ? item.show() : true"
+      >
+        <template #prepend v-if="item.icon">
+          <v-icon v-bind="item.icon" />
+        </template>
+      </v-list-item>
 
-    <slot name="appendItem" :node />
-  </v-list>
+      <slot name="appendItem" :node />
+    </v-list>
+  </Card>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
+import Card from "../common/Card.vue";
 import ExportEventsDialog from "../dialog/ExportEventsDialog.vue";
 import NodeColorDialog from "../dialog/NodeColorDialog.vue";
 import { TNode } from "@/types";

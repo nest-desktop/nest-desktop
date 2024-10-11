@@ -1,27 +1,30 @@
 <template>
-  <v-list density="compact">
-    <v-list-item
-      :key="index"
-      v-bind="item"
-      v-for="(item, index) in items"
-      v-show="item.show ? item.show() : true"
-    >
-      <template #prepend v-if="item.icon">
-        <v-icon v-bind="item.icon" />
-      </template>
-    </v-list-item>
+  <Card :color="nodeGroup.view.color">
+    <v-list density="compact">
+      <v-list-item
+        :key="index"
+        v-bind="item"
+        v-for="(item, index) in items"
+        v-show="item.show ? item.show() : true"
+      >
+        <template #prepend v-if="item.icon">
+          <v-icon v-bind="item.icon" />
+        </template>
+      </v-list-item>
 
-    <slot name="appendItem" :nodeGroup />
-  </v-list>
+      <slot name="appendItem" :nodeGroup />
+    </v-list>
+  </Card>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import Card from "../common/Card.vue";
+import NodeColorDialog from "../dialog/NodeColorDialog.vue";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 import { createDialog } from "vuetify3-dialog";
-import NodeColorDialog from "../dialog/NodeColorDialog.vue";
 
 const props = defineProps<{ nodeGroup: NodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);

@@ -30,21 +30,21 @@ const items = [
     onClick: () => {
       projectDBStore.value.loadProject(project.value);
       nextTick(() => {
-        project.value.state.state.editMode = true;
-      });
-    },
-    prependIcon: "mdi:mdi-pencil",
-    title: "Rename",
-  },
-  {
-    onClick: () => {
-      projectDBStore.value.loadProject(project.value);
-      nextTick(() => {
         projectDBStore.value.saveProject(project.value);
       });
     },
     prependIcon: "mdi:mdi-content-save-outline",
     title: "Save",
+  },
+  {
+    onClick: () => {
+      projectDBStore.value.loadProject(project.value);
+      nextTick(() => {
+        project.value.state.state.editMode = true;
+      });
+    },
+    prependIcon: "mdi:mdi-pencil",
+    title: "Rename",
   },
   {
     onClick: () => {

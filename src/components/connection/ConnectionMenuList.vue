@@ -1,25 +1,28 @@
 <template>
-  <v-list density="compact">
-    <slot name="prependItem" :connection />
+  <Card :color="connection.sourceNode.view.color">
+    <v-list density="compact">
+      <slot name="prependItem" :connection />
 
-    <v-list-item
-      :key="index"
-      v-bind="item"
-      v-for="(item, index) in items"
-      v-show="item.show ? item.show() : true"
-    >
-      <template #prepend v-if="item.icon">
-        <v-icon v-bind="item.icon" />
-      </template>
-    </v-list-item>
+      <v-list-item
+        :key="index"
+        v-bind="item"
+        v-for="(item, index) in items"
+        v-show="item.show ? item.show() : true"
+      >
+        <template #prepend v-if="item.icon">
+          <v-icon v-bind="item.icon" />
+        </template>
+      </v-list-item>
 
-    <slot name="appendItem" :connection />
-  </v-list>
+      <slot name="appendItem" :connection />
+    </v-list>
+  </Card>
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import Card from "../common/Card.vue";
 import { TConnection } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 
