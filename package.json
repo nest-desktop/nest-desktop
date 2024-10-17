@@ -80,7 +80,7 @@
     "eslint-plugin-vue": "~9.29",
     "js-yaml": "^4.1.0",
     "register-service-worker": "~1.7",
-    "sass": "~1.79",
+    "sass": "~1.80",
     "semver": "~7.6",
     "sharp": "~0.33",
     "tslog": "~4.9",
