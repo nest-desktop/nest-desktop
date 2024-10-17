@@ -1,6 +1,7 @@
 // networkGraphNodeAddPanel.ts
 
 import { Arc, Selection, arc } from "d3";
+import { UnwrapRef, reactive } from "vue";
 
 import { useAppStore } from "@/stores/appStore";
 import { TModel, TNetwork } from "@/types";
@@ -10,9 +11,22 @@ import { darkMode } from "../common/theme";
 import { TElementType } from "../model/model";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
+export interface INetworkGraphAddPanelState {
+  elementType: TElementType | null;
+  menuItems: { onClick: () => void; title: string; value: string }[];
+  modelValue: boolean;
+  target: string;
+}
+
 export class NetworkGraphNodeAddPanel extends BaseObj {
   private _elementTypes: TElementType[] = ["recorder", "neuron", "stimulator"];
   private _selector: Selection<any, any, any, any>;
+  private _state: UnwrapRef<INetworkGraphAddPanelState> = reactive({
+    elementType: null,
+    menuItems: [],
+    modelValue: false,
+    target: "",
+  });
   private _workspace: NetworkGraphWorkspace;
 
   constructor(networkGraphWorkspace: NetworkGraphWorkspace) {
@@ -46,6 +60,10 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     return this._workspace.networkGraph.config?.localStorage.nodeRadius;
   }
 
+  get state(): UnwrapRef<INetworkGraphAddPanelState> {
+    return this._state;
+  }
+
   get strokeWidth(): number {
     return this._workspace.networkGraph.config?.localStorage.strokeWidth;
   }
@@ -66,8 +84,12 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * Close models menu.
    */
   closeModelsMenu(): void {
-    this._workspace.state.modelsMenu.modelValue = false;
-    this._workspace.state.modelsMenu.target = "";
+    this._state.modelValue = false;
+    this._state.target = "";
+    setTimeout(() => {
+      this._state.elementType = null;
+      this._state.menuItems = [];
+    }, 200);
   }
 
   /**
@@ -249,11 +271,16 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   openModelMenu(event: MouseEvent, elementType: TElementType): void {
     if (!this.network) return;
 
-    if (this._workspace.state.modelsMenu.modelValue) {
+    if (this._state.modelValue) {
+      const currentElementType = this._state.elementType;
       this.closeModelsMenu();
-      setTimeout(() => this.openModelMenu(event, elementType), 200);
+      if (currentElementType != elementType) {
+        setTimeout(() => this.openModelMenu(event, elementType), 200);
+      }
       return;
     }
+
+    this._state.elementType = elementType;
 
     const models: TModel[] =
       this.network.project.modelDBStore.getModelsByElementType(elementType);
@@ -264,10 +291,9 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       onClick: () => this.selectModel(model.id, elementType),
     }));
 
-    this._workspace.state.modelsMenu.menuItems = items;
-    this._workspace.state.modelsMenu.target =
-      ".elementType." + elementType + " .menuItem";
-    this._workspace.state.modelsMenu.modelValue = true;
+    this._state.menuItems = items;
+    this._state.target = ".elementType." + elementType + " .menuItem";
+    this._state.modelValue = true;
   }
 
   selectModel(modelId: string, elementType: TElementType): void {
@@ -345,25 +371,6 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
         event.preventDefault();
 
         this.openModelMenu(event, elementType);
-
-        // createBottomSheet({
-        //   title: `Select a ${elementType} model`,
-        //   items,
-        // }).then((modelId: string) => {
-        //   if (!this.network) return;
-        //   modelStore.updateRecentAddedModels(modelId, elementType);
-
-        //   this._workspace.animationOff();
-
-        //   this.network.createNode(modelId, {
-        //     elementType,
-        //     position: Object.assign({}, this.position),
-        //   });
-
-        //   this.updateModelMenu(elementType);
-        //   this._workspace.networkGraph.update();
-        //   this._workspace.networkGraph.workspace.updateTransform();
-        // });
       });
     }
   }

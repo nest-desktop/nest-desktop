@@ -19,11 +19,6 @@ export interface INetworkGraphWorkspaceState {
   dragLine: boolean;
   dragging: boolean;
   keyCode: number;
-  modelsMenu: {
-    menuItems: { onClick: () => void; title: string; value: string }[];
-    modelValue: boolean;
-    target: string;
-  };
   showGrid: boolean;
   transforming: boolean;
 }
@@ -47,11 +42,6 @@ export class NetworkGraphWorkspace extends BaseObj {
     dragLine: false,
     dragging: false,
     keyCode: -1,
-    modelsMenu: {
-      menuItems: [],
-      modelValue: false,
-      target: "",
-    },
     showGrid: false,
     transforming: false,
   });

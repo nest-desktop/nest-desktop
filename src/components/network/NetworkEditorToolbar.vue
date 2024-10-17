@@ -54,19 +54,22 @@
         </ContextMenu>
 
         <v-menu
-          :target="graph.workspace.state.modelsMenu.target"
-          v-model="graph.workspace.state.modelsMenu.modelValue"
+          :target="graph.workspace.nodeAddPanel.state.target"
+          v-model="graph.workspace.nodeAddPanel.state.modelValue"
         >
           <template #activator="{ props }">
             <slot name="activator" v-bind="props" />
           </template>
 
           <v-list>
-            <v-list-subheader> Select a model </v-list-subheader>
+            <v-list-subheader>
+              Select a
+              {{ graph.workspace.nodeAddPanel.state.elementType }} model
+            </v-list-subheader>
             <v-list-item
               :key="index"
               @click="() => item.onClick()"
-              v-for="(item, index) in graph.workspace.state.modelsMenu
+              v-for="(item, index) in graph.workspace.nodeAddPanel.state
                 .menuItems"
             >
               <v-list-item-title>{{ item.title }}</v-list-item-title>
