@@ -2,13 +2,12 @@
 
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
-import { TStore } from "@/types";
 
 import { ISimulatorProps } from "../";
 import iconSet from "./components/iconSet";
 import types from "./helpers/types";
 import route from "./routes";
-import { usePyNNSimulatorStore } from "./stores/backends/pynnSimulatorStore";
+import { pynnSimulatorInit } from "./stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
 import { usePyNNModelStore } from "./stores/model/modelStore";
 import { usePyNNProjectDBStore } from "./stores/project/projectDBStore";
@@ -36,12 +35,8 @@ export const pynn: ISimulatorProps = {
       projectStore,
     };
 
-    // Initialize backend PyNN Simulator
-    const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
-    pynnSimulatorStore.init();
-
     pynn.backends = {
-      pynn: pynnSimulatorStore,
+      pynn: pynnSimulatorInit(),
     };
   },
   route,

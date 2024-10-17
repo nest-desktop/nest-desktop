@@ -14,9 +14,9 @@ import {
 import nestIconSet from "./components/iconSet";
 import types from "./helpers/types";
 import route from "./routes";
-import { useInsiteAccessStore } from "./stores/backends/insiteAccessStore";
-import { useNESTSimulatorStore } from "./stores/backends/nestSimulatorStore";
-import { useNESTMLServerStore } from "./stores/backends/nestmlServerStore";
+// import { insiteAccessInit } from "./stores/backends/insiteAccessStore";
+import { nestSimulatorInit } from "./stores/backends/nestSimulatorStore";
+import { nestmlServerInit } from "./stores/backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
 import { useNESTModelStore } from "./stores/model/modelStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
@@ -71,22 +71,10 @@ export const nest: ISimulatorProps = {
       projectStore,
     };
 
-    // Initialize backend NEST Simulator.
-    const nestSimulatorStore = useNESTSimulatorStore();
-    nestSimulatorStore.init();
-
-    // Initialize backend Insite Access.
-    const insiteAccessStore = useInsiteAccessStore();
-    insiteAccessStore.init();
-
-    // Initialize backend NESTML Server.
-    const nestmlServerStore = useNESTMLServerStore();
-    nestmlServerStore.init();
-
     nest.backends = {
-      nest: nestSimulatorStore,
-      insite: insiteAccessStore,
-      nestml: nestmlServerStore,
+      nest: nestSimulatorInit(),
+      // insite: insiteAccessInit(),
+      nestml: nestmlServerInit(),
     };
   },
   route,

@@ -63,6 +63,7 @@
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
+          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
         />
       </template>
     </ProjectBar>
@@ -200,7 +201,6 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
@@ -225,8 +225,12 @@ import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
 import { NESTNode } from "../helpers/node/node";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
+import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();

@@ -1,7 +1,6 @@
 // networkGraphNodeAddPanel.ts
 
 import { Arc, Selection, arc } from "d3";
-import { createBottomSheet } from "vuetify3-dialog";
 
 import { useAppStore } from "@/stores/appStore";
 import { TModel, TNetwork } from "@/types";
@@ -60,6 +59,15 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    */
   close(): void {
     this._selector.style("display", "none");
+    this.closeModelsMenu();
+  }
+
+  /**
+   * Close models menu.
+   */
+  closeModelsMenu(): void {
+    this._workspace.state.modelsMenu.modelValue = false;
+    this._workspace.state.modelsMenu.target = "";
   }
 
   /**
@@ -165,7 +173,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       model.abbreviation
     );
 
-    modelPanel.select(".menuItem").on("mouseup", () => {
+    modelPanel.select(".menuItem").on("click", () => {
       this.close();
       if (this.network == undefined) return;
 
@@ -238,6 +246,51 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this.updateColor();
   }
 
+  openModelMenu(event: MouseEvent, elementType: TElementType): void {
+    if (!this.network) return;
+
+    if (this._workspace.state.modelsMenu.modelValue) {
+      this.closeModelsMenu();
+      setTimeout(() => this.openModelMenu(event, elementType), 200);
+      return;
+    }
+
+    const models: TModel[] =
+      this.network.project.modelDBStore.getModelsByElementType(elementType);
+
+    const items = models.map((model: TModel) => ({
+      title: model.state.label,
+      value: model.id,
+      onClick: () => this.selectModel(model.id, elementType),
+    }));
+
+    this._workspace.state.modelsMenu.menuItems = items;
+    this._workspace.state.modelsMenu.target =
+      ".elementType." + elementType + " .menuItem";
+    this._workspace.state.modelsMenu.modelValue = true;
+  }
+
+  selectModel(modelId: string, elementType: TElementType): void {
+    this.close();
+
+    const appStore = useAppStore();
+    const modelStore = appStore.currentSimulator.stores.modelStore;
+
+    if (!this.network) return;
+    modelStore.updateRecentAddedModels(modelId, elementType);
+
+    this._workspace.animationOff();
+
+    this.network.createNode(modelId, {
+      elementType,
+      position: Object.assign({}, this.position),
+    });
+
+    this.updateModelMenu(elementType);
+    this._workspace.networkGraph.update();
+    this._workspace.networkGraph.workspace.updateTransform();
+  }
+
   /**
    * Update color of node add panel.
    */
@@ -288,41 +341,29 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       );
 
       // Click on element type.
-      panel.select(".menuItem").on("click", () => {
-        this.close();
-        if (!this.network) return;
+      panel.select(".menuItem").on("click", (event: MouseEvent) => {
+        event.preventDefault();
 
-        const models: TModel[] =
-          this.network.project.modelDBStore.getModelsByElementType(elementType);
+        this.openModelMenu(event, elementType);
 
-        const items = models.map((model: TModel) => ({
-          title: model.state.label,
-          value: model.id,
-        }));
+        // createBottomSheet({
+        //   title: `Select a ${elementType} model`,
+        //   items,
+        // }).then((modelId: string) => {
+        //   if (!this.network) return;
+        //   modelStore.updateRecentAddedModels(modelId, elementType);
 
-        createBottomSheet({
-          title: `Select a ${elementType} model`,
-          items,
-        }).then((modelId: string) => {
-          if (!this.network) return;
-          modelStore.updateRecentAddedModels(modelId, elementType);
+        //   this._workspace.animationOff();
 
-          this._workspace.animationOff();
+        //   this.network.createNode(modelId, {
+        //     elementType,
+        //     position: Object.assign({}, this.position),
+        //   });
 
-          this.network.createNode(modelId, {
-            elementType,
-            position: Object.assign({}, this.position),
-          });
-
-          this.updateModelMenu(elementType);
-          this._workspace.networkGraph.update();
-          this._workspace.networkGraph.workspace.updateTransform();
-        });
-
-        // this.openMenu(modelIds, offset);
-
-        // this.updateColor();
-        // panel.select(".models").style("display", "block");
+        //   this.updateModelMenu(elementType);
+        //   this._workspace.networkGraph.update();
+        //   this._workspace.networkGraph.workspace.updateTransform();
+        // });
       });
     }
   }

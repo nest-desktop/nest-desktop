@@ -11,6 +11,7 @@
         absolute
         offset
         title="Create a new model"
+        v-show="appStore.currentSimulator.backends.nestml.state.enabled"
       />
     </template>
   </ModelNav>
@@ -66,6 +67,7 @@
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
+          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
         />
       </template>
 
@@ -106,6 +108,7 @@ import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { loadJSON } from "@/utils/fetch";
+import { mountModelLayout } from "@/helpers/routes";
 
 import NewModelDialog from "../components/dialog/NewModelDialog.vue";
 import { INESTProjectProps, NESTProject } from "../helpers/project/project";
@@ -127,7 +130,6 @@ import {
 const modelStore: TModelStore = useNESTModelStore();
 
 import { useNESTModuleStore } from "../stores/moduleStore";
-import { mountModelLayout } from "@/helpers/routes";
 const moduleStore = useNESTModuleStore();
 
 const modelDBStore = computed(

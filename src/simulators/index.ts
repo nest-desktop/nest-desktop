@@ -18,7 +18,8 @@ import { CompletionSource } from "@codemirror/autocomplete";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
-import { pynn } from "./pynn";
+
+// import { pynn } from "./pynn";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
@@ -43,7 +44,7 @@ export interface ISimulatorProps {
 export const simulators: Record<string, ISimulatorProps> = {
   nest,
   norse,
-  pynn,
+  // pynn,
 };
 
 export function registerSimulators(app: App) {

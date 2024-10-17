@@ -8,7 +8,7 @@ import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 import iconSet from "./components/iconSet";
 import types from "./helpers/types";
 import route from "./routes";
-import { useNorseSimulatorStore } from "./stores/backends/norseSimulatorStore";
+import { norseSimulatorInit } from "./stores/backends/norseSimulatorStore";
 import { useNorseModelDBStore } from "./stores/model/modelDBStore";
 import { useNorseModelStore } from "./stores/model/modelStore";
 import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
@@ -37,12 +37,8 @@ export const norse: ISimulatorProps = {
       projectStore,
     };
 
-    // Initialize backend Norse Simulator.
-    const norseSimulatorStore = useNorseSimulatorStore();
-    norseSimulatorStore.init();
-
     norse.backends = {
-      norse: norseSimulatorStore,
+      norse: norseSimulatorInit(),
     };
   },
   route,

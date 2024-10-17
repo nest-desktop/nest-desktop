@@ -1,7 +1,7 @@
 // networkGraphWorkspace.ts
 
 import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
-import { nextTick } from "vue";
+import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TNetwork, TNetworkGraph, TNode } from "@/types";
 
@@ -19,6 +19,11 @@ export interface INetworkGraphWorkspaceState {
   dragLine: boolean;
   dragging: boolean;
   keyCode: number;
+  modelsMenu: {
+    menuItems: { onClick: () => void; title: string; value: string }[];
+    modelValue: boolean;
+    target: string;
+  };
   showGrid: boolean;
   transforming: boolean;
 }
@@ -34,7 +39,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     height: 600,
     width: 800,
   };
-  private _state: INetworkGraphWorkspaceState = {
+  private _state: UnwrapRef<INetworkGraphWorkspaceState> = reactive({
     centerNetwork: false,
     centerSelected: false,
     connected: false,
@@ -42,9 +47,14 @@ export class NetworkGraphWorkspace extends BaseObj {
     dragLine: false,
     dragging: false,
     keyCode: -1,
+    modelsMenu: {
+      menuItems: [],
+      modelValue: false,
+      target: "",
+    },
     showGrid: false,
     transforming: false,
-  };
+  });
   private _zoom: NetworkGraphZoom;
 
   constructor(networkGraph: TNetworkGraph) {
@@ -96,7 +106,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._selector;
   }
 
-  get state(): INetworkGraphWorkspaceState {
+  get state(): UnwrapRef<INetworkGraphWorkspaceState> {
     return this._state;
   }
 

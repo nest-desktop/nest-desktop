@@ -1,32 +1,5 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <v-chip
-      :text="graph?.hash"
-      @click="graph?.updateHash()"
-      size="small"
-      variant="text"
-    />
-
-    <div style="width: 320px" v-if="graph">
-      <ContextMenu
-        :target="graph ? graph.state.contextMenu.target : [0, 0]"
-        v-model="graph.state.contextMenu.modelValue"
-      >
-        <ConnectionMenuList
-          :connection="(graph.state.contextMenu.connection as TConnection)"
-          v-if="graph.state.contextMenu.connection"
-        />
-        <NodeMenuList
-          :node="(graph.state.contextMenu.node as TNode)"
-          v-if="graph.state.contextMenu.node"
-        />
-        <NodeGroupMenuList
-          :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
-          v-if="graph.state.contextMenu.nodeGroup"
-        />
-      </ContextMenu>
-    </div>
-
     <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
       <rect height="100%" id="workspaceHandler" width="100%" />
 
@@ -70,13 +43,7 @@
                   stroke="currentcolor"
                   v-if="connection.view.markerEndLabel === 'exc'"
                 />
-                <circle
-                  fill="transparent"
-                  r="4"
-                  stroke="currentcolor"
-                  transform="translate(5,5)"
-                  v-if="connection.view.markerEndLabel === 'assigned'"
-                />
+                <slot name="marker" :connection />
                 <text dx="8" dy="5" />
               </marker>
             </defs>
@@ -90,9 +57,11 @@
             />
           </g>
 
-          <g id="nodeGroups" />
-          <g id="connections" />
-          <g id="nodes" />
+          <slot name="components">
+            <g id="nodeGroups" />
+            <g id="connections" />
+            <g id="nodes" />
+          </slot>
         </g>
 
         <g id="nodeAddPanel" />
@@ -104,13 +73,8 @@
 <script lang="ts" setup>
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import ConnectionMenuList from "../connection/ConnectionMenuList.vue";
-import ContextMenu from "../common/ContextMenu.vue";
-import NodeGroupMenuList from "../node/NodeGroupMenuList.vue";
-import NodeMenuList from "../node/NodeMenuList.vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TConnection, TNetwork, TNode } from "@/types";
+import { TNetwork } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
@@ -176,7 +140,7 @@ onBeforeUnmount(() => {
   .synMarker {
     text {
       font-size: 4px;
-      font-weight: 100;
+      font-weight: 700;
       pointer-events: none;
       stroke-width: 0.5px;
       stroke: rgb(var(--v-on-background));

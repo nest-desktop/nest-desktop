@@ -3,6 +3,7 @@
 import { AxiosResponse } from "axios";
 
 import { defineBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 
 export const useInsiteAccessStore = defineBackendStore(
   "nest",
@@ -31,19 +32,16 @@ const getMultimeterAttribute = (
 
 const getMultimeters = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
-
   return insiteAccessStore.axiosInstance().get("nest/multimeters/");
 };
 
 const getNodes = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
-
   return insiteAccessStore.axiosInstance().get("nest/nodes/");
 };
 
 const getSimulationTimeInfo = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
-
   return insiteAccessStore.axiosInstance().get("nest/simulationTimeInfo/");
 };
 
@@ -69,8 +67,14 @@ const getSpikes = (query?: {
 
 const getSpikeRecorders = (): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
-
   return insiteAccessStore.axiosInstance().get("nest/spikerecorders/");
+};
+
+export const insiteAccessInit = (): TStore => {
+  // Initialize backend Insite Access.
+  const insiteAccessStore: TStore = useInsiteAccessStore();
+  insiteAccessStore.init();
+  return insiteAccessStore;
 };
 
 export default {

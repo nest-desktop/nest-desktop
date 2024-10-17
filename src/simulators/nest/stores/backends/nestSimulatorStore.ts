@@ -4,6 +4,7 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
+import { TStore } from "@/types";
 import { sortString } from "@/utils/array";
 import { notifyError } from "@/utils/notification";
 
@@ -99,9 +100,15 @@ const installModule = (moduleName?: string): void => {
     });
 };
 
+export const nestSimulatorInit = (): TStore => {
+  // Initialize backend NEST Simulator.
+  const nestSimulatorStore: TStore = useNESTSimulatorStore();
+  nestSimulatorStore.init();
+  return nestSimulatorStore;
+};
+
 const resetKernel = (): void => {
   const nestSimulatorStore = useNESTSimulatorStore();
-
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
 };
 
@@ -110,7 +117,6 @@ const simulate = (data: {
   return?: string;
 }): Promise<AxiosResponse> => {
   const nestSimulatorStore = useNESTSimulatorStore();
-
   return nestSimulatorStore.axiosInstance().post("exec", data);
 };
 

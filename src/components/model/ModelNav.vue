@@ -28,7 +28,7 @@
 
       <template #extension>
         <slot name="newModel">
-          <v-fab
+          <!-- <v-fab
             @click="dialogNewModel()"
             class="ms-4"
             color="primary"
@@ -38,7 +38,7 @@
             absolute
             offset
             title="Create a new model"
-          />
+          /> -->
         </slot>
 
         <v-row class="ma-2" no-gutters>
@@ -144,10 +144,10 @@ import ExportDialog from "../dialog/ExportDialog.vue";
 import ImportDialog from "../dialog/ImportDialog.vue";
 import Menu from "../common/Menu.vue";
 import ModelMenu from "./ModelMenu.vue";
-import TextFieldDialog from "../dialog/TextFieldDialog.vue";
+// import TextFieldDialog from "../dialog/TextFieldDialog.vue";
 
-import { useRouter } from "vue-router";
-const router = useRouter();
+// import { useRouter } from "vue-router";
+// const router = useRouter();
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -278,34 +278,34 @@ const items = [
   },
 ];
 
-const dialogNewModel = () => {
-  createDialog({
-    customComponent: {
-      component: TextFieldDialog,
-      props: {
-        title: "Create model",
-        modelValue: "new model " + modelDBStore.value.state.models.length,
-      },
-    },
-    text: "",
-    title: "",
-  }).then((modelLabel: string | undefined) => {
-    if (modelLabel) {
-      let modelId = modelLabel as string;
-      const model = modelDBStore.value.newModel({
-        id: modelId.replaceAll(" ", "_"),
-        label: modelLabel,
-      });
+// const dialogNewModel = () => {
+//   createDialog({
+//     customComponent: {
+//       component: TextFieldDialog,
+//       props: {
+//         title: "Create model",
+//         modelValue: "new model " + modelDBStore.value.state.models.length,
+//       },
+//     },
+//     text: "",
+//     title: "",
+//   }).then((modelLabel: string | undefined) => {
+//     if (modelLabel) {
+//       let modelId = modelLabel as string;
+//       const model = modelDBStore.value.newModel({
+//         id: modelId.replaceAll(" ", "_"),
+//         label: modelLabel,
+//       });
 
-      nextTick(() => {
-        router.push({
-          name: appStore.state.simulator + "ModelEditor",
-          params: { modelId: model.id },
-        });
-      });
-    }
-  });
-};
+//       nextTick(() => {
+//         router.push({
+//           name: appStore.state.simulator + "ModelEditor",
+//           params: { modelId: model.id },
+//         });
+//       });
+//     }
+//   });
+// };
 
 const dispatchWindowResize = () => {
   nextTick(() => window.dispatchEvent(new Event("resize")));

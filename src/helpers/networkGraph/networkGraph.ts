@@ -1,7 +1,7 @@
 // networkGraph.ts
 
 import { Selection, select } from "d3";
-import { Ref, UnwrapRef, reactive, watch } from "vue";
+import { Ref, UnwrapRef, nextTick, reactive, watch } from "vue";
 
 import { TConnection, TNetwork, TNode } from "@/types";
 import { debounce } from "@/utils/events";
@@ -27,13 +27,13 @@ interface IBaseNetworkGraphState {
 
 export class BaseNetworkGraph extends BaseObj {
   private _connectionGraph: ConnectionGraph;
-  public _network: TNetwork;
   private _nodeGraph: NodeGraph;
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: Selection<any, any, null, undefined>;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
+  public _network: TNetwork;
 
   constructor(ref: Ref<HTMLElement | null>, network: TNetwork) {
     super({
@@ -139,7 +139,7 @@ export class BaseNetworkGraph extends BaseObj {
     this.logger.trace("init");
 
     this._workspace?.init();
-    this.update();
+    nextTick(() => this.update());
 
     watch(
       () => [
@@ -218,6 +218,7 @@ export class BaseNetworkGraph extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
+      state: this.workspace.state.modelsMenu.modelValue,
       nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
         color: node.view.state.color,
         idx: node.idx,

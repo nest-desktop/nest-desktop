@@ -4,6 +4,7 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
+import { TStore } from "@/types";
 import { notifyError, notifySuccess } from "@/utils/notification";
 
 export const useNESTMLServerStore = defineBackendStore(
@@ -59,4 +60,11 @@ export const fetchNESTMLModels = (
   return nestmlServerStore
     .axiosInstance()
     .get(`/module/${moduleName}/installed`);
+};
+
+export const nestmlServerInit = (): TStore => {
+  // Initialize backend NESTML Server.
+  const nestmlServerStore: TStore = useNESTMLServerStore();
+  nestmlServerStore.init();
+  return nestmlServerStore;
 };
