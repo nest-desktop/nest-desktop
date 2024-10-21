@@ -13,9 +13,10 @@
             name: 'nestActivityExplorer',
             params: { projectId: projectStore.state.projectId },
           }"
-          title="Activity Explorer"
+          class="tab-activity-explorer"
           size="small"
           stacked
+          title="Activity Explorer"
           value="explore"
         >
           <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
@@ -32,7 +33,7 @@
         >
           <v-icon icon="mdi:mdi-menu-down" />
 
-          <v-menu activator="parent">
+          <v-menu activator="parent" target=".tab-activity-explorer">
             <v-list density="compact">
               <v-list-item
                 @click="
@@ -133,6 +134,7 @@
 
               <template #nodeModelSelect="{ selectState }">
                 <NodeModelSelect
+                  :elementTypes
                   :node
                   @openMenu="() => (selectState.menu = true)"
                 />
@@ -208,6 +210,7 @@ import Menu from "@/components/common/Menu.vue";
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
 import NodeGroup from "@/components/node/NodeGroup.vue";
+import NodeModelSelect from "@/components/node/NodeModelSelect.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
@@ -218,7 +221,6 @@ import { mountProjectLayout } from "@/helpers/routes";
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
-import NodeModelSelect from "../components/node/NodeModelSelect.vue";
 import NodePositionPopover from "../components/node/NodePositionPopover.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
 import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
@@ -238,6 +240,13 @@ const projectStore: TProjectStore = useNESTProjectStore();
 const project = computed(() => projectStore.state.project);
 
 const model = ref("");
+
+const elementTypes = [
+  { title: "copied model", value: "copied" },
+  { title: "neuron", value: "neuron" },
+  { title: "recorder", value: "recorder" },
+  { title: "stimulator", value: "stimulator" },
+];
 
 const getPopItems = (node: NESTNode) => [
   {

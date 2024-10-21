@@ -27,6 +27,7 @@
             name: 'nestModelExplorer',
             params: { modelId: modelStore.state.modelId },
           }"
+          class="tab-model-explorer"
           size="small"
           title="Model Explorer"
           value="explore"
@@ -45,7 +46,7 @@
         >
           <v-icon icon="mdi:mdi-menu-down" />
 
-          <v-menu activator="parent">
+          <v-menu activator="parent" target=".tab-model-explorer">
             <v-list density="compact">
               <v-list-item
                 :key="index"

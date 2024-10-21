@@ -17,7 +17,7 @@
 
         <template #append>
           <v-btn
-            @click.stop="select(props, true)"
+            @click="select(props, true)"
             class="icon"
             icon="mdi:mdi-menu-right"
             size="x-small"
@@ -52,8 +52,19 @@ import { computed, onMounted, reactive } from "vue";
 
 import { TModel, TNode } from "@/types";
 
-const props = defineProps<{ node: TNode }>();
+const props = defineProps<{
+  elementTypes?: { title: string; value: string }[];
+  node: TNode;
+}>();
 const node = computed(() => props.node);
+const elementTypes = computed(
+  () =>
+    props.elementTypes || [
+      { title: "neuron", value: "neuron" },
+      { title: "recorder", value: "recorder" },
+      { title: "stimulator", value: "stimulator" },
+    ]
+);
 
 const emit = defineEmits(["openMenu"]);
 
@@ -65,18 +76,16 @@ const state = reactive<{
   items: [],
 });
 
-const elementTypes = [
-  { title: "neuron", value: "neuron" },
-  { title: "recorder", value: "recorder" },
-  { title: "stimulator", value: "stimulator" },
-];
-
 const openMenu = () => emit("openMenu", true);
 
 const select = (props: Record<string, unknown>, open?: boolean) => {
   node.value.view.expandNodePanel();
 
-  if (["neuron", "recorder", "stimulator"].includes(props.value as string)) {
+  const elementTypesValues = elementTypes.value.map(
+    (elementType) => elementType.value
+  );
+
+  if (elementTypesValues.includes(props.value as string)) {
     state.elementType = props.value as string;
     state.items =
       node.value.network.project.modelDBStore.getModelsByElementType(

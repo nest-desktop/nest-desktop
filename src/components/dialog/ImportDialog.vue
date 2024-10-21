@@ -72,6 +72,7 @@
           flat
           prepend-icon="mdi:mdi-download"
           text="fetch"
+          variant="outlined"
         />
       </template>
 
