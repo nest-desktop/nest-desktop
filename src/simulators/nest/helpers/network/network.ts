@@ -8,6 +8,7 @@ import { INESTConnectionProps, NESTConnection } from "../connection/connection";
 import { NESTConnections } from "../connection/connections";
 import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
 import { NESTCopyModels } from "../model/copyModels";
+import { NESTModel } from "../model/model";
 import { INESTNodeProps } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
@@ -39,7 +40,6 @@ export class NESTNetwork extends BaseNetwork {
 
   constructor(project: NESTProject, networkProps: INESTNetworkProps = {}) {
     super(project, networkProps);
-    this._project = project;
 
     this._modelsCopied = new NESTCopyModels(this, networkProps.models);
   }
@@ -134,6 +134,19 @@ export class NESTNetwork extends BaseNetwork {
 
     // Initialize activity graph.
     // this._project.initActivityGraph();
+  }
+
+  /**
+   * Get models of the element type.
+   * @param elementType string
+   * @returns a list of models
+   */
+  override getModelsByElementType(
+    elementType: string
+  ): (NESTModel | NESTCopyModel)[] {
+    return elementType === "copied"
+      ? this.modelsCopied.filterByGeneralElementType("node")
+      : this.project.modelDBStore.getModelsByElementType(elementType);
   }
 
   /**

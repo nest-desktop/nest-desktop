@@ -52,17 +52,12 @@ export class BaseNode extends BaseObj {
 
     this._nodes = nodes;
     this._modelId = nodeProps.model || "";
-    this.loadModel(nodeProps.params);
 
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
     this._doc = nodeProps;
 
     this._view = new NodeView(this, nodeProps.view);
-
-    if (this.model?.isRecorder) {
-      this.createActivity(nodeProps?.activity);
-    }
   }
 
   get activity(): SpikeActivity | AnalogSignalActivity | Activity | undefined {
@@ -533,7 +528,12 @@ export class BaseNode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    // this.loadModel();
+    this.loadModel(this._doc.params);
+
+    if (this.model?.isRecorder) {
+      this.createActivity(this.doc.activity);
+    }
+
     this.update();
   }
 

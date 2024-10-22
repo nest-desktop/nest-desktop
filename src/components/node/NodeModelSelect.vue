@@ -87,10 +87,7 @@ const select = (props: Record<string, unknown>, open?: boolean) => {
 
   if (elementTypesValues.includes(props.value as string)) {
     state.elementType = props.value as string;
-    state.items =
-      node.value.network.project.modelDBStore.getModelsByElementType(
-        state.elementType
-      );
+    state.items = node.value.network.getModelsByElementType(state.elementType);
   } else {
     node.value.modelId = props.value as string;
   }

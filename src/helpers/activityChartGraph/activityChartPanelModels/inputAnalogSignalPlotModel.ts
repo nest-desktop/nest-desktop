@@ -17,8 +17,6 @@ export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
     this.label = "input analog signals";
     this.panel.height = 10;
     this.panel.xAxis = 1;
-
-    this.init(modelProps);
   }
 
   /**

@@ -1,18 +1,21 @@
 // analogSignalHistogramModel.ts
 
-import { max, min } from '../../../utils/array';
-import { currentBackgroundColor } from '../../common/theme';
-import { NodeRecord } from '../../node/nodeRecord';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { AnalogSignalPanelModel, IAnalogSignalPanelModelProps } from './analogSignalPanelModel';
+import { max, min } from "../../../utils/array";
+import { currentBackgroundColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  AnalogSignalPanelModel,
+  IAnalogSignalPanelModelProps,
+} from "./analogSignalPanelModel";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    model: IAnalogSignalPanelModelProps = {}
+    modelProps: IAnalogSignalPanelModelProps = {}
   ) {
-    super(panel, model);
+    super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "analogSignalHistogram";
     this.panel.xAxis = 2;
@@ -27,7 +30,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       },
     ]);
 
-    this.updateParams(model.params);
+    this.updateParams(modelProps.params);
   }
 
   /**

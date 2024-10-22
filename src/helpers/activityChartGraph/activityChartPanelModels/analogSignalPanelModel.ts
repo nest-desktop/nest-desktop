@@ -1,8 +1,11 @@
 // analogSignalPanelModel.ts
 
-import { NodeRecord } from '../../node/nodeRecord';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { ActivityChartPanelModel, IActivityChartPanelModelProps } from '../activityChartPanelModel';
+import { NodeRecord } from "../../node/nodeRecord";
+import { ActivityChartPanel } from "../activityChartPanel";
+import {
+  ActivityChartPanelModel,
+  IActivityChartPanelModelProps,
+} from "../activityChartPanelModel";
 
 export interface IAnalogSignalPanelModelProps
   extends IActivityChartPanelModelProps {}
@@ -12,28 +15,25 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
     panel: ActivityChartPanel,
     modelProps: IAnalogSignalPanelModelProps = {}
   ) {
-    super(panel);
+    super(panel, modelProps);
     this.activityType = "analog";
     this.id = "analogSignalPanelModel";
     this.label = "analog signals";
-
-    this.init(modelProps);
   }
 
   /**
    * Initialize panel model for analog signals.
-   * @param panelModelProps panel model props.
    *
    * @remarks
    * It sets activities and gets records from recorders.
    */
-  override init(panelModelProps: IAnalogSignalPanelModelProps = {}): void {
-    this.logger.trace("init", panelModelProps);
+  override init(): void {
+    this.logger.trace("init");
 
     this.updateActivities();
     this.initAnalogRecords();
 
-    this.initAnalogRecordsVisible(panelModelProps.records);
+    this.initAnalogRecordsVisible();
   }
 
   get axisTitle(): string {

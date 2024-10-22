@@ -91,10 +91,15 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _label: string = "";
   private _panel: ActivityChartPanel; // parent
   private _params: Record<string, ActivityChartPanelModelParameter> = {};
+  private _props: IActivityChartPanelModelProps;
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
-  constructor(panel: ActivityChartPanel) {
+  constructor(
+    panel: ActivityChartPanel,
+    modelProps: IActivityChartPanelModelProps = {}
+  ) {
     super({ logger: { settings: { minLevel: 3 } } });
+    this._props = modelProps;
 
     this._id = "activityChart";
     this._panel = panel;
@@ -195,6 +200,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   set paramsVisible(value: string[]) {
     this._state.paramsVisible = value;
     this.changes();
+  }
+
+  get props(): IActivityChartPanelModelProps {
+    return this._props;
   }
 
   get records(): NodeRecord[] {
@@ -311,9 +320,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Initialize visible records from analog activities.
-   * @param recordsProps node records props
    */
-  initAnalogRecordsVisible(recordsProps: string[] = []): void {
+  initAnalogRecordsVisible(): void {
+    const recordsProps: string[] = this.props.records || [];
     this.logger.trace("init visible analog records:", recordsProps);
 
     if (recordsProps && recordsProps.length > 0) {

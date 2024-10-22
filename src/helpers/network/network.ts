@@ -3,6 +3,7 @@
 import {
   TConnection,
   TConnections,
+  TModel,
   TNetwork,
   TNode,
   TNodes,
@@ -246,6 +247,15 @@ export class BaseNetwork extends BaseObj {
 
     // Trigger network change.
     this.changes();
+  }
+
+  /**
+   * Get models of the element type.
+   * @param elementType string
+   * @returns a list of models
+   */
+  getModelsByElementType(elementType: string): TModel[] {
+    return this.project.modelDBStore.getModelsByElementType(elementType);
   }
 
   /**
