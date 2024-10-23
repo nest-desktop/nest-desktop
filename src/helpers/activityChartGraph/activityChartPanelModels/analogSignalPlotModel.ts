@@ -284,6 +284,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * It requires activity data.
    */
   override update(): void {
+    this.logger.trace("update");
     this.empty();
 
     if (this.recordsVisible.length === 0) return;

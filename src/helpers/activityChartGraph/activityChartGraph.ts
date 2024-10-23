@@ -388,6 +388,7 @@ export class ActivityChartGraph extends BaseObj {
       this._plotLayout,
       this._plotConfig
     ).then(() => {
+      // this.init();
       this.initEvents();
     });
   }
@@ -563,6 +564,7 @@ export class ActivityChartGraph extends BaseObj {
    * Update panel models.
    */
   updatePanelModels(): void {
+    this.logger.trace("update panel models");
     this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
   }
 

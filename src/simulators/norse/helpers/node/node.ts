@@ -4,6 +4,7 @@ import Mustache from "mustache";
 import { nextTick } from "vue";
 
 import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { INodeParamProps } from "@/helpers/node/nodeParameter";
 
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
@@ -60,10 +61,11 @@ export class NorseNode extends BaseNode {
    * It emits network changes.
    */
   override changes(): void {
+    this.logger.trace("changes");
+
     this.clean();
     this.updateHash();
     this.generateCode();
-    this.logger.trace("changes");
 
     this.nodes.network.changes();
   }
@@ -76,12 +78,14 @@ export class NorseNode extends BaseNode {
   }
 
   /**
-   * Initialize node.
+   * Load model.
    */
-  override init(): void {
-    this.logger.trace("init");
+  override loadModel(paramsProps?: INodeParamProps[]): void {
+    this.logger.trace("load model:", this._modelId, paramsProps);
 
-    this.update();
-    nextTick(() => this.generateCode());
+    this._model = this.getModel(this._modelId);
+    this.addParameters(paramsProps);
+
+    this.generateCode();
   }
 }

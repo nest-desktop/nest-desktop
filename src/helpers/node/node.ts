@@ -469,6 +469,13 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Generate code.
+   */
+  generateCode(): void {
+    this._code = "";
+  }
+
+  /**
    * Get model.
    */
   getModel(modelId: string): TModel | undefined {
