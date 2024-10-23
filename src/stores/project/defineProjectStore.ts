@@ -49,7 +49,7 @@ export function defineProjectStore(
   }
 ): TProjectStore {
   const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 3,
+    minLevel: props.loggerMinLevel || 1,
     name: props.simulator + " project store",
   });
 

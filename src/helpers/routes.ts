@@ -19,6 +19,9 @@ const logger = mainLogger.getSubLogger({
   name: "route",
 });
 
+/**
+ * Before enter home path.
+ */
 export const homeBeforeEnter = (): void => {
   logger.trace("before enter home route");
 
@@ -27,7 +30,46 @@ export const homeBeforeEnter = (): void => {
 };
 
 /**
- * Before enter to model route.
+ * Load a model.
+ * @param modelId string
+ */
+const loadModel = (modelId: string): void => {
+  logger.trace("load model:", modelId);
+
+  const appStore = useAppStore();
+  const modelStore: TModelStore = appStore.currentSimulator.stores.modelStore;
+  const modelDBStore: TModelDBStore =
+    appStore.currentSimulator.stores.modelDBStore;
+
+  if (modelDBStore.state.initialized) {
+    modelStore.state.modelId = modelId;
+  } else {
+    setTimeout(() => loadModel(modelId), 250);
+  }
+};
+
+/**
+ * Load a project.
+ * @param projectId string
+ */
+const loadProject = (projectId?: string): void => {
+  logger.trace("load project:", truncate(projectId));
+
+  const appStore = useAppStore();
+  const projectStore: TProjectStore =
+    appStore.currentSimulator.stores.projectStore;
+  const projectDBStore: TProjectStore =
+    appStore.currentSimulator.stores.projectDBStore;
+
+  if (projectDBStore.state.initialized) {
+    projectStore.loadProject(projectId);
+  } else {
+    setTimeout(() => loadProject(projectId), 250);
+  }
+};
+
+/**
+ * Before enter model route.
  * @param to {path: string}
  */
 export const modelBeforeEnter = (to: {
@@ -37,10 +79,8 @@ export const modelBeforeEnter = (to: {
   logger.trace("before enter:", to.path);
   const appStore = useAppStore();
   const modelStore: TModelStore = appStore.currentSimulator.stores.modelStore;
-  const modelDBStore: TModelDBStore =
-    appStore.currentSimulator.stores.modelDBStore;
 
-  let modelId: string;
+  let modelId: string = "";
   if (to.params.modelId) {
     modelId = to.params.modelId;
   }
@@ -48,12 +88,7 @@ export const modelBeforeEnter = (to: {
   const path = to.path.split("/");
   modelStore.state.view = path[path.length - 1] || "edit";
 
-  let intervalId: string | number | NodeJS.Timeout;
-  intervalId = setInterval(() => {
-    if (!modelDBStore.state.initialized) return;
-    clearInterval(intervalId);
-    modelStore.state.modelId = modelId;
-  }, 250);
+  loadModel(modelId);
 };
 
 /**
@@ -78,24 +113,49 @@ export const modelRedirect = (to: {
 };
 
 /**
- * Load a project.
- * @param projectId string
+ * Mount model layout
+ * @param props
  */
-export const loadProject = (projectId?: string): void => {
-  logger.trace("load project:", truncate(projectId));
-
+export const mountModelLayout = (props: {
+  router: Router;
+  route: RouteLocationNormalizedLoadedGeneric;
+}): void => {
   const appStore = useAppStore();
-  const projectStore: TProjectStore =
-    appStore.currentSimulator.stores.projectStore;
+  const modelDBStore: TModelStore =
+    appStore.currentSimulator.stores.modelDBStore;
+
+  const modelIds = modelDBStore.state.models.map((model: TModel) => model.id);
+  if (!modelIds.includes(props.route.params.modelId)) {
+    errorDialog({
+      text: `Model "${props.route.params.modelId}" not found.`,
+    });
+  }
+};
+
+/**
+ * Mount project layout
+ * @param props
+ */
+export const mountProjectLayout = (props: {
+  router: Router;
+  route: RouteLocationNormalizedLoadedGeneric;
+}): void => {
+  const appStore = useAppStore();
   const projectDBStore: TProjectStore =
     appStore.currentSimulator.stores.projectDBStore;
 
-  if (
-    projectId &&
-    projectDBStore.state.initialized &&
-    projectDBStore.hasProjectId(projectId)
-  ) {
-    projectStore.loadProject(projectId);
+  const projectIds = projectDBStore.state.projects.map(
+    (project: TProject) => project.id
+  );
+  if (!projectIds.includes(props.route.params.projectId)) {
+    confirmDialog({
+      text: "Do you want create a new project?",
+      title: `Project (ID: ${truncate(
+        props.route.params.projectId as string
+      )}) not found.`,
+    }).then((answer: boolean) => {
+      if (answer) newProjectRoute(props.router);
+    });
   }
 };
 
@@ -108,7 +168,7 @@ export const newProjectRoute = (router: Router) => {
 };
 
 /**
- * Before enter to project route.
+ * Before enter project route.
  * @param to {path: string}
  */
 export const projectBeforeEnter = (to: {
@@ -121,10 +181,10 @@ export const projectBeforeEnter = (to: {
   const projectStore: TProjectStore =
     appStore.currentSimulator.stores.projectStore;
 
-  loadProject(to.params.projectId);
-
   const path = to.path.split("/");
   projectStore.state.tab.view = path[path.length - 1] || "edit";
+
+  loadProject(to.params.projectId);
 };
 
 /**
@@ -159,43 +219,4 @@ export const projectRedirect = (to: {
   loadProject(to.params.projectId);
 
   return projectStore.routeTo();
-};
-
-export const mountModelLayout = (props: {
-  router: Router;
-  route: RouteLocationNormalizedLoadedGeneric;
-}): void => {
-  const appStore = useAppStore();
-  const modelDBStore: TModelStore =
-    appStore.currentSimulator.stores.modelDBStore;
-
-  const modelIds = modelDBStore.state.models.map((model: TModel) => model.id);
-  if (!modelIds.includes(props.route.params.modelId)) {
-    errorDialog({
-      text: `Model "${props.route.params.modelId}" not found.`,
-    });
-  }
-};
-
-export const mountProjectLayout = (props: {
-  router: Router;
-  route: RouteLocationNormalizedLoadedGeneric;
-}): void => {
-  const appStore = useAppStore();
-  const projectDBStore: TProjectStore =
-    appStore.currentSimulator.stores.projectDBStore;
-
-  const projectIds = projectDBStore.state.projects.map(
-    (project: TProject) => project.id
-  );
-  if (!projectIds.includes(props.route.params.projectId)) {
-    confirmDialog({
-      text: "Do you want create a new project?",
-      title: `Project (ID: ${truncate(
-        props.route.params.projectId as string
-      )}) not found.`,
-    }).then((answer: boolean) => {
-      if (answer) newProjectRoute(props.router);
-    });
-  }
 };
