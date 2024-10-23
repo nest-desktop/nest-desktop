@@ -1,7 +1,6 @@
 // node.ts
 
 import Mustache from "mustache";
-import { nextTick } from "vue";
 
 import { BaseNode, INodeProps } from "@/helpers/node/node";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
