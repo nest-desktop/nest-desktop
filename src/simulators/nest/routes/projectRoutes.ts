@@ -6,11 +6,19 @@ import {
   projectRedirect,
 } from "@/helpers/routes";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { logger as mainLogger } from "@/utils/logger";
+import { truncate } from "@/utils/truncate";
 
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
 
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "nest project route",
+});
+
 const nestProjectBeforeEnter = (to: any) => {
+  logger.trace("before enter nest project route:", to.path);
   projectBeforeEnter(to);
 
   const projectStore: TProjectStore = useNESTProjectStore();
@@ -22,6 +30,7 @@ const nestProjectBeforeEnter = (to: any) => {
 };
 
 const nestProjectRedirect = (to: any) => {
+  logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 
   const projectStore: TProjectStore = useNESTProjectStore();
