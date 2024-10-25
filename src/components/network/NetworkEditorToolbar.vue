@@ -1,107 +1,113 @@
 <template>
   <v-toolbar
+    :class="{ collapse: state.collapse }"
     :collapse="state.collapse"
     :key="graph?.network.hash"
     absolute
+    class="toolbar"
+    color="background"
     density="compact"
   >
     <v-btn
+      @click="state.collapse = !state.collapse"
+      :icon="state.collapse ? 'mdi:mdi-chevron-right' : 'mdi:mdi-chevron-left'"
+      class="icon"
+      size="x-small"
+    />
+
+    <v-btn
+      :disabled="graph?.network.isEmpty"
+      @click="emptyNetwork()"
+      class="icon"
+      icon="mdi:mdi-trash-can-outline"
+      size="x-small"
+      title="Delete all network elements"
+    />
+
+    <v-btn
       :disabled="!graph?.network.nodes.hasAnySelectedNodes"
       @click="groupSelectedNodes()"
+      class="icon"
       icon="mdi:mdi-select-group"
-      size="small"
+      size="x-small"
     />
-
-    <v-btn
-      :key="index"
-      @click.stop="node.unselect()"
-      icon
-      size="small"
-      v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
-    >
-      <NodeAvatar :node="node as TNode" :size="32" />
-    </v-btn>
-
-    <div v-if="graph">
-      <v-chip
-        @click="graph.updateHash()"
-        size="small"
-        variant="text"
-        v-if="appStore.state.devMode"
-      >
-        {{ graph.hash }}
-      </v-chip>
-
-      <div style="width: 320px">
-        <ContextMenu
-          :target="graph.state.contextMenu.target"
-          v-model="graph.state.contextMenu.modelValue"
-        >
-          <slot name="ContextMenuList" :graph>
-            <ConnectionMenuList
-              :connection="(graph.state.contextMenu.connection as TConnection)"
-              v-if="graph.state.contextMenu.connection"
-            />
-            <NodeMenuList
-              :node="(graph.state.contextMenu.node as TNode)"
-              v-if="graph.state.contextMenu.node"
-            />
-            <NodeGroupMenuList
-              :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
-              v-if="graph.state.contextMenu.nodeGroup"
-            />
-          </slot>
-        </ContextMenu>
-
-        <v-menu
-          :target="graph.workspace.nodeAddPanel.state.target"
-          v-model="graph.workspace.nodeAddPanel.state.modelValue"
-        >
-          <template #activator="{ props }">
-            <slot name="activator" v-bind="props" />
-          </template>
-
-          <v-list>
-            <v-list-subheader>
-              Select a
-              {{ graph.workspace.nodeAddPanel.state.elementType }} model
-            </v-list-subheader>
-            <v-list-item
-              :key="index"
-              @click="() => item.onClick()"
-              v-for="(item, index) in graph.workspace.nodeAddPanel.state
-                .menuItems"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </div>
-
-    <v-spacer />
-
-    <v-btn
-      @click="downloadNetworkGraph()"
-      icon="mdi:mdi-camera"
-      size="small"
-      title="Export network graph"
-    />
-
-    <!-- <v-btn
-      @click="state.collapse = !state.collapse"
-      icon="mdi:mdi-tools"
-      size="small"
-    /> -->
 
     <template v-if="!state.collapse">
-      <v-btn
-        :disabled="graph?.network.isEmpty"
-        @click="emptyNetwork()"
-        icon="mdi:mdi-trash-can-outline"
+      <!-- <v-btn
+        @click="downloadNetworkGraph()"
+        icon="mdi:mdi-camera"
         size="small"
-        title="Delete all network elements"
-      />
+        title="Export network graph"
+      /> -->
+
+      <v-btn
+        :key="index"
+        @click.stop="node.unselect()"
+        icon
+        size="x-small"
+        v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
+      >
+        <NodeAvatar :node="node as TNode" :size="32" />
+      </v-btn>
+
+      <div v-if="graph">
+        <v-chip
+          @click="graph.updateHash()"
+          size="small"
+          variant="text"
+          v-if="appStore.state.devMode"
+        >
+          {{ graph.hash }}
+        </v-chip>
+
+        <div style="width: 320px">
+          <ContextMenu
+            :target="graph.state.contextMenu.target"
+            v-model="graph.state.contextMenu.modelValue"
+          >
+            <slot name="ContextMenuList" :graph>
+              <ConnectionMenuList
+                :connection="(graph.state.contextMenu.connection as TConnection)"
+                v-if="graph.state.contextMenu.connection"
+              />
+              <NodeMenuList
+                :node="(graph.state.contextMenu.node as TNode)"
+                v-if="graph.state.contextMenu.node"
+              />
+              <NodeGroupMenuList
+                :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
+                v-if="graph.state.contextMenu.nodeGroup"
+              />
+            </slot>
+          </ContextMenu>
+
+          <v-menu
+            :target="graph.workspace.nodeAddPanel.state.target"
+            v-model="graph.workspace.nodeAddPanel.state.modelValue"
+          >
+            <template #activator="{ props }">
+              <slot name="activator" v-bind="props" />
+            </template>
+
+            <v-list>
+              <v-list-subheader>
+                Select a
+                {{ graph.workspace.nodeAddPanel.state.elementType }} model
+              </v-list-subheader>
+              <v-list-item
+                :key="index"
+                @click="() => item.onClick()"
+                v-for="(item, index) in graph.workspace.nodeAddPanel.state
+                  .menuItems"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+      </div>
+
+      <v-spacer />
 
       <!--
       <v-text-field
@@ -113,32 +119,35 @@
       /> -->
 
       <v-btn
-        :color="graph?.workspace.state.centerSelected ? 'amber' : 'grey'"
+        :class="{ active: graph?.workspace.state.centerSelected }"
         :icon="
           graph?.workspace.state.centerSelected
             ? 'mdi:mdi-image-filter-center-focus'
             : 'mdi:mdi-image-filter-center-focus-strong-outline'
         "
         @click="() => graph?.workspace.toggleCenterSelected()"
-        size="small"
+        class="icon"
+        size="x-small"
         title="Auto-center currently selected element"
       />
 
       <v-btn
-        :color="graph?.workspace.state.centerNetwork ? 'amber' : 'grey'"
+        :class="{ active: graph?.workspace.state.centerNetwork }"
         @click="() => graph?.workspace.toggleCenterNetwork()"
+        class="icon"
         icon="mdi:mdi-focus-field"
-        size="small"
+        size="x-small"
         title="Auto-center whole network graph"
       />
 
       <v-btn
-        :color="graph?.workspace.state.showGrid ? 'amber' : 'grey'"
+        :class="{ active: graph?.workspace.state.showGrid }"
         :icon="
           graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'
         "
         @click="() => graph?.workspace.toggleGrid()"
-        size="small"
+        class="icon"
+        size="x-small"
         title="Show background grid"
       />
     </template>
@@ -156,7 +165,7 @@ import NodeMenuList from "../node/NodeMenuList.vue";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { TConnection, TNode } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
-import { downloadSVGImage } from "@/utils/download";
+// import { downloadSVGImage } from "@/utils/download";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -171,23 +180,23 @@ const state = reactive<{
   dialogDelete: boolean;
   dialogDownload: boolean;
 }>({
-  collapse: false,
+  collapse: true,
   dialogDelete: false,
   dialogDownload: false,
 });
 
-/**
- * Download network graph as svg.
- */
-const downloadNetworkGraph = () => {
-  if (!graph.value?.selector) return;
+// /**
+//  * Download network graph as svg.
+//  */
+// const downloadNetworkGraph = () => {
+//   if (!graph.value?.selector) return;
 
-  downloadSVGImage(
-    graph.value?.selector.node() as Node,
-    graph.value?.network.project.name
-  );
-  state.dialogDownload = false;
-};
+//   downloadSVGImage(
+//     graph.value?.selector.node() as Node,
+//     graph.value?.network.project.name
+//   );
+//   state.dialogDownload = false;
+// };
 
 /**
  * Empty network.
@@ -218,5 +227,22 @@ const groupSelectedNodes = () => {
 .list-leave-to {
   opacity: 0;
   transform: translateX(-10px);
+}
+
+.toolbar {
+  border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+  border-bottom-width: 1px;
+
+  &.collapse {
+    border-right-width: 1px;
+  }
+
+  .icon {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+
+    &.active {
+      color: darkorange;
+    }
+  }
 }
 </style>

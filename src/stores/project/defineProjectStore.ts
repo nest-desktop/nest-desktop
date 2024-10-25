@@ -49,7 +49,7 @@ export function defineProjectStore(
   }
 ): TProjectStore {
   const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 1,
+    minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " project store",
   });
 
@@ -143,11 +143,9 @@ export function defineProjectStore(
      * Create new project.
      */
     const newProject = (): void => {
-      logger.trace("new project:");
+      logger.trace("new project");
 
-      // const projectDBStore: TProjectStore = props.useProjectDBStore();
       state.project = new props.Project();
-      // state.project = projectDBStore.newProject();
       state.projectId = state.project.id;
       state.project.state.state.editMode = true;
     };

@@ -77,6 +77,7 @@ export const modelBeforeEnter = (to: {
   path: string;
 }): void => {
   logger.trace("before enter:", to.path);
+
   const appStore = useAppStore();
   const modelStore: TModelStore = appStore.currentSimulator.stores.modelStore;
 
@@ -120,6 +121,8 @@ export const mountModelLayout = (props: {
   router: Router;
   route: RouteLocationNormalizedLoadedGeneric;
 }): void => {
+  logger.trace("mount model layout");
+
   const appStore = useAppStore();
   const modelDBStore: TModelStore =
     appStore.currentSimulator.stores.modelDBStore;
@@ -140,6 +143,9 @@ export const mountProjectLayout = (props: {
   router: Router;
   route: RouteLocationNormalizedLoadedGeneric;
 }): void => {
+  const projectId = props.route.params.projectId as string;
+  logger.trace("mount project layout:", truncate(projectId));
+
   const appStore = useAppStore();
   const projectDBStore: TProjectStore =
     appStore.currentSimulator.stores.projectDBStore;
@@ -147,12 +153,15 @@ export const mountProjectLayout = (props: {
   const projectIds = projectDBStore.state.projects.map(
     (project: TProject) => project.id
   );
-  if (!projectIds.includes(props.route.params.projectId)) {
+
+  const projectStore: TProjectStore =
+    appStore.currentSimulator.stores.projectStore;
+  if (projectStore.state.projectId === projectId) return;
+
+  if (!projectIds.includes(projectId)) {
     confirmDialog({
-      text: "Do you want create a new project?",
-      title: `Project (ID: ${truncate(
-        props.route.params.projectId as string
-      )}) not found.`,
+      text: "Do you want to create a new project?",
+      title: `Project (ID: ${truncate(projectId)}) not found.`,
     }).then((answer: boolean) => {
       if (answer) newProjectRoute(props.router);
     });
@@ -160,6 +169,8 @@ export const mountProjectLayout = (props: {
 };
 
 export const newProjectRoute = (router: Router) => {
+  logger.trace("new project route");
+
   const appStore = useAppStore();
 
   router.push({
@@ -216,7 +227,8 @@ export const projectRedirect = (to: {
   const appStore = useAppStore();
   const projectStore: TProjectStore =
     appStore.currentSimulator.stores.projectStore;
-  loadProject(to.params.projectId);
+
+  if (to.params.projectId) loadProject(to.params.projectId);
 
   return projectStore.routeTo();
 };
