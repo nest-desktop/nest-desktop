@@ -1,11 +1,11 @@
 // network.ts
 
 import { BaseNetwork, INetworkProps } from "@/helpers/network/network";
-
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
+
 import { INorseConnectionProps } from "../connection/connection";
-import { INorseNodeProps } from "../node/node";
 import { NorseConnections } from "../connection/connections";
+import { INorseNodeProps } from "../node/node";
 import { NorseNodes } from "../node/nodes";
 import { NorseProject } from "../project/project";
 
