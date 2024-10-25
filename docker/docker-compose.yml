@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nest-desktop:
-    image: nest/nest-desktop:4.0-beta11
+    image: nest/nest-desktop:4.0
     ports:
       - "54286:54286"
 
