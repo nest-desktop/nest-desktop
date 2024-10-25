@@ -5,7 +5,13 @@ import { defineProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { NorseProject } from "../../helpers/project/project";
 import { NorseProjectDB } from "../../helpers/project/projectDB";
 
-const projectAssets = ["neuronal-states", "spike-activity"];
+const projectAssets = [
+  "alternating-current-input",
+  "noise-current-input",
+  "spike-activity",
+  "spike-inputs",
+  "step-current-input",
+];
 
 export const useNorseProjectDBStore = defineProjectDBStore({
   Project: NorseProject,

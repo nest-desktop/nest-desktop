@@ -1,8 +1,9 @@
 {
-  "abbreviation": "ng",
+  "abbreviation": "nc",
+  "codeTemplate": "torch.rand({{ simulation.time }}, {{ size }}) * {{ params.std.value }} + {{ params.mean.value }}",
   "elementType": "stimulator",
-  "id": "noise_generator",
-  "label": "noise generator (Gaussian)",
+  "id": "noise_current",
+  "label": "noise current (Gaussian)",
   "recordables": [
     "I"
   ],
@@ -11,9 +12,9 @@
       "id": "mean",
       "component": "valueSlider",
       "label": "mean value of the noise current",
-      "max": 1000,
-      "min": -1000,
-      "step": 1,
+      "max": 1,
+      "min": -1,
+      "step": 0.01,
       "unit": "pA",
       "value": 0
     },
@@ -21,9 +22,9 @@
       "id": "std",
       "component": "valueSlider",
       "label": "standard deviation of noise current",
-      "max": 100,
+      "max": 1,
       "min": 0,
-      "step": 1,
+      "step": 0.01,
       "unit": "pA",
       "value": 0
     },

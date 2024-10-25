@@ -11,14 +11,24 @@ import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { NorseProject } from "../project/project";
 import { NorseSimulationCode } from "./simulationCode";
 
-export interface INorseSimulationProps extends ISimulationProps {}
+export interface INorseSimulationProps extends ISimulationProps {
+  seed?: number;
+}
 
 export class NorseSimulation extends BaseSimulation {
+  private _seed: number;
+
   constructor(
     project: NorseProject,
     simulationProps: INorseSimulationProps = {}
   ) {
     super(project, simulationProps);
+
+    this._seed = simulationProps.seed || 0;
+  }
+
+  get seed(): number {
+    return this._seed;
   }
 
   override get SimulationCode() {

@@ -1,13 +1,13 @@
 {
-  "name": "neuronal-states",
+  "name": "noise current input",
   "network": {
     "nodes": [
       {
-        "model": "dc_generator",
+        "model": "noise_current",
         "params": [
           {
-            "id": "amplitude",
-            "value": 0.21
+            "id": "std",
+            "value": 0.4
           }
         ],
         "view": {

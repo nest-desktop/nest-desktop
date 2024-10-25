@@ -4,29 +4,30 @@ import torch
 import numpy as np
 {{ /simulation.code.importModules }}
 
+torch.manual_seed({{ simulation.seed}})
+
 {{ #network.nodes.hasSomeSpikeRecorder }}
-def simulateSpikes(neuron, connection_layer, stimulator, offset=0):
-    output, state = neuron(connection_layer(stimulator))
+def simulateSpikes(neuron, layer, input, offset=0):
+    output, state = neuron(layer(input))
     spikes = np.argwhere(output.detach().numpy() == 1)
     return {"times": spikes[:,0], "senders": spikes[:,1] + offset}
 {{ /network.nodes.hasSomeSpikeRecorder }}
 
 {{ #network.nodes.hasSomeAnalogRecorder }}
-def simulateAnalogs(neuron, connection_layer, stimulator, offset=0):
-    output, state = neuron(connection_layer(stimulator))
-    ids, ts  = np.meshgrid(np.arange(0, 1), np.arange(0, {{ simulation.time }}))
-    data = {"times": ts.ravel(), "senders": ids.ravel() + offset}
-    data.update({"v": state.v.detach().numpy().ravel()})
-    return data
+def simulateAnalogs(neuron, layer, input, offset=0):
+    output, state = neuron(layer(input))
+    v = state.v.detach().numpy()
+    ids, ts  = np.meshgrid(np.arange(0, v.shape[1]), np.arange(0, {{ simulation.time }}))
+    return {"times": ts.ravel(), "senders": ids.ravel() + offset, "v": v.ravel()}
 {{ /network.nodes.hasSomeAnalogRecorder }}
 
 {{ #simulation.code.createNodes }}
-# Create stimulators
+# Create inputs
 {{ #network.nodes.stimulators }}
-{{ &code }}
+{{ view.label }} = {{ &code }}
 {{ /network.nodes.stimulators }}
 
-# Create connection layer
+# Create layers
 {{ #network.connections.connectionsWithoutRecorders }}
 l{{ idx }} = torch.nn.Linear({{ source.size }}, {{ target.size }}, bias=False)
 l{{ idx }}.weight.data.fill_({{ synapse.weight }}) # all to all connectivity

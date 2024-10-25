@@ -4,6 +4,7 @@ import Mustache from "mustache";
 
 import { BaseNode, INodeProps } from "@/helpers/node/node";
 import { INodeParamProps } from "@/helpers/node/nodeParameter";
+import { TConnection } from "@/types";
 
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
@@ -26,8 +27,32 @@ export class NorseNode extends BaseNode {
 
   override get connections(): NorseConnection[] {
     return this.network.connections.all.filter(
-      (connection: NorseConnection) => connection.sourceIdx === this.idx
-    );
+      (connection: TConnection) => connection.sourceIdx === this.idx
+    ) as NorseConnection[];
+  }
+
+  get duration(): number {
+    return (
+      this.hasStart && this.hasStop
+        ? (this.simulation.time > this.stop
+            ? this.stop
+            : this.simulation.time) - this.start
+        : this.hasStart
+        ? this.simulation.time > this.start
+          ? this.simulation.time - this.start
+          : 0
+        : this.hasStop
+        ? this.stop
+        : this.simulation.time
+    ) as number;
+  }
+
+  get hasStart(): boolean {
+    return this.paramsVisible.includes("start");
+  }
+
+  get hasStop(): boolean {
+    return this.paramsVisible.includes("stop");
   }
 
   override get model(): NorseModel {
@@ -41,8 +66,22 @@ export class NorseNode extends BaseNode {
     return this._nodes as NorseNodes;
   }
 
+  get postOff(): number {
+    return this.simulation.time > this.stop
+      ? this.simulation.time - this.stop
+      : 0;
+  }
+
   override get simulation(): NorseSimulation {
     return this.nodes.network.project.simulation as NorseSimulation;
+  }
+
+  get start(): number {
+    return this.params.start.value as number;
+  }
+
+  get stop(): number {
+    return this.params.stop.value as number;
   }
 
   /**

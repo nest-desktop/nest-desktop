@@ -1,8 +1,8 @@
 {
-  "abbreviation": "pg",
+  "abbreviation": "ps",
   "elementType": "stimulator",
-  "id": "poisson_generator",
-  "label": "Poisson generator",
+  "id": "poisson_spikes",
+  "label": "Poisson spikes",
   "params": [
     {
       "id": "rate",

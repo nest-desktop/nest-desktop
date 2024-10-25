@@ -1,13 +1,17 @@
 {
-  "name": "spike activity",
+  "name": "alternating current input",
   "network": {
     "nodes": [
       {
-        "model": "direct_current",
+        "model": "alternating_current",
         "params": [
           {
             "id": "amplitude",
-            "value": 0.21
+            "value": 0.1
+          },
+          {
+            "id": "frequency",
+            "value": 3
           }
         ],
         "view": {
@@ -27,7 +31,7 @@
         }
       },
       {
-        "model": "spike_recorder",
+        "model": "voltmeter",
         "view": {
           "position": {
             "x": 325,
@@ -42,8 +46,8 @@
         "target": 1
       },
       {
-        "source": 1,
-        "target": 2
+        "source": 2,
+        "target": 1
       }
     ]
   },

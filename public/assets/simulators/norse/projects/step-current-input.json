@@ -1,5 +1,5 @@
 {
-  "name": "spike activity",
+  "name": "step current input",
   "network": {
     "nodes": [
       {
@@ -7,7 +7,15 @@
         "params": [
           {
             "id": "amplitude",
-            "value": 0.21
+            "value": 0.2
+          },
+          {
+            "id": "start",
+            "value": 10
+          },
+          {
+            "id": "stop",
+            "value": 110
           }
         ],
         "view": {
@@ -27,7 +35,7 @@
         }
       },
       {
-        "model": "spike_recorder",
+        "model": "voltmeter",
         "view": {
           "position": {
             "x": 325,
@@ -42,13 +50,13 @@
         "target": 1
       },
       {
-        "source": 1,
-        "target": 2
+        "source": 2,
+        "target": 1
       }
     ]
   },
   "simulation": {
-    "time": 100
+    "time": 200
   },
   "version": "4.0.0"
 }

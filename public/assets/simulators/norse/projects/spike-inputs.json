@@ -1,13 +1,18 @@
 {
-  "name": "spike activity",
+  "name": "spike inputs",
   "network": {
     "nodes": [
       {
-        "model": "direct_current",
+        "model": "input_spikes",
         "params": [
           {
-            "id": "amplitude",
-            "value": 0.21
+            "id": "spike_times",
+            "value": [
+              10,
+              20,
+              30,
+              40
+            ]
           }
         ],
         "view": {
@@ -27,7 +32,7 @@
         }
       },
       {
-        "model": "spike_recorder",
+        "model": "voltmeter",
         "view": {
           "position": {
             "x": 325,
@@ -42,8 +47,8 @@
         "target": 1
       },
       {
-        "source": 1,
-        "target": 2
+        "source": 2,
+        "target": 1
       }
     ]
   },

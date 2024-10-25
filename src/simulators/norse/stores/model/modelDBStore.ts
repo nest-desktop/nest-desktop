@@ -6,15 +6,15 @@ import { NorseModel } from "../../helpers/model/model";
 import { NorseModelDB } from "../../helpers/model/modelDB";
 
 const modelAssets = [
-  "ac_generator",
-  "dc_generator",
+  "alternating_current",
+  "direct_current",
   "input_spikes",
   "lif_neuron",
   "multimeter",
-  "noise_generator",
-  "poisson_generator",
+  "noise_current",
+  "poisson_spikes",
   "spike_recorder",
-  "step_current_generator",
+  "step_current",
   "voltmeter",
 ];
 

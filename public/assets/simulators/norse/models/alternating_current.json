@@ -1,37 +1,37 @@
 {
   "abbreviation": "ac",
-  "codeTemplate": "",
+  "codeTemplate": "(torch.sin(torch.arange(0, 2*np.pi * {{ params.frequency.value }} + {{ params.phase.value }}, 2*np.pi * {{ params.frequency.value }}/{{ simulation.time }})) * {{ params.amplitude.value }} + {{ params.offset.value }}).view({{ simulation.time }}, 1)",
   "elementType": "stimulator",
-  "id": "ac_generator",
+  "id": "alternating_current",
   "label": "alternating current",
   "params": [
     {
       "component": "valueSlider",
       "id": "amplitude",
       "label": "amplitude of sine current",
-      "max": 1000,
-      "min": -1000,
-      "step": 1,
+      "max": 1,
+      "min": -1,
+      "step": 0.01,
       "unit": "pA",
-      "value": 0
+      "value": 0.1
     },
     {
       "component": "valueSlider",
       "id": "frequency",
       "label": "frequency",
-      "max": 100,
+      "max": 10,
       "min": 0,
-      "step": 1,
+      "step": 0.1,
       "unit": "Hz",
-      "value": 0
+      "value": 1
     },
     {
       "component": "valueSlider",
       "id": "offset",
       "label": "constant amplitude offset",
-      "max": 1000,
+      "max": 2,
       "min": 0,
-      "step": 1,
+      "step": 0.01,
       "unit": "pA",
       "value": 0
     },
