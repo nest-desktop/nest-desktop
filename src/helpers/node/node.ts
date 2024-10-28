@@ -263,7 +263,6 @@ export class BaseNode extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
   }
 
   get parentNodes(): TNodes {
@@ -348,10 +347,11 @@ export class BaseNode extends BaseObj {
    * Add annotation to the list.
    * @param text string
    */
-  addAnnotation(text: string): void {
+  addAnnotation(text: string, emitChanges: boolean = true): void {
     if (this._annotations.indexOf(text) !== -1) return;
     this._annotations.push(text);
-    this.changes();
+
+    if (emitChanges) this.changes();
   }
 
   /**
@@ -360,7 +360,8 @@ export class BaseNode extends BaseObj {
    * @param visible boolean
    */
   addParameter(paramProps: INodeParamProps, visible: boolean = false): void {
-    this.logger.trace("add parameter", paramProps.id, visible);
+    this.logger.trace("add parameter", paramProps.id);
+
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
 
     if (visible) {
@@ -373,7 +374,7 @@ export class BaseNode extends BaseObj {
    * @param paramsProps - list of parameter props
    */
   addParameters(paramsProps?: INodeParamProps[]): void {
-    this.logger.trace("add parameters", paramsProps);
+    this.logger.trace("add parameters");
 
     this.emptyParams();
 
@@ -518,8 +519,9 @@ export class BaseNode extends BaseObj {
   /**
    * Sets all params to invisible.
    */
-  hideAllParams(): void {
+  hideAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = [];
+    if (emitChanges) this.changes();
   }
 
   /**
@@ -541,7 +543,7 @@ export class BaseNode extends BaseObj {
    * Load model.
    */
   loadModel(paramsProps?: INodeParamProps[]): void {
-    this.logger.trace("load model:", this._modelId, paramsProps);
+    this.logger.trace("load model:", this._modelId);
 
     this._model = this.getModel(this._modelId);
     this.addParameters(paramsProps);
@@ -553,7 +555,7 @@ export class BaseNode extends BaseObj {
    * @remarks
    * It emits node changes.
    */
-  modelChanges(): void {
+  modelChanges(emitChanges: boolean = true): void {
     this.logger.trace("model change");
 
     this.update();
@@ -568,7 +570,7 @@ export class BaseNode extends BaseObj {
         });
     }
 
-    this.nodes.network.changes();
+    if (emitChanges) this.nodes.network.changes();
   }
 
   /**
@@ -585,10 +587,10 @@ export class BaseNode extends BaseObj {
    * Remove annotation from the list.
    * @param text string
    */
-  removeAnnotation(text: string): void {
+  removeAnnotation(text: string, emitChanges: boolean = true): void {
     if (this._annotations.indexOf(text) === -1) return;
     this._annotations.splice(this._annotations.indexOf(text), 1);
-    this.changes();
+    if (emitChanges) this.changes();
   }
 
   /**
@@ -640,8 +642,9 @@ export class BaseNode extends BaseObj {
   /**
    * Sets all params to visible.
    */
-  showAllParams(): void {
+  showAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = Object.keys(this._params);
+    if (emitChanges) this.changes();
   }
 
   /**

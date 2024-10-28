@@ -23,8 +23,9 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { NESTActivityGraph } from "../helpers/activity/activityGraph";
 import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";
 
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
-const projectViewStore = useProjectViewStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+const projectViewStore = appStore.currentSimulator.views.project;
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();

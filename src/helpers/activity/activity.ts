@@ -165,6 +165,8 @@ export class Activity extends BaseObj {
   }
 
   changes(): void {
+    this.logger.trace("changes");
+
     this.project.changes();
   }
 

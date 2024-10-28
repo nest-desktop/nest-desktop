@@ -39,6 +39,7 @@ export interface ISimulatorProps {
   theme: Record<string, string>;
   title: string;
   types: Record<string, any>;
+  views: Record<string, TStore>;
 }
 
 export const simulators: Record<string, ISimulatorProps> = {

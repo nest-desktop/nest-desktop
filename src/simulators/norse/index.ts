@@ -1,5 +1,6 @@
 // norse/index.ts
 
+import { defineViewStore } from "@/stores/defineViewStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
@@ -40,6 +41,25 @@ export const norse: ISimulatorProps = {
     norse.backends = {
       norse: norseSimulatorInit(),
     };
+
+    norse.views = {
+      project: defineViewStore({
+        name: "project",
+        simulator: "norse",
+        views: {
+          controller: "",
+          main: "edit",
+        },
+      })(),
+      model: defineViewStore({
+        name: "model",
+        simulator: "norse",
+        views: {
+          controller: "",
+          main: "edit",
+        },
+      })(),
+    };
   },
   route,
   stores: {},
@@ -51,4 +71,5 @@ export const norse: ISimulatorProps = {
   },
   title: "Norse",
   types,
+  views: {},
 };

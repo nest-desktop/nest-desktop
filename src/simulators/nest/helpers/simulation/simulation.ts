@@ -51,7 +51,6 @@ export class NESTSimulation extends BaseSimulation {
 
   set modules(value: string[]) {
     this._modules = value;
-    this.changes();
   }
 
   override get project(): NESTProject {

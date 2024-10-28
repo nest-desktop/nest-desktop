@@ -50,8 +50,10 @@ import { computed } from "vue";
 
 import { TSimulation } from "@/types";
 
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
-const projectViewStore = useProjectViewStore();
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
+const projectViewStore = appStore.currentSimulator.views.project;
 
 const props = defineProps<{
   simulation: TSimulation;

@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer location="right" permanent rail>
     <v-tabs
-      :model-value="modelStore.state.views.controller"
+      :model-value="modelViewStore.state.views.controller"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -11,8 +11,8 @@
         :disabled="!modelStore.model.isNeuron && item.id === 'code'"
         :key="index"
         :ripple="false"
-        :value="modelStore.state.controller.open ? item.id : null"
-        @click.stop="modelStore.toggleController(item)"
+        :value="modelViewStore.state.controller.open ? item.id : null"
+        @click.stop="modelViewStore.toggleController(item)"
         class="justify-center"
         height="76"
         min-width="0"
@@ -30,11 +30,11 @@
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
           :icon="
-            modelStore.state.bottomNav.active
+            modelViewStore.state.bottomNav.active
               ? 'mdi:mdi-arrow-expand-down'
               : 'mdi:mdi-arrow-expand-up'
           "
-          @click.stop="toggleBottomNav()"
+          @click.stop="modelViewStore.toggleBottomNav()"
           value="code"
           variant="plain"
         />
@@ -43,15 +43,18 @@
   </v-navigation-drawer>
 
   <v-navigation-drawer
-    :model-value="modelStore.state.controller.open"
-    :width="modelStore.state.controller.width"
-    @transitionend="dispatchWindowResize()"
+    :model-value="modelViewStore.state.controller.open"
+    :width="modelViewStore.state.controller.width"
+    @transitionend="modelViewStore.dispatchWindowResize()"
     location="right"
     permanent
   >
-    <div @mousedown="resizeRightNav()" class="resize-handle left" />
+    <div
+      @mousedown="modelViewStore.resizeRightNav()"
+      class="resize-handle left"
+    />
 
-    <template v-if="modelStore.state.views.controller === 'specs'">
+    <template v-if="modelViewStore.state.views.controller === 'specs'">
       <v-toolbar
         color="transparent"
         density="compact"
@@ -77,7 +80,7 @@
       </v-list>
     </template>
 
-    <template v-if="modelStore.state.views.controller === 'params'">
+    <template v-if="modelViewStore.state.views.controller === 'params'">
       <!-- <template v-if="modelStore.model.isNeuron">
         <v-toolbar
           color="transparent"
@@ -112,7 +115,7 @@
       >
         <template #append>
           <v-btn
-            @click="resetAllParamValues"
+            @click="resetAllParamValues()"
             icon
             size="small"
             title="reset all param values"
@@ -126,7 +129,7 @@
         <ParamListItem
           :key="index"
           :param="(param as TModelParameter)"
-          @update:paramValue="updateCode"
+          @update:paramValue="updateCode()"
           v-for="(param, index) in modelParams"
         >
           <template #append>
@@ -139,13 +142,14 @@
       </v-list>
 
       <v-card-actions>
-        <v-btn @click="updateCode" text="apply params for simulation" />
+        <v-btn @click="updateCode()" text="apply params for simulation" />
       </v-card-actions>
     </template>
 
     <template
       v-else-if="
-        appStore.state.devMode && modelStore.state.views.controller === 'raw'
+        appStore.state.devMode &&
+        modelViewStore.state.views.controller === 'raw'
       "
     >
       <codemirror
@@ -156,7 +160,7 @@
       />
     </template>
 
-    <template v-if="modelStore.state.views.controller === 'code'">
+    <template v-if="modelViewStore.state.views.controller === 'code'">
       <slot name="simulationCodeEditor">
         <SimulationCodeEditor
           :simulation="(modelStore.state.project.simulation as BaseSimulation)"
@@ -165,7 +169,7 @@
       </slot>
     </template>
 
-    <template v-else-if="modelStore.state.views.controller === 'activity'">
+    <template v-else-if="modelViewStore.state.views.controller === 'activity'">
       <slot name="activityController">
         <ActivityChartController
           :graph="(modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph)"
@@ -175,14 +179,17 @@
   </v-navigation-drawer>
 
   <v-bottom-navigation
-    :active="modelStore.state.bottomNav.active"
-    :height="modelStore.state.bottomNav.height"
+    :active="modelViewStore.state.bottomNav.active"
+    :height="modelViewStore.state.bottomNav.height"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    @transitionend="dispatchWindowResize()"
+    @transitionend="modelViewStore.dispatchWindowResize()"
     class="no-print"
     location="bottom"
   >
-    <div @mousedown="resizeBottomNav()" class="resize-handle bottom" />
+    <div
+      @mousedown="modelViewStore.resizeBottomNav()"
+      class="resize-handle bottom"
+    />
 
     <slot name="simulationCodeMirror">
       <SimulationCodeMirror
@@ -196,7 +203,7 @@
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
-import { computed, nextTick } from "vue";
+import { computed } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import Menu from "../common/Menu.vue";
@@ -218,6 +225,7 @@ import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
+const modelViewStore = computed(() => appStore.currentSimulator.views.model);
 
 const modelParams = computed(() => modelStore.value.model.paramsAll);
 
@@ -291,9 +299,10 @@ const updateCode = () => {
   neurons.forEach((neuron: TNode) => {
     const modelParams = modelStore.value.model.params;
     neuron.paramsVisible.forEach((paramKey: string) => {
-      neuron.params[paramKey].value = modelParams[paramKey].value;
+      neuron.params[paramKey].state.value = modelParams[paramKey].value;
     });
   });
+  modelStore.value.state.project.changes();
 };
 
 //
@@ -305,76 +314,6 @@ const extensions: Extension[] = [basicSetup, languageJSON()];
 if (darkMode()) {
   extensions.push(oneDark);
 }
-
-//
-// Resize
-//
-
-const dispatchWindowResize = () => {
-  nextTick(() => window.dispatchEvent(new Event("resize")));
-};
-
-/**
- * Handle mouse move on resizing.
- * @param e MouseEvent from which the y position is taken
- */
-const handleBottomNavMouseMove = (e: MouseEvent) => {
-  modelStore.value.state.bottomNav.height = window.innerHeight - e.clientY;
-};
-
-/**
- * Handle mouse up on resizing.
- */
-const handleBottomNavMouseUp = () => {
-  navStore.state.resizing = false;
-  window.removeEventListener("mousemove", handleBottomNavMouseMove);
-  window.removeEventListener("mouseup", handleBottomNavMouseUp);
-  dispatchWindowResize();
-};
-
-/**
- * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
- */
-const handleRightNavMouseMove = (e: MouseEvent) => {
-  modelStore.value.state.controller.width = window.innerWidth - e.clientX - 64;
-};
-
-/**
- * Handle mouse up on resizing.
- */
-const handleRightNavMouseUp = () => {
-  navStore.state.resizing = false;
-  window.removeEventListener("mousemove", handleRightNavMouseMove);
-  window.removeEventListener("mouseup", handleRightNavMouseUp);
-  dispatchWindowResize();
-};
-
-/**
- * Resize bottom nav.
- */
-const resizeBottomNav = () => {
-  navStore.state.resizing = true;
-  window.addEventListener("mousemove", handleBottomNavMouseMove);
-  window.addEventListener("mouseup", handleBottomNavMouseUp);
-};
-
-/**
- * Resize side controller.
- */
-const resizeRightNav = () => {
-  navStore.state.resizing = true;
-  window.addEventListener("mousemove", handleRightNavMouseMove);
-  window.addEventListener("mouseup", handleRightNavMouseUp);
-};
-
-/**
- * Toggle bottom navigation.
- */
-const toggleBottomNav = () => {
-  modelStore.value.state.bottomNav.active =
-    !modelStore.value.state.bottomNav.active;
-};
 </script>
 
 <style scoped>

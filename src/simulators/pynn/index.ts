@@ -1,5 +1,6 @@
 // pynn/index.ts
 
+import { defineViewStore } from "@/stores/defineViewStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
@@ -38,6 +39,25 @@ export const pynn: ISimulatorProps = {
     pynn.backends = {
       pynn: pynnSimulatorInit(),
     };
+
+    pynn.views = {
+      project: defineViewStore({
+        name: "project",
+        simulator: "pynn",
+        views: {
+          controller: "",
+          main: "edit",
+        },
+      })(),
+      model: defineViewStore({
+        name: "model",
+        simulator: "pynn",
+        views: {
+          controller: "",
+          main: "edit",
+        },
+      })(),
+    };
   },
   route,
   stores: {},
@@ -48,4 +68,5 @@ export const pynn: ISimulatorProps = {
   },
   title: "PyNN",
   types,
+  views: {},
 };

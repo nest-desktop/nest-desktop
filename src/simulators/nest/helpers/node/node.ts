@@ -265,7 +265,7 @@ export class NESTNode extends BaseNode {
   /**
    * Sets all params to invisible.
    */
-  override hideAllParams(): void {
+  override hideAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = [];
 
     if (this.modelId === "cm_default") {
@@ -276,13 +276,16 @@ export class NESTNode extends BaseNode {
         receptor.hideAllParams()
       );
     }
+
+    if (emitChanges) this.changes();
   }
 
   /**
    * Load model.
+   * @remarks It adds parameters.
    */
   override loadModel(paramsProps?: INodeParamProps[]): void {
-    this.logger.trace("load model:", this._modelId, paramsProps);
+    this.logger.trace("load model:", this._modelId);
 
     if (
       this.network.modelsCopied &&
@@ -334,7 +337,7 @@ export class NESTNode extends BaseNode {
    * @remarks
    * It emits node changes.
    */
-  override resetParams(): void {
+  override resetParams(emitChanges: boolean = true): void {
     this.logger.trace("reset parameters");
 
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
@@ -348,13 +351,13 @@ export class NESTNode extends BaseNode {
       );
     }
 
-    this.changes();
+    if (emitChanges) this.changes();
   }
 
   /**
    * Sets all params to visible.
    */
-  override showAllParams(): void {
+  override showAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = Object.keys(this.params);
 
     if (this.modelId === "cm_default") {
@@ -365,17 +368,20 @@ export class NESTNode extends BaseNode {
         receptor.showAllParams()
       );
     }
+
+    if (emitChanges) this.changes();
   }
 
   /**
    * Toggle spatial mode.
    */
-  toggleSpatial(): void {
+  toggleSpatial(emitChanges: boolean = true): void {
     const term: string = this.size === 1 ? "grid" : "free";
     this._spatial.init({
       positions: this.spatial.hasPositions ? undefined : term,
     });
-    this.changes();
+
+    if (emitChanges) this.changes();
   }
 
   /**

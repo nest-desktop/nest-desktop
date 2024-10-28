@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, watch } from "vue";
+import { computed, nextTick, onMounted, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import ModelBar from "@/components/model/ModelBar.vue";
@@ -109,6 +109,7 @@ import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { loadJSON } from "@/utils/fetch";
+import { logger as mainLogger } from "@/utils/logger";
 import { mountModelLayout } from "@/helpers/routes";
 
 import NewModelDialog from "../components/dialog/NewModelDialog.vue";
@@ -136,6 +137,11 @@ const moduleStore = useNESTModuleStore();
 const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
 );
+
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "model layout",
+});
 
 const dialogNewModel = () => {
   createDialog({
@@ -173,6 +179,8 @@ const dialogNewModel = () => {
 };
 
 const loadProjectfromAssets = (): void => {
+  logger.trace("load project from assets:", modelStore.state.projectId);
+
   if (modelStore.state.projectId) {
     loadJSON(
       `assets/simulators/nest/projects/${modelStore.state.projectId}.json`
@@ -185,11 +193,15 @@ const loadProjectfromAssets = (): void => {
 };
 
 const selectProject = (projectId: string): void => {
+  logger.trace("select project", projectId);
+
   modelStore.state.projectId = projectId;
   update();
 };
 
 const update = () => {
+  logger.trace("update");
+
   if (!modelStore.model || !modelStore.model.isNeuron) {
     modelStore.state.project = undefined;
     return;
@@ -203,15 +215,23 @@ const update = () => {
     const project = modelStore.state.project;
 
     if (project) {
-      updateSimulationModules();
+      updateSimulationModules(false);
 
       project.network.nodes.neurons.forEach((neuron: NESTNode) => {
-        neuron.modelId = modelStore.state.modelId;
-        neuron.showAllParams();
+        neuron._modelId = modelStore.state.modelId;
+        neuron.loadModel();
       });
 
-      project.network.changes();
-      project.activityGraph.init();
+      nextTick(() => {
+        project.network.nodes.neurons.forEach((neuron: NESTNode) => {
+          neuron.showAllParams(false);
+        });
+
+        project.network.nodes.updateRecords();
+        project.simulation.init();
+        project.activities.init();
+        project.activityGraph.init();
+      });
     }
   } else {
     loadProjectfromAssets();

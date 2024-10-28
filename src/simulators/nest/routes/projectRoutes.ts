@@ -5,8 +5,8 @@ import {
   projectNew,
   projectRedirect,
 } from "@/helpers/routes";
+import { useAppStore } from "@/stores/appStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -22,8 +22,9 @@ const nestProjectBeforeEnter = (to: any) => {
   logger.trace("before enter nest project route:", to.path);
   projectBeforeEnter(to);
 
+  const appStore = useAppStore();
   const projectStore: TProjectStore = useNESTProjectStore();
-  const projectViewStore = useProjectViewStore();
+  const projectViewStore = appStore.currentSimulator.views.project;
   if (projectStore.state.project) {
     if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
       projectViewStore.state.views.activity = "abstract";
@@ -35,8 +36,9 @@ const nestProjectRedirect = (to: any) => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 
+  const appStore = useAppStore();
   const projectStore: TProjectStore = useNESTProjectStore();
-  const projectViewStore = useProjectViewStore();
+  const projectViewStore = appStore.currentSimulator.views.project;
   if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
     projectViewStore.state.views.activity = "abstract";
   }

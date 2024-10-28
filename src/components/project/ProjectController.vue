@@ -83,7 +83,7 @@
       <template
         v-else-if="
           appStore.state.devMode &&
-          projectViewStore.state.views.controller === 'raw'
+          projectStore.state.views.controller === 'raw'
         "
       >
         <codemirror
@@ -163,13 +163,13 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
-const projectViewStore = useProjectViewStore();
-
 const projectStore = computed(
   () => appStore.currentSimulator.stores.projectStore
 );
 const project = computed(() => projectStore.value.state.project);
+const projectViewStore = computed(
+  () => appStore.currentSimulator.views.project
+);
 
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)

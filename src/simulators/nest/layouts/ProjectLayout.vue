@@ -36,7 +36,9 @@
           <v-menu activator="parent" target=".tab-activity-explorer">
             <v-list density="compact">
               <v-list-item
-                @click="() => (projectStore.state.views.activity = 'abstract')"
+                @click="
+                  () => (projectViewStore.state.views.activity = 'abstract')
+                "
               >
                 <template #prepend>
                   <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
@@ -44,7 +46,9 @@
                 abstract
               </v-list-item>
               <v-list-item
-                @click="() => (projectStore.state.views.activity = 'spatial')"
+                @click="
+                  () => (projectViewStore.state.views.activity = 'spatial')
+                "
                 prepend-icon="mdi:mdi-axis-arrow"
               >
                 spatial
@@ -71,9 +75,11 @@
       <template #activityController>
         <ActivityChartController
           :graph="project.activityGraph.activityChartGraph"
-          v-if="projectStore.state.views.activity === 'abstract'"
+          v-if="projectViewStore.state.views.activity === 'abstract'"
         />
-        <template v-else-if="projectStore.state.views.activity === 'spatial'">
+        <template
+          v-else-if="projectViewStore.state.views.activity === 'spatial'"
+        >
           <ActivityAnimationController
             :graph="project.activityGraph.activityAnimationGraph"
           />
@@ -236,6 +242,9 @@ import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.state.project);
+const projectViewStore = computed(
+  () => appStore.currentSimulator.views.project
+);
 
 const model = ref("");
 

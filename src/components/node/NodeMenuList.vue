@@ -29,14 +29,8 @@ import NodeColorDialog from "../dialog/NodeColorDialog.vue";
 import { TNode } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 
-import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
-const networkGraphStore = useNetworkGraphStore();
-const graph = computed(() => networkGraphStore.state.graph);
-
-const props = defineProps<{ node?: TNode }>();
-const node = computed(
-  () => (props.node || graph.value?.state.contextMenu.node) as TNode
-);
+const props = defineProps<{ node: TNode }>();
+const node = computed(() => props.node as TNode);
 
 const items: {
   icon?: { icon: string; class: string };
@@ -75,8 +69,8 @@ const items: {
   {
     id: "nodeClone",
     onClick: () => {
-      node.value?.clone();
-      node.value?.changes();
+      node.value.clone();
+      node.value.changes();
     },
     prependIcon: "mdi:mdi-content-copy",
     title: "Clone node",
@@ -98,9 +92,9 @@ const items: {
     },
     prependIcon: "mdi:mdi-download",
     show: () =>
-      node.value?.model.isRecorder &&
-      node.value?.activity &&
-      node.value?.activity.hasEvents,
+      node.value.model.isRecorder &&
+      node.value.activity &&
+      node.value.activity.hasEvents,
     title: "Export events",
   },
   {
@@ -110,7 +104,7 @@ const items: {
         text: "Are you sure to delete node?",
         title: "Delete node?",
       }).then((answer: boolean) => {
-        if (answer) node.value?.remove();
+        if (answer) node.value.remove();
       });
     },
     prependIcon: "mdi:mdi-trash-can-outline",

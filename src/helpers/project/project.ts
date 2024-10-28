@@ -2,10 +2,9 @@
 
 import { nextTick } from "vue";
 
-import { closeLoading, openLoading } from "@/stores/appStore";
+import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { TActivityGraph, TNetwork, TProject, TSimulation } from "@/types";
 import { truncate } from "@/utils/truncate";
 
@@ -219,7 +218,8 @@ export class BaseProject extends BaseObj {
     this._networkRevision.commit();
 
     // Simulate when the configuration is set and the view mode is activity explorer.
-    const projectViewStore = useProjectViewStore();
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
     if (projectViewStore.state.simulationEvents.onChange) {
       nextTick(() => this.startSimulation());
     }
@@ -238,7 +238,8 @@ export class BaseProject extends BaseObj {
     // Generate simulation code.
     this._simulation.code.generate();
 
-    const projectViewStore = useProjectViewStore();
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
     if (projectViewStore.state.simulationEvents.onCheckout) {
       // Run simulation.
       nextTick(() => this.startSimulation());
@@ -330,7 +331,8 @@ export class BaseProject extends BaseObj {
     // Reset activities and activity graphs.
     this.activities.reset();
 
-    const projectViewStore = useProjectViewStore();
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
     if (!projectViewStore.state.simulationEvents.onChange)
       openLoading("Simulating... Please wait");
 

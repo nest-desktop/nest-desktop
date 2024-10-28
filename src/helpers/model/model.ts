@@ -162,7 +162,6 @@ export class BaseModel extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._state.paramsVisible = values;
-    this.changes();
   }
 
   get project(): TProject | undefined {

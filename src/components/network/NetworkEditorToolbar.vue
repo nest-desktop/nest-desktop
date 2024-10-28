@@ -8,6 +8,54 @@
     color="background"
     density="compact"
   >
+    <div v-if="graph" style="position: absolute">
+      <div style="width: 320px">
+        <ContextMenu
+          :target="graph.state.contextMenu.target"
+          v-model="graph.state.contextMenu.modelValue"
+        >
+          <slot name="ContextMenuList" :graph>
+            <ConnectionMenuList
+              :connection="(graph.state.contextMenu.connection as TConnection)"
+              v-if="graph.state.contextMenu.connection"
+            />
+            <NodeMenuList
+              :node="(graph.state.contextMenu.node as TNode)"
+              v-if="graph.state.contextMenu.node"
+            />
+            <NodeGroupMenuList
+              :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
+              v-if="graph.state.contextMenu.nodeGroup"
+            />
+          </slot>
+        </ContextMenu>
+
+        <v-menu
+          :target="graph.workspace.nodeAddPanel.state.target"
+          v-model="graph.workspace.nodeAddPanel.state.modelValue"
+        >
+          <template #activator="{ props }">
+            <slot name="activator" v-bind="props" />
+          </template>
+
+          <v-list>
+            <v-list-subheader>
+              Select a
+              {{ graph.workspace.nodeAddPanel.state.elementType }} model
+            </v-list-subheader>
+            <v-list-item
+              :key="index"
+              @click="() => item.onClick()"
+              v-for="(item, index) in graph.workspace.nodeAddPanel.state
+                .menuItems"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
+
     <v-btn
       @click="state.collapse = !state.collapse"
       :icon="state.collapse ? 'mdi:mdi-chevron-right' : 'mdi:mdi-chevron-left'"
@@ -47,67 +95,19 @@
         size="x-small"
         v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
       >
-        <NodeAvatar :node="node as TNode" :size="32" />
+        <NodeAvatar :node="(node as TNode)" :size="32" />
       </v-btn>
 
-      <div v-if="graph">
-        <v-chip
-          @click="graph.updateHash()"
-          size="small"
-          variant="text"
-          v-if="appStore.state.devMode"
-        >
-          {{ graph.hash }}
-        </v-chip>
-
-        <div style="width: 320px">
-          <ContextMenu
-            :target="graph.state.contextMenu.target"
-            v-model="graph.state.contextMenu.modelValue"
-          >
-            <slot name="ContextMenuList" :graph>
-              <ConnectionMenuList
-                :connection="(graph.state.contextMenu.connection as TConnection)"
-                v-if="graph.state.contextMenu.connection"
-              />
-              <NodeMenuList
-                :node="(graph.state.contextMenu.node as TNode)"
-                v-if="graph.state.contextMenu.node"
-              />
-              <NodeGroupMenuList
-                :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
-                v-if="graph.state.contextMenu.nodeGroup"
-              />
-            </slot>
-          </ContextMenu>
-
-          <v-menu
-            :target="graph.workspace.nodeAddPanel.state.target"
-            v-model="graph.workspace.nodeAddPanel.state.modelValue"
-          >
-            <template #activator="{ props }">
-              <slot name="activator" v-bind="props" />
-            </template>
-
-            <v-list>
-              <v-list-subheader>
-                Select a
-                {{ graph.workspace.nodeAddPanel.state.elementType }} model
-              </v-list-subheader>
-              <v-list-item
-                :key="index"
-                @click="() => item.onClick()"
-                v-for="(item, index) in graph.workspace.nodeAddPanel.state
-                  .menuItems"
-              >
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </div>
-      </div>
-
       <v-spacer />
+
+      <v-chip
+        @click="graph.updateHash()"
+        size="small"
+        variant="text"
+        v-if="graph && appStore.state.devMode"
+      >
+        {{ graph.hash }}
+      </v-chip>
 
       <!--
       <v-text-field

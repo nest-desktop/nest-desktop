@@ -1,5 +1,6 @@
 // nest/index.ts
 
+import { defineViewStore } from "@/stores/defineViewStore";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { logger as mainLogger } from "@/utils/logger";
@@ -76,6 +77,26 @@ export const nest: ISimulatorProps = {
       // insite: insiteAccessInit(),
       nestml: nestmlServerInit(),
     };
+
+    nest.views = {
+      project: defineViewStore({
+        name: "project",
+        simulator: "nest",
+        views: {
+          activity: "abstract",
+          controller: "",
+          main: "edit",
+        },
+      })(),
+      model: defineViewStore({
+        name: "model",
+        simulator: "nest",
+        views: {
+          controller: "",
+          main: "doc",
+        },
+      })(),
+    };
   },
   route,
   stores: {},
@@ -86,4 +107,5 @@ export const nest: ISimulatorProps = {
   },
   title: "NEST",
   types,
+  views: {},
 };

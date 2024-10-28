@@ -1,12 +1,12 @@
 <template>
   <v-navigation-drawer
-    :model-value="navState.state.open"
-    :style="{ transition: navState.state.resizing ? 'initial' : '' }"
-    :width="navState.state.width"
-    @transitionend="dispatchWindowResize()"
+    :model-value="navStore.state.open"
+    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
+    :width="navStore.state.width"
+    @transitionend="navStore.dispatchWindowResize()"
     permanent
   >
-    <div @mousedown="resizeSidebar" class="resize-handle" />
+    <div @mousedown="navStore.resizeSidebar()" class="resize-handle" />
 
     <v-toolbar
       :color
@@ -132,7 +132,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, reactive } from "vue";
+import { computed, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { TElementType } from "@/helpers/model/model";
@@ -153,7 +153,7 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
-const navState = useNavStore();
+const navStore = useNavStore();
 
 defineProps(["color"]);
 
@@ -306,38 +306,6 @@ const items = [
 //     }
 //   });
 // };
-
-const dispatchWindowResize = () => {
-  nextTick(() => window.dispatchEvent(new Event("resize")));
-};
-
-/**
- * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
- */
-const handleMouseMove = (e: MouseEvent) => {
-  navState.state.width = e.clientX - 64;
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
- * Handle mouse up on resizing.
- */
-const handleMouseUp = () => {
-  navState.state.resizing = false;
-  window.removeEventListener("mousemove", handleMouseMove);
-  window.removeEventListener("mouseup", handleMouseUp);
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
- * Resize sidebar.
- */
-const resizeSidebar = () => {
-  navState.state.resizing = true;
-  window.addEventListener("mousemove", handleMouseMove);
-  window.addEventListener("mouseup", handleMouseUp);
-};
 </script>
 
 <style lang="scss" scoped>

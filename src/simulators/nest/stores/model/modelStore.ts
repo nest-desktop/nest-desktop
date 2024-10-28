@@ -11,9 +11,8 @@ export const useNESTModelStore = defineModelStore({
   defaultView: "doc",
 });
 
-export const updateSimulationModules = (): void => {
+export const updateSimulationModules = (emitChanges: boolean = true): void => {
   const modelStore: TModelStore = useNESTModelStore();
-
   const moduleStore = useNESTModuleStore();
 
   modelStore.state.project.simulation.modules = moduleStore.state.modules
@@ -21,4 +20,6 @@ export const updateSimulationModules = (): void => {
       module.models.includes(modelStore.state.modelId)
     )
     .map((module: IModule) => module.name);
+
+  if (emitChanges) modelStore.state.project.simulation.changes();
 };

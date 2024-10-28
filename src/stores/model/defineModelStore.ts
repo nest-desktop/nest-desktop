@@ -9,27 +9,16 @@ import { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
+import { useAppStore } from "../appStore";
 import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
 
 interface IModelStoreState {
-  bottomNav: {
-    height: number;
-    active: boolean;
-  };
-  controller: {
-    open: boolean;
-    width: number;
-  };
   modelId: string;
   models: string[];
   project?: TProject;
   projectFilename?: string;
   recentAddedModels: Record<TElementType, string[]>;
-  views: {
-    controller: string;
-    main: string;
-  };
 }
 
 export type TModelStore = Store<
@@ -60,17 +49,9 @@ export function defineModelStore(
   });
 
   return defineStore(
-    props.simulator + "-model-view",
+    props.simulator + "-model",
     () => {
       const state = reactive<IModelStoreState>({
-        bottomNav: {
-          height: 200,
-          active: false,
-        },
-        controller: {
-          open: false,
-          width: 480,
-        },
         modelId: "",
         models: [],
         recentAddedModels: {
@@ -79,17 +60,23 @@ export function defineModelStore(
           stimulator: [],
           synapse: [],
         },
-        views: {
-          controller: "",
-          main: props.defaultView || "edit",
-        },
       });
 
       const model = computed(() => getModel(state.modelId));
 
+      /**
+       * Find model from the list.
+       * @param modelId model Id
+       * @returns model object
+       */
       const findModel = (modelId: string) =>
         state.models.find((model: any) => model.id === modelId);
 
+      /**
+       * Get model from the db list.
+       * @param modelId model Id
+       * @returns model object
+       */
       const getModel = (modelId: string) => {
         const modelDBStore: TModelStore = props.useModelDBStore();
         return modelDBStore.findModel(modelId) || findModel(modelId);
@@ -135,15 +122,20 @@ export function defineModelStore(
        * Redirect to route path of current model.
        * @returns
        */
-      const routeTo = (): { path: string } => ({
-        path:
-          "/" +
-          props.simulator +
-          "/model/" +
-          state.modelId +
-          "/" +
-          state.views.main,
-      });
+      const routeTo = (): { path: string } => {
+        const appStore = useAppStore();
+        const modelViewStore = appStore.currentSimulator.views.model;
+
+        return {
+          path:
+            "/" +
+            props.simulator +
+            "/model/" +
+            state.modelId +
+            "/" +
+            modelViewStore.state.views.main,
+        };
+      };
 
       /**
        * Save current model to the database.
@@ -173,19 +165,6 @@ export function defineModelStore(
       };
 
       /**
-       * Toggle controller navigation.
-       * @param item
-       */
-      const toggleController = (item?: { id: string }): void => {
-        if (!state.controller.open || state.views.controller === item?.id) {
-          state.controller.open = !state.controller.open;
-        }
-        state.views.controller = state.controller.open
-          ? (item?.id as string)
-          : "";
-      };
-
-      /**
        * Update recent added models.
        * @param modelId string
        * @param elementType neuron, recorder, stimulator
@@ -211,7 +190,6 @@ export function defineModelStore(
         saveModel,
         startSimulation,
         state,
-        toggleController,
         updateRecentAddedModels,
       };
     },
@@ -222,7 +200,7 @@ export function defineModelStore(
           storage: localStorage,
         },
         {
-          pick: ["state.bottomNav", "state.controller"],
+          pick: ["state.bottomNav", "state.controller", "state.views"],
           storage: sessionStorage,
         },
       ],

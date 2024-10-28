@@ -164,6 +164,8 @@ export class BaseNetworkGraph extends BaseObj {
     target: [number, number],
     props: { connection?: TConnection; node?: TNode; nodeGroup?: NodeGroup }
   ): void {
+    this.logger.trace("open context menu");
+
     if (this._state.contextMenu.modelValue) {
       this._state.contextMenu.modelValue = false;
       setTimeout(() => this.openContextMenu(target, props), 200);
