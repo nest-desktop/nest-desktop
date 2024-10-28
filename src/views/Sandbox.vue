@@ -29,7 +29,6 @@ import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
 import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
-import SandboxToast from "@/components/sandbox/SandboxToast.vue";
 
 const props = defineProps({
   component: { type: String, default: "alert" },
@@ -48,7 +47,6 @@ const components: Record<string, Object> = {
   itemGroup: SandboxItemGroup,
   slider: SandboxSlider,
   tabs: SandboxTabs,
-  toast: SandboxToast,
 };
 
 watch(
