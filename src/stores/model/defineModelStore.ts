@@ -19,7 +19,6 @@ interface IModelStoreState {
   };
   controller: {
     open: boolean;
-    view: string;
     width: number;
   };
   modelId: string;
@@ -27,7 +26,10 @@ interface IModelStoreState {
   project?: TProject;
   projectFilename?: string;
   recentAddedModels: Record<TElementType, string[]>;
-  view: string;
+  views: {
+    controller: string;
+    main: string;
+  };
 }
 
 export type TModelStore = Store<
@@ -67,7 +69,6 @@ export function defineModelStore(
         },
         controller: {
           open: false,
-          view: "",
           width: 480,
         },
         modelId: "",
@@ -78,7 +79,10 @@ export function defineModelStore(
           stimulator: [],
           synapse: [],
         },
-        view: props.defaultView || "edit",
+        views: {
+          controller: "",
+          main: props.defaultView || "edit",
+        },
       });
 
       const model = computed(() => getModel(state.modelId));
@@ -133,7 +137,12 @@ export function defineModelStore(
        */
       const routeTo = (): { path: string } => ({
         path:
-          "/" + props.simulator + "/model/" + state.modelId + "/" + state.view,
+          "/" +
+          props.simulator +
+          "/model/" +
+          state.modelId +
+          "/" +
+          state.views.main,
       });
 
       /**
@@ -168,10 +177,10 @@ export function defineModelStore(
        * @param item
        */
       const toggleController = (item?: { id: string }): void => {
-        if (!state.controller.open || state.controller.view === item?.id) {
+        if (!state.controller.open || state.views.controller === item?.id) {
           state.controller.open = !state.controller.open;
         }
-        state.controller.view = state.controller.open
+        state.views.controller = state.controller.open
           ? (item?.id as string)
           : "";
       };
@@ -207,10 +216,16 @@ export function defineModelStore(
       };
     },
     {
-      persist: {
-        pick: ["state.recentAddedModels"],
-        storage: localStorage,
-      },
+      persist: [
+        {
+          pick: ["state.recentAddedModels"],
+          storage: localStorage,
+        },
+        {
+          pick: ["state.bottomNav", "state.controller"],
+          storage: sessionStorage,
+        },
+      ],
     }
   );
 }

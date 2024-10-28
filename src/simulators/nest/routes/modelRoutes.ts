@@ -10,11 +10,11 @@ const nestModelRedirect = (to: any) => {
 
   const modelStore: TModelStore = useNESTModelStore();
   if (modelStore.model && !modelStore.model.isNeuron) {
-    if (modelStore.state.view === "explore") {
-      modelStore.state.view = "doc";
+    if (modelStore.state.views.main === "explore") {
+      modelStore.state.views.main = "doc";
     }
-    if (modelStore.state.controller.view === "code") {
-      modelStore.state.controller.view = "defaults";
+    if (modelStore.state.views.controller === "code") {
+      modelStore.state.views.controller = "defaults";
     }
   }
 

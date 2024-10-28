@@ -128,7 +128,7 @@
 
       <slot name="connectionEditor">
         <ConnectionEditor
-          :connection
+          :connection="(connection as TConnection)"
           :key="index"
           v-for="(connection, index) in node.connections"
         />
@@ -140,7 +140,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from "vue";
 
-import { TModel, TNode } from "@/types";
+import { TConnection, TModel, TNode } from "@/types";
 
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";

@@ -1,24 +1,165 @@
-// moduleStore.ts
+// projectViewStore.ts
 
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
+
+import { logger as mainLogger } from "@/utils/logger";
+
+import { useNavStore } from "../navStore";
+
+const logger = mainLogger.getSubLogger({
+  minLevel: 3,
+  name: "project view store",
+});
 
 export const useProjectViewStore = defineStore(
   "project-view",
   () => {
     const state = reactive<{
-      simulateAfterChange: { title: string; value: boolean };
-      simulateAfterCheckout: { title: string; value: boolean };
-      simulateAfterLoad: { title: string; value: boolean };
+      bottomNav: {
+        height: number;
+        active: boolean;
+      };
+      controller: {
+        open: boolean;
+        width: number;
+      };
+      simulationEvents: {
+        onCheckout: boolean;
+        onLoad: boolean;
+        onChange: boolean;
+      };
+      views: {
+        activity: string;
+        controller: string;
+        main: string;
+      };
     }>({
-      simulateAfterChange: { title: "simulate after change", value: false },
-      simulateAfterCheckout: { title: "simulate after checkout", value: false },
-      simulateAfterLoad: { title: "simulate after load", value: false },
+      bottomNav: {
+        height: 200,
+        active: false,
+      },
+      controller: {
+        open: false,
+        width: 480,
+      },
+      simulationEvents: {
+        onChange: false,
+        onCheckout: false,
+        onLoad: false,
+      },
+      views: {
+        activity: "abstract",
+        controller: "",
+        main: "edit",
+      },
     });
 
-    return { state };
+    const dispatchWindowResize = () => {
+      nextTick(() => window.dispatchEvent(new Event("resize")));
+    };
+
+    /**
+     * Handle mouse move on resizing.
+     * @param e MouseEvent from which the y position is taken
+     */
+    const handleBottomNavMouseMove = (e: MouseEvent) => {
+      state.bottomNav.height = window.innerHeight - e.clientY;
+    };
+
+    /**
+     * Handle mouse up on resizing.
+     */
+    const handleBottomNavMouseUp = () => {
+      const navStore = useNavStore();
+
+      navStore.state.resizing = false;
+      window.removeEventListener("mousemove", handleBottomNavMouseMove);
+      window.removeEventListener("mouseup", handleBottomNavMouseUp);
+      navStore.dispatchWindowResize();
+    };
+
+    /**
+     * Handle mouse move on resizing.
+     * @param e MouseEvent from which the x position is taken
+     */
+    const handleRightNavMouseMove = (e: MouseEvent) => {
+      state.controller.width = window.innerWidth - e.clientX - 64;
+    };
+
+    /**
+     * Handle mouse up on resizing.
+     */
+    const handleRightNavMouseUp = () => {
+      const navStore = useNavStore();
+
+      navStore.state.resizing = false;
+      window.removeEventListener("mousemove", handleRightNavMouseMove);
+      window.removeEventListener("mouseup", handleRightNavMouseUp);
+      navStore.dispatchWindowResize();
+    };
+
+    /**
+     * Resize bottom nav.
+     */
+    const resizeBottomNav = () => {
+      const navStore = useNavStore();
+
+      navStore.state.resizing = true;
+      window.addEventListener("mousemove", handleBottomNavMouseMove);
+      window.addEventListener("mouseup", handleBottomNavMouseUp);
+    };
+
+    /**
+     * Resize side controller.
+     */
+    const resizeRightNav = () => {
+      const navStore = useNavStore();
+
+      navStore.state.resizing = true;
+      window.addEventListener("mousemove", handleRightNavMouseMove);
+      window.addEventListener("mouseup", handleRightNavMouseUp);
+    };
+
+    /**
+     * Toggle bottom navigation.
+     */
+    const toggleBottomNav = () => {
+      state.bottomNav.active = !state.bottomNav.active;
+    };
+
+    /**
+     * Toggle navigation drawer.
+     * @param item
+     */
+    const toggleController = (item: { id: string }): void => {
+      logger.trace("toggle controller:", item.id);
+
+      if (!state.controller.open || state.views.controller === item.id) {
+        state.controller.open = !state.controller.open;
+      }
+      state.views.controller = state.controller.open ? item.id : "";
+    };
+
+    return {
+      dispatchWindowResize,
+      resizeBottomNav,
+      resizeRightNav,
+      state,
+      toggleController,
+      toggleBottomNav,
+    };
   },
   {
-    persist: true,
+    persist: [
+      {
+        pick: ["state.bottomNav", "state.controller", "state.views"],
+        storage: sessionStorage,
+      },
+      {
+        pick: ["state.simulationEvents"],
+        storage: localStorage,
+      },
+    ],
   }
 );

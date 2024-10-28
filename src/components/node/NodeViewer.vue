@@ -32,7 +32,7 @@
       >
         <ConnectionViewer
           :key="index"
-          :connection
+          :connection="(connection as BaseConnection)"
           v-for="(connection, index) in node.connections"
         />
       </v-expansion-panels>
@@ -45,6 +45,7 @@ import Card from "../common/Card.vue";
 import ConnectionViewer from "../connection/ConnectionViewer.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
+import { BaseConnection } from "@/helpers/connection/connection";
 import { TNode } from "@/types";
 
 defineProps<{ node: TNode }>();

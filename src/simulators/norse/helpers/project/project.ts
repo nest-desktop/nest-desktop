@@ -1,9 +1,6 @@
 // project.ts
 
-import { nextTick } from "vue";
-
 import { BaseProject, IProjectProps } from "@/helpers/project/project";
-import { useProjectViewStore } from "@/stores/project/projectViewStore";
 
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 import { INorseNetworkProps, NorseNetwork } from "../network/network";
@@ -40,33 +37,17 @@ export class NorseProject extends BaseProject {
   }
 
   /**
-   * Observer for network changes
+   * Generate codes
    *
    * @remarks
-   * It updates hash of the network.
+   * It generates node codes.
    * It generates simulation code in the code editor.
-   * It commits the network in the network history.
    */
-  override changes(): void {
-    this.updateHash();
-    this.state.checkChanges();
-
-    this.logger.trace("changes");
-    this.activities.checkRecorders();
-
+  override generateCodes(): void {
     this.network.nodes.nodeItems.forEach((node: NorseNode) =>
       node.generateCode()
     );
     this._simulation.code.generate();
-
-    this.networkRevision.commit();
-
-    // Simulate when the configuration is set
-    // and the view mode is activity explorer.
-    const projectViewStore = useProjectViewStore();
-    if (projectViewStore.state.simulateAfterChange.value) {
-      nextTick(() => this.startSimulation());
-    }
   }
 
   /**

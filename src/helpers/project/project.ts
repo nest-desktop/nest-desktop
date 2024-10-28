@@ -188,11 +188,21 @@ export class BaseProject extends BaseObj {
   }
 
   /**
+   * Generate codes
+   *
+   * @remarks
+   * It generates simulation code.
+   */
+  generateCodes(): void {
+    this._simulation.code.generate();
+  }
+
+  /**
    * Observer for network changes
    *
    * @remarks
    * It updates hash of the network.
-   * It generates simulation code in the code editor.
+   * It generates codes in the code editor.
    * It commits the network in the network history.
    */
   changes(): void {
@@ -204,13 +214,13 @@ export class BaseProject extends BaseObj {
 
     this._activities.checkRecorders();
 
-    this._simulation.code.generate();
+    this.generateCodes();
 
     this._networkRevision.commit();
 
     // Simulate when the configuration is set and the view mode is activity explorer.
     const projectViewStore = useProjectViewStore();
-    if (projectViewStore.state.simulateAfterChange.value) {
+    if (projectViewStore.state.simulationEvents.onChange) {
       nextTick(() => this.startSimulation());
     }
   }
@@ -229,7 +239,7 @@ export class BaseProject extends BaseObj {
     this._simulation.code.generate();
 
     const projectViewStore = useProjectViewStore();
-    if (projectViewStore.state.simulateAfterCheckout.value) {
+    if (projectViewStore.state.simulationEvents.onCheckout) {
       // Run simulation.
       nextTick(() => this.startSimulation());
     } else {
@@ -320,7 +330,10 @@ export class BaseProject extends BaseObj {
     // Reset activities and activity graphs.
     this.activities.reset();
 
-    openLoading("Simulating... Please wait");
+    const projectViewStore = useProjectViewStore();
+    if (!projectViewStore.state.simulationEvents.onChange)
+      openLoading("Simulating... Please wait");
+
     this._simulation
       .start()
       .then((response: any) => {

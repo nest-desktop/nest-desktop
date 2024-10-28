@@ -89,7 +89,7 @@
 
               <template #prepend-item>
                 <v-list-item
-                  @click="selectAllNodeRecords(panel)"
+                  @click="selectAllNodeRecords(panel as ActivityChartPanel)"
                   title="Select All"
                 />
                 <v-divider />
@@ -140,7 +140,7 @@
             <ParamListItem
               :key="index"
               :model-value="param.value"
-              :param
+              :param="(param as ActivityChartPanelModelParameter)"
               @update:model-value="graph.update()"
               v-for="(param, index) of panel.model.filteredParams"
             >
@@ -161,10 +161,11 @@ import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import Card from "../common/Card.vue";
 import NodeRecordChip from "../node/NodeRecordChip.vue";
+import ParamListItem from "../parameter/ParamListItem.vue";
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
+import { ActivityChartPanelModelParameter } from "@/helpers/activityChartGraph/activityChartPanelModelParameter";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
-import ParamListItem from "../parameter/ParamListItem.vue";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);

@@ -6,6 +6,7 @@ import {
   projectRedirect,
 } from "@/helpers/routes";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -22,9 +23,10 @@ const nestProjectBeforeEnter = (to: any) => {
   projectBeforeEnter(to);
 
   const projectStore: TProjectStore = useNESTProjectStore();
+  const projectViewStore = useProjectViewStore();
   if (projectStore.state.project) {
     if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-      projectStore.state.tab.activityView = "abstract";
+      projectViewStore.state.views.activity = "abstract";
     }
   }
 };
@@ -34,8 +36,9 @@ const nestProjectRedirect = (to: any) => {
   projectRedirect(to);
 
   const projectStore: TProjectStore = useNESTProjectStore();
+  const projectViewStore = useProjectViewStore();
   if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-    projectStore.state.tab.activityView = "abstract";
+    projectViewStore.state.views.activity = "abstract";
   }
 
   return projectStore.routeTo();

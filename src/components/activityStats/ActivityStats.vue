@@ -35,7 +35,7 @@
         >
           <v-expansion-panel-title class="py-0">
             <v-row class="text-button">
-              <NodeAvatar :node="activity.recorder" />
+              <NodeAvatar :node="(activity.recorder as TNode)" />
               <v-spacer />
               {{ activity.recorder.model.state.label }}
               <v-spacer />
@@ -72,6 +72,7 @@ import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { TNode } from "@/types";
 import { nextTick } from "vue";
 
 const props = defineProps<{ activities: Activities }>();

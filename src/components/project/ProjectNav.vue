@@ -3,11 +3,11 @@
     :model-value="navStore.state.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="navStore.state.width"
-    @transitionend="dispatchWindowResize()"
+    @transitionend="navStore.dispatchWindowResize()"
     class="d-print-none"
     permanent
   >
-    <div @mousedown="resizeSideNav()" class="resize-handle" />
+    <div @mousedown="navStore.resizeSideNav()" class="resize-handle" />
 
     <v-toolbar
       :color
@@ -176,10 +176,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref } from "vue";
+import { computed, ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { TProject } from "@/types";
+import { newProjectRoute } from "@/helpers/routes";
 // @ts-ignore - 'truncate' is declared but its value is never read.
 import { truncate } from "@/utils/truncate";
 
@@ -196,7 +197,6 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { useNavStore } from "@/stores/navStore";
-import { newProjectRoute } from "@/helpers/routes";
 const navStore = useNavStore();
 
 defineProps(["color"]);
@@ -280,38 +280,6 @@ const items = [
   },
   // { title: "Reset database", icon: "mdi:mdi-database-sync-outline" },
 ];
-
-const dispatchWindowResize = () => {
-  nextTick(() => window.dispatchEvent(new Event("resize")));
-};
-
-/**
- * Handle mouse move on resizing.
- * @param e MouseEvent from which the x position is taken
- */
-const handleSideNavMouseMove = (e: MouseEvent) => {
-  navStore.state.width = e.clientX - 64;
-  // window.dispatchEvent(new Event("resize"));
-};
-
-/**
- * Handle mouse up on resizing.
- */
-const handleSideNavMouseUp = () => {
-  navStore.state.resizing = false;
-  window.removeEventListener("mousemove", handleSideNavMouseMove);
-  window.removeEventListener("mouseup", handleSideNavMouseUp);
-  dispatchWindowResize();
-};
-
-/**
- * Resize side nav.
- */
-const resizeSideNav = () => {
-  navStore.state.resizing = true;
-  window.addEventListener("mousemove", handleSideNavMouseMove);
-  window.addEventListener("mouseup", handleSideNavMouseUp);
-};
 
 /**
  * Save project.

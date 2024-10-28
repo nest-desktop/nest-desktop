@@ -28,7 +28,16 @@
       >
         <v-list density="compact">
           <v-list-item :key="index" v-for="(menuItem, index) in menuItems">
-            {{ menuItem }}
+            <!-- @vue-ignore Element implicitly has an 'any' type because expression of type 'string' can't be used to
+                             index type '{ onCheckout: boolean; onLoad: boolean; onChange: boolean; }'.
+                             No index signature with a parameter of type 'string' was found on type '{ onCheckout:
+                             boolean; onLoad: boolean; onChange: boolean; }' -->
+            <v-checkbox
+              :label="menuItem.label"
+              density="compact"
+              hide-details
+              v-model="projectViewStore.state.simulationEvents[menuItem.value]"
+            />
           </v-list-item>
         </v-list>
       </v-menu>
@@ -40,6 +49,9 @@
 import { computed } from "vue";
 
 import { TSimulation } from "@/types";
+
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
+const projectViewStore = useProjectViewStore();
 
 const props = defineProps<{
   simulation: TSimulation;
@@ -55,9 +67,9 @@ const disabled = computed(
 const loading = computed(() => simulation.value.state.running);
 
 const menuItems = [
-  "simulateAfterChange",
-  "simulateAfterCheckout",
-  "simulateAfterLoad",
+  { label: "simulate on change", value: "onChange" },
+  { label: "simulate on checkout", value: "onCheckout" },
+  { label: "simulate on load", value: "onLoad" },
 ];
 
 const simulate = () => {

@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer location="right" permanent rail>
     <v-tabs
-      :model-value="modelStore.state.controller.view"
+      :model-value="modelStore.state.views.controller"
       :mandatory="false"
       color="primary"
       direction="vertical"
@@ -51,7 +51,7 @@
   >
     <div @mousedown="resizeRightNav()" class="resize-handle left" />
 
-    <template v-if="modelStore.state.controller.view === 'specs'">
+    <template v-if="modelStore.state.views.controller === 'specs'">
       <v-toolbar
         color="transparent"
         density="compact"
@@ -77,7 +77,7 @@
       </v-list>
     </template>
 
-    <template v-if="modelStore.state.controller.view === 'params'">
+    <template v-if="modelStore.state.views.controller === 'params'">
       <!-- <template v-if="modelStore.model.isNeuron">
         <v-toolbar
           color="transparent"
@@ -145,7 +145,7 @@
 
     <template
       v-else-if="
-        appStore.state.devMode && modelStore.state.controller.view === 'raw'
+        appStore.state.devMode && modelStore.state.views.controller === 'raw'
       "
     >
       <codemirror
@@ -156,7 +156,7 @@
       />
     </template>
 
-    <template v-if="modelStore.state.controller.view === 'code'">
+    <template v-if="modelStore.state.views.controller === 'code'">
       <slot name="simulationCodeEditor">
         <SimulationCodeEditor
           :simulation="(modelStore.state.project.simulation as BaseSimulation)"
@@ -165,7 +165,7 @@
       </slot>
     </template>
 
-    <template v-else-if="modelStore.state.controller.view === 'activity'">
+    <template v-else-if="modelStore.state.views.controller === 'activity'">
       <slot name="activityController">
         <ActivityChartController
           :graph="(modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph)"

@@ -31,7 +31,7 @@
             size="small"
             v-for="(node, index) in nodeGroup.nodes"
           >
-            <NodeAvatar :node size="32" />
+            <NodeAvatar :node="(node as TNode)" size="32" />
           </v-btn>
         </v-btn-group>
 
@@ -54,7 +54,7 @@
           variant="accordion"
         >
           <ConnectionEditor
-            :connection
+            :connection="(connection as TConnection)"
             :key="index"
             v-for="(connection, index) in nodeGroup.connections"
           />
@@ -71,6 +71,7 @@ import Menu from "../common/Menu.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeGroupMenuList from "./NodeGroupMenuList.vue";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TConnection, TNode } from "@/types";
 
 defineProps<{ nodeGroup: NodeGroup }>();
 </script>

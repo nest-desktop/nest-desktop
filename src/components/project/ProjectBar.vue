@@ -49,11 +49,12 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
+
 import NetworkHistory from "../network/NetworkHistory.vue";
 import SimulationButton from "../simulation/SimulationButton.vue";
+import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "@/stores/appStore";
-import { truncate } from "@/utils/truncate";
 const appStore = useAppStore();
 
 const projectStore = computed(

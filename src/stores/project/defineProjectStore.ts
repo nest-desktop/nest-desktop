@@ -14,22 +14,9 @@ import { useProjectDBStore } from "./projectDBStore";
 import { useProjectViewStore } from "./projectViewStore";
 
 interface IProjectStoreState {
-  bottomNav: {
-    height: number;
-    active: boolean;
-  };
   code: string;
-  controller: {
-    open: boolean;
-    view: string;
-    width: number;
-  };
   project: TProject;
   projectId: string;
-  tab: {
-    activityView: string;
-    view: string;
-  };
 }
 
 type Class<T> = new (...props: any) => T;
@@ -53,179 +40,196 @@ export function defineProjectStore(
     name: props.simulator + " project store",
   });
 
-  return defineStore(props.simulator + "-project", () => {
-    const state = reactive<IProjectStoreState>({
-      bottomNav: {
-        height: 200,
-        active: false,
-      },
-      code: "print('hello world!')",
-      controller: {
-        open: false,
-        view: "",
-        width: 480,
-      },
-      project: new props.Project() as TProject,
-      projectId: "",
-      tab: {
-        activityView: "abstract",
-        view: "edit",
-      },
-    });
+  return defineStore(
+    props.simulator + "-project",
+    () => {
+      const state = reactive<IProjectStoreState>({
+        code: "print('hello world!')",
+        project: new props.Project() as TProject,
+        projectId: "",
+      });
 
-    const projectDBStore: TProjectDBStore = props.useProjectDBStore();
+      const projectDBStore: TProjectDBStore = props.useProjectDBStore();
+      const projectViewStore = useProjectViewStore();
 
-    /**
-     * Initialize project store.
-     */
-    const init = (): void => {
-      logger.trace("init");
+      /**
+       * Initialize project store.
+       */
+      const init = (): void => {
+        logger.trace("init");
 
-      if (projectDBStore.state.initialized) {
-        state.projectId ? loadProject(state.projectId) : loadFirstProject();
-      }
-
-      watch(
-        () => projectDBStore.state.initialized,
-        () => {
-          logger.trace("watch", state.projectId);
-
+        if (projectDBStore.state.initialized) {
           state.projectId ? loadProject(state.projectId) : loadFirstProject();
         }
-      );
-    };
 
-    /**
-     * Check if the project is selected.
-     * @param projectId project ID
-     * @returns boolean
-     */
-    const isProjectSelected = (projectId: string): boolean =>
-      state.projectId === projectId;
+        watch(
+          () => projectDBStore.state.initialized,
+          () => {
+            logger.trace("watch", state.projectId);
 
-    /**
-     * Load first project
-     */
-    const loadFirstProject = (): void => {
-      const firstProject = projectDBStore.state.projects[0];
-      state.projectId = firstProject.id;
-      state.project = projectDBStore.getProject(firstProject.id);
-    };
+            state.projectId ? loadProject(state.projectId) : loadFirstProject();
+          }
+        );
+      };
 
-    /**
-     * Load current project from store.
-     * @param projectId project ID
-     */
-    const loadProject = (projectId: string = ""): void => {
-      logger.trace("load project:", truncate(projectId));
+      /**
+       * Check if the project is selected.
+       * @param projectId project ID
+       * @returns boolean
+       */
+      const isProjectSelected = (projectId: string): boolean =>
+        state.projectId === projectId;
 
-      if (!projectDBStore.hasProjectId(projectId)) return;
+      /**
+       * Load first project
+       */
+      const loadFirstProject = (): void => {
+        const firstProject = projectDBStore.state.projects[0];
+        state.projectId = firstProject.id;
+        state.project = projectDBStore.getProject(firstProject.id);
+      };
 
-      state.project = projectDBStore.getProject(projectId);
-      state.projectId = state.project.id;
+      /**
+       * Load current project from store.
+       * @param projectId project ID
+       */
+      const loadProject = (projectId: string = ""): void => {
+        logger.trace("load project:", truncate(projectId));
 
-      // state.project.activityGraph.init();
+        if (!projectDBStore.hasProjectId(projectId)) return;
 
-      // const activityGraphStore = useActivityGraphStore();
-      // activityGraphStore.init(state.project as Project);
-      // activityGraphStore.update();
+        state.project = projectDBStore.getProject(projectId);
+        state.projectId = state.project.id;
 
-      const projectViewStore = useProjectViewStore();
-      if (
-        projectViewStore.state.simulateAfterLoad.value &&
-        state.tab.view === "explore"
-      ) {
-        startSimulation();
-      }
-    };
+        // state.project.activityGraph.init();
 
-    /**
-     * Create new project.
-     */
-    const newProject = (): void => {
-      logger.trace("new project");
+        // const activityGraphStore = useActivityGraphStore();
+        // activityGraphStore.init(state.project as Project);
+        // activityGraphStore.update();
+        // const projectViewStore = useProjectViewStore();
 
-      state.project = new props.Project();
-      state.projectId = state.project.id;
-      state.project.state.state.editMode = true;
-    };
+        if (
+          projectViewStore.state.simulationEvents.onLoad &&
+          projectViewStore.state.views.main === "explore"
+        ) {
+          startSimulation();
+        }
+      };
 
-    /**
-     * Reload the project in the list.
-     * @param project project object
-     */
-    const reloadProject = (project: TProject): void => {
-      logger.trace("reload project:", truncate(project.id));
+      /**
+       * Create new project.
+       */
+      const newProject = (): void => {
+        logger.trace("new project");
 
-      projectDBStore.unloadProject(project.id);
-      state.project = projectDBStore.getProject(project.id);
-    };
+        state.project = new props.Project();
+        state.projectId = state.project.id;
+        state.project.state.state.editMode = true;
+      };
 
-    /**
-     * Get route path of current model.
-     * @returns
-     */
-    const routeTo = (): { path: string } => ({
-      path:
-        "/" +
-        props.simulator +
-        "/project/" +
-        state.projectId +
-        "/" +
-        state.tab.view,
-    });
+      /**
+       * Reload the project in the list.
+       * @param project project object
+       */
+      const reloadProject = (project: TProject): void => {
+        logger.trace("reload project:", truncate(project.id));
 
-    /**
-     * Save current project.
-     */
-    const saveCurrentProject = (): void => {
-      logger.trace("save project:", truncate(state.projectId));
+        projectDBStore.unloadProject(project.id);
+        state.project = projectDBStore.getProject(project.id);
+      };
 
-      projectDBStore.saveProject(state.projectId);
-    };
+      /**
+       * Get route path of current model.
+       * @returns
+       */
+      const routeTo = (): { path: string } => ({
+        path:
+          "/" +
+          props.simulator +
+          "/project/" +
+          state.projectId +
+          "/" +
+          projectViewStore.state.views.main,
+      });
 
-    /**
-     * Start simulation of the current project.
-     */
-    const startSimulation = (): void => {
-      logger.trace("start simulation:", truncate(state.projectId));
+      /**
+       * Save current project.
+       */
+      const saveCurrentProject = (): void => {
+        logger.trace("save project:", truncate(state.projectId));
 
-      router
-        .push({
-          name: props.simulator + "ActivityExplorer",
-          params: { projectId: state.projectId },
-        })
-        .then(() => {
-          // TODO: nextTick doesn't work.
-          setTimeout(() => state.project.startSimulation(), 100);
-        });
-    };
+        projectDBStore.saveProject(state.projectId);
+      };
 
-    /**
-     * Toggle navigation drawer.
-     * @param item
-     */
-    const toggleController = (item: { id: string }): void => {
-      logger.trace("toggle controller:", item.id);
+      /**
+       * Start simulation of the current project.
+       */
+      const startSimulation = (): void => {
+        logger.trace("start simulation:", truncate(state.projectId));
 
-      if (!state.controller.open || state.controller.view === item.id) {
-        state.controller.open = !state.controller.open;
-      }
-      state.controller.view = state.controller.open ? item.id : "";
-    };
+        router
+          .push({
+            name: props.simulator + "ActivityExplorer",
+            params: { projectId: state.projectId },
+          })
+          .then(() => {
+            // TODO: nextTick doesn't work.
+            setTimeout(() => state.project.startSimulation(), 100);
+          });
+      };
 
-    return {
-      init,
-      isProjectSelected,
-      loadProject,
-      newProject,
-      props,
-      reloadProject,
-      routeTo,
-      saveCurrentProject,
-      startSimulation,
-      state,
-      toggleController,
-    };
-  });
+      // /**
+      //  * Toggle navigation drawer.
+      //  * @param item
+      //  */
+      // const toggleController = (item: { id: string }): void => {
+      //   logger.trace("toggle controller:", item.id);
+
+      //   const projectViewStore = useProjectViewStore();
+
+      //   if (
+      //     !projectViewStore.state.controller.open ||
+      //     state.views.controller === item.id
+      //   ) {
+      //     projectViewStore.state.controller.open =
+      //       !projectViewStore.state.controller.open;
+      //   }
+      //   state.views.controller = projectViewStore.state.controller.open
+      //     ? item.id
+      //     : "";
+      // };
+
+      return {
+        init,
+        isProjectSelected,
+        loadProject,
+        newProject,
+        props,
+        reloadProject,
+        routeTo,
+        saveCurrentProject,
+        startSimulation,
+        state,
+        // toggleController,
+      };
+    }
+    // {
+    //   persist: [
+    //     {
+    //       pick: ["views.main"],
+    //       storage: localStorage,
+    //     },
+    //   ],
+    // }
+    // {
+    //   persist: [
+    //     {
+    //       pick: [
+    //         "state.views",
+    //       ],
+    //       storage: sessionStorage,
+    //     },
+    //   ],
+    // }
+  );
 }

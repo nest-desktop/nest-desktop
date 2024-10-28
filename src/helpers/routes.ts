@@ -8,6 +8,7 @@ import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { useNavStore } from "@/stores/navStore";
 import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -87,7 +88,7 @@ export const modelBeforeEnter = (to: {
   }
 
   const path = to.path.split("/");
-  modelStore.state.view = path[path.length - 1] || "edit";
+  modelStore.state.views.main = path[path.length - 1] || "edit";
 
   loadModel(modelId);
 };
@@ -188,12 +189,9 @@ export const projectBeforeEnter = (to: {
 }): void => {
   logger.trace("before enter project route:", to.path);
 
-  const appStore = useAppStore();
-  const projectStore: TProjectStore =
-    appStore.currentSimulator.stores.projectStore;
-
+  const projectViewStore = useProjectViewStore();
   const path = to.path.split("/");
-  projectStore.state.tab.view = path[path.length - 1] || "edit";
+  projectViewStore.state.views.main = path[path.length - 1] || "edit";
 
   loadProject(to.params.projectId);
 };

@@ -6,11 +6,11 @@
 
   <ActivityChartGraph
     :graph="graph.activityChartGraph"
-    v-if="projectStore.state.tab.activityView === 'abstract'"
+    v-if="projectViewStore.state.views.activity === 'abstract'"
   />
   <ActivityAnimationGraph
     :graph="graph.activityAnimationGraph"
-    v-else-if="projectStore.state.tab.activityView === 'spatial'"
+    v-else-if="projectViewStore.state.views.activity === 'spatial'"
   />
 </template>
 
@@ -22,6 +22,9 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { NESTActivityGraph } from "../helpers/activity/activityGraph";
 import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";
+
+import { useProjectViewStore } from "@/stores/project/projectViewStore";
+const projectViewStore = useProjectViewStore();
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();

@@ -79,7 +79,7 @@
     <ParamListItem
       :key="index"
       :color="synapse.connection.sourceNode.view.color"
-      :param
+      :param="(param as NESTSynapseParameter)"
       v-for="(param, index) in synapse.filteredParams"
     />
   </v-list>
@@ -91,6 +91,7 @@ import { computed } from "vue";
 import ParamListItem from "@/components/parameter/ParamListItem.vue";
 
 import { NESTSynapse } from "../../helpers/synapse/synapse";
+import { NESTSynapseParameter } from "../../helpers/synapse/synapseParameter";
 
 const props = defineProps<{ synapse: NESTSynapse }>();
 const synapse = computed(() => props.synapse);

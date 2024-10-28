@@ -1,7 +1,7 @@
 // navStore.ts
 
 import { Store, defineStore } from "pinia";
-import { reactive } from "vue";
+import { nextTick, reactive } from "vue";
 
 interface INavStoreState {
   open: boolean;
@@ -23,6 +23,42 @@ export const useNavStore: TNavStore = defineStore(
       width: 320,
     });
 
+    const dispatchWindowResize = () => {
+      nextTick(() => window.dispatchEvent(new Event("resize")));
+    };
+
+    /**
+     * Handle mouse move on resizing.
+     * @param e MouseEvent from which the x position is taken
+     */
+    const handleSideNavMouseMove = (e: MouseEvent) => {
+      state.width = e.clientX - 64;
+      // window.dispatchEvent(new Event("resize"));
+    };
+
+    /**
+     * Handle mouse up on resizing.
+     */
+    const handleSideNavMouseUp = () => {
+      state.resizing = false;
+      window.removeEventListener("mousemove", handleSideNavMouseMove);
+      window.removeEventListener("mouseup", handleSideNavMouseUp);
+      dispatchWindowResize();
+    };
+
+    /**
+     * Resize side nav.
+     */
+    const resizeSideNav = () => {
+      state.resizing = true;
+      window.addEventListener("mousemove", handleSideNavMouseMove);
+      window.addEventListener("mouseup", handleSideNavMouseUp);
+    };
+
+    /**
+     * Toggle side navigation.
+     * @param navItem
+     */
     const toggle = (navItem: any) => {
       if (!state.open || state.view === navItem.id) {
         state.open = !state.open;
@@ -30,7 +66,7 @@ export const useNavStore: TNavStore = defineStore(
       state.view = state.open ? navItem.id : "";
     };
 
-    return { state, toggle };
+    return { dispatchWindowResize, resizeSideNav, state, toggle };
   },
   {
     persist: [
