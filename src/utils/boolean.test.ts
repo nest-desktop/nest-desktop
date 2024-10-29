@@ -1,5 +1,7 @@
 // boolean.test.ts
+
 import { expect, test } from "vitest";
+
 import { getBoolean } from "./boolean";
 
 test("Get true as boolean value.", () => {

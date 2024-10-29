@@ -19,7 +19,9 @@
     "lint": "eslint .",
     "postinstall": "electron-builder install-app-deps",
     "preview": "vite preview",
-    "test": "vitest"
+    "preview:test": "vite preview --outDir ./coverage",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@codemirror/autocomplete": "~6.18",
@@ -71,6 +73,8 @@
     "@vite-pwa/assets-generator": "~0.2",
     "@vitejs/plugin-vue": "~5.1",
     "@vitest/coverage-istanbul": "~2.1",
+    "@vitest/coverage-v8": "2.1.4",
+    "@vitest/ui": "2.1.4",
     "@vue/test-utils": "~2.4",
     "electron": "~33.0",
     "electron-builder": "~25.1",

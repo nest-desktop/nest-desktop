@@ -1,5 +1,7 @@
 // truncate.test.ts
+
 import { expect, test } from "vitest";
+
 import { truncate } from "./truncate";
 
 test("Truncate long text.", () => {

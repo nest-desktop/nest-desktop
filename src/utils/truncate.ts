@@ -7,9 +7,5 @@
  * @returns string
  */
 export function truncate(value?: string, size: number = 6): string {
-  if (value) {
-    return value.slice(0, size);
-  } else {
-    return "";
-  }
+  return value != undefined ? value.slice(0, size) : "";
 }
