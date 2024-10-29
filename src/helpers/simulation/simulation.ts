@@ -5,8 +5,8 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TProject, TSimulationCode } from "@/types";
 
-import { notifyError, notifySuccess } from "../../utils/notification";
 import { BaseObj } from "../common/base";
+import { notifyError, notifySuccess } from "../common/notification";
 import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
 
 export interface IResponseProps {

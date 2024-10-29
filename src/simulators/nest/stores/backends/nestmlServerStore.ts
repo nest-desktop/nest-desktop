@@ -2,10 +2,10 @@
 
 import { AxiosError, AxiosResponse } from "axios";
 
+import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
-import { notifyError, notifySuccess } from "@/utils/notification";
 
 export const useNESTMLServerStore = defineBackendStore(
   "nest",

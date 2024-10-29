@@ -4,10 +4,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
+import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
-import { notifyError, notifySuccess } from "@/utils/notification";
 
 export function defineBackendStore(
   simulator: string,
