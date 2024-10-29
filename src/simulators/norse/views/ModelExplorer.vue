@@ -1,21 +1,31 @@
 <template>
-  <v-card :subtitle="model.id" title="Explorer">
-    <v-card-text> Text </v-card-text>
+  <v-chip
+    class="ma-2"
+    density="compact"
+    style="position: absolute; top: 72px; z-index: 1000"
+  >
+    {{ modelStore.state.projectId }}
+  </v-chip>
 
-    <v-card-actions>
-      <v-btn text="action" />
-    </v-card-actions>
-  </v-card>
+  <ActivityChartGraph
+    :graph="graph.activityChartGraph"
+    v-if="graph && modelStore.model.isNeuron"
+  />
 </template>
 
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { NorseModel } from "../helpers/model/model";
+import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
+import { BaseActivityGraph } from "@/helpers/activity/activityGraph";
 import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNorseModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = useNorseModelStore();
 
-const model = computed(() => modelStore.model as NorseModel);
+defineProps<{ modelId: string }>();
+
+const graph = computed(
+  () => modelStore.state.project?.activityGraph as BaseActivityGraph
+);
 </script>

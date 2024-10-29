@@ -1,11 +1,12 @@
 // defineModelStore.ts
 
 import { Store, defineStore } from "pinia";
-import { computed, reactive } from "vue";
+import { computed, nextTick, reactive } from "vue";
 
-import { TElementType } from "@/helpers/model/model";
+import { IProjectProps } from "@/helpers/project/project";
 import router from "@/router";
-import { TModel, TProject } from "@/types";
+import { TElementType, TModel, TNode, TProject } from "@/types";
+import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -16,7 +17,8 @@ import { useModelDBStore } from "./modelDBStore";
 interface IModelStoreState {
   modelId: string;
   models: string[];
-  project?: TProject;
+  project: TProject | null;
+  projectId: string;
   projectFilename?: string;
   recentAddedModels: Record<TElementType, string[]>;
 }
@@ -54,6 +56,7 @@ export function defineModelStore(
       const state = reactive<IModelStoreState>({
         modelId: "",
         models: [],
+        projectId: "",
         recentAddedModels: {
           neuron: [],
           recorder: [],
@@ -107,6 +110,23 @@ export function defineModelStore(
       };
 
       /**
+       * Load project from assets.
+       */
+      const loadProjectfromAssets = (): void => {
+        logger.trace("load project from assets:", state.projectId);
+        const appStore = useAppStore();
+        const projectStore = appStore.currentSimulator.stores.projectStore;
+
+        loadJSON(
+          `assets/simulators/${props.simulator}/projects/${state.projectId}.json`
+        ).then((projectProps: IProjectProps) => {
+          projectProps.filename = state.projectId;
+          model.value.project = new projectStore.props.Project(projectProps);
+          updateProject();
+        });
+      };
+
+      /**
        * New model.
        * @param modelId string
        */
@@ -120,7 +140,7 @@ export function defineModelStore(
 
       /**
        * Redirect to route path of current model.
-       * @returns
+       * @returns { path: string }
        */
       const routeTo = (): { path: string } => {
         const appStore = useAppStore();
@@ -148,6 +168,20 @@ export function defineModelStore(
       };
 
       /**
+       * Select project
+       * @param projectId
+       */
+      const selectProject = (
+        projectId: string,
+        callback?: () => void
+      ): void => {
+        logger.trace("select project", projectId);
+
+        state.projectId = projectId;
+        callback ? callback() : updateProject();
+      };
+
+      /**
        * Start simulation of the current project.
        */
       const startSimulation = (): void => {
@@ -162,6 +196,43 @@ export function defineModelStore(
             // TODO: nextTick doesn't work.
             setTimeout(() => state.project?.startSimulation(), 100);
           });
+      };
+
+      const updateProject = () => {
+        logger.trace("update");
+
+        if (!model || !model.value.isNeuron) {
+          state.project = undefined;
+          return;
+        }
+
+        if (
+          model.value.project &&
+          model.value.project?.filename === state.projectId
+        ) {
+          state.project = model.value.project;
+          const project = state.project;
+
+          if (project) {
+            project.network.nodes.neurons.forEach((neuron: TNode) => {
+              neuron._modelId = state.modelId;
+              neuron.loadModel();
+            });
+
+            nextTick(() => {
+              project.network.nodes.neurons.forEach((neuron: TNode) => {
+                neuron.showAllParams(false);
+              });
+
+              project.network.nodes.updateRecords();
+              project.simulation.init();
+              project.activities.init();
+              project.activityGraph.init();
+            });
+          }
+        } else {
+          loadProjectfromAssets();
+        }
       };
 
       /**
@@ -183,14 +254,17 @@ export function defineModelStore(
         getModel,
         init,
         loadModel,
+        loadProjectfromAssets,
         model,
         newModel,
         props,
         routeTo,
         saveModel,
+        selectProject,
         startSimulation,
         state,
         updateRecentAddedModels,
+        updateProject,
       };
     },
     {

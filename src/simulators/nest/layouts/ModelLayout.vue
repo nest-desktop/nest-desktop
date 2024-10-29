@@ -36,28 +36,12 @@
           <span class="text-no-wrap">Explorer</span>
         </v-tab>
 
-        <v-btn
+        <ModelSelectProjectMenu
           :disabled="!modelStore.model.isNeuron"
-          height="100%"
-          rounded="0"
-          style="min-width: 32px"
-          variant="plain"
-          width="32"
-        >
-          <v-icon icon="mdi:mdi-menu-down" />
-
-          <v-menu activator="parent" target=".tab-model-explorer">
-            <v-list density="compact">
-              <v-list-item
-                :key="index"
-                :prepend-icon="project.icon"
-                :title="project.name"
-                @click="selectProject(project.id)"
-                v-for="(project, index) in projects"
-              />
-            </v-list>
-          </v-menu>
-        </v-btn>
+          :projects
+          :modelValue="modelStore.state.projectId"
+          @update:model-value="(projectId: string) => modelStore.selectProject(projectId, updateProject)"
+        />
 
         <v-divider vertical />
       </template>
@@ -107,15 +91,12 @@ import { createDialog } from "vuetify3-dialog";
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
+import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vue";
 import { TModelStore } from "@/stores/model/defineModelStore";
-import { loadJSON } from "@/utils/fetch";
-import { logger as mainLogger } from "@/utils/logger";
 import { mountModelLayout } from "@/helpers/routes";
 
 import NewModelDialog from "../components/dialog/NewModelDialog.vue";
-import { INESTProjectProps, NESTProject } from "../helpers/project/project";
-import { NESTModel } from "../helpers/model/model";
-import { NESTNode } from "../helpers/node/node";
+import { NESTModel } from "../types";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useRoute, useRouter } from "vue-router";
@@ -125,10 +106,7 @@ const router = useRouter();
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import {
-  updateSimulationModules,
-  useNESTModelStore,
-} from "../stores/model/modelStore";
+import { updateProject, useNESTModelStore } from "../stores/model/modelStore";
 const modelStore: TModelStore = useNESTModelStore();
 
 import { useNESTModuleStore } from "../stores/moduleStore";
@@ -137,106 +115,6 @@ const moduleStore = useNESTModuleStore();
 const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
 );
-
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "model layout",
-});
-
-const dialogNewModel = () => {
-  createDialog({
-    customComponent: {
-      component: NewModelDialog,
-      props: {
-        title: "Create NEST model",
-        modelValue: "new model " + modelDBStore.value.state.models.length,
-      },
-    },
-    text: "",
-    title: "",
-    // @ts-ignore - Dialog only returns string.
-  }).then((model: NESTModel | undefined) => {
-    if (model) {
-      modelDBStore.value.state.models.unshift(model);
-      modelStore.state.modelId = model.id;
-
-      // Add model to first module.
-      if (
-        moduleStore.state.modules.length > 0 &&
-        !moduleStore.state.modules[0].models.includes(model.id)
-      ) {
-        moduleStore.state.modules[0].models.push(model.id);
-      }
-
-      router.push({
-        name: appStore.state.simulator + "ModelEditor",
-        params: {
-          modelId: model.id,
-        },
-      });
-    }
-  });
-};
-
-const loadProjectfromAssets = (): void => {
-  logger.trace("load project from assets:", modelStore.state.projectId);
-
-  if (modelStore.state.projectId) {
-    loadJSON(
-      `assets/simulators/nest/projects/${modelStore.state.projectId}.json`
-    ).then((projectProps: INESTProjectProps) => {
-      projectProps.filename = modelStore.state.projectId;
-      modelStore.model.project = new NESTProject(projectProps);
-      update();
-    });
-  }
-};
-
-const selectProject = (projectId: string): void => {
-  logger.trace("select project", projectId);
-
-  modelStore.state.projectId = projectId;
-  update();
-};
-
-const update = () => {
-  logger.trace("update");
-
-  if (!modelStore.model || !modelStore.model.isNeuron) {
-    modelStore.state.project = undefined;
-    return;
-  }
-
-  if (
-    modelStore.model?.project &&
-    modelStore.model.project?.filename === modelStore.state.projectId
-  ) {
-    modelStore.state.project = modelStore.model.project;
-    const project = modelStore.state.project;
-
-    if (project) {
-      updateSimulationModules(false);
-
-      project.network.nodes.neurons.forEach((neuron: NESTNode) => {
-        neuron._modelId = modelStore.state.modelId;
-        neuron.loadModel();
-      });
-
-      nextTick(() => {
-        project.network.nodes.neurons.forEach((neuron: NESTNode) => {
-          neuron.showAllParams(false);
-        });
-
-        project.network.nodes.updateRecords();
-        project.simulation.init();
-        project.activities.init();
-        project.activityGraph.init();
-      });
-    }
-  } else {
-    loadProjectfromAssets();
-  }
-};
 
 const projects: { id: string; name: string; icon: string }[] = [
   {
@@ -286,10 +164,45 @@ const projects: { id: string; name: string; icon: string }[] = [
   },
 ];
 
+const dialogNewModel = () => {
+  createDialog({
+    customComponent: {
+      component: NewModelDialog,
+      props: {
+        title: "Create NEST model",
+        modelValue: "new model " + modelDBStore.value.state.models.length,
+      },
+    },
+    text: "",
+    title: "",
+    // @ts-ignore - Dialog only returns string.
+  }).then((model: NESTModel | undefined) => {
+    if (model) {
+      modelDBStore.value.state.models.unshift(model);
+      modelStore.state.modelId = model.id;
+
+      // Add model to first module.
+      if (
+        moduleStore.state.modules.length > 0 &&
+        !moduleStore.state.modules[0].models.includes(model.id)
+      ) {
+        moduleStore.state.modules[0].models.push(model.id);
+      }
+
+      router.push({
+        name: appStore.state.simulator + "ModelEditor",
+        params: {
+          modelId: model.id,
+        },
+      });
+    }
+  });
+};
+
 onMounted(() => {
-  selectProject("model-step-current-up-down");
   mountModelLayout({ route, router });
+  nextTick(() => modelStore.selectProject(projects[0].id));
 });
 
-watch(() => modelStore.state.modelId, update);
+watch(() => modelStore.state.modelId, updateProject);
 </script>
