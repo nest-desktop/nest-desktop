@@ -60,7 +60,7 @@ export const updateProject = () => {
   }
 };
 
-const updateSimulationModules = (emitChanges: boolean = true): void => {
+export const updateSimulationModules = (emitChanges: boolean = true): void => {
   const modelStore: TModelStore = useNESTModelStore();
   const moduleStore = useNESTModuleStore();
 

@@ -3,9 +3,10 @@
 import { Store, defineStore } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 
+import { TElementType } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
 import router from "@/router";
-import { TElementType, TModel, TNode, TProject } from "@/types";
+import { TModel, TProject } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -56,6 +57,7 @@ export function defineModelStore(
       const state = reactive<IModelStoreState>({
         modelId: "",
         models: [],
+        project: null,
         projectId: "",
         recentAddedModels: {
           neuron: [],
@@ -202,7 +204,7 @@ export function defineModelStore(
         logger.trace("update");
 
         if (!model || !model.value.isNeuron) {
-          state.project = undefined;
+          state.project = null;
           return;
         }
 
@@ -214,13 +216,13 @@ export function defineModelStore(
           const project = state.project;
 
           if (project) {
-            project.network.nodes.neurons.forEach((neuron: TNode) => {
+            project.network.nodes.neurons.forEach((neuron) => {
               neuron._modelId = state.modelId;
               neuron.loadModel();
             });
 
             nextTick(() => {
-              project.network.nodes.neurons.forEach((neuron: TNode) => {
+              project.network.nodes.neurons.forEach((neuron) => {
                 neuron.showAllParams(false);
               });
 
