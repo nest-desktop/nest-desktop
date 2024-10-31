@@ -1,0 +1,38 @@
+{
+  "abbreviation": "ps",
+  "elementType": "stimulator",
+  "id": "poisson_spikes",
+  "label": "Poisson spikes",
+  "params": [
+    {
+      "id": "rate",
+      "component": "valueSlider",
+      "label": "mean firing rate",
+      "max": 10000,
+      "min": 0,
+      "step": 1,
+      "unit": "Hz",
+      "value": 0
+    },
+    {
+      "id": "start",
+      "component": "valueSlider",
+      "label": "start time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "id": "stop",
+      "component": "valueSlider",
+      "label": "stop time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

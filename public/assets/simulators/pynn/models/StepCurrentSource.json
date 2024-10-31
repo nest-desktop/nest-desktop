@@ -1,0 +1,20 @@
+{
+  "abbreviation": "sc",
+  "elementType": "stimulator",
+  "id": "StepCurrentSource",
+  "label": "step current",
+  "params": [
+    {
+      "component": "arrayInput",
+      "id": "times",
+      "label": "list/array of times at which the injected current changes",
+      "unit": "ms"
+    },
+    {
+      "component": "arrayInput",
+      "id": "amplitude",
+      "label": "list/array of current amplitudes to be injected at the times",
+      "unit": "nA"
+    }
+  ]
+}

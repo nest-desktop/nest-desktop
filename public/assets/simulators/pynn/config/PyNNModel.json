@@ -1,0 +1,60 @@
+{
+  "recordables": [
+    {
+      "id": "gsyn",
+      "label": "synaptic conductance",
+      "unit": "uS"
+    },
+    {
+      "id": "gsyn_ex",
+      "label": "excitatory synaptic conductance",
+      "unit": "uS"
+    },
+    {
+      "id": "gsyn_inh",
+      "label": "inhibitory synaptic conductance",
+      "unit": "uS"
+    },
+    {
+      "id": "isyn",
+      "label": "synaptic current",
+      "unit": "nA"
+    },
+    {
+      "id": "isyn_exc",
+      "label": "excitatory synaptic current",
+      "unit": "nA"
+    },
+    {
+      "id": "isyn_inh",
+      "label": "inhibitory synaptic current",
+      "unit": "nA"
+    },
+    {
+      "id": "h",
+      "label": "sodium channel inactivation"
+    },
+    {
+      "id": "m",
+      "label": "sodium channel activation"
+    },
+    {
+      "id": "n",
+      "label": "potassium channel activation"
+    },
+    {
+      "id": "spikes",
+      "label": "spikes"
+    },
+    {
+      "id": "v",
+      "label": "membrane potential",
+      "unit": "mV"
+    },
+    {
+      "id": "w",
+      "label": "current",
+      "unit": "nA"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "name": "Poisson spikes steps to model",
+  "network": {
+    "nodes": [
+      {
+        "model": "inhomogeneous_poisson_generator",
+        "params": [
+          {
+            "id": "rate_times",
+            "value": [
+              100,
+              200,
+              300,
+              400,
+              500,
+              600,
+              700,
+              800,
+              900,
+              1000,
+              1100,
+              1200,
+              1300,
+              1400,
+              1500,
+              1600,
+              1700,
+              1800,
+              1900,
+              2000,
+              2100,
+              2200,
+              2300,
+              2400,
+              2500,
+              2600,
+              2700,
+              2800
+            ]
+          },
+          {
+            "id": "rate_values",
+            "value": [
+              10,
+              0,
+              20,
+              0,
+              40,
+              0,
+              80,
+              0,
+              160,
+              0,
+              320,
+              0,
+              640,
+              0,
+              1280,
+              0,
+              2560,
+              0,
+              5120,
+              0,
+              10240,
+              0,
+              20480,
+              0,
+              40960,
+              0,
+              81920,
+              0
+            ]
+          }
+        ],
+        "view": {
+          "position": {
+            "x": 25,
+            "y": 75
+          }
+        }
+      },
+      {
+        "model": "iaf_psc_alpha",
+        "view": {
+          "position": {
+            "x": 175,
+            "y": 25
+          }
+        }
+      },
+      {
+        "model": "voltmeter",
+        "view": {
+          "position": {
+            "x": 325,
+            "y": 75
+          }
+        },
+        "params": [
+          {
+            "id": "interval",
+            "value": 0.1
+          }
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ]
+  },
+  "simulation": {
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 0.1,
+      "rngSeed": 1
+    },
+    "time": 3000
+  },
+  "version": "3.2.0"
+}

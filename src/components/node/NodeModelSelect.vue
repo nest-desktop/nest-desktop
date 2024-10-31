@@ -1,487 +1,118 @@
 <template>
-  <div class="nodeModelSelect">
-    <v-menu :close-on-content-click="false" tile v-model="state.opened">
-      <template #activator="{ on, attrs }">
-        <v-btn
-          :color="state.node.view.color"
-          :dark="projectView.config.coloredToolbar"
-          :height="40"
-          :text="!projectView.config.coloredToolbar"
-          block
-          class="nodeModel"
-          depressed
-          tile
-          v-bind="attrs"
-          v-on="on"
-        >
-          <span v-text="state.node.model.label" />
-          <v-spacer />
-          <v-chip
-            label
-            outlined
-            small
-            v-if="state.node.network.project.app.config.devMode"
-            v-text="state.node.shortHash"
-          />
-          <v-icon class="modelEdit" right small v-text="'mdi-pencil'" />
-        </v-btn>
-      </template>
+  <v-select
+    :item-props="true"
+    :items="state.items"
+    :label="state.elementType + ' model'"
+    @click.stop
+    class="model-select text-primary mx-1"
+    density="compact"
+    hide-details
+    item-title="label"
+    item-value="id"
+    v-model="node.modelId"
+  >
+    <template #item="{ props }">
+      <v-list-item @click="select(props)" class="node-model-item">
+        {{ props.title }}
 
-      <v-card style="min-width: 300px" tile>
-        <v-card-title class="pa-0" style="height: 40px">
-          <v-overflow-btn
-            :items="state.node.models"
-            @change="updateOnModelChange()"
-            class="ma-0"
-            dense
-            editable
-            filled
-            hide-details
-            item-text="label"
-            item-value="id"
-            style="font-weight: 700"
-            tile
-            v-model="state.node.modelId"
-          />
-        </v-card-title>
-
-        <v-card-text class="ma-0 pa-0">
-          <v-list class="no-highlight" dense>
-            <v-list-item-group
-              @change="paramChange"
-              active-class=""
-              multiple
-              v-model="state.visibleParams"
-            >
-              <v-list-item
-                :key="param.idx"
-                class="mx-0"
-                style="font-size: 12px"
-                v-for="param of state.node.params"
-              >
-                <template #default="">
-                  <v-list-item-content class="pa-1">
-                    <v-row no-gutters>
-                      <v-col
-                        class="d-flex justify-space-between"
-                        v-html="param.labelRow"
-                      />
-                    </v-row>
-                  </v-list-item-content>
-
-                  <v-list-item-action class="my-1">
-                    <v-checkbox
-                      :color="state.node.view.color"
-                      :input-value="param.state.visible"
-                      :value="param.state.visible"
-                      hide-details
-                    />
-                  </v-list-item-action>
-                </template>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-
-          <v-card flat tile v-if="state.node.modelId === 'cm_default'">
-            <span class="mx-2"> Compartments </span>
-            <v-card-actions class="justify-space-between">
-              <v-item-group
-                class="text-center"
-                mandatory
-                v-model="state.compIdx"
-              >
-                <v-item
-                  :key="'comp-' + compartment.idx"
-                  v-for="compartment of state.node.compartments"
-                  v-slot="{ active, toggle }"
-                >
-                  <v-chip
-                    :color="state.node.view.color"
-                    :input-value="active"
-                    :label="compartment.parentIdx !== -1"
-                    :title="compartment.labelFull"
-                    @click="toggle"
-                    @click:close="compartment.remove()"
-                    class="ma-1px"
-                    close
-                    outlined
-                    small
-                  >
-                    {{ compartment.label }}
-                  </v-chip>
-                </v-item>
-              </v-item-group>
-
-              <span>
-                <v-menu offset-y>
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      icon
-                      small
-                      text
-                      title="Add compartment"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon small v-text="'mdi-plus'" />
-                    </v-btn>
-                  </template>
-                  <v-list dense>
-                    <v-list-item @click="addCompartment({ parentIdx: -1 })">
-                      <v-list-item-title v-text="'Soma'" />
-                    </v-list-item>
-                    <v-list-item
-                      :key="'modelCompartment-' + comp.idx"
-                      @click="addCompartment({ parentIdx: comp.idx })"
-                      v-for="comp in state.node.compartments"
-                    >
-                      <v-list-item-title v-text="`Dendrite to ${comp.label}`" />
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </span>
-            </v-card-actions>
-
-            <v-card flat tile>
-              <v-window v-model="state.compIdx">
-                <v-window-item
-                  :key="compartment.idx"
-                  v-for="compartment of state.node.compartments"
-                >
-                  <v-card flat tile>
-                    <v-list class="no-highlight" dense>
-                      <v-list-item-group
-                        @change="compartmentParamChange"
-                        active-class=""
-                        multiple
-                      >
-                        <v-list-item
-                          :key="param.idx"
-                          class="mx-0"
-                          style="font-size: 12px"
-                          v-for="param of compartment.params"
-                        >
-                          <template #default="">
-                            <v-list-item-content class="pa-1">
-                              <v-row no-gutters>
-                                <v-col
-                                  class="d-flex justify-space-between"
-                                  v-html="param.labelRow"
-                                />
-                              </v-row>
-                            </v-list-item-content>
-
-                            <v-list-item-action class="my-1">
-                              <v-checkbox
-                                :color="state.node.view.color"
-                                :input-value="param.state.visible"
-                                :value="param.state.visible"
-                                hide-details
-                              />
-                            </v-list-item-action>
-                          </template>
-                        </v-list-item>
-                      </v-list-item-group>
-                    </v-list>
-
-                    <v-card flat tile>
-                      <span class="mx-2">
-                        Receptors in {{ compartment.label }}
-                      </span>
-                      <v-card-actions class="justify-space-between">
-                        <v-item-group
-                          class="text-center"
-                          mandatory
-                          v-model="state.receptorIdx"
-                        >
-                          <v-item
-                            :key="'compartmentReceptor-' + receptor.idx"
-                            v-for="receptor of compartment.receptors"
-                            v-slot="{ active, toggle }"
-                          >
-                            <v-chip
-                              :color="state.node.view.color"
-                              :input-value="active"
-                              @click:close="receptor.remove()"
-                              @click="toggle"
-                              class="ma-1px"
-                              close
-                              label
-                              outlined
-                              small
-                            >
-                              {{ receptor.id }}
-                            </v-chip>
-                          </v-item>
-                        </v-item-group>
-
-                        <span>
-                          <v-menu offset-y>
-                            <template #activator="{ on, attrs }">
-                              <v-btn
-                                icon
-                                small
-                                text
-                                title="Add receptor"
-                                v-bind="attrs"
-                                v-on="on"
-                              >
-                                <v-icon small v-text="'mdi-plus'" />
-                              </v-btn>
-                            </template>
-                            <v-list dense>
-                              <v-list-item
-                                :key="'modelReceptor-' + receptor.id"
-                                @click="addReceptor(compartment, receptor)"
-                                v-for="receptor in state.node.model.receptors"
-                              >
-                                <v-list-item-title v-text="receptor.id" />
-                              </v-list-item>
-                            </v-list>
-                          </v-menu>
-                        </span>
-                      </v-card-actions>
-                    </v-card>
-                  </v-card>
-
-                  <v-card flat tile>
-                    <v-window v-model="state.receptorIdx">
-                      <v-window-item
-                        :key="'nodeReceptor' + receptor.idx"
-                        v-for="receptor of compartment.receptors"
-                      >
-                        <v-card flat tile>
-                          <v-list class="no-highlight" dense>
-                            <v-list-item-group
-                              @change="receptorParamChange"
-                              active-class=""
-                              multiple
-                            >
-                              <v-list-item
-                                :key="param.idx"
-                                class="mx-0"
-                                style="font-size: 12px"
-                                v-for="param of receptor.params"
-                              >
-                                <template #default="">
-                                  <v-list-item-content class="pa-1">
-                                    <v-row no-gutters>
-                                      <v-col
-                                        class="d-flex justify-space-between"
-                                        v-html="param.labelRow"
-                                      />
-                                    </v-row>
-                                  </v-list-item-content>
-
-                                  <v-list-item-action class="my-1">
-                                    <v-checkbox
-                                      :color="state.node.view.color"
-                                      :input-value="param.state.visible"
-                                      :value="param.state.visible"
-                                      hide-details
-                                    />
-                                  </v-list-item-action>
-                                </template>
-                              </v-list-item>
-                            </v-list-item-group>
-                          </v-list>
-                        </v-card>
-                      </v-window-item>
-                    </v-window>
-                  </v-card>
-                </v-window-item>
-              </v-window>
-            </v-card>
-          </v-card>
-        </v-card-text>
-
-        <v-card-actions>
+        <template #append>
           <v-btn
-            @click="state.opened = false"
-            outlined
-            small
-            text
-            title="Close menu"
-            v-text="'close'"
+            @click="select(props, true)"
+            class="icon"
+            icon="mdi:mdi-menu-right"
+            size="x-small"
+            v-if="state.elementType"
+            variant="text"
           />
-          <v-spacer />
-          <v-btn
-            @click="hideAllParams()"
-            outlined
-            small
-            text
-            title="Hide all parameters"
-            v-text="'none'"
-          />
-          <v-btn
-            @click="showAllParams()"
-            outlined
-            small
-            text
-            title="Show all parameters"
-            v-text="'all'"
-          />
-        </v-card-actions>
-      </v-card>
-    </v-menu>
-  </div>
+        </template>
+      </v-list-item>
+    </template>
+
+    <template #prepend-item v-if="state.elementType">
+      <v-list-item
+        @click="
+          () => {
+            state.elementType = '';
+            state.items = elementTypes;
+          }
+        "
+      >
+        Other element types
+
+        <template #prepend>
+          <v-icon icon="mdi:mdi-menu-left" />
+        </template>
+      </v-list-item>
+    </template>
+  </v-select>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import { onMounted, reactive, watch } from '@vue/composition-api';
+<script lang="ts" setup>
+import { computed, onMounted, reactive } from "vue";
 
-import { ModelReceptor } from '@/core/model/modelReceptor/modelReceptor';
-import { Node } from '@/core/node/node';
-import { NodeCompartment } from '@/core/node/nodeCompartment/nodeCompartment';
-import { NodeCompartmentParameter } from '@/core/node/nodeCompartment/nodeCompartmentParameter';
-import { NodeParameter } from '@/core/node/nodeParameter';
-import { NodeReceptorParameter } from '@/core/node/nodeReceptor/nodeReceptorParameter';
-import core from '@/core';
+import { TModel, TNode } from "@/types";
 
-export default Vue.extend({
-  name: 'NodeModelSelect',
-  props: {
-    node: Node,
-  },
-  setup(props) {
-    const projectView = core.app.project.view;
-    const state = reactive({
-      compIdx: 0,
-      node: props.node as Node,
-      opened: false,
-      receptorIdx: 0,
-    });
+const props = defineProps<{
+  elementTypes?: { title: string; value: string }[];
+  node: TNode;
+}>();
+const node = computed(() => props.node);
+const elementTypes = computed(
+  () =>
+    props.elementTypes || [
+      { title: "neuron", value: "neuron" },
+      { title: "recorder", value: "recorder" },
+      { title: "stimulator", value: "stimulator" },
+    ]
+);
 
-    /**
-     * Add compartment to the list.
-     */
-    const addCompartment = (comp: any) => {
-      state.node.addCompartment(comp);
-      state.node.nodeChanges();
-    };
+const emit = defineEmits(["openMenu"]);
 
-    /**
-     * Add receptor to the list.
-     */
-    const addReceptor = (
-      comp: NodeCompartment,
-      modelReceptor: ModelReceptor
-    ) => {
-      comp.addReceptor(modelReceptor.toJSON());
-      state.node.nodeChanges();
-    };
+const state = reactive<{
+  elementType: string;
+  items: (TModel | any)[];
+}>({
+  elementType: "",
+  items: [],
+});
 
-    /**
-     * Updates the visibility status of every parameter of the current node.
-     * @param visibleParamIdx Array of all visible parameter indices
-     */
-    const paramChange = (visibleParamIdx: number[] = []) => {
-      state.node.params.forEach(
-        (param: NodeParameter) =>
-          (param.state.visible = visibleParamIdx.includes(param.idx))
-      );
-      state.node.nodeChanges();
-    };
+const openMenu = () => emit("openMenu", true);
 
-    /**
-     * Updates the visibility status of every parameter of the currently
-     * selected compartment.
-     * @param visibleParamIdx Array of all visible parameter indices
-     */
-    const compartmentParamChange = (visibleParamIdx: number[] = []) => {
-      state.node.compartments[state.compIdx].params.forEach(
-        (param: NodeCompartmentParameter) =>
-          (param.state.visible = visibleParamIdx.includes(param.idx))
-      );
-      state.node.nodeChanges();
-    };
+const select = (props: Record<string, unknown>, open?: boolean) => {
+  node.value.view.expandNodePanel();
 
-    /**
-     * Updates the visibility status of every parameter of the currently
-     * selected receptor.
-     * @param visibleParamIdx Array of all visible parameter indices
-     */
-    const receptorParamChange = (visibleParamIdx: number[] = []) => {
-      state.node.compartments[state.compIdx].receptors[
-        state.receptorIdx
-      ].params.forEach(
-        (param: NodeReceptorParameter) =>
-          (param.state.visible = visibleParamIdx.includes(param.idx))
-      );
-      state.node.nodeChanges();
-    };
+  const elementTypesValues = elementTypes.value.map(
+    (elementType) => elementType.value
+  );
 
-    /**
-     * Update when node model is changed.
-     */
-    const updateOnModelChange = () => {
-      state.node.hideAllParams();
-      state.node.nodeChanges();
-      update();
-    };
+  if (elementTypesValues.includes(props.value as string)) {
+    state.elementType = props.value as string;
+    state.items = node.value.network.getModelsByElementType(state.elementType);
+  } else {
+    node.value.modelId = props.value as string;
+  }
 
-    /**
-     * Update states.
-     */
-    const update = () => {
-      state.node = props.node as Node;
-    };
+  if (open) {
+    openMenu();
+  }
+};
 
-    /**
-     * Hide all parameters.
-     */
-    const hideAllParams = () => {
-      state.node.hideAllParams();
-      state.node.nodeChanges();
-      update();
-    };
-
-    /**
-     * Show all parameters.
-     */
-    const showAllParams = () => {
-      state.node.showAllParams();
-      state.node.nodeChanges();
-      update();
-    };
-
-    onMounted(() => {
-      update();
-    });
-
-    watch(
-      () => props.node,
-      () => update()
-    );
-
-    return {
-      addCompartment,
-      addReceptor,
-      compartmentParamChange,
-      hideAllParams,
-      paramChange,
-      projectView,
-      receptorParamChange,
-      showAllParams,
-      state,
-      update,
-      updateOnModelChange,
-    };
-  },
+onMounted(() => {
+  state.items = node.value.models;
+  state.elementType = node.value.elementType;
 });
 </script>
 
-<style>
-.nodeModel .modelEdit {
-  display: none;
-}
+<style lang="scss">
+.node-model-item {
+  .icon {
+    display: none;
+  }
 
-.nodeModel:hover .modelEdit {
-  display: block;
-}
-
-.no-highlight .v-list-item--active::before {
-  opacity: 0 !important;
+  &:hover {
+    .icon {
+      display: block;
+    }
+  }
 }
 </style>

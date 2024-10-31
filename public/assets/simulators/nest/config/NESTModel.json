@@ -1,0 +1,203 @@
+{
+  "recordables": [
+    {
+      "id": "Act_m",
+      "label": "sodium channel activation"
+    },
+    {
+      "id": "Act_n",
+      "label": "potassium channel activation"
+    },
+    {
+      "id": "g_d_AMPA_",
+      "label": "conductance of the AMPA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_AN_AMPA_",
+      "label": "conductance of the AMPA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_AN_NMDA_",
+      "label": "conductance of the NMDA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_GABA_",
+      "label": "conductance of the GABA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_d_NMDA_",
+      "label": "conductance of the NMDA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_ex",
+      "label": "excitatory conductance",
+      "unit": "nS"
+    },
+    {
+      "abbr": "g_ex dist",
+      "id": "g_ex.d",
+      "label": "distal conductance of excitatory input",
+      "unit": "nS"
+    },
+    {
+      "abbr": "g_ex prox",
+      "id": "g_ex.p",
+      "label": "proximal conductance of excitatory input",
+      "unit": "nS"
+    },
+    {
+      "abbr": "g_ex soma",
+      "id": "g_ex.s",
+      "label": "soma conductance of excitatory input",
+      "unit": "nS"
+    },
+    {
+      "id": "g_in",
+      "label": "inhibitory conductance",
+      "unit": "nS"
+    },
+    {
+      "abbr": "g_in dist",
+      "id": "g_in.d",
+      "label": "distal conductance of inhibitory input",
+      "unit": "nS"
+    },
+    {
+      "abbr": "g_in prox",
+      "id": "g_in.p",
+      "label": "proximal conductance of inhibitory input",
+      "unit": "nS"
+    },
+    {
+      "abbr": "g_in soma",
+      "id": "g_in.s",
+      "label": "soma conductance of inhibitory input",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_AMPA_",
+      "label": "conductance of the AMPA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_AN_AMPA_",
+      "label": "conductance of the AMPA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_AN_NMDA_",
+      "label": "conductance of the NMDA receptor in (AMPA/NMDA)",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_GABA_",
+      "label": "conductance of the GABA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "g_r_NMDA_",
+      "label": "conductance of the NMDA receptor",
+      "unit": "nS"
+    },
+    {
+      "id": "h_Na_",
+      "label": "sodium channel inactivation"
+    },
+    {
+      "id": "I_syn_ex",
+      "label": "total excitatory synaptic current",
+      "unit": "pA"
+    },
+    {
+      "id": "I_syn_in",
+      "label": "total inhibitory synaptic current",
+      "unit": "pA"
+    },
+    {
+      "id": "I",
+      "label": "current",
+      "unit": "pA"
+    },
+    {
+      "id": "Inact_h",
+      "label": "sodium channel inactivation"
+    },
+    {
+      "id": "m_Na_",
+      "label": "sodium channel activation"
+    },
+    {
+      "id": "n_K_",
+      "label": "potassium channel activation"
+    },
+    {
+      "id": "rate",
+      "label": "firing rate",
+      "unit": "spikes/s"
+    },
+    {
+      "id": "t_ref_remaining",
+      "label": "time remaining till end of refractory state",
+      "unit": "ms"
+    },
+    {
+      "id": "u",
+      "label": "membrane potential recovery variable"
+    },
+    {
+      "id": "v",
+      "label": "membrane potential",
+      "unit": "mV"
+    },
+    {
+      "id": "v_comp",
+      "label": "membrane potential of the compartment",
+      "unit": "mV"
+    },
+    {
+      "id": "V_m",
+      "label": "membrane potential",
+      "unit": "mV"
+    },
+    {
+      "abbr": "V_m dist",
+      "id": "V_m.d",
+      "label": "distal membrane potential",
+      "unit": "mV"
+    },
+    {
+      "abbr": "V_m prox",
+      "id": "V_m.p",
+      "label": "proximal membrane potential",
+      "unit": "mV"
+    },
+    {
+      "abbr": "V_m soma",
+      "id": "V_m.s",
+      "label": "soma membrane potential",
+      "unit": "mV"
+    },
+    {
+      "abbr": "V_th",
+      "id": "V_th",
+      "label": "spike threshold",
+      "unit": "mV"
+    },
+    {
+      "abbr": "w",
+      "id": "w",
+      "label": "spike-adaptation current",
+      "unit": "pA"
+    },
+    {
+      "abbr": "w",
+      "id": "weights",
+      "label": "weights"
+    }
+  ]
+}

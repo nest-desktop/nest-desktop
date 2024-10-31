@@ -1,0 +1,103 @@
+{
+  "activityGraph": {
+    "panels": [
+      {
+        "model": {
+          "id": "senderSpikeCountPlot",
+          "params": {
+            "lineShape": "linear",
+            "plotMode": "lines",
+            "spikeRate": true
+          }
+        }
+      },
+      {
+        "model": {
+          "id": "senderMeanISIPlot",
+          "params": {
+            "lineShape": "linear",
+            "plotMode": "lines"
+          }
+        }
+      }
+    ]
+  },
+  "name": "F-I Curve",
+  "network": {
+    "connections": [
+      {
+        "rule": "one_to_one",
+        "source": 1,
+        "target": 0
+      },
+      {
+        "rule": "all_to_all",
+        "source": 0,
+        "target": 2
+      }
+    ],
+    "nodes": [
+      {
+        "model": "iaf_psc_alpha",
+        "size": 1000,
+        "view": {
+          "position": {
+            "x": -150,
+            "y": -25
+          }
+        }
+      },
+      {
+        "model": "dc_generator",
+        "params": [
+          {
+            "id": "amplitude",
+            "type": {
+              "id": "np.arange",
+              "specs": [
+                {
+                  "id": "start",
+                  "value": 1
+                },
+                {
+                  "id": "stop",
+                  "value": 1001
+                },
+                {
+                  "id": "step",
+                  "value": 1
+                }
+              ]
+            },
+            "value": 0
+          }
+        ],
+        "size": 1000,
+        "view": {
+          "position": {
+            "x": 0,
+            "y": 25
+          }
+        }
+      },
+      {
+        "model": "spike_recorder",
+        "view": {
+          "position": {
+            "x": 150,
+            "y": -25
+          }
+        }
+      }
+    ]
+  },
+  "simulation": {
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 0.1,
+      "rngSeed": 1
+    },
+    "time": 1000
+  },
+  "version": "3.2.0"
+}

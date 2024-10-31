@@ -1,0 +1,71 @@
+{
+  "abbreviation": "lif",
+  "elementType": "neuron",
+  "id": "LIF",
+  "label": "leaky-integrate-and-fire",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "alpha",
+      "label": "alpha",
+      "max": 200,
+      "min": 1,
+      "step": 1,
+      "value": 100
+    },
+    {
+      "component": "valueSlider",
+      "id": "v_leak",
+      "label": "leak potential of the membrane",
+      "max": 1,
+      "min": 0,
+      "step": 0.01,
+      "unit": "mV",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "v_reset",
+      "label": "reset potential of the membrane",
+      "max": 1,
+      "min": 0,
+      "step": 0.01,
+      "unit": "mV",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "v_th",
+      "label": "spike threshold",
+      "max": 1,
+      "min": 0,
+      "step": 0.01,
+      "unit": "mV",
+      "value": 1
+    },
+    {
+      "component": "valueSlider",
+      "id": "tau_mem_inv",
+      "label": "inversed time constant of the membrane",
+      "max": 400,
+      "min": 1,
+      "step": 1,
+      "unit": "1/ms",
+      "value": 100
+    },
+    {
+      "component": "valueSlider",
+      "id": "tau_syn_inv",
+      "label": "inversed time constant of the synapse",
+      "max": 400,
+      "min": 1,
+      "step": 1,
+      "unit": "1/ms",
+      "value": 200
+    }
+  ],
+  "recordables": [
+    "I",
+    "v"
+  ]
+}

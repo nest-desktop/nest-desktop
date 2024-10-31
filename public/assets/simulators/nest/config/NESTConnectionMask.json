@@ -1,0 +1,108 @@
+{
+  "circular": {
+    "specs": [
+      {
+        "id": "radius",
+        "component": "valueSlider",
+        "label": "radius",
+        "max": 10,
+        "min": 0,
+        "step": 0.1,
+        "value": 0.5
+      }
+    ]
+  },
+  "doughnut": {
+    "specs": [
+      {
+        "id": "inner_radius",
+        "component": "valueSlider",
+        "label": "inner radius",
+        "max": 10,
+        "min": 0,
+        "step": 0.1,
+        "value": 0.1
+      },
+      {
+        "id": "outer_radius",
+        "component": "valueSlider",
+        "label": "outer radius",
+        "max": 10,
+        "min": 0,
+        "step": 0.1,
+        "value": 0.5
+      }
+    ]
+  },
+  "elliptical": {
+    "specs": [
+      {
+        "id": "major_axis",
+        "component": "valueSlider",
+        "label": "major axis",
+        "max": 10,
+        "min": 0,
+        "step": 0.1,
+        "value": 1
+      },
+      {
+        "id": "minor_axis",
+        "component": "valueSlider",
+        "label": "minor_axis",
+        "max": 10,
+        "min": 0,
+        "step": 0.1,
+        "value": 1
+      },
+      {
+        "id": "azimuth_angle",
+        "component": "valueSlider",
+        "label": "azimuth angle",
+        "max": 360,
+        "min": 0,
+        "step": 1,
+        "value": 0
+      },
+      {
+        "id": "anchor",
+        "component": "arrayInput",
+        "label": "anchor",
+        "value": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "rectangular": {
+    "specs": [
+      {
+        "id": "lower_left",
+        "component": "arrayInput",
+        "label": "lower left",
+        "value": [
+          -0.5,
+          -0.5
+        ]
+      },
+      {
+        "id": "upper_right",
+        "component": "arrayInput",
+        "label": "upper right",
+        "value": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "id": "azimuth_angle",
+        "component": "valueSlider",
+        "label": "azimuth angle",
+        "max": 360,
+        "min": 0,
+        "step": 1,
+        "value": 0
+      }
+    ]
+  }
+}

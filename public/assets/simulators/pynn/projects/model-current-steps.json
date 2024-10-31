@@ -1,0 +1,103 @@
+{
+  "name": "current steps to model",
+  "network": {
+    "nodes": [
+      {
+        "model": "step_current_generator",
+        "params": [
+          {
+            "id": "amplitude_times",
+            "value": [
+              100,
+              300,
+              500,
+              700,
+              900,
+              1100,
+              1300,
+              1500,
+              1700,
+              1900,
+              2100,
+              2300,
+              2500,
+              2700,
+              2900,
+              3100
+            ]
+          },
+          {
+            "id": "amplitude_values",
+            "value": [
+              10,
+              0,
+              20,
+              0,
+              40,
+              0,
+              80,
+              0,
+              160,
+              0,
+              320,
+              0,
+              640,
+              0,
+              1280,
+              0
+            ]
+          }
+        ],
+        "view": {
+          "position": {
+            "x": 25,
+            "y": 75
+          }
+        }
+      },
+      {
+        "model": "iaf_psc_alpha",
+        "view": {
+          "position": {
+            "x": 175,
+            "y": 25
+          }
+        }
+      },
+      {
+        "model": "voltmeter",
+        "params": [
+          {
+            "id": "interval",
+            "value": 0.1
+          }
+        ],
+        "view": {
+          "position": {
+            "x": 325,
+            "y": 75
+          }
+        }
+      }
+    ],
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ]
+  },
+  "simulation": {
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 0.1,
+      "rngSeed": 1
+    },
+    "time": 3300
+  },
+  "version": "3.2.0"
+}

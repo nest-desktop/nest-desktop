@@ -1,66 +1,79 @@
 <template>
-  <div class="networkHistory">
-    <v-btn-toggle dense group>
-      <v-btn
-        :disabled="projectView.countBefore() <= 0"
-        @click="projectView.state.project.network.oldest()"
-        class="mx-0"
-      >
-        <v-icon v-text="'mdi-page-first'" />
-      </v-btn>
+  <v-btn-group density="compact" theme="dark" variant="tonal">
+    <!-- <v-btn
+      :disabled="countBefore <= 0"
+      @click="project.networkRevision.oldest()"
+      icon="mdi:mdi-page-first"
+      title="load oldest network"
+    /> -->
 
-      <v-btn
-        :disabled="projectView.countBefore() <= 0"
-        @click="projectView.state.project.network.older()"
-        class="mx-0"
+    <v-btn
+      :disabled="countBefore <= 0"
+      @click="project.networkRevision.older()"
+      stacked
+      title="load older network"
+    >
+      <v-badge
+        :content="countBefore"
+        :offset-y="countBefore > 0 ? -2 : -18"
+        color="blue"
+        location="bottom right"
+        offset-x="-8"
       >
-        <v-badge
-          :content="projectView.countBefore()"
-          :value="projectView.countBefore()"
-          color="project darken-1"
-          offset-y="8"
-        >
-          <v-icon v-text="'mdi-undo-variant'" />
-        </v-badge>
-      </v-btn>
+        <v-icon>mdi-undo-variant</v-icon>
+      </v-badge>
+    </v-btn>
 
-      <v-btn
-        :disabled="projectView.countAfter() <= 0"
-        @click="projectView.state.project.network.newer()"
-        class="mx-0"
+    <v-btn
+      :disabled="countAfter <= 0"
+      @click="project.networkRevision.newer()"
+      stacked
+      title="load newer network"
+    >
+      <v-badge
+        :content="countAfter"
+        :offset-y="countAfter > 0 ? -2 : -18"
+        color="blue"
+        location="bottom right"
+        offset-x="-8"
       >
-        <v-badge
-          :content="projectView.countAfter()"
-          :value="projectView.countAfter()"
-          color="project darken-1"
-          offset-y="8"
-        >
-          <v-icon v-text="'mdi-redo-variant'" />
-        </v-badge>
-      </v-btn>
+        <v-icon>mdi-redo-variant</v-icon>
+      </v-badge>
+    </v-btn>
 
-      <v-btn
-        :disabled="projectView.countAfter() <= 0"
-        @click="projectView.state.project.network.newest()"
-        class="mx-0"
-      >
-        <v-icon v-text="'mdi-page-last'" />
-      </v-btn>
-    </v-btn-toggle>
-  </div>
+    <!-- <v-btn
+      :disabled="countAfter <= 0"
+      @click="project.networkRevision.newest()"
+      icon="mdi:mdi-page-last"
+      title="load newest network"
+    /> -->
+  </v-btn-group>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
+<script lang="ts" setup>
+import { computed } from "vue";
 
-import core from '@/core';
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
-export default Vue.extend({
-  name: 'NetworkHistory',
-  setup() {
-    return {
-      projectView: core.app.project.view,
-    };
-  },
-});
+const project = computed(
+  () => appStore.currentSimulator.stores.projectStore.state.project
+);
+
+/**
+ * Count networks before the current.
+ */
+const countBefore = computed(
+  (): number => project.value.networkRevision.revisionIdx
+);
+
+/**
+ * Count networks after the current.
+ */
+const countAfter = computed(
+  (): number =>
+    project.value.networkRevision.revisions.length -
+    project.value.networkRevision.revisionIdx -
+    1
+);
 </script>

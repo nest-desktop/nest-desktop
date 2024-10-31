@@ -1,0 +1,258 @@
+{
+  "rules": [
+    {
+      "value": "all_to_all",
+      "label": "all to all",
+      "params": []
+    },
+    {
+      "value": "fixed_indegree",
+      "label": "fixed indegree",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "integer",
+          "id": "indegree",
+          "label": "indegree",
+          "max": 100,
+          "min": 1,
+          "rules": [
+            [
+              "value > 0",
+              "The value must be strictly positive.",
+              "error"
+            ]
+          ],
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_multapses",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "fixed_outdegree",
+      "label": "fixed outdegree",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "integer",
+          "id": "outdegree",
+          "label": "outdegree",
+          "max": 100,
+          "min": 1,
+          "rules": [
+            [
+              "value > 0",
+              "The value must be strictly positive.",
+              "error"
+            ]
+          ],
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_multapses",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "fixed_total_number",
+      "label": "fixed total number",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "integer",
+          "id": "N",
+          "label": "N",
+          "max": 1000,
+          "min": 1,
+          "rules": [
+            [
+              "value > 0",
+              "The value must be strictly positive.",
+              "error"
+            ]
+          ],
+          "step": 1,
+          "value": 1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_multapses",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "one_to_one",
+      "label": "one to one",
+      "params": []
+    },
+    {
+      "value": "pairwise_bernoulli",
+      "label": "pairwise Bernoulli",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "float",
+          "id": "p",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "rules": [
+            [
+              "0 < value && value <= 1",
+              "The value must be between 0.01 and 1.",
+              "error"
+            ]
+          ],
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_multapses",
+          "label": "allow multapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "use_on_source",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "pairwise_poisson",
+      "label": "pairwise Poisson",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "float",
+          "id": "pairwise_avg_num_conns",
+          "label": "pairwise_avg_num_conns",
+          "max": 1.0,
+          "min": 0.01,
+          "rules": [
+            [
+              "0 < value",
+              "The value must be positive",
+              "error"
+            ]
+          ],
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "value": true,
+          "visible": false
+        },
+        {
+          "component": "checkbox",
+          "id": "use_on_source",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    },
+    {
+      "value": "symmetric_pairwise_bernoulli",
+      "label": "symmetric pairwise Bernoulli",
+      "params": [
+        {
+          "component": "valueSlider",
+          "format": "float",
+          "id": "p",
+          "label": "p",
+          "max": 1.0,
+          "min": 0.01,
+          "rules": [
+            [
+              "value > 0 && value <= 1",
+              "The value must be between 0.01 and 1.",
+              "error"
+            ]
+          ],
+          "step": 0.01,
+          "value": 0.1,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "allow_autapses",
+          "label": "allow autapses",
+          "readonly": true,
+          "value": false,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "make_symmetric",
+          "label": "make symmetric",
+          "readonly": true,
+          "value": true,
+          "visible": true
+        },
+        {
+          "component": "checkbox",
+          "id": "use_on_source",
+          "label": "use on source",
+          "value": false,
+          "visible": false
+        }
+      ]
+    }
+  ]
+}

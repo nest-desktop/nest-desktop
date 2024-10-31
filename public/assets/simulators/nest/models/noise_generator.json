@@ -1,0 +1,52 @@
+{
+  "abbreviation": "ng",
+  "elementType": "stimulator",
+  "favorite": true,
+  "id": "noise_generator",
+  "label": "noise current",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "mean",
+      "label": "mean value of the noise current",
+      "max": 1000,
+      "min": -1000,
+      "step": 1,
+      "unit": "pA",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "std",
+      "label": "standard deviation of noise current",
+      "max": 100,
+      "min": 0,
+      "step": 1,
+      "unit": "pA",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "start time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "stop time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ],
+  "recordables": [
+    "I"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "abbreviation": "dc",
+  "elementType": "stimulator",
+  "id": "DCSource",
+  "label": "direct current",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "amplitude",
+      "label": "amplitude",
+      "max": 10,
+      "min": -10,
+      "step": 0.01,
+      "unit": "nA",
+      "value": 1
+    },
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "onset time of pulse",
+      "max": 10,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "end of pulse",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

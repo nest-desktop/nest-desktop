@@ -1,0 +1,89 @@
+{
+    "activityGraph": {
+        "color": "trace"
+    },
+    "name": "rate response",
+    "network": {
+        "connections": [
+            {
+                "source": 1,
+                "target": 0,
+                "rule": "one_to_one"
+            },
+            {
+                "source": 2,
+                "target": 0
+            }
+        ],
+        "nodes": [
+            {
+                "model": "iaf_psc_alpha",
+                "view": {
+                    "position": {
+                        "x": -150,
+                        "y": -25
+                    }
+                },
+                "size": 11
+            },
+            {
+                "model": "poisson_generator",
+                "view": {
+                    "position": {
+                        "x": 0,
+                        "y": 25
+                    }
+                },
+                "size": 11,
+                "params": [
+                    {
+                        "id": "rate",
+                        "label": "mean firing rate",
+                        "value": 0,
+                        "type": {
+                            "id": "np.linspace",
+                            "specs": [
+                                {
+                                    "id": "start",
+                                    "value": 1000
+                                },
+                                {
+                                    "id": "stop",
+                                    "value": 10000
+                                },
+                                {
+                                    "id": "num",
+                                    "value": 11
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "model": "voltmeter",
+                "params": [
+                    {
+                        "id": "interval",
+                        "value": 1
+                    }
+                ],
+                "view": {
+                    "position": {
+                        "x": 150,
+                        "y": -25
+                    }
+                }
+            }
+        ]
+    },
+    "simulation": {
+        "kernel": {
+            "localNumThreads": 1,
+            "resolution": 0.1,
+            "rngSeed": 1
+        },
+        "time": 500
+    },
+    "version": "4.0.0"
+}

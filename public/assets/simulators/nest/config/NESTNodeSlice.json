@@ -1,0 +1,25 @@
+{
+  "params": [
+    {
+      "id": "start",
+      "component": "valueInput",
+      "label": "start",
+      "value": 0,
+      "visible": true
+    },
+    {
+      "id": "stop",
+      "component": "valueInput",
+      "label": "stop",
+      "value": 1,
+      "visible": true
+    },
+    {
+      "id": "step",
+      "component": "valueInput",
+      "label": "step",
+      "value": 1,
+      "visible": true
+    }
+  ]
+}

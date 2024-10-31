@@ -1,0 +1,24 @@
+{
+  "size": {
+    "format": "integer",
+    "id": "n",
+    "component": "valueSlider",
+    "label": "population size",
+    "max": 1000,
+    "min": 1,
+    "rules": [
+      [
+        "value > 0",
+        "The value must be strictly positive.",
+        "error"
+      ],
+      [
+        "value < 1000",
+        "Large values generate many data points and can put quite a load on your browser.",
+        "warning"
+      ]
+    ],
+    "step": 1,
+    "value": 1
+  }
+}

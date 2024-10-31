@@ -1,0 +1,56 @@
+---
+abbreviation: ac
+elementType: stimulator
+id: ac_generator
+label: alternating current
+params:
+  - component: valueSlider
+    id: amplitude
+    label: amplitude of sine current
+    max: 1000
+    min: -1000
+    step: 1
+    unit: pA
+    value: 0
+  - component: valueSlider
+    id: frequency
+    label: frequency
+    max: 100
+    min: 0
+    step: 1
+    unit: Hz
+    value: 0
+  - component: valueSlider
+    id: offset
+    label: constant amplitude offset
+    max: 1000
+    min: 0
+    step: 1
+    unit: pA
+    value: 0
+  - component: valueSlider
+    id: phase
+    label: phase of sine current
+    max: 360
+    min: 0
+    step: 1
+    unit: deg
+    value: 0
+  - component: valueSlider
+    id: start
+    label: start time
+    max: 1000
+    min: 0
+    step: 1
+    unit: ms
+    value: 0
+  - component: valueSlider
+    id: stop
+    label: stop time
+    max: 1000
+    min: 0
+    step: 1
+    unit: ms
+    value: 1000
+recordables:
+  - I

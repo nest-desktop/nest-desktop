@@ -1,0 +1,84 @@
+{
+  "name": "spatial spike activity",
+  "network": {
+    "nodes": [
+      {
+        "model": "poisson_generator",
+        "params": [
+          {
+            "id": "rate",
+            "value": 6500
+          }
+        ],
+        "view": {
+          "position": {
+            "x": 25,
+            "y": 25
+          }
+        }
+      },
+      {
+        "model": "iaf_psc_alpha",
+        "params": [],
+        "size": 100,
+        "spatial": {
+          "positions": "free",
+          "specs": {
+            "center": [
+              0,
+              0
+            ],
+            "extent": [
+              1,
+              1
+            ],
+            "edgeWrap": false,
+            "numDimensions": 2
+          }
+        },
+        "view": {
+          "position": {
+            "x": 175,
+            "y": 75
+          }
+        }
+      },
+      {
+        "model": "spike_recorder",
+        "view": {
+          "position": {
+            "x": 325,
+            "y": 25
+          }
+        }
+      }
+    ],
+    "connections": [
+      {
+        "source": 0,
+        "target": 1,
+        "synapse": {
+          "params": [
+            {
+              "id": "weight",
+              "value": 10
+            }
+          ]
+        }
+      },
+      {
+        "source": 1,
+        "target": 2
+      }
+    ]
+  },
+  "simulation": {
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 1,
+      "rngSeed": 1
+    },
+    "time": 1000
+  },
+  "version": "3.2.0"
+}

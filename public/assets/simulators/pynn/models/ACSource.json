@@ -1,0 +1,68 @@
+{
+  "abbreviation": "ac",
+  "elementType": "stimulator",
+  "id": "ACSource",
+  "label": "alternating current",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "amplitude",
+      "label": "sine amplitude",
+      "max": 10,
+      "min": -10,
+      "step": 0.01,
+      "unit": "nA",
+      "value": 1
+    },
+    {
+      "component": "valueSlider",
+      "id": "frequency",
+      "label": "frequency",
+      "max": 100,
+      "min": 1,
+      "step": 1,
+      "unit": "Hz",
+      "value": 10
+    },
+    {
+      "component": "valueSlider",
+      "id": "offset",
+      "label": "sine offset",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "nA",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "phase",
+      "label": "phase",
+      "max": 360,
+      "min": 0,
+      "step": 1,
+      "unit": "deg",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "onset time of pulse",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "end of pulse",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

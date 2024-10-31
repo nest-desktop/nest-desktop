@@ -1,0 +1,34 @@
+{
+  "center": {
+    "label": "center",
+    "value": [
+      0,
+      0
+    ]
+  },
+  "columns": {
+    "label": "columns",
+    "max": 10,
+    "min": 1,
+    "step": 1,
+    "value": 1
+  },
+  "extent": {
+    "label": "extent",
+    "value": [
+      1,
+      1
+    ]
+  },
+  "positions": {
+    "label": "positions",
+    "value": []
+  },
+  "rows": {
+    "label": "rows",
+    "max": 10,
+    "min": 1,
+    "step": 1,
+    "value": 1
+  }
+}

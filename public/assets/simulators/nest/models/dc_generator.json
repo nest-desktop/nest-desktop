@@ -1,0 +1,42 @@
+{
+  "abbreviation": "dc",
+  "elementType": "stimulator",
+  "favorite": true,
+  "id": "dc_generator",
+  "label": "direct current",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "amplitude",
+      "label": "amplitude of current",
+      "max": 1000,
+      "min": -1000,
+      "step": 1,
+      "unit": "pA",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "start time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "stop time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ],
+  "recordables": [
+    "I"
+  ]
+}

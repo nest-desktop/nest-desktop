@@ -20,8 +20,8 @@ Currently, the following versions are being supported with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 3.2.x   | :heavy_check_mark: |
-| < 3.2   | :x:                |
+| 4.0.x   | :heavy_check_mark: |
+| < 4.0   | :x:                |
 
 ## Reporting a Vulnerability
 

@@ -1,0 +1,40 @@
+{
+  "autoRNGSeed": false,
+  "params": [
+    {
+      "format": "integer",
+      "id": "localNumThreads",
+      "component": "tickSlider",
+      "label": "local number of threads",
+      "ticks": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "value": 1
+    },
+    {
+      "format": "integer",
+      "id": "rngSeed",
+      "component": "valueSlider",
+      "label": "seed of random number generator",
+      "max": 1000,
+      "min": 1,
+      "step": 1,
+      "value": 1
+    },
+    {
+      "id": "resolution",
+      "component": "tickSlider",
+      "label": "time resolution",
+      "ticks": [
+        0.01,
+        0.1,
+        1
+      ],
+      "unit": "ms",
+      "value": 0.1
+    }
+  ]
+}

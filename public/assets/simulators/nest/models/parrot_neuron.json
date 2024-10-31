@@ -1,0 +1,7 @@
+{
+  "abbreviation": "pn",
+  "elementType": "neuron",
+  "id": "parrot_neuron",
+  "label": "parrot neuron",
+  "params": []
+}

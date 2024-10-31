@@ -1,0 +1,62 @@
+{
+  "name": "step current input",
+  "network": {
+    "nodes": [
+      {
+        "model": "direct_current",
+        "params": [
+          {
+            "id": "amplitude",
+            "value": 0.2
+          },
+          {
+            "id": "start",
+            "value": 10
+          },
+          {
+            "id": "stop",
+            "value": 110
+          }
+        ],
+        "view": {
+          "position": {
+            "x": 25,
+            "y": 25
+          }
+        }
+      },
+      {
+        "model": "LIF",
+        "view": {
+          "position": {
+            "x": 175,
+            "y": 75
+          }
+        }
+      },
+      {
+        "model": "voltmeter",
+        "view": {
+          "position": {
+            "x": 325,
+            "y": 25
+          }
+        }
+      }
+    ],
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ]
+  },
+  "simulation": {
+    "time": 200
+  },
+  "version": "4.0.0"
+}

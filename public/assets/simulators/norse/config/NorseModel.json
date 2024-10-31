@@ -1,0 +1,12 @@
+{
+  "recordables": [
+    {
+      "id": "i",
+      "label": "input current"
+    },
+    {
+      "id": "v",
+      "label": "membrane voltage"
+    }
+  ]
+}

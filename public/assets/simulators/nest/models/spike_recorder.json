@@ -1,0 +1,29 @@
+{
+  "abbreviation": "sr",
+  "elementType": "recorder",
+  "favorite": true,
+  "id": "spike_recorder",
+  "label": "spike recorder",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "start time",
+      "max": 10000,
+      "min": 0,
+      "step": 10,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "stop time",
+      "max": 10000,
+      "min": 0,
+      "step": 10,
+      "unit": "ms",
+      "value": 10000
+    }
+  ]
+}

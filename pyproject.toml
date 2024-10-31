@@ -1,0 +1,51 @@
+[project]
+name = "nest-desktop"
+description = "A web-based GUI application for spiking neuronal networks"
+license = { file = "LICENSE" }
+authors = [
+  {name = "Sebastian Spreizer", email = "spreizer@web.de"},
+]
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["spiking neuronal networks", "simulation", "NEST", "NESTML", "Norse"]
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 5 - Production/Stable",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Education",
+  "Intended Audience :: End Users/Desktop",
+  "Intended Audience :: Science/Research",
+
+  "Topic :: Education",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+
+  # Pick your license as you wish (see also "license" above)
+  "License :: OSI Approved :: MIT License",
+
+  "Operating System :: OS Independent",
+
+  # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = []
+dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/nest-desktop/nest-desktop"
+documentation = "https://nest-desktop.readthedocs.io"
+
+[tool.setuptools]
+package-dir = {"nest_desktop" = "nest_desktop"}
+script-files = ["scripts/nest-desktop"]
+
+[tool.setuptools.dynamic]
+version = {attr = "nest_desktop.__version__"}

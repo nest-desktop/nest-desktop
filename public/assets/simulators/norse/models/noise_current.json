@@ -1,0 +1,52 @@
+{
+  "abbreviation": "nc",
+  "codeTemplate": "torch.rand({{ simulation.time }}, {{ size }}) * {{ params.std.value }} + {{ params.mean.value }}",
+  "elementType": "stimulator",
+  "id": "noise_current",
+  "label": "noise current (Gaussian)",
+  "recordables": [
+    "I"
+  ],
+  "params": [
+    {
+      "id": "mean",
+      "component": "valueSlider",
+      "label": "mean value of the noise current",
+      "max": 1,
+      "min": -1,
+      "step": 0.01,
+      "unit": "pA",
+      "value": 0
+    },
+    {
+      "id": "std",
+      "component": "valueSlider",
+      "label": "standard deviation of noise current",
+      "max": 1,
+      "min": 0,
+      "step": 0.01,
+      "unit": "pA",
+      "value": 0
+    },
+    {
+      "id": "start",
+      "component": "valueSlider",
+      "label": "start time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "id": "stop",
+      "component": "valueSlider",
+      "label": "stop time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

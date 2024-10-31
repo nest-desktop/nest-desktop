@@ -1,0 +1,14 @@
+{
+  "params": [
+    {
+      "id": "time",
+      "component": "valueSlider",
+      "label": "simulation time",
+      "max": 2000,
+      "min": 0,
+      "step": 10,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

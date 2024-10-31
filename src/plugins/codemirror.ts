@@ -1,14 +1,51 @@
-import Vue from 'vue';
-import VueCodemirror from 'vue-codemirror';
+// codemirror.ts
 
-import 'codemirror/mode/python/python.js';
-import 'codemirror/addon/selection/active-line.js';
+import { basicSetup } from "codemirror";
+// import { nestml } from "codemirror-lang-nestml";
+import VueCodemirror from "vue-codemirror";
 
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/base16-dark.css';
+import { autocompletion } from "@codemirror/autocomplete";
+import { json } from "@codemirror/lang-json";
+import { python } from "@codemirror/lang-python";
+import { yaml } from "@codemirror/lang-yaml";
+import { Compartment, Extension } from "@codemirror/state";
+import { oneDark } from "@codemirror/theme-one-dark";
 
-import 'codemirror/addon/edit/closebrackets';
-import 'codemirror/addon/edit/matchbrackets';
-import 'codemirror/addon/hint/show-hint.css';
+import { highlightLine } from "./codeMirrorExtensions/highlightLine";
+import { simulationCodeError } from "./codeMirrorExtensions/simulationCodeError";
+import { zebraStripes } from "./codeMirrorExtensions/zebraStripes";
 
-Vue.use(VueCodemirror);
+export default VueCodemirror;
+
+function languageJSON(): Extension[] {
+  const language = new Compartment();
+  return [language.of(json())];
+}
+
+// function languageNESTML(): Extension[] {
+//   const language = new Compartment();
+//   return [language.of(nestml())];
+// }
+
+function languagePython(): Extension[] {
+  const language = new Compartment();
+  return [language.of(python())];
+}
+
+function languageYAML(): Extension[] {
+  const language = new Compartment();
+  return [language.of(yaml())];
+}
+
+export {
+  autocompletion,
+  basicSetup,
+  languageJSON,
+  // languageNESTML,
+  languagePython,
+  languageYAML,
+  oneDark,
+  zebraStripes,
+  highlightLine,
+  simulationCodeError,
+};

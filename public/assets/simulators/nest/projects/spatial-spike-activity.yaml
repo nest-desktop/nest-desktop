@@ -1,0 +1,47 @@
+---
+name: spatial spike activity
+network:
+  connections:
+    - source: 0
+      synapse:
+        params:
+          - id: weight
+            value: 10
+      target: 1
+    - source: 1
+      target: 2
+  nodes:
+    - model: poisson_generator
+      params:
+        - id: rate
+          value: 6500
+      view:
+        position:
+          x: -150
+          y: -25
+    - model: iaf_psc_alpha
+      params: []
+      size: 100
+      spatial:
+        positions: free
+        specs:
+          center: [0, 0]
+          edgeWrap: false
+          extent: [1, 1]
+          numDimensions: 2
+      view:
+        position:
+          x: 0
+          y: 25
+    - model: spike_recorder
+      view:
+        position:
+          x: 150
+          y: -25
+simulation:
+  kernel:
+    localNumThreads: 1
+    resolution: 1
+    rngSeed: 1
+  time: 1000
+version: 4

@@ -1,0 +1,59 @@
+{
+  "types": [
+    {
+      "icon": "mdi:mdi-numeric",
+      "id": "constant",
+      "label": "constant"
+    },
+    {
+      "icon": "mdi:mdi-code-brackets",
+      "id": "np.arange",
+      "label": "ranged array",
+      "specs": [
+        {
+          "default": 0,
+          "id": "start",
+          "optional": true,
+          "label": "start",
+          "value": 0
+        },
+        {
+          "id": "stop",
+          "label": "stop",
+          "value": 1
+        },
+        {
+          "default": 1,
+          "id": "step",
+          "optional": true,
+          "label": "step",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "icon": "mdi:mdi-code-brackets",
+      "id": "np.linspace",
+      "label": "linear spaced array",
+      "specs": [
+        {
+          "id": "start",
+          "label": "start",
+          "value": 0
+        },
+        {
+          "id": "stop",
+          "label": "stop",
+          "value": 1
+        },
+        {
+          "default": 50,
+          "id": "num",
+          "optional": true,
+          "label": "num",
+          "value": 50
+        }
+      ]
+    }
+  ]
+}

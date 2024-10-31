@@ -1,0 +1,22 @@
+@use "vuetify" with (
+  $utilities: false,
+  $color-pack: false
+);
+
+.expansion-panel-title {
+  height: 48px !important;
+
+  // .menu {
+  //   opacity: 0;
+  // }
+
+  // &:hover {
+  //   .menu {
+  //     opacity: 1;
+  //   }
+  // }
+}
+
+.v-expansion-panel-text__wrapper {
+  padding: 0 !important;
+}

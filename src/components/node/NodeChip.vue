@@ -1,52 +1,32 @@
 <template>
-  <div class="nodeChip">
-    <v-chip :color="state.node.view.color" @click="selectNode" outlined small>
-      <span class="font-weight-bold" v-text="state.node.view.label" />
-      <span class="mx-1" v-text="state.node.model.label" />
-      <span class="mx-1" v-if="state.node.network.project.app.config.devMode">
-        ( {{ state.node.view.position.x.toFixed() }},
-        {{ state.node.view.position.y.toFixed() }})
-      </span>
-    </v-chip>
-  </div>
+  <v-chip :color="node.view.color" @click="selectNode" size="small">
+    <span class="font-weight-bold">{{ node.view.label }}</span>
+    <span class="mx-1">{{ node.model.state.label }}</span>
+
+    <span class="mx-1" v-if="appStore.state.devMode">
+      ({{ node.view.position.x.toFixed() }},
+      {{ node.view.position.y.toFixed() }})
+    </span>
+  </v-chip>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import { reactive, watch } from '@vue/composition-api';
+<script lang="ts" setup>
+import { computed } from "vue";
 
-import { NetworkGraph } from '@/core/network/networkGraph/networkGraph';
-import { Node } from '@/core/node/node';
+import { TNetworkGraph, TNode } from "@/types";
 
-export default Vue.extend({
-  name: 'NodeChip',
-  props: {
-    graph: NetworkGraph,
-    node: Node,
-  },
-  setup(props) {
-    const state = reactive({
-      graph: props.graph as NetworkGraph,
-      node: props.node as Node,
-    });
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
-    const selectNode = () => {
-      state.node.state.select();
-      state.graph.update();
-    };
+const props = defineProps<{
+  graph: TNetworkGraph;
+  node: TNode;
+}>();
+const graph = computed(() => props.graph);
+const node = computed(() => props.node);
 
-    watch(
-      () => [props.graph, props.node],
-      () => {
-        state.graph = props.graph as NetworkGraph;
-        state.node = props.node as Node;
-      }
-    );
-
-    return {
-      selectNode,
-      state,
-    };
-  },
-});
+const selectNode = () => {
+  node.value.select();
+  graph.value.update();
+};
 </script>

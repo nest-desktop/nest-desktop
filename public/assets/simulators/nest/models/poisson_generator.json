@@ -1,0 +1,39 @@
+{
+  "abbreviation": "pg",
+  "elementType": "stimulator",
+  "favorite": true,
+  "id": "poisson_generator",
+  "label": "Poisson generator",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "rate",
+      "label": "mean firing rate",
+      "max": 10000,
+      "min": 0,
+      "step": 1,
+      "unit": "Hz",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "start time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "stop time",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

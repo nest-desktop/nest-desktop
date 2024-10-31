@@ -1,0 +1,10 @@
+{
+  "insite": {
+    "port": 52056,
+    "enabled": false
+  },
+  "nest": {
+    "port": 52425,
+    "enabled": true
+  }
+}

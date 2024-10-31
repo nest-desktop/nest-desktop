@@ -1,0 +1,75 @@
+{
+  "name": "spike response",
+  "network": {
+    "connections": [
+      {
+        "source": 0,
+        "target": 1
+      },
+      {
+        "source": 2,
+        "target": 1
+      }
+    ],
+    "nodes": [
+      {
+        "model": "spike_generator",
+        "params": [
+          {
+            "id": "spike_times",
+            "value": [
+              100,
+              300
+            ]
+          },
+          {
+            "id": "spike_weights",
+            "value": [
+              1,
+              -1
+            ]
+          }
+        ],
+        "view": {
+          "position": {
+            "x": -150,
+            "y": 25
+          }
+        }
+      },
+      {
+        "model": "iaf_psc_alpha",
+        "view": {
+          "position": {
+            "x": 0,
+            "y": -25
+          }
+        }
+      },
+      {
+        "model": "voltmeter",
+        "params": [
+          {
+            "id": "interval",
+            "value": 0.1
+          }
+        ],
+        "view": {
+          "position": {
+            "x": 150,
+            "y": 25
+          }
+        }
+      }
+    ]
+  },
+  "simulation": {
+    "kernel": {
+      "localNumThreads": 1,
+      "resolution": 0.1,
+      "rngSeed": 1
+    },
+    "time": 500
+  },
+  "version": "3.2.0"
+}

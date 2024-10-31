@@ -1,0 +1,15 @@
+{
+  "abbreviation": "is",
+  "codeTemplate": "torch.zeros({{ simulation.time }}, {{ size }})\n{{ view.label }}[[{{ params.spike_times.value }}]] = 1",
+  "elementType": "stimulator",
+  "id": "input_spikes",
+  "label": "input spikes",
+  "params": [
+    {
+      "component": "arrayInput",
+      "id": "spike_times",
+      "label": "spike times",
+      "unit": "ms"
+    }
+  ]
+}

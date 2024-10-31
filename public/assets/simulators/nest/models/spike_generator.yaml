@@ -1,0 +1,18 @@
+---
+abbreviation: sg
+elementType: stimulator
+id: spike_generator
+label: spike generator
+params:
+  - component: arrayInput
+    id: spike_times
+    label: spike times
+    rules:
+      - - value.slice(1).every((item, idx) => value[idx] < item)
+        - The values must be sorted in ascending order.
+        - error
+    unit: ms
+  - component: arrayInput
+    id: spike_weights
+    label: weights of spike
+    unit: pA

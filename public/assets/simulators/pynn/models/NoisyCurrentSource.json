@@ -1,0 +1,48 @@
+{
+  "abbreviation": "nc",
+  "elementType": "stimulator",
+  "id": "NoisyCurrentSource",
+  "label": "noisy current",
+  "params": [
+    {
+      "component": "valueSlider",
+      "id": "mean",
+      "label": "mean current amplitude",
+      "max": 10,
+      "min": -10,
+      "step": 0.01,
+      "unit": "nA",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stdev",
+      "label": "standard deviation of the current amplitude",
+      "max": 100,
+      "min": 1,
+      "step": 1,
+      "unit": "nA",
+      "value": 1
+    },
+    {
+      "component": "valueSlider",
+      "id": "start",
+      "label": "onset of the current injection",
+      "max": 100,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 0
+    },
+    {
+      "component": "valueSlider",
+      "id": "stop",
+      "label": "end of the current injection",
+      "max": 1000,
+      "min": 0,
+      "step": 1,
+      "unit": "ms",
+      "value": 1000
+    }
+  ]
+}

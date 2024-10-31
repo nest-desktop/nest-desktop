@@ -1,153 +1,89 @@
 <template>
-  <div class="simulationButton">
-    <v-menu :close-on-content-click="false" offset-y>
-      <template #activator="{ on }">
-        <div class="btn-split text-no-wrap">
-          <v-btn
-            :disabled="state.disabled"
-            :loading="state.project.simulation.state.running"
-            @click="state.project.startSimulation()"
-            class="btn-main"
-            outlined
-            title="Simulate"
-          >
-            <v-icon class="d-flex d-lg-none" v-text="'mdi-play'" />
-            <span class="d-none d-lg-flex">
-              <v-icon left v-text="'mdi-play'" />
-              <span
-                v-if="state.project.simulation.code.runSimulation"
-                v-text="'Simulate'"
-              />
-              <span v-else v-text="'Prepare'" />
-            </span>
-          </v-btn>
-          <v-btn class="btn-append" outlined v-on="on">
-            <v-icon>mdi-menu-down</v-icon>
-          </v-btn>
-        </div>
-      </template>
-      <v-list dense>
-        <v-list-item
-          :key="index"
-          @click="item.onClick"
-          v-for="(item, index) in state.items"
-          v-show="item.show()"
-        >
-          <v-list-item-title v-text="item.title" />
+  <v-btn-group
+    class="mx-2"
+    density="compact"
+    divided
+    theme="dark"
+    v-if="simulation"
+  >
+    <v-btn
+      :disabled
+      :loading
+      @click="simulate()"
+      class="border-white"
+      prepend-icon="mdi:mdi-play"
+      title="Simulate"
+    >
+      <span v-if="simulation.code.runSimulation">Simulate</span>
+      <span v-else>Prepare</span>
+    </v-btn>
 
-          <v-list-item-action v-show="item.append">
-            <v-icon small v-text="'mdi-menu-right'" />
-          </v-list-item-action>
+    <v-btn :disabled class="border-white pa-2" style="min-width: 0">
+      <v-icon icon="mdi:mdi-menu-down" />
 
-          <v-list-item-action v-if="item.input === 'checkbox'">
+      <v-menu
+        :close-on-content-click="false"
+        activator="parent"
+        theme="primary"
+      >
+        <v-list density="compact">
+          <v-list-item :key="index" v-for="(menuItem, index) in menuItems">
+            <!-- @vue-ignore Element implicitly has an 'any' type because expression of type 'string' can't be used to
+                             index type '{ onCheckout: boolean; onLoad: boolean; onChange: boolean; }'.
+                             No index signature with a parameter of type 'string' was found on type '{ onCheckout:
+                             boolean; onLoad: boolean; onChange: boolean; }' -->
             <v-checkbox
-              :input-value="state.projectConfig[item.value]"
-              color="accent"
+              :label="menuItem.label"
+              density="compact"
+              hide-details
+              v-model="projectViewStore.state.simulationEvents[menuItem.value]"
             />
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-  </div>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-btn>
+  </v-btn-group>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import { onMounted, reactive, watch } from '@vue/composition-api';
+<script lang="ts" setup>
+import { computed } from "vue";
 
-import { Project } from '@/core/project/project';
-import core from '@/core';
+import { TSimulation } from "@/types";
 
-export default Vue.extend({
-  name: 'SimulationButton',
-  props: {
-    project: Project,
-    disabled: Boolean,
-  },
-  setup(props) {
-    const projectView = core.app.project.view;
-    const state = reactive({
-      disabled: props.disabled,
-      items: [
-        {
-          id: 'simulateAfterChange',
-          input: 'checkbox',
-          title: 'Simulate after change',
-          value: 'simulateAfterChange',
-          show: () => true,
-          onClick: () => {
-            state.projectConfig.simulateAfterChange =
-              !state.projectConfig.simulateAfterChange;
-            projectView.updateConfig(state.projectConfig);
-          },
-        },
-        {
-          id: 'simulateAfterLoad',
-          input: 'checkbox',
-          title: 'Simulate after load',
-          value: 'simulateAfterLoad',
-          show: () => true,
-          onClick: () => {
-            state.projectConfig.simulateAfterLoad =
-              !state.projectConfig.simulateAfterLoad;
-            projectView.updateConfig(state.projectConfig);
-          },
-        },
-        {
-          id: 'simulateAfterCheckout',
-          input: 'checkbox',
-          title: 'Simulate after checkout',
-          value: 'simulateAfterCheckout',
-          show: () => true,
-          onClick: () => {
-            state.projectConfig.simulateAfterCheckout =
-              !state.projectConfig.simulateAfterCheckout;
-            projectView.updateConfig(state.projectConfig);
-          },
-        },
-      ],
-      project: props.project as Project,
-      projectConfig: projectView.config,
-    });
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
-    const update = () => {
-      state.disabled = props.disabled;
-      state.project = props.project as Project;
-      state.projectConfig = projectView.config;
-    };
+const projectViewStore = appStore.currentSimulator.views.project;
 
-    onMounted(update);
+const props = defineProps<{
+  simulation: TSimulation;
+  disabled?: boolean;
+}>();
 
-    watch(
-      () => [props.disabled, props.project],
-      () => update()
-    );
+const emit = defineEmits(["click:simulate"]);
 
-    return { state };
-  },
-});
+const simulation = computed(() => props.simulation);
+const disabled = computed(
+  () => props.disabled || simulation.value.state.running || false
+);
+const loading = computed(() => simulation.value.state.running);
+
+const menuItems = [
+  { label: "simulate on change", value: "onChange" },
+  { label: "simulate on checkout", value: "onCheckout" },
+  { label: "simulate on load", value: "onLoad" },
+];
+
+const simulate = () => {
+  if (!loading.value) {
+    emit("click:simulate");
+  }
+};
 </script>
 
-<style>
-.simulationButton .btn-split {
-  display: inline-block;
-}
-.simulationButton .btn-split .btn-main {
-  border-right: none;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.simulationButton .btn-split .btn-prepend {
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
-  min-width: 35px !important;
-  padding: 0 !important;
-}
-
-.simulationButton .btn-split .btn-append {
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-  min-width: 35px !important;
-  padding: 0 !important;
+<style lang="scss">
+.border-white {
+  border-color: white !important;
+  border-inline-end-color: white !important;
 }
 </style>
