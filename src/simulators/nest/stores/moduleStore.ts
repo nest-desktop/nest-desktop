@@ -26,7 +26,7 @@ interface IModuleStoreState {
 export type TModuleStore = Store<string, any>;
 
 export const useNESTModuleStore: TModuleStore = defineStore(
-  "module-store",
+  "nest-module-store",
   () => {
     const state = reactive<IModuleStoreState>({
       installedModels: [],
