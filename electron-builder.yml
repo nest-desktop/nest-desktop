@@ -17,7 +17,7 @@ files:
 # extraResources:
 #   from: public/assets
 #   to: assets
-icon: icons/icon.png
+icon: icons/icon-256x256.png
 linux:
   category: Education;Science
   desktop: nest-desktop
