@@ -1,4 +1,4 @@
-appId: com.electron.nest-desktop
+appId: io.github.nest_desktop.nest-desktop
 asar: true
 deb:
   # depends:
