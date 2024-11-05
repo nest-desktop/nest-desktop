@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${NEST_PATH}/bin/nest_vars.sh
+source nest_vars.sh
 
 # export NESTML_MODULES_PATH="${NESTML_MODULES_PATH:-/tmp/nestmlmodules}"
 # export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${NESTML_MODULES_PATH}
