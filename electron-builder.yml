@@ -28,7 +28,8 @@ linux:
     # - deb
     # - flatpak
     # - snap
-productName: nest-desktop
+    # - tar.gz
+productName: NEST Desktop
 snap:
   base: core22
   title: NEST Desktop
