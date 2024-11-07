@@ -27,13 +27,17 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image type="source">https://raw.githubusercontent.com/nest-desktop/nest-desktop-docs/5628bd336eb7d6fcaae47327e2bedc486f4f1d8a/_static/img/edited/conceptual-approach.png</image>
+      <image
+      type="source">https://raw.githubusercontent.com/nest-desktop/nest-desktop-docs/5628bd336eb7d6fcaae47327e2bedc486f4f1d8a/_static/img/edited/conceptual-approach.png</image>
+      <caption>Conceptual approach</caption>
     </screenshot>
     <screenshot>
       <image type="source">https://raw.githubusercontent.com/nest-desktop/nest-desktop-docs/5628bd336eb7d6fcaae47327e2bedc486f4f1d8a/_static/img/screenshots/project/project-lab-book.png</image>
+      <caption>Lab view of network graph</caption>
     </screenshot>
     <screenshot>
       <image type="source">https://raw.githubusercontent.com/nest-desktop/nest-desktop-docs/5628bd336eb7d6fcaae47327e2bedc486f4f1d8a/_static/img/screenshots/activity/activity-chart-graph-spike.png</image>
+      <caption>Activity of spiking neurons</caption>
     </screenshot>
   </screenshots>
   <provides>
