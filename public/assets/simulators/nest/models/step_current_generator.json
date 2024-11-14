@@ -24,7 +24,5 @@
       "unit": "pA"
     }
   ],
-  "recordables": [
-    "I"
-  ]
+  "states": ["I"]
 }

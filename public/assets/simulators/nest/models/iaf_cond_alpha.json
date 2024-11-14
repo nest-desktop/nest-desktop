@@ -126,10 +126,5 @@
       "value": 2
     }
   ],
-  "recordables": [
-    "g_ex",
-    "g_in",
-    "t_ref_remaining",
-    "V_m"
-  ]
+  "states": ["g_ex", "g_in", "t_ref_remaining", "V_m"]
 }

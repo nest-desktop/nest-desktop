@@ -65,7 +65,5 @@
       "value": 1000
     }
   ],
-  "recordables": [
-    "I"
-  ]
+  "states": ["I"]
 }

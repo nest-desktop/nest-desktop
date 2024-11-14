@@ -16,5 +16,5 @@ params:
     id: amplitude_values
     label: amplitudes of step current current
     unit: pA
-recordables:
+states:
   - I

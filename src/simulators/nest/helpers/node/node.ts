@@ -454,7 +454,7 @@ export class NESTNode extends BaseNode {
                   ...target.compartmentRecordables,
                   ...target.receptorRecordables,
                 ]
-              : [...target.model.state.recordables]
+              : [...target.modelStates]
           ).flat();
         });
 

@@ -101,7 +101,7 @@ params:
     step: 0.1
     unit: ms
     value: 2
-recordables:
+states:
   - g_ex
   - g_in
   - t_ref_remaining

@@ -85,7 +85,7 @@ params:
     step: 0.1
     unit: ms
     value: 2
-recordables:
+states:
   - I_syn_ex
   - I_syn_in
   - V_m

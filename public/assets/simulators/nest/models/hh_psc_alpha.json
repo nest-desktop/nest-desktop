@@ -125,12 +125,5 @@
       "value": 2
     }
   ],
-  "recordables": [
-    "Act_m",
-    "Act_n",
-    "I_syn_ex",
-    "I_syn_in",
-    "Inact_h",
-    "V_m"
-  ]
+  "states": ["Act_m", "Act_n", "I_syn_ex", "I_syn_in", "Inact_h", "V_m"]
 }

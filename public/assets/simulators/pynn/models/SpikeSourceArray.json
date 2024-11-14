@@ -11,7 +11,7 @@
       "unit": "ms"
     }
   ],
-  "recordables": [
+  "states": [
     "spikes"
   ]
 }

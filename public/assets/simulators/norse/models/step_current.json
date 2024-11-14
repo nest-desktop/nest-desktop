@@ -3,9 +3,6 @@
   "elementType": "stimulator",
   "id": "step_current",
   "label": "step current",
-  "recordables": [
-    "I"
-  ],
   "params": [
     {
       "id": "amplitude_times",

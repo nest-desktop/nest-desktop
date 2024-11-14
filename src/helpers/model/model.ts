@@ -9,7 +9,6 @@ import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
 import { IDoc } from "../common/database";
 import { IParamProps } from "../common/parameter";
-import { INodeRecordProps } from "../node/nodeRecord";
 import { IModelParamProps, ModelParameter } from "./modelParameter";
 
 export interface IModelProps extends IDoc {
@@ -19,13 +18,19 @@ export interface IModelProps extends IDoc {
   favorite?: boolean;
   label?: string;
   params?: IModelParamProps[];
-  recordables?: (INodeRecordProps | string)[];
+  recordables?: (IModelStateProps | string)[];
+  states?: (IModelStateProps | string)[];
+}
+
+export interface IModelStateProps {
+  id: string,
+  label: string,
+  unit?: string,
 }
 
 interface IBaseModelState {
   label: string;
   paramsVisible: string[];
-  recordables: INodeRecordProps[]; // recordables for multimeter
 }
 
 export type TElementType = "neuron" | "recorder" | "stimulator" | "synapse";
@@ -39,6 +44,7 @@ export class BaseModel extends BaseObj {
   private _params: Record<string, ModelParameter> = {}; // model parameters
   private _project: TProject | undefined;
   private _state: UnwrapRef<IBaseModelState>;
+  private _states: IModelStateProps[] = [];
 
   constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
     super({
@@ -56,7 +62,6 @@ export class BaseModel extends BaseObj {
     this._state = reactive<IBaseModelState>({
       label: modelProps.label || "",
       paramsVisible: [],
-      recordables: [],
     });
 
     this.update(modelProps);
@@ -172,8 +177,16 @@ export class BaseModel extends BaseObj {
     this._project = value;
   }
 
+  get recordables(): IModelStateProps[] {
+    return this._states;
+  }
+
   get state(): UnwrapRef<IBaseModelState> {
     return this._state;
+  }
+
+  get states(): IModelStateProps[] {
+    return this._states;
   }
 
   get value(): string {
@@ -280,10 +293,10 @@ export class BaseModel extends BaseObj {
       modelProps.favorite = true;
     }
 
-    // Add the recordables if provided.
-    if (this.state.recordables.length > 0) {
-      modelProps.recordables = this.state.recordables.map(
-        (recordable: INodeRecordProps) => recordable
+    // Add model states if provided.
+    if (this.states.length > 0) {
+      modelProps.states = this.states.map(
+        (state: IModelStateProps | string) => state
       );
     }
 
@@ -300,9 +313,11 @@ export class BaseModel extends BaseObj {
     // Update the model ID.
     this._id = modelProps.id || uuidv4();
 
-    // Update the model recordables.
+    // Update the model recordables or states.
     if (modelProps.recordables) {
-      this.updateRecordables(modelProps.recordables);
+      this.updateStates(modelProps.recordables);
+    } else if (modelProps.states) {
+      this.updateStates(modelProps.states);
     }
 
     // Update the model parameters.
@@ -319,7 +334,7 @@ export class BaseModel extends BaseObj {
   updateHash(): void {
     this._updateHash({
       label: this.state.label,
-      recordables: this.state.recordables,
+      states: this.states,
       params: this.paramsAll.map((param: ModelParameter) => param.hash),
     });
   }
@@ -338,17 +353,17 @@ export class BaseModel extends BaseObj {
   }
 
   /**
-   * Update recordables.
-   * @param recordablesProps recordable or string props
+   * Update model states.
+   * @param statesProps list of model state props or string
    */
-  updateRecordables(recordablesProps: (INodeRecordProps | string)[]): void {
-    this.state.recordables = recordablesProps.map(
-      (recordableProps: INodeRecordProps | string) =>
-        recordableProps instanceof Object
-          ? recordableProps
-          : this.config?.localStorage.recordables.find(
-              (recordable: INodeRecordProps) =>
-                recordable.id === recordableProps
+  updateStates(statesProps: (IModelStateProps | string)[]): void {
+    this._states = statesProps.map(
+      (stateProps: IModelStateProps | string) =>
+        stateProps instanceof Object
+          ? stateProps
+          : this.config?.localStorage.states.find(
+              (state: IModelStateProps) =>
+                state.id === stateProps
             )
     );
   }

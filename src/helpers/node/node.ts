@@ -15,7 +15,7 @@ import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { BaseObj } from "../common/base";
-import { BaseModel, TElementType } from "../model/model";
+import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeGroup } from "./nodeGroup";
 import { INodeParamProps, NodeParameter } from "./nodeParameter";
@@ -213,6 +213,10 @@ export class BaseNode extends BaseObj {
 
   get modelParams(): Record<string, ModelParameter> {
     return this.model.params;
+  }
+
+  get modelStates(): IModelStateProps[] {
+    return this.model.states;
   }
 
   get models(): (TModel | any)[] {
@@ -732,7 +736,7 @@ export class BaseNode extends BaseObj {
     if (this.connections.length > 0) {
       if (this.model.isAnalogRecorder) {
         const recordablesNodes = this.targetNodes.map((target: TNode) =>
-          [...target.model.state.recordables].flat()
+          [...target.modelStates].flat()
         );
 
         if (recordablesNodes.length > 0) {

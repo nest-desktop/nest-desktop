@@ -273,7 +273,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   get recordables(): INodeRecordProps[] {
-    return this.model.state.recordables;
+    return this.model.recordables;
   }
 
   get show(): boolean {

@@ -2,10 +2,9 @@
 
 import { v4 as uuidv4 } from "uuid";
 
+import { BaseModel, IModelProps, IModelStateProps, TElementType } from "@/helpers/model/model";
 import { IParamProps } from "@/helpers/common/parameter";
-import { BaseModel, IModelProps, TElementType } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 
 // import { loadText } from "@/utils/fetch";
 import {
@@ -187,10 +186,10 @@ export class NESTModel extends BaseModel {
       modelProps.custom = this.custom;
     }
 
-    // Add the recordables if provided.
-    if (this.state.recordables.length > 0) {
-      modelProps.recordables = this.state.recordables.map(
-        (recordable: INodeRecordProps) => recordable
+    // Add the states if provided.
+    if (this.states.length > 0) {
+      modelProps.states = this.states.map(
+        (state: IModelStateProps) => state
       );
     }
 
@@ -230,9 +229,11 @@ export class NESTModel extends BaseModel {
     // Update the model ID.
     this.id = modelProps.id || uuidv4();
 
-    // Update the model recordables.
+    // Update the model recordables or states.
     if (modelProps.recordables) {
-      this.updateRecordables(modelProps.recordables);
+      this.updateStates(modelProps.recordables);
+    } else if (modelProps.states) {
+      this.updateStates(modelProps.states);
     }
 
     // Update the model parameters.
