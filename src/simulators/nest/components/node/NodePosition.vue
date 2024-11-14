@@ -1,5 +1,5 @@
 <template>
-  <v-label class="px-1" style="width: 100%" v-if="nodeSpatial.positions">
+  <v-label class="pl-3" style="width: 100%" v-if="nodeSpatial.positions">
     Positions
     <v-spacer />
 
