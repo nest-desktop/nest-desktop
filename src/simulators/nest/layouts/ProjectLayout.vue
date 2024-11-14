@@ -146,7 +146,7 @@
 
               <template #popItem>
                 <v-list-item class="param pl-0 pr-1">
-                  <NodePositionPopover
+                  <NodePosition
                     :nodeSpatial="node.spatial"
                     v-if="node.spatial.hasPositions"
                   />
@@ -225,7 +225,7 @@ import { mountProjectLayout } from "@/helpers/routes";
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
 import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
 import CopyModelEditor from "../components/model/CopyModelEditor.vue";
-import NodePositionPopover from "../components/node/NodePositionPopover.vue";
+import NodePosition from "../components/node/NodePosition.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
 import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
 import { NESTNode } from "../helpers/node/node";
