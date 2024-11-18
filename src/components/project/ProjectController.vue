@@ -83,7 +83,7 @@
       <template
         v-else-if="
           appStore.state.devMode &&
-          projectStore.state.views.controller === 'raw'
+          projectViewStore.state.views.controller === 'raw'
         "
       >
         <codemirror

@@ -36,6 +36,11 @@ import {
   watch,
 } from "vue";
 
+import {
+  DownloadImgopts,
+// @ts-ignore
+} from "plotly.js-basic-dist-min";
+
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
@@ -44,16 +49,16 @@ const graph = computed(() => props.graph);
 const state = reactive<{
   dialog: boolean;
   imageFormats: string[];
-  toImageButtonOptions: { filename: string; format: string };
+  toImageButtonOptions: DownloadImgopts
 }>({
   dialog: false,
   imageFormats: ["jpeg", "png", "svg", "webp"],
   toImageButtonOptions: {
     filename: "nest-desktop",
     format: "png", // png, svg, jpeg, webp
-    // height: 600,
+    height: 1080,
     // scale: 1, // Multiply title/legend/axis/canvas sizes by this factor
-    // width: 800,
+    width: 1920,
   },
 });
 const activityChartGraph = ref(null);

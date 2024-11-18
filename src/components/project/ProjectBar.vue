@@ -22,6 +22,7 @@
     </v-tabs>
 
     <v-spacer />
+
     <v-app-bar-title
       :text="
         projectStore.state.project.name ||
@@ -35,6 +36,17 @@
       size="x-small"
     /> -->
     <v-spacer />
+
+    <v-card class="mx-1" v-if="appStore.state.devMode && !appStore.state.loading" variant="outlined">
+      <v-list class="py-1" density="compact" style="font-size: 10px; line-height: 1em">
+        <v-list-item class="auto-min-height" >Simulation: {{ projectStore.state.project.state.state.stopwatch.simulation / 1000 }}s</v-list-item>
+        <v-tooltip :text="projectStore.state.project.state.plotly" location="bottom">
+          <template #activator="{ props }">
+            <v-list-item class="auto-min-height" v-bind="props">Visualization: {{ projectStore.state.project.state.visualization / 1000 }}s</v-list-item>
+          </template>
+        </v-tooltip>
+      </v-list>
+    </v-card>
 
     <NetworkHistory />
 
@@ -96,3 +108,10 @@ const tabItems = [
   },
 ];
 </script>
+
+<style lang="scss" scoped>
+.auto-min-height {
+  padding: 2px;
+  min-height: 1em
+}
+</style>

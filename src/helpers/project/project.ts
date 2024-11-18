@@ -336,9 +336,12 @@ export class BaseProject extends BaseObj {
     if (!projectViewStore.state.simulationEvents.onChange)
       openLoading("Simulating... Please wait");
 
+    const toc = Date.now();
     this._simulation
       .start()
       .then((response: any) => {
+        this._state.state.stopwatch.simulation = Date.now() - toc;
+
         if (
           response == null ||
           response.status !== 200 ||

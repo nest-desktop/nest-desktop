@@ -1,7 +1,7 @@
 // activityChartGraph.ts
 
-// @ts-ignore - Module '"plotly.js-cartesian-dist-min"' has no exported member 'Partial'.
-import Plotly, { Partial, Root } from "plotly.js-cartesian-dist-min";
+// @ts-ignore
+import * as PlotlyBasic from "plotly.js-basic-dist-min";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TProject } from "@/types";
@@ -38,8 +38,8 @@ export interface IActivityChartPanelModelProps {
 
 interface IActivityChartGraphState {
   dialog: Boolean;
-  gd?: Plotly.RootOrData;
-  ref?: Plotly.Root;
+  gd?: PlotlyBasic.RootOrData;
+  ref?: PlotlyBasic.Root;
   traceColor: string;
 }
 
@@ -117,9 +117,9 @@ const models: IActivityChartPanelModelProps[] = [
 ];
 
 export class ActivityChartGraph extends BaseObj {
-  private _plotConfig: Partial<Plotly.Config> = {};
-  private _plotData: Plotly.Data[] = [];
-  private _plotLayout: Partial<Plotly.Layout> = {};
+  private _plotConfig: PlotlyBasic.Partial<PlotlyBasic.Config> = {};
+  private _plotData: PlotlyBasic.Data[] = [];
+  private _plotLayout: PlotlyBasic.Partial<PlotlyBasic.Layout> = {};
   private _models: IActivityChartPanelModelProps[] = models;
   private _panels: ActivityChartPanel[] = [];
   private _project: TProject;
@@ -138,8 +138,8 @@ export class ActivityChartGraph extends BaseObj {
         [
           {
             name: "Download plot",
-            icon: Plotly.Icons.camera,
-            click: (gd: Plotly.RootOrData) => {
+            icon: PlotlyBasic.Icons.camera,
+            click: (gd: PlotlyBasic.RootOrData) => {
               this._state.gd = gd;
               this._state.dialog = true;
             },
@@ -221,11 +221,11 @@ export class ActivityChartGraph extends BaseObj {
     );
   }
 
-  get plotData(): Plotly.Data[] {
+  get plotData(): PlotlyBasic.Data[] {
     return this._plotData;
   }
 
-  get plotLayout(): Partial<Plotly.Layout> {
+  get plotLayout(): PlotlyBasic.Partial<PlotlyBasic.Layout> {
     return this._plotLayout;
   }
 
@@ -294,6 +294,7 @@ export class ActivityChartGraph extends BaseObj {
    * Delete traces.
    */
   deleteTraces(): void {
+    // @ts-ignore
     Plotly.deleteTraces(this._state.ref as Root, 0);
   }
 
@@ -301,11 +302,12 @@ export class ActivityChartGraph extends BaseObj {
    * Download image of the activity chart graph.
    * @param options
    */
-  downloadImage(options: Plotly.DownloadImgopts): void {
+  downloadImage(options: PlotlyBasic.DownloadImgopts): void {
     this.logger.trace("download Image:", options);
 
     if (!this._state.gd) return;
 
+    // @ts-ignore
     Plotly.downloadImage(this._state.gd, options);
   }
 
@@ -322,7 +324,7 @@ export class ActivityChartGraph extends BaseObj {
    * @param panel
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: Partial<IActivityChartPanelModelData>) => {
+    panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
       data.dataIdx = this._plotData.length;
       data.panelIdx = panel.idx;
       data.xaxis = "x" + panel.xAxis;
@@ -357,7 +359,7 @@ export class ActivityChartGraph extends BaseObj {
     this._state.ref.on("plotly_legendclick", (plot: any) => {
       nextTick(() => {
         if (plot && plot.data) {
-          plot.data.forEach((d: Partial<Plotly.Data>) => {
+          plot.data.forEach((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
             const panel = this._panels[d.panelIdx];
             panel.model.state.visible = d.visible;
           });
@@ -377,11 +379,12 @@ export class ActivityChartGraph extends BaseObj {
    * Create new Plot of the DOM reference.
    * @param ref
    */
-  newPlot(ref: Plotly.Root): void {
+  newPlot(ref: PlotlyBasic.Root): void {
     this.logger.trace("new plot");
 
     this._state.ref = ref;
 
+    // @ts-ignore
     Plotly.newPlot(
       this._state.ref,
       this._plotData,
@@ -400,7 +403,10 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("react");
 
+    const toc = Date.now();
+    // @ts-ignore
     Plotly.react(this._state.ref, this._plotData, this._plotLayout);
+    this._project.state.state.stopwatch.plotly.react = Date.now() - toc;
   }
 
   /**
@@ -411,6 +417,7 @@ export class ActivityChartGraph extends BaseObj {
     this.logger.trace("relayout");
 
     this.updateThemeColor();
+    // @ts-ignore
     Plotly.relayout(this._state.ref, this._plotLayout);
   }
 
@@ -440,36 +447,46 @@ export class ActivityChartGraph extends BaseObj {
     this.logger.trace("restyle");
 
     if (this.project.activities.state.hasSomeSpikeRecorders) {
-      this.restyleMarkerHeightSpikeTimesRasterPlot();
+      const restyleRaster = this.restyleMarkerHeightSpikeTimesRasterPlot();
+
+      const toc = Date.now();
+      // @ts-ignore
+      Plotly.restyle(
+        this._state.ref,
+        restyleRaster.update,
+        restyleRaster.traceIndices
+      );
+      this._project.state.state.stopwatch.plotly.restyle = Date.now() - toc;
     }
   }
 
   /**
-   * Restyle marker height of spike times raster plot
+   * Restyle marker height of spike times raster plot.
    */
-  restyleMarkerHeightSpikeTimesRasterPlot(): void {
-    if (!this._state.ref) return;
+  restyleMarkerHeightSpikeTimesRasterPlot(): {
+    update: any;
+    traceIndices: number[];
+  } {
+    if (!this._state.ref) return { update: {}, traceIndices: [] };
 
     const dataSpikeTimeRasterPlot = this._plotData.filter(
-      (d: Partial<Plotly.Data>) => d.modelId === "spikeTimesRasterPlot"
+      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.modelId === "spikeTimesRasterPlot"
     );
 
-    const markerSizes = dataSpikeTimeRasterPlot.map(
-      (d: Partial<Plotly.Data>) => {
-        const model = this._panels[d.panelIdx]
-          .model as SpikeTimesRasterPlotModel;
-        return model.markerSize;
-      }
-    );
+    const markerSizes = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
+      const model = this._panels[d.panelIdx].model as SpikeTimesRasterPlotModel;
+      return model.markerSize;
+    });
+
     const update = {
       "marker.size": markerSizes,
     };
 
-    const dataIndices = dataSpikeTimeRasterPlot.map(
-      (d: Partial<Plotly.Data>) => d.dataIdx
+    const traceIndices = dataSpikeTimeRasterPlot.map(
+      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.dataIdx
     );
 
-    Plotly.restyle(this._state.ref, update, dataIndices);
+    return { update, traceIndices };
   }
 
   /**
