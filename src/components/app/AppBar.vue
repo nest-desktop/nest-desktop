@@ -114,14 +114,14 @@
 </template>
 
 <script lang="ts" setup>
-// import { DatabaseService } from "@/helpers/common/database";
 import { createDialog } from "vuetify3-dialog";
-import BackendStatusIcon from "../iconsets/BackendStatusIcon.vue";
 
-import { useAppStore } from "@/stores/appStore";
+import AboutDialog from "../dialog/AboutDialog.vue";
+import BackendStatusIcon from "../iconsets/BackendStatusIcon.vue";
 import SettingsDialog from "../dialog/SettingsDialog.vue";
 import StoresDialog from "../dialog/StoresDialog.vue";
-import AboutDialog from "../dialog/AboutDialog.vue";
+
+import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const settingsItems = [
@@ -161,7 +161,9 @@ const openAboutDialog = () =>
   createDialog({    
     customComponent: {component: AboutDialog, props: false},
     dialogOptions: {
+      scrollable: true,
       width: "800px",
+      // height: "800px"
     },
     title: "", 
     text: "", 

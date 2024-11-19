@@ -9,21 +9,18 @@
         src="@/assets/img/logo/nest-desktop-logo-light.svg"
       />
       <p class="text-h2">NEST Desktop</p>
-      <p class="text-subtitle-1">An educational GUI for neuroscience</p>
+      <p class="text-subtitle-1">An exploratory app for neuroscience</p>
     </div>
 
     <v-card flat variant="text">
       <v-card-text class="text-justify">
         <div class="my-1">
-          NEST Desktop is a web-based GUI application for multiple
-          simulation tools with neuronal networks. The application enables
-          the rapid construction, parametrization, and instrumentation of
-          neuronal network models.
+          NEST Desktop is a web-based GUI application for multiple simulation tools with neuronal networks. The
+          application enables the rapid construction, parametrization, and instrumentation of neuronal network models.
         </div>
         <div class="my-1">
-          The primary objective is to provide an accessible classroom tool
-          that allows users to rapidly explore neuroscience concepts without
-          the need to learn a simulator control language at the same time.
+          The primary objective is to provide an accessible classroom tool that allows users to rapidly explore
+          neuroscience concepts without the need to learn a simulator control language at the same time.
         </div>
       </v-card-text>
     </v-card>
@@ -34,14 +31,11 @@
 
     <v-card flat subtitle="Acknowledgement">
       <v-card-text class="text-justify">
-        This project has received funding from the European Union’s Horizon
-        2020 Framework Programme for Research and Innovation under Specific
-        Grant Agreement No. 785907 (Human Brain Project SGA2) and No. 945539
-        (Human Brain Project SGA3). This project was funded by the Helmholtz
-        Association Initiative and Networking Fund under project number
-        SO-092 (Advanced Computing Architectures, ACA). This work was
-        supported by the DFG Excellence Cluster BrainLinks-BrainTools (grant
-        EXC 1086).
+        This project has received funding from the European Union’s Horizon 2020 Framework Programme for Research and
+        Innovation under Specific Grant Agreement No. 785907 (Human Brain Project SGA2) and No. 945539 (Human Brain
+        Project SGA3). This project was funded by the Helmholtz Association Initiative and Networking Fund under project
+        number SO-092 (Advanced Computing Architectures, ACA). This work was supported by the DFG Excellence Cluster
+        BrainLinks-BrainTools (grant EXC 1086).
 
         <v-row class="mt-4" justify="center" no-gutters>
           <v-col

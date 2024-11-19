@@ -20,7 +20,7 @@
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
-          <v-list density="compact">
+          <v-list density="compact" style="font-size:13px">
             <v-list-item :key="index" v-for="config,index in configs">
               {{ config }}
               <template #append>
@@ -59,8 +59,7 @@
                   :key="index">  
                   {{ database }}
                   <template #append>
-                    <v-btn size="x-small" icon="mdi:mdi-refresh" variant="text" />
-                    <v-btn size="x-small" icon="mdi:mdi-trash-can-outline" variant="text" />
+                    <v-btn @click.stop="destroyDatabase(database)" icon="mdi:mdi-trash-can-outline"  size="x-small" variant="text" />
                   </template>
                 </v-list-item>
               </v-list>
@@ -74,7 +73,9 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue";
+import PouchDB from "pouchdb";
 
+import { confirmDialog } from "@/helpers/common/confirmDialog";
 import { simulators } from "@/simulators";
 
 // import { useAppStore } from "@/stores/appStore";
@@ -92,4 +93,18 @@ const configs = [
 
 const clearLocalStorage = () => localStorage.clear();
 
+const destroyDatabase = (name: string) => {
+  confirmDialog({
+      title: "Destroy database",
+      text: "Are you sure to destroy database?",
+    }).then((response: boolean) => {
+    if (response) {
+      const db = new PouchDB(name);
+      db.destroy().then(() => {
+        const url = new URL(location.href)
+        location.replace(url.origin);
+      });
+    }
+  })
+}
 </script>
