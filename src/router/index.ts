@@ -42,12 +42,6 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: closeNav,
       },
       {
-        path: "about",
-        name: "about",
-        component: () => import("@/views/About.vue"),
-        beforeEnter: closeNav,
-      },
-      {
         path: "sandbox",
         name: "sandbox",
         children: [
@@ -63,12 +57,6 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/views/Sandbox.vue"),
           },
         ],
-      },
-      {
-        path: "settings",
-        name: "settings",
-        component: () => import("@/views/Settings.vue"),
-        beforeEnter: closeNav,
       },
     ],
   },

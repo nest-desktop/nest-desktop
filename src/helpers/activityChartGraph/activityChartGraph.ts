@@ -414,10 +414,8 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("react");
 
-    const toc = Date.now();
     // @ts-ignore
     Plotly.react(this._state.ref, this._plotData, this._plotLayout);
-    this._project.state.state.stopwatch.plotly.react = Date.now() - toc;
   }
 
   /**
@@ -460,14 +458,12 @@ export class ActivityChartGraph extends BaseObj {
     if (this.project.activities.state.hasSomeSpikeRecorders) {
       const restyleRaster = this.restyleMarkerHeightSpikeTimesRasterPlot();
 
-      const toc = Date.now();
       // @ts-ignore
       Plotly.restyle(
         this._state.ref,
         restyleRaster.update,
         restyleRaster.traceIndices
       );
-      this._project.state.state.stopwatch.plotly.restyle = Date.now() - toc;
     }
   }
 

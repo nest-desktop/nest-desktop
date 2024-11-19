@@ -336,11 +336,11 @@ export class BaseProject extends BaseObj {
     if (!projectViewStore.state.simulationEvents.onChange)
       openLoading("Simulating... Please wait");
 
-    const toc = Date.now();
+    const simtoc = Date.now();
     this._simulation
       .start()
       .then((response: any) => {
-        this._state.state.stopwatch.simulation = Date.now() - toc;
+        this._state.state.stopwatch.simulation = Date.now() - simtoc;
 
         if (
           response == null ||
@@ -350,8 +350,10 @@ export class BaseProject extends BaseObj {
         )
           return;
 
+        const vistoc = Date.now();
         // Update activities.
         this.activities.update(response.data.data);
+        this._state.state.stopwatch.visualization = Date.now() - vistoc;
 
         // Commit network for the history.
         this.networkRevision.commit();
