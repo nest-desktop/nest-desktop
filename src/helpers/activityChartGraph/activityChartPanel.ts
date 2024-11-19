@@ -60,7 +60,6 @@ export class ActivityChartPanel extends BaseObj {
     xaxis: {
       showgrid: true,
       title: "x label",
-      text: "x label",
     },
     yaxis: {
       height: 10,

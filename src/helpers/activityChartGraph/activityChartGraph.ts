@@ -4,8 +4,7 @@ import moment from "moment";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
 // @ts-ignore
-import * as PlotlyBasic from "plotly.js-cartesian-dist-min";
-// import Plotly from "plotly.js-cartesian-dist-min";
+import * as PlotlyBasic from "plotly.js-basic-dist-min";
 
 import { TProject } from "@/types";
 
