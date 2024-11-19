@@ -2152,18 +2152,6 @@
     "@types/node" "*"
     xmlbuilder ">=11.0.1"
 
-"@types/plotly.js-dist-min@~2.3":
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/@types/plotly.js-dist-min/-/plotly.js-dist-min-2.3.4.tgz#dcac506a1e5dc87aa84d0dc910830127f3cd4482"
-  integrity sha512-ISwLFV6Zs/v3DkaRFLyk2rvYAfVdnYP2VVVy7h+fBDWw52sn7sMUzytkWiN4M75uxr1uz1uiBioePTDpAfoFIg==
-  dependencies:
-    "@types/plotly.js" "*"
-
-"@types/plotly.js@*":
-  version "2.35.0"
-  resolved "https://registry.yarnpkg.com/@types/plotly.js/-/plotly.js-2.35.0.tgz#cc26a54e26ead5c361b364284a936408365c5800"
-  integrity sha512-hokP//6Ex8dj9JttJtV8MO5aJcNBittofftpKm7hgWBbe/dMggx8bnxmhCwuQ1N5uP9VXfa/2CUre/eu0l08RA==
-
 "@types/pouchdb-adapter-cordova-sqlite@*":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@types/pouchdb-adapter-cordova-sqlite/-/pouchdb-adapter-cordova-sqlite-1.0.4.tgz#c16847ba4e7bf284d520999ca39942fffbc72642"
@@ -6463,15 +6451,10 @@ plist@^3.0.4, plist@^3.0.5, plist@^3.1.0:
     base64-js "^1.5.1"
     xmlbuilder "^15.1.1"
 
-plotly.js-basic-dist-min@^2.35.2:
+plotly.js-basic-dist-min@~2.35:
   version "2.35.2"
   resolved "https://registry.yarnpkg.com/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.35.2.tgz#dc75aa85e0297d5a23038291f8eea2495292ce08"
   integrity sha512-+apJo+/k9YcDH7W39uIONM+t4P6x15w2MEZnmbi3JjGAl9yW1ZJmyqq4xtynwuIbyU26Nv+4oVu1IULGgUkzlQ==
-
-plotly.js-dist-min@~2.35:
-  version "2.35.2"
-  resolved "https://registry.yarnpkg.com/plotly.js-dist-min/-/plotly.js-dist-min-2.35.2.tgz#0d08bcc5dac84c44c36eccdfffdcfd2a6cbefe11"
-  integrity sha512-oWDTf2kYOmTtEw3epeeSBdfH/H3OSktF0suST9oI6fIgKfbyd4MT7TPh8+CVzdHYllYon24Q0HI1hZjOnLqk6g==
 
 possible-typed-array-names@^1.0.0:
   version "1.0.0"
