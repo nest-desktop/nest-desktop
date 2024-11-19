@@ -72,7 +72,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
-    const plotType = plotMode === "bar" ? plotMode : "scatter";
+    const plotType = plotMode === "bar" ? plotMode : "scattergl";
 
     this.data.push({
       activityIdx: activity.idx,

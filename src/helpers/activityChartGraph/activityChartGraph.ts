@@ -1,8 +1,11 @@
 // activityChartGraph.ts
 
-// @ts-ignore
-import * as PlotlyBasic from "plotly.js-basic-dist-min";
+import moment from "moment";
 import { UnwrapRef, nextTick, reactive } from "vue";
+
+// @ts-ignore
+import * as PlotlyBasic from "plotly.js-cartesian-dist-min";
+// import Plotly from "plotly.js-cartesian-dist-min";
 
 import { TProject } from "@/types";
 
@@ -24,6 +27,8 @@ import { SenderSpikeCountPlotModel } from "./activityChartPanelModels/senderSpik
 import { SpikeCountPlotModel } from "./activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
+import { createDialog } from "vuetify3-dialog";
+import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
 
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
@@ -37,8 +42,6 @@ export interface IActivityChartPanelModelProps {
 }
 
 interface IActivityChartGraphState {
-  dialog: Boolean;
-  gd?: PlotlyBasic.RootOrData;
   ref?: PlotlyBasic.Root;
   traceColor: string;
 }
@@ -126,7 +129,7 @@ export class ActivityChartGraph extends BaseObj {
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     this._project = project;
     this._plotConfig = {
@@ -139,12 +142,23 @@ export class ActivityChartGraph extends BaseObj {
           {
             name: "Download plot",
             icon: PlotlyBasic.Icons.camera,
-            click: (gd: PlotlyBasic.RootOrData) => {
-              this._state.gd = gd;
-              this._state.dialog = true;
+            click: () => {
+              let filename = this._project.name;
+              filename = filename.replaceAll(" ", "_");
+              const timestamp = moment(new Date()).format("YYMMDD");
+              createDialog({
+                title: "Save as image",
+                text: "Select a image format",
+                customComponent: {
+                  component: DownloadPlotDialog,
+                  props: { filename: `nest_desktop-${timestamp}-${filename}` },
+                },
+              }).then((response: PlotlyBasic.DownloadImgopts | undefined) =>
+                response ? this.downloadImage(response) : null
+              );
             },
           },
-          // 'toImage',
+          // "toImage",
         ],
         ["zoom2d", "pan2d"],
         ["zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d"],
@@ -165,14 +179,12 @@ export class ActivityChartGraph extends BaseObj {
       paper_bgcolor: currentBackgroundColor(),
       plot_bgcolor: currentBackgroundColor(),
       title: {
-        text: "",
         xref: "paper",
         x: 0,
       },
     };
 
     this._state = reactive<IActivityChartGraphState>({
-      dialog: false,
       traceColor: activityGraphProps?.color || "record",
     });
 
@@ -277,7 +289,7 @@ export class ActivityChartGraph extends BaseObj {
    * Observer for activity chart graph changes.
    *
    * @remarks
-   * It emits plotly react and restyle.
+   * It emits Plotly react and restyle.
    */
   changes(): void {
     this.update();
@@ -300,15 +312,14 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Download image of the activity chart graph.
-   * @param options
+   * @param options plotly download image options
    */
   downloadImage(options: PlotlyBasic.DownloadImgopts): void {
+    if (!this._state.ref) return;
     this.logger.trace("download Image:", options);
 
-    if (!this._state.gd) return;
-
     // @ts-ignore
-    Plotly.downloadImage(this._state.gd, options);
+    Plotly.downloadImage(this._state.ref, options);
   }
 
   /**
@@ -324,14 +335,16 @@ export class ActivityChartGraph extends BaseObj {
    * @param panel
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
-      data.dataIdx = this._plotData.length;
-      data.panelIdx = panel.idx;
-      data.xaxis = "x" + panel.xAxis;
-      data.yaxis = "y" + panel.yAxis;
-      // data.yaxis = "y" + index;
-      this._plotData.push(data);
-    });
+    panel.model.data.forEach(
+      (data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
+        data.dataIdx = this._plotData.length;
+        data.panelIdx = panel.idx;
+        data.xaxis = "x" + panel.xAxis;
+        data.yaxis = "y" + panel.yAxis;
+        // data.yaxis = "y" + index;
+        this._plotData.push(data);
+      }
+    );
   }
 
   /**
@@ -351,9 +364,8 @@ export class ActivityChartGraph extends BaseObj {
    * Initialize Plotly events.
    */
   initEvents(): void {
-    this.logger.trace("init events");
-
     if (!this._state.ref) return;
+    this.logger.trace("init events");
 
     // @ts-ignore - Property 'on' does not exist on type 'Root'. Property 'on' does not exist on type 'string'.
     this._state.ref.on("plotly_legendclick", (plot: any) => {
@@ -470,13 +482,17 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return { update: {}, traceIndices: [] };
 
     const dataSpikeTimeRasterPlot = this._plotData.filter(
-      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.modelId === "spikeTimesRasterPlot"
+      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) =>
+        d.modelId === "spikeTimesRasterPlot"
     );
 
-    const markerSizes = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
-      const model = this._panels[d.panelIdx].model as SpikeTimesRasterPlotModel;
-      return model.markerSize;
-    });
+    const markerSizes = dataSpikeTimeRasterPlot.map(
+      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
+        const model = this._panels[d.panelIdx]
+          .model as SpikeTimesRasterPlotModel;
+        return model.markerSize;
+      }
+    );
 
     const update = {
       "marker.size": markerSizes,
@@ -571,7 +587,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   updateVisiblePanelsData(): void {
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      panel.model.activities; // TODO: check if it is required.
+      // panel.model.activities; // TODO: check if it is required.
       this.gatherData(panel);
       this.updateLayoutPanel(panel);
     });

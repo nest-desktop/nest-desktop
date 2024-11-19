@@ -16,7 +16,7 @@
     />
 
     <v-card-actions>
-      <v-btn @click="resetColor" text="reset" />
+      <v-btn @click="resetColor()" text="reset" />
       <v-btn @click="closeDialog()" text="close" />
     </v-card-actions>
   </v-card>

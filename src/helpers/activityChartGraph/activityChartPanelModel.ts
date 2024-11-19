@@ -409,7 +409,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this.updateData();
 
     // Update label for layout.
-    this.updateLayoutLabel();
+    // this.updateLayoutLabel();
   }
 
   /**

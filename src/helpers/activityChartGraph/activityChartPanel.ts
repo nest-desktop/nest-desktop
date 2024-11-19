@@ -49,7 +49,7 @@ interface IActivityChartPanelState {
   visible: boolean;
 }
 
-export const plotType = "scattergl"; // TODO: Production did not found webgl (use "scattergl")
+export const plotType = "scattergl";
 
 export class ActivityChartPanel extends BaseObj {
   // private static readonly _name = 'ActivityGraphPanel';
@@ -59,12 +59,13 @@ export class ActivityChartPanel extends BaseObj {
     shapes: [],
     xaxis: {
       showgrid: true,
-      title: "",
+      title: "x label",
+      text: "x label",
     },
     yaxis: {
       height: 10,
       showgrid: true,
-      title: "",
+      title: "y label",
     },
   };
   private _model: ActivityChartPanelModel;
