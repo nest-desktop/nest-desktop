@@ -3,7 +3,6 @@
 import { BaseObj } from "@/helpers/common/base";
 
 import { NESTNetwork } from "../network/network";
-// import { TNode } from "@/types";
 import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 
 export class NESTCopyModels extends BaseObj {
@@ -215,7 +214,6 @@ export class NESTCopyModels extends BaseObj {
 
   /**
    * Update copied model component.
-   *
    * @param model props
    */
   update(modelsProps: INESTCopyModelProps[] = []): void {

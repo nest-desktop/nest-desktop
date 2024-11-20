@@ -37,7 +37,7 @@
             :value="param.id"
             density="compact"
             hide-details
-            v-for="(param, index) in Object.values(synapse.modelParams)"
+            v-for="(param, index) in synapse.model.paramsAll"
             v-model="synapse.paramsVisible"
           >
             <template #append>

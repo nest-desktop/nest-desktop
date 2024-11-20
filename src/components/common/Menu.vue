@@ -8,7 +8,9 @@
     rounded="pill"
     variant="text"
   >
-    <v-icon icon="mdi:mdi-dots-vertical" />
+    <slot name="icon">
+      <v-icon icon="mdi:mdi-dots-vertical" />
+    </slot>
 
     <v-menu activator="parent">
       <slot>

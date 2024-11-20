@@ -60,7 +60,7 @@
                       :value="param.id"
                       density="compact"
                       hide-details
-                      v-for="(param, index) in Object.values(node.modelParams)"
+                      v-for="(param, index) in node.model.paramsAll"
                       v-model="node.paramsVisible"
                     >
                       <template #append>
@@ -180,20 +180,3 @@ onMounted(() => {
   state.elementType = node.value.elementType;
 });
 </script>
-
-<!-- <style lang="scss">
-.node {
-  .v-list {
-    overflow: visible;
-
-    .v-list-item__content {
-      overflow: visible;
-    }
-  }
-
-  .v-input__prepend,
-  .v-input__append {
-    padding-top: 0 !important;
-  }
-}
-</style> -->
