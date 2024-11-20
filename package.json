@@ -1,7 +1,7 @@
 {
   "name": "nest-desktop",
   "desktopName": "io.github.nest_desktop.nest-desktop",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for NEST Simulator and other simulators of spiking networks.",
   "author": {
@@ -38,7 +38,7 @@
     "d3": "~7.9",
     "detect-browser": "~5.3",
     "events": "~3.3",
-    "mathjs": "~13.2",
+    "mathjs": "~14.0",
     "moment": "~2.30",
     "mustache": "~4.2",
     "object-hash": "~3.0",
