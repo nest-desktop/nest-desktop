@@ -18,7 +18,10 @@ import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { NESTConnection } from "../connection/connection";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
-import { NESTCopyModelParameter } from "./copyModelParameter";
+import {
+  INESTCopyModelParamProps,
+  NESTCopyModelParameter,
+} from "./copyModelParameter";
 import { NESTCopyModels } from "./copyModels";
 import { NESTModel } from "./model";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
@@ -47,7 +50,7 @@ export class NESTCopyModel extends BaseObj {
     copyModels: NESTCopyModels,
     modelProps: INESTCopyModelProps = { existing: "", new: "" }
   ) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     this._copyModels = copyModels;
     this._existingModelId = modelProps.existing;
@@ -313,80 +316,51 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Add model parameter component.
-   * @param paramProps - parameter props
+   * @param paramProps parameter props
    */
-  addParameter(paramProps: IParamProps): void {
+  addParameter(paramProps: IParamProps, visible: boolean = false): void {
     this.logger.trace("add parameter", paramProps.id);
 
     this._params[paramProps.id] = new NESTCopyModelParameter(this, paramProps);
-  }
 
-  /**
-   * Add parameter component.
-   * @param param - parameter object
-   */
-  addWeightRecorderParameter(param: { value: TParamValue }): void {
-    this.addParameter({
-      id: "weight_recorder",
-      items: this.network.nodes.weightRecorders.map(
-        (recorder: NESTNode) => recorder.view.label
-      ),
-      component: "select",
-      label: "weight recorder",
-      value: param.value,
-      visible: true,
-    });
-  }
-
-  clean(): void {
-    const weightRecorderParam: NESTCopyModelParameter =
-      this._params.weight_recorder;
-
-    // Update weight recorder list to select.
-    if (weightRecorderParam) {
-      weightRecorderParam.items = this.network.nodes.weightRecorders.map(
-        (recorder: NESTNode) => recorder.view.label
-      );
+    if (visible) {
+      this._paramsVisible.push(paramProps.id);
     }
   }
 
-  // /**
-  //  * Sets all params to invisible.
-  //  */
-  hideAllParams(): void {
-    this.paramsAll.forEach(
-      (param: NESTCopyModelParameter) => (param.visible = false)
-    );
-  }
-
   /**
-   * Initialize copy model.
-   * @remarks Do not use it in the constructor.
+   * Add parameter components.
+   * @param paramsProps list of parameter props
    */
-  init(): void {
-    this.initParameters(this._props.params);
-  }
+  addParameters(paramsProps?: IModelParamProps[]): void {
+    this.logger.trace("init parameters");
 
-  /**
-   * Initialize parameter components.
-   * @param paramsProps - list of parameter props
-   */
-  initParameters(paramsProps?: IModelParamProps[]): void {
-    this._params = {};
-    if (this.model && paramsProps) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = paramsProps.find(
-          (paramProps: IParamProps) => paramProps.id === modelParam.id
-        );
-        this.addParameter(param || modelParam.toJSON());
+    this.emptyParams();
+    if (this.model) {
+      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
+        if (paramsProps && paramsProps.length > 0) {
+          const nodeParamProps = paramsProps.find(
+            (paramProps: INESTCopyModelParamProps) =>
+              paramProps.id === modelParam.id
+          );
+          if (nodeParamProps) {
+            this.addParameter(
+              {
+                ...nodeParamProps,
+                ...modelParam,
+              },
+              true
+            );
+          } else {
+            this.addParameter(modelParam);
+          }
+        } else {
+          this.addParameter(modelParam);
+        }
       });
-    } else if (this.model) {
-      Object.values(this.model.params).forEach((param: ModelParameter) =>
-        this.addParameter(param.toJSON())
-      );
     } else if (paramsProps) {
-      paramsProps.forEach((paramProps: IParamProps) =>
-        this.addParameter(paramProps)
+      paramsProps.forEach((param: INESTCopyModelParamProps) =>
+        this.addParameter(param, true)
       );
     }
 
@@ -407,11 +381,57 @@ export class NESTCopyModel extends BaseObj {
       }
 
       if (weightRecorder) {
-        this.addWeightRecorderParameter({
-          value: weightRecorder,
-        });
+        this.addParameter(
+          {
+            id: "weight_recorder",
+            items: this.network.nodes.weightRecorders.map(
+              (recorder: NESTNode) => recorder.view.label
+            ),
+            component: "select",
+            label: "weight recorder",
+            value: weightRecorder,
+          },
+          true
+        );
       }
     }
+  }
+
+  clean(): void {
+    const weightRecorderParam: NESTCopyModelParameter =
+      this._params.weight_recorder;
+
+    // Update weight recorder list to select.
+    if (weightRecorderParam) {
+      weightRecorderParam.items = this.network.nodes.weightRecorders.map(
+        (recorder: NESTNode) => recorder.view.label
+      );
+    }
+  }
+
+  /**
+   * Empty parameters
+   */
+  emptyParams(): void {
+    this._params = {};
+    this._paramsVisible = [];
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
+  hideAllParams(): void {
+    this.paramsAll.forEach(
+      (param: NESTCopyModelParameter) => (param.visible = false)
+    );
+  }
+
+  /**
+   * Initialize copy model.
+   * @remarks Do not use it in the constructor.
+   */
+  init(): void {
+    this.addParameters(this._props.params);
   }
 
   isAssignedToWeightRecorder(node: NESTNode): boolean {

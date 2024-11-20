@@ -93,8 +93,8 @@ export class NESTNetwork extends BaseNetwork {
   override clean(): void {
     this.logger.trace("clean");
 
-    this.nodes.clean();
     this.connections.clean();
+    this.nodes.clean();
     this.modelsCopied.clean();
   }
 
@@ -156,9 +156,9 @@ export class NESTNetwork extends BaseNetwork {
   override init(): void {
     this.logger.trace("init");
 
-    this.modelsCopied.init();
     this.nodes.init();
     this.connections.init();
+    this.modelsCopied.init();
 
     this.updateStyle();
     this.updateHash();

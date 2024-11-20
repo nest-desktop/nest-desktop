@@ -75,6 +75,7 @@
                 icon="mdi:mdi-menu-right"
                 size="x-small"
                 v-if="state.elementType"
+                variant="text"
               />
             </template>
           </v-list-item>
@@ -172,38 +173,7 @@ onMounted(() => {
 });
 </script>
 
-<!-- <style lang="scss">
-.model-title {
-  .model-select {
-    .v-label {
-      font-size: 13px;
-    }
-  }
-
-  .menu {
-    opacity: 0;
-  }
-
-  &:hover {
-    .menu {
-      opacity: 1;
-    }
-  }
-}
-
-.v-list {
-  overflow: visible;
-
-  .v-list-item__content {
-    overflow: visible;
-  }
-}
-
-.v-input__prepend,
-.v-input__append {
-  padding-top: 0 !important;
-}
-
+<style lang="scss">
 .model-item {
   .icon {
     display: none;
@@ -215,4 +185,4 @@ onMounted(() => {
     }
   }
 }
-</style> -->
+</style>

@@ -161,6 +161,8 @@ export class NESTCopyModels extends BaseObj {
    * @remarks Do not use it in the constructor.
    */
   init(): void {
+    this._models.forEach((model: NESTCopyModel) => model.init());
+
     this.clean();
     this.updateHash();
   }
