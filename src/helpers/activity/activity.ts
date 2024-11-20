@@ -221,6 +221,7 @@ export class Activity extends BaseObj {
 
   /**
    * Initialize activity.
+   * @param activityprops - activity props
    *
    * Overwrites events.
    */
@@ -240,8 +241,8 @@ export class Activity extends BaseObj {
 
   postInit(): void {}
 
-  postUpdate(activity: IActivityProps): void {
-    activity;
+  postUpdate(activityProps: IActivityProps): void {
+    activityProps;
   }
 
   /**
