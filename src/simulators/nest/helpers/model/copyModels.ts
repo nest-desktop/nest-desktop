@@ -158,6 +158,7 @@ export class NESTCopyModels extends BaseObj {
 
   /**
    * Initialize copy models.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.clean();

@@ -40,6 +40,7 @@ export class NESTCopyModel extends BaseObj {
   private _newModelId: string;
   private _params: Record<string, NESTCopyModelParameter> = {};
   private _paramsVisible: string[] = [];
+  private _props: INESTCopyModelProps;
   private _state: UnwrapRef<INESTCopyModelState>;
 
   constructor(
@@ -56,7 +57,7 @@ export class NESTCopyModel extends BaseObj {
       visible: true,
     });
 
-    this.initParameters(modelProps);
+    this._props = modelProps;
   }
 
   get abbreviation(): string {
@@ -268,6 +269,10 @@ export class NESTCopyModel extends BaseObj {
     this.changes();
   }
 
+  get props(): INESTCopyModelProps {
+    return this._props;
+  }
+
   get receptors(): Record<string, NESTModelReceptor> {
     return this.model.receptors;
   }
@@ -355,15 +360,22 @@ export class NESTCopyModel extends BaseObj {
   }
 
   /**
-   * Initialize parameter components.
-   * @param model - model object
+   * Initialize copy model.
+   * @remarks Do not use it in the constructor.
    */
-  initParameters(modelProps?: INESTCopyModelProps): void {
-    // Update parameters from model
+  init(): void {
+    this.initParameters(this._props.params);
+  }
+
+  /**
+   * Initialize parameter components.
+   * @param paramsProps - list of parameter props
+   */
+  initParameters(paramsProps?: IModelParamProps[]): void {
     this._params = {};
-    if (this.model && modelProps && "params" in modelProps) {
+    if (this.model && paramsProps) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = modelProps.params?.find(
+        const param = paramsProps.find(
           (paramProps: IParamProps) => paramProps.id === modelParam.id
         );
         this.addParameter(param || modelParam.toJSON());
@@ -372,8 +384,8 @@ export class NESTCopyModel extends BaseObj {
       Object.values(this.model.params).forEach((param: ModelParameter) =>
         this.addParameter(param.toJSON())
       );
-    } else if (modelProps && "params" in modelProps) {
-      modelProps.params?.forEach((paramProps: IParamProps) =>
+    } else if (paramsProps) {
+      paramsProps.forEach((paramProps: IParamProps) =>
         this.addParameter(paramProps)
       );
     }
@@ -385,8 +397,8 @@ export class NESTCopyModel extends BaseObj {
       let weightRecorder: TParamValue =
         weightRecorders[weightRecorders.length - 1];
 
-      if (modelProps && "params" in modelProps) {
-        const weightRecorderParam = modelProps.params?.find(
+      if (paramsProps) {
+        const weightRecorderParam = paramsProps.find(
           (paramProps: IParamProps) => paramProps.id === "weight_recorder"
         );
         if (weightRecorderParam && weightRecorderParam.value) {
