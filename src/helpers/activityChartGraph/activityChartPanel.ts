@@ -45,7 +45,6 @@ interface IActivityChartPanelLayoutProps {
 }
 
 interface IActivityChartPanelState {
-  initialized: boolean;
   visible: boolean;
 }
 
@@ -81,7 +80,6 @@ export class ActivityChartPanel extends BaseObj {
     this._model = new SpikeTimesRasterPlotModel(this);
 
     this._state = reactive<IActivityChartPanelState>({
-      initialized: false,
       visible: true,
     });
 
@@ -181,13 +179,7 @@ export class ActivityChartPanel extends BaseObj {
       if (model) {
         // @ts-ignore - Property 'component' does not exist on type 'IActivityChartPanelModelProps'.
         this._model = new model.component(this, modelProps);
-        this._state.initialized = true;
       }
-    }
-
-    if (!this._state.initialized) {
-      this._model = new SpikeTimesRasterPlotModel(this, modelProps);
-      this._state.initialized = true;
     }
   }
 

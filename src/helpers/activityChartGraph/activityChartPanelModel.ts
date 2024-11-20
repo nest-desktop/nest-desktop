@@ -120,6 +120,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       visibleThreshold: "legendonly",
       xaxisType: "linear",
     });
+
+    if (this._panel.graph.state.initialized) this.init();
   }
 
   get activities(): Activity[] {

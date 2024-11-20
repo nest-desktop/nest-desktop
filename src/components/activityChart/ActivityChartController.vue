@@ -56,6 +56,7 @@
             label="Recorded events"
             multiple
             persistent-hint
+            v-if="panel.model.state.records.length > 0"
             v-model="panel.model.state.recordsVisible"
           >
             <template #chip="{ item }">
@@ -178,6 +179,9 @@ const addPanel = (modelId: string) => {
   graph.value.update();
 };
 
+/**
+ * Select all node records.
+ */
 const selectAllNodeRecords = (panel: ActivityChartPanel) => {
   panel.model.selectAllNodeRecords();
   graph.value.update();

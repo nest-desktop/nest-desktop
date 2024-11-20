@@ -41,6 +41,7 @@ export interface IActivityChartPanelModelProps {
 }
 
 interface IActivityChartGraphState {
+  initialized: boolean;
   ref?: PlotlyBasic.Root;
   traceColor: string;
 }
@@ -184,6 +185,7 @@ export class ActivityChartGraph extends BaseObj {
     };
 
     this._state = reactive<IActivityChartGraphState>({
+      initialized: false,
       traceColor: activityGraphProps?.color || "record",
     });
 
@@ -357,6 +359,8 @@ export class ActivityChartGraph extends BaseObj {
     this.initPanelModels();
 
     this.react();
+
+    this.state.initialized = true;
   }
 
   /**
