@@ -38,7 +38,6 @@
     "d3": "~7.9",
     "detect-browser": "~5.3",
     "events": "~3.3",
-    "mathjs": "~14.0",
     "moment": "~2.30",
     "mustache": "~4.2",
     "object-hash": "~3.0",
