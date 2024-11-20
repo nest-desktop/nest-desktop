@@ -275,6 +275,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Initialize connection.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");

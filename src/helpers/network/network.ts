@@ -271,6 +271,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Initialize network.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");

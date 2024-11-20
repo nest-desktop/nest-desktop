@@ -254,6 +254,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Initialize nodes.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");

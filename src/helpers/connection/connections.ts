@@ -113,6 +113,7 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Initialize connections.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");

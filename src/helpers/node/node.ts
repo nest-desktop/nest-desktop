@@ -36,7 +36,7 @@ export class BaseNode extends BaseObj {
   private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
     undefined;
   private _annotations: string[] = [];
-  private _doc: INodeProps;
+  private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
@@ -55,7 +55,7 @@ export class BaseNode extends BaseObj {
 
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
-    this._doc = nodeProps;
+    this._props = nodeProps;
 
     this._view = new NodeView(this, nodeProps.view);
   }
@@ -122,8 +122,8 @@ export class BaseNode extends BaseObj {
     );
   }
 
-  get doc(): INodeProps {
-    return this._doc;
+  get props(): INodeProps {
+    return this._props;
   }
 
   get elementType(): TElementType {
@@ -530,14 +530,15 @@ export class BaseNode extends BaseObj {
 
   /**
    * Initialize node.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");
 
-    this.loadModel(this._doc.params);
+    this.loadModel(this._props.params);
 
     if (this.model?.isRecorder) {
-      this.createActivity(this.doc.activity);
+      this.createActivity(this._props.activity);
     }
 
     this.update();
@@ -771,9 +772,9 @@ export class BaseNode extends BaseObj {
     this.logger.trace("update records");
 
     // Initialize selected records.
-    if (this.doc.records != null) {
+    if (this._props.records != null) {
       // Load record from stored nodes.
-      const recordIds = this.doc.records.map(
+      const recordIds = this._props.records.map(
         (recordProps: INodeRecordProps) => recordProps.id
       );
       this.records = [
