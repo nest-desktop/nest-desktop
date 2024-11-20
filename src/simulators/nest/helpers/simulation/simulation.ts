@@ -65,8 +65,7 @@ export class NESTSimulation extends BaseSimulation {
 
   /**
    * Generate seed.
-   *
-   * Generate simulation code.
+   * @remarks It generates simulation code.
    */
   generateSeed(): void {
     this.logger.trace("generate seed");
@@ -79,9 +78,7 @@ export class NESTSimulation extends BaseSimulation {
 
   /**
    * Run simulation.
-   *
-   * @remarks
-   * It runs the simulation with or without Insite.
+   * @remarks It runs the simulation with or without Insite.
    */
   override async run(): Promise<AxiosResponse<any, { data: any }> | void> {
     this.logger.trace("run simulation");
@@ -93,9 +90,7 @@ export class NESTSimulation extends BaseSimulation {
 
   /**
    * Run simulation.
-   *
-   * @remarks
-   * After the simulation it updates the activities and commits the network.
+   * @remarks After the simulation it updates the activities and commits the network.
    */
   async runSimulation(): Promise<AxiosResponse<any, { data: any }>> {
     this.logger.trace("run simulation");
@@ -138,9 +133,7 @@ export class NESTSimulation extends BaseSimulation {
 
   /**
    * Run simulation with recording backend Insite.
-   *
-   * @remarks
-   * During the simulation it gets and updates activities.
+   * @remarks During the simulation it gets and updates activities.
    */
   private async runWithInsite(): Promise<AxiosResponse<
     any,

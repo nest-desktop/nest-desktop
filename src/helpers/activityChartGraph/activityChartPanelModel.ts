@@ -222,7 +222,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Add data of this activity graph panel.
-   * @param activity
+   * @param activity activity object
    *
    * @remarks
    * It requires activity data.
@@ -250,9 +250,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Observer for activity chart panel model changes.
-   *
-   * @remarks
-   * It emits activity chart graph changes.
+   * @remarks It emits activity chart graph changes.
    */
   changes(): void {
     this.update();
@@ -269,7 +267,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Get activity from the project.
-   * @param idx
+   * @param idx index of activity
    * @returns activity object
    */
   getActivity(idx: number): Activity {
@@ -388,9 +386,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update panel model.
-   *
-   * @remarks
-   * It requires activity data.
+   * @remarks It requires activity data.
    */
   update(): void {
     this.logger.trace("update");
@@ -524,10 +520,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update layout label.
-   * @param records
-   *
-   * @remarks
-   * It is a replacement for abstract component.
+   * @param records list of node records
+   * @remarks It is a replacement for abstract component.
    */
   updateLayoutLabel(records?: NodeRecord[]): void {
     records;
@@ -535,9 +529,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update time of the panel model.
-   *
-   * @remarks
-   * It needs activity data.
+   * @remarks It needs activity data.
    */
   updateTime(): void {
     this._state.time.start = 0;

@@ -208,7 +208,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Add connection parameter.
-   * @param paramProps
+   * @param paramProps connection parameter props
    */
   addParameter(paramProps: IConnectionParamProps): void {
     this._params[paramProps.id] = new ConnectionParameter(this, paramProps);
@@ -216,23 +216,23 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Add connection parameters.
-   * @param paramProps
+   * @param paramsProps list of connection parameter props
    */
-  addParameters(paramProps: IConnectionParamProps[] = []): void {
+  addParameters(paramsProps: IConnectionParamProps[] = []): void {
     this.logger.trace("init parameter");
 
     this._paramsVisible = [];
     this._params = {};
     const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
     ruleConfig.params.forEach((param: IConnectionParamProps) => {
-      if (paramProps != null) {
-        const p: IConnectionParamProps | undefined = paramProps.find(
-          (p: IConnectionParamProps) => p.id === param.id
+      if (paramsProps != null) {
+        const paramProps: IConnectionParamProps | undefined = paramsProps.find(
+          (paramProps: IConnectionParamProps) => paramProps.id === param.id
         );
-        if (p != null) {
-          param.value = p.value;
-          if (p.type != null) {
-            param.type = p.type;
+        if (paramProps != null) {
+          param.value = paramProps.value;
+          if (paramProps.type != null) {
+            param.type = paramProps.type;
           }
         }
         if (param && param.visible !== false) {
@@ -245,9 +245,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Observer for connection changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   changes(): void {
     this.updateHash();
@@ -295,9 +293,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Reverse source and target indices.
-   *
-   * @remarks
-   * It emits connection changes.
+   * @remarks It emits connection changes.
    */
   reverse(): void {
     this.logger.trace("reverse");
@@ -315,9 +311,7 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Set defaults.
-   *
-   * @remarks
-   * It emits connection changes.
+   * @remarks It emits connection changes.
    */
   reset(): void {
     this.logger.trace("reset");

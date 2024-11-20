@@ -194,9 +194,7 @@ export class BaseSimulationCode extends BaseObj {
 
   /**
    * Initialize simulation code component.
-   *
-   * @remarks
-   * It generates simulation code.
+   * @remarks It generates simulation code.
    */
   init(): void {
     this.logger.trace("init");

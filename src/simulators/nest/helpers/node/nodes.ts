@@ -102,9 +102,7 @@ export class NESTNodes extends BaseNodes {
 
   /**
    * Update records color of recorders.
-   *
-   * @remarks
-   * It updates colors in activity chart graph and in activity animation graph.
+   * @remarks It updates colors in activity chart graph and in activity animation graph.
    */
   override updateRecordsColor(): void {
     this.logger.trace("update records color");

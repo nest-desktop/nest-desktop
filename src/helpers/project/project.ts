@@ -191,10 +191,7 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Generate codes
-   *
-   * @remarks
-   * It generates simulation code.
+   * Generate simulation code.
    */
   generateCodes(): void {
     this._simulation.code.generate();
@@ -316,9 +313,7 @@ export class BaseProject extends BaseObj {
 
   /**
    * Initialize model store.
-   *
-   * @remarks
-   * It will be overridden by simulator components.
+   * @remarks It will be overridden by simulator components.
    */
   initModelStore(): void {
     this._modelDBStore = useModelDBStore();

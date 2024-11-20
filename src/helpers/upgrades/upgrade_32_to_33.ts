@@ -12,9 +12,7 @@ const activityChartPanelModels: Record<string, string> = {
 };
 
 export function upgradeProject_32_to_33(projectProps: any): any {
-  if (!validateVersion(projectProps.version)) {
-    return projectProps;
-  }
+  if (!validateVersion(projectProps.version)) return projectProps;
 
   if (
     projectProps.activityGraph &&

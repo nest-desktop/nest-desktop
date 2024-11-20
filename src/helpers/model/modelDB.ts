@@ -46,7 +46,7 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Delete a model in the database.
    * @param model model object
-   * @returns
+   * @returns Promise of model props
    */
 
   async deleteModel(model: TModel): Promise<TModelProps> {
@@ -58,7 +58,7 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Delete multiple models.
    * @param models model objects
-   * @returns
+   * @returns Promise of model docs
    */
   async deleteModels(models: (TModel | TModelProps)[]): Promise<IDoc[]> {
     this.logger.trace("delete models");
@@ -73,7 +73,7 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Import model object to the database.
    * @param model model object
-   * @returns
+   * @returns Promise of model props
    */
   async importModel(model: TModel): Promise<TModelProps | void> {
     this.logger.trace("import model:", model.id);
@@ -84,7 +84,7 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Update a model in the database.
    * @param model model object
-   * @returns
+   * @returns Promise of model props
    */
   async updateModel(model: TModel): Promise<TModelProps | void> {
     if (!model.docId) return;

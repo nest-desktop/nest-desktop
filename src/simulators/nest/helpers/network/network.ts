@@ -178,7 +178,6 @@ export class NESTNetwork extends BaseNetwork {
 
   /**
    * Update network component.
-   *
    * @param network network props
    */
   override update(networkProps: INESTNetworkProps): void {

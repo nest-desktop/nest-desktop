@@ -221,9 +221,8 @@ export class Activity extends BaseObj {
 
   /**
    * Initialize activity.
-   * @param activityprops - activity props
-   *
-   * Overwrites events.
+   * @param activityProps activity props
+   * @remarks Overwrites events.
    */
   init(activityProps: IActivityProps = {}): void {
     this.logger.trace("init");
@@ -271,8 +270,8 @@ export class Activity extends BaseObj {
 
   /**
    * Update activity.
-   *
-   * Extends events.
+   * @param activityProps activity props
+   * @remarks Extends events.
    */
   update(activityProps: IActivityProps): void {
     this.logger.trace("update");

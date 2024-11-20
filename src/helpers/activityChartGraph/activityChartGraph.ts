@@ -388,7 +388,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Create new Plot of the DOM reference.
-   * @param ref
+   * @param ref reference for plotting
    */
   newPlot(ref: PlotlyBasic.Root): void {
     this.logger.trace("new plot");
@@ -510,9 +510,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Updates chart graph with activities.
-   *
-   * @remarks
-   * It required network activities.
+   * @remarks It required network activities.
    */
   update(): void {
     if (!this._state.ref) return;
@@ -559,7 +557,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Update the layout of the chart graph from each panel.
-   * @param panel
+   * @param panel activity chart panel
    */
   updateLayoutPanel(panel: ActivityChartPanel): void {
     panel.layout.shapes.forEach((shape) => {
@@ -598,9 +596,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Update color of records.
-   *
-   * @remarks
-   * It renders new updates in activity plots.
+   * @remarks It renders new updates in activity plots.
    */
   updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) =>

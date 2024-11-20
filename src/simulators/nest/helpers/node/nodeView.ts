@@ -81,11 +81,8 @@ export class NESTNodeView extends NodeView {
 
   /**
    * Set all synaptic weights.
-   *
-   * @remarks
-   * It emits node changes.
-   *
-   * @param term - inhibitory (negative) or excitatory (positive)
+   * @param term inhibitory (negative) or excitatory (positive)
+   * @remarks It emits node changes.
    */
   set synWeights(value: string) {
     this.state.synWeights = value;

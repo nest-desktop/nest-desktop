@@ -67,8 +67,7 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   /**
-   * Check if synapse parameter can be spatial
-   * when the connection is spatial.
+   * Check if synapse parameter can be spatial when the connection is spatial.
    */
   override get isSpatial(): boolean {
     return this.connection.isBothSpatial;
@@ -87,12 +86,8 @@ export class NESTSynapse extends BaseSynapse {
 
   /**
    * Set model.
-   *
-   * @remarks
-   * It initializes parameters and activity components.
-   * It triggers node changes.
-   *
-   * @param model - synapse model
+   * @param model synapse model
+   * @remarks It initializes parameters and activity components. It triggers node changes.
    */
   set model(model: NESTModel) {
     this._modelId = model.id;
@@ -110,10 +105,7 @@ export class NESTSynapse extends BaseSynapse {
 
   /**
    * Set model ID.
-   *
-   * @remarks
-   * It initializes parameters.
-   *
+   * @remarks It initializes parameters.
    * @param value - ID of the model
    */
   set modelId(value: string) {
@@ -210,9 +202,7 @@ export class NESTSynapse extends BaseSynapse {
 
   /**
    * Observer for model changes.
-   *
-   * @remarks
-   * It emits synapse changes.
+   * @remarks It emits synapse changes.
    */
   modelChanges(): void {
     this.initParameters();

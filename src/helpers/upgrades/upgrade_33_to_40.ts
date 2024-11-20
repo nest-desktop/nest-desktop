@@ -29,8 +29,22 @@ function upgradeParams(props: any): void {
 }
 
 export function upgradeProject_33_to_40(projectProps: any): any {
-  if (!validateVersion(projectProps.version)) {
-    return projectProps;
+  if (!validateVersion(projectProps.version)) return projectProps;
+
+  if (projectProps.activityGraph) {
+    projectProps.activityGraph.color = "record";
+    projectProps.activityGraph.panels.forEach((panelProps: any) => {
+      if (!panelProps.model.records) return;
+
+      panelProps.model.records = panelProps.model.records.map(
+        (recordProps: any) => {
+          const groupId = recordProps.groupId;
+          const groupIdSplitted = groupId.split(".");
+          groupIdSplitted.reverse();
+          return groupIdSplitted.join(".");
+        }
+      );
+    });
   }
 
   projectProps.network.nodes.forEach((nodeProps: any) =>

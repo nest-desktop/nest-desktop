@@ -34,7 +34,6 @@ export class NetworkRevision extends BaseObj {
 
   /**
    * Load network from the history list.
-   *
    * @remarks It generates code.
    */
   load(): INetworkRevisionProps {

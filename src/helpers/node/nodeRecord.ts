@@ -148,7 +148,7 @@ export class NodeRecord extends BaseObj {
 
   /**
    * Get color.
-   * @param idx number
+   * @param idx index of color cycle
    * @returns node color name
    */
   getColor(idx: number): string {
@@ -196,9 +196,7 @@ export class NodeRecord extends BaseObj {
 
   /**
    * Update state of node record.
-   *
-   * @remarks:
-   * It requires network activity.
+   * @remarks It requires network activity.
    */
   updateColorMap(): void {
     if (!this.hasEvent || !this.hasValues) return;

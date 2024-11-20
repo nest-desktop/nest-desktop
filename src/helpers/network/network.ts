@@ -196,7 +196,7 @@ export class BaseNetwork extends BaseObj {
   /**
    * Create node component by user interaction.
    * @param model model name of default models
-   * @param view
+   * @param view node view props
    */
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
@@ -213,9 +213,7 @@ export class BaseNetwork extends BaseObj {
   /**
    * Delete connection component from the network.
    * @param connection connection object
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   deleteConnection(connection: TConnection): void {
     this.logger.trace("delete connection");
@@ -229,10 +227,8 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Delete node component from the network.
-   * @param node
-   *
-   * @remarks
-   * It emits network changes.
+   * @param node node or node group object
+   * @remarks It emits network changes.
    */
   deleteNode(node: NodeGroup | TNode): void {
     this.logger.trace("delete node");
@@ -261,7 +257,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Get node color.
-   * @param idx number
+   * @param idx index of color cycle
    * @returns node color name
    */
   getNodeColor(idx: number): string {
@@ -296,7 +292,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Update network component.
-   * @param networkProps - network props
+   * @param networkProps network props
    */
   update(networkProps: INetworkProps): void {
     this.logger.trace("update");
