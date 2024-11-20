@@ -158,6 +158,14 @@
             </tr>
           </template> -->
 
+      <!-- <template #item.actions>
+        <v-btn
+          icon="mdi:mdi-code-json"
+          size="x-small"
+          variant="text"
+        />
+      </template> -->
+
       <template #item.valid="{ value }">
         <v-icon
           :color="value ? 'success' : 'error'"
@@ -313,6 +321,7 @@ const headers = [
   { title: "Created at", key: "props.createdAt" },
   { title: "Version", key: "props.version" },
   { title: "Valid", key: "valid" },
+  // { title: "Actions", key: "actions" },
 ];
 
 const githubAPI = (group?: string) =>

@@ -1,9 +1,9 @@
 // nodeParameter.ts
 
-import { TNodeParameterParent } from '@/types';
+import { TNodeParameterParent } from "@/types";
 
-import { BaseParameter, IParamProps } from '../common/parameter';
-import { ModelParameter } from '../model/modelParameter';
+import { BaseParameter, IParamProps } from "../common/parameter";
+import { ModelParameter } from "../model/modelParameter";
 
 export interface INodeParamProps extends IParamProps {}
 
@@ -37,9 +37,13 @@ export class NodeParameter extends BaseParameter {
   override toJSON(): INodeParamProps {
     const paramProps: INodeParamProps = {
       id: this.id,
-      label: this.label,
       value: this.value,
     };
+
+    // Add label if existed.
+    if (this.label) {
+      paramProps.label = this.label;
+    }
 
     // Add value factors if existed.
     if (this.factors.length > 0) {

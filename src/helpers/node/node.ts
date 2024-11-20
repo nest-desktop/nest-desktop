@@ -48,7 +48,7 @@ export class BaseNode extends BaseObj {
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
+    super({ config: { name: "Node" }, logger: { settings: { minLevel: 1 } } });
 
     this._nodes = nodes;
     this._modelId = nodeProps.model || "";
@@ -350,6 +350,7 @@ export class BaseNode extends BaseObj {
   /**
    * Add annotation to the list.
    * @param text string
+   * @param emitChanges boolean
    */
   addAnnotation(text: string, emitChanges: boolean = true): void {
     if (this._annotations.indexOf(text) !== -1) return;
@@ -375,7 +376,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Add parameters to the node.
-   * @param paramsProps - list of parameter props
+   * @param paramsProps list of parameter props
    */
   addParameters(paramsProps?: INodeParamProps[]): void {
     this.logger.trace("add parameters");
@@ -412,9 +413,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Observer for node changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   changes(): void {
     this.logger.trace("changes");
@@ -475,9 +474,10 @@ export class BaseNode extends BaseObj {
 
   /**
    * Get model.
+   * @param modelId model ID
    */
   getModel(modelId: string): TModel | undefined {
-    this.logger.trace("get model:", modelId);
+    // this.logger.trace("get model:", modelId);
 
     return this.modelDBStore.findModel(modelId);
   }
@@ -556,9 +556,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Observer for model changes.
-   *
-   * @remarks
-   * It emits node changes.
+   * @remarks It emits node changes.
    */
   modelChanges(emitChanges: boolean = true): void {
     this.logger.trace("model change");
@@ -580,9 +578,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Delete node.
-   *
-   * @remarks
-   * It removes node component of the network.
+   * @remarks It removes node component of the network.
    */
   remove(): void {
     this.network.deleteNode(this);
@@ -620,9 +616,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Reset value in parameter components.
-   *
-   * @remarks
-   * It emits node changes.
+   * @remarks It emits node changes.
    */
   resetParams(): void {
     this.logger.trace("reset parameters");
@@ -646,6 +640,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Sets all params to visible.
+   * @param emitChanges option to emit changes.
    */
   showAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = Object.keys(this._params);
@@ -764,9 +759,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Update records.
-   *
-   * @remarks
-   * It should be called after connections are created.
+   * @remarks It should be called after connections are created.
    */
   updateRecords(): void {
     this.logger.trace("update records");

@@ -75,7 +75,7 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   get isStatic(): boolean {
-    return this.model.id === "static_synapse";
+    return this.modelId === "static_synapse";
   }
 
   get model(): NESTModel {

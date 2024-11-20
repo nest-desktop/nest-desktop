@@ -83,15 +83,41 @@
       <template
         v-else-if="
           appStore.state.devMode &&
-          projectViewStore.state.views.controller === 'raw'
+          projectViewStore.state.views.controller === 'data'
         "
       >
-        <codemirror
-          :extensions="extensions"
-          :model-value="projectJSON"
-          disabled
-          style="font-size: 0.75rem; width: 100%"
-        />
+        <v-tabs density="compact" v-model="tab">
+          <v-tab value="doc">DB doc</v-tab>
+          <v-tab value="json">json</v-tab>
+        </v-tabs>
+
+        <v-window v-model="tab">
+          <v-window-item
+            reverse-transition="no-transition"
+            transition="no-transition"
+            value="doc"
+          >
+          <codemirror
+            :extensions="extensions"
+            :model-value="projectDoc"
+            disabled
+            style="font-size: 0.75rem; width: 100%"
+            />
+          </v-window-item>
+
+          <v-window-item
+            reverse-transition="no-transition"
+            transition="no-transition"
+            value="json"
+          >
+          <codemirror
+            :extensions="extensions"
+            :model-value="projectJSON"
+            disabled
+            style="font-size: 0.75rem; width: 100%"
+            />
+          </v-window-item>
+        </v-window>
       </template>
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
@@ -142,7 +168,7 @@
 <script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
@@ -171,9 +197,16 @@ const projectViewStore = computed(
   () => appStore.currentSimulator.views.project
 );
 
+
+const projectDoc = computed(() =>
+  JSON.stringify(project.value.doc, null, 2)
+);
+
 const projectJSON = computed(() =>
   JSON.stringify(project.value.toJSON(), null, 2)
 );
+
+const tab = ref("doc");
 
 interface IControllerItem {
   id: string;
@@ -201,12 +234,12 @@ const controllerItems: IControllerItem[] = [
     title: "Edit kernel",
   },
   {
-    id: "raw",
+    id: "data",
     icon: {
       icon: "mdi:mdi-code-json",
     },
     show: "dev",
-    title: "View raw data",
+    title: "View data",
   },
   { id: "code", icon: { icon: "mdi:mdi-xml" }, title: "Edit code" },
   {

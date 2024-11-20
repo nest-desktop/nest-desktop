@@ -151,6 +151,7 @@ export class NESTNetwork extends BaseNetwork {
 
   /**
    * Initialize network.
+   * @remarks Do not use it in the constructor.
    */
   override init(): void {
     this.logger.trace("init");
@@ -165,7 +166,7 @@ export class NESTNetwork extends BaseNetwork {
 
   /**
    * Serialize for JSON.
-   * @return network object
+   * @return network props
    */
   override toJSON(): INESTNetworkProps {
     return {

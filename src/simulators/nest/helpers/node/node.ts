@@ -258,7 +258,8 @@ export class NESTNode extends BaseNode {
    * Get NEST or copied NEST model.
    */
   override getModel(modelId: string): NESTModel {
-    this.logger.trace("get model:", modelId);
+    // this.logger.trace("get model:", modelId);
+
     return this.modelDBStore.findModel(modelId) as NESTModel;
   }
 
@@ -476,11 +477,11 @@ export class NESTNode extends BaseNode {
         }
       }
     } else if (this.modelId === "weight_recorder") {
-      recordables.push(
-        this.model.config?.localStorage.recordables.find(
-          (recordProps: INodeRecordProps) => recordProps.id === "weights"
-        )
+      const recordable = this.model.config?.localStorage.states.find(
+        (recordProps: INodeRecordProps) => recordProps.id === "weights"
       );
+
+      recordables.push(recordable);
     }
 
     // if (recordables.length != this.recordables.length) {

@@ -20,6 +20,7 @@ import { BaseNetwork, INetworkProps } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { ProjectState } from "./projectState";
+import { upgradeProject } from "../upgrades/upgrades";
 
 export interface IProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -48,6 +49,9 @@ export class BaseProject extends BaseObj {
 
   constructor(projectProps: IProjectProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
+
+    // Upgrade project props.
+    projectProps = upgradeProject(projectProps);
 
     // Database instance.
     this._doc = projectProps || {};
