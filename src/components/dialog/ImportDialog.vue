@@ -227,6 +227,9 @@ interface IGithubTree {
   url: string;
 }
 
+const emit = defineEmits(["closeDialog"]);
+const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
+
 const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
 );
@@ -277,12 +280,12 @@ const state = reactive<{
 const groups = [
   {
     icon: "network:network",
-    title: "Import projects",
+    title: "project repo",
     value: "projects",
   },
   {
     icon: "nest:logo",
-    title: "Import models",
+    title: "model repo",
     value: "models",
   },
 ];
@@ -420,9 +423,6 @@ const addProps = (
     });
   });
 };
-
-const emit = defineEmits(["closeDialog"]);
-const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
 /**
  * Get model from github.
