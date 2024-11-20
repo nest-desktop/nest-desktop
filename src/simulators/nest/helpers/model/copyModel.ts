@@ -50,7 +50,7 @@ export class NESTCopyModel extends BaseObj {
     copyModels: NESTCopyModels,
     modelProps: INESTCopyModelProps = { existing: "", new: "" }
   ) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._copyModels = copyModels;
     this._existingModelId = modelProps.existing;
@@ -95,22 +95,20 @@ export class NESTCopyModel extends BaseObj {
   }
 
   /**
-   * This method sets the model ID to <ID of parent model> + '_copied' to avoid
-   * naming collisions.
+   * This method sets the model ID to <ID of parent model> + '_copied' to avoid naming collisions.
    * @param value New model ID
    */
   set existingModelId(value: string) {
     const renameNew = this.newModelId.includes(this._existingModelId);
+    if (renameNew) this.newModelId = value + "_copied" + (this.idx + 1);
     this._existingModelId = value;
-    if (renameNew) {
-      this.newModelId = value + "_copied" + (this.idx + 1);
-    }
-    this.initParameters();
+
+    this.addParameters();
     this.changes();
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0;
+    return this._paramsVisible.length > 0 && "weight_recorder" in this.params;
   }
 
   get copyModels(): NESTCopyModels {
@@ -381,18 +379,15 @@ export class NESTCopyModel extends BaseObj {
       }
 
       if (weightRecorder) {
-        this.addParameter(
-          {
-            id: "weight_recorder",
-            items: this.network.nodes.weightRecorders.map(
-              (recorder: NESTNode) => recorder.view.label
-            ),
-            component: "select",
-            label: "weight recorder",
-            value: weightRecorder,
-          },
-          true
-        );
+        this.addParameter({
+          id: "weight_recorder",
+          items: this.network.nodes.weightRecorders.map(
+            (recorder: NESTNode) => recorder.view.label
+          ),
+          component: "select",
+          label: "weight recorder",
+          value: weightRecorder,
+        });
       }
     }
   }
@@ -443,9 +438,7 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Observer for model changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   changes(): void {
     this.logger.trace("changes");
@@ -455,9 +448,7 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Delete model.
-   *
-   * @remarks
-   * It removes model component of the network.
+   * @remarks It removes model component of the network.
    */
   remove(): void {
     this.network.nodes.nodeItems
@@ -496,7 +487,7 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return model object
+   * @return model props
    */
   toJSON(): INESTCopyModelProps {
     return {
