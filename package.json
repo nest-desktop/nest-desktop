@@ -3,7 +3,7 @@
   "desktopName": "io.github.nest_desktop.nest-desktop",
   "version": "4.0.2",
   "private": false,
-  "description": "NEST Desktop is a web-based GUI for NEST Simulator and other simulators of spiking networks.",
+  "description": "NEST Desktop is a web-based GUI for the simulation of spiking neuronal networks.",
   "author": {
     "name": "Sebastian Spreizer",
     "email": "spreizer@web.de"
@@ -31,7 +31,7 @@
     "@codemirror/lang-yaml": "~6.1",
     "@codemirror/state": "~6.4",
     "@codemirror/theme-one-dark": "~6.1",
-    "@codemirror/view": "~6.34",
+    "@codemirror/view": "~6.35",
     "@mdi/font": "~7.4",
     "axios": "~1.7",
     "codemirror": "~6.0",
