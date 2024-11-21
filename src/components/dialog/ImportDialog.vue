@@ -522,7 +522,7 @@ const fetchFromOldDatabase = () => {
   const projectDB = new BaseProjectDB("PROJECT_STORE");
 
   modelDB
-    .list()
+    .list("updatedAt", true)
     .then((modelsProps: TModelProps[]) =>
       modelsProps.forEach((modelProps: TModelProps) => {
         delete modelProps._id;
@@ -532,7 +532,7 @@ const fetchFromOldDatabase = () => {
     );
 
   projectDB
-    .list()
+    .list("updatedAt", true)
     .then((projectsProps: TProjectProps[]) =>
       projectsProps.forEach((projectProps: TProjectProps) => {
         delete projectProps._id;
