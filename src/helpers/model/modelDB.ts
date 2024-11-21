@@ -12,7 +12,7 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Create a model in the database.
    * @param model model object
-   * @returns
+   * @returns Promise of model props
    */
   async createModel(model: TModel): Promise<TModelProps | void> {
     this.logger.trace("create model", model.id);
