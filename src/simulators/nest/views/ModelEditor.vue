@@ -96,7 +96,7 @@ const updateSpecs = () => {
       switch (response.status) {
         case 200:
           model.value.updateParameters(response.data.params);
-          model.value.updateRecordables(response.data.states);
+          model.value.updateStates(response.data.states);
           modelStore.saveModel();
           notifySuccess("Updated specifications from backend successfully.");
           break;

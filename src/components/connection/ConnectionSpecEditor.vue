@@ -33,7 +33,7 @@
             :value="param.id"
             density="compact"
             hide-details
-            v-for="(param, index) in Object.values(connection.params)"
+            v-for="(param, index) in connection.paramsAll"
             v-model="connection.paramsVisible"
           >
             <template #append>

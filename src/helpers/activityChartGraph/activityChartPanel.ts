@@ -45,11 +45,10 @@ interface IActivityChartPanelLayoutProps {
 }
 
 interface IActivityChartPanelState {
-  initialized: boolean;
   visible: boolean;
 }
 
-export const plotType = "scattergl"; // TODO: Production did not found webgl (use "scattergl")
+export const plotType = "scattergl";
 
 export class ActivityChartPanel extends BaseObj {
   // private static readonly _name = 'ActivityGraphPanel';
@@ -59,12 +58,12 @@ export class ActivityChartPanel extends BaseObj {
     shapes: [],
     xaxis: {
       showgrid: true,
-      title: "",
+      title: "x label",
     },
     yaxis: {
       height: 10,
       showgrid: true,
-      title: "",
+      title: "y label",
     },
   };
   private _model: ActivityChartPanelModel;
@@ -81,7 +80,6 @@ export class ActivityChartPanel extends BaseObj {
     this._model = new SpikeTimesRasterPlotModel(this);
 
     this._state = reactive<IActivityChartPanelState>({
-      initialized: false,
       visible: true,
     });
 
@@ -181,13 +179,7 @@ export class ActivityChartPanel extends BaseObj {
       if (model) {
         // @ts-ignore - Property 'component' does not exist on type 'IActivityChartPanelModelProps'.
         this._model = new model.component(this, modelProps);
-        this._state.initialized = true;
       }
-    }
-
-    if (!this._state.initialized) {
-      this._model = new SpikeTimesRasterPlotModel(this, modelProps);
-      this._state.initialized = true;
     }
   }
 

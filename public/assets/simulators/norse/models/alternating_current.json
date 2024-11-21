@@ -65,8 +65,5 @@
       "unit": "ms",
       "value": 1000
     }
-  ],
-  "recordables": [
-    "I"
   ]
 }

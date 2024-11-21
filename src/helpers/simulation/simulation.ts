@@ -167,9 +167,7 @@ export class BaseSimulation extends BaseObj {
 
   /**
    * Run simulation.
-   *
-   * @remarks
-   * After the simulation it updates the activities and commits the network.
+   * @remarks After the simulation it updates the activities and commits the network.
    */
   async run(): Promise<any> {
     this.logger.trace("run simulation");
@@ -177,9 +175,7 @@ export class BaseSimulation extends BaseObj {
 
   /**
    * Start simulation.
-   *
-   * @remarks
-   * It starts the simulation.
+   * @remarks It starts the simulation.
    */
   async start(): Promise<AxiosResponse<any, any> | void> {
     this.logger.trace("start");

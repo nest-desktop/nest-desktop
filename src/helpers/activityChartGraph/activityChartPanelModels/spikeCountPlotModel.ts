@@ -1,14 +1,16 @@
 // spikeCountPlotModel.ts
 
-import { useAppStore } from '@/stores/appStore';
-import { TNode, TParameter } from '@/types';
+import { TNode, TParameter } from "@/types";
 
-import { deviation, max, mean, min, sum } from '../../../utils/array';
-import { SpikeActivity } from '../../activity/spikeActivity';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { ActivityChartPanelModelParameter } from '../activityChartPanelModelParameter';
-import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { deviation, max, mean, min, sum } from "../../../utils/array";
+import { SpikeActivity } from "../../activity/spikeActivity";
+import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(
@@ -122,8 +124,6 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const appStore = useAppStore();
-
     const nodeSizeTotal = sum(
       activity.recorder.nodes.nodeItems.map((node: TNode) => node.size)
     );
@@ -170,29 +170,28 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
       mode: "lines",
       showlegend: false,
-      type: appStore.state.webGL ? "scattergl" : "scatter",
+      type: plotType,
       visible: this.state.visible,
       x,
       y,
     } as IActivityChartPanelModelData);
 
     if (horizontalLine) {
-      this.data.push({
-        activityIdx: activity.idx,
-        hoverinfo: "none",
-        legendgroup: "spikes" + activity.idx,
+      const y = 0.63;
+      this.panel.layout.shapes.push({
         line: {
           color: "red",
           dash: "dot",
           width: 1,
         },
-        mode: "lines",
-        showlegend: false,
-        type: appStore.state.webGL ? "scattergl" : "scatter",
-        visible: this.state.visible,
-        x: [start, end],
-        y: [0.63, 0.63],
-      } as IActivityChartPanelModelData);
+        type: "line",
+        x0: 0,
+        x1: 1,
+        xref: "paper",
+        y0: y,
+        y1: y,
+        yref: "y",
+      });
     }
   }
 

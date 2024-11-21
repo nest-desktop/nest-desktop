@@ -158,6 +158,14 @@
             </tr>
           </template> -->
 
+      <!-- <template #item.actions>
+        <v-btn
+          icon="mdi:mdi-code-json"
+          size="x-small"
+          variant="text"
+        />
+      </template> -->
+
       <template #item.valid="{ value }">
         <v-icon
           :color="value ? 'success' : 'error'"
@@ -176,6 +184,17 @@
     </v-data-table-virtual>
 
     <v-card-actions>
+      <v-btn
+        @click="fetchFromOldDatabase()"
+        icon="mdi:mdi-database-arrow-up-outline"
+        size="small"
+        title="fetch from old database"
+        variant="text"
+        v-if="currentSimulator === 'nest'"
+      />
+
+      <v-spacer />
+
       <v-btn
         :disabled="state.selected.length === 0"
         @click="
@@ -201,12 +220,13 @@
 import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
+import { BaseModelDB } from "@/helpers/model/modelDB";
+import { BaseProjectDB } from "@/helpers/project/projectDB";
 import { INESTCopyModelProps } from "@/simulators/nest/helpers/model/copyModel";
-import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
-
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
 import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
+import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -226,6 +246,11 @@ interface IGithubTree {
   size: number;
   url: string;
 }
+
+const emit = defineEmits(["closeDialog"]);
+const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
+
+const currentSimulator = computed(() => appStore.state.simulator);
 
 const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
@@ -277,12 +302,12 @@ const state = reactive<{
 const groups = [
   {
     icon: "network:network",
-    title: "Import projects",
+    title: "project repo",
     value: "projects",
   },
   {
     icon: "nest:logo",
-    title: "Import models",
+    title: "model repo",
     value: "models",
   },
 ];
@@ -310,6 +335,7 @@ const headers = [
   { title: "Created at", key: "props.createdAt" },
   { title: "Version", key: "props.version" },
   { title: "Valid", key: "valid" },
+  // { title: "Actions", key: "actions" },
 ];
 
 const githubAPI = (group?: string) =>
@@ -421,9 +447,6 @@ const addProps = (
   });
 };
 
-const emit = defineEmits(["closeDialog"]);
-const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
-
 /**
  * Get model from github.
  */
@@ -490,6 +513,34 @@ const getTreesFromGithub = () => {
       );
   });
 };
+
+/**
+ * Fetch props from old database.
+ */
+const fetchFromOldDatabase = () => {
+  const modelDB = new BaseModelDB("MODEL_STORE");
+  const projectDB = new BaseProjectDB("PROJECT_STORE");
+
+  modelDB
+    .list("updatedAt", true)
+    .then((modelsProps: TModelProps[]) =>
+      modelsProps.forEach((modelProps: TModelProps) => {
+        delete modelProps._id;
+        delete modelProps._rev;
+        addProps(modelProps);
+      })
+    );
+
+  projectDB
+    .list("updatedAt", true)
+    .then((projectsProps: TProjectProps[]) =>
+      projectsProps.forEach((projectProps: TProjectProps) => {
+        delete projectProps._id;
+        delete projectProps._rev;
+        addProps(projectProps);
+      })
+    );
+}
 
 /**
  * Fetch props from URL.

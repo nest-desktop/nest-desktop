@@ -29,40 +29,25 @@ export default defineConfig((configEnv: { mode: string }) => ({
             extType = "fonts";
           }
           if (name.startsWith("vendors_")) {
-            return `assets/${extType}/vendors/${name.slice(8)}.[hash][extname]`;
+            return `assets/${extType}/vendors/${name.slice(8)}-[hash][extname]`;
           }
-          return `assets/${extType}/[name].[hash][extname]`;
+          return `assets/${extType}/[name]-[hash][extname]`;
         },
         chunkFileNames: (assetInfo: { facadeModuleId: string; name: string }) => {
           // https://github.com/vitejs/vite-plugin-vue/issues/19
           const name = assetInfo.name;
-          // assetInfo.name.endsWith(".vue_vue_type_style_index_0_lang") ||
-          // assetInfo.name.endsWith(".vue_vue_type_script_setup_true_lang")
-          //   ? assetInfo.name.split(".")[0]
-          //   : assetInfo.name;
-
-          // if (assetInfo.facadeModuleId && assetInfo.facadeModuleId.includes("simulators")) {
-          //   const path = assetInfo.facadeModuleId.split("/");
-          //   return `assets/js/simulators/${path[path.indexOf("simulators") + 1]}/${name}-[hash].js`;
-          // }
           if (name.startsWith("vendors_")) {
-            return `assets/js/vendors/${name.slice(8)}.[hash].js`;
+            return `assets/js/vendors/${name.slice(8)}-[hash].js`;
           }
-          return `assets/js/${name}.[hash].js`;
+          return `assets/js/${name}-[hash].js`;
         },
-        entryFileNames: "assets/js/[name].[hash].js",
+        entryFileNames: "assets/js/[name]-[hash].js",
         manualChunks: (id: string): string => {
           // https://github.com/vitejs/vite/discussions/9440#discussioncomment-10131471
-          // if (id.includes("/vue/") || id.includes("/@vue/")) {
-          //   return "@vue";
-          // } else
-          if (id.includes("node_modules")) {
-            const path = id.toString().split("/");
+          const path = id.toString().split("/");
+          if (path.includes("node_modules")) {
             const vendor = path[path.indexOf("node_modules") + 1];
             return "vendors_" + (vendor.startsWith("d3") ? "@d3" : vendor);
-            // } else if (id.includes("simulators")) {
-            //   const path = id.toString().split("/");
-            //   return path[path.indexOf("simulators") + 1];
           }
           return "main";
         },
@@ -131,7 +116,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
-        maximumFileSizeToCacheInBytes: 4500000,
+        // maximumFileSizeToCacheInBytes: 2000000,
         // Don't fallback on document based (e.g. `/some-page`) requests
         // Even though this says `null` by default, I had to set this specifically to `null` to make it work
         navigateFallback: null,

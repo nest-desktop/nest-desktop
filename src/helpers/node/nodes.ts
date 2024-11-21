@@ -254,6 +254,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Initialize nodes.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");
@@ -264,7 +265,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Remove node component from the network.
-   *
+   * @param node node object
    */
   remove(node: NodeGroup | TNode): void {
     this.logger.trace("remove node");
@@ -328,7 +329,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return network props
+   * @return list of node props
    */
   toJSON(): (INodeGroupProps | INodeProps)[] {
     return this.nodes.map((node: NodeGroup | TNode) => node.toJSON());
@@ -433,9 +434,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Update records of recorders.
-   *
-   * @remarks
-   * It should be called after network created.
+   * @remarks It should be called after network created.
    */
   updateRecords(): void {
     this.logger.trace("update records");
@@ -447,9 +446,7 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Update records color of recorders.
-   *
-   * @remarks
-   * It updates colors in activity chart graph.
+   * @remarks It updates colors in activity chart graph.
    */
   updateRecordsColor(): void {
     this.logger.trace("update records color");

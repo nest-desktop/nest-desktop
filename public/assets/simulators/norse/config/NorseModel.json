@@ -1,12 +1,22 @@
 {
-  "recordables": [
+  "states": [   
+    {
+      "id": "a",
+      "label": "membrane potential adaptation factor"
+    },
     {
       "id": "i",
-      "label": "input current"
+      "label": "synaptic input current",
+      "unit": "pA"
     },
     {
       "id": "v",
-      "label": "membrane voltage"
+      "label": "membrane potential",
+      "unit": "mV"
+    },
+    {
+      "id": "z",
+      "label": "recurrent spikes"
     }
   ]
 }

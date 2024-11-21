@@ -167,9 +167,7 @@ export class NodeGraph extends BaseObj {
 
   /**
    * Update nodes in network graph.
-   *
-   * @remarks
-   * This function should be called when nodes are changed.
+   * @remarks This function should be called when nodes are changed.
    */
   update(): void {
     this.logger.silly("update");

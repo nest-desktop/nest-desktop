@@ -106,9 +106,5 @@
       "value": 2
     }
   ],
-  "recordables": [
-    "I_syn_ex",
-    "I_syn_in",
-    "V_m"
-  ]
+  "states": ["I_syn_ex", "I_syn_in", "V_m"]
 }

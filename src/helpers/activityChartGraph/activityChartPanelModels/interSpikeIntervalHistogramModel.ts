@@ -1,11 +1,14 @@
 // interSpikeIntervalHistogramModel.ts
 
-import { max } from '../../../utils/array';
-import { SpikeActivity } from '../../activity/spikeActivity';
-import { currentBackgroundColor } from '../../common/theme';
-import { ActivityChartPanel } from '../activityChartPanel';
-import { IActivityChartPanelModelData } from '../activityChartPanelModel';
-import { ISpikeTimesPanelModelProps, SpikeTimesPanelModel } from './spikeTimesPanelModel';
+import { max } from "../../../utils/array";
+import { SpikeActivity } from "../../activity/spikeActivity";
+import { currentBackgroundColor } from "../../common/theme";
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import {
+  ISpikeTimesPanelModelProps,
+  SpikeTimesPanelModel,
+} from "./spikeTimesPanelModel";
 
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
   constructor(

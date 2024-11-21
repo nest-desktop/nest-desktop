@@ -93,7 +93,15 @@
         <table class="py-2">
           <tbody>
             <tr>
-              <td style="width: 48px" />
+              <td style="width: 48px" >
+                <v-btn
+                  @click="unselectAll()"
+                  icon="mdi:mdi-checkbox-blank-outline"
+                  class="ma-0 pa-0"
+                  size="x-small"
+                  variant="text"
+                />
+              </td>
               <td :key="idx" class="px-2" v-for="(header, idx) in headers">
                 <div v-if="header.key === 'id'">Total</div>
                 <div v-else-if="['mean', 'std'].includes(header.key)">
@@ -171,6 +179,11 @@ const colMean = (key: string) => {
 const selected = () => {
   nextTick(() => update());
 };
+
+const unselectAll = () => {
+  activity.value.state.selected = [];
+  activity.value.chartGraph.update()
+}
 
 /**
  * Update stats of analog activity.

@@ -114,7 +114,7 @@
       "value": 0
     }
   ],
-  "recordables": [
+  "states": [
     "spikes",
     "v",
     "gsyn_exc",

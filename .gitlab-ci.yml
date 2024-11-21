@@ -45,7 +45,7 @@ build_app:
 
 deploy_pypi:
   stage: deploy
-  image: python:latest
+  image: python:3.12
   needs:
     - build_app
   rules:
@@ -104,9 +104,9 @@ deploy_docker_ebrains:
 # DEPLOY DOCKER IMAGE ON DOCKER HUB
 #
 
-deploy_docker_hub_nestsim:
+deploy_docker_hub_nest:
   stage: deploy
-  image: ubuntu:22.04
+  image: ubuntu:24.04
   needs:
     - build_app
   rules:
@@ -118,15 +118,15 @@ deploy_docker_hub_nestsim:
     - source .env
     - echo "${DOCKER_HUB_ACCESS_TOKEN}" | docker login -u ${DOCKER_HUB_ACCESS_USER} --password-stdin
   script:
-    - docker build -f docker/Dockerfile -t nestsim/nest-desktop:${DOCKER_TAG} .
+    - docker build -f docker/Dockerfile -t nest/nest-desktop:${DOCKER_TAG} .
     - |-
       if [[ $CI_COMMIT_BRANCH == "main" ]]; then
-        docker tag nestsim/nest-desktop:${DOCKER_TAG} nestsim/nest-desktop:${DOCKER_TAG%.*}
-        docker tag nestsim/nest-desktop:${DOCKER_TAG} nestsim/nest-desktop:latest
+        docker tag nest/nest-desktop:${DOCKER_TAG} nest/nest-desktop:${DOCKER_TAG%.*}
+        docker tag nest/nest-desktop:${DOCKER_TAG} nest/nest-desktop:latest
       else
-        docker tag nestsim/nest-desktop:${DOCKER_TAG} nestsim/nest-desktop:dev
+        docker tag nest/nest-desktop:${DOCKER_TAG} nest/nest-desktop:dev
       fi
-    - docker push nestsim/nest-desktop --all-tags
+    - docker push nest/nest-desktop --all-tags
   after_script:
     - docker logout
   tags:

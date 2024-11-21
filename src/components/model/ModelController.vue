@@ -62,11 +62,11 @@
       />
 
       <v-list>
-        <v-list-subheader>Recordables / States</v-list-subheader>
+        <v-list-subheader>States</v-list-subheader>
         <ParamViewer
           :key="index"
-          :param="(recordable as TModelParameter)"
-          v-for="(recordable, index) in modelStore.model.state.recordables"
+          :param="(state as TModelParameter)"
+          v-for="(state, index) in modelStore.model.states"
         />
       </v-list>
 

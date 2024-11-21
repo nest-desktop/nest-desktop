@@ -109,7 +109,7 @@
                 <v-btn
                   @click.prevent="saveProject(project)"
                   :disabled="!project.state?.changes"
-                  :color="project.state?.changes ? 'red' : 'primary'"
+                  :color="project.state?.changes ? 'orange' : 'primary'"
                   :icon="
                     project.state?.changes
                       ? 'mdi:mdi-content-save-outline'

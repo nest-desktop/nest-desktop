@@ -1,4 +1,4 @@
-appId: com.electron.nest-desktop
+appId: io.github.nest_desktop.nest-desktop
 asar: true
 deb:
   # depends:
@@ -17,18 +17,19 @@ files:
 # extraResources:
 #   from: public/assets
 #   to: assets
-icon: icons/icon.png
+icon: icons/icon-256x256.png
 linux:
   category: Education;Science
   desktop: nest-desktop
   synopsis: NEST Desktop
   target:
     - dir
-      # - AppImage
-      # - deb
-      # - flatpak
-      # - snap
+    # - AppImage
+    # - deb
+    # - flatpak
+    # - snap
+    # - tar.gz
 productName: nest-desktop
 snap:
-  base: core22
+  base: core24
   title: NEST Desktop

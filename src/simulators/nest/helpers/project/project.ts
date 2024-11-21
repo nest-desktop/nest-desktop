@@ -51,9 +51,7 @@ export class NESTProject extends BaseProject {
 
   /**
    * Clone a new project of this current project.
-   *
-   * @remarks
-   * It generates new project id and empties updatedAt variable;
+   * @remarks It generates new project id and empties updatedAt variable;
    */
   override clone(): NESTProject {
     this.logger.trace("clone");

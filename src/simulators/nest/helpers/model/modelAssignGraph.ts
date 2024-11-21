@@ -66,9 +66,7 @@ export class NESTModelAssignGraph {
 
   /**
    * Update connections in network graph.
-   *
-   * @remarks
-   * This function should be called when connections in the network are changed.
+   * @remarks This function should be called when connections in the network are changed.
    */
   update(): void {
     if (!this._networkGraph.selector) return;

@@ -24,7 +24,6 @@ export const useAppStore = defineStore(
       simulatorVisible: string[];
       theme: string;
       themeIcon: string;
-      webGL: boolean;
     }>({
       autoUpdate: false,
       devMode: false,
@@ -38,7 +37,6 @@ export const useAppStore = defineStore(
       simulatorVisible: ["nest"],
       theme: "auto", // auto, light, dark
       themeIcon: "mdi:mdi-system",
-      webGL: true,
     });
 
     const clearLogs = () => {
@@ -139,7 +137,7 @@ export const useAppStore = defineStore(
         storage: localStorage,
       },
       {
-        pick: ["state.devMode", "state.webGL"],
+        pick: ["state.devMode"],
         storage: sessionStorage,
       },
     ],

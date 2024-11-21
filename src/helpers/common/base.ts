@@ -71,7 +71,7 @@ export class BaseObj {
 
   /**
    * Update logger name suffix.
-   * @param text string.
+   * @param text string
    */
   updateLoggerName(text: string): void {
     this._logger.settings.name = `[${truncate(this._uuid)}] ${

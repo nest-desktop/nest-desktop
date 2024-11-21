@@ -1,5 +1,5 @@
 <template>
-  <v-label class="px-1" style="width: 100%" v-if="nodeSpatial.positions">
+  <v-label class="pl-3" style="width: 100%" v-if="nodeSpatial.positions">
     Positions
     <v-spacer />
 
@@ -57,11 +57,17 @@
     >
       <v-icon icon="mdi:mdi-format-text-wrapping-wrap" size="small" />
     </v-chip>
+
+    <v-btn icon size="x-small" variant="text">
+      <v-icon icon="mdi:mdi-pencil" />
+      <NodePositionMenu :nodeSpatial />
+    </v-btn>
   </v-label>
 </template>
 
 <script lang="ts" setup>
 import { NESTNodeSpatial } from "../../helpers/node/nodeSpatial/nodeSpatial";
+import NodePositionMenu from "./NodePositionMenu.vue";
 
 defineProps<{ nodeSpatial: NESTNodeSpatial }>();
 </script>

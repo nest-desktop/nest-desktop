@@ -169,9 +169,7 @@ export class ActivityAnimationLayer {
 
   /**
    * Create grids.
-   *
-   * @remarks
-   * returns a group of GridHelpers
+   * @remarks returns a group of GridHelpers
    */
   createGrids(divisions: number = 2): Group<Object3DEventMap> {
     const grid: Group<Object3DEventMap> = new Group();
@@ -294,9 +292,7 @@ export class ActivityAnimationLayer {
 
   /**
    * Update frames.
-   *
-   * @remarks
-   * It requires activity events.
+   * @remarks It requires activity events.
    */
   updateFrames(): void {
     const events: IEventProps = Object.assign({}, this._activity.events);

@@ -160,6 +160,11 @@ export class BaseNetworkGraph extends BaseObj {
     );
   }
 
+  /**
+   * Open contect menu
+   * @param target position of mouse
+   * @param props Object data
+   */
   openContextMenu(
     target: [number, number],
     props: { connection?: TConnection; node?: TNode; nodeGroup?: NodeGroup }
@@ -201,9 +206,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   /**
    * Update network graph.
-   *
-   * @remarks
-   * This function should be called when the network is changed.
+   * @remarks This function should be called when the network is changed.
    */
   update(): void {
     this.logger.silly("update");

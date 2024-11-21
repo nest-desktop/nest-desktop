@@ -100,7 +100,7 @@ params:
     step: 0.1
     unit: ms
     value: 2
-recordables:
+states:
   - Act_m
   - Act_n
   - I_syn_ex

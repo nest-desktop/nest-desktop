@@ -33,13 +33,25 @@
       <v-list-item
         :key="index"
         :prepend-icon="item.id + ':logo'"
-        :to="'/' + item.id"
         :title="item.title"
+        :to="'/' + item.id"
         :value="item.id"
         v-for="(item, index) in appStore.simulatorItems"
       />
     </v-list>
   </v-menu>
+
+  <v-btn @click="openAboutDialog()" size="x-small" text="about" variant="text" />
+
+  <v-btn
+    append-icon="mdi:mdi-open-in-new"
+    class="mx-1px"
+    href="https://nest-desktop.readthedocs.io"
+    size="x-small"
+    target="_blank"
+    text="help"
+    variant="text"
+  />
 
   <v-menu>
     <template #activator="{ props }">
@@ -47,7 +59,7 @@
         append-icon="mdi:mdi-menu-down"
         class="mx-1px"
         size="x-small"
-        text="settings"
+        text="more"
         v-bind="props"
         variant="text"
       />
@@ -60,27 +72,8 @@
         v-bind="item"
         v-for="(item, index) in settingsItems"
       />
-
-      <v-list-item :to="{ name: 'settings' }">
-        <template #prepend>
-          <v-icon icon="mdi:mdi-cogs" size="small" />
-        </template>
-        <v-list-item-title>Settings</v-list-item-title>
-      </v-list-item>
     </v-list>
   </v-menu>
-
-  <v-btn :to="{ name: 'about' }" size="x-small" text="about" variant="text" />
-
-  <v-btn
-    append-icon="mdi:mdi-open-in-new"
-    class="mx-1px"
-    href="https://nest-desktop.readthedocs.io"
-    size="x-small"
-    target="_blank"
-    text="help"
-    variant="text"
-  />
 
   <v-divider class="mx-1" vertical />
 
@@ -121,31 +114,60 @@
 </template>
 
 <script lang="ts" setup>
-// import { DatabaseService } from "@/helpers/common/database";
+import { createDialog } from "vuetify3-dialog";
+
+import AboutDialog from "../dialog/AboutDialog.vue";
 import BackendStatusIcon from "../iconsets/BackendStatusIcon.vue";
+import SettingsDialog from "../dialog/SettingsDialog.vue";
+import StoresDialog from "../dialog/StoresDialog.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const settingsItems = [
   {
-    prependIcon: "mdi:mdi-cog-refresh-outline",
-    onClick: () => localStorage.clear(),
-    title: "Clear config",
-    value: "clearConfig",
+    prependIcon: "mdi:mdi-cogs",
+    onClick: () => createDialog({
+      customComponent: {
+        component: SettingsDialog,
+        props: false
+      },
+      dialogOptions: {
+        width: "400px",
+      },
+      text: "",
+      title: "",
+    }),
+    title: "Settings",
   },
-  // {
-  //   icon: "mdi:mdi-database-refresh-outline",
-  //   id: "destroyDatabase",
-  //   title: `Destroy ${appStore.currentSimulator.id} database`,
-  //   onClick: () => {
-  //     appStore.currentSimulator.databases.forEach((url) => {
-  //       const db = new DatabaseService(url);
-  //       db.destroy();
-  //     });
-  //   },
-  // },
+  {
+    prependIcon: "mdi:mdi-database",
+    onClick: () => createDialog({
+      customComponent: {
+        component: StoresDialog,
+        props: false
+      },
+      dialogOptions: {
+        width: "400px",
+      },
+      text: "",
+      title: "",
+    }),
+    title: "Stores",
+  }
 ];
+
+const openAboutDialog = () => 
+  createDialog({    
+    customComponent: {component: AboutDialog, props: false},
+    dialogOptions: {
+      scrollable: true,
+      width: "800px",
+      // height: "800px"
+    },
+    title: "", 
+    text: "", 
+})
 </script>
 
 <style lang="scss">

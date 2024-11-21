@@ -64,7 +64,7 @@
 
     <v-divider />
 
-    <v-list density="compact">
+    <v-list class="my-2" density="compact">
       <v-list-subheader>References</v-list-subheader>
       <v-list-item
         :key="index"

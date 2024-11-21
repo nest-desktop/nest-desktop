@@ -1,6 +1,10 @@
 // model.ts
 
-import { BaseModel, IModelProps } from "@/helpers/model/model";
+import {
+  BaseModel,
+  IModelProps,
+  IModelStateProps,
+} from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 export interface INorseModelProps extends IModelProps {
@@ -50,10 +54,10 @@ export class NorseModel extends BaseModel {
       version: process.env.APP_VERSION,
     };
 
-    // Add the recordables if provided.
-    if (this.state.recordables.length > 0) {
-      modelProps.recordables = this.state.recordables.map(
-        (recordable: any) => recordable.id
+    // Add the states if provided.
+    if (this.states.length > 0) {
+      modelProps.states = this.states.map(
+        (state: IModelStateProps) => state.id
       );
     }
 

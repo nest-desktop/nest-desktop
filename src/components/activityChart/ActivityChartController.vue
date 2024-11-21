@@ -43,98 +43,97 @@
         <ActivityChartPanelToolbar :panel="(panel as ActivityChartPanel)" />
 
         <v-card-text class="pa-0" v-if="panel.state.visible">
-          <span v-if="panel.model.state.records.length > 0">
-            <v-select
-              :items="panel.model.state.records"
-              @update:model-value="update()"
-              class="pa-1 pt-3"
-              chips
-              clearable
-              density="compact"
-              item-title="title"
-              item-value="groupId"
-              hide-details
-              label="Recorded events"
-              multiple
-              persistent-hint
-              v-model="panel.model.state.recordsVisible"
-            >
-              <template #chip="{ item }">
-                <NodeRecordChip
-                  :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
-                  v-if="panel.model.getNodeRecord(item.value)"
-                />
-              </template>
+          <v-select
+            :items="panel.model.state.records"
+            @update:model-value="update()"
+            class="pa-1 pt-3"
+            chips
+            clearable
+            density="compact"
+            item-title="title"
+            item-value="groupId"
+            hide-details
+            label="Recorded events"
+            multiple
+            persistent-hint
+            v-if="panel.model.state.records.length > 0"
+            v-model="panel.model.state.recordsVisible"
+          >
+            <template #chip="{ item }">
+              <NodeRecordChip
+                :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                v-if="panel.model.getNodeRecord(item.value)"
+              />
+            </template>
 
-              <template #item="{ item, props }">
-                <v-list-item v-bind="props" density="compact" title="">
-                  <v-checkbox
-                    :label="item.title"
-                    :model-value="
-                      panel.model.state.recordsVisible.includes(item.value)
-                    "
-                    density="compact"
-                    hide-details
-                  >
-                    <template #append>
-                      <NodeRecordChip
-                        :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
-                        class="my-auto"
-                        v-if="panel.model.getNodeRecord(item.value)"
-                      />
-                    </template>
-                  </v-checkbox>
-                </v-list-item>
-              </template>
-
-              <template #prepend-item>
-                <v-list-item
-                  @click="selectAllNodeRecords(panel as ActivityChartPanel)"
-                  title="Select All"
-                />
-                <v-divider />
-              </template>
-
-              <!-- <template #selection="{ item }">
-                <v-chip
-                  :color="item.color"
-                  :title="
-                    item.labelCapitalize + (item.unit ? ` (${item.unit})` : '')
+            <template #item="{ item, props }">
+              <v-list-item v-bind="props" density="compact" title="">
+                <v-checkbox
+                  :label="item.title"
+                  :model-value="
+                    panel.model.state.recordsVisible.includes(item.value)
                   "
-                  @click="(e) => showColorPopup(e, item)"
-                  @click:close="
-                    () => {
-                      panel.model.removeRecord(item);
-                      graph.update();
-                    }
-                  "
-                  close
-                  disable-lookup
-                  label
-                  size="small"
-                  style="margin: 1px 2px"
+                  density="compact"
+                  hide-details
                 >
-                  {{ appStore.devMode ? item.groupId : item.id }}
-                </v-chip>
-              </template> -->
+                  <template #append>
+                    <NodeRecordChip
+                      :nodeRecord="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                      class="my-auto"
+                      v-if="panel.model.getNodeRecord(item.value)"
+                    />
+                  </template>
+                </v-checkbox>
+              </v-list-item>
+            </template>
 
-              <!--
+            <template #prepend-item>
+              <v-list-item
+                @click="selectAllNodeRecords(panel as ActivityChartPanel)"
+                title="Select All"
+              />
+              <v-divider />
+            </template>
 
-              <template #item="{ item }">
-                <v-chip
-                  :color="item.color"
-                  class="mx-2"
-                  label
-                  size="small"
-                />
+            <!-- <template #selection="{ item }">
+              <v-chip
+                :color="item.color"
+                :title="
+                  item.labelCapitalize + (item.unit ? ` (${item.unit})` : '')
+                "
+                @click="(e) => showColorPopup(e, item)"
+                @click:close="
+                  () => {
+                    panel.model.removeRecord(item);
+                    graph.update();
+                  }
+                "
+                close
+                disable-lookup
+                label
+                size="small"
+                style="margin: 1px 2px"
+              >
                 {{ appStore.devMode ? item.groupId : item.id }}
-                <div style="font-size: 12px">
-                  {{ item.labelCapitalize }}
-                  <span v-if="item.unit">(${item.unit})</span>
-                </div>
-              </template> -->
-            </v-select>
-          </span>
+              </v-chip>
+            </template> -->
+
+            <!--
+
+            <template #item="{ item }">
+              <v-chip
+                :color="item.color"
+                class="mx-2"
+                label
+                size="small"
+              />
+              {{ appStore.devMode ? item.groupId : item.id }}
+              <div style="font-size: 12px">
+                {{ item.labelCapitalize }}
+                <span v-if="item.unit">(${item.unit})</span>
+              </div>
+            </template> -->
+          </v-select>
 
           <v-list>
             <ParamListItem
@@ -180,6 +179,9 @@ const addPanel = (modelId: string) => {
   graph.value.update();
 };
 
+/**
+ * Select all node records.
+ */
 const selectAllNodeRecords = (panel: ActivityChartPanel) => {
   panel.model.selectAllNodeRecords();
   graph.value.update();

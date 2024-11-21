@@ -11,6 +11,7 @@
       "max": 200,
       "min": 1,
       "step": 1,
+      "type": "float",
       "value": 100
     },
     {
@@ -21,6 +22,7 @@
       "min": 0,
       "step": 0.01,
       "unit": "mV",
+      "type": "torch.tensor",
       "value": 0
     },
     {
@@ -31,6 +33,7 @@
       "min": 0,
       "step": 0.01,
       "unit": "mV",
+      "type": "torch.tensor",
       "value": 0
     },
     {
@@ -41,6 +44,7 @@
       "min": 0,
       "step": 0.01,
       "unit": "mV",
+      "type": "torch.tensor",
       "value": 1
     },
     {
@@ -51,6 +55,7 @@
       "min": 1,
       "step": 1,
       "unit": "1/ms",
+      "type": "torch.tensor",
       "value": 100
     },
     {
@@ -61,11 +66,9 @@
       "min": 1,
       "step": 1,
       "unit": "1/ms",
+      "type": "torch.tensor",
       "value": 200
     }
   ],
-  "recordables": [
-    "I",
-    "v"
-  ]
+  "states": ["i", "v", "z"]
 }

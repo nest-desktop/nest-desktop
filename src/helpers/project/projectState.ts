@@ -7,6 +7,10 @@ import { TProject } from "@/types";
 export interface IProjectState {
   changes: boolean;
   editMode: boolean;
+  stopwatch: {
+    simulation: number;
+    visualization: number;
+  };
 }
 
 export class ProjectState {
@@ -20,6 +24,10 @@ export class ProjectState {
     this._state = reactive<IProjectState>({
       changes: false,
       editMode: false,
+      stopwatch: {
+        simulation: 0,
+        visualization: 0,
+      },
     });
   }
 

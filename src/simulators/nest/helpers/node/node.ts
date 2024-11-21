@@ -212,7 +212,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Add compartment component.
-   * @param compartmentProps - node compartment props
+   * @param compartmentProps node compartment props
    */
   addCompartment(compartmentProps: INESTNodeCompartmentProps): void {
     const compartment = new NESTNodeCompartment(this, compartmentProps);
@@ -222,7 +222,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Add compartments for the node.
-   * @param compartmentsProps - list of node compartment props
+   * @param compartmentsProps list of node compartment props
    */
   addCompartments(compartmentsProps: INESTNodeCompartmentProps[]): void {
     this.logger.trace("add compartments");
@@ -235,7 +235,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Add receptor component.
-   * @param receptorProps - receptor props
+   * @param receptorProps receptor props
    */
   addReceptor(receptorProps: INESTNodeReceptorProps): void {
     this._receptors.push(new NESTNodeReceptor(this, receptorProps));
@@ -243,7 +243,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Add receptors for the node.
-   * @param receptorsProps - list of receptor props
+   * @param receptorsProps list of receptor props
    */
   addReceptors(receptorsProps: INESTNodeReceptorProps[]): void {
     this.logger.trace("add receptors");
@@ -258,7 +258,8 @@ export class NESTNode extends BaseNode {
    * Get NEST or copied NEST model.
    */
   override getModel(modelId: string): NESTModel {
-    this.logger.trace("get model:", modelId);
+    // this.logger.trace("get model:", modelId);
+
     return this.modelDBStore.findModel(modelId) as NESTModel;
   }
 
@@ -303,6 +304,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Remove compartment from the node.
+   * @param compaartment: NEST node compartment
    */
   removeCompartment(compartment: NESTNodeCompartment): void {
     // Remove all receptors linking to this compartment.
@@ -333,9 +335,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Reset value in parameter components.
-   *
-   * @remarks
-   * It emits node changes.
+   * @remarks It emits node changes.
    */
   override resetParams(emitChanges: boolean = true): void {
     this.logger.trace("reset parameters");
@@ -454,7 +454,7 @@ export class NESTNode extends BaseNode {
                   ...target.compartmentRecordables,
                   ...target.receptorRecordables,
                 ]
-              : [...target.model.state.recordables]
+              : [...target.modelStates]
           ).flat();
         });
 
@@ -476,11 +476,11 @@ export class NESTNode extends BaseNode {
         }
       }
     } else if (this.modelId === "weight_recorder") {
-      recordables.push(
-        this.model.config?.localStorage.recordables.find(
-          (recordProps: INodeRecordProps) => recordProps.id === "weights"
-        )
+      const recordable = this.model.config?.localStorage.states.find(
+        (recordProps: INodeRecordProps) => recordProps.id === "weights"
       );
+
+      recordables.push(recordable);
     }
 
     // if (recordables.length != this.recordables.length) {

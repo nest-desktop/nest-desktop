@@ -96,13 +96,6 @@ defineProps<{
 //   to?: string;
 // }[] = [
 // {
-//   icon: "mdi:mdi-google-downasaur",
-//   id: "webgl",
-//   onClick: toggleWebGL,
-//   title: `Toggle webGL (${appStore.webGL ? "on" : "off"})`,
-//   color: appStore.webGL ? "green" : "red",
-// },
-// {
 //   icon: "mdi:mdi-slide",
 //   id: "sandbox",
 //   title: "sandbox",

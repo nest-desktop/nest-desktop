@@ -4,9 +4,6 @@
   "elementType": "stimulator",
   "id": "noise_current",
   "label": "noise current (Gaussian)",
-  "recordables": [
-    "I"
-  ],
   "params": [
     {
       "id": "mean",

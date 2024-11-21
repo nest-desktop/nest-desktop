@@ -20,6 +20,7 @@ import { BaseNetwork, INetworkProps } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { ProjectState } from "./projectState";
+import { upgradeProject } from "../upgrades/upgrades";
 
 export interface IProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -48,6 +49,9 @@ export class BaseProject extends BaseObj {
 
   constructor(projectProps: IProjectProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
+
+    // Upgrade project props.
+    projectProps = upgradeProject(projectProps);
 
     // Database instance.
     this._doc = projectProps || {};
@@ -187,10 +191,7 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Generate codes
-   *
-   * @remarks
-   * It generates simulation code.
+   * Generate simulation code.
    */
   generateCodes(): void {
     this._simulation.code.generate();
@@ -312,9 +313,7 @@ export class BaseProject extends BaseObj {
 
   /**
    * Initialize model store.
-   *
-   * @remarks
-   * It will be overridden by simulator components.
+   * @remarks It will be overridden by simulator components.
    */
   initModelStore(): void {
     this._modelDBStore = useModelDBStore();
@@ -336,9 +335,12 @@ export class BaseProject extends BaseObj {
     if (!projectViewStore.state.simulationEvents.onChange)
       openLoading("Simulating... Please wait");
 
+    const simtoc = Date.now();
     this._simulation
       .start()
       .then((response: any) => {
+        this._state.state.stopwatch.simulation = Date.now() - simtoc;
+
         if (
           response == null ||
           response.status !== 200 ||
@@ -347,8 +349,10 @@ export class BaseProject extends BaseObj {
         )
           return;
 
+        const vistoc = Date.now();
         // Update activities.
         this.activities.update(response.data.data);
+        this._state.state.stopwatch.visualization = Date.now() - vistoc;
 
         // Commit network for the history.
         this.networkRevision.commit();

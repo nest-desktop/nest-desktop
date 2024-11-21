@@ -92,7 +92,7 @@ const onResize = () => {
     48 - // toolbar
     64 - // current expansion title panel
     (activities.value.all.length - 1) * 48 - // other expansion title panel
-    42; // data table footer
+    52; // data table footer
 };
 
 const update = () =>

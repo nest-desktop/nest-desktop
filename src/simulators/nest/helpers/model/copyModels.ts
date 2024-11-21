@@ -3,7 +3,6 @@
 import { BaseObj } from "@/helpers/common/base";
 
 import { NESTNetwork } from "../network/network";
-// import { TNode } from "@/types";
 import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 
 export class NESTCopyModels extends BaseObj {
@@ -158,8 +157,11 @@ export class NESTCopyModels extends BaseObj {
 
   /**
    * Initialize copy models.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
+    this._models.forEach((model: NESTCopyModel) => model.init());
+
     this.clean();
     this.updateHash();
   }
@@ -212,7 +214,6 @@ export class NESTCopyModels extends BaseObj {
 
   /**
    * Update copied model component.
-   *
    * @param model props
    */
   update(modelsProps: INESTCopyModelProps[] = []): void {

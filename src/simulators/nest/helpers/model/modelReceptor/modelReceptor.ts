@@ -111,9 +111,7 @@ export class NESTModelReceptor extends BaseObj {
 
   /**
    * Observer for model receptor changes.
-   *
-   * @remarks
-   * It emits model changes.
+   * @remarks It emits model changes.
    */
   changes(): void {
     this.clean();
@@ -168,9 +166,7 @@ export class NESTModelReceptor extends BaseObj {
 
   /**
    * Delete the model receptor.
-   *
-   * @remarks
-   * It removes the receptor from the model.
+   * @remarks It removes the receptor from the model.
    */
   remove(): void {
     // this._model.deleteReceptor(this);
@@ -178,9 +174,7 @@ export class NESTModelReceptor extends BaseObj {
 
   /**
    * Reset value in parameter components.
-   *
-   * @remarks
-   * It emits model changes.
+   * @remarks It emits model changes.
    */
   resetParameters(): void {
     Object.values(this._params).forEach((param: NESTModelReceptorParameter) =>
@@ -189,9 +183,9 @@ export class NESTModelReceptor extends BaseObj {
     this.changes();
   }
 
-  // /**
-  //  * Sets all params to visible.
-  //  */
+  /**
+   * Sets all params to visible.
+   */
   showAllParams(): void {
     this.paramsVisible = Object.keys(this._params);
   }

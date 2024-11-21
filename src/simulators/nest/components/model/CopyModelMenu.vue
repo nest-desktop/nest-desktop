@@ -1,62 +1,56 @@
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    activator="parent"
-    v-model="state.show"
-  >
-    <v-card flat style="min-width: 300px">
-      <!-- <v-card-title class="pa-0">
-        <v-row no-gutters>
-          <v-col cols="12">
-            <NodeModelSelect :node="node" />
-          </v-col>
-        </v-row>
-      </v-card-title> -->
+  <v-card flat style="min-width: 300px">
+    <!-- <v-card-title class="pa-0">
+      <v-row no-gutters>
+        <v-col cols="12">
+          <NodeModelSelect :node="node" />
+        </v-col>
+      </v-row>
+    </v-card-title> -->
 
-      <span v-if="state.content == undefined">
-        <v-list density="compact">
-          <v-list-item
-            :key="index"
-            v-bind="item"
-            v-for="(item, index) in items"
-            v-show="item.show()"
-          >
-            <template #append>
-              <template v-if="item.append">
-                <v-icon icon="mdi:mdi-menu-right" size="small" />
-              </template>
-
-              <!-- <template v-if="item.input === 'checkbox'">
-                <v-checkbox
-                  :color="node.view.color"
-                  :input-value="state[item.value]"
-                />
-              </template>
-
-              <template v-if="item.input === 'switch'">
-                <v-switch
-                  :color="node.view.color"
-                  :value="state[item.value]"
-                  dense
-                  hide-details
-                />
-              </template> -->
+    <span v-if="state.content == undefined">
+      <v-list density="compact">
+        <v-list-item
+          :key="index"
+          v-bind="item"
+          v-for="(item, index) in items"
+          v-show="item.show()"
+        >
+          <template #append>
+            <template v-if="item.append">
+              <v-icon icon="mdi:mdi-menu-right" size="small" />
             </template>
 
-            <template #prepend>
-              <v-icon v-bind="item.icon" />
+            <!-- <template v-if="item.input === 'checkbox'">
+              <v-checkbox
+                :color="node.view.color"
+                :input-value="state[item.value]"
+              />
             </template>
-          </v-list-item>
-        </v-list>
-      </span>
 
-      <span>
-        <v-dialog :value="state.dialog" width="80%">
-          <ModelDocumentation :modelId="model.existingModelId" />
-        </v-dialog>
-      </span>
-    </v-card>
-  </v-menu>
+            <template v-if="item.input === 'switch'">
+              <v-switch
+                :color="node.view.color"
+                :value="state[item.value]"
+                dense
+                hide-details
+              />
+            </template> -->
+          </template>
+
+          <template #prepend>
+            <v-icon v-bind="item.icon" />
+          </template>
+        </v-list-item>
+      </v-list>
+    </span>
+
+    <span>
+      <v-dialog :value="state.dialog" width="80%">
+        <ModelDocumentation :modelId="model.existingModelId" />
+      </v-dialog>
+    </span>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

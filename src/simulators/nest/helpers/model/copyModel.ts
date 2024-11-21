@@ -18,7 +18,10 @@ import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { NESTConnection } from "../connection/connection";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
-import { NESTCopyModelParameter } from "./copyModelParameter";
+import {
+  INESTCopyModelParamProps,
+  NESTCopyModelParameter,
+} from "./copyModelParameter";
 import { NESTCopyModels } from "./copyModels";
 import { NESTModel } from "./model";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
@@ -40,6 +43,7 @@ export class NESTCopyModel extends BaseObj {
   private _newModelId: string;
   private _params: Record<string, NESTCopyModelParameter> = {};
   private _paramsVisible: string[] = [];
+  private _props: INESTCopyModelProps;
   private _state: UnwrapRef<INESTCopyModelState>;
 
   constructor(
@@ -56,7 +60,7 @@ export class NESTCopyModel extends BaseObj {
       visible: true,
     });
 
-    this.initParameters(modelProps);
+    this._props = modelProps;
   }
 
   get abbreviation(): string {
@@ -91,22 +95,20 @@ export class NESTCopyModel extends BaseObj {
   }
 
   /**
-   * This method sets the model ID to <ID of parent model> + '_copied' to avoid
-   * naming collisions.
+   * This method sets the model ID to <ID of parent model> + '_copied' to avoid naming collisions.
    * @param value New model ID
    */
   set existingModelId(value: string) {
     const renameNew = this.newModelId.includes(this._existingModelId);
+    if (renameNew) this.newModelId = value + "_copied" + (this.idx + 1);
     this._existingModelId = value;
-    if (renameNew) {
-      this.newModelId = value + "_copied" + (this.idx + 1);
-    }
-    this.initParameters();
+
+    this.addParameters();
     this.changes();
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0;
+    return this._paramsVisible.length > 0 && "weight_recorder" in this.params;
   }
 
   get copyModels(): NESTCopyModels {
@@ -268,12 +270,16 @@ export class NESTCopyModel extends BaseObj {
     this.changes();
   }
 
+  get props(): INESTCopyModelProps {
+    return this._props;
+  }
+
   get receptors(): Record<string, NESTModelReceptor> {
     return this.model.receptors;
   }
 
   get recordables(): INodeRecordProps[] {
-    return this.model.state.recordables;
+    return this.model.recordables;
   }
 
   get show(): boolean {
@@ -308,29 +314,82 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Add model parameter component.
-   * @param paramProps - parameter props
+   * @param paramProps parameter props
    */
-  addParameter(paramProps: IParamProps): void {
+  addParameter(paramProps: IParamProps, visible: boolean = false): void {
     this.logger.trace("add parameter", paramProps.id);
 
     this._params[paramProps.id] = new NESTCopyModelParameter(this, paramProps);
+
+    if (visible) {
+      this._paramsVisible.push(paramProps.id);
+    }
   }
 
   /**
-   * Add parameter component.
-   * @param param - parameter object
+   * Add parameter components.
+   * @param paramsProps list of parameter props
    */
-  addWeightRecorderParameter(param: { value: TParamValue }): void {
-    this.addParameter({
-      id: "weight_recorder",
-      items: this.network.nodes.weightRecorders.map(
+  addParameters(paramsProps?: IModelParamProps[]): void {
+    this.logger.trace("init parameters");
+
+    this.emptyParams();
+    if (this.model) {
+      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
+        if (paramsProps && paramsProps.length > 0) {
+          const nodeParamProps = paramsProps.find(
+            (paramProps: INESTCopyModelParamProps) =>
+              paramProps.id === modelParam.id
+          );
+          if (nodeParamProps) {
+            this.addParameter(
+              {
+                ...nodeParamProps,
+                ...modelParam,
+              },
+              true
+            );
+          } else {
+            this.addParameter(modelParam);
+          }
+        } else {
+          this.addParameter(modelParam);
+        }
+      });
+    } else if (paramsProps) {
+      paramsProps.forEach((param: INESTCopyModelParamProps) =>
+        this.addParameter(param, true)
+      );
+    }
+
+    if (this.isSynapse) {
+      const weightRecorders = this.network.nodes.weightRecorders.map(
         (recorder: NESTNode) => recorder.view.label
-      ),
-      component: "select",
-      label: "weight recorder",
-      value: param.value,
-      visible: true,
-    });
+      );
+      let weightRecorder: TParamValue =
+        weightRecorders[weightRecorders.length - 1];
+
+      if (paramsProps) {
+        const weightRecorderParam = paramsProps.find(
+          (paramProps: IParamProps) => paramProps.id === "weight_recorder"
+        );
+        if (weightRecorderParam && weightRecorderParam.value) {
+          weightRecorder = weightRecorderParam.value;
+        }
+      }
+
+      if (weightRecorder) {
+        this.addParameter({
+          id: "weight_recorder",
+          items: this.network.nodes.weightRecorders.map(
+            (recorder: NESTNode) => recorder.view.label
+          ),
+          component: "select",
+          label: "weight recorder",
+          value: weightRecorder,
+        });
+      }
+    }
   }
 
   clean(): void {
@@ -345,9 +404,17 @@ export class NESTCopyModel extends BaseObj {
     }
   }
 
-  // /**
-  //  * Sets all params to invisible.
-  //  */
+  /**
+   * Empty parameters
+   */
+  emptyParams(): void {
+    this._params = {};
+    this._paramsVisible = [];
+  }
+
+  /**
+   * Sets all params to invisible.
+   */
   hideAllParams(): void {
     this.paramsAll.forEach(
       (param: NESTCopyModelParameter) => (param.visible = false)
@@ -355,51 +422,11 @@ export class NESTCopyModel extends BaseObj {
   }
 
   /**
-   * Initialize parameter components.
-   * @param model - model object
+   * Initialize copy model.
+   * @remarks Do not use it in the constructor.
    */
-  initParameters(modelProps?: INESTCopyModelProps): void {
-    // Update parameters from model
-    this._params = {};
-    if (this.model && modelProps && "params" in modelProps) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = modelProps.params?.find(
-          (paramProps: IParamProps) => paramProps.id === modelParam.id
-        );
-        this.addParameter(param || modelParam.toJSON());
-      });
-    } else if (this.model) {
-      Object.values(this.model.params).forEach((param: ModelParameter) =>
-        this.addParameter(param.toJSON())
-      );
-    } else if (modelProps && "params" in modelProps) {
-      modelProps.params?.forEach((paramProps: IParamProps) =>
-        this.addParameter(paramProps)
-      );
-    }
-
-    if (this.isSynapse) {
-      const weightRecorders = this.network.nodes.weightRecorders.map(
-        (recorder: NESTNode) => recorder.view.label
-      );
-      let weightRecorder: TParamValue =
-        weightRecorders[weightRecorders.length - 1];
-
-      if (modelProps && "params" in modelProps) {
-        const weightRecorderParam = modelProps.params?.find(
-          (paramProps: IParamProps) => paramProps.id === "weight_recorder"
-        );
-        if (weightRecorderParam && weightRecorderParam.value) {
-          weightRecorder = weightRecorderParam.value;
-        }
-      }
-
-      if (weightRecorder) {
-        this.addWeightRecorderParameter({
-          value: weightRecorder,
-        });
-      }
-    }
+  init(): void {
+    this.addParameters(this._props.params);
   }
 
   isAssignedToWeightRecorder(node: NESTNode): boolean {
@@ -411,9 +438,7 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Observer for model changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   changes(): void {
     this.logger.trace("changes");
@@ -423,9 +448,7 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Delete model.
-   *
-   * @remarks
-   * It removes model component of the network.
+   * @remarks It removes model component of the network.
    */
   remove(): void {
     this.network.nodes.nodeItems
@@ -464,7 +487,7 @@ export class NESTCopyModel extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return model object
+   * @return model props
    */
   toJSON(): INESTCopyModelProps {
     return {

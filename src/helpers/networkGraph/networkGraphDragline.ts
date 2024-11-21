@@ -70,8 +70,8 @@ export class NetworkGraphDragline extends BaseObj {
 
   /**
    * Draw path of the drag line.
-   * @param sourcePos
-   * @param targetPos
+   * @param sourcePos source position
+   * @param targetPos target position
    */
   drawPath(
     sourcePos: { x: number; y: number },

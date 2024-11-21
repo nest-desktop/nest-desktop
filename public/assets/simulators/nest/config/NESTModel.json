@@ -1,5 +1,5 @@
 {
-  "recordables": [
+  "states": [
     {
       "id": "Act_m",
       "label": "sodium channel activation"

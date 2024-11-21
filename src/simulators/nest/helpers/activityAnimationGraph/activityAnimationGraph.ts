@@ -115,9 +115,7 @@ export class ActivityAnimationGraph {
 
   /**
    * Initialize activity graph for animation.
-   *
-   * @remarks
-   * It runs without checking activities.
+   * @remarks It runs without checking activities.
    */
   init(): void {
     this._layers = [];
@@ -125,9 +123,7 @@ export class ActivityAnimationGraph {
 
   /**
    * Initialize animation scene.
-   *
-   * @remarks
-   * It should be initialized in the vue component is mounted.
+   * @remarks It should be initialized in the vue component is mounted.
    */
   initScene(ref: any): void {
     this.destroyScene();
@@ -198,9 +194,7 @@ export class ActivityAnimationGraph {
 
   /**
    * Update activity graph for animation.
-   *
-   * @remarks
-   * It requires network activities.
+   * @remarks It requires network activities.
    */
   update(): void {
     this._state.nSamples =

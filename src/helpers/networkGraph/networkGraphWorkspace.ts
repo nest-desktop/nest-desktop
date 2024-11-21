@@ -258,7 +258,7 @@ export class NetworkGraphWorkspace extends BaseObj {
 
   /**
    * Update cursor position.
-   * @param position
+   * @param position mouse position
    */
   updateCursorPosition(
     position: { x: number; y: number } = { x: 0, y: 0 }

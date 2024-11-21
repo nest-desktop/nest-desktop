@@ -1,12 +1,13 @@
 // parameter.ts
 
-import { ILogObj, ISettingsParam } from 'tslog';
-import { UnwrapRef, reactive } from 'vue';
+import { ILogObj, ISettingsParam } from "tslog";
+import { UnwrapRef, reactive } from "vue";
 
-import { TParameter } from '@/types';
+import { TParameter } from "@/types";
+import { truncate } from "@/utils/truncate";
 
-import { BaseObj } from './base';
-import { IConfigProps } from './config';
+import { BaseObj } from "./base";
+import { IConfigProps } from "./config";
 
 interface IParamOptions {
   component?: string;
@@ -150,34 +151,31 @@ export class BaseParameter extends BaseObj {
     return this._label;
   }
 
+  set label(value: string) {
+    this._label = value;
+  }
+
   get labelInput(): string {
     let label: string = "";
-    label += this.config?.localStorage.rawLabel
-      ? this.id
-      : this.options["label"] || this.options.id;
+    label += this.options.label || this.options.id;
 
-    if (this.options.unit) {
-      label += ` (${this.options["unit"]})`;
-    }
+    if (this.options.unit) label += ` (${this.options.unit})`;
+
     return label;
   }
 
   get labelRow(): string {
     let label: string = "";
-    label += `<span>${
-      this.config?.localStorage.rawLabel
-        ? this.id
-        : this.options["label"] || this.options.id
-    }</span>`;
+    label += `<span>${this.options.label || this.options.id}</span>`;
 
-    if (this.options.unit) {
-      label += `<span>${this.value} ${this.options["unit"]}</span>`;
-    }
+    if (this.options.unit)
+      label += `<span>${this.value} ${this.options.unit}</span>`;
+
     return label;
   }
 
-  set label(value: string) {
-    this._label = value;
+  get labelShort(): string {
+    return truncate(this.label, 30);
   }
 
   get max(): number {

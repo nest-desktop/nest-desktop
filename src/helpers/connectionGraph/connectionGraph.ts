@@ -250,9 +250,7 @@ export class ConnectionGraph extends BaseObj {
 
   /**
    * Update connections in network graph.
-   *
-   * @remarks
-   * This function should be called when connections are changed.
+   * @remarks This function should be called when connections are changed.
    */
   update(): void {
     if (!this._networkGraph.selector) return;

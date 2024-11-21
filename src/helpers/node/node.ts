@@ -15,7 +15,7 @@ import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { BaseObj } from "../common/base";
-import { BaseModel, TElementType } from "../model/model";
+import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeGroup } from "./nodeGroup";
 import { INodeParamProps, NodeParameter } from "./nodeParameter";
@@ -36,7 +36,7 @@ export class BaseNode extends BaseObj {
   private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
     undefined;
   private _annotations: string[] = [];
-  private _doc: INodeProps;
+  private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
@@ -55,7 +55,7 @@ export class BaseNode extends BaseObj {
 
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
-    this._doc = nodeProps;
+    this._props = nodeProps;
 
     this._view = new NodeView(this, nodeProps.view);
   }
@@ -122,8 +122,8 @@ export class BaseNode extends BaseObj {
     );
   }
 
-  get doc(): INodeProps {
-    return this._doc;
+  get props(): INodeProps {
+    return this._props;
   }
 
   get elementType(): TElementType {
@@ -213,6 +213,10 @@ export class BaseNode extends BaseObj {
 
   get modelParams(): Record<string, ModelParameter> {
     return this.model.params;
+  }
+
+  get modelStates(): IModelStateProps[] {
+    return this.model.states;
   }
 
   get models(): (TModel | any)[] {
@@ -346,6 +350,7 @@ export class BaseNode extends BaseObj {
   /**
    * Add annotation to the list.
    * @param text string
+   * @param emitChanges boolean
    */
   addAnnotation(text: string, emitChanges: boolean = true): void {
     if (this._annotations.indexOf(text) !== -1) return;
@@ -371,13 +376,12 @@ export class BaseNode extends BaseObj {
 
   /**
    * Add parameters to the node.
-   * @param paramsProps - list of parameter props
+   * @param paramsProps list of parameter props
    */
   addParameters(paramsProps?: INodeParamProps[]): void {
     this.logger.trace("add parameters");
 
     this.emptyParams();
-
     if (this._model) {
       this._model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
@@ -408,9 +412,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Observer for node changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   changes(): void {
     this.logger.trace("changes");
@@ -471,9 +473,10 @@ export class BaseNode extends BaseObj {
 
   /**
    * Get model.
+   * @param modelId model ID
    */
   getModel(modelId: string): TModel | undefined {
-    this.logger.trace("get model:", modelId);
+    // this.logger.trace("get model:", modelId);
 
     return this.modelDBStore.findModel(modelId);
   }
@@ -526,14 +529,15 @@ export class BaseNode extends BaseObj {
 
   /**
    * Initialize node.
+   * @remarks Do not use it in the constructor.
    */
   init(): void {
     this.logger.trace("init");
 
-    this.loadModel(this._doc.params);
+    this.loadModel(this._props.params);
 
     if (this.model?.isRecorder) {
-      this.createActivity(this.doc.activity);
+      this.createActivity(this._props.activity);
     }
 
     this.update();
@@ -551,9 +555,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Observer for model changes.
-   *
-   * @remarks
-   * It emits node changes.
+   * @remarks It emits node changes.
    */
   modelChanges(emitChanges: boolean = true): void {
     this.logger.trace("model change");
@@ -575,9 +577,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Delete node.
-   *
-   * @remarks
-   * It removes node component of the network.
+   * @remarks It removes node component of the network.
    */
   remove(): void {
     this.network.deleteNode(this);
@@ -615,9 +615,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Reset value in parameter components.
-   *
-   * @remarks
-   * It emits node changes.
+   * @remarks It emits node changes.
    */
   resetParams(): void {
     this.logger.trace("reset parameters");
@@ -641,6 +639,7 @@ export class BaseNode extends BaseObj {
 
   /**
    * Sets all params to visible.
+   * @param emitChanges option to emit changes.
    */
   showAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = Object.keys(this._params);
@@ -732,7 +731,7 @@ export class BaseNode extends BaseObj {
     if (this.connections.length > 0) {
       if (this.model.isAnalogRecorder) {
         const recordablesNodes = this.targetNodes.map((target: TNode) =>
-          [...target.model.state.recordables].flat()
+          [...target.modelStates].flat()
         );
 
         if (recordablesNodes.length > 0) {
@@ -759,17 +758,15 @@ export class BaseNode extends BaseObj {
 
   /**
    * Update records.
-   *
-   * @remarks
-   * It should be called after connections are created.
+   * @remarks It should be called after connections are created.
    */
   updateRecords(): void {
     this.logger.trace("update records");
 
     // Initialize selected records.
-    if (this.doc.records != null) {
+    if (this._props.records != null) {
       // Load record from stored nodes.
-      const recordIds = this.doc.records.map(
+      const recordIds = this._props.records.map(
         (recordProps: INodeRecordProps) => recordProps.id
       );
       this.records = [

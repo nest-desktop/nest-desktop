@@ -87,10 +87,10 @@ export class SpikeActivity extends Activity {
   /**
    * Post-update spike activity.
    */
-  override postUpdate(activity: ISpikeActivityProps): void {
-    if (activity.events == undefined) return;
+  override postUpdate(activityProps: ISpikeActivityProps): void {
+    if (activityProps.events == undefined) return;
 
-    this.updateTimes(activity.events);
+    this.updateTimes(activityProps.events);
   }
 
   /**
