@@ -185,6 +185,17 @@
 
     <v-card-actions>
       <v-btn
+        @click="fetchFromOldDatabase()"
+        icon="mdi:mdi-database-arrow-up-outline"
+        size="small"
+        title="fetch from old database"
+        variant="text"
+        v-if="currentSimulator === 'nest'"
+      />
+
+      <v-spacer />
+
+      <v-btn
         :disabled="state.selected.length === 0"
         @click="
           () => {
@@ -209,12 +220,13 @@
 import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
+import { BaseModelDB } from "@/helpers/model/modelDB";
+import { BaseProjectDB } from "@/helpers/project/projectDB";
 import { INESTCopyModelProps } from "@/simulators/nest/helpers/model/copyModel";
-import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
-
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
 import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
+import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -237,6 +249,8 @@ interface IGithubTree {
 
 const emit = defineEmits(["closeDialog"]);
 const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
+
+const currentSimulator = computed(() => appStore.state.simulator);
 
 const modelDBStore = computed(
   () => appStore.currentSimulator.stores.modelDBStore
@@ -499,6 +513,34 @@ const getTreesFromGithub = () => {
       );
   });
 };
+
+/**
+ * Fetch props from old database.
+ */
+const fetchFromOldDatabase = () => {
+  const modelDB = new BaseModelDB("MODEL_STORE");
+  const projectDB = new BaseProjectDB("PROJECT_STORE");
+
+  modelDB
+    .list()
+    .then((modelsProps: TModelProps[]) =>
+      modelsProps.forEach((modelProps: TModelProps) => {
+        delete modelProps._id;
+        delete modelProps._rev;
+        addProps(modelProps);
+      })
+    );
+
+  projectDB
+    .list()
+    .then((projectsProps: TProjectProps[]) =>
+      projectsProps.forEach((projectProps: TProjectProps) => {
+        delete projectProps._id;
+        delete projectProps._rev;
+        addProps(projectProps);
+      })
+    );
+}
 
 /**
  * Fetch props from URL.
