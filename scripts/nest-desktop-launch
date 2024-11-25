@@ -2,8 +2,8 @@
 
 source nest_vars.sh
 
-# export NESTML_MODULES_PATH="${NESTML_MODULES_PATH:-/tmp/nestmlmodules}"
-# export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${NESTML_MODULES_PATH}
+export NESTML_MODULES_PATH="${NESTML_MODULES_PATH:-/tmp/nestmlmodules}"
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${NESTML_MODULES_PATH}
 
 export NEST_SERVER_DISABLE_AUTH=1
 export NEST_SERVER_DISABLE_RESTRICTION=1
@@ -14,9 +14,12 @@ export NEST_SERVER_MODULES="import nest; import numpy; import numpy as np"
 export NEST_SERVER_DAEMON=1
 nest-server start
 
-# Start NESTML Server as daemon
-# export NESTML_SERVER_DAEMON=1
-# nestml-server start
+if ! command -v nestml-server 2>&1 >/dev/null
+then
+    # Start NESTML Server as daemon
+    export NESTML_SERVER_DAEMON=1
+    nestml-server start
+fi
 
 # Start NEST Desktop
 nest-desktop --no-sandbox
@@ -24,5 +27,8 @@ nest-desktop --no-sandbox
 # Stop NEST Server
 nest-server stop
 
-# Stop NESTML Server
-# nestml-server stop
+if ! command -v nestml-server 2>&1 >/dev/null
+then
+    # Stop NESTML Server
+    nestml-server stop
+fi
