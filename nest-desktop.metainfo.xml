@@ -6,7 +6,7 @@
   <developer_name>Sebastian Spreizer</developer_name>
   <summary>Simulate spiking neuronal networks</summary>
   <metadata_license>CC0-1.0</metadata_license>
-  <url type="homepage">https://nest-simulator.org/nest-desktop</url>
+  <url type="homepage">https://nest-desktop.github.io</url>
   <url type="bugtracker">https://github.com/nest-desktop/nest-desktop/issues</url>
   <url type="help">https://nest-desktop.readthedocs.io/</url>
   <url type="contribute">https://nest-desktop.readthedocs.io/en/latest/contribute.html</url>
