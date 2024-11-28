@@ -1,7 +1,7 @@
 {
   "name": "nest-desktop",
   "desktopName": "io.github.nest_desktop.nest-desktop",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for the simulation of spiking neuronal networks.",
   "author": {
@@ -52,7 +52,7 @@
     "uuid": "~11.0",
     "vue": "~3.5",
     "vue-codemirror": "~6.1",
-    "vue-router": "~4.4",
+    "vue-router": "~4.5",
     "vuetify": "~3.7",
     "vuetify3-dialog": "~1.5",
     "webfontloader": "~1.6"
@@ -62,7 +62,7 @@
     "@types/d3": "~7.4",
     "@types/js-yaml": "~4.0",
     "@types/mustache": "~4.2",
-    "@types/node": "~22.9",
+    "@types/node": "~22.10",
     "@types/object-hash": "~3.0",
     "@types/pouchdb": "~6.4",
     "@types/pouchdb-upsert": "~2.2",
@@ -87,7 +87,8 @@
     "semver": "~7.6",
     "sharp": "~0.33",
     "tslog": "~4.9",
-    "vite": "~5.4",
+    "typescript": "~5.6",
+    "vite": "~6.0",
     "vite-plugin-electron": "~0.29",
     "vite-plugin-pwa": "~0.21",
     "vite-plugin-vuetify": "~2.0",
@@ -98,7 +99,7 @@
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: Use node LTS version (v22)",
     "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.",
-    "@codemirror/view: >= 6.35 Codemirror extensions broken."
+    "typescript>=5.7: Error because vue-tsc doesn't work with it. https://github.com/vuejs/language-tools/issues/5018"
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
