@@ -114,29 +114,35 @@ export const modelRedirect = (to: {
 };
 
 /**
- * Mount model layout
+ * Mount model layout.
  * @param props
  */
 export const mountModelLayout = (props: {
   router: Router;
   route: RouteLocationNormalizedLoadedGeneric;
 }): void => {
+  const modelId = props.route.params.modelId as string;
   logger.trace("mount model layout");
 
   const appStore = useAppStore();
   const modelDBStore: TModelStore =
     appStore.currentSimulator.stores.modelDBStore;
+  const modelStore: TModelStore = appStore.currentSimulator.stores.modelStore;
 
-  const modelIds = modelDBStore.state.models.map((model: TModel) => model.id);
-  if (!modelIds.includes(props.route.params.modelId)) {
-    errorDialog({
-      text: `Model "${props.route.params.modelId}" not found.`,
-    });
-  }
+  setTimeout(() => {
+    if (modelStore.state.modelId === modelId) return;
+
+    const modelIds = modelDBStore.state.models.map((model: TModel) => model.id);
+    if (!modelIds.includes(modelId)) {
+      errorDialog({
+        text: `Model "${props.route.params.modelId}" not found.`,
+      });
+    }
+  }, 250);
 };
 
 /**
- * Mount project layout
+ * Mount project layout.
  * @param props
  */
 export const mountProjectLayout = (props: {
@@ -149,25 +155,30 @@ export const mountProjectLayout = (props: {
   const appStore = useAppStore();
   const projectDBStore: TProjectStore =
     appStore.currentSimulator.stores.projectDBStore;
-
-  const projectIds = projectDBStore.state.projects.map(
-    (project: TProject) => project.id
-  );
-
   const projectStore: TProjectStore =
     appStore.currentSimulator.stores.projectStore;
-  if (projectStore.state.projectId === projectId) return;
 
-  if (!projectIds.includes(projectId)) {
-    confirmDialog({
-      text: "Do you want to create a new project?",
-      title: `Project (ID: ${truncate(projectId)}) not found.`,
-    }).then((answer: boolean) => {
-      if (answer) newProjectRoute(props.router);
-    });
-  }
+  setTimeout(() => {
+    if (projectStore.state.projectId === projectId) return;
+
+    const projectIds = projectDBStore.state.projects.map(
+      (project: TProject) => project.id
+    );
+    if (!projectIds.includes(projectId)) {
+      confirmDialog({
+        text: "Do you want to create a new project?",
+        title: `Project (ID: ${truncate(projectId)}) not found.`,
+      }).then((answer: boolean) => {
+        if (answer) newProjectRoute(props.router);
+      });
+    }
+  }, 250);
 };
 
+/**
+ * Route to create a new project.
+ * @param router Router object
+ */
 export const newProjectRoute = (router: Router) => {
   logger.trace("new project route");
 
