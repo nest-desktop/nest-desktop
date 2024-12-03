@@ -3,9 +3,7 @@
 // https://github.com/electron-vite/vite-plugin-electron/blob/main/examples/quick-start/electron/main.ts
 
 process.env.DIST = join(__dirname, "../dist");
-process.env.PUBLIC = app.isPackaged
-  ? process.env.DIST
-  : join(process.env.DIST, "../public");
+process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST, "../public");
 
 import { BrowserWindow, app } from "electron";
 import { join } from "path";
