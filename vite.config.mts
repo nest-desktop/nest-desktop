@@ -1,4 +1,5 @@
 // vite.config.mts
+// https://vite.dev/config/
 
 import { URL, fileURLToPath } from "node:url";
 // Utilities
