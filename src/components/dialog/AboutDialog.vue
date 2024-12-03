@@ -1,18 +1,10 @@
 <template>
   <v-card class="my-1" width="800">
-    <div class="text-center">
-      <v-img
-        alt="nest-desktop-logo"
-        class="logo my-6"
-        contain
-        height="250"
-        src="@/assets/img/logo/nest-desktop-logo-light.svg"
-      />
-      <p class="text-h2">NEST Desktop</p>
-      <p class="text-subtitle-1">An exploratory app for neuroscience</p>
-    </div>
-
-    <v-card flat variant="text">
+    <v-card
+      flat
+      subtitle="An exploratory app for neuroscience"
+      title="NEST Desktop"
+      variant="text">
       <v-card-text class="text-justify">
         <div class="my-1">
           NEST Desktop is a web-based GUI application for multiple simulation tools with neuronal networks. The
