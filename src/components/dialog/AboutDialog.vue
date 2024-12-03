@@ -1,19 +1,25 @@
 <template>
-  <v-card class="my-1" width="800">
+  <v-card
+    class="my-1"
+    width="800"
+  >
     <v-card
       flat
       subtitle="An exploratory app for neuroscience"
       title="NEST Desktop"
-      variant="text">
+      variant="text"
+    >
       <v-card-text class="text-justify">
-        <div class="my-1">
-          NEST Desktop is a web-based GUI application for multiple simulation tools with neuronal networks. The
-          application enables the rapid construction, parametrization, and instrumentation of neuronal network models.
-        </div>
-        <div class="my-1">
-          The primary objective is to provide an accessible classroom tool that allows users to rapidly explore
-          neuroscience concepts without the need to learn a simulator control language at the same time.
-        </div>
+        NEST Desktop is a web-based GUI application for multiple simulation tools with spiking neuronal networks. The
+        application enables the rapid construction, parametrization, and instrumentation of neuronal network models. The
+        primary objective is to provide an accessible classroom tool that allows users to rapidly explore neuroscience
+        concepts without the need to learn a simulator control language at the same time.
+        <a
+          href="https://nest-desktop.readthedocs.io/en/latest/about/index.html#abstract"
+          target="_blank"
+        >
+          Read more.
+        </a>
       </v-card-text>
     </v-card>
 
@@ -21,15 +27,24 @@
     <AppDetails flat />
     <v-divider />
 
-    <v-card flat subtitle="Acknowledgement">
+    <v-card
+      flat
+      subtitle="Acknowledgement"
+    >
       <v-card-text class="text-justify">
         This project has received funding from the European Union’s Horizon 2020 Framework Programme for Research and
         Innovation under Specific Grant Agreement No. 785907 (Human Brain Project SGA2) and No. 945539 (Human Brain
-        Project SGA3). This project was funded by the Helmholtz Association Initiative and Networking Fund under project
-        number SO-092 (Advanced Computing Architectures, ACA). This work was supported by the DFG Excellence Cluster
-        BrainLinks-BrainTools (grant EXC 1086).
+        Project SGA3), the European Union’s Horizon Europe Programme under the Specific Grant Agreement No. 101147319
+        (EBRAINS 2.0), the Helmholtz Association Initiative and Networking Fund under project number SO-092
+        (Advanced Computing Architectures, ACA) and the "Bundesministeriums für Bildung und Forschung" (BMBF) for the
+        grant DATIPilot.
+        This work was supported by the DFG Excellence Cluster BrainLinks-BrainTools (grant EXC 1086).
 
-        <v-row class="mt-4" justify="center" no-gutters>
+        <v-row
+          class="mt-4"
+          justify="center"
+          no-gutters
+        >
           <v-col
             v-for="reference in references"
             :key="reference.title"
