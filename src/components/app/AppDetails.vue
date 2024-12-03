@@ -85,7 +85,7 @@ import { detect } from "detect-browser";
 const appVersion = process.env.APP_VERSION;
 const license = "MIT License";
 const contactName = "Sebastian Spreizer";
-const mailto = "spreizer@uni-trier.de";
+const mailto = "spreizer@web.de";
 const mailSubject = `[NEST Desktop ${appVersion}]`;
 
 const state = reactive<{
@@ -127,10 +127,15 @@ if (info) {
 }
 
 const refItems = [
+{
+    href: "https://nest-desktop.github.io",
+    prependIcon: "mdi:mdi-home",
+    title: "Official page",
+  },
   {
     href: "https://nest-desktop.readthedocs.io",
     prependIcon: "mdi:mdi-book-open",
-    title: "Documentation",
+    title: "Guides",
   },
   {
     href: "https://github.com/nest-desktop/nest-desktop",
