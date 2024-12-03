@@ -54,9 +54,10 @@
               />
 
               <v-list>
-                <v-list-item 
-                  v-for="(database, index) in simulators[simulator].databases" 
-                  :key="index">  
+                <v-list-item
+                  :key="index"
+                  v-for="(database, index) in simulators[simulator].databases"
+                >
                   {{ database }}
                   <template #append>
                     <v-btn @click.stop="destroyDatabase(database)" icon="mdi:mdi-trash-can-outline"  size="x-small" variant="text" />
@@ -87,7 +88,7 @@ const simulatorItems = computed(() => Object.values(simulators));
 const simulator = ref("nest");
 
 const configs = [
-  "App", "Connection", "Network", "NetworkGraph", "Node", "NodeRecord", "Simulation", 
+  "App", "Connection", "Network", "NetworkGraph", "Node", "NodeRecord", "Simulation",
 ]
 
 
