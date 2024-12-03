@@ -6,9 +6,14 @@
       title="Simulation kernel editor"
     />
 
-    <Card :color="props.color" class="ma-1" title="Modules">
+    <Card
+      :color="props.color"
+      class="ma-1"
+      title="Modules"
+    >
       <v-card-text>
         <NESTModuleSelect
+          v-model="simulation.modules"
           :return-object="false"
           chips
           clearable
@@ -17,52 +22,59 @@
           hide-selected
           label="Install modules"
           multiple
-          v-model="simulation.modules"
         />
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1" title="Simulation kernel">
+    <Card
+      :color="props.color"
+      class="ma-1"
+      title="Simulation kernel"
+    >
       <v-card-text>
         <TickSlider
-          :thumb-color="props.color"
-          class="mx-1 py-1"
           v-bind="options.threadSettings"
           v-model="simulation.kernel.localNumThreads"
+          :thumb-color="props.color"
+          class="mx-1 py-1"
         />
 
         <TickSlider
-          :thumbColor="props.color"
-          class="mx-1 py-1"
           v-bind="options.resolutionSettings"
           v-model="simulation.kernel.resolution"
+          :thumb-color="props.color"
+          class="mx-1 py-1"
         />
 
         <ValueSlider
-          :thumb-color="props.color"
-          class="mx-1 py-1"
           v-bind="options.rngSeedSettings"
           v-model="simulation.kernel.rngSeed"
+          :thumb-color="props.color"
+          class="mx-1 py-1"
         />
 
         <v-checkbox
-          :color="props.color"
-          @update:model-value="updateAutoRNGSeed()"
-          class="mx-1"
-          hide-details="auto"
           v-bind="options.autoRNGSeedSettings"
           v-model="state.autoRNGSeed"
+          :color="props.color"
+          class="mx-1"
+          hide-details="auto"
+          @update:model-value="updateAutoRNGSeed()"
         />
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1" title="Simulation">
+    <Card
+      :color="props.color"
+      class="ma-1"
+      title="Simulation"
+    >
       <v-card-text class="py-0">
         <ValueSlider
-          :thumb-color="props.color"
-          class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"
+          :thumb-color="props.color"
+          class="mx-1 py-2"
         />
       </v-card-text>
     </Card>

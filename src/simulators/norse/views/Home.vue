@@ -3,7 +3,11 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-img :src="norseLogo" alt="norse-logo" class="ma-2 mx-10" />
+          <v-img
+            :src="norseLogo"
+            alt="norse-logo"
+            class="ma-2 mx-10"
+          />
 
           <v-card-subtitle>
             Deep learning with spiking neural networks in PyTorch
@@ -19,15 +23,18 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2" title="References">
+        <v-card
+          class="mt-2"
+          title="References"
+        >
           <v-card-text>
             <v-list density="compact">
               <v-list-item
+                v-for="(refItem, index) in refItems"
                 :key="index"
                 append-icon="mdi:mdi-open-in-new"
                 target="_blank"
                 v-bind="refItem"
-                v-for="(refItem, index) in refItems"
               />
             </v-list>
           </v-card-text>
@@ -36,7 +43,10 @@
 
       <v-col md="6">
         <v-card title="Backend">
-          <v-expansion-panels elevation="0" variant="accordion">
+          <v-expansion-panels
+            elevation="0"
+            variant="accordion"
+          >
             <v-expansion-panel>
               <v-expansion-panel-title>
                 Backend settings

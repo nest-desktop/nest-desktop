@@ -1,51 +1,61 @@
 <template>
   <Card
+    v-if="nodeGroup.show"
     :color="nodeGroup.view.color"
+    class="node-group ma-1"
     @mouseenter="nodeGroup.view.focus()"
     @mouseleave="nodeGroup.parentNodes.unfocusNode()"
-    class="node-group ma-1"
-    v-if="nodeGroup.show"
   >
     <v-card-title class="node-group-title">
       <v-row no-gutters>
         <v-btn
-          @click.stop="nodeGroup.toggleSelection()"
           class="mx-1"
           flat
           icon
           variant="tonal"
+          @click.stop="nodeGroup.toggleSelection()"
         >
-          <NodeAvatar :node="nodeGroup" size="48" />
+          <NodeAvatar
+            :node="nodeGroup"
+            size="48"
+          />
         </v-btn>
 
-        <v-btn-group class="mx-4" multiple rounded="xl">
+        <v-btn-group
+          class="mx-4"
+          multiple
+          rounded="xl"
+        >
           <v-btn
+            v-for="(node, index) in nodeGroup.nodes"
             :key="index"
+            class="btn-avatar px-0"
+            size="small"
             @click.stop="
               () => {
                 node.parentNodes.unselectNodes();
                 node.toggleSelection();
               }
             "
-            class="btn-avatar px-0"
-            size="small"
-            v-for="(node, index) in nodeGroup.nodes"
           >
-            <NodeAvatar :node="(node as TNode)" size="32" />
+            <NodeAvatar
+              :node="(node as TNode)"
+              size="32"
+            />
           </v-btn>
         </v-btn-group>
 
         <v-spacer />
 
         <Menu>
-          <NodeGroupMenuList :nodeGroup />
+          <NodeGroupMenuList :node-group />
         </Menu>
       </v-row>
     </v-card-title>
 
     <v-card-actions
-      style="min-height: 40px"
       v-if="nodeGroup.connections.length > 0"
+      style="min-height: 40px"
     >
       <v-row>
         <v-expansion-panels
@@ -54,9 +64,9 @@
           variant="accordion"
         >
           <ConnectionEditor
-            :connection="(connection as TConnection)"
-            :key="index"
             v-for="(connection, index) in nodeGroup.connections"
+            :key="index"
+            :connection="(connection as TConnection)"
           />
         </v-expansion-panels>
       </v-row>

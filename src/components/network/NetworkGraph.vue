@@ -1,23 +1,35 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <svg class="networkGraph" height="100%" ref="networkGraphRef" width="100%">
-      <rect height="100%" id="workspaceHandler" width="100%" />
+    <svg
+      ref="networkGraphRef"
+      class="networkGraph"
+      height="100%"
+      width="100%"
+    >
+      <rect
+        id="workspaceHandler"
+        height="100%"
+        width="100%"
+      />
 
       <g id="networkWorkspace">
         <g class="grid no-print" />
 
         <g id="network">
-          <g :key="graph?.network.connections.all.length" class="synMarker">
+          <g
+            :key="graph?.network.connections.all.length"
+            class="synMarker"
+          >
             <defs
+              v-for="(connection, index) of graph?.network.connections.all"
               :key="'defs' + index"
               :style="{
                 color: 'var(--colorNode' + connection.source.idx + ')',
               }"
-              v-for="(connection, index) of graph?.network.connections.all"
             >
               <marker
-                :key="connection.hash"
                 :id="'syn-' + index"
+                :key="connection.hash"
                 markerHeight="8"
                 markerWidth="16"
                 orient="auto"
@@ -25,26 +37,32 @@
                 refY="4"
               >
                 <path
+                  v-if="connection.view.markerEndLabel === 'generic'"
                   d="M10,2L14,4L10,6"
                   fill="transparent"
                   stroke="currentcolor"
-                  v-if="connection.view.markerEndLabel === 'generic'"
                 />
                 <circle
+                  v-if="connection.view.markerEndLabel === 'inh'"
                   fill="currentcolor"
                   r="2"
                   stroke="currentcolor"
                   transform="translate(12,4)"
-                  v-if="connection.view.markerEndLabel === 'inh'"
                 />
                 <path
+                  v-if="connection.view.markerEndLabel === 'exc'"
                   d="M10,2L14,4L10,6L10,2L14,4"
                   fill="currentcolor"
                   stroke="currentcolor"
-                  v-if="connection.view.markerEndLabel === 'exc'"
                 />
-                <slot name="marker" :connection />
-                <text dx="8" dy="5" />
+                <slot
+                  name="marker"
+                  :connection
+                />
+                <text
+                  dx="8"
+                  dy="5"
+                />
               </marker>
             </defs>
           </g>

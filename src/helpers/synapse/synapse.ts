@@ -77,7 +77,7 @@ export class BaseSynapse extends BaseObj {
   }
 
   get weight(): number {
-    let weight: TSynapseParameter = this.params.weight;
+    const weight: TSynapseParameter = this.params.weight;
     return weight ? (weight.value as number) : 1;
   }
 

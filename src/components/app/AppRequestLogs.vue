@@ -5,12 +5,16 @@
     temporary
     width="400"
   >
-    <v-toolbar color="transparent" density="compact" title="Request logs">
+    <v-toolbar
+      color="transparent"
+      density="compact"
+      title="Request logs"
+    >
       <template #append>
         <v-btn-toggle
+          v-model="appStore.state.filterTag"
           class="mx-2"
           density="compact"
-          v-model="appStore.state.filterTag"
         >
           <v-btn
             color="error"
@@ -47,31 +51,40 @@
 
     <div class="mx-4">
       <v-btn
+        v-if="appStore.state.filterTag"
         block
         class="px-2"
         density="compact"
         text="Show all logs"
-        v-if="appStore.state.filterTag"
         @click="appStore.state.filterTag = ''"
       />
     </div>
 
-    <v-list class="px-1" density="compact">
+    <v-list
+      class="px-1"
+      density="compact"
+    >
       <v-divider />
 
       <v-list-item
         v-for="(log, index) in appStore.state.requestLogs"
-        :key="index"
-        class="pa-0"
         v-show="
           appStore.state.filterTag
             ? log.level === appStore.state.filterTag
             : true
         "
+        :key="index"
+        class="pa-0"
       >
-        <v-toolbar color="transparent" density="compact">
+        <v-toolbar
+          color="transparent"
+          density="compact"
+        >
           <template #prepend>
-            <v-icon :color="log.level" :icon="icons[log.level]" />
+            <v-icon
+              :color="log.level"
+              :icon="icons[log.level]"
+            />
           </template>
 
           <v-toolbar-title
@@ -89,7 +102,10 @@
           </template>
         </v-toolbar>
 
-        <div class="px-4" v-html="log.htmlContent" />
+        <div
+          class="px-4"
+          v-html="log.htmlContent"
+        />
 
         <v-divider class="my-1" />
       </v-list-item>

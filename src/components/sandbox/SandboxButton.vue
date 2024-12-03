@@ -2,16 +2,20 @@
   <v-card class="playground-button">
     <v-card-title>Button</v-card-title>
     <v-card-text>
-      <v-row :key="index" class="my-3" v-for="(buttonGrp, index) in buttons">
+      <v-row
+        v-for="(buttonGrp, index) in buttons"
+        :key="index"
+        class="my-3"
+      >
         <v-btn
-          :color="button.color || state.color"
+          v-for="(button, index) in buttonGrp"
           :key="index"
+          :color="button.color || state.color"
           :size="button.size || state.size"
           :text="button.text"
           :variant="(button.variant || state.variant) as variantTypes"
-          @click.stop="update(button)"
           class="mx-1"
-          v-for="(button, index) in buttonGrp"
+          @click.stop="update(button)"
         />
       </v-row>
     </v-card-text>

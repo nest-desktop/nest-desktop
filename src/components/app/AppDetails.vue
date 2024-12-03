@@ -6,11 +6,22 @@
         target="_blank"
       >
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-license" />
+          <v-col
+            class="font-weight-bold text-left"
+            cols="4"
+          >
+            <v-icon
+              class="mx-2"
+              icon="mdi:mdi-license"
+            />
             License
           </v-col>
-          <v-col class="text-right" cols="8">{{ license }}</v-col>
+          <v-col
+            class="text-right"
+            cols="8"
+          >
+            {{ license }}
+          </v-col>
         </v-row>
       </v-list-item>
       <v-list-item
@@ -20,31 +31,63 @@
         target="_blank"
       >
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-tag-outline" />
+          <v-col
+            class="font-weight-bold text-left"
+            cols="4"
+          >
+            <v-icon
+              class="mx-2"
+              icon="mdi:mdi-tag-outline"
+            />
             Current version
           </v-col>
-          <v-col class="text-right" cols="8">{{ appVersion }}</v-col>
+          <v-col
+            class="text-right"
+            cols="8"
+          >
+            {{ appVersion }}
+          </v-col>
         </v-row>
       </v-list-item>
-      <v-list-item :href="mailText" target="_blank">
+      <v-list-item
+        :href="mailText"
+        target="_blank"
+      >
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
+          <v-col
+            class="font-weight-bold text-left"
+            cols="4"
+          >
+            <v-icon
+              class="mx-2"
+              icon="mdi:mdi-email-outline"
+            />
             Contact
           </v-col>
-          <v-col class="text-caption text-right" cols="8">
+          <v-col
+            class="text-caption text-right"
+            cols="8"
+          >
             {{ contactName }}
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-magnify" />
+          <v-col
+            class="font-weight-bold text-left"
+            cols="4"
+          >
+            <v-icon
+              class="mx-2"
+              icon="mdi:mdi-magnify"
+            />
             Client info
           </v-col>
-          <v-col class="text-caption text-right" cols="8">
+          <v-col
+            class="text-caption text-right"
+            cols="8"
+          >
             <v-chip
               :text="state.browserName + ' ' + state.browserVersion"
               prepend-icon="mdi:mdi-application-outline"
@@ -64,15 +107,18 @@
 
     <v-divider />
 
-    <v-list class="my-2" density="compact">
+    <v-list
+      class="my-2"
+      density="compact"
+    >
       <v-list-subheader>References</v-list-subheader>
       <v-list-item
+        v-for="(item, index) in refItems"
         :key="index"
         append-icon="mdi:mdi-open-in-new"
         target="_blank"
         v-bind="item"
         :title="item.title + ' (' + item.href + ')'"
-        v-for="(item, index) in refItems"
       />
     </v-list>
   </v-card>

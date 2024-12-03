@@ -1,6 +1,12 @@
 <template>
-  <v-layout class="activityGraphLayout" full-height>
-    <div class="activityChartGraph full-height" ref="activityChartGraph" />
+  <v-layout
+    class="activityGraphLayout"
+    full-height
+  >
+    <div
+      ref="activityChartGraph"
+      class="activityChartGraph full-height"
+    />
   </v-layout>
 </template>
 

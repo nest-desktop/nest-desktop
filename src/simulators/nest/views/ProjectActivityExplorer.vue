@@ -5,12 +5,12 @@
   </v-toolbar> -->
 
   <ActivityChartGraph
-    :graph="graph.activityChartGraph"
     v-if="projectViewStore.state.views.activity === 'abstract'"
+    :graph="graph.activityChartGraph"
   />
   <ActivityAnimationGraph
-    :graph="graph.activityAnimationGraph"
     v-else-if="projectViewStore.state.views.activity === 'spatial'"
+    :graph="graph.activityAnimationGraph"
   />
 </template>
 

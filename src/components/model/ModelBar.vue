@@ -1,5 +1,9 @@
 <template>
-  <v-app-bar class="d-print-none" elevation="0" height="48">
+  <v-app-bar
+    class="d-print-none"
+    elevation="0"
+    height="48"
+  >
     <v-tabs stacked>
       <slot name="prependTabs" />
 
@@ -32,10 +36,10 @@
     <slot name="prependBtn" />
 
     <SimulationButton
+      v-if="modelStore.state.project"
       :disabled="!modelStore.model.isNeuron"
       :simulation="modelStore.state.project.simulation"
       @click:simulate="modelStore.startSimulation()"
-      v-if="modelStore.state.project"
     />
   </v-app-bar>
 </template>

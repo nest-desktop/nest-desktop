@@ -6,13 +6,17 @@
       title="Simulation kernel editor"
     />
 
-    <Card :color="props.color" class="ma-1" title="Simulation">
+    <Card
+      :color="props.color"
+      class="ma-1"
+      title="Simulation"
+    >
       <v-card-text class="py-0">
         <ValueSlider
-          :thumb-color="props.color"
-          class="mx-1 py-2"
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"
+          :thumb-color="props.color"
+          class="mx-1 py-2"
         />
       </v-card-text>
     </Card>

@@ -203,7 +203,7 @@ export function defineModelStore(
       const updateProject = () => {
         logger.trace("update");
 
-        if (!model || !model.value.isNeuron) {
+        if (!model.value || !model.value.isNeuron) {
           state.project = null;
           return;
         }

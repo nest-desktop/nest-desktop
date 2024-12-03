@@ -1,5 +1,6 @@
 <template>
   <v-range-slider
+    v-model="value"
     :step="props.step"
     class="mx-1 py-1 range-slider align-center"
     color="grey"
@@ -8,10 +9,10 @@
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    v-model="value"
   >
     <template #prepend>
       <v-text-field
+        v-model="lower"
         :label="(props.inputLabel[0] as string)"
         :step="props.step"
         :suffix="props.unit"
@@ -19,12 +20,12 @@
         hide-details
         style="max-width: 80px"
         type="number"
-        v-model="lower"
         variant="underlined"
       />
     </template>
     <template #append>
       <v-text-field
+        v-model="upper"
         :label="(props.inputLabel[1] as string)"
         :step="props.step"
         :suffix="props.unit"
@@ -32,7 +33,6 @@
         hide-details
         style="max-width: 80px"
         type="number"
-        v-model="upper"
         variant="underlined"
       />
     </template>
@@ -43,8 +43,8 @@
 import { computed, reactive, watch } from "vue";
 
 const props = defineProps({
-  inputLabel: { default: ["lower", "upper"], type: Array<String> },
-  modelValue: { default: [0, 100], type: Array<Number> },
+  inputLabel: { default: ["lower", "upper"], type: Array<string> },
+  modelValue: { default: [0, 100], type: Array<number> },
   step: { default: 1, type: Number },
   unit: { default: "", type: String },
 });

@@ -1,40 +1,52 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
-      <v-icon icon="mdi:mdi-import" size="small" />
+      <v-icon
+        icon="mdi:mdi-import"
+        size="small"
+      />
       Import
 
-      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+      <v-btn
+        flat
+        icon="mdi:mdi-close"
+        size="small"
+        @click="closeDialog()"
+      />
     </v-card-title>
 
-    <v-toolbar class="px-2" color="transparent" density="compact">
+    <v-toolbar
+      class="px-2"
+      color="transparent"
+      density="compact"
+    >
       <v-btn-toggle
+        v-model="state.source"
         class="mr-1"
         density="compact"
         mandatory
-        v-model="state.source"
       >
         <v-btn
+          v-for="(source, index) in sources"
           :key="index"
           style="min-width: 40px"
           v-bind="source"
-          v-for="(source, index) in sources"
         />
       </v-btn-toggle>
 
       <template v-if="state.source === 'github'">
         <v-btn-toggle
-          @update:model-value="getTreesFromGithub()"
+          v-model="state.githubGroup"
           class="mx-1"
           density="compact"
           mandatory
-          v-model="state.githubGroup"
+          @update:model-value="getTreesFromGithub()"
         >
           <v-btn
+            v-for="(source, index) in groups"
             :key="index"
             style="min-width: 40px"
             v-bind="source"
-            v-for="(source, index) in groups"
           />
         </v-btn-toggle>
 
@@ -42,43 +54,42 @@
           :disabled="state.githubTrees.length === 0"
           :items="state.githubTrees"
           :label="state.githubGroup + ' path'"
-          @update:model-value="getFilesFromGithub"
           class="mx-1"
           density="compact"
           flat
           hide-details
           item-title="path"
+          v-model="state.githubSelectedTree"
           prepend-icon="mdi:mdi-github"
           return-object
-          v-model="state.githubSelectedTree"
+          @update:model-value="getFilesFromGithub"
         />
 
         <v-select
           :disabled="state.githubFiles.length === 0"
           :items="state.githubFiles"
-          @update:model-value="updateURLFromGithub"
           class="mx-1"
           density="compact"
           flat
           hide-details
           item-title="path"
+          v-model="state.githubSelectedFile"
           label="File"
           return-object
-          v-model="state.githubSelectedFile"
+          @update:model-value="updateURLFromGithub"
         />
 
         <v-btn
-          @click="fetchProps()"
           flat
           prepend-icon="mdi:mdi-download"
           text="fetch"
           variant="outlined"
+          @click="fetchProps()"
         />
       </template>
 
       <template v-else-if="state.source === 'drive'">
         <v-file-input
-          @update:model-value="loadProjectsFromDrive"
           density="compact"
           flat
           hide-details
@@ -86,13 +97,14 @@
           show-size
           title="Click to select a file"
           truncate-length="100"
+          @update:model-value="loadProjectsFromDrive"
         >
           <template #append>
             <v-btn
-              @upload="loadProjectsFromDrive"
               flat
               prepend-icon="mdi:mdi-upload"
               text="upload"
+              @upload="loadProjectsFromDrive"
             />
           </template>
         </v-file-input>
@@ -100,6 +112,7 @@
 
       <template v-else-if="state.source === 'url'">
         <v-text-field
+          v-model="state.url"
           class="ma-0 pa-0"
           clearable
           density="compact"
@@ -109,14 +122,13 @@
           label="URL"
           prepend-icon="mdi:mdi-web"
           title="Please enter the project's URL"
-          v-model="state.url"
         >
           <template #append>
             <v-btn
-              @click="fetchProps()"
               flat
               prepend-icon="mdi:mdi-download"
               text="fetch"
+              @click="fetchProps()"
             />
           </template>
         </v-text-field>
@@ -129,6 +141,7 @@
     </v-toolbar>
 
     <v-data-table-virtual
+      v-model="state.selected"
       :group-by="[{ key: 'group', order: 'asc' }]"
       :headers
       :items="state.items"
@@ -137,7 +150,6 @@
       item-value="name"
       return-object
       show-select
-      v-model="state.selected"
     >
       <!-- <template #group-header="{ item, columns, toggleGroup, isGroupOpen }">
             <tr>
@@ -185,33 +197,36 @@
 
     <v-card-actions>
       <v-btn
-        @click="fetchFromOldDatabase()"
+        v-if="currentSimulator === 'nest'"
         icon="mdi:mdi-database-arrow-up-outline"
         size="small"
         title="fetch from old database"
         variant="text"
-        v-if="currentSimulator === 'nest'"
+        @click="fetchFromOldDatabase()"
       />
 
       <v-spacer />
 
       <v-btn
         :disabled="state.selected.length === 0"
+        prepend-icon="mdi:mdi-import"
+        text="import selected"
         @click="
           () => {
             importSelected();
             closeDialog();
           }
         "
-        prepend-icon="mdi:mdi-import"
-        text="import selected"
       />
       <v-btn
-        @click="state.items = []"
         prepend-icon="mdi:mdi-delete-empty-outline"
         text="clear"
+        @click="state.items = []"
       />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn
+        text="close"
+        @click="closeDialog()"
+      />
     </v-card-actions>
   </v-card>
 </template>

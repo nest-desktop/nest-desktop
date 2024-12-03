@@ -3,11 +3,14 @@
     :model-value="navStore.state.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="navStore.state.width"
-    @transitionend="navStore.dispatchWindowResize()"
     class="d-print-none"
     permanent
+    @transitionend="navStore.dispatchWindowResize()"
   >
-    <div @mousedown="navStore.resizeSideNav()" class="resize-handle" />
+    <div
+      class="resize-handle"
+      @mousedown="navStore.resizeSideNav()"
+    />
 
     <v-toolbar
       :color
@@ -17,6 +20,7 @@
       extension-height="36"
     >
       <v-text-field
+        v-model="search"
         class="mx-1"
         clearable
         density="compact"
@@ -24,12 +28,10 @@
         placeholder="Search project"
         prepend-inner-icon="mdi:mdi-magnify"
         single-line
-        v-model="search"
       />
 
       <template #extension>
         <v-fab
-          @click="newProjectRoute(router)"
           class="ms-4"
           color="primary"
           icon="mdi:mdi-plus"
@@ -38,9 +40,13 @@
           absolute
           offset
           title="Create a new project"
+          @click="newProjectRoute(router)"
         />
 
-        <v-row class="mx-4 text-subtitle-2" no-gutters>
+        <v-row
+          class="mx-4 text-subtitle-2"
+          no-gutters
+        >
           <v-spacer />
 
           {{ projects.length }} project
@@ -77,19 +83,19 @@
       <template
         v-if="
           projectStore.state.project &&
-          !projectStore.state.project.docId &&
-          projectStore.state.project.state?.editMode
+            !projectStore.state.project.docId &&
+            projectStore.state.project.state?.editMode
         "
       >
         <v-text-field
-          @click:append-inner="saveProject(projectStore.state.project)"
           append-inner-icon="mdi:mdi-content-save-edit-outline"
           autofocused
           class="pb-1"
+          v-model="projectStore.state.project.name"
           density="compact"
           hide-details
           label="Project name"
-          v-model="projectStore.state.project.name"
+          @click:append-inner="saveProject(projectStore.state.project)"
         />
       </template>
 
@@ -104,10 +110,12 @@
             :ripple="!project.state?.editMode"
             v-bind="props"
           >
-            <template #append v-if="!project.state?.editMode">
+            <template
+              v-if="!project.state?.editMode"
+              #append
+            >
               <template v-if="project.doc">
                 <v-btn
-                  @click.prevent="saveProject(project)"
                   :disabled="!project.state?.changes"
                   :color="project.state?.changes ? 'orange' : 'primary'"
                   :icon="
@@ -117,6 +125,7 @@
                   "
                   size="x-small"
                   variant="text"
+                  @click.prevent="saveProject(project)"
                 />
               </template>
 
@@ -126,38 +135,53 @@
               />
             </template>
 
-            <template #default v-if="project.state?.editMode">
+            <template
+              v-if="project.state?.editMode"
+              #default
+            >
               <v-text-field
-                @click.prevent
-                @click:append-inner="saveProject(project)"
-                @update:model-value="project.state.state.changes = true"
                 append-inner-icon="mdi:mdi-content-save-edit-outline"
                 autofocused
                 class="pt-2"
                 density="compact"
                 hide-details
-                label="Project name"
                 v-model="project.name"
+                label="Project name"
+                @click.prevent
+                @click:append-inner="saveProject(project)"
+                @update:model-value="project.state.state.changes = true"
               />
             </template>
 
-            <template #default v-else-if="appStore.state.devMode">
+            <template
+              v-else-if="appStore.state.devMode"
+              #default
+            >
               <v-list-item-title>
                 {{
                   project.name || "undefined project " + truncate(project.id)
                 }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                <span class="mx-1" v-if="project.id">
+                <span
+                  v-if="project.id"
+                  class="mx-1"
+                >
                   {{ truncate(project.id) }}
                 </span>
-                <span class="mx-1" v-if="project.doc">
+                <span
+                  v-if="project.doc"
+                  class="mx-1"
+                >
                   {{ truncate(project.docId) }}
                 </span>
               </v-list-item-subtitle>
             </template>
 
-            <template #default v-else>
+            <template
+              v-else
+              #default
+            >
               <v-list-item-title>
                 {{
                   project.name || "undefined project " + truncate(project.id)

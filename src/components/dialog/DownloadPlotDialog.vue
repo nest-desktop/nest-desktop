@@ -3,35 +3,59 @@
     <v-card-title>Download plot as image</v-card-title>
 
     <v-card-text>
-      <v-text-field density="compact" label="filename" v-model="state.toImageButtonOptions.filename" />
+      <v-text-field
+        v-model="state.toImageButtonOptions.filename"
+        density="compact"
+        label="filename"
+      />
 
       <v-row>
         <v-col cols="6">
-          <v-text-field density="compact" label="width" v-model="state.toImageButtonOptions.width">
-            <template #prepend>size:</template>
+          <v-text-field
+            v-model="state.toImageButtonOptions.width"
+            density="compact"
+            label="width"
+          >
+            <template #prepend>
+              size:
+            </template>
           </v-text-field>
         </v-col>
         <v-col cols="6">
-          <v-text-field density="compact" label="height" v-model="state.toImageButtonOptions.height">
-            <template #prepend>x</template>
-            <template #append>px</template>
+          <v-text-field
+            v-model="state.toImageButtonOptions.height"
+            density="compact"
+            label="height"
+          >
+            <template #prepend>
+              x
+            </template>
+            <template #append>
+              px
+            </template>
           </v-text-field>
         </v-col>
       </v-row>
 
       <v-select
+        v-model="state.toImageButtonOptions.format"
         :items="state.imageFormats"
         density="compact"
         hide-details
         label="Image format"
-        v-model="state.toImageButtonOptions.format"
       />
     </v-card-text>
 
     <v-card-actions>
       <v-spacer />
-      <v-btn @click="closeDialog(state.toImageButtonOptions)" text="download" />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn
+        text="download"
+        @click="closeDialog(state.toImageButtonOptions)"
+      />
+      <v-btn
+        text="close"
+        @click="closeDialog()"
+      />
     </v-card-actions>
   </v-card>
 </template>

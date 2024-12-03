@@ -40,15 +40,18 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2" title="References">
+        <v-card
+          class="mt-2"
+          title="References"
+        >
           <v-card-text>
             <v-list>
               <v-list-item
+                v-for="(refItem, index) in refItems"
                 :key="index"
                 append-icon="mdi:mdi-open-in-new"
                 target="_blank"
                 v-bind="refItem"
-                v-for="(refItem, index) in refItems"
               />
             </v-list>
           </v-card-text>
@@ -57,7 +60,11 @@
 
       <v-col md="6">
         <v-card title="Backend">
-          <v-expansion-panels elevation="0" title variant="accordion">
+          <v-expansion-panels
+            elevation="0"
+            title
+            variant="accordion"
+          >
             <v-expansion-panel>
               <v-expansion-panel-title>
                 Backend settings

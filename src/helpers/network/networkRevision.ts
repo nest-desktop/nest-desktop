@@ -9,7 +9,7 @@ import { INodeProps } from "../node/node";
 import { INetworkProps } from "./network";
 
 interface INetworkRevisionProps extends INetworkProps {
-  codeHash?: String;
+  codeHash?: string;
 }
 
 export class NetworkRevision extends BaseObj {

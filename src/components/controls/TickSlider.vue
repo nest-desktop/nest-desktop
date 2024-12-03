@@ -3,8 +3,6 @@
     :max
     :min="0"
     :ticks
-    @click:append="increment"
-    @click:prepend="decrement"
     append-icon="mdi:mdi-plus"
     class="mx-1 py-3 tick-slider"
     color="grey"
@@ -14,15 +12,21 @@
     step="1"
     style="position: relative"
     thumb-size="16"
+    @click:append="increment"
     track-size="2"
+    @click:prepend="decrement"
     v-model="tickIdx"
   >
     <template #append>
-      <div class="unit">{{ props.unit }}</div>
+      <div class="unit">
+        {{ props.unit }}
+      </div>
     </template>
 
     <template #tick-label="{ index }">
-      <div class="label">{{ state.ticks[index] }}</div>
+      <div class="label">
+        {{ state.ticks[index] }}
+      </div>
     </template>
   </v-slider>
 </template>

@@ -2,29 +2,41 @@
   <div class="activityChartPanelMenuPopover">
     <v-card>
       <v-list density="compact">
-        <v-list-group fluid value="Analog signals">
+        <v-list-group
+          fluid
+          value="Analog signals"
+        >
           <template #activator="{ props }">
-            <v-list-item v-bind="props" title="Analog signals" />
+            <v-list-item
+              v-bind="props"
+              title="Analog signals"
+            />
           </template>
           <v-list-item
+            v-for="(model, index) in graph.modelsAnalog"
             :key="'analogPanel' + index"
             :prepend-icon="model.icon"
             :title="model.label"
             @click="selectModel(model.id)"
-            v-for="(model, index) in graph.modelsAnalog"
           />
         </v-list-group>
 
-        <v-list-group fluid value="Spike activity">
+        <v-list-group
+          fluid
+          value="Spike activity"
+        >
           <template #activator="{ props }">
-            <v-list-item v-bind="props" title="Spike activity" />
+            <v-list-item
+              v-bind="props"
+              title="Spike activity"
+            />
           </template>
           <v-list-item
+            v-for="(model, index) in graph.modelsSpike"
             :key="'spikePanel' + index"
             :prepend-icon="model.icon"
             :title="model.label"
             @click="selectModel(model.id)"
-            v-for="(model, index) in graph.modelsSpike"
           />
         </v-list-group>
       </v-list>

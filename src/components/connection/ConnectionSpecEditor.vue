@@ -1,6 +1,11 @@
 <template>
-  <v-btn-group class="pt-2 mt-1" style="width: 100%" variant="text">
+  <v-btn-group
+    class="pt-2 mt-1"
+    style="width: 100%"
+    variant="text"
+  >
     <v-select
+      v-model="connection.rule.value"
       :disabled="
         connection.sourceNode.size === 1 && connection.targetNode.size === 1
       "
@@ -9,7 +14,6 @@
       density="compact"
       hide-details
       label="Connection rule"
-      v-model="connection.rule.value"
     />
 
     <v-menu :close-on-content-click="false">
@@ -27,14 +31,14 @@
       <v-card>
         <v-card-text>
           <v-checkbox
-            :color="connection.sourceNode.view.color"
+            v-for="(param, index) in connection.paramsAll"
             :key="index"
+            v-model="connection.paramsVisible"
+            :color="connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"
             density="compact"
             hide-details
-            v-for="(param, index) in connection.paramsAll"
-            v-model="connection.paramsVisible"
           >
             <template #append>
               {{ param.id }}: {{ param.value }}
@@ -45,15 +49,21 @@
       </v-card>
     </v-menu>
 
-    <Menu :items class="rounded-circle" />
+    <Menu
+      :items
+      class="rounded-circle"
+    />
   </v-btn-group>
 
-  <v-list density="compact" v-if="connection.paramsVisible.length > 0">
+  <v-list
+    v-if="connection.paramsVisible.length > 0"
+    density="compact"
+  >
     <ParamListItem
-      :color="connection.sourceNode.view.color"
-      :key="index"
-      :param="(param as ConnectionParameter)"
       v-for="(param, index) in connection.filteredParams"
+      :key="index"
+      :color="connection.sourceNode.view.color"
+      :param="(param as ConnectionParameter)"
     />
   </v-list>
 </template>

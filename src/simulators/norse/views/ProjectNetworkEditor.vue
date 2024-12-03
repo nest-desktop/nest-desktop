@@ -1,7 +1,14 @@
 <template>
-  <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
+  <v-layout
+    id="networkGraphLayout"
+    class="networkGraphLayout"
+    full-height
+  >
     <NetworkEditorToolbar />
-    <NetworkGraph :key="network.project.id" :network />
+    <NetworkGraph
+      :key="network.project.id"
+      :network
+    />
   </v-layout>
 </template>
 

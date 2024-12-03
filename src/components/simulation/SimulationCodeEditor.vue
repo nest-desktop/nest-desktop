@@ -1,17 +1,32 @@
 <template>
-  <v-toolbar color="transparent" density="compact">
-    <v-btn-toggle class="mx-1" color="blue" multiple rounded="0" variant="text">
+  <v-toolbar
+    color="transparent"
+    density="compact"
+  >
+    <v-btn-toggle
+      class="mx-1"
+      color="blue"
+      multiple
+      rounded="0"
+      variant="text"
+    >
       <IconBtn
-        :icon="item.icon"
+        v-for="(item, index) in codeBlocks"
         :key="index"
+        :icon="item.icon"
         :title="item.title"
         size="x-small"
-        v-for="(item, index) in codeBlocks"
       />
     </v-btn-toggle>
     <v-spacer />
-    <v-btn icon="mdi:mdi-download" size="small" />
-    <v-btn icon="mdi:mdi-dots-vertical" size="small" />
+    <v-btn
+      icon="mdi:mdi-download"
+      size="small"
+    />
+    <v-btn
+      icon="mdi:mdi-dots-vertical"
+      size="small"
+    />
   </v-toolbar>
 
   <!-- <v-btn
@@ -24,9 +39,9 @@
   /> -->
 
   <SimulationCodeMirror
+    v-if="simulation"
     :disabled="state.disabled"
     :simulation="simulation"
-    v-if="simulation"
   />
 </template>
 

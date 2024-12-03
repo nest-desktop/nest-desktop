@@ -3,7 +3,6 @@
     <v-select
       :key="node.hash"
       :items="node.recordables"
-      @update:model-value="nextTick(() => node.changes())"
       base-color="primary"
       chips
       class="pa-1"
@@ -14,21 +13,32 @@
       hide-details
       item-title="title"
       item-value="groupId"
+      @update:model-value="nextTick(() => node.changes())"
       label="Record from"
       multiple
       persistent-hint
       return-object
       v-model="node.records"
     >
-      <template #chip="{ item }" v-if="node.records.length > 0">
+      <template
+        v-if="node.records.length > 0"
+        #chip="{ item }"
+      >
         <NodeRecordChip
-          :nodeRecord="(node.getNodeRecord(item.value) as NodeRecord)"
           v-if="node.getNodeRecord(item.value)"
+          :node-record="(node.getNodeRecord(item.value) as NodeRecord)"
         />
       </template>
 
-      <template #item="{ item, props }" v-if="node.records.length > 0">
-        <v-list-item v-bind="props" density="compact" title="">
+      <template
+        v-if="node.records.length > 0"
+        #item="{ item, props }"
+      >
+        <v-list-item
+          v-bind="props"
+          density="compact"
+          title=""
+        >
           <v-checkbox
             :label="item.title"
             :model-value="node.records.includes(item.raw)"
@@ -37,9 +47,9 @@
           >
             <template #append>
               <NodeRecordChip
-                :nodeRecord="(node.getNodeRecord(item.value) as NodeRecord)"
-                class="my-auto"
                 v-if="node.getNodeRecord(item.value)"
+                :node-record="(node.getNodeRecord(item.value) as NodeRecord)"
+                class="my-auto"
               />
             </template>
           </v-checkbox>

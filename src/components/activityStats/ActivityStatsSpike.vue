@@ -1,9 +1,9 @@
 <template>
   <v-data-table-virtual
+    :key="state.activityHash"
     :headers="headers as any[]"
     :height="props.height"
     :items="state.items"
-    :key="state.activityHash"
     :loading="state.loading"
     class="activityStatsSpike"
     density="compact"
@@ -24,8 +24,14 @@
         <table class="py-2">
           <tbody>
             <tr>
-              <td :key="idx" class="px-2" v-for="(header, idx) in headers">
-                <div v-if="header.key === 'id'">Total</div>
+              <td
+                v-for="(header, idx) in headers"
+                :key="idx"
+                class="px-2"
+              >
+                <div v-if="header.key === 'id'">
+                  Total
+                </div>
                 <div v-else-if="header.key === 'count'">
                   <span>&#931;</span>
                   = {{ colSum(header.key) }}

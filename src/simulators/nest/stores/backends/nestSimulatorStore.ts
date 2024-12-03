@@ -32,7 +32,7 @@ const fetchModels = (): void => {
     .post("/api/GetKernelStatus", { keys: ["node_models", "synapse_models"] })
     .then((response: AxiosResponse) => {
       if (response.data) {
-        let models = [...response.data[0], ...response.data[1]];
+        const models = [...response.data[0], ...response.data[1]];
         models.sort((a: string, b: string) => sortString(a, b));
 
         modelStore.state.models = models.map((modelId: string) => ({

@@ -1,29 +1,36 @@
 <template>
-  <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
+  <v-layout
+    id="networkGraphLayout"
+    class="networkGraphLayout"
+    full-height
+  >
     <NetworkEditorToolbar>
       <template #ContextMenuList="{ graph }">
         <ConnectionMenuList
-          :connection="(graph.state.contextMenu.connection as NESTConnection)"
           v-if="graph.state.contextMenu.connection"
+          :connection="(graph.state.contextMenu.connection as NESTConnection)"
         />
         <NESTNodeMenuList
-          :node="(graph.state.contextMenu.node as NESTNode)"
           v-if="graph.state.contextMenu.node"
+          :node="(graph.state.contextMenu.node as NESTNode)"
         />
         <NodeGroupMenuList
-          :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
           v-if="graph.state.contextMenu.nodeGroup"
+          :node-group="(graph.state.contextMenu.nodeGroup as NodeGroup)"
         />
       </template>
     </NetworkEditorToolbar>
-    <NetworkGraph :key="network.project.id" :network>
+    <NetworkGraph
+      :key="network.project.id"
+      :network
+    >
       <template #marker="{ connection }">
         <circle
+          v-if="connection.view.markerEndLabel === 'assigned'"
           fill="transparent"
           r="4"
           stroke="currentcolor"
           transform="translate(5,5)"
-          v-if="connection.view.markerEndLabel === 'assigned'"
         />
       </template>
 

@@ -10,8 +10,8 @@ import { notifyError, notifySuccess } from "../common/notification";
 import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
 
 export interface IResponseProps {
-  data: Object | string;
-  config: Object;
+  data: object | string;
+  config: object;
   headers: AxiosHeaders;
   request: XMLHttpRequest;
   status: number;

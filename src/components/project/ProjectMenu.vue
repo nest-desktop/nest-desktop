@@ -1,5 +1,8 @@
 <template>
-  <Menu :items size="x-small" />
+  <Menu
+    :items
+    size="x-small"
+  />
 </template>
 
 <script lang="ts" setup>

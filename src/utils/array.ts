@@ -72,9 +72,9 @@ export function min(values: number[]): number {
  * https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
  */
 export function onlyUnique(
-  value: Object | number | string,
+  value: object | number | string,
   index: number,
-  array: (Object | number | string)[]
+  array: (object | number | string)[]
 ): boolean {
   return array.indexOf(value) === index;
 }

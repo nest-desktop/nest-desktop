@@ -12,7 +12,7 @@ import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 interface IProjectDBStoreState {
-  initialized: Boolean;
+  initialized: boolean;
   projects: (TProject | TProjectProps)[];
   searchTerm: string;
   tryImports: number;

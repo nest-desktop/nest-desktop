@@ -21,8 +21,8 @@ export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
     const pos2 = nodes[1].view.position;
 
     // [dx, dy] is the direction vector of the line.
-    var dx = pos2.x - pos1.x;
-    var dy = pos2.y - pos1.y;
+    let dx = pos2.x - pos1.x;
+    let dy = pos2.y - pos1.y;
 
     // Scale it to something very small.
     dx *= 0.001;
@@ -30,8 +30,8 @@ export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
 
     // Orthogonal directions to a 2D vector [dx, dy] are [dy, -dx] and [-dy, dx]
     // take the midpoint [mx, my] of the line and translate it in both directions.
-    var mx = (pos1.x + pos2.x) * 0.5;
-    var my = (pos1.y + pos2.y) * 0.5;
+    const mx = (pos1.x + pos2.x) * 0.5;
+    const my = (pos1.y + pos2.y) * 0.5;
     nodeCoords = nodeCoords.concat([
       [mx + dy, my - dx],
       [mx - dy, my + dx],

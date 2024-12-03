@@ -4,13 +4,13 @@
       <slot
         name="activator"
         v-bind="{
-              props: {
-                ...props,
-                onClick: closeMenu(),
-                onContextmenu: (e: any) => onContextmenuPipe(props.onClick, e),
-                tabindex: '0',
-              },
-            }"
+          props: {
+            ...props,
+            onClick: closeMenu(),
+            onContextmenu: (e: any) => onContextmenuPipe(props.onClick, e),
+            tabindex: '0',
+          },
+        }"
       />
     </template>
 
@@ -18,7 +18,11 @@
       <v-list density="compact">
         <slot name="prependItem" />
 
-        <v-list-item :key="index" v-bind="item" v-for="(item, index) in items">
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          v-bind="item"
+        >
           <template #prepend>
             <v-icon v-bind="item.icon" />
           </template>

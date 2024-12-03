@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel density="compact" flat>
+  <v-expansion-panel
+    density="compact"
+    flat
+  >
     <v-expansion-panel-title>
       <v-row class="text-button">
         <NodeAvatar :node="layer.activity.recorder" />
@@ -20,26 +23,25 @@
       <v-card flat>
         <v-select
           :items="layer.models"
-          @update:model-value="update"
           class="my-2"
           density="compact"
           hide-details
+          v-model="layer.modelSelected"
           label="select geometry model"
           prepend-inner-icon="mdi-shape"
           return-object
-          v-model="layer.modelSelected"
+          @update:model-value="update"
         />
       </v-card>
 
       <v-card
+        v-if="layer.activity.recorder.model.isAnalogRecorder"
         flat
         rounded="0"
-        v-if="layer.activity.recorder.model.isAnalogRecorder"
       >
         <span v-if="layer.state.records.length > 0">
           <v-select
             :items="layer.state.records"
-            @update:model-value="update"
             attach
             chips
             class="pa-1 pt-3"
@@ -50,6 +52,7 @@
             persistent-hint
             return-object
             v-model="layer.state.record"
+            @update:model-value="update"
           >
             <template #selection="{ item }">
               <v-chip
@@ -86,29 +89,35 @@
           </v-select>
         </span>
 
-        <v-card flat v-if="layer.state.record">
-          <v-btn-group class="pt-2 px-1" style="width: 100%">
+        <v-card
+          v-if="layer.state.record"
+          flat
+        >
+          <v-btn-group
+            class="pt-2 px-1"
+            style="width: 100%"
+          >
             <v-text-field
               :label="`min [${layer.state.record.unit}]`"
               :step="0.1"
-              @update:model-value="update"
               density="compact"
+              v-model="layer.state.record.state.colorMap.min"
               hide-details
               rounded="e-0"
               style="flex-grow: 0"
               type="number"
-              v-model="layer.state.record.state.colorMap.min"
               width="100"
+              @update:model-value="update"
             />
 
             <v-select
+              v-model="layer.state.record.state.colorMap.scale"
               :items="colorScales"
-              @update:model-value="update"
               density="compact"
               label="color map"
               hide-details
               rounded="0"
-              v-model="layer.state.record.state.colorMap.scale"
+              @update:model-value="update"
             >
               <template #item="{ item, props }">
                 <v-list-item v-bind="props">
@@ -138,23 +147,23 @@
             <v-text-field
               :label="`max [${layer.state.record.unit}]`"
               :step="0.1"
-              @update:model-value="update"
               density="compact"
+              v-model="layer.state.record.state.colorMap.max"
               hide-details
               rounded="s-0"
               style="flex-grow: 0"
               type="number"
-              v-model="layer.state.record.state.colorMap.max"
               width="100"
+              @update:model-value="update"
             />
           </v-btn-group>
 
           <v-checkbox
-            @update:model-value="update"
+            v-model="layer.state.record.state.colorMap.reverse"
             color="accent"
             density="compact"
             label="reverse colormap"
-            v-model="layer.state.record.state.colorMap.reverse"
+            @update:model-value="update"
           />
         </v-card>
       </v-card>
@@ -180,60 +189,60 @@
       </v-card> -->
 
       <v-card
+        v-if="layer.activity.recorder.model.isSpikeRecorder"
         flat
         title="Trail"
-        v-if="layer.activity.recorder.model.isSpikeRecorder"
       >
         <v-list>
           <v-list-item>
             <ValueSlider
+              v-model="layer.state.trail.length"
               :max="layer.graph.state.frames.sampleRate * 50"
               :min="0"
               :step="layer.graph.state.frames.sampleRate"
               label="trail length"
-              v-model="layer.state.trail.length"
             />
           </v-list-item>
 
           <v-list-item>
             <v-checkbox
+              v-model="layer.state.trail.fading"
               hide-details
               label="trail fading"
-              v-model="layer.state.trail.fading"
             />
           </v-list-item>
 
           <v-list-item>
             <v-select
+              v-model="layer.state.trail.mode"
               :items="['off', 'growing', 'shrinking']"
               class="mt-2"
               density="compact"
               hide-details
               label="trail mode"
-              v-model="layer.state.trail.mode"
             />
           </v-list-item>
         </v-list>
       </v-card>
 
       <v-card
+        v-if="layer.modelSelected?.value.includes('box')"
         flat
         subtitle="box style"
-        v-if="layer.modelSelected?.value.includes('box')"
       >
         <v-card-text class="py-0">
           <v-checkbox
+            v-model="layer.state.object.flatHeight"
             hide-details
             density="compact"
             label="flatten height"
-            v-model="layer.state.object.flatHeight"
           />
 
           <v-checkbox
+            v-model="layer.state.object.flyingBoxes"
             hide-details
             density="compact"
             label="flying planes"
-            v-model="layer.state.object.flyingBoxes"
           />
         </v-card-text>
       </v-card>
@@ -252,7 +261,7 @@ import { ActivityAnimationLayer } from "../../helpers/activityAnimationGraph/act
 const props = defineProps<{ layer: ActivityAnimationLayer }>();
 const layer = computed(() => props.layer);
 
-const colorScales: String[] = [
+const colorScales: string[] = [
   "BrBG",
   "PRGn",
   "PiYG",

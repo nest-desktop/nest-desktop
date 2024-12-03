@@ -13,7 +13,6 @@
           }"
           :indeterminate="!node.view.state.synWeights"
           :model-value="node.view.state.synWeights"
-          @update:model-value="(value) => updateSynWeights(node as NESTNode, value)"
           density="compact"
           false-icon="mdi:mdi-minus"
           false-value="inhibitory"
@@ -21,6 +20,7 @@
           indeterminate-icon="mdi:mdi-plus-minus-variant"
           true-icon="mdi:mdi-plus"
           true-value="excitatory"
+          @update:model-value="(value) => updateSynWeights(node as NESTNode, value)"
         >
           <template #label>
             <span class="ml-7">Set all synaptic weights</span>

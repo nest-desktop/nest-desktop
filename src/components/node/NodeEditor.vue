@@ -1,10 +1,10 @@
 <template>
   <Card
+    v-if="node.show"
     :color="node.view.color"
+    class="node ma-1"
     @mouseenter="node.view.focus()"
     @mouseleave="node.nodes.unfocusNode()"
-    class="node ma-1"
-    v-if="node.show"
   >
     <v-expansion-panels
       :key="node.connections.length"
@@ -14,22 +14,35 @@
     >
       <v-expansion-panel>
         <v-expansion-panel-title class="ma-0 pa-0 pr-3 pt-1">
-          <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
+          <v-btn-group
+            class="py-1 pr-2"
+            style="width: 100%"
+            variant="text"
+          >
             <v-btn
-              @click.stop="node.toggleSelection()"
-              @click.right.prevent="node.unselect()"
               icon
               class="mx-4 rounded-circle"
               size="medium"
+              @click.stop="node.toggleSelection()"
+              @click.right.prevent="node.unselect()"
             >
               <NodeAvatar :node />
             </v-btn>
 
-            <slot name="nodeModelSelect" :selectState="state">
-              <NodeModelSelect :node @openMenu="() => (state.menu = true)" />
+            <slot
+              name="nodeModelSelect"
+              :select-state="state"
+            >
+              <NodeModelSelect
+                :node
+                @open-menu="() => (state.menu = true)"
+              />
             </slot>
 
-            <v-menu :close-on-content-click="false" v-model="state.menu">
+            <v-menu
+              v-model="state.menu"
+              :close-on-content-click="false"
+            >
               <template #activator="{ props }">
                 <v-btn
                   class="rounded-circle"
@@ -42,26 +55,28 @@
               <v-card>
                 <v-card-text>
                   <v-checkbox
+                    v-model="node.view.state.showSize"
                     :disabled="node.model.isRecorder"
                     :color="node.view.color"
                     density="compact"
                     hide-details
                     label="Population size"
-                    v-model="node.view.state.showSize"
                   >
-                    <template #append>n: {{ node.size }}</template>
+                    <template #append>
+                      n: {{ node.size }}
+                    </template>
                   </v-checkbox>
 
                   <template v-if="node.modelParams">
                     <v-checkbox
-                      :color="node.view.color"
+                      v-for="(param, index) in node.model.paramsAll"
                       :key="index"
+                      v-model="node.paramsVisible"
+                      :color="node.view.color"
                       :label="param.label"
                       :value="param.id"
                       density="compact"
                       hide-details
-                      v-for="(param, index) in node.model.paramsAll"
-                      v-model="node.paramsVisible"
                     >
                       <template #append>
                         {{ param.id }}: {{ param.value }}
@@ -72,10 +87,19 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn @click.stop="() => node.showAllParams()" text="all" />
-                  <v-btn @click.stop="() => node.hideAllParams()" text="none" />
+                  <v-btn
+                    text="all"
+                    @click.stop="() => node.showAllParams()"
+                  />
+                  <v-btn
+                    text="none"
+                    @click.stop="() => node.hideAllParams()"
+                  />
                   <v-spacer />
-                  <v-btn @click.stop="state.menu = false" text="close" />
+                  <v-btn
+                    text="close"
+                    @click.stop="state.menu = false"
+                  />
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -89,26 +113,35 @@
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
-          <v-list class="py-0" v-if="node.view.state.showSize">
+          <v-list
+            v-if="node.view.state.showSize"
+            class="py-0"
+          >
             <slot name="popItem">
               <v-list-item class="param pl-0 pr-1">
                 <ValueSlider
-                  :thumb-color="node.view.color"
-                  @update:model-value="node.changes()"
                   id="n"
+                  v-model="node.size"
+                  :thumb-color="node.view.color"
                   input-label="n"
                   label="population size"
-                  v-model="node.size"
+                  @update:model-value="node.changes()"
                 />
 
                 <template #append>
-                  <Menu :items="popItems" size="x-small" />
+                  <Menu
+                    :items="popItems"
+                    size="x-small"
+                  />
                 </template>
               </v-list-item>
             </slot>
           </v-list>
 
-          <v-list class="py-0" v-if="node.model.isMultimeter">
+          <v-list
+            v-if="node.model.isMultimeter"
+            class="py-0"
+          >
             <v-list-item>
               <NodeRecordSelect :node />
             </v-list-item>
@@ -116,11 +149,11 @@
 
           <v-list class="py-0">
             <ParamListItem
-              :color="node.view.color"
-              :key="index"
-              :param="node.params[paramId]"
               v-for="(paramId, index) in node.paramsVisible"
               v-if="node.paramsVisible.length > 0"
+              :key="index"
+              :color="node.view.color"
+              :param="node.params[paramId]"
             />
           </v-list>
         </v-expansion-panel-text>
@@ -128,9 +161,9 @@
 
       <slot name="connectionEditor">
         <ConnectionEditor
-          :connection="(connection as TConnection)"
-          :key="index"
           v-for="(connection, index) in node.connections"
+          :key="index"
+          :connection="(connection as TConnection)"
         />
       </slot>
     </v-expansion-panels>

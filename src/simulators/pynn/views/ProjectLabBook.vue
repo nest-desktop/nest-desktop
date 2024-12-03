@@ -1,38 +1,62 @@
 <template>
   <v-container>
     <v-layout
-      class="networkGraphLayout"
       id="networkGraphLayout"
+      class="networkGraphLayout"
       style="height: 300px"
     >
-      <NetworkGraph :key="network.project.id" :network />
+      <NetworkGraph
+        :key="network.project.id"
+        :network
+      />
     </v-layout>
 
     <v-row no-gutters>
-      <v-col class="pa-1" cols="12" md="4" sm="6">
-        <div class="text-button">Stimulator</div>
+      <v-col
+        class="pa-1"
+        cols="12"
+        md="4"
+        sm="6"
+      >
+        <div class="text-button">
+          Stimulator
+        </div>
         <NodeViewer
-          :key="index"
-          :node="(node as BaseNode)"
           v-for="(node, index) in network.nodes.stimulators"
+          :key="index"
+          :node="(node as BaseNode)"
         />
       </v-col>
 
-      <v-col class="pa-1" cols="12" md="4" sm="6">
-        <div class="text-button">Neuron</div>
+      <v-col
+        class="pa-1"
+        cols="12"
+        md="4"
+        sm="6"
+      >
+        <div class="text-button">
+          Neuron
+        </div>
         <NodeViewer
-          :key="index"
-          :node="(node as BaseNode)"
           v-for="(node, index) in network.nodes.neurons"
+          :key="index"
+          :node="(node as BaseNode)"
         />
       </v-col>
 
-      <v-col class="pa-1" cols="12" md="4" sm="6">
-        <div class="text-button">Recorder</div>
+      <v-col
+        class="pa-1"
+        cols="12"
+        md="4"
+        sm="6"
+      >
+        <div class="text-button">
+          Recorder
+        </div>
         <NodeViewer
+          v-for="(node, index) in network.nodes.recorders"
           :key="index"
           :node="(node as BaseNode)"
-          v-for="(node, index) in network.nodes.recorders"
         />
       </v-col>
     </v-row>

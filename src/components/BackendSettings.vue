@@ -1,7 +1,14 @@
 <template>
   <v-row class="mt-1">
-    <v-col class="d-flex justify-center" cols="1">
-      <v-checkbox inset title="Enable backend" v-model="store.state.enabled" />
+    <v-col
+      class="d-flex justify-center"
+      cols="1"
+    >
+      <v-checkbox
+        v-model="store.state.enabled"
+        inset
+        title="Enable backend"
+      />
     </v-col>
 
     <v-col cols="11">
@@ -9,20 +16,23 @@
         :disabled="!store.state.enabled"
         :hide-details="store.state.response.data.length === 0"
         :placeholder="store.defaults"
+        v-model="store.state.url"
         :rules="[
           (value) => value.length === 0 || isURL(value) || 'URL is not valid',
         ]"
-        @update:focused="updateOnFocus"
         class="my-2"
         density="compact"
         label="URL of backend"
         persistent-placeholder
-        v-model="store.state.url"
+        @update:focused="updateOnFocus"
       >
         <template #append>
           <v-btn @click="store.ping()">
             <template #append>
-              <BackendStatusIcon :backend-store="store" size="small" />
+              <BackendStatusIcon
+                :backend-store="store"
+                size="small"
+              />
             </template>
             ping
           </v-btn>

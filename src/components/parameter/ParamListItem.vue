@@ -1,7 +1,14 @@
 <template>
-  <v-list-item class="param pa-1" v-if="param" style="line-height: 32px">
+  <v-list-item
+    v-if="param"
+    class="param pa-1"
+    style="line-height: 32px"
+  >
     <template v-if="param.state.random">
-      <v-label class="px-1" style="width: 100%">
+      <v-label
+        class="px-1"
+        style="width: 100%"
+      >
         {{ param.label || param.options.label || param.id }}
         <v-spacer />
         {{ param.id }}: {{ param.code }}
@@ -9,59 +16,62 @@
     </template>
 
     <ArrayInput
-      @update:model-value="update"
-      v-bind="param.options"
       v-else-if="param.options.component === 'arrayInput'"
-      v-model="(param.value as Number[])"
+      v-bind="param.options"
+      v-model="(param.value as number[])"
+      @update:model-value="update"
     />
 
     <v-checkbox
+      v-else-if="param.options.component === 'checkbox'"
+      v-bind="param.options"
+      v-model="(param.value as boolean)"
       :color="color"
-      @update:model-value="update"
       density="compact"
       hide-details
-      v-bind="param.options"
-      v-else-if="param.options.component === 'checkbox'"
-      v-model="(param.value as boolean)"
+      @update:model-value="update"
     />
 
     <RangeSlider
+      v-else-if="param.options.component === 'rangeSlider'"
+      v-bind="param.options"
+      v-model="(param.value as number[])"
       :thumb-color="color"
       @update:model-value="update"
-      v-bind="param.options"
-      v-else-if="param.options.component === 'rangeSlider'"
-      v-model="(param.value as number[])"
     />
 
     <v-select
+      v-else-if="param.options.component === 'select'"
+      v-bind="param.options"
+      v-model="(param.value as string)"
       :items="param.items"
-      @update:model-value="update"
       class="pa-1 pb-0"
       density="compact"
       hide-details
-      v-bind="param.options"
-      v-else-if="param.options.component === 'select'"
-      v-model="(param.value as string)"
+      @update:model-value="update"
     />
 
     <TickSlider
+      v-else-if="param.options.component === 'tickSlider'"
+      v-bind="param.options"
+      v-model="(param.value as number)"
       :thumb-color="color"
       @update:model-value="update"
-      v-bind="param.options"
-      v-else-if="param.options.component === 'tickSlider'"
-      v-model="(param.value as number)"
     />
 
     <ValueSlider
+      v-else-if="param.options.component === 'valueSlider'"
+      v-bind="param.options"
+      v-model="(param.value as number)"
       :thumb-color="color"
       @update:model-value="update"
-      v-bind="param.options"
-      v-else-if="param.options.component === 'valueSlider'"
-      v-model="(param.value as number)"
     />
 
     <template v-else>
-      <v-row class="pt-1" no-gutters>
+      <v-row
+        class="pt-1"
+        no-gutters
+      >
         <v-label
           :title="param.label || param.options.label"
           class="text-truncate"
@@ -74,14 +84,14 @@
         <v-text-field
           :label="param.id"
           :step="param.step"
+          v-model="param.value"
           :suffix="param.unit"
-          @update:model-value="update"
           density="compact"
           hide-details
           style="max-width: 80px"
           type="number"
-          v-model="param.value"
           variant="underlined"
+          @update:model-value="update"
         />
       </v-row>
     </template>
@@ -89,10 +99,16 @@
     <template #append>
       <slot name="append">
         <template v-if="param.state.random">
-          <ParamPopover :param size="x-small" />
+          <ParamPopover
+            :param
+            size="x-small"
+          />
         </template>
 
-        <Menu :items size="x-small" />
+        <Menu
+          :items
+          size="x-small"
+        />
       </slot>
     </template>
   </v-list-item>

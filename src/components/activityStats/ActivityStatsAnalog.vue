@@ -1,49 +1,56 @@
 <template>
   <v-data-table-virtual
+    :key="state.activityHash"
     :headers
     :items="state.items"
-    :key="state.activityHash"
     :loading="state.loading"
-    @update:model-value="updateGraph()"
     class="activityStatsAnalog"
+    v-model="activity.state.selected"
     density="compact"
     fixed-header
     loading-text="Loading... Please wait"
     show-select
-    v-model="activity.state.selected"
+    @update:model-value="updateGraph()"
   >
     <template #top>
       <v-select
         :readonly="activity.recorder.records.length < 2"
         :items="activity.recorder.records"
-        @update:model-value="selected()"
         chips
         class="mr-1"
         density="compact"
+        v-if="activity.recorder.model.isMultimeter"
         hide-details
+        v-model="state.selectedRecord"
         item-title="title"
         item-value="id"
-        v-if="activity.recorder.model.isMultimeter"
-        v-model="state.selectedRecord"
+        @update:model-value="selected()"
       >
-        <template #chip="{ item }" style="width: 100%">
+        <template
+          #chip="{ item }"
+          style="width: 100%"
+        >
           {{ item.title }}
           <NodeRecordChip
-            :nodeRecord="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
-            style="position: absolute; right: 4px"
             v-if="item.raw.groupId"
+            :node-record="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+            style="position: absolute; right: 4px"
           />
         </template>
 
         <template #item="{ item, props }">
-          <v-list-item v-bind="props" density="compact" title="">
+          <v-list-item
+            v-bind="props"
+            density="compact"
+            title=""
+          >
             <v-row no-gutters>
               {{ item.title }}
               <v-spacer />
               <NodeRecordChip
-                :nodeRecord="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
-                class="my-auto"
                 v-if="item.raw.groupId"
+                :node-record="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+                class="my-auto"
               />
             </v-row>
           </v-list-item>
@@ -80,10 +87,10 @@
         </template>
 
         <ColorPicker
-          @update:model-value="updateRecordsColor()"
-          colorScheme="google20c"
-          hide-inputs
           v-model="record.state.traceColors[index]"
+          color-scheme="google20c"
+          hide-inputs
+          @update:model-value="updateRecordsColor()"
         />
       </v-menu>
     </template>
@@ -93,17 +100,23 @@
         <table class="py-2">
           <tbody>
             <tr>
-              <td style="width: 48px" >
+              <td style="width: 48px">
                 <v-btn
-                  @click="unselectAll()"
                   icon="mdi:mdi-checkbox-blank-outline"
                   class="ma-0 pa-0"
                   size="x-small"
                   variant="text"
+                  @click="unselectAll()"
                 />
               </td>
-              <td :key="idx" class="px-2" v-for="(header, idx) in headers">
-                <div v-if="header.key === 'id'">Total</div>
+              <td
+                v-for="(header, idx) in headers"
+                :key="idx"
+                class="px-2"
+              >
+                <div v-if="header.key === 'id'">
+                  Total
+                </div>
                 <div v-else-if="['mean', 'std'].includes(header.key)">
                   <span>&#956;</span>
                   = {{ toFixed(colMean(header.key)) }}

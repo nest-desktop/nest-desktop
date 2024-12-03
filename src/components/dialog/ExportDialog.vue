@@ -1,13 +1,22 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
-      <v-icon icon="mdi:mdi-export" size="small" />
+      <v-icon
+        icon="mdi:mdi-export"
+        size="small"
+      />
       Export
 
-      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+      <v-btn
+        flat
+        icon="mdi:mdi-close"
+        size="small"
+        @click="closeDialog()"
+      />
     </v-card-title>
 
     <v-data-table-virtual
+      v-model="state.selected"
       :group-by="[{ key: 'group', order: 'asc' }]"
       :headers
       :items="state.items"
@@ -15,7 +24,6 @@
       item-value="name"
       return-object
       show-select
-      v-model="state.selected"
     >
       <template #item.valid="{ value }">
         <v-icon
@@ -28,17 +36,24 @@
     <v-card-actions>
       <v-btn
         :disabled="state.selected.length === 0"
+        prepend-icon="mdi:mdi-export"
+        text="export selected"
         @click="
           () => {
             exportSelected();
             closeDialog();
           }
         "
-        prepend-icon="mdi:mdi-export"
-        text="export selected"
       />
-      <v-btn @click="update()" prepend-icon="mdi:mdi-reload" text="reload" />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn
+        prepend-icon="mdi:mdi-reload"
+        text="reload"
+        @click="update()"
+      />
+      <v-btn
+        text="close"
+        @click="closeDialog()"
+      />
     </v-card-actions>
   </v-card>
 </template>

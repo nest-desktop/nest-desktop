@@ -4,20 +4,29 @@
     style="border-width: 0 0 0 4px !important"
   >
     <v-list density="compact">
-      <slot name="prependItem" :connection />
+      <slot
+        name="prependItem"
+        :connection
+      />
 
       <v-list-item
-        :key="index"
-        v-bind="item"
         v-for="(item, index) in items"
         v-show="item.show ? item.show() : true"
+        :key="index"
+        v-bind="item"
       >
-        <template #prepend v-if="item.icon">
+        <template
+          v-if="item.icon"
+          #prepend
+        >
           <v-icon v-bind="item.icon" />
         </template>
       </v-list-item>
 
-      <slot name="appendItem" :connection />
+      <slot
+        name="appendItem"
+        :connection
+      />
     </v-list>
   </Card>
 </template>

@@ -1,33 +1,37 @@
 <template>
-  <v-card flat title="Model editor" v-if="model">
+  <v-card
+    v-if="model"
+    flat
+    title="Model editor"
+  >
     <v-card-text>
       <v-row>
         <v-col cols="5">
           <v-text-field
+            v-model="state.modelId"
             density="compact"
             disabled
             hide-details
             label="model id"
-            v-model="state.modelId"
           />
         </v-col>
 
         <v-col cols="5">
           <v-text-field
+            v-if="model.state"
+            v-model="model.state.label"
             density="compact"
             hide-details
             label="model label"
-            v-model="model.state.label"
-            v-if="model.state"
           />
         </v-col>
 
         <v-col cols="2">
           <v-btn
-            @click="saveModel()"
             block
             prepend-icon="mdi-content-save-outline"
             text="save"
+            @click="saveModel()"
           />
         </v-col>
 

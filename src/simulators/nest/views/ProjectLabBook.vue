@@ -1,18 +1,21 @@
 <template>
   <v-container>
     <v-layout
-      class="networkGraphLayout"
       id="networkGraphLayout"
+      class="networkGraphLayout"
       style="height: 300px"
     >
-      <NetworkGraph :key="network.project.id" :network>
+      <NetworkGraph
+        :key="network.project.id"
+        :network
+      >
         <template #marker="{ connection }">
           <circle
+            v-if="connection.view.markerEndLabel === 'assigned'"
             fill="transparent"
             r="4"
             stroke="currentcolor"
             transform="translate(5,5)"
-            v-if="connection.view.markerEndLabel === 'assigned'"
           />
         </template>
 
@@ -26,30 +29,48 @@
     </v-layout>
 
     <v-row no-gutters>
-      <v-col class="pa-1" cols="12" sm="4">
-        <div class="text-button">Stimulator</div>
+      <v-col
+        class="pa-1"
+        cols="12"
+        sm="4"
+      >
+        <div class="text-button">
+          Stimulator
+        </div>
         <NodeViewer
-          :key="index"
-          :node="(node as NESTNode)"
           v-for="(node, index) in network.nodes.stimulators"
+          :key="index"
+          :node="(node as NESTNode)"
         />
       </v-col>
 
-      <v-col class="pa-1" cols="12" sm="4">
-        <div class="text-button">Neuron</div>
+      <v-col
+        class="pa-1"
+        cols="12"
+        sm="4"
+      >
+        <div class="text-button">
+          Neuron
+        </div>
         <NodeViewer
-          :key="index"
-          :node="(node as NESTNode)"
           v-for="(node, index) in network.nodes.neurons"
+          :key="index"
+          :node="(node as NESTNode)"
         />
       </v-col>
 
-      <v-col class="pa-1" cols="12" sm="4">
-        <div class="text-button">Recorder</div>
+      <v-col
+        class="pa-1"
+        cols="12"
+        sm="4"
+      >
+        <div class="text-button">
+          Recorder
+        </div>
         <NodeViewer
+          v-for="(node, index) in network.nodes.recorders"
           :key="index"
           :node="(node as NESTNode)"
-          v-for="(node, index) in network.nodes.recorders"
         />
       </v-col>
     </v-row>

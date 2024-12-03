@@ -8,8 +8,8 @@
   </v-chip>
 
   <ActivityChartGraph
-    :graph="graph.activityChartGraph"
     v-if="graph && modelStore.model.isNeuron"
+    :graph="graph.activityChartGraph"
   />
 </template>
 

@@ -1,19 +1,19 @@
 <template>
   <v-select
     :items
-    @update:model-value="loadFromFile()"
     density="compact"
+    v-model="model.templateName"
     hide-details
     label="model template"
     max-width="400"
     item-props="{ prependIcon: 'mdi:mdi-file-upload-outline' }"
-    v-model="model.templateName"
+    @update:model-value="loadFromFile()"
   >
     <template #append-item>
       <v-list-item
-        @click="loadFromGithub()"
         prepend-icon="mdi:mdi-github"
         title="load from Github"
+        @click="loadFromGithub()"
       />
     </template>
   </v-select>

@@ -2,7 +2,6 @@
   <ModelNav color="nest-model">
     <template #newModel>
       <v-fab
-        @click="dialogNewModel()"
         class="ms-4"
         color="primary"
         icon="mdi:mdi-plus"
@@ -10,8 +9,9 @@
         size="40"
         absolute
         offset
-        title="Create a new model"
         v-show="appStore.currentSimulator.backends.nestml.state.enabled"
+        title="Create a new model"
+        @click="dialogNewModel()"
       />
     </template>
   </ModelNav>
@@ -39,7 +39,7 @@
         <ModelSelectProjectMenu
           :disabled="!modelStore.model.isNeuron"
           :projects
-          :modelValue="modelStore.state.projectId"
+          :model-value="modelStore.state.projectId"
           @update:model-value="(projectId: string) => modelStore.selectProject(projectId, updateProject)"
         />
 
@@ -48,19 +48,19 @@
 
       <template #prependBtn>
         <v-btn
-          @click="openNESTModuleDialog()"
+          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
-          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
+          @click="openNESTModuleDialog()"
         />
       </template>
 
       <v-btn
-        @click="openNESTModuleDialog()"
         prepend-icon="mdi:mdi-memory"
         text="module"
         title="Generate module"
+        @click="openNESTModuleDialog()"
       />
 
       <template #prependTabs>
@@ -80,7 +80,10 @@
 
     <ModelController />
 
-    <router-view :key="modelStore.state.modelId" name="model" />
+    <router-view
+      :key="modelStore.state.modelId"
+      name="model"
+    />
   </template>
 </template>
 

@@ -34,7 +34,7 @@ import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
 
 export interface IActivityChartPanelModelProps {
   activityType: string;
-  component: Object;
+  component: object;
   id: string;
   icon: string;
   label: string;

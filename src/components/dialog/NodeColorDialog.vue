@@ -1,23 +1,29 @@
 <template>
   <v-card>
     <ColorPicker
-      :colorScheme="state.colorScheme"
-      @update:model-value="nodeColorChange()"
-      hide-inputs
       v-model="node.view.color"
+      :color-scheme="state.colorScheme"
+      hide-inputs
+      @update:model-value="nodeColorChange()"
     />
 
     <v-select
+      v-model="state.colorScheme"
       :items="colorSchemes"
       class="mx-2"
       density="compact"
       hide-details
-      v-model="state.colorScheme"
     />
 
     <v-card-actions>
-      <v-btn @click="resetColor()" text="reset" />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn
+        text="reset"
+        @click="resetColor()"
+      />
+      <v-btn
+        text="close"
+        @click="closeDialog()"
+      />
     </v-card-actions>
   </v-card>
 </template>

@@ -1,5 +1,9 @@
 <template>
-  <v-btn-group density="compact" theme="dark" variant="tonal">
+  <v-btn-group
+    density="compact"
+    theme="dark"
+    variant="tonal"
+  >
     <!-- <v-btn
       :disabled="countBefore <= 0"
       @click="project.networkRevision.oldest()"
@@ -9,9 +13,9 @@
 
     <v-btn
       :disabled="countBefore <= 0"
-      @click="project.networkRevision.older()"
       stacked
       title="load older network"
+      @click="project.networkRevision.older()"
     >
       <v-badge
         :content="countBefore"
@@ -26,9 +30,9 @@
 
     <v-btn
       :disabled="countAfter <= 0"
-      @click="project.networkRevision.newer()"
       stacked
       title="load newer network"
+      @click="project.networkRevision.newer()"
     >
       <v-badge
         :content="countAfter"

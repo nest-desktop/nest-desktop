@@ -31,7 +31,7 @@ interface IInsiteSpikeRecorderResponseData {
 type TNodeData = {
   model: string;
   nodeId: number;
-  nodeStatus: Object;
+  nodeStatus: object;
   position: number[];
   recorderUnitId: number;
   simulationNodeId: number;

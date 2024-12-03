@@ -29,7 +29,7 @@ export class NetworkGraphGrid {
    * Get data for grid graph.
    */
   data(): INetworkGraphGridData[] {
-    const data = new Array();
+    const data = [];
     const offset = 10;
     const cellHeight = 25;
     const cellWidth = 25;

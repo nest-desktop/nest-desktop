@@ -17,7 +17,10 @@
     </v-list>
 
     <v-card-actions>
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn
+        text="close"
+        @click="closeDialog()"
+      />
     </v-card-actions>
   </v-card>
 </template>

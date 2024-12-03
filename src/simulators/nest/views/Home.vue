@@ -3,7 +3,11 @@
     <v-row>
       <v-col md="6">
         <v-card>
-          <v-img :src="nestLogo" alt="nest-logo" class="ma-2 mx-10" />
+          <v-img
+            :src="nestLogo"
+            alt="nest-logo"
+            class="ma-2 mx-10"
+          />
 
           <v-card-subtitle class="mt-4">
             Simulator for spiking neural network models
@@ -38,15 +42,18 @@
           </v-card-text>
         </v-card>
 
-        <v-card class="mt-2" title="References">
+        <v-card
+          class="mt-2"
+          title="References"
+        >
           <v-card-text>
             <v-list density="compact">
               <v-list-item
+                v-for="(refItem, index) in refItems"
                 :key="index"
                 append-icon="mdi:mdi-open-in-new"
                 target="_blank"
                 v-bind="refItem"
-                v-for="(refItem, index) in refItems"
               />
             </v-list>
           </v-card-text>
@@ -55,27 +62,33 @@
 
       <v-col md="6">
         <v-card title="Backend">
-          <v-expansion-panels elevation="0" variant="accordion">
+          <v-expansion-panels
+            elevation="0"
+            variant="accordion"
+          >
             <v-expansion-panel>
               <v-expansion-panel-title>
                 Backend settings
                 <v-spacer />
 
                 <BackendStatusIcon
+                  v-for="(backend, index) in appStore.currentSimulator.backends"
+                  :key="index"
                   :backend-store="backend"
                   :title="backend.state.name"
-                  :key="index"
-                  v-for="(backend, index) in appStore.currentSimulator.backends"
                 />
               </v-expansion-panel-title>
 
               <v-expansion-panel-text>
-                <v-tabs v-model="state.backendTab" density="compact">
+                <v-tabs
+                  v-model="state.backendTab"
+                  density="compact"
+                >
                   <v-tab
-                    :key="index"
-                    :value="backend.state.name"
                     v-for="(backend, index) in appStore.currentSimulator
                       .backends"
+                    :key="index"
+                    :value="backend.state.name"
                   >
                     {{ backend.state.name }}
                     <template #append>
@@ -87,12 +100,15 @@
                   </v-tab>
                 </v-tabs>
 
-                <v-window v-model="state.backendTab" class="mx-2">
+                <v-window
+                  v-model="state.backendTab"
+                  class="mx-2"
+                >
                   <v-window-item
-                    :key="index"
-                    :value="backend.state.name"
                     v-for="(backend, index) in appStore.currentSimulator
                       .backends"
+                    :key="index"
+                    :value="backend.state.name"
                   >
                     <BackendSettings :store="backend" />
                   </v-window-item>
@@ -111,13 +127,13 @@
                 <v-spacer />
 
                 <v-btn
-                  @click.stop="openNESTModuleDialog()"
                   class="mx-1"
                   flat
                   icon="nest:build-models"
                   size="x-small"
                   title="Generate NESTML models"
                   variant="text"
+                  @click.stop="openNESTModuleDialog()"
                 />
               </v-expansion-panel-title>
 
@@ -125,37 +141,38 @@
                 <v-card>
                   <v-card-title>
                     <NESTModuleSelect
+                      v-model="state.selectedModule"
                       :hide-details="false"
+                      clearable
+                      return-object
                       @update:model-value="
                         (item) =>
                           item
                             ? nestSimulator.installModule(item.name)
                             : resetKernel()
                       "
-                      clearable
-                      return-object
-                      v-model="state.selectedModule"
                     >
                       <template #details>
                         <span
+                          v-if="customModels ? customModels.length > 0 : false"
                           :title="customModels?.join(',')"
                           density="compact"
                           variant="text"
-                          v-if="customModels ? customModels.length > 0 : false"
                         >
                           {{ customModels?.length }}
                           custom model
                           <span
-                            text="s"
                             v-show="
                               customModels ? customModels.length > 1 : false
                             "
+                            text="s"
                           />
                         </span>
                       </template>
                     </NESTModuleSelect>
 
                     <v-text-field
+                      v-model="state.modelSearch"
                       class="my-2"
                       clearable
                       density="compact"
@@ -163,18 +180,23 @@
                       label="Search model"
                       placeholder="Search model"
                       prepend-inner-icon="mdi:mdi-magnify"
-                      v-model="state.modelSearch"
                     >
                       <template #details>
                         {{ models.length }} model
-                        <span text="s" v-show="models.length > 1" />
+                        <span
+                          v-show="models.length > 1"
+                          text="s"
+                        />
                       </template>
                     </v-text-field>
                   </v-card-title>
 
                   <v-divider />
 
-                  <v-virtual-scroll :items="models" max-height="300">
+                  <v-virtual-scroll
+                    :items="models"
+                    max-height="300"
+                  >
                     <template #default="{ item }">
                       <v-list-item>
                         <!-- @vue-ignore item is unknown -->

@@ -1,5 +1,8 @@
 <template>
-  <v-avatar class="recorder" rounded="0">
+  <v-avatar
+    class="recorder"
+    rounded="0"
+  >
     <span class="label">
       <slot />
     </span>

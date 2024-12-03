@@ -144,7 +144,7 @@ export class NESTModel extends BaseModel {
    */
   replaceModelId(modelLabel: string): void {
     if (this._templateName.length > 0) {
-      let elementType = this._templateName.split("_").pop() as TElementType;
+      const elementType = this._templateName.split("_").pop() as TElementType;
       if (["neuron", "synapse"].includes(elementType)) {
         this.elementType = elementType;
       }

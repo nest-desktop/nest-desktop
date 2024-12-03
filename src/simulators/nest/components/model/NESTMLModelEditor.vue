@@ -1,29 +1,39 @@
 <template>
-  <v-card class="my-2" flat v-if="model.custom">
-    <v-toolbar color="transparent" density="compact">
+  <v-card
+    v-if="model.custom"
+    class="my-2"
+    flat
+  >
+    <v-toolbar
+      color="transparent"
+      density="compact"
+    >
       <NESTMLModelSelect
         :model
         :model-value="model.templateName"
-        @update:model-value="updateOnSelect"
         class="pt-1"
+        @update:model-value="updateOnSelect"
       />
 
       <v-spacer />
 
       <NESTModuleCombobox
-        @click.stop
-        @update:model-value="updateModules()"
         chips
         class="pt-1"
+        v-model="state.selectedModules"
         label="module"
         max-width="400"
         multiple
-        v-model="state.selectedModules"
+        @click.stop
+        @update:model-value="updateModules()"
       />
     </v-toolbar>
 
     <v-card-text>
-      <codemirror :extensions v-model="model.nestmlScript" />
+      <codemirror
+        v-model="model.nestmlScript"
+        :extensions
+      />
     </v-card-text>
   </v-card>
 </template>

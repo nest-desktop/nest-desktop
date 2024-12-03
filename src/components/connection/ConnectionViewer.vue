@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel elevation="0" rounded="0">
+  <v-expansion-panel
+    elevation="0"
+    rounded="0"
+  >
     <v-expansion-panel-title class="expansion-panel-title">
       <v-row>
         <ConnectionAvatar :connection />
@@ -11,18 +14,21 @@
       </v-row>
     </v-expansion-panel-title>
     <v-expansion-panel-text class="pa-0">
-      <v-card class="ma-0" variant="flat">
+      <v-card
+        class="ma-0"
+        variant="flat"
+      >
         <v-card-text>
           <v-list>
             <ParamViewer
+              v-for="(paramId, index) in connection.paramsVisible"
               :key="index"
               :param="connection.params[paramId]"
-              v-for="(paramId, index) in connection.paramsVisible"
             />
             <ParamViewer
+              v-for="(paramId, index) in connection.synapse.paramsVisible"
               :key="index"
               :param="connection.synapse.params[paramId]"
-              v-for="(paramId, index) in connection.synapse.paramsVisible"
             />
           </v-list>
         </v-card-text>

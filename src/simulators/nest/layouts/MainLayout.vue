@@ -1,5 +1,5 @@
 <template>
-  <AppNavigation :navItems />
+  <AppNavigation :nav-items />
 
   <v-main v-if="appStore.state.simulator === 'nest'">
     <router-view />

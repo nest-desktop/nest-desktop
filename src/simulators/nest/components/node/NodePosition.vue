@@ -1,5 +1,9 @@
 <template>
-  <v-label class="pl-3" style="width: 100%" v-if="nodeSpatial.positions">
+  <v-label
+    v-if="nodeSpatial.positions"
+    class="pl-3"
+    style="width: 100%"
+  >
     Positions
     <v-spacer />
 
@@ -19,48 +23,55 @@
     </v-chip>
 
     <v-chip
+      v-if="nodeSpatial.positions.name === 'free'"
       class="mx-1"
       label
       size="x-small"
       title="dimensions"
-      v-if="nodeSpatial.positions.name === 'free'"
     >
       {{ nodeSpatial.positions.numDimensions }}D
     </v-chip>
 
     <v-chip
+      v-if="nodeSpatial.positions.name === 'grid'"
       class="mx-1"
       label
       size="x-small"
       title="shape"
-      v-if="nodeSpatial.positions.name === 'grid'"
     >
       {{ nodeSpatial.positions.shape }}
     </v-chip>
 
     <v-chip
+      v-if="nodeSpatial.positions.name === 'free'"
       class="mx-1"
       label
       size="x-small"
       title="size"
-      v-if="nodeSpatial.positions.name === 'free'"
     >
       {{ nodeSpatial.node.size }}
     </v-chip>
 
     <v-chip
+      v-if="nodeSpatial.positions.edgeWrap"
       class="mx-1"
       label
       size="x-small"
       title="edge wrap"
-      v-if="nodeSpatial.positions.edgeWrap"
     >
-      <v-icon icon="mdi:mdi-format-text-wrapping-wrap" size="small" />
+      <v-icon
+        icon="mdi:mdi-format-text-wrapping-wrap"
+        size="small"
+      />
     </v-chip>
 
-    <v-btn icon size="x-small" variant="text">
+    <v-btn
+      icon
+      size="x-small"
+      variant="text"
+    >
       <v-icon icon="mdi:mdi-pencil" />
-      <NodePositionMenu :nodeSpatial />
+      <NodePositionMenu :node-spatial />
     </v-btn>
   </v-label>
 </template>

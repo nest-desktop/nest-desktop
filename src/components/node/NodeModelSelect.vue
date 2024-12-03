@@ -3,32 +3,38 @@
     :item-props="true"
     :items="state.items"
     :label="state.elementType + ' model'"
-    @click.stop
     class="model-select text-primary mx-1"
+    v-model="node.modelId"
     density="compact"
     hide-details
     item-title="label"
     item-value="id"
-    v-model="node.modelId"
+    @click.stop
   >
     <template #item="{ props }">
-      <v-list-item @click="select(props)" class="node-model-item">
+      <v-list-item
+        class="node-model-item"
+        @click="select(props)"
+      >
         {{ props.title }}
 
         <template #append>
           <v-btn
-            @click="select(props, true)"
+            v-if="state.elementType"
             class="icon"
             icon="mdi:mdi-menu-right"
             size="x-small"
-            v-if="state.elementType"
             variant="text"
+            @click="select(props, true)"
           />
         </template>
       </v-list-item>
     </template>
 
-    <template #prepend-item v-if="state.elementType">
+    <template
+      v-if="state.elementType"
+      #prepend-item
+    >
       <v-list-item
         @click="
           () => {

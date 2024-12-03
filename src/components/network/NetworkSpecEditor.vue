@@ -1,19 +1,22 @@
 <template>
   <div class="networkEditor">
-    <v-toolbar color="transparent" density="compact">
+    <v-toolbar
+      color="transparent"
+      density="compact"
+    >
       <v-btn-toggle
+        v-model="network.state.state.elementTypeIdx"
         class="ma-2"
         mandatory
-        v-model="network.state.state.elementTypeIdx"
         variant="text"
       >
         <IconBtn
-          :icon="item.icon"
-          :key="index"
-          :title="item.title"
-          @click="network.nodes.unselectNodes()"
-          size="x-small"
           v-for="(item, index) in network.elementTypes"
+          :key="index"
+          :icon="item.icon"
+          :title="item.title"
+          size="x-small"
+          @click="network.nodes.unselectNodes()"
         />
       </v-btn-toggle>
 
@@ -21,16 +24,19 @@
 
       <v-menu>
         <template #activator="{ props }">
-          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
+          <v-btn
+            icon="mdi:mdi-dots-vertical"
+            size="small"
+            v-bind="props"
+          />
         </template>
 
         <v-list density="compact">
           <v-list-item
+            v-for="(item, index) in items"
             :key="index"
             v-bind="item"
-            v-for="(item, index) in items"
-          >
-          </v-list-item>
+          />
         </v-list>
       </v-menu>
     </v-toolbar>
@@ -39,12 +45,18 @@
 
     <slot name="nodes">
       <div :key="network.nodes.length">
-        <div :key="index" v-for="(node, index) in network.nodes.all">
-          <NodeEditor :node="(node as TNode)" v-if="node.isNode" />
+        <div
+          v-for="(node, index) in network.nodes.all"
+          :key="index"
+        >
+          <NodeEditor
+            v-if="node.isNode"
+            :node="(node as TNode)"
+          />
 
           <NodeGroup
-            :nodeGroup="(node as TNodeGroup)"
             v-else-if="node.isGroup"
+            :node-group="(node as TNodeGroup)"
           />
         </div>
       </div>

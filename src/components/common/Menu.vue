@@ -1,12 +1,12 @@
 <template>
   <v-btn
-    @click.prevent
-    @click.stop
     class="menu-btn"
     icon
     size="small"
     rounded="pill"
     variant="text"
+    @click.prevent
+    @click.stop
   >
     <slot name="icon">
       <v-icon icon="mdi:mdi-dots-vertical" />
@@ -18,12 +18,15 @@
           <slot name="prependItem" />
 
           <v-list-item
+            v-for="(item, index) in items"
             :key="index"
             v-bind="item"
-            v-for="(item, index) in items"
           >
             <template #prepend>
-              <v-icon size="small" v-bind="item.icon" />
+              <v-icon
+                size="small"
+                v-bind="item.icon"
+              />
             </template>
           </v-list-item>
 

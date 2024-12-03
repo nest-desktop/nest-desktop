@@ -19,7 +19,10 @@
           title="Activity Explorer"
           value="explore"
         >
-          <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
+          <v-icon
+            class="mdi-flip-v"
+            icon="mdi:mdi-border-style"
+          />
           Explorer
         </v-tab>
 
@@ -33,7 +36,10 @@
         >
           <v-icon icon="mdi:mdi-menu-down" />
 
-          <v-menu activator="parent" target=".tab-activity-explorer">
+          <v-menu
+            activator="parent"
+            target=".tab-activity-explorer"
+          >
             <v-list density="compact">
               <v-list-item
                 @click="
@@ -41,15 +47,18 @@
                 "
               >
                 <template #prepend>
-                  <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
+                  <v-icon
+                    class="mdi-flip-v"
+                    icon="mdi:mdi-border-style"
+                  />
                 </template>
                 abstract
               </v-list-item>
               <v-list-item
+                prepend-icon="mdi:mdi-axis-arrow"
                 @click="
                   () => (projectViewStore.state.views.activity = 'spatial')
                 "
-                prepend-icon="mdi:mdi-axis-arrow"
               >
                 spatial
               </v-list-item>
@@ -62,11 +71,11 @@
 
       <template #prependBtn>
         <v-btn
-          @click="openNESTModuleDialog()"
+          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
-          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
+          @click="openNESTModuleDialog()"
         />
       </template>
     </ProjectBar>
@@ -74,8 +83,8 @@
     <ProjectController>
       <template #activityController>
         <ActivityChartController
-          :graph="project.activityGraph.activityChartGraph"
           v-if="projectViewStore.state.views.activity === 'abstract'"
+          :graph="project.activityGraph.activityChartGraph"
         />
         <template
           v-else-if="projectViewStore.state.views.activity === 'spatial'"
@@ -86,10 +95,10 @@
 
           <v-expansion-panels>
             <ActivityAnimationControllerLayer
-              :key="index"
-              :layer
               v-for="(layer, index) in project.activityGraph
                 .activityAnimationGraph.layers"
+              :key="index"
+              :layer
             />
           </v-expansion-panels>
         </template>
@@ -98,6 +107,7 @@
       <template #model>
         <span v-if="project.network.state.elementTypeIdx === 5">
           <v-select
+            v-model="model"
             :items="project.modelDBStore.state.models"
             class="ma-1"
             density="compact"
@@ -107,13 +117,12 @@
             item-value="id"
             label="Existing model"
             prepend-icon="mdi:mdi-plus"
-            v-model="model"
           >
             <template #append>
               <v-btn
                 :disabled="model.length === 0"
-                @click="copyModel(model)"
                 text="copy"
+                @click="copyModel(model)"
               />
             </template>
           </v-select>
@@ -121,57 +130,66 @@
 
         <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
           <CopyModelEditor
+            v-for="(model, index) of project.network.modelsCopied.all"
             :key="index"
             :model="model"
-            v-for="(model, index) of project.network.modelsCopied.all"
           />
         </span>
       </template>
 
       <template #nodes>
         <div :key="project.network.nodes.length">
-          <div :key="index" v-for="(node, index) in project.network.nodes.all">
-            <NodeEditor :node v-if="node.isNode">
+          <div
+            v-for="(node, index) in project.network.nodes.all"
+            :key="index"
+          >
+            <NodeEditor
+              v-if="node.isNode"
+              :node
+            >
               <template #nodeMenuContent>
                 <NESTNodeMenuList :node />
               </template>
 
               <template #nodeModelSelect="{ selectState }">
                 <NodeModelSelect
-                  :elementTypes
+                  :element-types
                   :node
-                  @openMenu="() => (selectState.menu = true)"
+                  @open-menu="() => (selectState.menu = true)"
                 />
               </template>
 
               <template #popItem>
                 <v-list-item class="param pl-0 pr-1">
                   <NodePosition
-                    :nodeSpatial="node.spatial"
                     v-if="node.spatial.hasPositions"
+                    :node-spatial="node.spatial"
                   />
 
                   <ValueSlider
-                    :thumb-color="node.view.color"
-                    @update:model-value="node.changes()"
+                    v-else
                     id="n"
+                    v-model="node.size"
+                    :thumb-color="node.view.color"
                     input-label="n"
                     label="population size"
-                    v-else
-                    v-model="node.size"
+                    @update:model-value="node.changes()"
                   />
 
                   <template #append>
-                    <Menu :items="getPopItems(node)" size="x-small" />
+                    <Menu
+                      :items="getPopItems(node)"
+                      size="x-small"
+                    />
                   </template>
                 </v-list-item>
               </template>
 
               <template #connectionEditor>
                 <ConnectionEditor
-                  :connection
-                  :key="index"
                   v-for="(connection, index) in node.connections"
+                  :key="index"
+                  :connection
                 >
                   <template #panelTitle>
                     <div
@@ -191,7 +209,10 @@
               </template>
             </NodeEditor>
 
-            <NodeGroup :nodeGroup="node" v-else-if="node.isGroup" />
+            <NodeGroup
+              v-else-if="node.isGroup"
+              :node-group="node"
+            />
           </div>
         </div>
       </template>
@@ -201,7 +222,10 @@
       </template>
     </ProjectController>
 
-    <router-view :key="projectStore.state.projectId" name="project" />
+    <router-view
+      :key="projectStore.state.projectId"
+      name="project"
+    />
   </template>
 </template>
 

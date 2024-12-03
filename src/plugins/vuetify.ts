@@ -129,6 +129,6 @@ export function addTheme(colors: Record<string, string>): void {
   );
 }
 
-export function addIconSet(iconSet: Record<string, Object>): void {
+export function addIconSet(iconSet: Record<string, object>): void {
   vuetify.icons.sets = Object.assign(vuetify.icons.sets, iconSet);
 }

@@ -1,12 +1,12 @@
 <template>
   <codemirror
+    v-model="simulation.code.script"
     :extensions
+    style="font-size: 0.75rem; width: 100%"
     @blur="() => (state.focused = false)"
     @focus="() => (state.focused = true)"
     @ready="handleReady"
     @update="updateView($event)"
-    style="font-size: 0.75rem; width: 100%"
-    v-model="simulation.code.script"
   />
 </template>
 

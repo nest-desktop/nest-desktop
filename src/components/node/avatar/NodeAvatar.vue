@@ -1,27 +1,27 @@
 <template>
   <StimulatorAvatar
-    :color="node.view.color"
     v-if="node.elementType === 'stimulator'"
+    :color="node.view.color"
   >
     {{ node.view.label }}
   </StimulatorAvatar>
   <RecorderAvatar
-    :color="node.view.color"
     v-else-if="node.elementType === 'recorder'"
+    :color="node.view.color"
   >
     {{ node.view.label }}
   </RecorderAvatar>
   <NeuronAvatar
+    v-else-if="node.elementType === 'neuron'"
     :color="node.view.color"
     :weight="node.view.synWeights"
-    v-else-if="node.elementType === 'neuron'"
   >
     {{ node.view.label }}
   </NeuronAvatar>
   <v-avatar
+    v-else
     :color="nodeGroup.view.color"
     class="node-avatar"
-    v-else
     variant="tonal"
   >
     {{ node.view.label }}

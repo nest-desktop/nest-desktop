@@ -1,12 +1,15 @@
 <template>
-  <v-card class="playground-color-picker" title="Color picker">
+  <v-card
+    class="playground-color-picker"
+    title="Color picker"
+  >
     <v-card-text>
       <v-select
+        v-model="state.colorScheme"
         :items="colorSchemes"
         density="compact"
         label="Select a color scheme"
         persistent-hint
-        v-model="state.colorScheme"
       />
 
       <ColorPicker :color-scheme="state.colorScheme" />

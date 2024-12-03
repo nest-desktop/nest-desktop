@@ -22,7 +22,7 @@
         <ModelSelectProjectMenu
           :disabled="!modelStore.model.isNeuron"
           :projects
-          :modelValue="modelStore.state.projectId"
+          :model-value="modelStore.state.projectId"
           @update:model-value="(projectId: string) => modelStore.selectProject(projectId)"
         />
 
@@ -32,7 +32,10 @@
 
     <ModelController />
 
-    <router-view :key="modelStore.state.modelId" name="model" />
+    <router-view
+      :key="modelStore.state.modelId"
+      name="model"
+    />
   </template>
 </template>
 

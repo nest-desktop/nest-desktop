@@ -1,5 +1,8 @@
 <template>
-  <v-card class="playground-import-json" title="Config">
+  <v-card
+    class="playground-import-json"
+    title="Config"
+  >
     <v-card-text>{{ data }}</v-card-text>
   </v-card>
 </template>

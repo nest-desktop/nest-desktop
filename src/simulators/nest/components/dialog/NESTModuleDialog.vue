@@ -2,32 +2,36 @@
   <v-card title="Select a module">
     <v-card-text>
       <NESTModuleSelect
-        @update:model-value="fetchInstalledModels()"
-        return-object
         v-model="state.selectedModule"
+        return-object
+        @update:model-value="fetchInstalledModels()"
       />
 
       <v-list>
         <v-list-subheader text="Models" />
 
         <v-list-item
+          v-for="(modelId, index) in state.selectedModule.models"
           :key="index"
           :to="{
             name: 'nestModel',
             params: { modelId },
           }"
           @click="closeDialog()"
-          v-for="(modelId, index) in state.selectedModule.models"
         >
           {{ modelId }}
 
           <template #append>
             <v-icon
+              v-if="moduleStore.state.installedModels.includes(modelId)"
               color="green"
               icon="mdi:mdi-check"
-              v-if="moduleStore.state.installedModels.includes(modelId)"
             />
-            <v-icon color="red" icon="mdi:mdi-cancel" v-else />
+            <v-icon
+              v-else
+              color="red"
+              icon="mdi:mdi-cancel"
+            />
           </template>
         </v-list-item>
       </v-list>
@@ -47,10 +51,13 @@
         :disabled="
           appStore.currentSimulator.backends.nestml.state.response.status != 200
         "
-        @click="closeDialog(state.selectedModule)"
         text="Generate module"
+        @click="closeDialog(state.selectedModule)"
       />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn
+        text="close"
+        @click="closeDialog()"
+      />
     </v-card-actions>
   </v-card>
 </template>

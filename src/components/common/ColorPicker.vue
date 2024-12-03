@@ -1,5 +1,9 @@
 <template>
-  <v-color-picker :swatches="state.swatches" elevation="0" show-swatches />
+  <v-color-picker
+    :swatches="state.swatches"
+    elevation="0"
+    show-swatches
+  />
 </template>
 
 <script lang="ts" setup>

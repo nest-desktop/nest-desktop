@@ -10,31 +10,38 @@
     </template>
 
     <template #append>
-      <v-btn-group class="py-2" style="height: 100%">
+      <v-btn-group
+        class="py-2"
+        style="height: 100%"
+      >
         <v-btn
           :icon="panel.state.visible ? 'mdi:mdi-eye' : 'mdi:mdi-eye-off'"
-          @click="panel.toggleVisible()"
           size="x-small"
+          @click="panel.toggleVisible()"
         />
         <v-btn
-          @click="panel.decreaseHeight()"
           icon="mdi:mdi-minus"
           size="x-small"
+          @click="panel.decreaseHeight()"
         />
         <v-btn
-          @click="panel.increaseHeight()"
           icon="mdi:mdi-plus"
           size="x-small"
+          @click="panel.increaseHeight()"
         />
         <v-btn
-          @click="panel.remove()"
           icon="mdi:mdi-trash-can-outline"
           size="x-small"
+          @click="panel.remove()"
         />
 
         <v-menu :close-on-content-click="false">
           <template #activator="{ props }">
-            <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="props" />
+            <v-btn
+              icon="mdi:mdi-dots-vertical"
+              size="small"
+              v-bind="props"
+            />
           </template>
 
           <ActivityChartPanelMenuPopover

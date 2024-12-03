@@ -1,18 +1,24 @@
 <template>
   <v-container class="sandbox">
     <v-navigation-drawer permanent>
-      <v-list nav density="compact">
+      <v-list
+        nav
+        density="compact"
+      >
         <v-list-item
+          v-for="(_, component) in components"
           :key="component"
           :title="component"
           :to="`${component}`"
           :value="component"
-          v-for="(_, component) in components"
         />
       </v-list>
     </v-navigation-drawer>
 
-    <component :is="components[currentComponent]" class="component" />
+    <component
+      :is="components[currentComponent]"
+      class="component"
+    />
   </v-container>
 </template>
 
@@ -36,7 +42,7 @@ const props = defineProps({
 
 const currentComponent = ref("");
 
-const components: Record<string, Object> = {
+const components: Record<string, object> = {
   alert: SandboxAlert,
   button: SandboxButton,
   buttonToggle: SandboxButtonToggle,
