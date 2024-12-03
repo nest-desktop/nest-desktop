@@ -1,3 +1,6 @@
+// eslint.config.mjs
+// https://eslint.vuejs.org/user-guide/
+
 import eslint from '@eslint/js';
 // import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginVue from 'eslint-plugin-vue';
@@ -17,7 +20,7 @@ export default typescriptEslint.config(
       "**/nest_desktop.egg-info",
       "**/node_modules",
       "**/release",
-      "*.d.ts"
+      "**/*.d.ts"
     ],
   }, {
   extends: [
