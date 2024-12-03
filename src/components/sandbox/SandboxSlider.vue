@@ -5,8 +5,8 @@
         Slider
         <v-spacer />
         <v-tabs density="compact" v-model="state.tab">
-          <v-tab value="components"> Components </v-tab>
-          <v-tab value="values"> Values </v-tab>
+          <v-tab value="components">Components</v-tab>
+          <v-tab value="values">Values</v-tab>
         </v-tabs>
       </v-row>
     </v-card-title>
@@ -59,10 +59,9 @@ const state = reactive<{
 });
 
 const items = [
-  { inputLabel: "id1", label: "default slider", value: 10 },
+  { label: "default slider", value: 10 },
   {
     color: "blue",
-    inputLabel: "id2",
     label: "custom slider",
     max: 10,
     min: -10,
@@ -71,47 +70,44 @@ const items = [
     value: 0,
   },
   {
+    component: "tickSlider",
     color: "orange",
-    inputLabel: "id3",
     label: "default ticks",
     ticks: [1, 2, 3, 4],
     value: 2,
-    variant: "ticks",
   },
   {
+    component: "tickSlider",
     color: "green",
-    inputLabel: "id4",
     label: "non-linear ticks",
     ticks: [1, 10, 100],
     unit: "ms",
     value: 10,
-    variant: "ticks",
   },
   {
+    component: "tickSlider",
     color: "red",
-    inputLabel: "id4",
     label: "string ticks",
     ticks: ["bad", "okay", "superb"],
     value: "okay",
-    variant: "ticks",
   },
   {
+    component: "rangeSlider",
     color: "purple",
     inputLabel: ["id5l", "id5u"],
-    label: "default rangeslider",
+    label: "default rangeSlider",
     value: [20, 50],
-    variant: "range",
   },
   {
+    component: "rangeSlider",
     color: "brown",
     inputLabel: ["id6l", "id6u"],
-    label: "custom rangeslider",
+    label: "custom rangeSlider",
     max: 10,
     min: -10,
     step: 0.1,
     unit: "ms",
     value: [-5, 5],
-    variant: "range",
   },
 ];
 </script>

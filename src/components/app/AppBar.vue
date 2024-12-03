@@ -31,17 +31,22 @@
 
     <v-list density="compact">
       <v-list-item
+        v-for="(item, index) in appStore.simulatorItems"
         :key="index"
         :prepend-icon="item.id + ':logo'"
         :title="item.title"
         :to="'/' + item.id"
         :value="item.id"
-        v-for="(item, index) in appStore.simulatorItems"
       />
     </v-list>
   </v-menu>
 
-  <v-btn @click="openAboutDialog()" size="x-small" text="about" variant="text" />
+  <v-btn
+    size="x-small"
+    text="about"
+    variant="text"
+    @click="openAboutDialog()"
+  />
 
   <v-btn
     append-icon="mdi:mdi-open-in-new"
@@ -67,49 +72,61 @@
 
     <v-list density="compact">
       <v-list-item
+        v-for="(item, index) in settingsItems"
+        v-bind="item"
         :key="index"
         @click="item.onClick"
-        v-bind="item"
-        v-for="(item, index) in settingsItems"
       />
     </v-list>
   </v-menu>
 
-  <v-divider class="mx-1" vertical />
+  <v-divider
+    class="mx-1"
+    vertical
+  />
 
   <v-btn
     :icon="appStore.state.themeIcon"
-    @click="appStore.toggleTheme()"
     size="x-small"
     title="Toggle theme"
     variant="text"
+    @click="appStore.toggleTheme()"
   />
 
   <v-spacer />
 
-  <v-divider class="mx-1" vertical />
+  <v-divider
+    class="mx-1"
+    vertical
+  />
 
   <v-btn
-    :disabled="!backend.state.enabled"
-    :key="index"
-    :title="backend.state.url"
-    @click="backend.update()"
-    size="x-small"
     v-for="(backend, index) in appStore.currentSimulator.backends"
+    :key="index"
+    :disabled="!backend.state.enabled"
+    :title="backend.state.url"
+    size="x-small"
     variant="text"
+    @click="backend.update()"
   >
     {{ backend.state.name }}
-    <BackendStatusIcon :backendStore="backend" size="small" />
+    <BackendStatusIcon
+      :backend-store="backend"
+      size="small"
+    />
   </v-btn>
 
-  <v-divider class="mx-1" vertical />
+  <v-divider
+    class="mx-1"
+    vertical
+  />
 
   <v-btn
-    @click="appStore.state.logsOpen = !appStore.state.logsOpen"
     icon="mdi:mdi-menu-open"
     size="x-small"
     title="View request logs"
     variant="text"
+    @click="appStore.state.logsOpen = !appStore.state.logsOpen"
   />
 </template>
 
@@ -157,16 +174,16 @@ const settingsItems = [
   }
 ];
 
-const openAboutDialog = () => 
-  createDialog({    
+const openAboutDialog = () =>
+  createDialog({
     customComponent: {component: AboutDialog, props: false},
     dialogOptions: {
       scrollable: true,
       width: "800px",
       // height: "800px"
     },
-    title: "", 
-    text: "", 
+    title: "",
+    text: "",
 })
 </script>
 

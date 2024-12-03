@@ -18,7 +18,7 @@
           href="https://nest-desktop.readthedocs.io/en/latest/about/index.html#abstract"
           target="_blank"
         >
-          Read more.
+          Read more
         </a>
       </v-card-text>
     </v-card>
