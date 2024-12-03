@@ -1,25 +1,13 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <svg
-      ref="networkGraphRef"
-      class="networkGraph"
-      height="100%"
-      width="100%"
-    >
-      <rect
-        id="workspaceHandler"
-        height="100%"
-        width="100%"
-      />
+    <svg ref="networkGraphRef" class="networkGraph" height="100%" width="100%">
+      <rect id="workspaceHandler" height="100%" width="100%" />
 
       <g id="networkWorkspace">
         <g class="grid no-print" />
 
         <g id="network">
-          <g
-            :key="graph?.network.connections.all.length"
-            class="synMarker"
-          >
+          <g :key="graph?.network.connections.all.length" class="synMarker">
             <defs
               v-for="(connection, index) of graph?.network.connections.all"
               :key="'defs' + index"
@@ -55,24 +43,14 @@
                   fill="currentcolor"
                   stroke="currentcolor"
                 />
-                <slot
-                  name="marker"
-                  :connection
-                />
-                <text
-                  dx="8"
-                  dy="5"
-                />
+                <slot name="marker" :connection />
+                <text dx="8" dy="5" />
               </marker>
             </defs>
           </g>
 
           <g class="dragline">
-            <path
-              :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }"
-              d="M0,0L0,0"
-              fill="none"
-            />
+            <path :style="{ strokeWidth: graph?.config?.localStorage.strokeWidth }" d="M0,0L0,0" fill="none" />
           </g>
 
           <slot name="components">

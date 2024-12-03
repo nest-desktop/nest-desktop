@@ -17,7 +17,5 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = usePyNNProjectStore();
 
-const graph = computed(
-  () => projectStore.state.project.activityGraph as BaseActivityGraph
-);
+const graph = computed(() => projectStore.state.project.activityGraph as BaseActivityGraph);
 </script>

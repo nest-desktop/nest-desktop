@@ -3,11 +3,7 @@
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
 
-export const useNorseSimulatorStore = defineBackendStore(
-  "norse",
-  "norse",
-  "http://localhost:11428"
-);
+export const useNorseSimulatorStore = defineBackendStore("norse", "norse", "http://localhost:11428");
 
 export const norseSimulatorInit = (): TStore => {
   // Initialize backend Norse Simulator.

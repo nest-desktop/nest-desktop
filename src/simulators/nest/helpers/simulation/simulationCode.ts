@@ -1,9 +1,6 @@
 // simulationCode.ts
 
-import {
-  BaseSimulationCode,
-  ISimulationCodeProps,
-} from "@/helpers/simulation/simulationCode";
+import { BaseSimulationCode, ISimulationCodeProps } from "@/helpers/simulation/simulationCode";
 
 import { NESTSimulation } from "./simulation";
 
@@ -17,10 +14,7 @@ const simulationCodeBlocks: string[] = [
 ];
 
 export class NESTSimulationCode extends BaseSimulationCode {
-  constructor(
-    simulation: NESTSimulation,
-    simulationCodeProps: ISimulationCodeProps = {}
-  ) {
+  constructor(simulation: NESTSimulation, simulationCodeProps: ISimulationCodeProps = {}) {
     super(simulation, {
       blocks: simulationCodeBlocks,
       templateFilename: "nest-master",

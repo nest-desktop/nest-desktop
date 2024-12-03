@@ -1,15 +1,7 @@
 <template>
   <div class="networkEditor">
-    <v-toolbar
-      color="transparent"
-      density="compact"
-    >
-      <v-btn-toggle
-        v-model="network.state.state.elementTypeIdx"
-        class="ma-2"
-        mandatory
-        variant="text"
-      >
+    <v-toolbar color="transparent" density="compact">
+      <v-btn-toggle v-model="network.state.state.elementTypeIdx" class="ma-2" mandatory variant="text">
         <IconBtn
           v-for="(item, index) in network.elementTypes"
           :key="index"
@@ -23,20 +15,12 @@
       <v-spacer />
 
       <v-menu>
-        <template #activator="{ props:btnProps }">
-          <v-btn
-            icon="mdi:mdi-dots-vertical"
-            size="small"
-            v-bind="btnProps"
-          />
+        <template #activator="{ props: btnProps }">
+          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
         </template>
 
         <v-list density="compact">
-          <v-list-item
-            v-for="(item, index) in items"
-            :key="index"
-            v-bind="item"
-          />
+          <v-list-item v-for="(item, index) in items" :key="index" v-bind="item" />
         </v-list>
       </v-menu>
     </v-toolbar>
@@ -45,19 +29,10 @@
 
     <slot name="nodes">
       <div :key="network.nodes.length">
-        <div
-          v-for="(node, index) in network.nodes.all"
-          :key="index"
-        >
-          <NodeEditor
-            v-if="node.isNode"
-            :node="(node as TNode)"
-          />
+        <div v-for="(node, index) in network.nodes.all" :key="index">
+          <NodeEditor v-if="node.isNode" :node="(node as TNode)" />
 
-          <NodeGroup
-            v-else-if="node.isGroup"
-            :node-group="(node as TNodeGroup)"
-          />
+          <NodeGroup v-else-if="node.isGroup" :node-group="(node as TNodeGroup)" />
         </div>
       </div>
     </slot>
@@ -81,9 +56,7 @@ const items = [
   {
     id: "collapseAll",
     onClick: () => {
-      network.value.nodes.nodeItems.forEach(
-        (node: TNode) => (node.view.state.expansionPanels = [])
-      );
+      network.value.nodes.nodeItems.forEach((node: TNode) => (node.view.state.expansionPanels = []));
     },
     prependIcon: "mdi:mdi-collapse-all-outline",
     title: "collapse all",
@@ -92,8 +65,7 @@ const items = [
     id: "expandAll",
     onClick: () => {
       network.value.nodes.nodeItems.forEach(
-        (node: TNode) =>
-          (node.view.state.expansionPanels = range(node.connections.length + 1))
+        (node: TNode) => (node.view.state.expansionPanels = range(node.connections.length + 1)),
       );
     },
     prependIcon: "mdi:mdi-expand-all-outline",

@@ -1,9 +1,6 @@
 // projectStore.ts
 
-import {
-  TProjectStore,
-  defineProjectStore,
-} from "@/stores/project/defineProjectStore";
+import { TProjectStore, defineProjectStore } from "@/stores/project/defineProjectStore";
 
 import { NESTProject } from "../../helpers/project/project";
 import { useNESTProjectDBStore } from "./projectDBStore";

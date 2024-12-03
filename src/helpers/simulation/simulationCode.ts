@@ -34,10 +34,7 @@ export class BaseSimulationCode extends BaseObj {
   private _simulation: TSimulation; // parent
   private _state: UnwrapRef<ISimulationCodeState>;
 
-  constructor(
-    simulation: TSimulation,
-    simulationCodeProps?: ISimulationCodeProps
-  ) {
+  constructor(simulation: TSimulation, simulationCodeProps?: ISimulationCodeProps) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._simulation = simulation;
@@ -125,9 +122,7 @@ export class BaseSimulationCode extends BaseObj {
     if (format === "py") {
       data = this._state.script;
     } else if (format === "ipynb") {
-      const source: string[] = this._state.script
-        .split("\n")
-        .map((s: string) => s + "\n");
+      const source: string[] = this._state.script.split("\n").map((s: string) => s + "\n");
 
       data = JSON.stringify(
         {
@@ -159,7 +154,7 @@ export class BaseSimulationCode extends BaseObj {
           nbformat_minor: 5,
         },
         null,
-        "\t"
+        "\t",
       );
     }
     download(data, "script", format);
@@ -172,10 +167,7 @@ export class BaseSimulationCode extends BaseObj {
     this.logger.trace("generate");
 
     if (this._state.template) {
-      this.script = Mustache.render(
-        this._state.template || "",
-        this.simulation.project
-      );
+      this.script = Mustache.render(this._state.template || "", this.simulation.project);
       this.updateHash();
     } else {
       this.loadTemplate().then(() => nextTick(() => this.generate()));

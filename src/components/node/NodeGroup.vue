@@ -8,24 +8,11 @@
   >
     <v-card-title class="node-group-title">
       <v-row no-gutters>
-        <v-btn
-          class="mx-1"
-          flat
-          icon
-          variant="tonal"
-          @click.stop="nodeGroup.toggleSelection()"
-        >
-          <NodeAvatar
-            :node="nodeGroup"
-            size="48"
-          />
+        <v-btn class="mx-1" flat icon variant="tonal" @click.stop="nodeGroup.toggleSelection()">
+          <NodeAvatar :node="nodeGroup" size="48" />
         </v-btn>
 
-        <v-btn-group
-          class="mx-4"
-          multiple
-          rounded="xl"
-        >
+        <v-btn-group class="mx-4" multiple rounded="xl">
           <v-btn
             v-for="(node, index) in nodeGroup.nodes"
             :key="index"
@@ -38,10 +25,7 @@
               }
             "
           >
-            <NodeAvatar
-              :node="(node as TNode)"
-              size="32"
-            />
+            <NodeAvatar :node="(node as TNode)" size="32" />
           </v-btn>
         </v-btn-group>
 
@@ -53,10 +37,7 @@
       </v-row>
     </v-card-title>
 
-    <v-card-actions
-      v-if="nodeGroup.connections.length > 0"
-      style="min-height: 40px"
-    >
+    <v-card-actions v-if="nodeGroup.connections.length > 0" style="min-height: 40px">
       <v-row>
         <v-expansion-panels
           :key="nodeGroup.connections.length"
@@ -86,7 +67,7 @@ import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { TConnection, TNode } from "@/types";
 
 const props = defineProps<{ nodeGroup: NodeGroup }>();
-const nodeGroup = computed(() => props.nodeGroup)
+const nodeGroup = computed(() => props.nodeGroup);
 </script>
 
 <style lang="scss">

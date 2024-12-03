@@ -9,15 +9,8 @@
     @mouseleave="connection.connections.unfocusConnection()"
   >
     <v-expansion-panel-title class="ma-0 pa-0 pr-3 pt-1 expansion-panel-title">
-      <v-btn-group
-        class="py-1 pr-2"
-        style="width: 100%"
-        variant="text"
-      >
-        <ConnectionAvatar
-          :connection
-          class="my-auto ml-4"
-        />
+      <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
+        <ConnectionAvatar :connection class="my-auto ml-4" />
 
         <v-spacer />
 

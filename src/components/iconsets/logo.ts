@@ -12,8 +12,7 @@ const customSvgNameToComponent: Record<string, any> = {
 };
 
 const logo: IconSet = {
-  component: (props: IconProps) =>
-    h(customSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(customSvgNameToComponent[props.icon as string]),
 };
 
 export { logo };

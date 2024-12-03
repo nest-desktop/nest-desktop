@@ -11,6 +11,5 @@ const norseSvgNameToComponent: Record<string, object> = {
 };
 
 export default {
-  component: (props: IconProps) =>
-    h(norseSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(norseSvgNameToComponent[props.icon as string]),
 };

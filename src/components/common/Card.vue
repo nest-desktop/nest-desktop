@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="card my-1"
-    variant="outlined"
-  >
+  <v-card class="card my-1" variant="outlined">
     <slot />
   </v-card>
 </template>

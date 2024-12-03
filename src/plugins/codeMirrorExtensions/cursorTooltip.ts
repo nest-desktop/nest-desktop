@@ -1,12 +1,7 @@
 // cursorTooltip.ts
 
 import { EditorState, StateField } from "@codemirror/state";
-import {
-  EditorView,
-  Tooltip,
-  hoverTooltip,
-  showTooltip,
-} from "@codemirror/view";
+import { EditorView, Tooltip, hoverTooltip, showTooltip } from "@codemirror/view";
 
 const cursorTooltipField = StateField.define<readonly Tooltip[]>({
   create: getCursorTooltips,

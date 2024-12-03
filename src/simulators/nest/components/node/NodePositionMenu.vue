@@ -1,14 +1,6 @@
 <template>
-  <v-menu
-    v-model="state.menuOpen"
-    :close-on-content-click="false"
-    :width="400"
-    activator="parent"
-  >
-    <v-card
-      v-if="nodeSpatial.positions"
-      :min-width="300"
-    >
+  <v-menu v-model="state.menuOpen" :close-on-content-click="false" :width="400" activator="parent">
+    <v-card v-if="nodeSpatial.positions" :min-width="300">
       <v-card-text>
         <v-select
           v-model="state.selectedPositions"
@@ -50,22 +42,11 @@
 
         <span v-if="nodeSpatial.positions.name === 'grid'">
           <v-row class="mt-0">
-            <v-col
-              class="ma-auto"
-              cols="3"
-            >shape</v-col>
+            <v-col class="ma-auto" cols="3">shape</v-col>
             <v-spacer />
-            <v-col
-              v-for="(item, idx) of nodeSpatial.positions.shape"
-              :key="idx"
-              cols="3"
-            >
+            <v-col v-for="(item, idx) of nodeSpatial.positions.shape" :key="idx" cols="3">
               <v-text-field
-                :label="
-                  (nodeSpatial.positions.numDimensions === 2
-                    ? ['rows', 'columns']
-                    : ['x', 'y', 'z'])[idx]
-                "
+                :label="(nodeSpatial.positions.numDimensions === 2 ? ['rows', 'columns'] : ['x', 'y', 'z'])[idx]"
                 :min="1"
                 :model-value="item"
                 density="compact"
@@ -85,16 +66,9 @@
           </v-row>
 
           <v-row class="mt-0">
-            <v-col
-              class="ma-auto"
-              cols="3"
-            >center</v-col>
+            <v-col class="ma-auto" cols="3">center</v-col>
             <v-spacer />
-            <v-col
-              v-for="(item, idx) of nodeSpatial.positions.center"
-              :key="idx"
-              cols="3"
-            >
+            <v-col v-for="(item, idx) of nodeSpatial.positions.center" :key="idx" cols="3">
               <v-text-field
                 :label="['x', 'y', 'z'][idx]"
                 :model-value="item"
@@ -116,17 +90,9 @@
           </v-row>
 
           <v-row class="mt-0">
-            <v-col
-              class="ma-auto"
-              cols="3"
-              title=""
-            >extent</v-col>
+            <v-col class="ma-auto" cols="3" title="">extent</v-col>
             <v-spacer />
-            <v-col
-              v-for="(item, idx) of nodeSpatial.positions.extent"
-              :key="idx"
-              cols="3"
-            >
+            <v-col v-for="(item, idx) of nodeSpatial.positions.extent" :key="idx" cols="3">
               <v-text-field
                 :label="['x', 'y', 'z'][idx]"
                 :min="0"
@@ -164,11 +130,7 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          size="small"
-          text="update positions"
-          @click="updatePositions()"
-        />
+        <v-btn size="small" text="update positions" @click="updatePositions()" />
       </v-card-actions>
     </v-card>
   </v-menu>
@@ -205,11 +167,7 @@ const state = reactive<{
     max: 1000,
     rules: [
       ["value > 0", "The value must be strictly positive.", "error"],
-      [
-        "value < 1000",
-        "Large values generate many data points and can put quite a load on your browser.",
-        "warning",
-      ],
+      ["value < 1000", "Large values generate many data points and can put quite a load on your browser.", "warning"],
     ],
     value: 1,
   },

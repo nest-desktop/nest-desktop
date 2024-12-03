@@ -33,7 +33,7 @@ export function defineProjectDBStore(
     Project: BaseProject,
     ProjectDB: BaseProjectDB,
     simulator: "base",
-  }
+  },
 ): TProjectDBStore {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
@@ -126,10 +126,7 @@ export function defineProjectDBStore(
      * Export project from the list.
      * @param projectId project ID
      */
-    const exportProject = (
-      project: Project | TProjectProps,
-      withActivities: boolean = false
-    ): void => {
+    const exportProject = (project: Project | TProjectProps, withActivities: boolean = false): void => {
       logger.trace("export project:", truncate(project.id));
 
       if (project.doc && withActivities) {
@@ -144,14 +141,10 @@ export function defineProjectDBStore(
      * @param projectId project ID
      * @returns project object or props
      */
-    const findProject = (
-      projectId: string
-    ): Project | TProjectProps | undefined => {
+    const findProject = (projectId: string): Project | TProjectProps | undefined => {
       logger.trace("find project:", truncate(projectId));
 
-      return state.projects.find(
-        (project: Project | TProjectProps) => project.id === projectId
-      );
+      return state.projects.find((project: Project | TProjectProps) => project.id === projectId);
     };
 
     /**
@@ -164,11 +157,7 @@ export function defineProjectDBStore(
       } else {
         return state.projects.filter((project: Project | TProjectProps) => {
           if (project.name) {
-            return (
-              project.name
-                .toLowerCase()
-                .indexOf(state.searchTerm.toLowerCase()) !== -1
-            );
+            return project.name.toLowerCase().indexOf(state.searchTerm.toLowerCase()) !== -1;
           }
         });
       }
@@ -198,16 +187,14 @@ export function defineProjectDBStore(
     const getProjectIds = (): (string | undefined)[] =>
       state.projects.map((project: Project | TProjectProps) => project.id);
 
-    const getProjectIdx = (project: TProject | TProjectProps): number =>
-      state.projects.indexOf(project);
+    const getProjectIdx = (project: TProject | TProjectProps): number => state.projects.indexOf(project);
 
     /**
      * Check if the store has project.
      * @param projectId project ID
      * @returns boolean
      */
-    const hasProjectId = (projectId: string): boolean =>
-      getProjectIds().includes(projectId);
+    const hasProjectId = (projectId: string): boolean => getProjectIds().includes(projectId);
 
     /**
      * Import projects the update list.
@@ -228,9 +215,7 @@ export function defineProjectDBStore(
       let promises: Promise<TProjectProps>[] = [];
       if (props.projectAssets) {
         promises = props.projectAssets.map(async (file: string) => {
-          return loadJSON(
-            `assets/simulators/${props.simulator}/projects/${file}.json`
-          ).then((data) => db.create(data));
+          return loadJSON(`assets/simulators/${props.simulator}/projects/${file}.json`).then((data) => db.create(data));
         });
       }
       return Promise.all(promises);
@@ -267,9 +252,7 @@ export function defineProjectDBStore(
      * @param project project object or props
      * @returns
      */
-    const loadProject = (
-      project: Project | TProjectProps
-    ): Project | undefined => {
+    const loadProject = (project: Project | TProjectProps): Project | undefined => {
       logger.trace("load project:", truncate(project.id));
       if (isProjectLoaded(project)) return project;
 
@@ -361,12 +344,10 @@ export function defineProjectDBStore(
       logger.trace("update list");
 
       state.projects = [];
-      return db
-        .list("updatedAt", false)
-        .then((projectsProps: TProjectProps[]) => {
-          state.projects = projectsProps as TProjectProps[];
-          state.initialized = true;
-        });
+      return db.list("updatedAt", false).then((projectsProps: TProjectProps[]) => {
+        state.projects = projectsProps as TProjectProps[];
+        state.initialized = true;
+      });
     };
 
     /**

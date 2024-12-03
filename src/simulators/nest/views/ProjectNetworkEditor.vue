@@ -1,29 +1,19 @@
 <template>
-  <v-layout
-    id="networkGraphLayout"
-    class="networkGraphLayout"
-    full-height
-  >
+  <v-layout id="networkGraphLayout" class="networkGraphLayout" full-height>
     <NetworkEditorToolbar>
       <template #ContextMenuList="{ graph }">
         <ConnectionMenuList
           v-if="graph.state.contextMenu.connection"
           :connection="(graph.state.contextMenu.connection as NESTConnection)"
         />
-        <NESTNodeMenuList
-          v-if="graph.state.contextMenu.node"
-          :node="(graph.state.contextMenu.node as NESTNode)"
-        />
+        <NESTNodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as NESTNode)" />
         <NodeGroupMenuList
           v-if="graph.state.contextMenu.nodeGroup"
           :node-group="(graph.state.contextMenu.nodeGroup as NodeGroup)"
         />
       </template>
     </NetworkEditorToolbar>
-    <NetworkGraph
-      :key="network.project.id"
-      :network
-    >
+    <NetworkGraph :key="network.project.id" :network>
       <template #marker="{ connection }">
         <circle
           v-if="connection.view.markerEndLabel === 'assigned'"
@@ -62,7 +52,5 @@ import { NESTNode } from "../helpers/node/node";
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
-const network = computed(
-  () => projectStore.state.project.network as NESTNetwork
-);
+const network = computed(() => projectStore.state.project.network as NESTNetwork);
 </script>

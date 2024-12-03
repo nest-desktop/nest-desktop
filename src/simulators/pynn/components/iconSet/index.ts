@@ -11,6 +11,5 @@ const pynnSvgNameToComponent: Record<string, object> = {
 };
 
 export default {
-  component: (props: IconProps) =>
-    h(pynnSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(pynnSvgNameToComponent[props.icon as string]),
 };

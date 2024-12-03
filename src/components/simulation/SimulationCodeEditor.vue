@@ -1,32 +1,11 @@
 <template>
-  <v-toolbar
-    color="transparent"
-    density="compact"
-  >
-    <v-btn-toggle
-      class="mx-1"
-      color="blue"
-      multiple
-      rounded="0"
-      variant="text"
-    >
-      <IconBtn
-        v-for="(item, index) in codeBlocks"
-        :key="index"
-        :icon="item.icon"
-        :title="item.title"
-        size="x-small"
-      />
+  <v-toolbar color="transparent" density="compact">
+    <v-btn-toggle class="mx-1" color="blue" multiple rounded="0" variant="text">
+      <IconBtn v-for="(item, index) in codeBlocks" :key="index" :icon="item.icon" :title="item.title" size="x-small" />
     </v-btn-toggle>
     <v-spacer />
-    <v-btn
-      icon="mdi:mdi-download"
-      size="small"
-    />
-    <v-btn
-      icon="mdi:mdi-dots-vertical"
-      size="small"
-    />
+    <v-btn icon="mdi:mdi-download" size="small" />
+    <v-btn icon="mdi:mdi-dots-vertical" size="small" />
   </v-toolbar>
 
   <!-- <v-btn
@@ -38,11 +17,7 @@
     title="Edit mode"
   /> -->
 
-  <SimulationCodeMirror
-    v-if="simulation"
-    :disabled="state.disabled"
-    :simulation="simulation"
-  />
+  <SimulationCodeMirror v-if="simulation" :disabled="state.disabled" :simulation="simulation" />
 </template>
 
 <script lang="ts" setup>

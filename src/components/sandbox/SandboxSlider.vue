@@ -4,38 +4,20 @@
       <v-row no-gutters>
         Slider
         <v-spacer />
-        <v-tabs
-          v-model="state.tab"
-          density="compact"
-        >
-          <v-tab value="components">
-            Components
-          </v-tab>
-          <v-tab value="values">
-            Values
-          </v-tab>
+        <v-tabs v-model="state.tab" density="compact">
+          <v-tab value="components"> Components </v-tab>
+          <v-tab value="values"> Values </v-tab>
         </v-tabs>
       </v-row>
     </v-card-title>
 
     <v-card-text>
       <v-window v-model="state.tab">
-        <v-window-item
-          reverse-transition="no-transition"
-          transition="no-transition"
-          value="components"
-        >
+        <v-window-item reverse-transition="no-transition" transition="no-transition" value="components">
           <v-list>
-            <v-list-item
-              v-for="(sliderItem, index) in items"
-              :key="index"
-            >
+            <v-list-item v-for="(sliderItem, index) in items" :key="index">
               <v-row no-gutters>
-                <Slider
-                  v-model="sliderItem.value"
-                  :options="sliderItem"
-                  :thumb-color="sliderItem.color"
-                />
+                <Slider v-model="sliderItem.value" :options="sliderItem" :thumb-color="sliderItem.color" />
                 <div style="width: 100px">
                   {{ typeof sliderItem.value }}
                   {{ sliderItem.value }}
@@ -45,11 +27,7 @@
           </v-list>
         </v-window-item>
 
-        <v-window-item
-          reverse-transition="no-transition"
-          transition="no-transition"
-          value="values"
-        >
+        <v-window-item reverse-transition="no-transition" transition="no-transition" value="values">
           <pre>{{ items }}</pre>
         </v-window-item>
       </v-window>

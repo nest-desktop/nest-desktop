@@ -17,7 +17,5 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { useNorseProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNorseProjectStore();
 
-const graph = computed(
-  () => projectStore.state.project.activityGraph as BaseActivityGraph
-);
+const graph = computed(() => projectStore.state.project.activityGraph as BaseActivityGraph);
 </script>

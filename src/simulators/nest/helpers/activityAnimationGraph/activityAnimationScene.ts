@@ -254,10 +254,8 @@ export class ActivityAnimationScene {
     camera.rotation.theta = camera.rotation.theta % 360;
     const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
     const position: Vector3 = this._state.camera.position;
-    position.x =
-      camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
-    position.z =
-      camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
+    position.x = camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
+    position.z = camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
     this._camera.lookAt(this._scene.position);
   }
 
@@ -305,8 +303,6 @@ export class ActivityAnimationScene {
    * Update scene background.
    */
   updateSceneBackground(): void {
-    this._scene.background = darkMode()
-      ? new Color(0x121212)
-      : new Color(0xfefefe);
+    this._scene.background = darkMode() ? new Color(0x121212) : new Color(0xfefefe);
   }
 }

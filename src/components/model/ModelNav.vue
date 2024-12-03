@@ -6,18 +6,9 @@
     permanent
     @transitionend="navStore.dispatchWindowResize()"
   >
-    <div
-      class="resize-handle"
-      @mousedown="navStore.resizeSidebar()"
-    />
+    <div class="resize-handle" @mousedown="navStore.resizeSidebar()" />
 
-    <v-toolbar
-      :color
-      class="fixed-bar"
-      density="compact"
-      extended
-      extension-height="36"
-    >
+    <v-toolbar :color class="fixed-bar" density="compact" extended extension-height="36">
       <v-text-field
         v-model="state.search"
         class="mx-1"
@@ -44,10 +35,7 @@
           /> -->
         </slot>
 
-        <v-row
-          class="ma-2"
-          no-gutters
-        >
+        <v-row class="ma-2" no-gutters>
           <v-spacer />
 
           <v-chip
@@ -57,17 +45,11 @@
             prepend-icon="mdi:mdi-filter-variant"
             title="source of the models"
             variant="text"
-            @click="
-              state.source =
-                sources[(sources.indexOf(state.source) + 1) % sources.length]
-            "
+            @click="state.source = sources[(sources.indexOf(state.source) + 1) % sources.length]"
           />
 
           <v-chip
-            :prepend-icon="
-              'mdi:mdi-order-alphabetical-' +
-                (state.orderByAsc ? 'ascending' : 'descending')
-            "
+            :prepend-icon="'mdi:mdi-order-alphabetical-' + (state.orderByAsc ? 'ascending' : 'descending')"
             class="mx-1"
             density="compact"
             text="sort"
@@ -80,10 +62,7 @@
 
           <span class="text-subtitle-2">
             {{ models.length }}
-            model<span
-              v-show="models.length > 1"
-              text="s"
-            />
+            model<span v-show="models.length > 1" text="s" />
           </span>
         </v-row>
       </template>
@@ -91,22 +70,9 @@
       <Menu :items />
     </v-toolbar>
 
-    <v-list
-      class="pt-0"
-      density="compact"
-      lines="two"
-      nav
-    >
-      <v-list-subheader
-        class="pa-0"
-        inset
-        style="margin-left: -28px"
-      >
-        <v-btn-toggle
-          v-model="state.elementType"
-          density="compact"
-          style="height: 24px"
-        >
+    <v-list class="pt-0" density="compact" lines="two" nav>
+      <v-list-subheader class="pa-0" inset style="margin-left: -28px">
+        <v-btn-toggle v-model="state.elementType" density="compact" style="height: 24px">
           <v-btn
             v-for="elementType in elementTypes"
             :key="elementType"
@@ -131,15 +97,8 @@
               v-bind="props"
             >
               <template #append>
-                <v-chip
-                  v-if="appStore.state.devMode"
-                  :text="item.hash"
-                  size="x-small"
-                />
-                <ModelMenu
-                  :color="isHovering ? 'primary' : 'transparent'"
-                  :model="(item as TModel)"
-                />
+                <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
+                <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
               </template>
             </v-list-item>
           </v-hover>
@@ -173,12 +132,10 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-defineProps<{color: string}>();
+defineProps<{ color: string }>();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
-const modelDBStore = computed(
-  () => appStore.currentSimulator.stores.modelDBStore
-);
+const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
 
 const models = computed(() => {
   let models: TModel[] = [];
@@ -195,22 +152,16 @@ const models = computed(() => {
 
   if (state.search) {
     models = models.filter((model: TModel) =>
-      model.state.label
-        .toLocaleLowerCase()
-        .includes(state.search ? state.search.toLocaleLowerCase() : "")
+      model.state.label.toLocaleLowerCase().includes(state.search ? state.search.toLocaleLowerCase() : ""),
     );
   }
 
   if (state.elementType) {
-    models = models.filter(
-      (model: TModel) => model.elementType === state.elementType
-    );
+    models = models.filter((model: TModel) => model.elementType === state.elementType);
   }
 
   const sortedBy = "id";
-  models.sort((a: TModel, b: TModel) =>
-    sortString(a[sortedBy], b[sortedBy], state.orderByAsc)
-  );
+  models.sort((a: TModel, b: TModel) => sortString(a[sortedBy], b[sortedBy], state.orderByAsc));
 
   return models;
 });
@@ -228,12 +179,7 @@ const state = reactive<{
 });
 
 const sources = ["installed", "custom", appStore.currentSimulator.id];
-const elementTypes: TElementType[] = [
-  "neuron",
-  "recorder",
-  "stimulator",
-  "synapse",
-];
+const elementTypes: TElementType[] = ["neuron", "recorder", "stimulator", "synapse"];
 
 const items = [
   {

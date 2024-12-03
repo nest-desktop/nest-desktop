@@ -4,10 +4,7 @@
     <v-btn icon="mdi:mdi-minus" />
   </v-toolbar> -->
 
-  <ActivityChartGraph
-    v-if="projectViewStore.state.views.activity === 'abstract'"
-    :graph="graph.activityChartGraph"
-  />
+  <ActivityChartGraph v-if="projectViewStore.state.views.activity === 'abstract'" :graph="graph.activityChartGraph" />
   <ActivityAnimationGraph
     v-else-if="projectViewStore.state.views.activity === 'spatial'"
     :graph="graph.activityAnimationGraph"
@@ -30,7 +27,5 @@ const projectViewStore = appStore.currentSimulator.views.project;
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
-const graph = computed(
-  () => projectStore.state.project.activityGraph as NESTActivityGraph
-);
+const graph = computed(() => projectStore.state.project.activityGraph as NESTActivityGraph);
 </script>

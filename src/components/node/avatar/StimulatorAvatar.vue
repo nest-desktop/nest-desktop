@@ -1,16 +1,9 @@
 <template>
-  <v-avatar
-    class="stimulator"
-    rounded="0"
-  >
+  <v-avatar class="stimulator" rounded="0">
     <span class="label">
       <slot />
     </span>
-    <v-icon
-      :color
-      class="position-absolute icon-size"
-      icon="network:stimulator"
-    />
+    <v-icon :color class="position-absolute icon-size" icon="network:stimulator" />
   </v-avatar>
 </template>
 

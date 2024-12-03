@@ -210,15 +210,11 @@ export class NodeRecord extends BaseObj {
     this._state.traceColors.slice(0, this._nodeSize);
 
     if (this._nodeSize > this._state.traceColors.length) {
-      const arrayIdx = [
-        ...Array(this._nodeSize - this._state.traceColors.length).keys(),
-      ];
+      const arrayIdx = [...Array(this._nodeSize - this._state.traceColors.length).keys()];
       this._state.traceColors = [
         ...this._state.traceColors,
         ...arrayIdx.map((idx) =>
-          this.nodeSize == 1
-            ? this._state.color
-            : this.getColor(idx + this._state.traceColors.length)
+          this.nodeSize == 1 ? this._state.color : this.getColor(idx + this._state.traceColors.length),
         ),
       ];
     }

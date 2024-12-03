@@ -200,9 +200,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     this._zoom.transform.y = (this._size.height / 2) * this._zoom.transform.k;
     this._handler.call(
       this._zoom.handler.transform,
-      zoomIdentity
-        .translate(this._zoom.transform.x, this._zoom.transform.y)
-        .scale(this._zoom.transform.k)
+      zoomIdentity.translate(this._zoom.transform.x, this._zoom.transform.y).scale(this._zoom.transform.k),
     );
   }
 
@@ -260,9 +258,7 @@ export class NetworkGraphWorkspace extends BaseObj {
    * Update cursor position.
    * @param position mouse position
    */
-  updateCursorPosition(
-    position: { x: number; y: number } = { x: 0, y: 0 }
-  ): void {
+  updateCursorPosition(position: { x: number; y: number } = { x: 0, y: 0 }): void {
     this._state.cursorPosition.x = position.x;
     this._state.cursorPosition.y = position.y;
   }
@@ -281,11 +277,7 @@ export class NetworkGraphWorkspace extends BaseObj {
    * Update transform of the workspace.
    */
   updateTransform(): void {
-    if (
-      this.network == undefined ||
-      (!this._state.centerNetwork && !this._state.centerSelected)
-    )
-      return;
+    if (this.network == undefined || (!this._state.centerNetwork && !this._state.centerSelected)) return;
 
     const bbox = this._handler.node().getBBox();
 
@@ -295,13 +287,11 @@ export class NetworkGraphWorkspace extends BaseObj {
     const nodes = this.network.nodes;
     const connections = this.network.connections;
     if (this._state.centerSelected && connections.state.selectedNode) {
-      const nodePosition: { x: number; y: number } =
-        connections.state.selectedNode.view.position;
+      const nodePosition: { x: number; y: number } = connections.state.selectedNode.view.position;
       x = nodePosition.x;
       y = nodePosition.y;
     } else if (this._state.centerNetwork && nodes.all.length > 0) {
-      const networkCenterPos: { x: number; y: number } =
-        this.centerNetworkPos();
+      const networkCenterPos: { x: number; y: number } = this.centerNetworkPos();
       x = networkCenterPos.x;
       y = networkCenterPos.y;
     }
@@ -312,9 +302,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     this._state.transforming = true;
     this._handler.call(
       this._zoom.handler.transform,
-      zoomIdentity
-        .translate(this._zoom.transform.x, this._zoom.transform.y)
-        .scale(this._zoom.transform.k)
+      zoomIdentity.translate(this._zoom.transform.x, this._zoom.transform.y).scale(this._zoom.transform.k),
     );
     this._state.transforming = false;
   }

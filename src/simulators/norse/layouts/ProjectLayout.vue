@@ -6,10 +6,7 @@
 
     <ProjectController />
 
-    <router-view
-      :key="projectStore.state.projectId"
-      name="project"
-    />
+    <router-view :key="projectStore.state.projectId" name="project" />
   </template>
 </template>
 

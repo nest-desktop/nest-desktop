@@ -43,9 +43,7 @@ export class NESTCopyModelParameter extends BaseParameter {
     if (value && !isVisible) {
       this.parent.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
+      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
     }
   }
 

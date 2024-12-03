@@ -1,21 +1,8 @@
 <template>
-  <v-navigation-drawer
-    v-model="appStore.state.logsOpen"
-    location="right"
-    temporary
-    width="400"
-  >
-    <v-toolbar
-      color="transparent"
-      density="compact"
-      title="Request logs"
-    >
+  <v-navigation-drawer v-model="appStore.state.logsOpen" location="right" temporary width="400">
+    <v-toolbar color="transparent" density="compact" title="Request logs">
       <template #append>
-        <v-btn-toggle
-          v-model="appStore.state.filterTag"
-          class="mx-2"
-          density="compact"
-        >
+        <v-btn-toggle v-model="appStore.state.filterTag" class="mx-2" density="compact">
           <v-btn
             color="error"
             icon="mdi:mdi-alert-circle-outline"
@@ -34,12 +21,7 @@
           />
         </v-btn-toggle>
 
-        <v-btn
-          icon="mdi:mdi-playlist-remove"
-          size="small"
-          title="Clear all logs"
-          @click="appStore.clearLogs()"
-        />
+        <v-btn icon="mdi:mdi-playlist-remove" size="small" title="Clear all logs" @click="appStore.clearLogs()" />
         <v-btn
           icon="mdi:mdi-menu-close"
           size="small"
@@ -60,45 +42,24 @@
       />
     </div>
 
-    <v-list
-      class="px-1"
-      density="compact"
-    >
+    <v-list class="px-1" density="compact">
       <v-divider />
 
       <v-list-item
         v-for="(log, index) in appStore.state.requestLogs"
-        v-show="
-          appStore.state.filterTag
-            ? log.level === appStore.state.filterTag
-            : true
-        "
+        v-show="appStore.state.filterTag ? log.level === appStore.state.filterTag : true"
         :key="index"
         class="pa-0"
       >
-        <v-toolbar
-          color="transparent"
-          density="compact"
-        >
+        <v-toolbar color="transparent" density="compact">
           <template #prepend>
-            <v-icon
-              :color="log.level"
-              :icon="icons[log.level]"
-            />
+            <v-icon :color="log.level" :icon="icons[log.level]" />
           </template>
 
-          <v-toolbar-title
-            :text="log.date"
-            color="primary"
-            class="text-subtitle-1"
-          />
+          <v-toolbar-title :text="log.date" color="primary" class="text-subtitle-1" />
 
           <template #append>
-            <v-btn
-              icon="mdi:mdi-close"
-              size="x-small"
-              @click="appStore.state.requestLogs.splice(index, 1)"
-            />
+            <v-btn icon="mdi:mdi-close" size="x-small" @click="appStore.state.requestLogs.splice(index, 1)" />
           </template>
         </v-toolbar>
 

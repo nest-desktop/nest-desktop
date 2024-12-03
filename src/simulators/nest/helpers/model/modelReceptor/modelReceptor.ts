@@ -101,10 +101,7 @@ export class NESTModelReceptor extends BaseObj {
    * @param param - parameter object
    */
   addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new NESTModelReceptorParameter(
-      this,
-      paramProps
-    );
+    this._params[paramProps.id] = new NESTModelReceptorParameter(this, paramProps);
   }
 
   /**
@@ -150,15 +147,13 @@ export class NESTModelReceptor extends BaseObj {
    */
   initParameters(modelReceptorProps: INESTModelReceptorProps): void {
     if (modelReceptorProps.params) {
-      modelReceptorProps.params.forEach(
-        (paramProps: IParamProps) => {
-          if (this.getParameter(paramProps.id)) {
-            this.updateParameter(paramProps);
-          } else {
-            this.addParameter(paramProps);
-          }
+      modelReceptorProps.params.forEach((paramProps: IParamProps) => {
+        if (this.getParameter(paramProps.id)) {
+          this.updateParameter(paramProps);
+        } else {
+          this.addParameter(paramProps);
         }
-      );
+      });
     }
   }
 
@@ -175,9 +170,7 @@ export class NESTModelReceptor extends BaseObj {
    * @remarks It emits model changes.
    */
   resetParameters(): void {
-    Object.values(this._params).forEach((param: NESTModelReceptorParameter) =>
-      param.reset()
-    );
+    Object.values(this._params).forEach((param: NESTModelReceptorParameter) => param.reset());
     this.changes();
   }
 
@@ -196,16 +189,12 @@ export class NESTModelReceptor extends BaseObj {
     const receptorProps: INESTModelReceptorProps = {
       id: this._id,
       label: this._label,
-      params: this.filteredParams.map((param: NESTModelReceptorParameter) =>
-        param.toJSON()
-      ),
+      params: this.filteredParams.map((param: NESTModelReceptorParameter) => param.toJSON()),
     };
 
     // Add recordables if provided.
     if (this._recordables.length > 0) {
-      receptorProps.recordables = this._recordables.map(
-        (recordable: INodeRecordProps) => recordable.id
-      );
+      receptorProps.recordables = this._recordables.map((recordable: INodeRecordProps) => recordable.id);
     }
 
     return receptorProps;
@@ -230,9 +219,8 @@ export class NESTModelReceptor extends BaseObj {
    */
   updateRecordables(modelProps: IModelProps): void {
     if (modelProps.recordables) {
-      this._recordables = this._model.config?.localStorage.recordables.filter(
-        (recordable: INodeRecordProps) =>
-          modelProps?.recordables?.includes(recordable.id)
+      this._recordables = this._model.config?.localStorage.recordables.filter((recordable: INodeRecordProps) =>
+        modelProps?.recordables?.includes(recordable.id),
       );
     }
   }

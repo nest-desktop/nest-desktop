@@ -63,8 +63,7 @@ export class NetworkRevision extends BaseObj {
     this.logger.trace("commit network");
 
     const codeHash = this._project.simulation.code.hash;
-    if (codeHash == null || codeHash == undefined || codeHash.length == 0)
-      return;
+    if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
 
     // Remove networks after the current.
     this._revisions = this._revisions.slice(0, this._revisionIdx + 1);
@@ -72,16 +71,12 @@ export class NetworkRevision extends BaseObj {
     // Limit max amount of network revisions.
     const maxRevisions: number = 9;
     if (this._revisions.length > maxRevisions) {
-      this._revisions = this._revisions.slice(
-        this._revisions.length - maxRevisions
-      );
+      this._revisions = this._revisions.slice(this._revisions.length - maxRevisions);
     }
 
     // Get last network of the revisions.
     const lastNetwork: INetworkRevisionProps =
-      this._revisions.length > 0
-        ? this._revisions[this._revisions.length - 1]
-        : {};
+      this._revisions.length > 0 ? this._revisions[this._revisions.length - 1] : {};
 
     const currentNetwork: INetworkRevisionProps =
       this._revisions.length > 0 && lastNetwork.codeHash === codeHash

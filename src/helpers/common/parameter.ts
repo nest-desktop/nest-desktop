@@ -84,11 +84,7 @@ export class BaseParameter extends BaseObj {
   private _unit: string = "";
   private _component: string = "";
 
-  constructor(
-    paramProps: IParamProps,
-    loggerProps?: ISettingsParam<ILogObj>,
-    configProps?: IConfigProps
-  ) {
+  constructor(paramProps: IParamProps, loggerProps?: ISettingsParam<ILogObj>, configProps?: IConfigProps) {
     super({
       config: { name: "Parameter", ...configProps },
       logger: { settings: { minLevel: 3, ...loggerProps } },
@@ -168,8 +164,7 @@ export class BaseParameter extends BaseObj {
     let label: string = "";
     label += `<span>${this.options.label || this.options.id}</span>`;
 
-    if (this.options.unit)
-      label += `<span>${this.value} ${this.options.unit}</span>`;
+    if (this.options.unit) label += `<span>${this.value} ${this.options.unit}</span>`;
 
     return label;
   }
@@ -285,14 +280,10 @@ export class BaseParameter extends BaseObj {
   }
 
   set typeId(value: string) {
-    this._type = this.config?.localStorage.types.find(
-      (type: IParamType) => type.id === value
-    );
+    this._type = this.config?.localStorage.types.find((type: IParamType) => type.id === value);
 
     if (!this.isConstant) {
-      this.specs.forEach(
-        (p: IParamTypeSpec) => (p.value = parseFloat(p.value as string))
-      );
+      this.specs.forEach((p: IParamTypeSpec) => (p.value = parseFloat(p.value as string)));
     }
   }
 
@@ -322,9 +313,7 @@ export class BaseParameter extends BaseObj {
 
   get valueFixed(): string {
     if (Array.isArray(this.value)) {
-      return (
-        "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]"
-      );
+      return "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]";
     } else if (typeof this.value === "number") {
       return this.toFixed(this.value);
     } else {
@@ -349,9 +338,7 @@ export class BaseParameter extends BaseObj {
     if (value && !isVisible) {
       this.parent.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
+      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
     }
   }
 
@@ -388,9 +375,7 @@ export class BaseParameter extends BaseObj {
     this._factors = paramProps.factors || [];
 
     if (paramProps.type) {
-      const type = this.config?.localStorage.types.find(
-        (t: IParamType) => t.id === paramProps.type?.id
-      );
+      const type = this.config?.localStorage.types.find((t: IParamType) => t.id === paramProps.type?.id);
       if (type != null) {
         this._type = { ...type, ...paramProps.type };
       }
@@ -499,10 +484,7 @@ export class BaseParameter extends BaseObj {
       }
     } else if (this._type.id.startsWith("np")) {
       const specs: string = this.specs
-        .filter(
-          (spec: IParamTypeSpec) =>
-            !(spec.optional && spec.value === spec.default)
-        )
+        .filter((spec: IParamTypeSpec) => !(spec.optional && spec.value === spec.default))
         .map((spec: IParamTypeSpec) => spec.value)
         .join(", ");
       value = `${this._type.id}(${specs})`;
@@ -515,15 +497,11 @@ export class BaseParameter extends BaseObj {
       value += specs[1].value !== 0 ? ` + ${specs[1].value}` : "";
     } else if (this._type.id.startsWith("spatial")) {
       // Spatial distribution.
-      const specs: string = this.specs
-        .map((spec: IParamTypeSpec) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
       value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
-      const specs: string = this.specs
-        .map((spec: IParamTypeSpec) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
       value = `nest.${this._type.id}(${specs})`;
     }
     return value;

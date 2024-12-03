@@ -1,13 +1,6 @@
 // nodeGraphConnector.ts
 
-import {
-  DragBehavior,
-  Selection,
-  Transition,
-  drag,
-  select,
-  transition,
-} from "d3";
+import { DragBehavior, Selection, Transition, drag, select, transition } from "d3";
 
 import { TNetworkGraph, TNode } from "@/types";
 
@@ -64,14 +57,10 @@ export class NodeGraphConnector extends BaseObj {
     const network = this._networkGraph.network;
     const workspace = this._networkGraph.workspace;
 
-    if (
-      network.connections.state.selectedNode &&
-      network.nodes.state.focusedNode &&
-      workspace.state.dragLine
-    ) {
+    if (network.connections.state.selectedNode && network.nodes.state.focusedNode && workspace.state.dragLine) {
       this._networkGraph.network.connectNodes(
         network.connections.state.selectedNode.idx,
-        network.nodes.state.focusedNode.idx
+        network.nodes.state.focusedNode.idx,
       );
     }
 
@@ -97,24 +86,13 @@ export class NodeGraphConnector extends BaseObj {
       .style("opacity", 0)
       .on("mousedown.drag", null);
 
-    connector
-      .append("path")
-      .attr("fill", "none")
-      .attr("stroke", "white")
-      .style("opacity", 0)
-      .attr("stroke-width", 16);
+    connector.append("path").attr("fill", "none").attr("stroke", "white").style("opacity", 0).attr("stroke-width", 16);
 
-    connector
-      .append("path")
-      .attr("class", "color")
-      .attr("fill", "none")
-      .attr("stroke-width", this.strokeWidth);
+    connector.append("path").attr("class", "color").attr("fill", "none").attr("stroke-width", this.strokeWidth);
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: NodeGroup | TNode | unknown) =>
-        this.drag(e, n as NodeGroup | TNode)
-      )
+      .on("drag", (e: MouseEvent, n: NodeGroup | TNode | unknown) => this.drag(e, n as NodeGroup | TNode))
       .on("end", (e: MouseEvent) => this.dragEnd(e));
 
     const connectorEnd = connector.append("g").attr("class", "end");
@@ -186,28 +164,18 @@ export class NodeGraphConnector extends BaseObj {
   render(): void {
     this.logger.trace("render");
 
-    const connector: Selection<any, any, any, any> = select("g#nodes")
-      .selectAll("g.node")
-      .selectAll("g.connector");
+    const connector: Selection<any, any, any, any> = select("g#nodes").selectAll("g.node").selectAll("g.connector");
 
     const workspace = this._networkGraph.workspace;
-    const connectionDrag: boolean =
-      workspace.state.dragLine || workspace.state.dragging;
+    const connectionDrag: boolean = workspace.state.dragLine || workspace.state.dragging;
 
     const duration: number = connectionDrag ? 0 : 250;
     const t: Transition<any, any, any, any> = transition().duration(duration);
 
     connector
       .transition(t)
-      .delay(
-        this._networkGraph.network?.nodes.state.focusedNode ||
-          workspace.state.dragLine
-          ? 0
-          : 1000
-      )
-      .style("opacity", (n: NodeGroup | TNode) =>
-        n.view.isFocused && !connectionDrag ? "1" : "0"
-      );
+      .delay(this._networkGraph.network?.nodes.state.focusedNode || workspace.state.dragLine ? 0 : 1000)
+      .style("opacity", (n: NodeGroup | TNode) => (n.view.isFocused && !connectionDrag ? "1" : "0"));
 
     // Connector animation.
     const connectorEndPos: { x: number; y: number } = {
@@ -221,14 +189,8 @@ export class NodeGraphConnector extends BaseObj {
       .attr(
         "d",
         (
-          n: NodeGroup | TNode | any // TODO: no any!
-        ) =>
-          drawPathMouse(
-            { x: 0, y: 0 },
-            n.view.isFocused && !connectionDrag
-              ? connectorEndPos
-              : { x: 0, y: 0 }
-          )
+          n: NodeGroup | TNode | any, // TODO: no any!
+        ) => drawPathMouse({ x: 0, y: 0 }, n.view.isFocused && !connectionDrag ? connectorEndPos : { x: 0, y: 0 }),
       );
 
     connector
@@ -237,7 +199,7 @@ export class NodeGraphConnector extends BaseObj {
       .attr("transform", (n: NodeGroup | TNode) =>
         n.view.isFocused && !connectionDrag
           ? `translate(${connectorEndPos.x}, ${connectorEndPos.y})`
-          : "translate(0,0)"
+          : "translate(0,0)",
       );
 
     connector.selectAll(".color").style("stroke", "currentcolor");

@@ -1,9 +1,6 @@
 <template>
   <svg viewBox="0 0 24 24">
-    <g
-      transform="translate(-353.26166,-545.8422)"
-      style="display: inline"
-    >
+    <g transform="translate(-353.26166,-545.8422)" style="display: inline">
       <path
         d="m 377.26166,566.04715 c 0,1.95725 -1.61484,3.79511 -3.54368,3.79511 H 353.2619 l -2.4e-4,-20.45644 c 0,-1.95696 1.56309,-3.54362 3.49193,-3.54362 h 16.96439 c 1.92884,0 3.54368,1.97403 3.54368,3.54374 z"
         style="
@@ -50,46 +47,26 @@
         cx="368.43753"
         cy="555.05078"
         r="1.5718517"
-        style="
-          fill-opacity: 1;
-          fill: #ffffff;
-          stroke-width: 0.17476;
-          stroke: none;
-        "
+        style="fill-opacity: 1; fill: #ffffff; stroke-width: 0.17476; stroke: none"
       />
       <circle
         cx="373.75766"
         cy="555.05078"
         r="1.5718517"
-        style="
-          fill-opacity: 1;
-          fill: #ffffff;
-          stroke-width: 0.17476;
-          stroke: none;
-        "
+        style="fill-opacity: 1; fill: #ffffff; stroke-width: 0.17476; stroke: none"
       />
       <circle
         cx="373.75766"
         cy="560.37091"
         r="1.5718517"
-        style="
-          fill-opacity: 1;
-          fill: #ffffff;
-          stroke-width: 0.17476;
-          stroke: none;
-        "
+        style="fill-opacity: 1; fill: #ffffff; stroke-width: 0.17476; stroke: none"
       />
       <circle
         class="content"
         cx="368.43753"
         cy="560.37091"
         r="1.5718517"
-        style="
-          fill-opacity: 1;
-          fill: #ffffff;
-          stroke-width: 0.17476;
-          stroke: none;
-        "
+        style="fill-opacity: 1; fill: #ffffff; stroke-width: 0.17476; stroke: none"
       />
     </g>
   </svg>

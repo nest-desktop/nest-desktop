@@ -1,37 +1,15 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
-      <v-icon
-        icon="mdi:mdi-import"
-        size="small"
-      />
+      <v-icon icon="mdi:mdi-import" size="small" />
       Import
 
-      <v-btn
-        flat
-        icon="mdi:mdi-close"
-        size="small"
-        @click="closeDialog()"
-      />
+      <v-btn flat icon="mdi:mdi-close" size="small" @click="closeDialog()" />
     </v-card-title>
 
-    <v-toolbar
-      class="px-2"
-      color="transparent"
-      density="compact"
-    >
-      <v-btn-toggle
-        v-model="state.source"
-        class="mr-1"
-        density="compact"
-        mandatory
-      >
-        <v-btn
-          v-for="(source, index) in sources"
-          :key="index"
-          style="min-width: 40px"
-          v-bind="source"
-        />
+    <v-toolbar class="px-2" color="transparent" density="compact">
+      <v-btn-toggle v-model="state.source" class="mr-1" density="compact" mandatory>
+        <v-btn v-for="(source, index) in sources" :key="index" style="min-width: 40px" v-bind="source" />
       </v-btn-toggle>
 
       <template v-if="state.source === 'github'">
@@ -42,12 +20,7 @@
           mandatory
           @update:model-value="getTreesFromGithub()"
         >
-          <v-btn
-            v-for="(source, index) in groups"
-            :key="index"
-            style="min-width: 40px"
-            v-bind="source"
-          />
+          <v-btn v-for="(source, index) in groups" :key="index" style="min-width: 40px" v-bind="source" />
         </v-btn-toggle>
 
         <v-select
@@ -79,13 +52,7 @@
           @update:model-value="updateURLFromGithub"
         />
 
-        <v-btn
-          flat
-          prepend-icon="mdi:mdi-download"
-          text="fetch"
-          variant="outlined"
-          @click="fetchProps()"
-        />
+        <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" variant="outlined" @click="fetchProps()" />
       </template>
 
       <template v-else-if="state.source === 'drive'">
@@ -100,12 +67,7 @@
           @update:model-value="loadProjectsFromDrive"
         >
           <template #append>
-            <v-btn
-              flat
-              prepend-icon="mdi:mdi-upload"
-              text="upload"
-              @upload="loadProjectsFromDrive"
-            />
+            <v-btn flat prepend-icon="mdi:mdi-upload" text="upload" @upload="loadProjectsFromDrive" />
           </template>
         </v-file-input>
       </template>
@@ -124,12 +86,7 @@
           title="Please enter the project's URL"
         >
           <template #append>
-            <v-btn
-              flat
-              prepend-icon="mdi:mdi-download"
-              text="fetch"
-              @click="fetchProps()"
-            />
+            <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" @click="fetchProps()" />
           </template>
         </v-text-field>
       </template>
@@ -179,10 +136,7 @@
       </template> -->
 
       <template #[`item.valid`]="{ value }">
-        <v-icon
-          :color="value ? 'success' : 'error'"
-          :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'"
-        />
+        <v-icon :color="value ? 'success' : 'error'" :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'" />
       </template>
 
       <!-- <template #expanded-row="{ columns, item }">
@@ -218,15 +172,8 @@
           }
         "
       />
-      <v-btn
-        prepend-icon="mdi:mdi-delete-empty-outline"
-        text="clear"
-        @click="state.items = []"
-      />
-      <v-btn
-        text="close"
-        @click="closeDialog()"
-      />
+      <v-btn prepend-icon="mdi:mdi-delete-empty-outline" text="clear" @click="state.items = []" />
+      <v-btn text="close" @click="closeDialog()" />
     </v-card-actions>
   </v-card>
 </template>
@@ -267,12 +214,8 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
 const currentSimulator = computed(() => appStore.state.simulator);
 
-const modelDBStore = computed(
-  () => appStore.currentSimulator.stores.modelDBStore
-);
-const projectDBStore = computed(
-  () => appStore.currentSimulator.stores.projectDBStore
-);
+const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
+const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
 
 const state = reactive<{
   githubFiles: IGithubTree[];
@@ -354,34 +297,21 @@ const headers = [
 ];
 
 const githubAPI = (group?: string) =>
-  `https://api.github.com/repos/nest-desktop/nest-desktop-${
-    group || state.githubGroup
-  }/git/trees/`;
+  `https://api.github.com/repos/nest-desktop/nest-desktop-${group || state.githubGroup}/git/trees/`;
 const githubRawURL = (group?: string) =>
-  `https://raw.githubusercontent.com/nest-desktop/nest-desktop-${
-    group || state.githubGroup
-  }/${state.githubTag}/`;
+  `https://raw.githubusercontent.com/nest-desktop/nest-desktop-${group || state.githubGroup}/${state.githubTag}/`;
 
 /**
  * Add and validate props.
  */
-const addProps = (
-  dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProjectProps)[]
-) => {
+const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProjectProps)[]) => {
   if (dataRaw == undefined) return;
 
-  const dataProps: (TModelProps | TProjectProps)[] = Array.isArray(dataRaw)
-    ? dataRaw
-    : [dataRaw];
+  const dataProps: (TModelProps | TProjectProps)[] = Array.isArray(dataRaw) ? dataRaw : [dataRaw];
   dataProps.forEach((props: TModelProps | TProjectProps) => {
     let valid = false;
 
-    const group =
-      "elementType" in props
-        ? "model"
-        : "network" in props
-        ? "project"
-        : undefined;
+    const group = "elementType" in props ? "model" : "network" in props ? "project" : undefined;
 
     if (group === undefined) return;
 
@@ -409,47 +339,38 @@ const addProps = (
           networkProps.models?.forEach((modelProps: INESTCopyModelProps) => {
             if (!modelProps.existing) return;
 
-            if (
-              !modelDBStore.value.hasModel(modelProps.existing) &&
-              !modelIds.includes(modelProps.existing)
-            ) {
+            if (!modelDBStore.value.hasModel(modelProps.existing) && !modelIds.includes(modelProps.existing)) {
               modelIds.push(modelProps.existing);
             }
           });
         }
 
         // Get model Ids from node models if not installed in NEST Desktop.
-        networkProps.nodes?.forEach(
-          (nodeProps: INodeProps | INodeGroupProps) => {
-            if (!("model" in nodeProps)) return;
+        networkProps.nodes?.forEach((nodeProps: INodeProps | INodeGroupProps) => {
+          if (!("model" in nodeProps)) return;
 
-            const nodeItemProps = nodeProps as INodeProps;
-            if (
-              nodeItemProps.model &&
-              !modelDBStore.value.hasModel(nodeItemProps.model) &&
-              !modelIds.includes(nodeItemProps.model)
-            ) {
-              modelIds.push(nodeItemProps.model);
-            }
+          const nodeItemProps = nodeProps as INodeProps;
+          if (
+            nodeItemProps.model &&
+            !modelDBStore.value.hasModel(nodeItemProps.model) &&
+            !modelIds.includes(nodeItemProps.model)
+          ) {
+            modelIds.push(nodeItemProps.model);
           }
-        );
+        });
 
         axios
           .get(githubRawURL("models") + `index.json`)
-          .then(
-            (
-              response: AxiosResponse<any, { data: Record<string, string> }>
-            ) => {
-              if (!response.data) return;
+          .then((response: AxiosResponse<any, { data: Record<string, string> }>) => {
+            if (!response.data) return;
 
-              modelIds.forEach((modelId: string) => {
-                const path = response.data[modelId];
-                if (!path) return;
+            modelIds.forEach((modelId: string) => {
+              const path = response.data[modelId];
+              if (!path) return;
 
-                getModelFromGithub(path, modelId);
-              });
-            }
-          );
+              getModelFromGithub(path, modelId);
+            });
+          });
 
         break;
     }
@@ -469,28 +390,22 @@ const addProps = (
 const getModelFromGithub = (path: string, modelId: string) => {
   axios
     .get(githubRawURL("models") + path)
-    .then(
-      (response: AxiosResponse<any, { data: TModelProps | TModelProps[] }>) => {
-        if (!response.data) return;
+    .then((response: AxiosResponse<any, { data: TModelProps | TModelProps[] }>) => {
+      if (!response.data) return;
 
-        const modelsProps: TModelProps[] = Array.isArray(response.data)
-          ? response.data
-          : [response.data];
+      const modelsProps: TModelProps[] = Array.isArray(response.data) ? response.data : [response.data];
 
-        const modelProps = modelsProps.find(
-          (modelProps: TModelProps) => modelProps.id === modelId
-        );
-        if (!modelProps) return;
-        const valid = modelDBStore.value.validateModel(modelProps);
+      const modelProps = modelsProps.find((modelProps: TModelProps) => modelProps.id === modelId);
+      if (!modelProps) return;
+      const valid = modelDBStore.value.validateModel(modelProps);
 
-        state.items.push({
-          group: "model",
-          name: modelProps.label || "",
-          props: modelProps,
-          valid,
-        });
-      }
-    );
+      state.items.push({
+        group: "model",
+        name: modelProps.label || "",
+        props: modelProps,
+        valid,
+      });
+    });
 };
 
 /**
@@ -500,13 +415,9 @@ const getFilesFromGithub = (tree: IGithubTree) => {
   state.githubSelectedFile = { path: "" } as IGithubTree;
   state.githubFiles = [];
 
-  axios
-    .get(githubAPI() + tree.sha)
-    .then((response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
-      state.githubFiles = response.data.tree.filter(
-        (d: IGithubTree) => d.type === "blob" && d.path.endsWith(".json")
-      );
-    });
+  axios.get(githubAPI() + tree.sha).then((response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
+    state.githubFiles = response.data.tree.filter((d: IGithubTree) => d.type === "blob" && d.path.endsWith(".json"));
+  });
 };
 
 /**
@@ -520,13 +431,9 @@ const getTreesFromGithub = () => {
   nextTick(() => {
     axios
       .get(githubAPI() + `${state.githubTag}?recursive=true`)
-      .then(
-        (response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
-          state.githubTrees = response.data.tree.filter(
-            (tree: IGithubTree) => tree.type === "tree"
-          );
-        }
-      );
+      .then((response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
+        state.githubTrees = response.data.tree.filter((tree: IGithubTree) => tree.type === "tree");
+      });
   });
 };
 
@@ -537,26 +444,22 @@ const fetchFromOldDatabase = () => {
   const modelDB = new BaseModelDB("MODEL_STORE");
   const projectDB = new BaseProjectDB("PROJECT_STORE");
 
-  modelDB
-    .list("updatedAt", true)
-    .then((modelsProps: TModelProps[]) =>
-      modelsProps.forEach((modelProps: TModelProps) => {
-        delete modelProps._id;
-        delete modelProps._rev;
-        addProps(modelProps);
-      })
-    );
+  modelDB.list("updatedAt", true).then((modelsProps: TModelProps[]) =>
+    modelsProps.forEach((modelProps: TModelProps) => {
+      delete modelProps._id;
+      delete modelProps._rev;
+      addProps(modelProps);
+    }),
+  );
 
-  projectDB
-    .list("updatedAt", true)
-    .then((projectsProps: TProjectProps[]) =>
-      projectsProps.forEach((projectProps: TProjectProps) => {
-        delete projectProps._id;
-        delete projectProps._rev;
-        addProps(projectProps);
-      })
-    );
-}
+  projectDB.list("updatedAt", true).then((projectsProps: TProjectProps[]) =>
+    projectsProps.forEach((projectProps: TProjectProps) => {
+      delete projectProps._id;
+      delete projectProps._rev;
+      addProps(projectProps);
+    }),
+  );
+};
 
 /**
  * Fetch props from URL.
@@ -570,8 +473,8 @@ const fetchProps = (url?: string) => {
         {
           data: TModelProps | TProjectProps | (TProjectProps | TModelProps)[];
         }
-      >
-    ) => addProps(response.data)
+      >,
+    ) => addProps(response.data),
   );
 };
 
@@ -614,7 +517,7 @@ const loadProjectsFromDrive = (files: File | File[]) => {
   const fileReader = new FileReader();
   fileReader.readAsText(file);
   fileReader.addEventListener("load", (event: ProgressEvent<FileReader>) =>
-    addProps(JSON.parse(event.target?.result as string))
+    addProps(JSON.parse(event.target?.result as string)),
   );
 };
 
@@ -626,8 +529,7 @@ const updateURLFromGithub = () => {
     const tree = state.githubSelectedTree;
     if (!tree && !Object.keys(tree).includes("path")) return;
 
-    state.url =
-      githubRawURL() + `${tree.path}/${state.githubSelectedFile.path}`;
+    state.url = githubRawURL() + `${tree.path}/${state.githubSelectedFile.path}`;
   });
 };
 </script>

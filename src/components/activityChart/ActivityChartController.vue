@@ -1,45 +1,20 @@
 <template>
   <div class="activityChartController">
-    <v-toolbar
-      color="transparent"
-      density="compact"
-    >
-      <v-btn
-        icon="mdi:mdi-reload"
-        size="x-small"
-        @click="graph.resetPanels()"
-      />
+    <v-toolbar color="transparent" density="compact">
+      <v-btn icon="mdi:mdi-reload" size="x-small" @click="graph.resetPanels()" />
 
-      <v-btn
-        class="mx-2"
-        prepend-icon="mdi:mdi-plus"
-        size="small"
-      >
+      <v-btn class="mx-2" prepend-icon="mdi:mdi-plus" size="small">
         Add panel
-        <v-menu
-          :close-on-content-click="false"
-          activator="parent"
-        >
-          <ActivityChartPanelMenuPopover
-            :graph="(graph as ActivityChartGraph)"
-            @changed="addPanel"
-          />
+        <v-menu :close-on-content-click="false" activator="parent">
+          <ActivityChartPanelMenuPopover :graph="(graph as ActivityChartGraph)" @changed="addPanel" />
         </v-menu>
       </v-btn>
 
       <v-spacer />
 
-      <v-icon
-        class="ma-auto"
-        icon="mdi:mdi-format-color-fill"
-      />
+      <v-icon class="ma-auto" icon="mdi:mdi-format-color-fill" />
 
-      <v-btn-toggle
-        v-model="graph.state.traceColor"
-        class="mx-2"
-        density="compact"
-        @update:model-value="update()"
-      >
+      <v-btn-toggle v-model="graph.state.traceColor" class="mx-2" density="compact" @update:model-value="update()">
         <v-btn
           v-for="(traceColor, index) in traceColors"
           :key="index"
@@ -51,20 +26,11 @@
     </v-toolbar>
 
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
-    <div
-      v-for="(panel, panelIdx) in graph.panels"
-      :key="'panel' + panelIdx"
-    >
-      <Card
-        class="mx-1"
-        color="primary"
-      >
+    <div v-for="(panel, panelIdx) in graph.panels" :key="'panel' + panelIdx">
+      <Card class="mx-1" color="primary">
         <ActivityChartPanelToolbar :panel="(panel as ActivityChartPanel)" />
 
-        <v-card-text
-          v-if="panel.state.visible"
-          class="pa-0"
-        >
+        <v-card-text v-if="panel.state.visible" class="pa-0">
           <v-select
             v-if="panel.model.state.records.length > 0"
             v-model="panel.model.state.recordsVisible"
@@ -89,16 +55,10 @@
             </template>
 
             <template #item="{ item, props: itemProps }">
-              <v-list-item
-                v-bind="itemProps"
-                density="compact"
-                title=""
-              >
+              <v-list-item v-bind="itemProps" density="compact" title="">
                 <v-checkbox
                   :label="item.title"
-                  :model-value="
-                    panel.model.state.recordsVisible.includes(item.value)
-                  "
+                  :model-value="panel.model.state.recordsVisible.includes(item.value)"
                   density="compact"
                   hide-details
                 >
@@ -114,10 +74,7 @@
             </template>
 
             <template #prepend-item>
-              <v-list-item
-                title="Select All"
-                @click="selectAllNodeRecords(panel as ActivityChartPanel)"
-              />
+              <v-list-item title="Select All" @click="selectAllNodeRecords(panel as ActivityChartPanel)" />
               <v-divider />
             </template>
 

@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    flat
-    style="min-width: 300px"
-  >
+  <v-card flat style="min-width: 300px">
     <!-- <v-card-title class="pa-0">
       <v-row no-gutters>
         <v-col cols="12">
@@ -13,18 +10,10 @@
 
     <span v-if="state.content == undefined">
       <v-list density="compact">
-        <v-list-item
-          v-for="(item, index) in items"
-          v-show="item.show()"
-          :key="index"
-          v-bind="item"
-        >
+        <v-list-item v-for="(item, index) in items" v-show="item.show()" :key="index" v-bind="item">
           <template #append>
             <template v-if="item.append">
-              <v-icon
-                icon="mdi:mdi-menu-right"
-                size="small"
-              />
+              <v-icon icon="mdi:mdi-menu-right" size="small" />
             </template>
 
             <!-- <template v-if="item.input === 'checkbox'">
@@ -52,10 +41,7 @@
     </span>
 
     <span>
-      <v-dialog
-        :value="state.dialog"
-        width="80%"
-      >
+      <v-dialog :value="state.dialog" width="80%">
         <ModelDocumentation :model-id="model.existingModelId" />
       </v-dialog>
     </span>

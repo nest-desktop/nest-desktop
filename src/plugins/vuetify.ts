@@ -118,15 +118,9 @@ export const vuetify = createVuetify({
 });
 
 export function addTheme(colors: Record<string, string>): void {
-  vuetify.theme.themes.value.light.colors = Object.assign(
-    vuetify.theme.themes.value.light.colors,
-    colors
-  );
+  vuetify.theme.themes.value.light.colors = Object.assign(vuetify.theme.themes.value.light.colors, colors);
 
-  vuetify.theme.themes.value.dark.colors = Object.assign(
-    vuetify.theme.themes.value.dark.colors,
-    colors
-  );
+  vuetify.theme.themes.value.dark.colors = Object.assign(vuetify.theme.themes.value.dark.colors, colors);
 }
 
 export function addIconSet(iconSet: Record<string, object>): void {

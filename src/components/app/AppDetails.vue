@@ -1,25 +1,13 @@
 <template>
   <v-card class="appDetails">
     <v-list density="compact">
-      <v-list-item
-        href="https://github.com/nest-desktop/nest-desktop/blob/dev/LICENSE"
-        target="_blank"
-      >
+      <v-list-item href="https://github.com/nest-desktop/nest-desktop/blob/dev/LICENSE" target="_blank">
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
-            <v-icon
-              class="mx-2"
-              icon="mdi:mdi-license"
-            />
+          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-license" />
             License
           </v-col>
-          <v-col
-            class="text-right"
-            cols="8"
-          >
+          <v-col class="text-right" cols="8">
             {{ license }}
           </v-col>
         </v-row>
@@ -31,75 +19,40 @@
         target="_blank"
       >
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
-            <v-icon
-              class="mx-2"
-              icon="mdi:mdi-tag-outline"
-            />
+          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-tag-outline" />
             Current version
           </v-col>
-          <v-col
-            class="text-right"
-            cols="8"
-          >
+          <v-col class="text-right" cols="8">
             {{ appVersion }}
           </v-col>
         </v-row>
       </v-list-item>
-      <v-list-item
-        :href="mailText"
-        target="_blank"
-      >
+      <v-list-item :href="mailText" target="_blank">
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
-            <v-icon
-              class="mx-2"
-              icon="mdi:mdi-email-outline"
-            />
+          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
             Contact
           </v-col>
-          <v-col
-            class="text-caption text-right"
-            cols="8"
-          >
+          <v-col class="text-caption text-right" cols="8">
             {{ contactName }}
           </v-col>
         </v-row>
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col
-            class="font-weight-bold text-left"
-            cols="4"
-          >
-            <v-icon
-              class="mx-2"
-              icon="mdi:mdi-magnify"
-            />
+          <v-col class="font-weight-bold text-left" cols="4">
+            <v-icon class="mx-2" icon="mdi:mdi-magnify" />
             Client info
           </v-col>
-          <v-col
-            class="text-caption text-right"
-            cols="8"
-          >
+          <v-col class="text-caption text-right" cols="8">
             <v-chip
               :text="state.browserName + ' ' + state.browserVersion"
               prepend-icon="mdi:mdi-application-outline"
               size="x-small"
               variant="text"
             />
-            <v-chip
-              :text="state.osType"
-              prepend-icon="mdi:mdi-desktop-tower-monitor"
-              size="x-small"
-              variant="text"
-            />
+            <v-chip :text="state.osType" prepend-icon="mdi:mdi-desktop-tower-monitor" size="x-small" variant="text" />
           </v-col>
         </v-row>
       </v-list-item>
@@ -107,10 +60,7 @@
 
     <v-divider />
 
-    <v-list
-      class="my-2"
-      density="compact"
-    >
+    <v-list class="my-2" density="compact">
       <v-list-subheader>References</v-list-subheader>
       <v-list-item
         v-for="(item, index) in refItems"
@@ -159,10 +109,7 @@ const mailBody = () => [
   `OS type: ${state.osType}`,
 ];
 
-const mailText = computed(
-  () =>
-    `mailto:${mailto}?subject=${mailSubject}&body=${mailBody().join("%0D%0A")}`
-);
+const mailText = computed(() => `mailto:${mailto}?subject=${mailSubject}&body=${mailBody().join("%0D%0A")}`);
 
 const info = detect();
 if (info) {
@@ -173,7 +120,7 @@ if (info) {
 }
 
 const refItems = [
-{
+  {
     href: "https://nest-desktop.github.io",
     prependIcon: "mdi:mdi-home",
     title: "Official page",

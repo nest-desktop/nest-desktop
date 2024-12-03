@@ -22,28 +22,17 @@
     <template #no-data>
       <v-list-item>
         <v-list-item-title>
-          No results matching "<strong>{{ state.search }}</strong>.
-          <span v-if="state.valid">
-            Click <kbd text="+" /> to create a new one.
-          </span>
+          No results matching "<strong>{{ state.search }}</strong
+          >.
+          <span v-if="state.valid"> Click <kbd text="+" /> to create a new one. </span>
         </v-list-item-title>
       </v-list-item>
     </template>
 
     <template #item="{ index, item, props }">
-      <v-list-item
-        :key="index"
-        class="module-item"
-        v-bind="props"
-        title=""
-      >
+      <v-list-item :key="index" class="module-item" v-bind="props" title="">
         <template #prepend>
-          <v-avatar
-            :text="item.title.slice(0, 2)"
-            class="text-uppercase"
-            size="small"
-            start
-          />
+          <v-avatar :text="item.title.slice(0, 2)" class="text-uppercase" size="small" start />
         </template>
 
         <template #append>

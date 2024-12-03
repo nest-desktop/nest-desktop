@@ -10,10 +10,7 @@ import { truncate } from "@/utils/truncate";
 
 import { Activities } from "../activity/activities";
 import { Activity } from "../activity/activity";
-import {
-  BaseActivityGraph,
-  IBaseActivityGraphProps,
-} from "../activity/activityGraph";
+import { BaseActivityGraph, IBaseActivityGraphProps } from "../activity/activityGraph";
 import { BaseObj } from "../common/base";
 import { IDoc } from "../common/database";
 import { BaseNetwork, INetworkProps } from "../network/network";
@@ -73,10 +70,7 @@ export class BaseProject extends BaseObj {
 
     this._networkRevision = new NetworkRevision(this);
     this._activities = new Activities(this);
-    this._activityGraph = new this.ActivityGraph(
-      this,
-      projectProps.activityGraph
-    );
+    this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
 
     // Initialize components.
     nextTick(() => this.init());
@@ -245,9 +239,7 @@ export class BaseProject extends BaseObj {
       nextTick(() => this.startSimulation());
     } else {
       // Update activities.
-      this.activities.update(
-        this.activities.all.map((activity: Activity) => activity.toJSON())
-      );
+      this.activities.update(this.activities.all.map((activity: Activity) => activity.toJSON()));
 
       // Update activities in activity graph.
       this._activityGraph.activityChartGraph.updateActivities();
@@ -331,8 +323,7 @@ export class BaseProject extends BaseObj {
 
     const appStore = useAppStore();
     const projectViewStore = appStore.currentSimulator.views.project;
-    if (!projectViewStore.state.simulationEvents.onChange)
-      openLoading("Simulating... Please wait");
+    if (!projectViewStore.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
 
     const simtoc = Date.now();
     this._simulation
@@ -340,13 +331,7 @@ export class BaseProject extends BaseObj {
       .then((response: any) => {
         this._state.state.stopwatch.simulation = Date.now() - simtoc;
 
-        if (
-          response == null ||
-          response.status !== 200 ||
-          response.data == null ||
-          !response.data.data
-        )
-          return;
+        if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;
 
         const vistoc = Date.now();
         // Update activities.

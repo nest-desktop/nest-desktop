@@ -12,18 +12,9 @@ import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
-import {
-  INESTNodeCompartmentProps,
-  NESTNodeCompartment,
-} from "./nodeCompartment/nodeCompartment";
-import {
-  INESTNodeReceptorProps,
-  NESTNodeReceptor,
-} from "./nodeReceptor/nodeReceptor";
-import {
-  INESTNodeSpatialProps,
-  NESTNodeSpatial,
-} from "./nodeSpatial/nodeSpatial";
+import { INESTNodeCompartmentProps, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
+import { INESTNodeReceptorProps, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
+import { INESTNodeSpatialProps, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
 import { NESTNodes } from "./nodes";
 
 export interface INESTNodeProps extends INodeProps {
@@ -63,24 +54,16 @@ export class NESTNode extends BaseNode {
     }
 
     return this.network.modelsCopied.filter((model: NESTCopyModel) =>
-      Object.values(model.params).some(
-        (param: BaseParameter) => param.value === this.view.label
-      )
+      Object.values(model.params).some((param: BaseParameter) => param.value === this.view.label),
     );
   }
 
   get compartmentIndices(): number[] {
-    return this._compartments.map(
-      (compartment: NESTNodeCompartment) => compartment.idx
-    );
+    return this._compartments.map((compartment: NESTNodeCompartment) => compartment.idx);
   }
 
   get compartmentRecordables(): INodeRecordProps[] {
-    const recordables = [
-      ...this._compartments.map(
-        (comp: NESTNodeCompartment) => comp.recordables
-      ),
-    ];
+    const recordables = [...this._compartments.map((comp: NESTNodeCompartment) => comp.recordables)];
     return recordables.flat();
   }
 
@@ -89,16 +72,12 @@ export class NESTNode extends BaseNode {
   }
 
   override get connections(): NESTConnection[] {
-    return this.network.connections.all.filter(
-      (connection: NESTConnection) => connection.sourceIdx === this.idx
-    );
+    return this.network.connections.all.filter((connection: NESTConnection) => connection.sourceIdx === this.idx);
   }
 
   override get connectionsNeuronTargets(): NESTConnection[] {
     return this.network.connections.all.filter(
-      (connection: NESTConnection) =>
-        connection.sourceIdx === this.idx &&
-        connection.targetNode.model.isNeuron
+      (connection: NESTConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
     );
   }
 
@@ -159,9 +138,7 @@ export class NESTNode extends BaseNode {
     // Get models of the same element type.
     const elementType: string = this.model?.elementType;
 
-    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(
-      elementType
-    ) as NESTModel[];
+    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
 
     return models;
   }
@@ -184,11 +161,7 @@ export class NESTNode extends BaseNode {
   }
 
   get receptorRecordables(): INodeRecordProps[] {
-    const recordables = [
-      ...this._receptors.map(
-        (receptor: NESTNodeReceptor) => receptor.recordables
-      ),
-    ];
+    const recordables = [...this._receptors.map((receptor: NESTNodeReceptor) => receptor.recordables)];
     return recordables.flat();
   }
 
@@ -228,9 +201,7 @@ export class NESTNode extends BaseNode {
     this.logger.trace("add compartments");
 
     this._compartments = [];
-    compartmentsProps.forEach((compartmentProps: INESTNodeCompartmentProps) =>
-      this.addCompartment(compartmentProps)
-    );
+    compartmentsProps.forEach((compartmentProps: INESTNodeCompartmentProps) => this.addCompartment(compartmentProps));
   }
 
   /**
@@ -249,9 +220,7 @@ export class NESTNode extends BaseNode {
     this.logger.trace("add receptors");
 
     this._receptors = [];
-    receptorsProps.forEach((receptorProps: INESTNodeReceptorProps) =>
-      this.addReceptor(receptorProps)
-    );
+    receptorsProps.forEach((receptorProps: INESTNodeReceptorProps) => this.addReceptor(receptorProps));
   }
 
   /**
@@ -272,12 +241,8 @@ export class NESTNode extends BaseNode {
     this.paramsVisible = [];
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) =>
-        comp.hideAllParams()
-      );
-      this.receptors.forEach((receptor: NESTNodeReceptor) =>
-        receptor.hideAllParams()
-      );
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.hideAllParams());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.hideAllParams());
     }
 
     if (emitChanges) this.changes();
@@ -291,10 +256,7 @@ export class NESTNode extends BaseNode {
   override loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId);
 
-    if (
-      this.network.modelsCopied &&
-      this.network.modelsCopied.findByModelId(this._modelId)
-    ) {
+    if (this.network.modelsCopied && this.network.modelsCopied.findByModelId(this._modelId)) {
       this._modelCopied = this.network.modelsCopied.getModel(this._modelId);
       this._model = this.getModel(this._modelCopied.existingModelId);
     } else {
@@ -311,9 +273,7 @@ export class NESTNode extends BaseNode {
    */
   removeCompartment(compartment: NESTNodeCompartment): void {
     // Remove all receptors linking to this compartment.
-    compartment.receptors.forEach((receptor: NESTNodeReceptor) =>
-      receptor.remove()
-    );
+    compartment.receptors.forEach((receptor: NESTNodeReceptor) => receptor.remove());
 
     // Remove compartment from the list.
     this._compartments.splice(this._compartments.indexOf(compartment), 1);
@@ -347,12 +307,8 @@ export class NESTNode extends BaseNode {
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) =>
-        comp.resetParameters()
-      );
-      this.receptors.forEach((receptor: NESTNodeReceptor) =>
-        receptor.resetParameters()
-      );
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.resetParameters());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.resetParameters());
     }
 
     if (emitChanges) this.changes();
@@ -365,12 +321,8 @@ export class NESTNode extends BaseNode {
     this.paramsVisible = Object.keys(this.params);
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) =>
-        comp.showAllParams()
-      );
-      this.receptors.forEach((receptor: NESTNodeReceptor) =>
-        receptor.showAllParams()
-      );
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.showAllParams());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.showAllParams());
     }
 
     if (emitChanges) this.changes();
@@ -403,9 +355,7 @@ export class NESTNode extends BaseNode {
     }
 
     if (this.filteredParams.length > 0) {
-      nodeProps.params = this.filteredParams.map((param: NodeParameter) =>
-        param.toJSON()
-      );
+      nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
     }
 
     // Add annotations if provided.
@@ -415,9 +365,7 @@ export class NESTNode extends BaseNode {
 
     // Add records if this model is multimeter.
     if (this.model.isMultimeter) {
-      nodeProps.records = this.records.map((record: NodeRecord) =>
-        record.toJSON()
-      );
+      nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
     }
 
     // Add positions if this node is spatial.
@@ -426,15 +374,11 @@ export class NESTNode extends BaseNode {
     }
 
     if (this._compartments.length > 0) {
-      nodeProps.compartments = this._compartments.map(
-        (compartment: NESTNodeCompartment) => compartment.toJSON()
-      );
+      nodeProps.compartments = this._compartments.map((compartment: NESTNodeCompartment) => compartment.toJSON());
     }
 
     if (this._receptors.length > 0) {
-      nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) =>
-        receptor.toJSON()
-      );
+      nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
     }
 
     return nodeProps;
@@ -454,43 +398,32 @@ export class NESTNode extends BaseNode {
         const recordablesNodes = this.targetNodes.map((target: NESTNode) => {
           return (
             target.modelId === "cm_default"
-              ? [
-                  ...target.compartmentRecordables,
-                  ...target.receptorRecordables,
-                ]
+              ? [...target.compartmentRecordables, ...target.receptorRecordables]
               : [...target.modelStates]
           ).flat();
         });
 
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled
-            .filter((recordProps: INodeRecordProps) => recordProps)
-            .filter(onlyUnique);
+          recordables = recordablesPooled.filter((recordProps: INodeRecordProps) => recordProps).filter(onlyUnique);
 
           if (this.modelId === "voltmeter") {
-            recordables = recordables.filter((recordProps: INodeRecordProps) =>
-              ["V_m", "v"].includes(recordProps.id)
-            );
+            recordables = recordables.filter((recordProps: INodeRecordProps) => ["V_m", "v"].includes(recordProps.id));
           }
 
-          recordables.sort((a: { id: string }, b: { id: string }) =>
-            sortString(a.id, b.id)
-          );
+          recordables.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
         }
       }
     } else if (this.modelId === "weight_recorder") {
       const recordable = this.model.config?.localStorage.states.find(
-        (recordProps: INodeRecordProps) => recordProps.id === "weights"
+        (recordProps: INodeRecordProps) => recordProps.id === "weights",
       );
 
       recordables.push(recordable);
     }
 
     // if (recordables.length != this.recordables.length) {
-    this.recordables = recordables.map(
-      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
-    );
+    this.recordables = recordables.map((recordProps: INodeRecordProps) => new NodeRecord(this, recordProps));
     // }
 
     this.updateRecordsColor();

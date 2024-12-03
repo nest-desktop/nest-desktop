@@ -1,15 +1,12 @@
 // activityChartPanelModelParameter.ts
 
-import { BaseParameter, IParamProps } from '../common/parameter';
-import { ActivityChartPanelModel } from './activityChartPanelModel';
+import { BaseParameter, IParamProps } from "../common/parameter";
+import { ActivityChartPanelModel } from "./activityChartPanelModel";
 
 export class ActivityChartPanelModelParameter extends BaseParameter {
   public _activityChartPanelModel: ActivityChartPanelModel;
 
-  constructor(
-    activityChartPanelModel: ActivityChartPanelModel,
-    paramProps: IParamProps
-  ) {
+  constructor(activityChartPanelModel: ActivityChartPanelModel, paramProps: IParamProps) {
     super(paramProps, { minLevel: 3 });
 
     this._activityChartPanelModel = activityChartPanelModel;

@@ -2,20 +2,14 @@
 
 import { AxiosResponse } from "axios";
 
-import {
-  BaseSimulation,
-  ISimulationProps,
-} from "@/helpers/simulation/simulation";
+import { BaseSimulation, ISimulationProps } from "@/helpers/simulation/simulation";
 
 import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { PyNNProject } from "../project/project";
 import { PyNNSimulationCode } from "./simulationCode";
 
 export class PyNNSimulation extends BaseSimulation {
-  constructor(
-    project: PyNNProject,
-    simulationProps: ISimulationProps = {}
-  ) {
+  constructor(project: PyNNProject, simulationProps: ISimulationProps = {}) {
     super(project, simulationProps);
   }
 

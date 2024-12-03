@@ -22,10 +22,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
         color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
-      const mesh: Mesh<any, MeshLambertMaterial, any> = new Mesh(
-        geometry,
-        material
-      );
+      const mesh: Mesh<any, MeshLambertMaterial, any> = new Mesh(geometry, material);
       mesh.userData.position = position;
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);
@@ -47,7 +44,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
       height?: number;
       opacity?: number;
       scale?: number;
-    } = {}
+    } = {},
   ): void {
     this.logger.trace("update mesh");
 

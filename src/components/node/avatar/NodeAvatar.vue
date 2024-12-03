@@ -1,29 +1,14 @@
 <template>
-  <StimulatorAvatar
-    v-if="node.elementType === 'stimulator'"
-    :color="node.view.color"
-  >
+  <StimulatorAvatar v-if="node.elementType === 'stimulator'" :color="node.view.color">
     {{ node.view.label }}
   </StimulatorAvatar>
-  <RecorderAvatar
-    v-else-if="node.elementType === 'recorder'"
-    :color="node.view.color"
-  >
+  <RecorderAvatar v-else-if="node.elementType === 'recorder'" :color="node.view.color">
     {{ node.view.label }}
   </RecorderAvatar>
-  <NeuronAvatar
-    v-else-if="node.elementType === 'neuron'"
-    :color="node.view.color"
-    :weight="node.view.synWeights"
-  >
+  <NeuronAvatar v-else-if="node.elementType === 'neuron'" :color="node.view.color" :weight="node.view.synWeights">
     {{ node.view.label }}
   </NeuronAvatar>
-  <v-avatar
-    v-else
-    :color="nodeGroup.view.color"
-    class="node-avatar"
-    variant="tonal"
-  >
+  <v-avatar v-else :color="nodeGroup.view.color" class="node-avatar" variant="tonal">
     {{ node.view.label }}
   </v-avatar>
 </template>

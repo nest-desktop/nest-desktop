@@ -1,16 +1,9 @@
 <template>
-  <v-avatar
-    class="recorder"
-    rounded="0"
-  >
+  <v-avatar class="recorder" rounded="0">
     <span class="label">
       <slot />
     </span>
-    <v-icon
-      :color
-      class="position-absolute icon-size"
-      icon="network:recorder"
-    />
+    <v-icon :color class="position-absolute icon-size" icon="network:recorder" />
   </v-avatar>
 </template>
 

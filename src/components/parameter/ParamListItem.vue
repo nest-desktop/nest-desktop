@@ -1,14 +1,7 @@
 <template>
-  <v-list-item
-    v-if="param"
-    class="param pa-1"
-    style="line-height: 32px"
-  >
+  <v-list-item v-if="param" class="param pa-1" style="line-height: 32px">
     <template v-if="param.state.random">
-      <v-label
-        class="px-1"
-        style="width: 100%"
-      >
+      <v-label class="px-1" style="width: 100%">
         {{ param.label || param.options.label || param.id }}
         <v-spacer />
         {{ param.id }}: {{ param.code }}
@@ -68,14 +61,8 @@
     />
 
     <template v-else>
-      <v-row
-        class="pt-1"
-        no-gutters
-      >
-        <v-label
-          :title="param.label || param.options.label"
-          class="text-truncate"
-        >
+      <v-row class="pt-1" no-gutters>
+        <v-label :title="param.label || param.options.label" class="text-truncate">
           {{ param.label || param.options.label }}
         </v-label>
 
@@ -99,16 +86,10 @@
     <template #append>
       <slot name="append">
         <template v-if="param.state.random">
-          <ParamPopover
-            :param
-            size="x-small"
-          />
+          <ParamPopover :param size="x-small" />
         </template>
 
-        <Menu
-          :items
-          size="x-small"
-        />
+        <Menu :items size="x-small" />
       </slot>
     </template>
   </v-list-item>

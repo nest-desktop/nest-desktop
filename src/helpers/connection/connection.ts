@@ -7,9 +7,7 @@ import { IConfigProps } from "../common/config";
 import { IParamProps } from "../common/parameter";
 import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
-import {
-  ConnectionParameter,
-} from "./connectionParameter";
+import { ConnectionParameter } from "./connectionParameter";
 import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
@@ -37,11 +35,7 @@ export class BaseConnection extends BaseObj {
   public _connections: TConnections; // parent
   public _synapse: TSynapse;
 
-  constructor(
-    connections: TConnections,
-    connectionProps: IConnectionProps,
-    configProps?: IConfigProps
-  ) {
+  constructor(connections: TConnections, connectionProps: IConnectionProps, configProps?: IConfigProps) {
     super({
       config: { name: "Connection", ...configProps },
       logger: { settings: { minLevel: 3 } },
@@ -226,7 +220,7 @@ export class BaseConnection extends BaseObj {
     ruleConfig.params.forEach((param: IParamProps) => {
       if (paramsProps != null) {
         const paramProps: IParamProps | undefined = paramsProps.find(
-          (paramProps: IParamProps) => paramProps.id === param.id
+          (paramProps: IParamProps) => paramProps.id === param.id,
         );
         if (paramProps != null) {
           param.value = paramProps.value;
@@ -285,9 +279,7 @@ export class BaseConnection extends BaseObj {
    * Get all parameter of the rule.
    */
   getRuleConfig(): IConnectionRuleConfig {
-    return this.config?.localStorage.rules.find(
-      (r: IConnectionRuleConfig) => r.value === this._rule.value
-    );
+    return this.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this._rule.value);
   }
 
   /**
@@ -358,9 +350,7 @@ export class BaseConnection extends BaseObj {
     }
 
     if (this._paramsVisible.length > 0) {
-      connectionProps.params = this.filteredParams.map(
-        (param: ConnectionParameter) => param.toJSON()
-      );
+      connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
     }
 
     return connectionProps;
@@ -386,9 +376,7 @@ export class BaseConnection extends BaseObj {
       targetModelId?: string;
     } = {
       idx: this.idx,
-      params: this.paramsAll.map((param: ConnectionParameter) =>
-        param.toJSON()
-      ),
+      params: this.paramsAll.map((param: ConnectionParameter) => param.toJSON()),
       synapse: this.synapse.hash,
     };
 

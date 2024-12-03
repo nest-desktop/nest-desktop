@@ -52,9 +52,7 @@ export function registerSimulators(app: App) {
   // Add IconSets, Themes and Routes of all simulators.
   Object.values(simulators).forEach((simulatorProps: ISimulatorProps) => {
     // Add icon set for vuetify.
-    addIconSet(
-      Object.fromEntries([[simulatorProps.id, simulatorProps.iconSet]])
-    );
+    addIconSet(Object.fromEntries([[simulatorProps.id, simulatorProps.iconSet]]));
 
     // Add theme to vuetify.
     addTheme(simulatorProps.theme);
@@ -72,9 +70,7 @@ export function registerSimulators(app: App) {
         const simulatorProps = simulators[simulatorId];
 
         // Load config files.
-        simulatorProps.configNames.forEach(
-          (name: string) => new Config({ name, simulator: simulatorProps.id })
-        );
+        simulatorProps.configNames.forEach((name: string) => new Config({ name, simulator: simulatorProps.id }));
 
         // Initialize simulator.
         simulatorProps.init();

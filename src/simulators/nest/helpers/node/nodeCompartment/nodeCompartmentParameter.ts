@@ -7,10 +7,7 @@ import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParam
 import { NESTNodeCompartment } from "./nodeCompartment";
 
 export class NESTNodeCompartmentParameter extends NodeParameter {
-  constructor(
-    nodeCompartment: NESTNodeCompartment,
-    paramProps: IParamProps
-  ) {
+  constructor(nodeCompartment: NESTNodeCompartment, paramProps: IParamProps) {
     super(nodeCompartment, paramProps);
   }
 
@@ -34,10 +31,9 @@ export class NESTNodeCompartmentParameter extends NodeParameter {
     if (value && !isVisible) {
       this.nodeCompartment.node.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.nodeCompartment.node.paramsVisible =
-        this.nodeCompartment.node.paramsVisible.filter(
-          (paramId: string) => paramId !== this.id
-        );
+      this.nodeCompartment.node.paramsVisible = this.nodeCompartment.node.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id,
+      );
     }
   }
 }

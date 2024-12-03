@@ -1,18 +1,10 @@
 <template>
-  <v-chip
-    :color="node.view.color"
-    size="small"
-    @click="selectNode"
-  >
+  <v-chip :color="node.view.color" size="small" @click="selectNode">
     <span class="font-weight-bold">{{ node.view.label }}</span>
     <span class="mx-1">{{ node.model.state.label }}</span>
 
-    <span
-      v-if="appStore.state.devMode"
-      class="mx-1"
-    >
-      ({{ node.view.position.x.toFixed() }},
-      {{ node.view.position.y.toFixed() }})
+    <span v-if="appStore.state.devMode" class="mx-1">
+      ({{ node.view.position.x.toFixed() }}, {{ node.view.position.y.toFixed() }})
     </span>
   </v-chip>
 </template>

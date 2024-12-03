@@ -33,7 +33,7 @@ export function defineProjectStore(
     Project: BaseProject,
     simulator: "base",
     useProjectDBStore,
-  }
+  },
 ): TProjectStore {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
@@ -57,7 +57,7 @@ export function defineProjectStore(
 
       if (projectDBStore.state.initialized) {
         if (state.projectId) {
-          loadProject(state.projectId)
+          loadProject(state.projectId);
         } else {
           loadFirstProject();
         }
@@ -69,11 +69,11 @@ export function defineProjectStore(
           logger.trace("watch", state.projectId);
 
           if (state.projectId) {
-            loadProject(state.projectId)
+            loadProject(state.projectId);
           } else {
             loadFirstProject();
           }
-        }
+        },
       );
     };
 
@@ -82,8 +82,7 @@ export function defineProjectStore(
      * @param projectId project ID
      * @returns boolean
      */
-    const isProjectSelected = (projectId: string): boolean =>
-      state.projectId === projectId;
+    const isProjectSelected = (projectId: string): boolean => state.projectId === projectId;
 
     /**
      * Load first project
@@ -115,10 +114,7 @@ export function defineProjectStore(
 
       const appStore = useAppStore();
       const projectViewStore = appStore.currentSimulator.views.project;
-      if (
-        projectViewStore.state.simulationEvents.onLoad &&
-        projectViewStore.state.views.main === "explore"
-      ) {
+      if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
         startSimulation();
       }
     };
@@ -154,13 +150,7 @@ export function defineProjectStore(
       const projectViewStore = appStore.currentSimulator.views.project;
 
       return {
-        path:
-          "/" +
-          props.simulator +
-          "/project/" +
-          state.projectId +
-          "/" +
-          projectViewStore.state.views.main,
+        path: "/" + props.simulator + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
       };
     };
 

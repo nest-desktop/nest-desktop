@@ -25,16 +25,14 @@ export class NorseNode extends BaseNode {
 
   override get connections(): NorseConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) => connection.sourceIdx === this.idx
+      (connection: TConnection) => connection.sourceIdx === this.idx,
     ) as NorseConnection[];
   }
 
   get duration(): number {
     return (
       this.hasStart && this.hasStop
-        ? (this.simulation.time > this.stop
-            ? this.stop
-            : this.simulation.time) - this.start
+        ? (this.simulation.time > this.stop ? this.stop : this.simulation.time) - this.start
         : this.hasStart
         ? this.simulation.time > this.start
           ? this.simulation.time - this.start
@@ -65,9 +63,7 @@ export class NorseNode extends BaseNode {
   }
 
   get postOff(): number {
-    return this.simulation.time > this.stop
-      ? this.simulation.time - this.stop
-      : 0;
+    return this.simulation.time > this.stop ? this.simulation.time - this.stop : 0;
   }
 
   override get simulation(): NorseSimulation {

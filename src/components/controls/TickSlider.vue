@@ -63,9 +63,7 @@ const tickIdx = computed({
   },
 });
 
-const ticks = computed(() =>
-  Object.keys(state.ticks).map((tick: string) => JSON.parse(tick))
-);
+const ticks = computed(() => Object.keys(state.ticks).map((tick: string) => JSON.parse(tick)));
 
 const max = computed(() => ticks.value.length - 1);
 

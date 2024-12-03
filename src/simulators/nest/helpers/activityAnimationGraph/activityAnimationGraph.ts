@@ -188,8 +188,7 @@ export class ActivityAnimationGraph {
    */
   stepBackwardFrame(): void {
     this.pauseFrameAnimation();
-    this.frameIdx =
-      (this.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
+    this.frameIdx = (this.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
   }
 
   /**
@@ -197,10 +196,7 @@ export class ActivityAnimationGraph {
    * @remarks It requires network activities.
    */
   update(): void {
-    this._state.nSamples =
-      this.project.simulation.state.biologicalTime *
-        this._state.frames.sampleRate -
-      1;
+    this._state.nSamples = this.project.simulation.state.biologicalTime * this._state.frames.sampleRate - 1;
 
     // Update activity layers and frames.
     this.project.activities.all.forEach((activity: Activity) => {
@@ -233,10 +229,7 @@ export class ActivityAnimationGraph {
       this.setFirstFrame();
     } else {
       this.frameIdx =
-        (currentFrameIdx +
-          frames.speed * frames.windowSize +
-          this._state.nSamples) %
-        this._state.nSamples;
+        (currentFrameIdx + frames.speed * frames.windowSize + this._state.nSamples) % this._state.nSamples;
     }
   }
 

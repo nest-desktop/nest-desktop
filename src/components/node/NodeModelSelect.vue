@@ -11,11 +11,8 @@
     item-value="id"
     @click.stop
   >
-    <template #item="{ props:itemProps }">
-      <v-list-item
-        class="node-model-item"
-        @click="select(itemProps)"
-      >
+    <template #item="{ props: itemProps }">
+      <v-list-item class="node-model-item" @click="select(itemProps)">
         {{ itemProps.title }}
 
         <template #append>
@@ -31,10 +28,7 @@
       </v-list-item>
     </template>
 
-    <template
-      v-if="state.elementType"
-      #prepend-item
-    >
+    <template v-if="state.elementType" #prepend-item>
       <v-list-item
         @click="
           () => {
@@ -69,7 +63,7 @@ const elementTypes = computed(
       { title: "neuron", value: "neuron" },
       { title: "recorder", value: "recorder" },
       { title: "stimulator", value: "stimulator" },
-    ]
+    ],
 );
 
 const emit = defineEmits(["openMenu"]);
@@ -87,9 +81,7 @@ const openMenu = () => emit("openMenu", true);
 const select = (props: Record<string, unknown>, open?: boolean) => {
   node.value.view.expandNodePanel();
 
-  const elementTypesValues = elementTypes.value.map(
-    (elementType) => elementType.value
-  );
+  const elementTypesValues = elementTypes.value.map((elementType) => elementType.value);
 
   if (elementTypesValues.includes(props.value as string)) {
     state.elementType = props.value as string;

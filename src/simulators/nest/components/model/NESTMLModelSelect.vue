@@ -10,11 +10,7 @@
     @update:model-value="loadFromFile()"
   >
     <template #append-item>
-      <v-list-item
-        prepend-icon="mdi:mdi-github"
-        title="load from Github"
-        @click="loadFromGithub()"
-      />
+      <v-list-item prepend-icon="mdi:mdi-github" title="load from Github" @click="loadFromGithub()" />
     </template>
   </v-select>
 </template>
@@ -43,9 +39,7 @@ const items = [
 
 const loadFromFile = () => {
   nextTick(() => {
-    loadText(
-      `assets/simulators/nest/models/nestml/${model.value.templateName}.nestml`
-    ).then((text: string) => {
+    loadText(`assets/simulators/nest/models/nestml/${model.value.templateName}.nestml`).then((text: string) => {
       model.value.emptyParams();
       model.value.nestmlScript = text;
       emit("update:model-value");
@@ -74,7 +68,7 @@ const loadFromGithub = () => {
         model.value.emptyParams();
         emit("update:model-value");
       }
-    }
+    },
   );
 };
 

@@ -1,18 +1,10 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
-      <v-icon
-        icon="mdi:mdi-github"
-        size="small"
-      />
+      <v-icon icon="mdi:mdi-github" size="small" />
       Load NESTML script from GitHub
 
-      <v-btn
-        flat
-        icon="mdi:mdi-close"
-        size="small"
-        @click="closeDialog()"
-      />
+      <v-btn flat icon="mdi:mdi-close" size="small" @click="closeDialog()" />
     </v-card-title>
 
     <v-card-text>
@@ -56,25 +48,12 @@
           @update:model-value="fetchNESTMLScript"
         />
 
-        <v-btn
-          :disabled="!state.script"
-          text="load"
-          title="Load NESTML script"
-          @click="loadNESTMLScript()"
-        />
+        <v-btn :disabled="!state.script" text="load" title="Load NESTML script" @click="loadNESTMLScript()" />
       </v-row>
 
-      <v-row
-        class="text-h6"
-        no-gutters
-      >
-        Preview
-      </v-row>
+      <v-row class="text-h6" no-gutters> Preview </v-row>
       <v-window style="max-height: 500px; overflow: auto">
-        <codemirror
-          v-model="state.script"
-          disabled
-        />
+        <codemirror v-model="state.script" disabled />
       </v-window>
     </v-card-text>
 
@@ -146,18 +125,14 @@ const fetchElementTypes = () => {
   state.modelFilenames = [];
 
   nextTick(() => {
-    axios
-      .get(`${githubAPI}/git/trees/${state.githubTag}`)
-      .then((response: AxiosResponse) => {
-        const modelsTree = getTree(response.data.tree, "models");
-        if (modelsTree) {
-          axios
-            .get(`${githubAPI}/git/trees/${modelsTree.sha}`)
-            .then((response: AxiosResponse) => {
-              state.elementTypes = response.data.tree || [];
-            });
-        }
-      });
+    axios.get(`${githubAPI}/git/trees/${state.githubTag}`).then((response: AxiosResponse) => {
+      const modelsTree = getTree(response.data.tree, "models");
+      if (modelsTree) {
+        axios.get(`${githubAPI}/git/trees/${modelsTree.sha}`).then((response: AxiosResponse) => {
+          state.elementTypes = response.data.tree || [];
+        });
+      }
+    });
   });
 };
 
@@ -194,8 +169,7 @@ const fetchNESTMLScript = () => {
   });
 };
 
-const getTree = (trees: IGithubTree[], path: string) =>
-  trees.find((tree: IGithubTree) => tree.path === path);
+const getTree = (trees: IGithubTree[], path: string) => trees.find((tree: IGithubTree) => tree.path === path);
 
 const loadNESTMLScript = () => {
   const modelId = state.modelFilename.split(".")[0];

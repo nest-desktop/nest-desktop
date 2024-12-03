@@ -18,11 +18,7 @@
       <v-list density="compact">
         <slot name="prependItem" />
 
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-          v-bind="item"
-        >
+        <v-list-item v-for="(item, index) in items" :key="index" v-bind="item">
           <template #prepend>
             <v-icon v-bind="item.icon" />
           </template>

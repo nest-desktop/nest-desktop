@@ -1,14 +1,7 @@
 <template>
   <v-container>
-    <v-layout
-      id="networkGraphLayout"
-      class="networkGraphLayout"
-      style="height: 300px"
-    >
-      <NetworkGraph
-        :key="network.project.id"
-        :network
-      >
+    <v-layout id="networkGraphLayout" class="networkGraphLayout" style="height: 300px">
+      <NetworkGraph :key="network.project.id" :network>
         <template #marker="{ connection }">
           <circle
             v-if="connection.view.markerEndLabel === 'assigned'"
@@ -29,49 +22,19 @@
     </v-layout>
 
     <v-row no-gutters>
-      <v-col
-        class="pa-1"
-        cols="12"
-        sm="4"
-      >
-        <div class="text-button">
-          Stimulator
-        </div>
-        <NodeViewer
-          v-for="(node, index) in network.nodes.stimulators"
-          :key="index"
-          :node="(node as NESTNode)"
-        />
+      <v-col class="pa-1" cols="12" sm="4">
+        <div class="text-button">Stimulator</div>
+        <NodeViewer v-for="(node, index) in network.nodes.stimulators" :key="index" :node="(node as NESTNode)" />
       </v-col>
 
-      <v-col
-        class="pa-1"
-        cols="12"
-        sm="4"
-      >
-        <div class="text-button">
-          Neuron
-        </div>
-        <NodeViewer
-          v-for="(node, index) in network.nodes.neurons"
-          :key="index"
-          :node="(node as NESTNode)"
-        />
+      <v-col class="pa-1" cols="12" sm="4">
+        <div class="text-button">Neuron</div>
+        <NodeViewer v-for="(node, index) in network.nodes.neurons" :key="index" :node="(node as NESTNode)" />
       </v-col>
 
-      <v-col
-        class="pa-1"
-        cols="12"
-        sm="4"
-      >
-        <div class="text-button">
-          Recorder
-        </div>
-        <NodeViewer
-          v-for="(node, index) in network.nodes.recorders"
-          :key="index"
-          :node="(node as NESTNode)"
-        />
+      <v-col class="pa-1" cols="12" sm="4">
+        <div class="text-button">Recorder</div>
+        <NodeViewer v-for="(node, index) in network.nodes.recorders" :key="index" :node="(node as NESTNode)" />
       </v-col>
     </v-row>
   </v-container>
@@ -90,7 +53,5 @@ import { NESTNode } from "../helpers/node/node";
 import { useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = useNESTProjectStore();
 
-const network = computed(
-  () => projectStore.state.project.network as NESTNetwork
-);
+const network = computed(() => projectStore.state.project.network as NESTNetwork);
 </script>

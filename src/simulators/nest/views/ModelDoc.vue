@@ -1,9 +1,5 @@
 <template>
-  <v-row
-    class="full-height"
-    no-gutters
-    style="height: calc(100vh - 24px - 48px)"
-  >
+  <v-row class="full-height" no-gutters style="height: calc(100vh - 24px - 48px)">
     <iframe
       :key="modelId"
       :src="`https://nest-simulator.readthedocs.io/en/latest/models/${modelId}.html#models-${parseKebabCase(

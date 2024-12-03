@@ -1,10 +1,7 @@
 <template>
   <v-container class="sandbox">
     <v-navigation-drawer permanent>
-      <v-list
-        nav
-        density="compact"
-      >
+      <v-list nav density="compact">
         <v-list-item
           v-for="(_, componentItem) in components"
           :key="componentItem"
@@ -15,10 +12,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <component
-      :is="components[currentComponent]"
-      class="component"
-    />
+    <component :is="components[currentComponent]" class="component" />
   </v-container>
 </template>
 
@@ -57,7 +51,7 @@ const components: Record<string, object> = {
 
 watch(
   () => props.component,
-  () => (currentComponent.value = props.component)
+  () => (currentComponent.value = props.component),
 );
 </script>
 

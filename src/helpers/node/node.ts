@@ -1,14 +1,7 @@
 // node.ts
 
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import {
-  TConnection,
-  TModel,
-  TNetwork,
-  TNode,
-  TNodes,
-  TSimulation,
-} from "@/types";
+import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/types";
 
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
@@ -34,8 +27,7 @@ export interface INodeProps {
 }
 // export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
 export class BaseNode extends BaseObj {
-  private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
-    undefined;
+  private _activity?: SpikeActivity | AnalogSignalActivity | Activity = undefined;
   private _annotations: string[] = [];
   private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
@@ -84,42 +76,32 @@ export class BaseNode extends BaseObj {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter(
-      (connection: TConnection) => connection.sourceIdx === this.idx
-    );
+    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
   }
 
   get connectionsNeurons(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        (connection.sourceIdx === this.idx &&
-          connection.targetNode.model.isNeuron) ||
-        (connection.targetIdx === this.idx &&
-          connection.sourceNode.model.isNeuron)
+        (connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron) ||
+        (connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron),
     );
   }
 
   get connectionsNeuronSources(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) =>
-        connection.targetIdx === this.idx &&
-        connection.sourceNode.model.isNeuron
+      (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron,
     );
   }
 
   get connectionsNeuronTargets(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) =>
-        connection.sourceIdx === this.idx &&
-        connection.targetNode.model.isNeuron
+      (connection: TConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
     );
   }
 
   get connectionsStimulatorSources(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) =>
-        connection.targetIdx === this.idx &&
-        connection.sourceNode.model.isStimulator
+      (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isStimulator,
     );
   }
 
@@ -238,9 +220,7 @@ export class BaseNode extends BaseObj {
   }
 
   get nodeGroups(): NodeGroup[] {
-    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) =>
-      nodeGroup.nodeItemsDeep.includes(this)
-    );
+    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
   }
 
   get nodeIdx(): number {
@@ -291,21 +271,11 @@ export class BaseNode extends BaseObj {
   }
 
   get recordsFixed(): string {
-    return (
-      "[" +
-      this._records
-        .map((record: NodeRecord) => '"' + record.id + '"')
-        .join(",") +
-      "]"
-    );
+    return "[" + this._records.map((record: NodeRecord) => '"' + record.id + '"').join(",") + "]";
   }
 
   get recordSpikes(): boolean {
-    return (
-      this.connections.filter((connection: TConnection) =>
-        connection.view.connectSpikeRecorder()
-      ).length > 0
-    );
+    return this.connections.filter((connection: TConnection) => connection.view.connectSpikeRecorder()).length > 0;
   }
 
   get show(): boolean {
@@ -386,16 +356,14 @@ export class BaseNode extends BaseObj {
     if (this._model) {
       this._model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
-          const nodeParamProps = paramsProps.find(
-            (paramProps: IParamProps) => paramProps.id === modelParam.id
-          );
+          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
           if (nodeParamProps) {
             this.addParameter(
               {
                 ...nodeParamProps,
                 ...modelParam,
               },
-              true
+              true,
             );
           } else {
             this.addParameter(modelParam);
@@ -405,9 +373,7 @@ export class BaseNode extends BaseObj {
         }
       });
     } else if (paramsProps) {
-      paramsProps.forEach((param: IParamProps) =>
-        this.addParameter(param, true)
-      );
+      paramsProps.forEach((param: IParamProps) => this.addParameter(param, true));
     }
   }
 
@@ -497,9 +463,7 @@ export class BaseNode extends BaseObj {
    * @returns node record object
    */
   getNodeRecord(groupId: string): NodeRecord | undefined {
-    return this._records.find(
-      (record: NodeRecord) => record.groupId === groupId
-    );
+    return this._records.find((record: NodeRecord) => record.groupId === groupId);
   }
 
   /**
@@ -507,9 +471,7 @@ export class BaseNode extends BaseObj {
    * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
-    return Object.keys(this._params).some(
-      (paramKey: string) => paramKey === paramId
-    );
+    return Object.keys(this._params).some((paramKey: string) => paramKey === paramId);
   }
 
   /**
@@ -662,9 +624,7 @@ export class BaseNode extends BaseObj {
     }
 
     if (this.filteredParams.length > 0) {
-      nodeProps.params = this.filteredParams.map((param: NodeParameter) =>
-        param.toJSON()
-      );
+      nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
     }
 
     // Add annotations if provided.
@@ -674,9 +634,7 @@ export class BaseNode extends BaseObj {
 
     // Add records if this model is multimeter.
     if (this.model.isMultimeter) {
-      nodeProps.records = this._records.map((nodeRecord: NodeRecord) =>
-        nodeRecord.toJSON()
-      );
+      nodeProps.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
     }
 
     return nodeProps;
@@ -714,9 +672,7 @@ export class BaseNode extends BaseObj {
       idx: this.idx,
       model: this._modelId,
       params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
-      recordables: this._recordables.map(
-        (recordable: NodeRecord) => recordable.uuid
-      ),
+      recordables: this._recordables.map((recordable: NodeRecord) => recordable.uuid),
       size: this._size,
     });
   }
@@ -731,27 +687,19 @@ export class BaseNode extends BaseObj {
     // Initialize recordables.
     if (this.connections.length > 0) {
       if (this.model.isAnalogRecorder) {
-        const recordablesNodes = this.targetNodes.map((target: TNode) =>
-          [...target.modelStates].flat()
-        );
+        const recordablesNodes = this.targetNodes.map((target: TNode) => [...target.modelStates].flat());
 
         if (recordablesNodes.length > 0) {
           const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled
-            .filter((recordProps: INodeRecordProps) => recordProps)
-            .filter(onlyUnique);
+          recordables = recordablesPooled.filter((recordProps: INodeRecordProps) => recordProps).filter(onlyUnique);
 
-          recordables.sort((a: { id: string }, b: { id: string }) =>
-            sortString(a.id, b.id)
-          );
+          recordables.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
         }
       }
     }
 
     // if (recordables.length != this.recordables.length) {
-    this.recordables = recordables.map(
-      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
-    );
+    this.recordables = recordables.map((recordProps: INodeRecordProps) => new NodeRecord(this, recordProps));
     // }
 
     this.updateRecordsColor();
@@ -767,21 +715,11 @@ export class BaseNode extends BaseObj {
     // Initialize selected records.
     if (this._props.records != null) {
       // Load record from stored nodes.
-      const recordIds = this._props.records.map(
-        (recordProps: INodeRecordProps) => recordProps.id
-      );
-      this.records = [
-        ...this.recordables.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
+      const recordIds = this._props.records.map((recordProps: INodeRecordProps) => recordProps.id);
+      this.records = [...this.recordables.filter((record: NodeRecord) => recordIds.includes(record.id))];
     } else if (this.records.length > 0) {
       const recordIds = this.recordables.map((record: NodeRecord) => record.id);
-      this.records = [
-        ...this.records.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
+      this.records = [...this.records.filter((record: NodeRecord) => recordIds.includes(record.id))];
 
       this.records.forEach((record: NodeRecord) => {
         record.node = this;

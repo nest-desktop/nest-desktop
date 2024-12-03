@@ -28,18 +28,14 @@ export class ConnectionState {
    * Check if this connection is focused.
    */
   get isFocused(): boolean {
-    return (
-      this.connection.connections.state.focusedConnection === this._connection
-    );
+    return this.connection.connections.state.focusedConnection === this._connection;
   }
 
   /**
    * Check if this connection is selected.
    */
   get isSelected(): boolean {
-    return (
-      this.connection.connections.state.selectedConnection === this._connection
-    );
+    return this.connection.connections.state.selectedConnection === this._connection;
   }
 
   get state(): UnwrapRef<IConnectionState> {
@@ -58,8 +54,6 @@ export class ConnectionState {
    */
   select(): void {
     const connections = this.connection.connections;
-    connections.state.selectedConnection = this.isSelected
-      ? null
-      : this._connection;
+    connections.state.selectedConnection = this.isSelected ? null : this._connection;
   }
 }

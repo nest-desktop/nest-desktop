@@ -7,10 +7,7 @@ import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IActivityChartPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "spikeTimesHistogram";

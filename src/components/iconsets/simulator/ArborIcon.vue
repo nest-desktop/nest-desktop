@@ -1,9 +1,5 @@
 <template>
-  <svg
-    width="64.946602"
-    viewBox="0 0 64.946602 64.946598"
-    height="64.946602"
-  >
+  <svg width="64.946602" viewBox="0 0 64.946602 64.946598" height="64.946602">
     <defs id="defs29" />
     <sodipodi:namedview
       id="namedview27"
@@ -20,10 +16,7 @@
       bordercolor="#666666"
       pagecolor="#ffffff"
     />
-    <g
-      id="g24"
-      transform="matrix(0.30075999,0,0,0.30075999,1.8045599,9.0227997)"
-    >
+    <g id="g24" transform="matrix(0.30075999,0,0,0.30075999,1.8045599,9.0227997)">
       <path
         id="path16"
         inkscape:connector-curvature="0"

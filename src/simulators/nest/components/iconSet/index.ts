@@ -18,6 +18,5 @@ const nestSvgNameToComponent: Record<string, object> = {
 };
 
 export default {
-  component: (props: IconProps) =>
-    h(nestSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(nestSvgNameToComponent[props.icon as string]),
 };

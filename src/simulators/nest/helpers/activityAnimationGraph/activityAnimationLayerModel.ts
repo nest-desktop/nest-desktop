@@ -1,20 +1,10 @@
 // activityAnimationLayerModel.ts
 
-import {
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  MeshLambertMaterial,
-  Object3D,
-  Object3DEventMap,
-} from "three";
+import { Group, Mesh, MeshBasicMaterial, MeshLambertMaterial, Object3D, Object3DEventMap } from "three";
 
 import { BaseObj } from "@/helpers/common/base";
 
-import {
-  ActivityAnimationLayer,
-  IActivityAnimationLayerFrame,
-} from "./activityAnimationLayer";
+import { ActivityAnimationLayer, IActivityAnimationLayerFrame } from "./activityAnimationLayer";
 
 export class ActivityAnimationLayerModel extends BaseObj {
   private _graphGroup: Group<Object3DEventMap>;
@@ -84,8 +74,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
     const trail = this.layer.state.trail;
     if (trail.length > 0) {
       for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
-        const frame: IActivityAnimationLayerFrame =
-          this.layer.frames[this.layer.graph.state.frameIdx - trailIdx];
+        const frame: IActivityAnimationLayerFrame = this.layer.frames[this.layer.graph.state.frameIdx - trailIdx];
         if (frame) {
           this.updateObjects(frame, trailIdx);
         }
@@ -101,8 +90,11 @@ export class ActivityAnimationLayerModel extends BaseObj {
 
     const scale: number = this._layer.state.object.size;
     this._graphGroup.children.forEach((child: Object3D<Object3DEventMap>) => {
-      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> =
-        child as Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
+      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> = child as Mesh<
+        any,
+        MeshBasicMaterial | MeshLambertMaterial,
+        any
+      >;
 
       mesh.material.opacity = 0.0;
       const position = mesh.userData.position;
@@ -122,7 +114,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
       height?: number;
       opacity?: number;
       scale?: number;
-    }
+    },
   ): void {
     this.logger.trace("update mesh");
 
@@ -146,14 +138,8 @@ export class ActivityAnimationLayerModel extends BaseObj {
     this._layer.state.reset = false;
     const state = this.layer.state;
 
-    const ratio: number =
-      trailIdx != null ? trailIdx / (state.trail.length + 1) : 0;
-    const opacity: number =
-      trailIdx != null
-        ? state.trail.fading
-          ? 1 - ratio
-          : 1
-        : state.object.opacity;
+    const ratio: number = trailIdx != null ? trailIdx / (state.trail.length + 1) : 0;
+    const opacity: number = trailIdx != null ? (state.trail.fading ? 1 - ratio : 1) : state.object.opacity;
 
     const size: number = state.object.size;
     let scale: number;
@@ -182,8 +168,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
         height = size;
       }
 
-      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> = this
-        ._graphGroup.children[sender] as Mesh<
+      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> = this._graphGroup.children[sender] as Mesh<
         any,
         MeshBasicMaterial | MeshLambertMaterial,
         any

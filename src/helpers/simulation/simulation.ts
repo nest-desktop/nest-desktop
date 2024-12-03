@@ -216,9 +216,7 @@ export class BaseSimulation extends BaseObj {
           }
         } else if ("request" in error) {
           // The request was made but no response was received.
-          notifyError(
-            "Failed to perform simulation (Simulator backend is not running)."
-          );
+          notifyError("Failed to perform simulation (Simulator backend is not running).");
         } else if ("message" in error && error.message != undefined) {
           // Something happened in setting up the request
           // that triggered an error.

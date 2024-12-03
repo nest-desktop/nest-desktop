@@ -14,7 +14,7 @@ export function calcPathNode(
     radius?: number;
     sweep?: number;
     xAxisRotation?: number;
-  } = {}
+  } = {},
 ): {
   a: number;
   ax: number;
@@ -123,7 +123,7 @@ export function drawPathNode(
     radius?: number;
     sweep?: number;
     xAxisRotation?: number;
-  } = {}
+  } = {},
 ): string {
   const path = calcPathNode(source, target, options);
 
@@ -137,10 +137,7 @@ export function drawPathNode(
 /**
  * Draw SVG path to mouse.
  */
-export function drawPathMouse(
-  source: { x: number; y: number },
-  target: { x: number; y: number }
-): string {
+export function drawPathMouse(source: { x: number; y: number }, target: { x: number; y: number }): string {
   // Defaults for normal edge.
   const ellipticalArc: number = 2.5;
   const xAxisRotation: number = 0;
@@ -160,9 +157,5 @@ export function drawPathMouse(
   const drx: number = dr * ellipticalArc * 2;
   const dry: number = dr * ellipticalArc; // * 2;
 
-  return [
-    `M${x1},${y1}A${drx},${dry}`,
-    `${xAxisRotation},${largeArc},${sweep}`,
-    `${x2},${y2}`,
-  ].join(" ");
+  return [`M${x1},${y1}A${drx},${dry}`, `${xAxisRotation},${largeArc},${sweep}`, `${x2},${y2}`].join(" ");
 }

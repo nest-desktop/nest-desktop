@@ -16,13 +16,7 @@ import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
 import { TSimulation } from "@/types";
-import {
-  autocompletion,
-  basicSetup,
-  languagePython,
-  oneDark,
-  simulationCodeError
-} from "@/plugins/codemirror";
+import { autocompletion, basicSetup, languagePython, oneDark, simulationCodeError } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
@@ -66,12 +60,12 @@ watch(
         });
       });
     }
-  }
+  },
 );
 
 watch(
   () => simulation.value.state.error,
-  () => view.value.dispatch()
+  () => view.value.dispatch(),
 );
 </script>
 
@@ -82,10 +76,7 @@ watch(
 }
 
 .cm-errorLine {
-  background-color: rgba(
-    var(--v-theme-red),
-    var(--v-disabled-opacity)
-  ) !important;
+  background-color: rgba(var(--v-theme-red), var(--v-disabled-opacity)) !important;
 }
 
 .cm-panels-bottom {

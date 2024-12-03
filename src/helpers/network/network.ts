@@ -1,14 +1,6 @@
 // network.ts
 
-import {
-  TConnection,
-  TConnections,
-  TModel,
-  TNetwork,
-  TNode,
-  TNodes,
-  TProject,
-} from "@/types";
+import { TConnection, TConnections, TModel, TNetwork, TNode, TNodes, TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
@@ -58,10 +50,7 @@ export class BaseNetwork extends BaseObj {
     this._state = new NetworkState(this);
 
     this._nodes = new this.Nodes(this, networkProps.nodes || []);
-    this._connections = new this.Connections(
-      this,
-      networkProps.connections || []
-    );
+    this._connections = new this.Connections(this, networkProps.connections || []);
   }
 
   get Connections() {
@@ -77,8 +66,7 @@ export class BaseNetwork extends BaseObj {
   }
 
   set colors(value: string[]) {
-    const color: { cycle: string[]; scheme: string } =
-      this.config?.localStorage.color;
+    const color: { cycle: string[]; scheme: string } = this.config?.localStorage.color;
     color.cycle = value;
     this.config?.localStorage.update({ color });
   }
@@ -176,12 +164,8 @@ export class BaseNetwork extends BaseObj {
       target: targetIdx,
     });
 
-    if (
-      connection.sourceNode.isNode &&
-      connection.sourceNode.view.state.synWeights
-    ) {
-      connection.synapse.weightLabel =
-        connection.sourceNode.view.state.synWeights;
+    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights) {
+      connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
     }
 
     // Trigger network change.
@@ -309,9 +293,7 @@ export class BaseNetwork extends BaseObj {
   updateHash(): void {
     this._updateHash({
       nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
-      connections: this.connections.all.map(
-        (connection: TConnection) => connection.hash
-      ),
+      connections: this.connections.all.map((connection: TConnection) => connection.hash),
     });
   }
 
@@ -321,8 +303,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: NodeGroup | TNode) =>
-      node.view.updateStyle()
-    );
+    this._nodes.all.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
   }
 }

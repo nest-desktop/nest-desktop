@@ -1,8 +1,5 @@
 <template>
-  <Menu
-    :items
-    size="x-small"
-  />
+  <Menu :items size="x-small" />
 </template>
 
 <script lang="ts" setup>
@@ -24,9 +21,7 @@ const props = defineProps<{
 }>();
 
 const model = computed(() => props.model);
-const modelDBStore = computed(
-  () => appStore.currentSimulator.stores.modelDBStore
-);
+const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
 
 const items = [
   {

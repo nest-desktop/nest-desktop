@@ -1,11 +1,7 @@
 <template>
   <v-card title="Select a module">
     <v-card-text>
-      <NESTModuleSelect
-        v-model="state.selectedModule"
-        return-object
-        @update:model-value="fetchInstalledModels()"
-      />
+      <NESTModuleSelect v-model="state.selectedModule" return-object @update:model-value="fetchInstalledModels()" />
 
       <v-list>
         <v-list-subheader text="Models" />
@@ -22,16 +18,8 @@
           {{ modelId }}
 
           <template #append>
-            <v-icon
-              v-if="moduleStore.state.installedModels.includes(modelId)"
-              color="green"
-              icon="mdi:mdi-check"
-            />
-            <v-icon
-              v-else
-              color="red"
-              icon="mdi:mdi-cancel"
-            />
+            <v-icon v-if="moduleStore.state.installedModels.includes(modelId)" color="green" icon="mdi:mdi-check" />
+            <v-icon v-else color="red" icon="mdi:mdi-cancel" />
           </template>
         </v-list-item>
       </v-list>
@@ -48,16 +36,11 @@
 
       <v-spacer />
       <v-btn
-        :disabled="
-          appStore.currentSimulator.backends.nestml.state.response.status != 200
-        "
+        :disabled="appStore.currentSimulator.backends.nestml.state.response.status != 200"
         text="Generate module"
         @click="closeDialog(state.selectedModule)"
       />
-      <v-btn
-        text="close"
-        @click="closeDialog()"
-      />
+      <v-btn text="close" @click="closeDialog()" />
     </v-card-actions>
   </v-card>
 </template>
@@ -78,8 +61,7 @@ const state = reactive<{ selectedModule: IModule }>({
 });
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (module?: IModule | null) =>
-  emit("closeDialog", module ? module : false);
+const closeDialog = (module?: IModule | null) => emit("closeDialog", module ? module : false);
 
 const fetchInstalledModels = () => {
   nextTick(() => {

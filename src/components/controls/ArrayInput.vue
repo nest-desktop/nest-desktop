@@ -32,9 +32,7 @@ const value = computed({
       case "string":
         valueEmit =
           // @ts-expect-error Property 'startsWith' does not exist on type 'never'.
-          value.startsWith("[") && value.endsWith("]")
-            ? JSON.parse(value)
-            : JSON.parse(`[${value}]`);
+          value.startsWith("[") && value.endsWith("]") ? JSON.parse(value) : JSON.parse(`[${value}]`);
         break;
     }
 

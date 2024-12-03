@@ -1,36 +1,12 @@
 <template>
-  <Card
-    class="ma-1"
-    color="primary"
-  >
-    <v-expansion-panels
-      class="pa-0"
-      variant="accordion"
-    >
+  <Card class="ma-1" color="primary">
+    <v-expansion-panels class="pa-0" variant="accordion">
       <v-expansion-panel density="compact">
-        <v-expansion-panel-title
-          class="expansion-panel-title d-flex align-center pl-0 pr-2"
-        >
-          <v-btn-group
-            mandatory
-            variant="text"
-            @click.stop
-          >
-            <v-btn
-              icon="mdi:mdi-skip-backward"
-              title="set first frame"
-              @click="graph.setFirstFrame()"
-            />
-            <v-btn
-              :active="graph.state.frames.speed < -1"
-              icon
-              title="speed down"
-              @click="graph.decrementFrameSpeed()"
-            >
-              <v-icon
-                class="mdi-rotate-180"
-                icon="mdi:mdi-fast-forward"
-              />
+        <v-expansion-panel-title class="expansion-panel-title d-flex align-center pl-0 pr-2">
+          <v-btn-group mandatory variant="text" @click.stop>
+            <v-btn icon="mdi:mdi-skip-backward" title="set first frame" @click="graph.setFirstFrame()" />
+            <v-btn :active="graph.state.frames.speed < -1" icon title="speed down" @click="graph.decrementFrameSpeed()">
+              <v-icon class="mdi-rotate-180" icon="mdi:mdi-fast-forward" />
             </v-btn>
             <v-btn
               :active="graph.state.frames.speed === -1"
@@ -38,27 +14,16 @@
               title="play backward"
               @click="graph.playBackwardFrameAnimation()"
             >
-              <v-icon
-                class="mdi-rotate-180"
-                icon="mdi:mdi-play"
-              />
+              <v-icon class="mdi-rotate-180" icon="mdi:mdi-play" />
             </v-btn>
-            <v-btn
-              icon="mdi:mdi-step-backward"
-              title="step backward"
-              @click="graph.stepBackwardFrame()"
-            />
+            <v-btn icon="mdi:mdi-step-backward" title="step backward" @click="graph.stepBackwardFrame()" />
             <v-btn
               :active="graph.state.frames.speed === 0"
               icon="mdi:mdi-pause"
               title="pause"
               @click="graph.pauseFrameAnimation()"
             />
-            <v-btn
-              icon="mdi:mdi-step-forward"
-              title="step forward"
-              @click="graph.stepForwardFrame()"
-            />
+            <v-btn icon="mdi:mdi-step-forward" title="step forward" @click="graph.stepForwardFrame()" />
             <v-btn
               :active="graph.state.frames.speed === 1"
               icon="mdi:mdi-play"
@@ -71,11 +36,7 @@
               title="speed up"
               @click="graph.incrementFrameSpeed()"
             />
-            <v-btn
-              icon="mdi:mdi-skip-forward"
-              title="set last frame"
-              @click="graph.setLastFrame()"
-            />
+            <v-btn icon="mdi:mdi-skip-forward" title="set last frame" @click="graph.setLastFrame()" />
           </v-btn-group>
         </v-expansion-panel-title>
 

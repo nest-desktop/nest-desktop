@@ -74,8 +74,6 @@ export class BaseObj {
    * @param text string
    */
   updateLoggerName(text: string): void {
-    this._logger.settings.name = `[${truncate(this._uuid)}] ${
-      this.constructor.name
-    } ${text}`;
+    this._logger.settings.name = `[${truncate(this._uuid)}] ${this.constructor.name} ${text}`;
   }
 }

@@ -7,18 +7,9 @@
     permanent
     @transitionend="navStore.dispatchWindowResize()"
   >
-    <div
-      class="resize-handle"
-      @mousedown="navStore.resizeSideNav()"
-    />
+    <div class="resize-handle" @mousedown="navStore.resizeSideNav()" />
 
-    <v-toolbar
-      :color
-      class="fixed-bar"
-      density="compact"
-      extended
-      extension-height="36"
-    >
+    <v-toolbar :color class="fixed-bar" density="compact" extended extension-height="36">
       <v-text-field
         v-model="search"
         class="mx-1"
@@ -43,10 +34,7 @@
           @click="newProjectRoute(router)"
         />
 
-        <v-row
-          class="mx-4 text-subtitle-2"
-          no-gutters
-        >
+        <v-row class="mx-4 text-subtitle-2" no-gutters>
           <v-spacer />
 
           {{ projects.length }} project
@@ -71,20 +59,12 @@
       </v-menu> -->
     </v-toolbar>
 
-    <v-list
-      :key="projects.length"
-      class="pt-0"
-      density="compact"
-      lines="two"
-      nav
-    >
+    <v-list :key="projects.length" class="pt-0" density="compact" lines="two" nav>
       <v-list-subheader inset />
 
       <template
         v-if="
-          projectStore.state.project &&
-            !projectStore.state.project.docId &&
-            projectStore.state.project.state?.editMode
+          projectStore.state.project && !projectStore.state.project.docId && projectStore.state.project.state?.editMode
         "
       >
         <v-text-field
@@ -100,7 +80,7 @@
       </template>
 
       <template v-for="(project, index) in projects.slice().reverse()">
-        <v-hover v-slot="{ isHovering, props:itemProps }">
+        <v-hover v-slot="{ isHovering, props: itemProps }">
           <v-list-item
             :key="index"
             :to="{
@@ -110,35 +90,22 @@
             :ripple="!project.state?.editMode"
             v-bind="itemProps"
           >
-            <template
-              v-if="!project.state?.editMode"
-              #append
-            >
+            <template v-if="!project.state?.editMode" #append>
               <template v-if="project.doc">
                 <v-btn
                   :disabled="!project.state?.changes"
                   :color="project.state?.changes ? 'orange' : 'primary'"
-                  :icon="
-                    project.state?.changes
-                      ? 'mdi:mdi-content-save-outline'
-                      : 'mdi:mdi-check'
-                  "
+                  :icon="project.state?.changes ? 'mdi:mdi-content-save-outline' : 'mdi:mdi-check'"
                   size="x-small"
                   variant="text"
                   @click.prevent="saveProject(project)"
                 />
               </template>
 
-              <ProjectMenu
-                :color="isHovering ? 'primary' : 'transparent'"
-                :project
-              />
+              <ProjectMenu :color="isHovering ? 'primary' : 'transparent'" :project />
             </template>
 
-            <template
-              v-if="project.state?.editMode"
-              #default
-            >
+            <template v-if="project.state?.editMode" #default>
               <v-text-field
                 v-model="project.name"
                 append-inner-icon="mdi:mdi-content-save-edit-outline"
@@ -153,43 +120,26 @@
               />
             </template>
 
-            <template
-              v-else-if="appStore.state.devMode"
-              #default
-            >
+            <template v-else-if="appStore.state.devMode" #default>
               <v-list-item-title>
-                {{
-                  project.name || "undefined project " + truncate(project.id)
-                }}
+                {{ project.name || "undefined project " + truncate(project.id) }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                <span
-                  v-if="project.id"
-                  class="mx-1"
-                >
+                <span v-if="project.id" class="mx-1">
                   {{ truncate(project.id) }}
                 </span>
-                <span
-                  v-if="project.doc"
-                  class="mx-1"
-                >
+                <span v-if="project.doc" class="mx-1">
                   {{ truncate(project.docId) }}
                 </span>
               </v-list-item-subtitle>
             </template>
 
-            <template
-              v-else
-              #default
-            >
+            <template v-else #default>
               <v-list-item-title>
-                {{
-                  project.name || "undefined project " + truncate(project.id)
-                }}
+                {{ project.name || "undefined project " + truncate(project.id) }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{ project.network.nodes.length }} nodes,
-                {{ project.network.connections.length }} connections
+                {{ project.network.nodes.length }} nodes, {{ project.network.connections.length }} connections
               </v-list-item-subtitle>
             </template>
           </v-list-item>
@@ -223,22 +173,16 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-defineProps<{color: string}>();
+defineProps<{ color: string }>();
 
-const projectStore = computed(
-  () => appStore.currentSimulator.stores.projectStore
-);
+const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
 
-const projectDBStore = computed(
-  () => appStore.currentSimulator.stores.projectDBStore
-);
+const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
 
 const projects = computed(() =>
   projectDBStore.value.state.projects.filter((project: TProject) =>
-    project.name
-      .toLocaleLowerCase()
-      .includes(search.value ? search.value.toLocaleLowerCase() : "")
-  )
+    project.name.toLocaleLowerCase().includes(search.value ? search.value.toLocaleLowerCase() : ""),
+  ),
 );
 
 const search = ref("");

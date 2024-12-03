@@ -20,14 +20,7 @@ function getHexagonPoints(radius: number): string {
   const p3: number[] = anglePoint(210, a, 4);
   const p4: number[] = anglePoint(270, a, 4);
   const p5: number[] = anglePoint(330, a, 4);
-  const points: string = [
-    p0.join(","),
-    p1.join(","),
-    p2.join(","),
-    p3.join(","),
-    p4.join(","),
-    p5.join(","),
-  ].join(",");
+  const points: string = [p0.join(","), p1.join(","), p2.join(","), p3.join(","), p4.join(","), p5.join(",")].join(",");
   return points;
 }
 
@@ -55,12 +48,7 @@ function getSquarePoints(radius: number): string {
   const p1: number[] = anglePoint(135, a, 4);
   const p2: number[] = anglePoint(225, a, 4);
   const p3: number[] = anglePoint(315, a, 4);
-  const points: string = [
-    p0.join(","),
-    p1.join(","),
-    p2.join(","),
-    p3.join(","),
-  ].join(",");
+  const points: string = [p0.join(","), p1.join(","), p2.join(","), p3.join(",")].join(",");
   return points;
 }
 
@@ -107,10 +95,7 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  drawShape(
-    selector: Selection<any, any, any, any>,
-    node: NodeGroup | TNode
-  ): void {
+  drawShape(selector: Selection<any, any, any, any>, node: NodeGroup | TNode): void {
     this.logger.trace("draw shape");
 
     selector.attr("elementType", node.elementType);
@@ -145,10 +130,7 @@ export class NodeGraphShape extends BaseObj {
       .style("pointer-events", "none")
       .style("text-anchor", "middle")
       .style("text-transform", "uppercase", "important")
-      .attr(
-        "fill",
-        node.isGroup ? "currentcolor" : "rgb(var(--v-border-color))"
-      );
+      .attr("fill", node.isGroup ? "currentcolor" : "rgb(var(--v-border-color))");
   }
 
   /**
@@ -159,9 +141,7 @@ export class NodeGraphShape extends BaseObj {
   init(selector: Selection<any, any, any, any>, node: NodeGroup | TNode): void {
     this.logger.silly("init");
 
-    const elem: Selection<any, any, any, any> = selector
-      .append("g")
-      .attr("class", "core");
+    const elem: Selection<any, any, any, any> = selector.append("g").attr("class", "core");
 
     this.drawShape(selector, node);
 
@@ -169,19 +149,13 @@ export class NodeGraphShape extends BaseObj {
       const nodes = this._networkGraph.network.nodes;
       const connections = this._networkGraph.network.connections;
 
-      if (
-        connections.state.selectedNode &&
-        this._networkGraph.workspace.state.dragLine
-      ) {
+      if (connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         // Set cursor position of the focused node.
         this._networkGraph.workspace.updateCursorPosition(node.view.position);
 
         this._networkGraph.workspace.animationOff();
 
-        this._networkGraph.network.connectNodes(
-          connections.state.selectedNode.idx,
-          node.idx
-        );
+        this._networkGraph.network.connectNodes(connections.state.selectedNode.idx, node.idx);
         this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {
@@ -209,27 +183,19 @@ export class NodeGraphShape extends BaseObj {
    */
   render(): void {
     this.logger.silly("render");
-    const nodes: Selection<any, any, any, any> =
-      select("g#nodes").selectAll("g.node");
+    const nodes: Selection<any, any, any, any> = select("g#nodes").selectAll("g.node");
 
     // Check if neuron has to change its shape.
     nodes.each((node: TNode, idx: number, elements: any) => {
       const elem = select(elements[idx]);
 
-      if (
-        elem.attr("elementType") !== node.elementType ||
-        elem.attr("weight") !== node.view.synWeights
-      ) {
+      if (elem.attr("elementType") !== node.elementType || elem.attr("weight") !== node.view.synWeights) {
         this.drawShape(elem, node);
       }
 
       elem
         .select(".shape")
-        .style(
-          "stroke-width",
-          (node.size > 1 ? 1.5 : 1) *
-            this._networkGraph.config?.localStorage.strokeWidth
-        )
+        .style("stroke-width", (node.size > 1 ? 1.5 : 1) * this._networkGraph.config?.localStorage.strokeWidth)
         .style("opacity", node.isGroup ? 0.12 : node.view.opacity ? 1 : 0.6);
 
       elem

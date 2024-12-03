@@ -1,7 +1,6 @@
 // upgrade_31_to_32.ts
 
-const validateVersion = (version: string) =>
-  /^3\.1(\.\d+)?(\w+)?$/.test(version);
+const validateVersion = (version: string) => /^3\.1(\.\d+)?(\w+)?$/.test(version);
 
 export function upgradeProject_31_to_32(projectProps: any): any {
   if (!validateVersion(projectProps.version)) return projectProps;

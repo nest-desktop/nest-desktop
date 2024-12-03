@@ -1,21 +1,12 @@
 <template>
   <div class="activityStatsViewer">
-    <v-toolbar
-      color="transparent"
-      density="compact"
-      title="Activity stats"
-    >
+    <v-toolbar color="transparent" density="compact" title="Activity stats">
       <v-spacer />
 
-      <v-icon
-        class="ma-auto"
-        icon="mdi:mdi-format-color-fill"
-      />
+      <v-icon class="ma-auto" icon="mdi:mdi-format-color-fill" />
 
       <v-btn-toggle
-        v-model="
-          activities.project.activityGraph.activityChartGraph.state.traceColor
-        "
+        v-model="activities.project.activityGraph.activityChartGraph.state.traceColor"
         class="mx-2"
         density="compact"
         @update:model-value="update()"
@@ -30,20 +21,9 @@
       </v-btn-toggle>
     </v-toolbar>
 
-    <v-layout
-      v-resize="onResize"
-      class="activityStats ml-1"
-      full-height
-    >
-      <v-expansion-panels
-        v-model="activities.state.activityStatsPanelId"
-        mandatory
-        variant="accordion"
-      >
-        <v-expansion-panel
-          v-for="(activity, index) in activities.all"
-          :key="index"
-        >
+    <v-layout v-resize="onResize" class="activityStats ml-1" full-height>
+      <v-expansion-panels v-model="activities.state.activityStatsPanelId" mandatory variant="accordion">
+        <v-expansion-panel v-for="(activity, index) in activities.all" :key="index">
           <v-expansion-panel-title class="py-0">
             <v-row class="text-button">
               <NodeAvatar :node="(activity.recorder as TNode)" />
@@ -53,10 +33,7 @@
             </v-row>
           </v-expansion-panel-title>
 
-          <v-expansion-panel-text
-            :key="activities.hash"
-            class="ma-0 pa-0"
-          >
+          <v-expansion-panel-text :key="activities.hash" class="ma-0 pa-0">
             <ActivityStatsSpike
               v-if="activity.recorder.model.isSpikeRecorder"
               :activity="activity as SpikeActivity"
@@ -66,9 +43,7 @@
             <ActivityStatsAnalog
               v-if="activity.recorder.model.isAnalogRecorder"
               :activity="activity as AnalogSignalActivity"
-              :height="
-                state.height - (activity.recorder.model.isMultimeter ? 40 : 0)
-              "
+              :height="state.height - (activity.recorder.model.isMultimeter ? 40 : 0)"
             />
           </v-expansion-panel-text>
         </v-expansion-panel>

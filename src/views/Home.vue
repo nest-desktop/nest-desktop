@@ -16,9 +16,7 @@
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-        <h2 class="text-h2">
-          NEST Desktop
-        </h2>
+        <h2 class="text-h2">NEST Desktop</h2>
       </div>
 
       <div style="height: 60px" />

@@ -202,12 +202,7 @@ export class ActivityAnimationLayer {
     if (this._activity.nodePositions.length > 0) {
       this._state.ndim = this._activity.nodePositions[0].length;
       this._state.positions = this._activity.nodePositions.map(
-        (pos: number[]) =>
-          new Vector3(
-            pos[0],
-            pos.length === 3 ? pos[1] : 0,
-            pos.length === 3 ? pos[2] : pos[1]
-          )
+        (pos: number[]) => new Vector3(pos[0], pos.length === 3 ? pos[1] : 0, pos.length === 3 ? pos[2] : pos[1]),
       );
     }
 
@@ -231,9 +226,7 @@ export class ActivityAnimationLayer {
     });
 
     if (this._state.record == null) {
-      const record = this._state.records.find((record: { id: string }) =>
-        ["V_m", "v"].includes(record.id)
-      );
+      const record = this._state.records.find((record: { id: string }) => ["V_m", "v"].includes(record.id));
       this._state.record = record != null ? record : this._state.records[0];
     }
   }
@@ -305,9 +298,7 @@ export class ActivityAnimationLayer {
     }
 
     // Collect senders based on events.
-    events.senders = events.senders.map((sender: number) =>
-      this._activity.nodeIds.indexOf(sender)
-    );
+    events.senders = events.senders.map((sender: number) => this._activity.nodeIds.indexOf(sender));
 
     // Add empty data (from individual recorder) in each frame.
     this._frames.forEach((frame: IActivityAnimationLayerFrame) => {

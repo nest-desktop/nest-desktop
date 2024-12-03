@@ -1,8 +1,5 @@
 <template>
-  <v-expansion-panel
-    elevation="0"
-    rounded="0"
-  >
+  <v-expansion-panel elevation="0" rounded="0">
     <v-expansion-panel-title class="expansion-panel-title">
       <v-row>
         <ConnectionAvatar :connection />
@@ -14,10 +11,7 @@
       </v-row>
     </v-expansion-panel-title>
     <v-expansion-panel-text class="pa-0">
-      <v-card
-        class="ma-0"
-        variant="flat"
-      >
+      <v-card class="ma-0" variant="flat">
         <v-card-text>
           <v-list>
             <ParamViewer

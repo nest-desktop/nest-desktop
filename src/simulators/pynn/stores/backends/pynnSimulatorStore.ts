@@ -3,11 +3,7 @@
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
 
-export const usePyNNSimulatorStore = defineBackendStore(
-  "pynn",
-  "pynn",
-  "http://localhost:91198"
-);
+export const usePyNNSimulatorStore = defineBackendStore("pynn", "pynn", "http://localhost:91198");
 
 export const pynnSimulatorInit = (): TStore => {
   // Initialize backend PyNN Simulator

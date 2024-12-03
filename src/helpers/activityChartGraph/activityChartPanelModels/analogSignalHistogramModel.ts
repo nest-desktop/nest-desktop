@@ -8,10 +8,7 @@ import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IActivityChartPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "analogSignalHistogram";
@@ -41,13 +38,9 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
 
     if (this.recordsVisible.length === 0) return;
 
-    this.recordsVisible.forEach((record: NodeRecord) =>
-      this.updateHistogramRange(record.values)
-    );
+    this.recordsVisible.forEach((record: NodeRecord) => this.updateHistogramRange(record.values));
 
-    this.recordsVisible.forEach((record: NodeRecord) =>
-      this.updateEventData(record)
-    );
+    this.recordsVisible.forEach((record: NodeRecord) => this.updateEventData(record));
   }
 
   /**
@@ -60,14 +53,8 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     // Update time.
     if (values.length === 0) return;
 
-    this.state.histogram.start = Math.min(
-      this.state.histogram.start,
-      min(values) as number
-    );
-    this.state.histogram.end = Math.max(
-      this.state.histogram.end,
-      max(values) as number
-    );
+    this.state.histogram.start = Math.min(this.state.histogram.start, min(values) as number);
+    this.state.histogram.end = Math.max(this.state.histogram.end, max(values) as number);
   }
 
   /**

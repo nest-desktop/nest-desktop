@@ -49,11 +49,7 @@ export class ConnectionView {
     xAxisRotation: number;
   } {
     return {
-      ellipticalArc:
-        this._connection.source.isSelected &&
-        this._connection.source.connections.length > 1
-          ? 1
-          : 5,
+      ellipticalArc: this._connection.source.isSelected && this._connection.source.connections.length > 1 ? 1 : 5,
       sweep: this._connection.idx % 2,
       xAxisRotation: this._state.xAxisRotation,
     };
@@ -81,8 +77,7 @@ export class ConnectionView {
   }
 
   get opacity(): boolean {
-    const focusedConnection = this._connection.connections.state
-      .focusedConnection as TConnection;
+    const focusedConnection = this._connection.connections.state.focusedConnection as TConnection;
 
     return (
       this._connection.sourceNode.connections.length === 1 ||
@@ -107,10 +102,7 @@ export class ConnectionView {
   }
 
   get toRight(): boolean {
-    return (
-      this._connection.source.view.position.x <
-      this._connection.target.view.position.x
-    );
+    return this._connection.source.view.position.x < this._connection.target.view.position.x;
   }
 
   /**
@@ -120,8 +112,7 @@ export class ConnectionView {
     const sourceNode = this._connection.sourceNode;
     const targetNode = this._connection.targetNode;
     return (
-      (sourceNode.isNode ? sourceNode.model.isNeuron : false) &&
-      (targetNode.isNode ? targetNode.model.isNeuron : false)
+      (sourceNode.isNode ? sourceNode.model.isNeuron : false) && (targetNode.isNode ? targetNode.model.isNeuron : false)
     );
   }
 
@@ -141,9 +132,7 @@ export class ConnectionView {
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.targetNode.isNode
-      ? this._connection.targetNode.model.isSpikeRecorder
-      : false;
+    return this._connection.targetNode.isNode ? this._connection.targetNode.model.isSpikeRecorder : false;
   }
 
   /**
@@ -154,10 +143,8 @@ export class ConnectionView {
       return 0;
     }
 
-    const source: { x: number; y: number } =
-      this._connection.source.view.position;
-    const target: { x: number; y: number } =
-      this._connection.target.view.position;
+    const source: { x: number; y: number } = this._connection.source.view.position;
+    const target: { x: number; y: number } = this._connection.target.view.position;
     const x1: number = source.x;
     const y1: number = source.y;
     const x2: number = target.x;

@@ -1,10 +1,5 @@
 <template>
-  <v-navigation-drawer
-    class="d-print-none full-height"
-    location="right"
-    permanent
-    rail
-  >
+  <v-navigation-drawer class="d-print-none full-height" location="right" permanent rail>
     <v-tabs
       :mandatory="false"
       :model-value="projectViewStore.state.views.controller"
@@ -14,9 +9,7 @@
     >
       <v-tab
         v-for="(item, index) in controllerItems"
-        v-show="
-          item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
-        "
+        v-show="item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)"
         :key="index"
         :ripple="false"
         :value="item.id"
@@ -25,28 +18,15 @@
         min-width="0"
         @click.stop="projectViewStore.toggleController(item)"
       >
-        <v-icon
-          class="ma-1"
-          size="large"
-          v-bind="item.icon"
-        />
+        <v-icon class="ma-1" size="large" v-bind="item.icon" />
         <span style="font-size: 9px">{{ item.id }}</span>
       </v-tab>
     </v-tabs>
 
     <template #append>
-      <v-row
-        align="center"
-        class="my-1"
-        justify="center"
-        no-gutters
-      >
+      <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="
-            projectViewStore.state.bottomNav.active
-              ? 'mdi:mdi-arrow-expand-down'
-              : 'mdi:mdi-arrow-expand-up'
-          "
+          :icon="projectViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
           value="code"
           variant="plain"
           @click.stop="projectViewStore.toggleBottomNav()"
@@ -64,10 +44,7 @@
     permanent
     @transitionend="projectViewStore.dispatchWindowResize()"
   >
-    <div
-      class="resize-handle left"
-      @mousedown="projectViewStore.resizeRightNav()"
-    />
+    <div class="resize-handle left" @mousedown="projectViewStore.resizeRightNav()" />
 
     <div :key="projectStore.state.projectId">
       <template v-if="projectViewStore.state.views.controller === 'network'">
@@ -83,40 +60,20 @@
         </slot>
       </template>
 
-      <template
-        v-else-if="projectViewStore.state.views.controller === 'kernel'"
-      >
+      <template v-else-if="projectViewStore.state.views.controller === 'kernel'">
         <slot name="simulationKernel">
-          <SimulationKernelEditor
-            :simulation="(project.simulation as BaseSimulation)"
-          />
+          <SimulationKernelEditor :simulation="(project.simulation as BaseSimulation)" />
         </slot>
       </template>
 
-      <template
-        v-else-if="
-          appStore.state.devMode &&
-            projectViewStore.state.views.controller === 'data'
-        "
-      >
-        <v-tabs
-          v-model="tab"
-          density="compact"
-        >
-          <v-tab value="doc">
-            DB doc
-          </v-tab>
-          <v-tab value="json">
-            json
-          </v-tab>
+      <template v-else-if="appStore.state.devMode && projectViewStore.state.views.controller === 'data'">
+        <v-tabs v-model="tab" density="compact">
+          <v-tab value="doc"> DB doc </v-tab>
+          <v-tab value="json"> json </v-tab>
         </v-tabs>
 
         <v-window v-model="tab">
-          <v-window-item
-            reverse-transition="no-transition"
-            transition="no-transition"
-            value="doc"
-          >
+          <v-window-item reverse-transition="no-transition" transition="no-transition" value="doc">
             <codemirror
               :extensions="extensions"
               :model-value="projectDoc"
@@ -125,11 +82,7 @@
             />
           </v-window-item>
 
-          <v-window-item
-            reverse-transition="no-transition"
-            transition="no-transition"
-            value="json"
-          >
+          <v-window-item reverse-transition="no-transition" transition="no-transition" value="json">
             <codemirror
               :extensions="extensions"
               :model-value="projectJSON"
@@ -142,19 +95,13 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
         <slot name="simulationCodeEditor">
-          <SimulationCodeEditor
-            :simulation="(project.simulation as BaseSimulation)"
-          />
+          <SimulationCodeEditor :simulation="(project.simulation as BaseSimulation)" />
         </slot>
       </template>
 
-      <template
-        v-else-if="projectViewStore.state.views.controller === 'activity'"
-      >
+      <template v-else-if="projectViewStore.state.views.controller === 'activity'">
         <slot name="activityController">
-          <ActivityChartController
-            :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)"
-          />
+          <ActivityChartController :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)" />
         </slot>
       </template>
 
@@ -172,15 +119,10 @@
     location="bottom"
     @transitionend="projectViewStore.dispatchWindowResize()"
   >
-    <div
-      class="resize-handle bottom"
-      @mousedown="projectViewStore.resizeBottomNav()"
-    />
+    <div class="resize-handle bottom" @mousedown="projectViewStore.resizeBottomNav()" />
 
     <slot name="simulationCodeMirror">
-      <SimulationCodeMirror
-        :simulation="(project.simulation as BaseSimulation)"
-      />
+      <SimulationCodeMirror :simulation="(project.simulation as BaseSimulation)" />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -209,22 +151,13 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const projectStore = computed(
-  () => appStore.currentSimulator.stores.projectStore
-);
+const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
 const project = computed(() => projectStore.value.state.project);
-const projectViewStore = computed(
-  () => appStore.currentSimulator.views.project
-);
+const projectViewStore = computed(() => appStore.currentSimulator.views.project);
 
+const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
 
-const projectDoc = computed(() =>
-  JSON.stringify(project.value.doc, null, 2)
-);
-
-const projectJSON = computed(() =>
-  JSON.stringify(project.value.toJSON(), null, 2)
-);
+const projectJSON = computed(() => JSON.stringify(project.value.toJSON(), null, 2));
 
 const tab = ref("doc");
 

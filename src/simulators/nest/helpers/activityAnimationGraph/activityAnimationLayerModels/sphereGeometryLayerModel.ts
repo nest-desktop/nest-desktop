@@ -22,10 +22,7 @@ export class SphereGeometryLayerModel extends ActivityAnimationLayerModel {
         color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
-      const mesh: Mesh<any, MeshBasicMaterial, any> = new Mesh(
-        geometry,
-        material
-      );
+      const mesh: Mesh<any, MeshBasicMaterial, any> = new Mesh(geometry, material);
       mesh.userData.position = position;
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);

@@ -1,13 +1,6 @@
 <template>
-  <v-card
-    flat
-    title="Settings"
-    width="400"
-  >
-    <v-card
-      flat
-      subtitle="Theme"
-    >
+  <v-card flat title="Settings" width="400">
+    <v-card flat subtitle="Theme">
       <v-card-text>
         <v-radio-group
           v-model="appStore.state.theme"
@@ -22,10 +15,7 @@
             true-icon="mdi:mdi-checkbox-marked-circle-outline"
           >
             <template #label>
-              <v-icon
-                :icon="theme.icon"
-                class="mx-2"
-              />
+              <v-icon :icon="theme.icon" class="mx-2" />
               {{ capitalize(theme.title) }}
             </template>
           </v-radio>
@@ -33,10 +23,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card
-      flat
-      subtitle="General"
-    >
+    <v-card flat subtitle="General">
       <v-card-text>
         <v-switch
           v-model="appStore.state.devMode"
@@ -56,10 +43,7 @@
       </v-card-text>
     </v-card>
 
-    <v-card
-      flat
-      subtitle="Simulators"
-    >
+    <v-card flat subtitle="Simulators">
       <v-card-text>
         <v-select
           v-model="appStore.state.simulatorVisible"
@@ -71,11 +55,7 @@
           multiple
         >
           <template #chip="{ item }">
-            <v-chip
-              :prepend-icon="item.value + ':logo'"
-              color="grey"
-              label
-            >
+            <v-chip :prepend-icon="item.value + ':logo'" color="grey" label>
               {{ item.title }}
             </v-chip>
           </template>
@@ -83,9 +63,7 @@
       </v-card-text>
     </v-card>
 
-    <div class="d-flex ma-auto text-caption">
-      Current version: {{ appVersion }}
-    </div>
+    <div class="d-flex ma-auto text-caption">Current version: {{ appVersion }}</div>
   </v-card>
 </template>
 

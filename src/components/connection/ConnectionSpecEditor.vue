@@ -1,14 +1,8 @@
 <template>
-  <v-btn-group
-    class="pt-2 mt-1"
-    style="width: 100%"
-    variant="text"
-  >
+  <v-btn-group class="pt-2 mt-1" style="width: 100%" variant="text">
     <v-select
       v-model="connection.rule.value"
-      :disabled="
-        connection.sourceNode.size === 1 && connection.targetNode.size === 1
-      "
+      :disabled="connection.sourceNode.size === 1 && connection.targetNode.size === 1"
       :items="rules"
       class="mx-1"
       density="compact"
@@ -17,7 +11,7 @@
     />
 
     <v-menu :close-on-content-click="false">
-      <template #activator="{ props:btnProps }">
+      <template #activator="{ props: btnProps }">
         <v-btn
           :disabled="Object.keys(connection.params).length === 0"
           class="rounded-circle"
@@ -49,16 +43,10 @@
       </v-card>
     </v-menu>
 
-    <Menu
-      :items
-      class="rounded-circle"
-    />
+    <Menu :items class="rounded-circle" />
   </v-btn-group>
 
-  <v-list
-    v-if="connection.paramsVisible.length > 0"
-    density="compact"
-  >
+  <v-list v-if="connection.paramsVisible.length > 0" density="compact">
     <ParamListItem
       v-for="(param, index) in connection.filteredParams"
       :key="index"

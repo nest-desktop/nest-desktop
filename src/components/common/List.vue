@@ -1,21 +1,10 @@
 <template>
-  <v-list
-    v-model:opened="state.listOpen"
-    class="list"
-    density="compact"
-  >
-    <v-list-item
-      v-if="state.listOpen.length > 0"
-      prepend-icon="mdi:mdi-chevron-left"
-      @click="state.listOpen = []"
-    >
+  <v-list v-model:opened="state.listOpen" class="list" density="compact">
+    <v-list-item v-if="state.listOpen.length > 0" prepend-icon="mdi:mdi-chevron-left" @click="state.listOpen = []">
       {{ state.listOpen[0] }}
     </v-list-item>
 
-    <div
-      v-for="(item, index) in items"
-      :key="index"
-    >
+    <div v-for="(item, index) in items" :key="index">
       <v-list-group
         v-if="'items' in item"
         :value="item.value"
@@ -59,10 +48,10 @@
 import { reactive } from "vue";
 
 interface IItem {
-  icon: string,
-  title: string,
-  value: string,
-  items?: IItem[]
+  icon: string;
+  title: string;
+  value: string;
+  items?: IItem[];
 }
 
 defineProps<{ items: IItem[] }>();
@@ -80,8 +69,7 @@ const state = reactive<{ listOpen: string[] }>({
   }
 
   .subitem {
-    border-left: 2px solid
-      rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
+    border-left: 2px solid rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
     margin-inline-start: 28px !important;
   }
 }

@@ -2,10 +2,7 @@
 
 import { AxiosResponse } from "axios";
 
-import {
-  BaseSimulation,
-  ISimulationProps,
-} from "@/helpers/simulation/simulation";
+import { BaseSimulation, ISimulationProps } from "@/helpers/simulation/simulation";
 
 import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { NorseProject } from "../project/project";
@@ -18,10 +15,7 @@ export interface INorseSimulationProps extends ISimulationProps {
 export class NorseSimulation extends BaseSimulation {
   private _seed: number;
 
-  constructor(
-    project: NorseProject,
-    simulationProps: INorseSimulationProps = {}
-  ) {
+  constructor(project: NorseProject, simulationProps: INorseSimulationProps = {}) {
     super(project, simulationProps);
 
     this._seed = simulationProps.seed || 0;

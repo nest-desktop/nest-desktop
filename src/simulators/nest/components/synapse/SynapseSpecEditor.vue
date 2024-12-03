@@ -1,10 +1,5 @@
 <template>
-  <v-btn-group
-    v-if="!synapse.connection.view.connectRecorder()"
-    class="pt-2 mt-1"
-    style="width: 100%"
-    variant="text"
-  >
+  <v-btn-group v-if="!synapse.connection.view.connectRecorder()" class="pt-2 mt-1" style="width: 100%" variant="text">
     <v-select
       v-model="synapse.modelId"
       :disabled="synapse.models.length < 2"
@@ -18,7 +13,7 @@
     />
 
     <v-menu :close-on-content-click="false">
-      <template #activator="{ props:btnProps }">
+      <template #activator="{ props: btnProps }">
         <v-btn
           class="rounded-circle"
           color="primary"
@@ -50,22 +45,12 @@
     </v-menu>
 
     <v-menu>
-      <template #activator="{ props:btnProps }">
-        <v-btn
-          class="rounded-circle"
-          color="primary"
-          icon="mdi:mdi-dots-vertical"
-          size="small"
-          v-bind="btnProps"
-        />
+      <template #activator="{ props: btnProps }">
+        <v-btn class="rounded-circle" color="primary" icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
       </template>
 
       <v-list density="compact">
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-          @click="item.onClick"
-        >
+        <v-list-item v-for="(item, index) in items" :key="index" @click="item.onClick">
           <template #prepend>
             <v-icon :icon="item.icon" />
           </template>
@@ -75,10 +60,7 @@
     </v-menu>
   </v-btn-group>
 
-  <v-list
-    v-if="synapse.paramsVisible.length > 0"
-    density="compact"
-  >
+  <v-list v-if="synapse.paramsVisible.length > 0" density="compact">
     <ParamListItem
       v-for="(param, index) in synapse.filteredParams"
       :key="index"

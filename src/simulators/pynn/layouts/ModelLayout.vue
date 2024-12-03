@@ -6,10 +6,7 @@
 
     <ModelController />
 
-    <router-view
-      :key="modelStore.state.modelId"
-      name="model"
-    />
+    <router-view :key="modelStore.state.modelId" name="model" />
   </template>
 </template>
 

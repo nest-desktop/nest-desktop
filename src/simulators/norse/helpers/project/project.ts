@@ -5,10 +5,7 @@ import { BaseProject, IProjectProps } from "@/helpers/project/project";
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 import { INorseNetworkProps, NorseNetwork } from "../network/network";
 import { NorseNode } from "../node/node";
-import {
-  INorseSimulationProps,
-  NorseSimulation,
-} from "../simulation/simulation";
+import { INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
 
 export interface INorseProjectProps extends IProjectProps {
   network?: INorseNetworkProps;
@@ -44,9 +41,7 @@ export class NorseProject extends BaseProject {
    * It generates simulation code in the code editor.
    */
   override generateCodes(): void {
-    this.network.nodes.nodeItems.forEach((node: NorseNode) =>
-      node.generateCode()
-    );
+    this.network.nodes.nodeItems.forEach((node: NorseNode) => node.generateCode());
     this._simulation.code.generate();
   }
 

@@ -1,6 +1,6 @@
 // randomParameter.ts
 
-import { BaseObj } from './base';
+import { BaseObj } from "./base";
 
 interface IParameterRandomProps {
   distribution: string;

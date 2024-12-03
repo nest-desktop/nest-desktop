@@ -16,9 +16,7 @@
     </template>
   </ModelNav>
 
-  <template
-    v-if="modelStore.model && modelStore.model.id === modelStore.state.modelId"
-  >
+  <template v-if="modelStore.model && modelStore.model.id === modelStore.state.modelId">
     <ModelBar color="nest-model">
       <template #modelExplorer>
         <v-tab
@@ -56,12 +54,7 @@
         />
       </template>
 
-      <v-btn
-        prepend-icon="mdi:mdi-memory"
-        text="module"
-        title="Generate module"
-        @click="openNESTModuleDialog()"
-      />
+      <v-btn prepend-icon="mdi:mdi-memory" text="module" title="Generate module" @click="openNESTModuleDialog()" />
 
       <template #prependTabs>
         <v-tab
@@ -80,10 +73,7 @@
 
     <ModelController />
 
-    <router-view
-      :key="modelStore.state.modelId"
-      name="model"
-    />
+    <router-view :key="modelStore.state.modelId" name="model" />
   </template>
 </template>
 
@@ -115,9 +105,7 @@ const modelStore: TModelStore = useNESTModelStore();
 import { useNESTModuleStore } from "../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
-const modelDBStore = computed(
-  () => appStore.currentSimulator.stores.modelDBStore
-);
+const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
 
 const projects: { id: string; name: string; icon: string }[] = [
   {
@@ -185,10 +173,7 @@ const dialogNewModel = () => {
       modelStore.state.modelId = model.id;
 
       // Add model to first module.
-      if (
-        moduleStore.state.modules.length > 0 &&
-        !moduleStore.state.modules[0].models.includes(model.id)
-      ) {
+      if (moduleStore.state.modules.length > 0 && !moduleStore.state.modules[0].models.includes(model.id)) {
         moduleStore.state.modules[0].models.push(model.id);
       }
 

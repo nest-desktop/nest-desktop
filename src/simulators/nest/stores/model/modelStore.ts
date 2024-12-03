@@ -29,10 +29,7 @@ export const updateProject = () => {
     return;
   }
 
-  if (
-    modelStore.model?.project &&
-    modelStore.model.project?.filename === modelStore.state.projectId
-  ) {
+  if (modelStore.model?.project && modelStore.model.project?.filename === modelStore.state.projectId) {
     modelStore.state.project = modelStore.model.project;
     const project = modelStore.state.project;
 
@@ -65,9 +62,7 @@ export const updateSimulationModules = (emitChanges: boolean = true): void => {
   const moduleStore = useNESTModuleStore();
 
   modelStore.state.project.simulation.modules = moduleStore.state.modules
-    .filter((module: IModule) =>
-      module.models.includes(modelStore.state.modelId)
-    )
+    .filter((module: IModule) => module.models.includes(modelStore.state.modelId))
     .map((module: IModule) => module.name);
 
   if (emitChanges) modelStore.state.project.simulation.changes();

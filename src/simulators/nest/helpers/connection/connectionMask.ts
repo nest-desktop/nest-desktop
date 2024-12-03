@@ -23,10 +23,7 @@ export class NESTConnectionMask extends BaseObj {
   private _masktype: EMaskType;
   private _specs: any;
 
-  constructor(
-    connection: NESTConnection,
-    maskProps?: INESTConnectionMaskProps
-  ) {
+  constructor(connection: NESTConnection, maskProps?: INESTConnectionMaskProps) {
     super({
       config: { name: "NESTConnectionMask", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },
@@ -227,11 +224,9 @@ export class NESTConnectionMask extends BaseObj {
     } else {
       this._masktype = value;
       this._specs = {};
-      this.config?.localStorage.data[value].specs.forEach(
-        (spec: { id: string; value: any }) => {
-          this._specs[spec.id] = spec.value;
-        }
-      );
+      this.config?.localStorage.data[value].specs.forEach((spec: { id: string; value: any }) => {
+        this._specs[spec.id] = spec.value;
+      });
     }
     this.draw();
   }

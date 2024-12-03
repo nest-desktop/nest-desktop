@@ -13,11 +13,7 @@
         </v-col>
 
         <v-col cols="6">
-          <NESTMLModelSelect
-            :model="(model as NESTModel)"
-            class="pt-1"
-            @update:model-value="updateOnSelect"
-          />
+          <NESTMLModelSelect :model="(model as NESTModel)" class="pt-1" @update:model-value="updateOnSelect" />
         </v-col>
       </v-row>
 
@@ -37,16 +33,8 @@
       />
 
       <v-spacer />
-      <v-btn
-        text="create"
-        title="Create"
-        @click="closeDialog(true)"
-      />
-      <v-btn
-        text="cancel"
-        title="Cancel"
-        @click="closeDialog(false)"
-      />
+      <v-btn text="create" title="Create" @click="closeDialog(true)" />
+      <v-btn text="cancel" title="Cancel" @click="closeDialog(false)" />
     </v-card-actions>
   </v-card>
 </template>
@@ -60,11 +48,9 @@ const props = defineProps<{ modelValue: string }>();
 const model = ref(new NESTModel({ custom: true }));
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (response: boolean) =>
-  emit("closeDialog", response ? model.value : undefined);
+const closeDialog = (response: boolean) => emit("closeDialog", response ? model.value : undefined);
 
-const updateModelId = (modelLabel: string) =>
-  nextTick(() => model.value.replaceModelId(modelLabel));
+const updateModelId = (modelLabel: string) => nextTick(() => model.value.replaceModelId(modelLabel));
 
 const updateOnSelect = () => {
   const modelLabel = model.value.state.label;

@@ -1,13 +1,6 @@
 // connectionGraph.ts
 
-import {
-  DragBehavior,
-  Selection,
-  Transition,
-  drag,
-  select,
-  transition,
-} from "d3";
+import { DragBehavior, Selection, Transition, drag, select, transition } from "d3";
 
 import { TConnection, TNetworkGraph, TNode } from "@/types";
 
@@ -72,9 +65,7 @@ export class ConnectionGraph extends BaseObj {
       });
     }
 
-    connection.nodeGroups.forEach((nodeGroup: NodeGroup) =>
-      nodeGroup.view.updateCentroid()
-    );
+    connection.nodeGroups.forEach((nodeGroup: NodeGroup) => nodeGroup.view.updateCentroid());
 
     this._networkGraph.render();
   }
@@ -85,11 +76,7 @@ export class ConnectionGraph extends BaseObj {
    * @param idx index of the element
    * @param elements SVG elements
    */
-  init(
-    connection: TConnection,
-    idx: number,
-    elements: SVGGElement[] | ArrayLike<SVGGElement>
-  ): void {
+  init(connection: TConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
     const elem: Selection<any, any, any, any> = select(elements[idx]);
 
     elem.selectAll("*").remove();
@@ -122,7 +109,7 @@ export class ConnectionGraph extends BaseObj {
         if (c.network.connections.state.selectedNode && this.state.dragLine) {
           this._networkGraph.workspace.dragline.drawPath(
             c.network.connections.state.selectedNode.view.position,
-            c.view.markerEndPosition
+            c.view.markerEndPosition,
           );
         }
         this._networkGraph.update();
@@ -136,10 +123,7 @@ export class ConnectionGraph extends BaseObj {
         const workspace = this._networkGraph.workspace;
         connection.sourceNode.view.focus();
 
-        if (
-          network.connections.state.selectedNode &&
-          workspace.state.dragLine
-        ) {
+        if (network.connections.state.selectedNode && workspace.state.dragLine) {
           // Set cursor position of the focused connection.
           workspace.updateCursorPosition(connection.view.centerPosition);
 
@@ -152,8 +136,7 @@ export class ConnectionGraph extends BaseObj {
 
           // Update record colors of the weight recorder.
           if (network.connections.state.selectedNode.isNode) {
-            const selectedNode = network.connections.state
-              .selectedNode as TNode;
+            const selectedNode = network.connections.state.selectedNode as TNode;
             selectedNode.updateRecordsColor();
           }
         } else {
@@ -176,22 +159,15 @@ export class ConnectionGraph extends BaseObj {
   render(): void {
     this.logger.trace("render");
 
-    select("g#connections").style("pointer-events", () =>
-      this._networkGraph.workspace.state.dragLine ? "none" : ""
-    );
+    select("g#connections").style("pointer-events", () => (this._networkGraph.workspace.state.dragLine ? "none" : ""));
     const selector = select("g#connections").selectAll("g.connection");
 
-    const duration: number = this._networkGraph.workspace.state.dragging
-      ? 0
-      : 250;
+    const duration: number = this._networkGraph.workspace.state.dragging ? 0 : 250;
     const t: Transition<any, any, any, any> = transition().duration(duration);
 
     const connections = select("g#connections").selectAll("g.connection");
     connections
-      .style(
-        "color",
-        (c: TConnection | any) => "var(--colorNode" + c.source.idx + ")"
-      )
+      .style("color", (c: TConnection | any) => "var(--colorNode" + c.source.idx + ")")
       .transition(t)
       .style("opacity", 1);
 
@@ -209,23 +185,17 @@ export class ConnectionGraph extends BaseObj {
           drawPathNode(
             connection.source.view.position,
             connection.target.view.position,
-            connection.view.connectionGraphOptions
-          )
+            connection.view.connectionGraphOptions,
+          ),
         );
 
       elem
         .select("path.color")
         .style("stroke", "currentColor")
-        .style(
-          "stroke-width",
-          this.strokeWidth * (connection.state.isFocused ? 1.2 : 1)
-        )
+        .style("stroke-width", this.strokeWidth * (connection.state.isFocused ? 1.2 : 1))
         .style("opacity", connection.view.opacity ? 1 : 0.3)
         .attr("marker-end", `url(#syn-${connection.idx})`)
-        .style(
-          "stroke-dasharray",
-          connection.view.probabilistic() ? "7.85" : ""
-        );
+        .style("stroke-dasharray", connection.view.probabilistic() ? "7.85" : "");
 
       elem.transition(t).delay(duration).style("opacity", 1);
 
@@ -255,20 +225,14 @@ export class ConnectionGraph extends BaseObj {
   update(): void {
     if (!this._networkGraph.selector) return;
 
-    const connections: Selection<any, any, any, any> =
-      this._networkGraph.selector
-        .select("g#connections")
-        .selectAll("g.connection")
-        .data(
-          this.networkGraph.network.connections.all,
-          (c: TConnection | any) => c.uuid
-        );
+    const connections: Selection<any, any, any, any> = this._networkGraph.selector
+      .select("g#connections")
+      .selectAll("g.connection")
+      .data(this.networkGraph.network.connections.all, (c: TConnection | any) => c.uuid);
 
     const dragging: DragBehavior<any, unknown, unknown> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, c: TConnection | unknown) =>
-        this.drag(e, c as TConnection)
-      )
+      .on("drag", (e: MouseEvent, c: TConnection | unknown) => this.drag(e, c as TConnection))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     connections

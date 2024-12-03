@@ -38,7 +38,7 @@ export class BaseModelDB extends DatabaseService {
           this.create(modelProps as IDoc).then(() => {
             resolve(modelProps);
           });
-        })
+        }),
     );
     return Promise.all(models);
   }

@@ -56,15 +56,11 @@ export class Activity extends BaseObj {
 
   get currentTime(): number {
     const simulationState = this.recorder.network.project.simulation.state;
-    return simulationState.timeInfo.current > 0
-      ? simulationState.timeInfo.current
-      : simulationState.biologicalTime;
+    return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.nodeItems.map(
-      (node: TNode) => node.model.elementType
-    );
+    return this.recorder.nodes.nodeItems.map((node: TNode) => node.model.elementType);
   }
 
   get endTime(): number {
@@ -90,20 +86,14 @@ export class Activity extends BaseObj {
    * Check if activity contains analog signal data from input devices.
    */
   get hasInputAnalogData(): boolean {
-    return (
-      this.recorder.model?.isAnalogRecorder &&
-      this.elementTypes.includes("stimulator")
-    );
+    return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("stimulator");
   }
 
   /**
    * Check if activity contains analog signal data from neurons.
    */
   get hasNeuronAnalogData(): boolean {
-    return (
-      this.recorder.model?.isAnalogRecorder &&
-      this.elementTypes.includes("neuron")
-    );
+    return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("neuron");
   }
 
   get idx(): number {
@@ -115,9 +105,7 @@ export class Activity extends BaseObj {
   }
 
   get lastTime(): number {
-    return this._events.times && this._events.times.length > 0
-      ? this.events.times[this.events.times.length - 1]
-      : 0;
+    return this._events.times && this._events.times.length > 0 ? this.events.times[this.events.times.length - 1] : 0;
   }
 
   get nEvents(): number {
@@ -207,9 +195,7 @@ export class Activity extends BaseObj {
     });
     let csv = eventKeys.join(",") + "\n";
     csv += this._events.times
-      .map((_: number, idx: number) =>
-        eventKeys.map((key) => this._events[key][idx]).join(",")
-      )
+      .map((_: number, idx: number) => eventKeys.map((key) => this._events[key][idx]).join(","))
       .join("\n");
     download(csv, "events", "csv");
   }
@@ -241,13 +227,13 @@ export class Activity extends BaseObj {
   /**
    * Call after init call.
    */
-  postInit(): void {};
+  postInit(): void {}
 
   /**
    * Call after update call.
    * @param _activityProps activity props
    */
-  postUpdate(_activityProps: IActivityProps): void {};
+  postUpdate(_activityProps: IActivityProps): void {}
 
   /**
    * Reset activity.

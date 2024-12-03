@@ -23,9 +23,9 @@ export interface IModelProps extends IDoc {
 }
 
 export interface IModelStateProps {
-  id: string,
-  label: string,
-  unit?: string,
+  id: string;
+  label: string;
+  unit?: string;
 }
 
 interface IBaseModelState {
@@ -283,9 +283,7 @@ export class BaseModel extends BaseObj {
       elementType: this._elementType,
       id: this._id,
       label: this.state.label,
-      params: Object.values(this._params).map((param: ModelParameter) =>
-        param.toJSON()
-      ),
+      params: Object.values(this._params).map((param: ModelParameter) => param.toJSON()),
       version: process.env.APP_VERSION,
     };
 
@@ -295,9 +293,7 @@ export class BaseModel extends BaseObj {
 
     // Add model states if provided.
     if (this.states.length > 0) {
-      modelProps.states = this.states.map(
-        (state: IModelStateProps | string) => state
-      );
+      modelProps.states = this.states.map((state: IModelStateProps | string) => state);
     }
 
     return modelProps;
@@ -357,14 +353,10 @@ export class BaseModel extends BaseObj {
    * @param statesProps list of model state props or string
    */
   updateStates(statesProps: (IModelStateProps | string)[]): void {
-    this._states = statesProps.map(
-      (stateProps: IModelStateProps | string) =>
-        stateProps instanceof Object
-          ? stateProps
-          : this.config?.localStorage.states.find(
-              (state: IModelStateProps) =>
-                state.id === stateProps
-            )
+    this._states = statesProps.map((stateProps: IModelStateProps | string) =>
+      stateProps instanceof Object
+        ? stateProps
+        : this.config?.localStorage.states.find((state: IModelStateProps) => state.id === stateProps),
     );
   }
 }

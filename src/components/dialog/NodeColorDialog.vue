@@ -7,23 +7,11 @@
       @update:model-value="nodeColorChange()"
     />
 
-    <v-select
-      v-model="state.colorScheme"
-      :items="colorSchemes"
-      class="mx-2"
-      density="compact"
-      hide-details
-    />
+    <v-select v-model="state.colorScheme" :items="colorSchemes" class="mx-2" density="compact" hide-details />
 
     <v-card-actions>
-      <v-btn
-        text="reset"
-        @click="resetColor()"
-      />
-      <v-btn
-        text="close"
-        @click="closeDialog()"
-      />
+      <v-btn text="reset" @click="resetColor()" />
+      <v-btn text="close" @click="closeDialog()" />
     </v-card-actions>
   </v-card>
 </template>

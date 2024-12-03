@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    :subtitle="model.id"
-    title="Explorer"
-  >
+  <v-card :subtitle="model.id" title="Explorer">
     <v-card-text>Text</v-card-text>
 
     <v-card-actions>

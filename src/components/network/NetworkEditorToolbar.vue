@@ -8,27 +8,15 @@
     color="background"
     density="compact"
   >
-    <div
-      v-if="graph"
-      style="position: absolute"
-    >
+    <div v-if="graph" style="position: absolute">
       <div style="width: 320px">
-        <ContextMenu
-          v-model="graph.state.contextMenu.modelValue"
-          :target="graph.state.contextMenu.target"
-        >
-          <slot
-            name="ContextMenuList"
-            :graph
-          >
+        <ContextMenu v-model="graph.state.contextMenu.modelValue" :target="graph.state.contextMenu.target">
+          <slot name="ContextMenuList" :graph>
             <ConnectionMenuList
               v-if="graph.state.contextMenu.connection"
               :connection="(graph.state.contextMenu.connection as TConnection)"
             />
-            <NodeMenuList
-              v-if="graph.state.contextMenu.node"
-              :node="(graph.state.contextMenu.node as TNode)"
-            />
+            <NodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as TNode)" />
             <NodeGroupMenuList
               v-if="graph.state.contextMenu.nodeGroup"
               :node-group="(graph.state.contextMenu.nodeGroup as NodeGroup)"
@@ -41,10 +29,7 @@
           :target="graph.workspace.nodeAddPanel.state.target"
         >
           <template #activator="{ props }">
-            <slot
-              name="activator"
-              v-bind="props"
-            />
+            <slot name="activator" v-bind="props" />
           </template>
 
           <v-list>
@@ -53,8 +38,7 @@
               {{ graph.workspace.nodeAddPanel.state.elementType }} model
             </v-list-subheader>
             <v-list-item
-              v-for="(item, index) in graph.workspace.nodeAddPanel.state
-                .menuItems"
+              v-for="(item, index) in graph.workspace.nodeAddPanel.state.menuItems"
               :key="index"
               @click="() => item.onClick()"
             >
@@ -104,20 +88,12 @@
         size="x-small"
         @click.stop="node.unselect()"
       >
-        <NodeAvatar
-          :node="(node as TNode)"
-          :size="32"
-        />
+        <NodeAvatar :node="(node as TNode)" :size="32" />
       </v-btn>
 
       <v-spacer />
 
-      <v-chip
-        v-if="graph && appStore.state.devMode"
-        size="small"
-        variant="text"
-        @click="graph.updateHash()"
-      >
+      <v-chip v-if="graph && appStore.state.devMode" size="small" variant="text" @click="graph.updateHash()">
         {{ graph.hash }}
       </v-chip>
 
@@ -154,9 +130,7 @@
 
       <v-btn
         :class="{ active: graph?.workspace.state.showGrid }"
-        :icon="
-          graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'
-        "
+        :icon="graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'"
         class="icon"
         size="x-small"
         title="Show background grid"

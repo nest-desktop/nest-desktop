@@ -51,15 +51,11 @@ export class NESTNodeParameter extends NodeParameter {
       value += specs[1].value !== 0 ? ` + ${specs[1].value}` : "";
     } else if (this.type.id.startsWith("spatial")) {
       // Spatial distribution.
-      const specs: string = this.specs
-        .map((spec: any) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: any) => spec.value).join(", ");
       value = `nest.${this.type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
-      const specs: string = this.specs
-        .map((spec: any) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: any) => spec.value).join(", ");
       value = `nest.${this.type.id}(${specs})`;
     }
     return value;

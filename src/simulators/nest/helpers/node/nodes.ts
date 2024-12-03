@@ -20,9 +20,7 @@ export class NESTNodes extends BaseNodes {
    * Check if the network has some nodes with compartments
    */
   get hasSomeNodeCompartments(): boolean {
-    return this.nodeItems.some(
-      (node: NESTNode) => node.compartments.length > 0
-    );
+    return this.nodeItems.some((node: NESTNode) => node.compartments.length > 0);
   }
 
   /**
@@ -40,8 +38,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   get isWeightRecorderSelected(): boolean {
-    const selectedNode = this.network.connections.state
-      .selectedNode as NESTNode;
+    const selectedNode = this.network.connections.state.selectedNode as NESTNode;
     return selectedNode ? selectedNode.model.isWeightRecorder : false;
   }
 
@@ -50,9 +47,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get neurons(): NESTNode[] {
-    return this.nodeItems.filter(
-      (node: NESTNode) => node.model.isNeuron
-    ) as NESTNode[];
+    return this.nodeItems.filter((node: NESTNode) => node.model.isNeuron) as NESTNode[];
   }
 
   override get nodes(): (NodeGroup | NESTNode)[] {
@@ -60,15 +55,11 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get nodeItems(): NESTNode[] {
-    return this.nodes.filter(
-      (node: NodeGroup | NESTNode) => node.isNode
-    ) as NESTNode[];
+    return this.nodes.filter((node: NodeGroup | NESTNode) => node.isNode) as NESTNode[];
   }
 
   override get recorders(): NESTNode[] {
-    return this.nodeItems.filter(
-      (node: NESTNode) => node.model.isRecorder
-    ) as NESTNode[];
+    return this.nodeItems.filter((node: NESTNode) => node.model.isRecorder) as NESTNode[];
   }
 
   /**
@@ -79,18 +70,14 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get stimulators(): NESTNode[] {
-    return this.nodeItems.filter(
-      (node: NESTNode) => node.model.isStimulator
-    ) as NESTNode[];
+    return this.nodeItems.filter((node: NESTNode) => node.model.isStimulator) as NESTNode[];
   }
 
   /**
    * Get nodes with weight recorders.
    */
   get weightRecorders(): NESTNode[] {
-    return this.nodeItems.filter(
-      (node: NESTNode) => node.model.isWeightRecorder
-    );
+    return this.nodeItems.filter((node: NESTNode) => node.model.isWeightRecorder);
   }
 
   /**
@@ -111,8 +98,7 @@ export class NESTNodes extends BaseNodes {
       recorder.updateRecordsColor();
     });
 
-    const activityGraph = this.network.project
-      .activityGraph as NESTActivityGraph;
+    const activityGraph = this.network.project.activityGraph as NESTActivityGraph;
 
     if (activityGraph.activityChartGraph) {
       activityGraph.activityChartGraph.updateRecordsColor();

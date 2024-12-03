@@ -57,11 +57,7 @@ export const nest: ISimulatorProps = {
 
     const modelStore = useNESTModelStore();
     if (modelStore.state.recentAddedModels.recorder.length === 0) {
-      modelStore.state.recentAddedModels.recorder = [
-        "multimeter",
-        "spike_recorder",
-        "voltmeter",
-      ];
+      modelStore.state.recentAddedModels.recorder = ["multimeter", "spike_recorder", "voltmeter"];
     }
     const projectStore = useNESTProjectStore();
 

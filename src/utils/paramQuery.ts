@@ -5,10 +5,7 @@ import { RouteLocationNormalizedLoaded } from "vue-router";
 /**
  * Get parameter from URL.
  */
-export const getParamFromURL = (
-  route: RouteLocationNormalizedLoaded,
-  paramKey: string
-) => {
+export const getParamFromURL = (route: RouteLocationNormalizedLoaded, paramKey: string) => {
   let param: string | null;
   if (route.query[paramKey]) {
     param = route.query[paramKey] as string;

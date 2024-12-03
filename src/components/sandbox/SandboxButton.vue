@@ -2,11 +2,7 @@
   <v-card class="playground-button">
     <v-card-title>Button</v-card-title>
     <v-card-text>
-      <v-row
-        v-for="(buttonGrp, index) in buttons"
-        :key="index"
-        class="my-3"
-      >
+      <v-row v-for="(buttonGrp, index) in buttons" :key="index" class="my-3">
         <v-btn
           v-for="(button, btnIdx) in buttonGrp"
           :key="btnIdx"
@@ -35,14 +31,7 @@ const state = reactive<{
   variant: "elevated",
 });
 
-type variantTypes =
-  | "elevated"
-  | "flat"
-  | "outlined"
-  | "plain"
-  | "text"
-  | "tonal"
-  | undefined;
+type variantTypes = "elevated" | "flat" | "outlined" | "plain" | "text" | "tonal" | undefined;
 
 const buttons: Record<string, string>[][] = [
   [

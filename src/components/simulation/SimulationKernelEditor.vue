@@ -1,16 +1,8 @@
 <template>
   <div class="simulationKernelEditor">
-    <v-toolbar
-      color="transparent"
-      density="compact"
-      title="Simulation kernel editor"
-    />
+    <v-toolbar color="transparent" density="compact" title="Simulation kernel editor" />
 
-    <Card
-      :color="props.color"
-      class="ma-1"
-      title="Simulation"
-    >
+    <Card :color="props.color" class="ma-1" title="Simulation">
       <v-card-text class="py-0">
         <ValueSlider
           v-bind="options.simulationTimeSettings"
@@ -34,7 +26,7 @@ const props = defineProps<{
   color?: string;
   simulation: TSimulation;
 }>();
-const simulation = computed(() => props.simulation)
+const simulation = computed(() => props.simulation);
 
 const options = {
   simulationTimeSettings: {
@@ -47,8 +39,7 @@ const options = {
     value: 1000,
     rules: [
       (value: number) =>
-        value < 2000 ||
-        "Large values generate many data points and can put quite a load on your browser.",
+        value < 2000 || "Large values generate many data points and can put quite a load on your browser.",
     ],
   },
 };

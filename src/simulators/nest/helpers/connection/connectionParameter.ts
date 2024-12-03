@@ -13,10 +13,7 @@ const PyNNParamIds: Record<string, string> = {
 };
 
 export class NESTConnectionParameter extends ConnectionParameter {
-  constructor(
-    connection: NESTConnection,
-    paramProps: IParamProps
-  ) {
+  constructor(connection: NESTConnection, paramProps: IParamProps) {
     super(connection, paramProps);
   }
 
@@ -34,9 +31,7 @@ export class NESTConnectionParameter extends ConnectionParameter {
 
   override get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;
-    return !this.isSpatial
-      ? types.filter((type: IParamType) => !type.id.startsWith("spatial"))
-      : types;
+    return !this.isSpatial ? types.filter((type: IParamType) => !type.id.startsWith("spatial")) : types;
   }
 
   PyNNParamId(): string {

@@ -33,8 +33,7 @@ const networkSvgNameToComponent: Record<string, any> = {
 };
 
 const network: IconSet = {
-  component: (props: IconProps) =>
-    h(networkSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(networkSvgNameToComponent[props.icon as string]),
 };
 
 export { network };

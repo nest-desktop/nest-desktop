@@ -5,10 +5,7 @@ import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
 
 export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IActivityChartPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "neuronAnalogSignalPlot";

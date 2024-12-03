@@ -34,10 +34,7 @@ export class NESTNodeReceptor {
     this._id = nodeReceptorProps.id;
     this._idx = this._node.receptors.length;
 
-    if (
-      -1 < nodeReceptorProps.compIdx &&
-      nodeReceptorProps.compIdx < this._node.compartments.length
-    ) {
+    if (-1 < nodeReceptorProps.compIdx && nodeReceptorProps.compIdx < this._node.compartments.length) {
       this._compartment = this._node.compartments[nodeReceptorProps.compIdx];
     }
 
@@ -71,9 +68,7 @@ export class NESTNodeReceptor {
   }
 
   get label(): string {
-    return `${this.id} ` + this._compartment
-      ? `(${this._compartment?.label})`
-      : "";
+    return `${this.id} ` + this._compartment ? `(${this._compartment?.label})` : "";
   }
 
   get model(): NESTModelReceptor {
@@ -113,14 +108,10 @@ export class NESTNodeReceptor {
     if (this.model == undefined) {
       return [];
     }
-    const recordables = this.model.recordables.map(
-      (recordable: INodeRecordProps) => ({
-        ...recordable,
-      })
-    );
-    recordables.forEach(
-      (recordable: INodeRecordProps) => (recordable.id += this._idx)
-    );
+    const recordables = this.model.recordables.map((recordable: INodeRecordProps) => ({
+      ...recordable,
+    }));
+    recordables.forEach((recordable: INodeRecordProps) => (recordable.id += this._idx));
     return recordables;
   }
 
@@ -141,10 +132,7 @@ export class NESTNodeReceptor {
    * @param parammProps parameter props
    */
   addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new NESTNodeReceptorParameter(
-      this,
-      paramProps
-    );
+    this._params[paramProps.id] = new NESTNodeReceptorParameter(this, paramProps);
   }
 
   /**
@@ -170,9 +158,7 @@ export class NESTNodeReceptor {
    * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
-    return Object.keys(this._params).some(
-      (paramKey: string) => paramKey === paramId
-    );
+    return Object.keys(this._params).some((paramKey: string) => paramKey === paramId);
   }
 
   /**
@@ -197,23 +183,17 @@ export class NESTNodeReceptor {
     if (model && receptorProps.id) {
       const modelReceptor = model.receptors[receptorProps.id];
       if (modelReceptor) {
-        Object.values(modelReceptor.params).forEach(
-          (modelReceptorParam: NESTModelReceptorParameter) => {
-            if (receptorProps && receptorProps.params) {
-              const receptorParam = receptorProps.params.find(
-                (p: IParamProps) => p.id === modelReceptorParam.id
-              );
-              this.addParameter(receptorParam || modelReceptorParam.toJSON());
-            } else {
-              this.addParameter(modelReceptorParam.toJSON());
-            }
+        Object.values(modelReceptor.params).forEach((modelReceptorParam: NESTModelReceptorParameter) => {
+          if (receptorProps && receptorProps.params) {
+            const receptorParam = receptorProps.params.find((p: IParamProps) => p.id === modelReceptorParam.id);
+            this.addParameter(receptorParam || modelReceptorParam.toJSON());
+          } else {
+            this.addParameter(modelReceptorParam.toJSON());
           }
-        );
+        });
       }
     } else if (receptorProps.params) {
-      receptorProps.params.forEach((paramProps: IParamProps) =>
-        this.addParameter(paramProps)
-      );
+      receptorProps.params.forEach((paramProps: IParamProps) => this.addParameter(paramProps));
     }
   }
 
@@ -230,9 +210,7 @@ export class NESTNodeReceptor {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    this.paramsAll.forEach(
-      (param: NESTNodeReceptorParameter) => (param.visible = false)
-    );
+    this.paramsAll.forEach((param: NESTNodeReceptorParameter) => (param.visible = false));
   }
 
   /**
@@ -247,9 +225,7 @@ export class NESTNodeReceptor {
    * Sets all params to visible.
    */
   showAllParams(): void {
-    this.paramsAll.forEach(
-      (param: NESTNodeReceptorParameter) => (param.visible = true)
-    );
+    this.paramsAll.forEach((param: NESTNodeReceptorParameter) => (param.visible = true));
   }
 
   /**
@@ -260,9 +236,7 @@ export class NESTNodeReceptor {
     return {
       compIdx: this._compartment ? this._compartment.idx : -1,
       id: this.id,
-      params: this.filteredParams.map((paramProps: NESTNodeReceptorParameter) =>
-        paramProps.toJSON()
-      ),
+      params: this.filteredParams.map((paramProps: NESTNodeReceptorParameter) => paramProps.toJSON()),
     };
   }
 }

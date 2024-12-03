@@ -27,14 +27,8 @@
         <table class="py-2">
           <tbody>
             <tr>
-              <td
-                v-for="(header, idx) in headers"
-                :key="idx"
-                class="px-2"
-              >
-                <div v-if="header.key === 'id'">
-                  Total
-                </div>
+              <td v-for="(header, idx) in headers" :key="idx" class="px-2">
+                <div v-if="header.key === 'id'">Total</div>
                 <div v-else-if="header.key === 'count'">
                   <span>&#931;</span>
                   = {{ colSum(header.key) }}
@@ -146,7 +140,7 @@ onMounted(() => {
 
 watch(
   () => activity.value.hash,
-  () => update()
+  () => update(),
 );
 </script>
 

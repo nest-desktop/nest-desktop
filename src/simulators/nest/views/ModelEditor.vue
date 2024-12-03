@@ -1,19 +1,9 @@
 <template>
-  <v-card
-    v-if="model"
-    flat
-    title="Model editor"
-  >
+  <v-card v-if="model" flat title="Model editor">
     <v-card-text>
       <v-row>
         <v-col cols="5">
-          <v-text-field
-            v-model="state.modelId"
-            density="compact"
-            disabled
-            hide-details
-            label="model id"
-          />
+          <v-text-field v-model="state.modelId" density="compact" disabled hide-details label="model id" />
         </v-col>
 
         <v-col cols="5">
@@ -27,12 +17,7 @@
         </v-col>
 
         <v-col cols="2">
-          <v-btn
-            block
-            prepend-icon="mdi-content-save-outline"
-            text="save"
-            @click="saveModel()"
-          />
+          <v-btn block prepend-icon="mdi-content-save-outline" text="save" @click="saveModel()" />
         </v-col>
 
         <!-- <v-col cols="4">
@@ -118,6 +103,6 @@ watch(
   () => modelStore.state.modelId,
   () => {
     state.modelId = modelStore.state.modelId;
-  }
+  },
 );
 </script>

@@ -6,5 +6,4 @@ export class NorseModelDB extends BaseModelDB {
   constructor() {
     super("NORSE_MODEL_STORE");
   }
-
 }

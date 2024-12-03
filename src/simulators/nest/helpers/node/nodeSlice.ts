@@ -45,9 +45,7 @@ export class NESTNodeSlice extends BaseObj {
       params.push(step);
     }
 
-    const indices = params.map((param: NodeParameter) =>
-      param.disabled ? null : param.value
-    );
+    const indices = params.map((param: NodeParameter) => (param.disabled ? null : param.value));
     return `[${indices.join(":")}]`;
   }
 
@@ -83,7 +81,7 @@ export class NESTNodeSlice extends BaseObj {
     this.config?.localStorage.params.forEach((param: IParamProps) => {
       if (paramsProps.length > 0) {
         const paramProps: IParamProps | undefined = paramsProps.find(
-          (paramProps: IParamProps) => paramProps.id === param.id
+          (paramProps: IParamProps) => paramProps.id === param.id,
         );
         if (paramProps) {
           param.value = paramProps.value;

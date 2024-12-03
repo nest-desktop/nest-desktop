@@ -9,11 +9,7 @@
     v-bind="props.options"
     v-model="(modelValue as string | number)"
   />
-  <ValueSlider
-    v-else
-    v-bind="props.options"
-    v-model="(modelValue as number)"
-  />
+  <ValueSlider v-else v-bind="props.options" v-model="(modelValue as number)" />
 </template>
 
 <script lang="ts" setup>
@@ -26,7 +22,7 @@ import ValueSlider from "./ValueSlider.vue";
 type TValue = number | string | number[];
 
 interface IOptions {
-  component?: "rangeSlider" | "tickSlider" |  "valueSlider" | string;
+  component?: "rangeSlider" | "tickSlider" | "valueSlider" | string;
   color?: string;
   id?: string;
   inputLabel?: string[];
@@ -34,12 +30,12 @@ interface IOptions {
   max?: number;
   min?: number;
   step?: number;
-  ticks?: (number| string)[];
+  ticks?: (number | string)[];
   unit?: string;
   value: TValue;
 }
 
-const props = defineProps<{modelValue: TValue, options: IOptions}>();
+const props = defineProps<{ modelValue: TValue; options: IOptions }>();
 const emit = defineEmits(["update:modelValue"]);
 
 const modelValue = computed({

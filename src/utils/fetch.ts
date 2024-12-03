@@ -25,8 +25,7 @@ export const load = async (path: string): Promise<string | any> => {
  * @param path string
  * @returns any
  */
-export const loadJSON = async (path: string): Promise<any> =>
-  fetch(path).then((res: Response) => res.json());
+export const loadJSON = async (path: string): Promise<any> => fetch(path).then((res: Response) => res.json());
 
 /**
  * Load text from file.
@@ -43,5 +42,4 @@ export const loadText = async (path: string): Promise<string> =>
  * @param path
  * @returns any
  */
-export const loadYAML = async (path: string): Promise<any> =>
-  loadText(path).then((text: string) => dumpYAML(text));
+export const loadYAML = async (path: string): Promise<any> => loadText(path).then((text: string) => dumpYAML(text));

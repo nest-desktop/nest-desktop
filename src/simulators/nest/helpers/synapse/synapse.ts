@@ -116,9 +116,7 @@ export class NESTSynapse extends BaseSynapse {
 
   get models(): NESTModel[] {
     const elementType: string = this.model.elementType;
-    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(
-      elementType
-    ) as NESTModel[];
+    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
 
     // const modelsCopied: NESTCopyModel[] =
     //   this.connection.network.modelsCopied.filterByElementType(elementType);
@@ -150,10 +148,7 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   get showReceptorType(): boolean {
-    return (
-      !this.connection.sourceNode.model.isRecorder &&
-      this.connection.targetNode.receptors.length > 0
-    );
+    return !this.connection.sourceNode.model.isRecorder && this.connection.targetNode.receptors.length > 0;
   }
 
   /**
@@ -181,18 +176,14 @@ export class NESTSynapse extends BaseSynapse {
     this._params = {};
     if (this.model && paramsProps) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = paramsProps?.find(
-          (param: any) => param.id === modelParam.id
-        );
+        const param = paramsProps?.find((param: any) => param.id === modelParam.id);
         this.addParameter(param || modelParam);
         if (param && param.visible !== false) {
           this._paramsVisible.push(modelParam.id);
         }
       });
     } else if (this.model) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) =>
-        this.addParameter(modelParam)
-      );
+      Object.values(this.model.params).forEach((modelParam: ModelParameter) => this.addParameter(modelParam));
     } else if (paramsProps) {
       paramsProps.forEach((param: any) => this.addParameter(param));
     }
@@ -220,9 +211,7 @@ export class NESTSynapse extends BaseSynapse {
     }
 
     if (this.filteredParams.length > 0) {
-      synapseProps.params = this.filteredParams.map(
-        (param: NESTSynapseParameter) => param.toJSON()
-      );
+      synapseProps.params = this.filteredParams.map((param: NESTSynapseParameter) => param.toJSON());
     }
 
     if (this._receptorIdx !== 0) {

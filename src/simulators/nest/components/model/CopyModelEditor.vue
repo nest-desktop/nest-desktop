@@ -1,21 +1,16 @@
 <template>
-  <Card
-    v-if="model.show"
-    class="ma-1"
-  >
+  <Card v-if="model.show" class="ma-1">
     <v-expansion-panels variant="accordion">
       <v-expansion-panel>
         <v-expansion-panel-title class="ma-0 pa-0 pr-3 pl-1 pt-1">
-          <v-btn-group
-            class="py-1 pr-2"
-            style="width: 100%"
-            variant="text"
-          >
+          <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
             <v-avatar>
               <v-icon
-                :icon="state.elementType == 'synapse'
-                  ? 'mdi:mdi-checkbox-multiple-blank-circle-outline'
-                  : 'mdi:mdi-content-copy'"
+                :icon="
+                  state.elementType == 'synapse'
+                    ? 'mdi:mdi-checkbox-multiple-blank-circle-outline'
+                    : 'mdi:mdi-content-copy'
+                "
               />
             </v-avatar>
 
@@ -31,11 +26,8 @@
               item-value="id"
               @click.stop
             >
-              <template #item="{ props:itemProps }">
-                <v-list-item
-                  class="model-item"
-                  @click="select(itemProps)"
-                >
+              <template #item="{ props: itemProps }">
+                <v-list-item class="model-item" @click="select(itemProps)">
                   {{ itemProps.title }}
 
                   <template #append>
@@ -51,10 +43,7 @@
                 </v-list-item>
               </template>
 
-              <template
-                v-if="state.elementType"
-                #prepend-item
-              >
+              <template v-if="state.elementType" #prepend-item>
                 <v-list-item
                   @click="
                     () => {
@@ -72,11 +61,8 @@
               </template>
             </v-select>
 
-            <v-menu
-              v-model="state.menu"
-              :close-on-content-click="false"
-            >
-              <template #activator="{ props:btnProps }">
+            <v-menu v-model="state.menu" :close-on-content-click="false">
+              <template #activator="{ props: btnProps }">
                 <v-btn
                   class="menu-btn"
                   icon="mdi:mdi-order-bool-ascending-variant"
@@ -110,19 +96,10 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn
-                    text="all"
-                    @click.stop="() => model.showAllParams()"
-                  />
-                  <v-btn
-                    text="none"
-                    @click.stop="() => model.hideAllParams()"
-                  />
+                  <v-btn text="all" @click.stop="() => model.showAllParams()" />
+                  <v-btn text="none" @click.stop="() => model.hideAllParams()" />
                   <v-spacer />
-                  <v-btn
-                    text="close"
-                    @click.stop="state.menu = false"
-                  />
+                  <v-btn text="close" @click.stop="state.menu = false" />
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -136,18 +113,9 @@
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
-          <v-text-field
-            v-model="model.newModelId"
-            class="ma-1"
-            density="compact"
-            hide-details
-            label="New label"
-          />
+          <v-text-field v-model="model.newModelId" class="ma-1" density="compact" hide-details label="New label" />
 
-          <v-list
-            v-if="model.paramsVisible.length > 0"
-            class="py-0"
-          >
+          <v-list v-if="model.paramsVisible.length > 0" class="py-0">
             <ParamListItem
               v-for="(paramId, index) in model.paramsVisible"
               :key="index"
@@ -195,10 +163,7 @@ const elementTypes = [
 const select = (props: Record<string, unknown>, callback?: () => void) => {
   if (["neuron", "recorder", "stimulator"].includes(props.value as string)) {
     state.elementType = props.value as string;
-    state.items =
-      model.value.network.project.modelDBStore.getModelsByElementType(
-        state.elementType
-      ) as NESTModel[];
+    state.items = model.value.network.project.modelDBStore.getModelsByElementType(state.elementType) as NESTModel[];
   } else {
     model.value.existingModelId = props.value as string;
   }

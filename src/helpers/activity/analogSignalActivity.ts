@@ -26,9 +26,7 @@ export class AnalogSignalActivity extends Activity {
   getNodeRecord(groupId: string): NodeRecord | undefined {
     if (this.recorder.records.length === 0) return;
 
-    return this.recorder.records.find(
-      (record: NodeRecord) => record.groupId === groupId
-    );
+    return this.recorder.records.find((record: NodeRecord) => record.groupId === groupId);
   }
 
   /**

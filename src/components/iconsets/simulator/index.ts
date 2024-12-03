@@ -16,8 +16,7 @@ const simulatorSvgNameToComponent: any = {
 };
 
 const simulator: IconSet = {
-  component: (props: IconProps) =>
-    h(simulatorSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(simulatorSvgNameToComponent[props.icon as string]),
 };
 
 export { simulator };

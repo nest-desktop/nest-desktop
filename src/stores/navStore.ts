@@ -75,7 +75,7 @@ export const useNavStore: TNavStore = defineStore(
         storage: sessionStorage,
       },
     ],
-  }
+  },
 );
 
 export const closeNav = () => {

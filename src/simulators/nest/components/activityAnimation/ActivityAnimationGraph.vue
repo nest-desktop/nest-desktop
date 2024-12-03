@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="activityAnimationGraph"
-    class="activityAnimationGraph"
-  />
+  <div ref="activityAnimationGraph" class="activityAnimationGraph" />
 </template>
 
 <script lang="ts" setup>

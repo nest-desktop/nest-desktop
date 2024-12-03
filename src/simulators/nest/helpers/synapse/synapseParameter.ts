@@ -24,9 +24,7 @@ export class NESTSynapseParameter extends BaseSynapseParameter {
 
   override get types(): any[] {
     const types: any[] = this.config?.localStorage.types;
-    return !this.synapse.isSpatial
-      ? types.filter((type: any) => !type.id.startsWith("spatial"))
-      : types;
+    return !this.synapse.isSpatial ? types.filter((type: any) => !type.id.startsWith("spatial")) : types;
   }
 
   override get parent(): NESTSynapse {

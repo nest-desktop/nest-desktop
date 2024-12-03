@@ -14,11 +14,7 @@
     >
       <v-expansion-panel>
         <v-expansion-panel-title class="ma-0 pa-0 pr-3 pt-1">
-          <v-btn-group
-            class="py-1 pr-2"
-            style="width: 100%"
-            variant="text"
-          >
+          <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
             <v-btn
               icon
               class="mx-4 rounded-circle"
@@ -29,21 +25,12 @@
               <NodeAvatar :node />
             </v-btn>
 
-            <slot
-              name="nodeModelSelect"
-              :select-state="state"
-            >
-              <NodeModelSelect
-                :node
-                @open-menu="() => (state.menu = true)"
-              />
+            <slot name="nodeModelSelect" :select-state="state">
+              <NodeModelSelect :node @open-menu="() => (state.menu = true)" />
             </slot>
 
-            <v-menu
-              v-model="state.menu"
-              :close-on-content-click="false"
-            >
-              <template #activator="{ props:btnProps }">
+            <v-menu v-model="state.menu" :close-on-content-click="false">
+              <template #activator="{ props: btnProps }">
                 <v-btn
                   class="rounded-circle"
                   icon="mdi:mdi-order-bool-ascending-variant"
@@ -62,9 +49,7 @@
                     hide-details
                     label="Population size"
                   >
-                    <template #append>
-                      n: {{ node.size }}
-                    </template>
+                    <template #append> n: {{ node.size }} </template>
                   </v-checkbox>
 
                   <template v-if="node.modelParams">
@@ -87,19 +72,10 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn
-                    text="all"
-                    @click.stop="() => node.showAllParams()"
-                  />
-                  <v-btn
-                    text="none"
-                    @click.stop="() => node.hideAllParams()"
-                  />
+                  <v-btn text="all" @click.stop="() => node.showAllParams()" />
+                  <v-btn text="none" @click.stop="() => node.hideAllParams()" />
                   <v-spacer />
-                  <v-btn
-                    text="close"
-                    @click.stop="state.menu = false"
-                  />
+                  <v-btn text="close" @click.stop="state.menu = false" />
                 </v-card-actions>
               </v-card>
             </v-menu>
@@ -113,10 +89,7 @@
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
-          <v-list
-            v-if="node.view.state.showSize"
-            class="py-0"
-          >
+          <v-list v-if="node.view.state.showSize" class="py-0">
             <slot name="popItem">
               <v-list-item class="param pl-0 pr-1">
                 <ValueSlider
@@ -129,19 +102,13 @@
                 />
 
                 <template #append>
-                  <Menu
-                    :items="popItems"
-                    size="x-small"
-                  />
+                  <Menu :items="popItems" size="x-small" />
                 </template>
               </v-list-item>
             </slot>
           </v-list>
 
-          <v-list
-            v-if="node.model.isMultimeter"
-            class="py-0"
-          >
+          <v-list v-if="node.model.isMultimeter" class="py-0">
             <v-list-item>
               <NodeRecordSelect :node />
             </v-list-item>
@@ -191,7 +158,7 @@ const node = computed(() => props.node);
 
 const state = reactive<{
   elementType: string;
-  items: (TModel)[];
+  items: TModel[];
   menu: boolean;
 }>({
   elementType: "",

@@ -92,9 +92,7 @@ export class NESTNodeSpatial extends BaseObj {
     return nodeSpatialProps;
   }
 
-  updatePositionParams(
-    positionProps: IBasePositionsProps | IGridPositionsProps
-  ): void {
+  updatePositionParams(positionProps: IBasePositionsProps | IGridPositionsProps): void {
     this._positions?.update(positionProps);
   }
 

@@ -22,14 +22,10 @@ const _createNotification = (props: { htmlContent: string; level: Level }) => {
   createNotification(props);
 };
 
-export const notifyError = (htmlContent: string) =>
-  _createNotification({ htmlContent, level: "error" });
+export const notifyError = (htmlContent: string) => _createNotification({ htmlContent, level: "error" });
 
-export const notifyInfo = (htmlContent: string) =>
-  _createNotification({ htmlContent, level: "info" });
+export const notifyInfo = (htmlContent: string) => _createNotification({ htmlContent, level: "info" });
 
-export const notifySuccess = (htmlContent: string) =>
-  _createNotification({ htmlContent, level: "success" });
+export const notifySuccess = (htmlContent: string) => _createNotification({ htmlContent, level: "success" });
 
-export const notifyWarning = (htmlContent: string) =>
-  _createNotification({ htmlContent, level: "warning" });
+export const notifyWarning = (htmlContent: string) => _createNotification({ htmlContent, level: "warning" });

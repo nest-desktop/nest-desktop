@@ -7,10 +7,7 @@ import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelRecep
 import { NESTNodeReceptor } from "./nodeReceptor";
 
 export class NESTNodeReceptorParameter extends NodeParameter {
-  constructor(
-    nodeReceptor: NESTNodeReceptor,
-    paramProps: IParamProps
-  ) {
+  constructor(nodeReceptor: NESTNodeReceptor, paramProps: IParamProps) {
     super(nodeReceptor, paramProps);
   }
 
@@ -35,7 +32,7 @@ export class NESTNodeReceptorParameter extends NodeParameter {
       this.nodeReceptor.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
       this.nodeReceptor.paramsVisible = this.nodeReceptor.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
+        (paramId: string) => paramId !== this.id,
       );
     }
   }

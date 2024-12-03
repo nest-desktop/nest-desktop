@@ -87,7 +87,7 @@ watch(
   () => {
     modelRef.lower = props.modelValue[0] as number;
     modelRef.upper = props.modelValue[1] as number;
-  }
+  },
 );
 </script>
 

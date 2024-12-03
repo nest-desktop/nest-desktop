@@ -11,10 +11,7 @@ import { TProject } from "@/types";
 import { IBaseActivityGraphProps } from "../activity/activityGraph";
 import { BaseObj } from "../common/base";
 import { currentBackgroundColor, currentColor } from "../common/theme";
-import {
-  ActivityChartPanel,
-  IActivityChartPanelProps,
-} from "./activityChartPanel";
+import { ActivityChartPanel, IActivityChartPanelProps } from "./activityChartPanel";
 import { IActivityChartPanelModelData } from "./activityChartPanelModel";
 import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
@@ -154,7 +151,7 @@ export class ActivityChartGraph extends BaseObj {
                   props: { filename: `nest_desktop-${timestamp}-${filename}` },
                 },
               }).then((response: PlotlyBasic.DownloadImgopts | undefined) =>
-                response ? this.downloadImage(response) : null
+                response ? this.downloadImage(response) : null,
               );
             },
           },
@@ -194,9 +191,7 @@ export class ActivityChartGraph extends BaseObj {
 
   get currentTime(): number {
     const simulationState = this._project.simulation.state;
-    return simulationState.timeInfo.current > 0
-      ? simulationState.timeInfo.current
-      : simulationState.biologicalTime;
+    return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
   }
 
   get endTime(): number {
@@ -208,15 +203,11 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   get modelsAnalog(): IActivityChartPanelModelProps[] {
-    return this._models.filter(
-      (model: IActivityChartPanelModelProps) => model.activityType === "analog"
-    );
+    return this._models.filter((model: IActivityChartPanelModelProps) => model.activityType === "analog");
   }
 
   get modelsSpike(): IActivityChartPanelModelProps[] {
-    return this._models.filter(
-      (model: IActivityChartPanelModelProps) => model.activityType === "spike"
-    );
+    return this._models.filter((model: IActivityChartPanelModelProps) => model.activityType === "spike");
   }
 
   get panels(): ActivityChartPanel[] {
@@ -229,9 +220,7 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   get panelsVisible(): ActivityChartPanel[] {
-    return this._panels.filter(
-      (panel: ActivityChartPanel) => panel.state.visible
-    );
+    return this._panels.filter((panel: ActivityChartPanel) => panel.state.visible);
   }
 
   get plotData(): PlotlyBasic.Data[] {
@@ -257,7 +246,7 @@ export class ActivityChartGraph extends BaseObj {
   addPanel(
     panelProps: IActivityChartPanelProps = {
       model: { id: "spikeTimesRasterPlot" },
-    }
+    },
   ): void {
     this.logger.trace("add panel:", panelProps.model?.id);
 
@@ -272,9 +261,7 @@ export class ActivityChartGraph extends BaseObj {
     this.logger.trace("add panels");
 
     if (panelsProps != undefined && panelsProps.length > 0) {
-      panelsProps.forEach((panelProps: IActivityChartPanelProps) =>
-        this.addPanel(panelProps)
-      );
+      panelsProps.forEach((panelProps: IActivityChartPanelProps) => this.addPanel(panelProps));
     } else {
       if (this._project.activities.state.hasSomeAnalogRecorders) {
         this.addPanel({ model: { id: "analogSignalPlot" } });
@@ -336,16 +323,14 @@ export class ActivityChartGraph extends BaseObj {
    * @param panel
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach(
-      (data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
-        data.dataIdx = this._plotData.length;
-        data.panelIdx = panel.idx;
-        data.xaxis = "x" + panel.xAxis;
-        data.yaxis = "y" + panel.yAxis;
-        // data.yaxis = "y" + index;
-        this._plotData.push(data);
-      }
-    );
+    panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
+      data.dataIdx = this._plotData.length;
+      data.panelIdx = panel.idx;
+      data.xaxis = "x" + panel.xAxis;
+      data.yaxis = "y" + panel.yAxis;
+      // data.yaxis = "y" + index;
+      this._plotData.push(data);
+    });
   }
 
   /**
@@ -399,12 +384,7 @@ export class ActivityChartGraph extends BaseObj {
     this._state.ref = ref;
 
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.newPlot(
-      this._state.ref,
-      this._plotData,
-      this._plotLayout,
-      this._plotConfig
-    ).then(() => {
+    Plotly.newPlot(this._state.ref, this._plotData, this._plotLayout, this._plotConfig).then(() => {
       // this.init();
       this.initEvents();
     });
@@ -462,11 +442,7 @@ export class ActivityChartGraph extends BaseObj {
       const restyleRaster = this.restyleMarkerHeightSpikeTimesRasterPlot();
 
       // @ts-expect-error Cannot find name 'Plotly'.
-      Plotly.restyle(
-        this._state.ref,
-        restyleRaster.update,
-        restyleRaster.traceIndices
-      );
+      Plotly.restyle(this._state.ref, restyleRaster.update, restyleRaster.traceIndices);
     }
   }
 
@@ -480,25 +456,19 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return { update: {}, traceIndices: [] };
 
     const dataSpikeTimeRasterPlot = this._plotData.filter(
-      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) =>
-        d.modelId === "spikeTimesRasterPlot"
+      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.modelId === "spikeTimesRasterPlot",
     );
 
-    const markerSizes = dataSpikeTimeRasterPlot.map(
-      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
-        const model = this._panels[d.panelIdx]
-          .model as SpikeTimesRasterPlotModel;
-        return model.markerSize;
-      }
-    );
+    const markerSizes = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
+      const model = this._panels[d.panelIdx].model as SpikeTimesRasterPlotModel;
+      return model.markerSize;
+    });
 
     const update = {
       "marker.size": markerSizes,
     };
 
-    const traceIndices = dataSpikeTimeRasterPlot.map(
-      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.dataIdx
-    );
+    const traceIndices = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.dataIdx);
 
     return { update, traceIndices };
   }
@@ -549,9 +519,7 @@ export class ActivityChartGraph extends BaseObj {
    * Update the theme color of the chart graph.
    */
   updateThemeColor(): void {
-    this._panels.forEach((panel: ActivityChartPanel) =>
-      panel.model.updateBackgroundColor()
-    );
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateBackgroundColor());
 
     this._plotLayout.font.color = currentColor();
     this._plotLayout.paper_bgcolor = currentBackgroundColor();
@@ -567,15 +535,10 @@ export class ActivityChartGraph extends BaseObj {
       shape.yref = "y" + (panel.yAxis > 1 ? panel.yAxis : "");
     });
 
-    this._plotLayout.shapes = [
-      ...this._plotLayout.shapes,
-      ...panel.layout.shapes,
-    ];
+    this._plotLayout.shapes = [...this._plotLayout.shapes, ...panel.layout.shapes];
 
-    this._plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] =
-      panel.layout.yaxis;
-    this._plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] =
-      panel.layout.xaxis;
+    this._plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] = panel.layout.yaxis;
+    this._plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] = panel.layout.xaxis;
   }
 
   /**
@@ -602,9 +565,7 @@ export class ActivityChartGraph extends BaseObj {
    * @remarks It renders new updates in activity plots.
    */
   updateRecordsColor(): void {
-    this._panels.forEach((panel: ActivityChartPanel) =>
-      panel.model.updateRecordsColor()
-    );
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateRecordsColor());
     this.react();
   }
 
@@ -612,8 +573,6 @@ export class ActivityChartGraph extends BaseObj {
    * Update visible panel layout of the chart graph.
    */
   updateVisiblePanelsLayout(): void {
-    this.panelsVisible.forEach((panel: ActivityChartPanel) =>
-      panel.updateLayout()
-    );
+    this.panelsVisible.forEach((panel: ActivityChartPanel) => panel.updateLayout());
   }
 }

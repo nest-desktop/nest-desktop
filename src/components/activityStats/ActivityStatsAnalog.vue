@@ -26,9 +26,7 @@
         item-value="id"
         @update:model-value="selected()"
       >
-        <template
-          #chip="{ item }"
-        >
+        <template #chip="{ item }">
           {{ item.title }}
           <NodeRecordChip
             v-if="item.raw.groupId"
@@ -38,11 +36,7 @@
         </template>
 
         <template #item="{ item, props: itemProps }">
-          <v-list-item
-            v-bind="itemProps"
-            density="compact"
-            title=""
-          >
+          <v-list-item v-bind="itemProps" density="compact" title="">
             <v-row no-gutters>
               {{ item.title }}
               <v-spacer />
@@ -75,7 +69,7 @@
 
     <template #[`item.actions`]="{ index }">
       <v-menu transition="slide-y-transition">
-        <template #activator="{ props:iconProps }">
+        <template #activator="{ props: iconProps }">
           <v-icon
             :color="record.state.traceColors[index]"
             class="me-2"
@@ -108,14 +102,8 @@
                   @click="unselectAll()"
                 />
               </td>
-              <td
-                v-for="(header, idx) in headers"
-                :key="idx"
-                class="px-2"
-              >
-                <div v-if="header.key === 'id'">
-                  Total
-                </div>
+              <td v-for="(header, idx) in headers" :key="idx" class="px-2">
+                <div v-if="header.key === 'id'">Total</div>
                 <div v-else-if="['mean', 'std'].includes(header.key)">
                   <span>&#956;</span>
                   = {{ toFixed(colMean(header.key)) }}
@@ -194,8 +182,8 @@ const selected = () => {
 
 const unselectAll = () => {
   activity.value.state.selected = [];
-  activity.value.chartGraph.update()
-}
+  activity.value.chartGraph.update();
+};
 
 /**
  * Update stats of analog activity.
@@ -251,7 +239,7 @@ onMounted(() => update());
 
 watch(
   () => activity.value.hash,
-  () => update()
+  () => update(),
 );
 </script>
 

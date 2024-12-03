@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    class="playground-color-picker"
-    title="Color picker"
-  >
+  <v-card class="playground-color-picker" title="Color picker">
     <v-card-text>
       <v-select
         v-model="state.colorScheme"

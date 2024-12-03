@@ -10,10 +10,7 @@ import { ActivityChartPanelModelParameter } from "../activityChartPanelModelPara
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IActivityChartPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "spikeCountPlot";
@@ -81,12 +78,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    *
    * See https://stackoverflow.com/questions/36266895/simple-histogram-algorithm-in-javascript
    */
-  histogram(
-    data: number[],
-    min: number = -Infinity,
-    max: number = Infinity,
-    size: number = 1
-  ): number[] {
+  histogram(data: number[], min: number = -Infinity, max: number = Infinity, size: number = 1): number[] {
     for (const item of data) {
       if (item < min) min = item;
       else if (item > max) max = item;
@@ -121,9 +113,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const nodeSizeTotal = sum(
-      activity.recorder.nodes.nodeItems.map((node: TNode) => node.size)
-    );
+    const nodeSizeTotal = sum(activity.recorder.nodes.nodeItems.map((node: TNode) => node.size));
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
@@ -199,8 +189,6 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     this.panel.layout.xaxis.title = "Time [ms]";
     const ytitle = this.params.normalization.value as string;
     this.panel.layout.yaxis.title =
-      ytitle == "off"
-        ? "Spike count"
-        : ytitle.slice(0, 1).toUpperCase() + ytitle.slice(1);
+      ytitle == "off" ? "Spike count" : ytitle.slice(0, 1).toUpperCase() + ytitle.slice(1);
   }
 }

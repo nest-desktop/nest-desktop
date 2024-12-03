@@ -15,10 +15,7 @@ interface IDataPoints {
 }
 
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IActivityChartPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "analogSignalPlot";
@@ -74,8 +71,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record node record object
    */
   addAverageLine(record: NodeRecord): void {
-    if (!record.hasEvent || record.activity.state.selected?.length === 0)
-      return;
+    if (!record.hasEvent || record.activity.state.selected?.length === 0) return;
 
     const nodeIds: number[] = record.activity.state.selected; //record.activity.nodeIds.slice(
     // ...this.params[0].value
@@ -135,16 +131,11 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record node record object
    */
   addMultipleLines(record: NodeRecord): void {
-    if (!record.hasEvent || record.activity.state.selected?.length === 0)
-      return;
+    if (!record.hasEvent || record.activity.state.selected?.length === 0) return;
 
     const nodeIds: number[] = record.activity.nodeIds;
     const selected: number[] = record.activity.state.selected;
-    const data: IDataPoints[] = this.createGraphDataPoints(
-      nodeIds,
-      record,
-      selected
-    );
+    const data: IDataPoints[] = this.createGraphDataPoints(nodeIds, record, selected);
 
     const color = record.color;
 
@@ -241,11 +232,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * @param record Array of NodeRecords (containing the events)
    * @returns Array containing x, y and name value for every data point
    */
-  createGraphDataPoints(
-    nodeIds: number[],
-    record: NodeRecord,
-    selected: number[] = []
-  ): IDataPoints[] {
+  createGraphDataPoints(nodeIds: number[], record: NodeRecord, selected: number[] = []): IDataPoints[] {
     if (!nodeIds || nodeIds.length === 0) return [];
     const data: IDataPoints[] = nodeIds.map(() => ({ name: "", x: [], y: [] }));
 
@@ -257,11 +244,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     }
 
     senders.forEach((sender: number, idx: number) => {
-      if (
-        (selected.length > 0 && !selected.includes(sender)) ||
-        !nodeIds.includes(sender)
-      )
-        return;
+      if ((selected.length > 0 && !selected.includes(sender)) || !nodeIds.includes(sender)) return;
 
       const senderIdx: number = nodeIds.indexOf(sender);
       data[senderIdx].x.push(record.times[idx]);
@@ -287,10 +270,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.recordsVisible.forEach((record: NodeRecord) => {
-      if (
-        ["V_m", "v"].includes(record.id) &&
-        this.params.spikeThreshold.value
-      ) {
+      if (["V_m", "v"].includes(record.id) && this.params.spikeThreshold.value) {
         // Add spike threshold for membrane potential.
         this.addSpikeThresholdLine(record);
       }
@@ -329,23 +309,19 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     // Check if the activity state contains the active node.
     if (record.activity.state.activeNodeId == null) return;
 
-    const nodeIds = this.recordsVisible
-      .map((record: NodeRecord) => record.activity.nodeIds)
-      .flat();
+    const nodeIds = this.recordsVisible.map((record: NodeRecord) => record.activity.nodeIds).flat();
 
     // Check if the panel displays activity of the active node.
     if (!nodeIds.includes(record.activity.state.activeNodeId)) return;
 
-    const recordIds = this.recordsVisible.map(
-      (record: NodeRecord) => record.id
-    );
+    const recordIds = this.recordsVisible.map((record: NodeRecord) => record.id);
 
     // Check if the record is displayed in the panel.
     if (!recordIds.includes(record.id)) return;
 
     const data: { x: number[]; y: number[] } = this.createGraphDataPoints(
       [record.activity.state.activeNodeId],
-      record
+      record,
     )[0];
 
     plotData.x = data.x;

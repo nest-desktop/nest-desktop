@@ -9,10 +9,7 @@ import { notifyError } from "@/helpers/common/notification";
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
 import { NESTSimulationCode } from "./simulationCode";
-import {
-  INESTSimulationKernelProps,
-  NESTSimulationKernel,
-} from "./simulationKernel";
+import { INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 
 export interface INESTSimulationProps {
   code?: ISimulationCodeProps;
@@ -25,10 +22,7 @@ export class NESTSimulation extends BaseSimulation {
   private _kernel: NESTSimulationKernel; // simulation kernel
   private _modules: string[];
 
-  constructor(
-    project: NESTProject,
-    simulationProps: INESTSimulationProps = {}
-  ) {
+  constructor(project: NESTProject, simulationProps: INESTSimulationProps = {}) {
     super(project, simulationProps);
     this._modules = simulationProps.modules || [];
     this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
@@ -84,9 +78,7 @@ export class NESTSimulation extends BaseSimulation {
   override async run(): Promise<AxiosResponse<any, { data: any }> | void> {
     this.logger.trace("run simulation");
 
-    return this.code.runSimulationInsite
-      ? this.runWithInsite()
-      : this.runSimulation();
+    return this.code.runSimulationInsite ? this.runWithInsite() : this.runSimulation();
   }
 
   /**
@@ -107,7 +99,7 @@ export class NESTSimulation extends BaseSimulation {
             };
             status: number;
           }
-        >
+        >,
       ) => {
         if (response.data.data == null) {
           return response;
@@ -122,13 +114,12 @@ export class NESTSimulation extends BaseSimulation {
             data = response.data.data;
 
             // Get biological time
-            this.state.biologicalTime =
-              data.biological_time != null ? data.biological_time : this.time;
+            this.state.biologicalTime = data.biological_time != null ? data.biological_time : this.time;
 
             break;
         }
         return response;
-      }
+      },
     );
   }
 
@@ -136,10 +127,7 @@ export class NESTSimulation extends BaseSimulation {
    * Run simulation with recording backend Insite.
    * @remarks During the simulation it gets and updates activities.
    */
-  private async runWithInsite(): Promise<AxiosResponse<
-    any,
-    { data: any }
-  > | void> {
+  private async runWithInsite(): Promise<AxiosResponse<any, { data: any }> | void> {
     this.logger.trace("run simulation with Insite");
 
     this.state.timeInfo = {

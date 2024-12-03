@@ -1,14 +1,7 @@
 <template>
-  <v-layout
-    id="networkGraphLayout"
-    class="networkGraphLayout"
-    full-height
-  >
+  <v-layout id="networkGraphLayout" class="networkGraphLayout" full-height>
     <NetworkEditorToolbar />
-    <NetworkGraph
-      :key="network.project.id"
-      :network
-    />
+    <NetworkGraph :key="network.project.id" :network />
   </v-layout>
 </template>
 
@@ -23,7 +16,5 @@ import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { usePyNNProjectStore } from "../stores/project/projectStore";
 const projectStore: TProjectStore = usePyNNProjectStore();
 
-const network = computed(
-  () => projectStore.state.project.network as BaseNetwork
-);
+const network = computed(() => projectStore.state.project.network as BaseNetwork);
 </script>

@@ -1,10 +1,6 @@
 <template :key="theme.name.value">
   <v-app>
-    <v-system-bar
-      class="d-print-none"
-      color="systembar"
-      flat
-    >
+    <v-system-bar class="d-print-none" color="systembar" flat>
       <AppBar />
     </v-system-bar>
 
@@ -12,30 +8,15 @@
 
     <router-view />
 
-    <v-overlay
-      :model-value="appStore.state.loading"
-      class="align-center justify-center"
-      scroll-strategy="block"
-    >
+    <v-overlay :model-value="appStore.state.loading" class="align-center justify-center" scroll-strategy="block">
       <v-card>
         <v-card-text>
-          <v-row
-            align-content="center"
-            class="fill-height"
-            justify="center"
-          >
-            <v-col
-              class="text-subtitle-1 text-center"
-              cols="12"
-            >
+          <v-row align-content="center" class="fill-height" justify="center">
+            <v-col class="text-subtitle-1 text-center" cols="12">
               {{ appStore.state.loadingText }}
             </v-col>
             <v-col cols="6">
-              <v-progress-linear
-                height="3"
-                indeterminate
-                rounded
-              />
+              <v-progress-linear height="3" indeterminate rounded />
             </v-col>
           </v-row>
         </v-card-text>

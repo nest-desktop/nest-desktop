@@ -59,14 +59,7 @@ export class BasePositions {
   }
 
   get posAsString(): string {
-    return (
-      "[" +
-      this._pos.map(
-        (p: number[]) =>
-          "[" + p.map((pp: number) => pp.toFixed(2)).join(",") + "]"
-      ) +
-      "]"
-    );
+    return "[" + this._pos.map((p: number[]) => "[" + p.map((pp: number) => pp.toFixed(2)).join(",") + "]") + "]";
   }
 
   get posExisted(): boolean {

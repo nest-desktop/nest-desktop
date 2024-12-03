@@ -50,11 +50,7 @@ export class SpikeActivity extends Activity {
   getVariance(values: number[]): number {
     const n: number = values.length;
     const avg: number = this.getAverage(values);
-    return (
-      values
-        .map((x: number) => Math.pow(x - avg, 2))
-        .reduce((a: number, b: number) => a + b) / n
-    );
+    return values.map((x: number) => Math.pow(x - avg, 2)).reduce((a: number, b: number) => a + b) / n;
   }
 
   /**

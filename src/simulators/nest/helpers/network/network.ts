@@ -29,9 +29,7 @@ const _elementTypes: { icon: string; id: string; title: string }[] = [
 ];
 
 // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
-export function isNESTNetworkProps(
-  networkProps: TNetworkProps
-): networkProps is INESTNetworkProps {
+export function isNESTNetworkProps(networkProps: TNetworkProps): networkProps is INESTNetworkProps {
   return (networkProps as INESTNetworkProps).models != undefined;
 }
 
@@ -61,11 +59,7 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   override get isEmpty(): boolean {
-    return (
-      this.modelsCopied.all.length === 0 &&
-      this.nodes.all.length === 0 &&
-      this.connections.all.length === 0
-    );
+    return this.modelsCopied.all.length === 0 && this.nodes.all.length === 0 && this.connections.all.length === 0;
   }
 
   /**
@@ -141,9 +135,7 @@ export class NESTNetwork extends BaseNetwork {
    * @param elementType string
    * @returns a list of models
    */
-  override getModelsByElementType(
-    elementType: string
-  ): (NESTModel | NESTCopyModel)[] {
+  override getModelsByElementType(elementType: string): (NESTModel | NESTCopyModel)[] {
     return elementType === "copied"
       ? this.modelsCopied.filterByGeneralElementType("node")
       : this.project.modelDBStore.getModelsByElementType(elementType);
@@ -199,9 +191,7 @@ export class NESTNetwork extends BaseNetwork {
     this._updateHash({
       models: this.modelsCopied.all.map((model: NESTCopyModel) => model.hash),
       nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
-      connections: this.connections.all.map(
-        (connection: NESTConnection) => connection.hash
-      ),
+      connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
     });
   }
 }

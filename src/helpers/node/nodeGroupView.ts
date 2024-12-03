@@ -30,7 +30,7 @@ export class NodeGroupView extends BaseObj {
     nodeGroup: NodeGroup,
     viewProps: INodeGroupViewProps = {
       visible: true,
-    }
+    },
   ) {
     super({ logger: { settings: { minLevel: 3 } } });
 
@@ -101,7 +101,7 @@ export class NodeGroupView extends BaseObj {
   get opacity(): boolean {
     // const connections = this.nodeGroup.parent.network.connections;
     // const nodes = this.nodeGroup.parentNodes;
-    return true
+    return true;
     // (
     //   connections.state.selectedNode == null ||
     //   (connections.state.selectedNode != null &&

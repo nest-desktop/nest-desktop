@@ -12,7 +12,7 @@ export class NESTNodeView extends NodeView {
     viewProps: INodeViewProps = {
       position: { x: 0, y: 0 },
       visible: true,
-    }
+    },
   ) {
     super(node, viewProps);
   }
@@ -27,21 +27,14 @@ export class NESTNodeView extends NodeView {
         return connection.sourceNode.view.color;
       }
     } else if (this.node.model.isRecorder) {
-      const connections: NESTConnection[] =
-        this.node.network.connections.all.filter(
-          (connection: NESTConnection) =>
-            connection.sourceIdx === this._node.idx ||
-            connection.targetIdx === this._node.idx
-        );
-      if (
-        connections.length === 1 &&
-        connections[0].sourceIdx !== connections[0].targetIdx
-      ) {
+      const connections: NESTConnection[] = this.node.network.connections.all.filter(
+        (connection: NESTConnection) =>
+          connection.sourceIdx === this._node.idx || connection.targetIdx === this._node.idx,
+      );
+      if (connections.length === 1 && connections[0].sourceIdx !== connections[0].targetIdx) {
         const connection: NESTConnection = connections[0];
         const node: NESTNode = (
-          connection.sourceIdx === this.node.idx
-            ? connection.target
-            : connection.source
+          connection.sourceIdx === this.node.idx ? connection.target : connection.source
         ) as NESTNode;
         return node.view.color;
       }
@@ -66,8 +59,7 @@ export class NESTNodeView extends NodeView {
       return "";
 
     const weights: number[] = this.node.connectionsNeuronTargets.map(
-      (connection: NESTConnection) =>
-        connection.synapse.params.weight.value as number
+      (connection: NESTConnection) => connection.synapse.params.weight.value as number,
     );
 
     if (weights.every((weight: number) => weight > 0)) {
@@ -102,17 +94,13 @@ export class NESTNodeView extends NodeView {
     const cleanWeightRecorder = false;
 
     if (this.node.model.isWeightRecorder && cleanWeightRecorder) {
-      const copiedSynapseModels =
-        this.node.nodes.network.modelsCopied.synapseModels.filter(
-          (model: NESTCopyModel) => model.isAssignedToWeightRecorder(this.node)
-        );
+      const copiedSynapseModels = this.node.nodes.network.modelsCopied.synapseModels.filter((model: NESTCopyModel) =>
+        model.isAssignedToWeightRecorder(this.node),
+      );
 
       if (copiedSynapseModels.length === 1) {
         const copiedSynapseModel = copiedSynapseModels[0];
-        const connection =
-          this.node.nodes.network.connections.getBySynapseModelId(
-            copiedSynapseModel.id
-          );
+        const connection = this.node.nodes.network.connections.getBySynapseModelId(copiedSynapseModel.id);
         if (connection) {
           this.state.position = connection.view.centerPosition;
         }

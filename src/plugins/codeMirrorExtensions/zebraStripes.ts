@@ -1,13 +1,7 @@
 // zebraStripes.ts
 
 import { Extension, Facet, RangeSetBuilder } from "@codemirror/state";
-import {
-  Decoration,
-  DecorationSet,
-  EditorView,
-  ViewPlugin,
-  ViewUpdate,
-} from "@codemirror/view";
+import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
 
 const baseTheme = EditorView.baseTheme({
   "&light .cm-zebraStripe": { backgroundColor: "#d4fafa" },
@@ -15,16 +9,11 @@ const baseTheme = EditorView.baseTheme({
 });
 
 const stepSize = Facet.define({
-  combine: (values: readonly number[]) =>
-    values.length ? Math.min(...values) : 2,
+  combine: (values: readonly number[]) => (values.length ? Math.min(...values) : 2),
 });
 
 export function zebraStripes(options: { step?: number } = {}): Extension[] {
-  return [
-    baseTheme,
-    options.step == null ? [] : stepSize.of(options.step),
-    showStripes,
-  ];
+  return [baseTheme, options.step == null ? [] : stepSize.of(options.step), showStripes];
 }
 
 const stripe = Decoration.line({
@@ -53,11 +42,10 @@ const showStripes = ViewPlugin.fromClass(
     }
 
     update(update: ViewUpdate) {
-      if (update.docChanged || update.viewportChanged)
-        this.decorations = stripeDeco(update.view) as DecorationSet;
+      if (update.docChanged || update.viewportChanged) this.decorations = stripeDeco(update.view) as DecorationSet;
     }
   },
   {
     decorations: (v) => v.decorations,
-  }
+  },
 );

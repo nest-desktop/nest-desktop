@@ -1,9 +1,6 @@
 // connection.ts
 
-import {
-  BaseConnection,
-  IConnectionProps,
-} from "@/helpers/connection/connection";
+import { BaseConnection, IConnectionProps } from "@/helpers/connection/connection";
 
 import { NorseConnections } from "./connections";
 
@@ -14,10 +11,7 @@ export interface INorseConnectionProps extends IConnectionProps {
 export class NorseConnection extends BaseConnection {
   private _bias: boolean;
 
-  constructor(
-    connections: NorseConnections,
-    connectionProps: INorseConnectionProps
-  ) {
+  constructor(connections: NorseConnections, connectionProps: INorseConnectionProps) {
     super(connections, connectionProps);
 
     this._bias = connectionProps.bias || false;

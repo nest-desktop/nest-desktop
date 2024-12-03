@@ -6,10 +6,7 @@ import { ModelParameter } from "@/helpers/model/modelParameter";
 import { NESTModelReceptor } from "./modelReceptor";
 
 export class NESTModelReceptorParameter extends ModelParameter {
-  constructor(
-    modelReceptor: NESTModelReceptor,
-    paramProps: IParamProps
-  ) {
+  constructor(modelReceptor: NESTModelReceptor, paramProps: IParamProps) {
     super(modelReceptor.model, paramProps);
   }
 

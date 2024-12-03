@@ -1,10 +1,6 @@
 // model.ts
 
-import {
-  BaseModel,
-  IModelProps,
-  IModelStateProps,
-} from "@/helpers/model/model";
+import { BaseModel, IModelProps, IModelStateProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 export interface INorseModelProps extends IModelProps {
@@ -48,17 +44,13 @@ export class NorseModel extends BaseModel {
       elementType: this.elementType,
       id: this.id,
       label: this.state.label,
-      params: Object.values(this.params).map((param: ModelParameter) =>
-        param.toJSON()
-      ),
+      params: Object.values(this.params).map((param: ModelParameter) => param.toJSON()),
       version: process.env.APP_VERSION,
     };
 
     // Add the states if provided.
     if (this.states.length > 0) {
-      modelProps.states = this.states.map(
-        (state: IModelStateProps) => state.id
-      );
+      modelProps.states = this.states.map((state: IModelStateProps) => state.id);
     }
 
     if (this.codeTemplate) {

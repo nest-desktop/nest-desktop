@@ -1,32 +1,15 @@
 <template>
-  <Card
-    :color="node.view.color"
-    style="border-width: 0 0 0 4px !important"
-  >
+  <Card :color="node.view.color" style="border-width: 0 0 0 4px !important">
     <v-list density="compact">
-      <slot
-        name="prependItem"
-        :node
-      />
+      <slot name="prependItem" :node />
 
-      <v-list-item
-        v-for="(item, index) in items"
-        v-show="item.show ? item.show() : true"
-        :key="index"
-        v-bind="item"
-      >
-        <template
-          v-if="item.icon"
-          #prepend
-        >
+      <v-list-item v-for="(item, index) in items" v-show="item.show ? item.show() : true" :key="index" v-bind="item">
+        <template v-if="item.icon" #prepend>
           <v-icon v-bind="item.icon" />
         </template>
       </v-list-item>
 
-      <slot
-        name="appendItem"
-        :node
-      />
+      <slot name="appendItem" :node />
     </v-list>
   </Card>
 </template>
@@ -103,10 +86,7 @@ const items: {
       });
     },
     prependIcon: "mdi:mdi-download",
-    show: () =>
-      node.value.model.isRecorder &&
-      node.value.activity &&
-      node.value.activity.hasEvents,
+    show: () => node.value.model.isRecorder && node.value.activity && node.value.activity.hasEvents,
     title: "Export events",
   },
   {

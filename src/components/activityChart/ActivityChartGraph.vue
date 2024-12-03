@@ -1,23 +1,11 @@
 <template>
-  <v-layout
-    class="activityGraphLayout"
-    full-height
-  >
-    <div
-      ref="activityChartGraph"
-      class="activityChartGraph full-height"
-    />
+  <v-layout class="activityGraphLayout" full-height>
+    <div ref="activityChartGraph" class="activityChartGraph full-height" />
   </v-layout>
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
 
@@ -45,7 +33,7 @@ const init = () => {
 };
 
 const relayout = () => graph.value?.relayout();
-const restyle = () =>  graph.value?.restyle();
+const restyle = () => graph.value?.restyle();
 
 onBeforeUnmount(() => {
   // graph.value.deleteTraces();
@@ -59,7 +47,7 @@ onMounted(() => {
 
 watch(
   () => props.graph,
-  () => init()
+  () => init(),
 );
 </script>
 

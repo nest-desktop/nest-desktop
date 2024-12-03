@@ -1,16 +1,9 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between align-center">
-      <v-icon
-        icon="mdi:mdi-trash-can-outline"
-        size="small"
-      />
+      <v-icon icon="mdi:mdi-trash-can-outline" size="small" />
       Delete
-      <v-btn
-        icon="mdi:mdi-close"
-        size="small"
-        @click="closeDialog()"
-      />
+      <v-btn icon="mdi:mdi-close" size="small" @click="closeDialog()" />
     </v-card-title>
 
     <v-data-table-virtual
@@ -23,10 +16,7 @@
       show-select
     >
       <template #[`item.valid`]="{ value }">
-        <v-icon
-          :color="value ? 'success' : 'error'"
-          :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'"
-        />
+        <v-icon :color="value ? 'success' : 'error'" :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'" />
       </template>
     </v-data-table-virtual>
 
@@ -42,15 +32,8 @@
           }
         "
       />
-      <v-btn
-        prepend-icon="mdi:mdi-reload"
-        text="Reload"
-        @click="update()"
-      />
-      <v-btn
-        text="close"
-        @click="closeDialog()"
-      />
+      <v-btn prepend-icon="mdi:mdi-reload" text="Reload" @click="update()" />
+      <v-btn text="close" @click="closeDialog()" />
     </v-card-actions>
   </v-card>
 </template>

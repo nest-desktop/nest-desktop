@@ -9,11 +9,7 @@
     @click.prevent
     @click.stop
   >
-    <v-menu
-      :close-on-content-click="false"
-      activator="parent"
-      transition="slide-y-transition"
-    >
+    <v-menu :close-on-content-click="false" activator="parent" transition="slide-y-transition">
       <v-card>
         <ColorPicker
           v-model="nodeRecord.state.color"
@@ -23,18 +19,8 @@
         />
 
         <v-card-actions>
-          <v-select
-            v-model="colorScheme"
-            :items="colorSchemes"
-            class="mx-2"
-            density="compact"
-            hide-details
-          />
-          <v-btn
-            size="small"
-            text="reset"
-            @click="resetColor"
-          />
+          <v-select v-model="colorScheme" :items="colorSchemes" class="mx-2" density="compact" hide-details />
+          <v-btn size="small" text="reset" @click="resetColor" />
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -82,9 +68,7 @@ const resetColor = () => {
  * Triggers when record color is changed.
  */
 const updateRecordsColor = () => {
-  nextTick(() =>
-    nodeRecord.value.node.network.project.activityGraph.activityChartGraph.updateRecordsColor()
-  );
+  nextTick(() => nodeRecord.value.node.network.project.activityGraph.activityChartGraph.updateRecordsColor());
 };
 </script>
 

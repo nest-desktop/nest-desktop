@@ -1,8 +1,5 @@
 <template>
-  <v-expansion-panel
-    density="compact"
-    flat
-  >
+  <v-expansion-panel density="compact" flat>
     <v-expansion-panel-title>
       <v-row class="text-button">
         <NodeAvatar :node="layer.activity.recorder" />
@@ -34,11 +31,7 @@
         />
       </v-card>
 
-      <v-card
-        v-if="layer.activity.recorder.model.isAnalogRecorder"
-        flat
-        rounded="0"
-      >
+      <v-card v-if="layer.activity.recorder.model.isAnalogRecorder" flat rounded="0">
         <span v-if="layer.state.records.length > 0">
           <v-select
             v-model="layer.state.record"
@@ -55,13 +48,7 @@
             @update:model-value="update"
           >
             <template #selection="{ item }">
-              <v-chip
-                :color="item.raw.state.color"
-                class="mx-2"
-                disable-lookup
-                label
-                size="small"
-              >
+              <v-chip :color="item.raw.state.color" class="mx-2" disable-lookup label size="small">
                 {{ item.raw.id }}
               </v-chip>
               <div style="font-size: 12px">
@@ -73,12 +60,7 @@
             <template #item="{ item }">
               <v-list-item>
                 <template #prepend>
-                  <v-chip
-                    :color="item.raw.state.color"
-                    class="mx-2"
-                    label
-                    size="small"
-                  >
+                  <v-chip :color="item.raw.state.color" class="mx-2" label size="small">
                     {{ item.raw.id }}
                   </v-chip>
                 </template>
@@ -89,14 +71,8 @@
           </v-select>
         </span>
 
-        <v-card
-          v-if="layer.state.record"
-          flat
-        >
-          <v-btn-group
-            class="pt-2 px-1"
-            style="width: 100%"
-          >
+        <v-card v-if="layer.state.record" flat>
+          <v-btn-group class="pt-2 px-1" style="width: 100%">
             <v-text-field
               v-model="layer.state.record.state.colorMap.min"
               :label="`min [${layer.state.record.unit}]`"
@@ -119,7 +95,7 @@
               rounded="0"
               @update:model-value="update"
             >
-              <template #item="{ item, props:itemProps }">
+              <template #item="{ item, props: itemProps }">
                 <v-list-item v-bind="itemProps">
                   <template #append>
                     <img
@@ -128,7 +104,7 @@
                       alt="img"
                       height="12"
                       width="72"
-                    >
+                    />
                   </template>
                 </v-list-item>
               </template>
@@ -140,7 +116,7 @@
                   alt="img"
                   height="12"
                   width="72"
-                >
+                />
               </template>
             </v-select>
 
@@ -188,11 +164,7 @@
         </v-card-text>
       </v-card> -->
 
-      <v-card
-        v-if="layer.activity.recorder.model.isSpikeRecorder"
-        flat
-        title="Trail"
-      >
+      <v-card v-if="layer.activity.recorder.model.isSpikeRecorder" flat title="Trail">
         <v-list>
           <v-list-item>
             <ValueSlider
@@ -205,11 +177,7 @@
           </v-list-item>
 
           <v-list-item>
-            <v-checkbox
-              v-model="layer.state.trail.fading"
-              hide-details
-              label="trail fading"
-            />
+            <v-checkbox v-model="layer.state.trail.fading" hide-details label="trail fading" />
           </v-list-item>
 
           <v-list-item>
@@ -225,25 +193,11 @@
         </v-list>
       </v-card>
 
-      <v-card
-        v-if="layer.modelSelected?.value.includes('box')"
-        flat
-        subtitle="box style"
-      >
+      <v-card v-if="layer.modelSelected?.value.includes('box')" flat subtitle="box style">
         <v-card-text class="py-0">
-          <v-checkbox
-            v-model="layer.state.object.flatHeight"
-            hide-details
-            density="compact"
-            label="flatten height"
-          />
+          <v-checkbox v-model="layer.state.object.flatHeight" hide-details density="compact" label="flatten height" />
 
-          <v-checkbox
-            v-model="layer.state.object.flyingBoxes"
-            hide-details
-            density="compact"
-            label="flying planes"
-          />
+          <v-checkbox v-model="layer.state.object.flyingBoxes" hide-details density="compact" label="flying planes" />
         </v-card-text>
       </v-card>
     </v-expansion-panel-text>
@@ -303,12 +257,11 @@ const colorScales: string[] = [
 ];
 
 // https://stackoverflow.com/questions/66419471/vue-3-vite-dynamic-image-src
-const imageUrl = (name: string) =>
-  new URL(`/src/assets/img/colorscales/${name}.png`, import.meta.url).href;
+const imageUrl = (name: string) => new URL(`/src/assets/img/colorscales/${name}.png`, import.meta.url).href;
 
 const update = () => {
-  nextTick(() => layer.value.renderFrame())
-}
+  nextTick(() => layer.value.renderFrame());
+};
 </script>
 
 <style lang="scss">
