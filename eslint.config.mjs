@@ -1,11 +1,11 @@
 // eslint.config.mjs
 // https://eslint.vuejs.org/user-guide/
 
-import eslint from '@eslint/js';
-// import eslintConfigPrettier from 'eslint-config-prettier';
-import eslintPluginVue from 'eslint-plugin-vue';
-import globals from 'globals';
-import typescriptEslint from 'typescript-eslint';
+import eslint from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginVue from "eslint-plugin-vue";
+import globals from "globals";
+import typescriptEslint from "typescript-eslint";
 
 export default typescriptEslint.config(
   {
@@ -20,27 +20,28 @@ export default typescriptEslint.config(
       "**/nest_desktop.egg-info",
       "**/node_modules",
       "**/release",
-      "**/*.d.ts"
+      "**/*.d.ts",
     ],
-  }, {
-  extends: [
-    eslint.configs.recommended,
-    ...typescriptEslint.configs.recommended,
-    ...eslintPluginVue.configs['flat/recommended'],
-  ],
-  files: ['**/*.{ts,vue}'],
-  languageOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    globals: globals.browser,
-    parserOptions: {
-      parser: typescriptEslint.parser,
+  },
+  {
+    extends: [
+      eslint.configs.recommended,
+      ...typescriptEslint.configs.recommended,
+      ...eslintPluginVue.configs["flat/recommended"],
+    ],
+    files: ["**/*.{ts,vue}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.browser,
+      parserOptions: {
+        parser: typescriptEslint.parser,
+      },
+    },
+    rules: {
+      // your rules
+      "vue/multi-word-component-names": "off",
     },
   },
-  rules: {
-    // your rules
-    "vue/multi-word-component-names": "off",
-  },
-  // eslintConfigPrettier
-}
-)
+  eslintConfigPrettier,
+);
