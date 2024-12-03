@@ -7,12 +7,7 @@
         "params": [
           {
             "id": "spike_times",
-            "value": [
-              10,
-              20,
-              30,
-              40
-            ]
+            "value": [10, 20, 30, 40]
           }
         ],
         "view": {

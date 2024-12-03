@@ -114,10 +114,5 @@
       "value": 0
     }
   ],
-  "states": [
-    "spikes",
-    "v",
-    "gsyn_exc",
-    "gsyn_inh"
-  ]
+  "states": ["spikes", "v", "gsyn_exc", "gsyn_inh"]
 }

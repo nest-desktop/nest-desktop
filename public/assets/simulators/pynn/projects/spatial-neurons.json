@@ -24,14 +24,8 @@
         "spatial": {
           "positions": "free",
           "specs": {
-            "center": [
-              0,
-              0
-            ],
-            "extent": [
-              1,
-              1
-            ],
+            "center": [0, 0],
+            "extent": [1, 1],
             "edgeWrap": false,
             "numDimensions": 2
           }

@@ -94,8 +94,5 @@
       "value": -50
     }
   ],
-  "states": [
-    "spikes",
-    "v"
-  ]
+  "states": ["spikes", "v"]
 }

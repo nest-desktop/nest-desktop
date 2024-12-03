@@ -17,21 +17,11 @@
         "params": [
           {
             "id": "amplitude_times",
-            "value": [
-              100,
-              300,
-              500,
-              700
-            ]
+            "value": [100, 300, 500, 700]
           },
           {
             "id": "amplitude_values",
-            "value": [
-              1,
-              0,
-              -1,
-              0
-            ]
+            "value": [1, 0, -1, 0]
           }
         ],
         "view": {

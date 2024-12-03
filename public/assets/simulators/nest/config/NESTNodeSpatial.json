@@ -1,10 +1,7 @@
 {
   "center": {
     "label": "center",
-    "value": [
-      0,
-      0
-    ]
+    "value": [0, 0]
   },
   "columns": {
     "label": "columns",
@@ -15,10 +12,7 @@
   },
   "extent": {
     "label": "extent",
-    "value": [
-      1,
-      1
-    ]
+    "value": [1, 1]
   },
   "positions": {
     "label": "positions",
