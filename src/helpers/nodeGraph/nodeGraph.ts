@@ -46,7 +46,7 @@ export class NodeGraph extends BaseObj {
     if (node.isGroup) {
       const nodeGroup = node as NodeGroup;
 
-      // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+      // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
       const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
       nodeGroup.nodeItemsDeep.forEach((node: TNode) => {

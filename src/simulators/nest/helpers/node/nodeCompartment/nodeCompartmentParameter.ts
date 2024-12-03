@@ -1,16 +1,15 @@
 // nodeCompartmentParameter.ts
 
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { IParamProps } from "@/helpers/common/parameter";
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";
 import { NESTNodeCompartment } from "./nodeCompartment";
 
-export interface INESTNodeCompartmentParamProps extends INodeParamProps {}
-
 export class NESTNodeCompartmentParameter extends NodeParameter {
   constructor(
     nodeCompartment: NESTNodeCompartment,
-    paramProps: INESTNodeCompartmentParamProps
+    paramProps: IParamProps
   ) {
     super(nodeCompartment, paramProps);
   }

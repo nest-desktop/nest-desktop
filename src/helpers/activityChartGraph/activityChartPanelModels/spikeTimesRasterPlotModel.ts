@@ -2,16 +2,13 @@
 
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-scatter-plot";
@@ -36,7 +33,6 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
     const d = this.panel.graph.plotLayout.yaxis.domain;
     const domain = d[1] - d[0];
 
-    // @ts-ignore - Property '_fullLayout' does not exist on type 'Root'.
     const layoutHeight = this.panel.graph.state.ref._fullLayout.height;
     const r = this.panel.graph.plotLayout.yaxis.range;
     const range = r[1] - r[0];

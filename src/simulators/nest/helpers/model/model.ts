@@ -7,10 +7,7 @@ import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 // import { loadText } from "@/utils/fetch";
-import {
-  INESTModelCompartmentParamProps,
-  NESTModelCompartmentParameter,
-} from "./modelCompartmentParameter";
+import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 import {
   INESTModelReceptorProps,
   NESTModelReceptor,
@@ -107,7 +104,7 @@ export class NESTModel extends BaseModel {
    * Add a compartment parameter to the model specifications.
    * @param param parameter props
    */
-  addCompartmentParameter(param: INESTModelCompartmentParamProps): void {
+  addCompartmentParameter(param: IParamProps): void {
     this._compartmentParams[param.id] = new NESTModelCompartmentParameter(
       this,
       param

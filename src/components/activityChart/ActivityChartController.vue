@@ -52,8 +52,8 @@
 
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
     <div
-      v-for="(panel, index) in graph.panels"
-      :key="'panel' + index"
+      v-for="(panel, panelIdx) in graph.panels"
+      :key="'panel' + panelIdx"
     >
       <Card
         class="mx-1"
@@ -66,6 +66,8 @@
           class="pa-0"
         >
           <v-select
+            v-if="panel.model.state.records.length > 0"
+            v-model="panel.model.state.recordsVisible"
             :items="panel.model.state.records"
             class="pa-1 pt-3"
             chips
@@ -78,8 +80,6 @@
             multiple
             persistent-hint
             @update:model-value="update()"
-            v-if="panel.model.state.records.length > 0"
-            v-model="panel.model.state.recordsVisible"
           >
             <template #chip="{ item }">
               <NodeRecordChip
@@ -88,9 +88,9 @@
               />
             </template>
 
-            <template #item="{ item, props }">
+            <template #item="{ item, props: itemProps }">
               <v-list-item
-                v-bind="props"
+                v-bind="itemProps"
                 density="compact"
                 title=""
               >
@@ -163,8 +163,8 @@
 
           <v-list>
             <ParamListItem
-              v-for="(param, index) of panel.model.filteredParams"
-              :key="index"
+              v-for="(param, paramIdx) of panel.model.filteredParams"
+              :key="paramIdx"
               :model-value="param.value"
               :param="(param as ActivityChartPanelModelParameter)"
               @update:model-value="graph.update()"

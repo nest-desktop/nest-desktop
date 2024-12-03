@@ -6,8 +6,6 @@ import {
 } from "@/helpers/simulation/simulationCode";
 import { NorseSimulation } from "./simulation";
 
-export interface INorseSimulationCodeProps extends ISimulationCodeProps {}
-
 const simulationCodeBlocks: string[] = [
   "importModules",
   "createNodes",
@@ -18,7 +16,7 @@ const simulationCodeBlocks: string[] = [
 export class NorseSimulationCode extends BaseSimulationCode {
   constructor(
     simulation: NorseSimulation,
-    simulationCodeProps: INorseSimulationCodeProps = {}
+    simulationCodeProps: ISimulationCodeProps = {}
   ) {
     super(simulation, {
       blocks: simulationCodeBlocks,

@@ -5,10 +5,8 @@ import { TNode } from "@/types";
 import { NodeRecord } from "../node/nodeRecord";
 import { Activity, IActivityProps } from "./activity";
 
-interface IAnalogSignalActivityProps extends IActivityProps {}
-
 export class AnalogSignalActivity extends Activity {
-  constructor(recorder: TNode, activityProps: IAnalogSignalActivityProps = {}) {
+  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
     super(recorder, activityProps);
   }
 

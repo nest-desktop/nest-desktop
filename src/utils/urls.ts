@@ -18,7 +18,7 @@ export function isURL(str: string): boolean {
 
   try {
     url = new URL(str);
-  } catch (_) {
+  } catch {
     return false;
   }
 

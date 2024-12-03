@@ -1,6 +1,6 @@
 // defineModelDBStore.ts
 
-import { Store, _UnwrapAll, defineStore } from "pinia";
+import { Store, defineStore } from "pinia";
 import { UnwrapRef, reactive } from "vue";
 
 import { IDoc } from "@/helpers/common/database";
@@ -58,7 +58,7 @@ export function defineModelDBStore(
   });
 
   const db = new props.ModelDB();
-  // @ts-ignore - Cannot find namespace 'props'.
+  // @ts-expect-error Cannot find namespace 'props'.
   type Model = props.Model;
 
   return defineStore(props.simulator + "-model-db", () => {

@@ -19,6 +19,7 @@
         />
 
         <v-switch
+          v-model="state.numDimensions"
           color="primary"
           false-icon="mdi:mdi-numeric-2"
           hide-details
@@ -28,7 +29,6 @@
           show-ticks="always"
           step="1"
           true-icon="mdi:mdi-numeric-3"
-          v-model="state.numDimensions"
           @update:model-value="
             (value: boolean | null) => nextTick(() => {
               nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 })

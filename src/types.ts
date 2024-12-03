@@ -29,10 +29,8 @@ import { BaseSimulationCode } from "./helpers/simulation/simulationCode";
 import { BaseSynapse, ISynapseProps } from "./helpers/synapse/synapse";
 import {
   BaseSynapseParameter,
-  ISynapseParamProps,
 } from "./helpers/synapse/synapseParameter";
 import {
-  INESTSynapseParamProps,
   NESTSynapseParameter,
 } from "./simulators/nest/helpers/synapse/synapseParameter";
 //
@@ -90,12 +88,10 @@ export type TNodeParameterComponentProps =
   | nest.INESTNodeProps
   | nest.INESTCopyModelProps
   | nest.INESTNodeCompartmentProps
-  | nest.INESTNodeReceptorProps
-  | norse.INorseNodeProps;
+  | nest.INESTNodeReceptorProps;
 export type TNodeProps =
   | INodeProps
-  | nest.INESTNodeProps
-  | norse.INorseNodeProps;
+  | nest.INESTNodeProps;
 export type TNodes = BaseNodes | nest.NESTNodes | norse.NorseNodes;
 export type TParameter =
   | ActivityChartPanelModelParameter
@@ -132,10 +128,8 @@ export type TSimulationCode =
 export type TSimulationProps =
   | ISimulationProps
   | nest.INESTSimulationProps
-  | norse.INorseSimulationProps
-  | pynn.IPyNNSimulationProps;
+  | norse.INorseSimulationProps;
 export type TStore = Store<string, any>;
 export type TSynapse = BaseSynapse | nest.NESTSynapse;
 export type TSynapseParameter = BaseSynapseParameter | NESTSynapseParameter;
-export type TSynapseParamProps = ISynapseParamProps | INESTSynapseParamProps;
 export type TSynapseProps = ISynapseProps | nest.INESTSynapseProps;

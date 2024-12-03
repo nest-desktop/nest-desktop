@@ -5,17 +5,14 @@ import { TNode, TParameter } from "@/types";
 import { deviation, max, mean, min, sum } from "../../../utils/array";
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";

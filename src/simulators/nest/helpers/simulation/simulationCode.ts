@@ -7,8 +7,6 @@ import {
 
 import { NESTSimulation } from "./simulation";
 
-export interface INESTSimulationCodeProps extends ISimulationCodeProps {}
-
 const simulationCodeBlocks: string[] = [
   "importModules",
   "resetKernel",
@@ -21,7 +19,7 @@ const simulationCodeBlocks: string[] = [
 export class NESTSimulationCode extends BaseSimulationCode {
   constructor(
     simulation: NESTSimulation,
-    simulationCodeProps: INESTSimulationCodeProps = {}
+    simulationCodeProps: ISimulationCodeProps = {}
   ) {
     super(simulation, {
       blocks: simulationCodeBlocks,

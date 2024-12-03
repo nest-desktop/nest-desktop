@@ -13,10 +13,10 @@
 
     <v-col cols="11">
       <v-text-field
+        v-model="store.state.url"
         :disabled="!store.state.enabled"
         :hide-details="store.state.response.data.length === 0"
         :placeholder="store.defaults"
-        v-model="store.state.url"
         :rules="[
           (value) => value.length === 0 || isURL(value) || 'URL is not valid',
         ]"

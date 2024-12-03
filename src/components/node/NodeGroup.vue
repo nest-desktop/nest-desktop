@@ -75,6 +75,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import Menu from "../common/Menu.vue";
@@ -83,7 +85,8 @@ import NodeGroupMenuList from "./NodeGroupMenuList.vue";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { TConnection, TNode } from "@/types";
 
-defineProps<{ nodeGroup: NodeGroup }>();
+const props = defineProps<{ nodeGroup: NodeGroup }>();
+const nodeGroup = computed(() => props.nodeGroup)
 </script>
 
 <style lang="scss">

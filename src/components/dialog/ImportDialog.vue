@@ -51,6 +51,7 @@
         </v-btn-toggle>
 
         <v-select
+          v-model="state.githubSelectedTree"
           :disabled="state.githubTrees.length === 0"
           :items="state.githubTrees"
           :label="state.githubGroup + ' path'"
@@ -59,13 +60,13 @@
           flat
           hide-details
           item-title="path"
-          v-model="state.githubSelectedTree"
           prepend-icon="mdi:mdi-github"
           return-object
           @update:model-value="getFilesFromGithub"
         />
 
         <v-select
+          v-model="state.githubSelectedFile"
           :disabled="state.githubFiles.length === 0"
           :items="state.githubFiles"
           class="mx-1"
@@ -73,7 +74,6 @@
           flat
           hide-details
           item-title="path"
-          v-model="state.githubSelectedFile"
           label="File"
           return-object
           @update:model-value="updateURLFromGithub"
@@ -178,7 +178,7 @@
         />
       </template> -->
 
-      <template #item.valid="{ value }">
+      <template #[`item.valid`]="{ value }">
         <v-icon
           :color="value ? 'success' : 'error'"
           :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'"
@@ -389,6 +389,7 @@ const addProps = (
     let projectProps: TProjectProps;
     let modelProps: TModelProps;
     let name: string = "";
+    let networkProps: TNetworkProps;
 
     switch (group) {
       case "model":
@@ -401,7 +402,7 @@ const addProps = (
         name = projectProps.name || "";
         valid = projectDBStore.value.validateProject(projectProps);
 
-        const networkProps = projectProps.network as TNetworkProps;
+        networkProps = projectProps.network as TNetworkProps;
 
         // Get model Ids from copied models if not installed in NEST Desktop.
         if (networkProps && isNESTNetworkProps(networkProps)) {

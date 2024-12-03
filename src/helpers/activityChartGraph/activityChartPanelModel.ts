@@ -8,10 +8,7 @@ import { IParamProps, TParamValue } from "../common/parameter";
 import { currentBackgroundColor } from "../common/theme";
 import { NodeRecord } from "../node/nodeRecord";
 import { ActivityChartPanel } from "./activityChartPanel";
-import {
-  ActivityChartPanelModelParameter,
-  IActivityChartPanelModelParamProps,
-} from "./activityChartPanelModelParameter";
+import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -224,15 +221,13 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Add data of this activity graph panel.
-   * @param activity activity object
+   * @param _activity activity object
    *
    * @remarks
    * It requires activity data.
    * It is a replacement for abstract component.
    */
-  addData(activity: Activity): void {
-    activity;
-  }
+  addData(_activity: Activity): void {};
 
   addParameter(paramProps: IParamProps) {
     this._params[paramProps.id] = new ActivityChartPanelModelParameter(
@@ -334,8 +329,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Initialize params for controller.
    * @param paramsProps parameter props
    */
-  initParams(paramsProps: IActivityChartPanelModelParamProps[]): void {
-    paramsProps.forEach((paramProps: IActivityChartPanelModelParamProps) => {
+  initParams(paramsProps: IParamProps[]): void {
+    paramsProps.forEach((paramProps: IParamProps) => {
       this.addParameter(paramProps);
       if (paramProps.visible != false) {
         this.params[paramProps.id].visible = true;
@@ -412,11 +407,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update active marker.
-   * @param record node record object
+   * @param _record node record object
    */
-  updateActiveMarker(record?: NodeRecord): void {
-    record;
-  }
+  updateActiveMarker(_record?: NodeRecord): void {};
 
   /**
    * Update activities.
@@ -477,7 +470,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateParams(paramsProps: Record<string, TParamValue> = {}): void {
     this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
-      if (paramsProps.hasOwnProperty(param.id)) {
+      if (param.id in paramsProps) {
         param.state.value = paramsProps[param.id];
       }
     });
@@ -522,12 +515,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update layout label.
-   * @param records list of node records
+   * @param _records list of node records
    * @remarks It is a replacement for abstract component.
    */
-  updateLayoutLabel(records?: NodeRecord[]): void {
-    records;
-  }
+  updateLayoutLabel(_records?: NodeRecord[]): void {}
 
   /**
    * Update time of the panel model.

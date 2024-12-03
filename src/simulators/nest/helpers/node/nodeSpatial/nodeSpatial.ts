@@ -2,13 +2,14 @@
 
 import { BaseObj } from "@/helpers/common/base";
 
-import { FreePositions, IFreePositionsProps } from "./freePositions";
+import { FreePositions } from "./freePositions";
 import { GridPositions, IGridPositionsProps } from "./gridPositions";
+import { IBasePositionsProps } from "./basePositions";
 import { NESTNode } from "../node";
 
 export interface INESTNodeSpatialProps {
   positions?: string;
-  specs?: IFreePositionsProps | IGridPositionsProps;
+  specs?: IBasePositionsProps | IGridPositionsProps;
 }
 
 export class NESTNodeSpatial extends BaseObj {
@@ -92,7 +93,7 @@ export class NESTNodeSpatial extends BaseObj {
   }
 
   updatePositionParams(
-    positionProps: IFreePositionsProps | IGridPositionsProps
+    positionProps: IBasePositionsProps | IGridPositionsProps
   ): void {
     this._positions?.update(positionProps);
   }

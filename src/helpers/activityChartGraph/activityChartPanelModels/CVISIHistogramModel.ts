@@ -3,16 +3,13 @@
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bar";

@@ -173,7 +173,7 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-defineProps(["color"]);
+defineProps<{color: string}>();
 
 const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
 const modelDBStore = computed(

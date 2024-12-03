@@ -8,7 +8,7 @@ import { NorseConnections } from "./helpers/connection/connections";
 import { INorseModelProps, NorseModel } from "./helpers/model/model";
 import { NorseModelDB } from "./helpers/model/modelDB";
 import { INorseNetworkProps, NorseNetwork } from "./helpers/network/network";
-import { INorseNodeProps, NorseNode } from "./helpers/node/node";
+import { NorseNode } from "./helpers/node/node";
 import { NorseNodes } from "./helpers/node/nodes";
 import { INorseProjectProps, NorseProject } from "./helpers/project/project";
 import { NorseProjectDB } from "./helpers/project/projectDB";
@@ -27,7 +27,6 @@ export {
   NorseModelDB,
   type INorseNetworkProps,
   NorseNetwork,
-  type INorseNodeProps,
   NorseNode,
   NorseNodes,
   type INorseProjectProps,

@@ -18,9 +18,9 @@
       <v-spacer />
 
       <NESTModuleCombobox
+        v-model="state.selectedModules"
         chips
         class="pt-1"
-        v-model="state.selectedModules"
         label="module"
         max-width="400"
         multiple

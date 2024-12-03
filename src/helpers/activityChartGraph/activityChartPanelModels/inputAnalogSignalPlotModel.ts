@@ -1,15 +1,13 @@
 // inputAnalogSignalPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import {
-  AnalogSignalPlotModel,
-  IAnalogSignalPlotModelProps,
-} from "./analogSignalPlotModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
 
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: IAnalogSignalPlotModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";

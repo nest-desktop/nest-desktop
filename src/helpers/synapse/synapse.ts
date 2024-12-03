@@ -1,12 +1,13 @@
 // synapse.ts
 
-import { TConnection, TSynapseParamProps, TSynapseParameter } from "@/types";
+import { TConnection, TSynapseParameter } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseSynapseParameter } from "./synapseParameter";
+import { IParamProps } from "../common/parameter";
 
 export interface ISynapseProps {
-  params?: TSynapseParamProps[];
+  params?: IParamProps[];
 }
 
 export class BaseSynapse extends BaseObj {
@@ -111,7 +112,7 @@ export class BaseSynapse extends BaseObj {
    * Add parameter component.
    * @param paramProps- synapse parameter props
    */
-  addParameter(paramProps: TSynapseParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     // this._logger.trace("add parameter:", param)
     this._params[paramProps.id] = new BaseSynapseParameter(this, paramProps);
   }
@@ -148,7 +149,7 @@ export class BaseSynapse extends BaseObj {
   /**
    * Initialize synapse parameters.
    */
-  initParameters(paramsProps?: TSynapseParamProps[]): void {
+  initParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("init parameters");
 
     this._paramsVisible = [];

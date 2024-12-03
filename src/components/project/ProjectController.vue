@@ -14,10 +14,10 @@
     >
       <v-tab
         v-for="(item, index) in controllerItems"
-        :key="index"
         v-show="
           item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
         "
+        :key="index"
         :ripple="false"
         :value="item.id"
         class="justify-center"

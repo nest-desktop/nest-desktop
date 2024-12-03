@@ -8,14 +8,12 @@ import {
 import { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
 import { NESTProject } from "../project/project";
 
-export interface INESTActivityGraphProps extends IBaseActivityGraphProps {}
-
 export class NESTActivityGraph extends BaseActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;
 
   constructor(
     project: NESTProject,
-    activityGraphProps?: INESTActivityGraphProps
+    activityGraphProps?: IBaseActivityGraphProps
   ) {
     super(project, activityGraphProps);
 

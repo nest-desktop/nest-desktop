@@ -37,12 +37,10 @@ interface IErr {
   stack: string;
 }
 
-interface IOptions {}
-
 export class DatabaseService extends BaseObj {
-  // @ts-ignore - Cannot use namespace 'PouchDB' as a type.
+  // @ts-expect-error Cannot use namespace 'PouchDB' as a type.
   private _db: PouchDB;
-  private _options: IOptions;
+  private _options: PouchDB.Configuration.DatabaseConfiguration;
   private _state: { ready: boolean; valid: boolean; version: string } = {
     ready: false,
     valid: false,
@@ -52,7 +50,7 @@ export class DatabaseService extends BaseObj {
 
   constructor(
     url: string,
-    options?: IOptions,
+    options?: PouchDB.Configuration.DatabaseConfiguration,
     loggerSettings?: ISettingsParam<ILogObj>
   ) {
     super({ logger: { settings: { minLevel: 3, ...loggerSettings } } });
@@ -68,7 +66,7 @@ export class DatabaseService extends BaseObj {
     this._state.ready = true;
   }
 
-  // @ts-ignore - Cannot use namespace 'PouchDB' as a type.
+  // @ts-expect-error Cannot use namespace 'PouchDB' as a type.
   get db(): PouchDB {
     return this._db;
   }

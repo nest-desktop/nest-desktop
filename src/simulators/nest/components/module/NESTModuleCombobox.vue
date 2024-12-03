@@ -1,5 +1,6 @@
 <template>
   <v-combobox
+    v-model:search="state.search"
     :append-inner-icon="state.valid && !state.exist ? 'mdi:mdi-plus' : ''"
     :hide-no-data="false"
     :items="moduleStore.state.modules"
@@ -9,7 +10,6 @@
     label="Module"
     prepend-inner-icon="mdi:mdi-memory"
     item-title="name"
-    v-model:search="state.search"
     item-value="name"
     @click:append-inner="state.valid ? moduleStore.addModule(state.search) : ''"
     @update:search="updateModuleExisting()"

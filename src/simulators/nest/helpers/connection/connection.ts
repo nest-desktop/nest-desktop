@@ -5,22 +5,22 @@ import {
   IConnectionProps,
 } from "@/helpers/connection/connection";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
+import { IParamProps } from "@/helpers/common/parameter";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { INodeParamProps } from "@/helpers/node/nodeParameter";
 
+import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
+import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
+import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
 import { NESTNodeSlice } from "../node/nodeSlice";
-import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTSynapseParameter } from "../synapse/synapseParameter";
-import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
-import { NESTConnections } from "./connections";
 
 export interface INESTConnectionProps extends IConnectionProps {
-  sourceSlice?: INodeParamProps[];
-  targetSlice?: INodeParamProps[];
+  sourceSlice?: IParamProps[];
+  targetSlice?: IParamProps[];
   mask?: INESTConnectionMaskProps;
   synapse?: INESTSynapseProps;
 }

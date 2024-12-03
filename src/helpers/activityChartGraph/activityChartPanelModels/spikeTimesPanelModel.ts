@@ -6,13 +6,10 @@ import {
   IActivityChartPanelModelProps,
 } from "../activityChartPanelModel";
 
-export interface ISpikeTimesPanelModelProps
-  extends IActivityChartPanelModelProps {}
-
 export class SpikeTimesPanelModel extends ActivityChartPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.activityType = "spike";

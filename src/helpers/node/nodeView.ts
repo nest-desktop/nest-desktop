@@ -136,15 +136,15 @@ export class NodeView extends BaseObj {
   }
 
   get opacity(): boolean {
-    const connections = this.node.nodes.network.connections;
-    const nodes = this.node.nodes;
-    return (
-      true ||
-      connections.state.selectedNode == null ||
-      (connections.state.selectedNode != null &&
-        this.node.isSelectedForConnection) ||
-      (nodes.state.focusedNode != null && this.isFocused)
-    );
+    // const connections = this.node.nodes.network.connections;
+    // const nodes = this.node.nodes;
+    return true
+    // (
+    //   connections.state.selectedNode == null ||
+    //   (connections.state.selectedNode != null &&
+    //     this.node.isSelectedForConnection) ||
+    //   (nodes.state.focusedNode != null && this.isFocused)
+    // );
   }
 
   get position(): { x: number; y: number } {

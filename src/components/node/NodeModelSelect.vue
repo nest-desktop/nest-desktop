@@ -1,22 +1,22 @@
 <template>
   <v-select
+    v-model="node.modelId"
     :item-props="true"
     :items="state.items"
     :label="state.elementType + ' model'"
     class="model-select text-primary mx-1"
-    v-model="node.modelId"
     density="compact"
     hide-details
     item-title="label"
     item-value="id"
     @click.stop
   >
-    <template #item="{ props }">
+    <template #item="{ props:itemProps }">
       <v-list-item
         class="node-model-item"
-        @click="select(props)"
+        @click="select(itemProps)"
       >
-        {{ props.title }}
+        {{ itemProps.title }}
 
         <template #append>
           <v-btn
@@ -25,7 +25,7 @@
             icon="mdi:mdi-menu-right"
             size="x-small"
             variant="text"
-            @click="select(props, true)"
+            @click="select(itemProps, true)"
           />
         </template>
       </v-list-item>

@@ -22,7 +22,7 @@
       return-object
       show-select
     >
-      <template #item.valid="{ value }">
+      <template #[`item.valid`]="{ value }">
         <v-icon
           :color="value ? 'success' : 'error'"
           :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'"

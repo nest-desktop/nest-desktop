@@ -99,15 +99,15 @@ export class NodeGroupView extends BaseObj {
   }
 
   get opacity(): boolean {
-    const connections = this.nodeGroup.parent.network.connections;
-    const nodes = this.nodeGroup.parentNodes;
-    return (
-      true ||
-      connections.state.selectedNode == null ||
-      (connections.state.selectedNode != null &&
-        this.nodeGroup.isSelectedForConnection) ||
-      (nodes.state.focusedNode != null && this.isFocused)
-    );
+    // const connections = this.nodeGroup.parent.network.connections;
+    // const nodes = this.nodeGroup.parentNodes;
+    return true
+    // (
+    //   connections.state.selectedNode == null ||
+    //   (connections.state.selectedNode != null &&
+    //     this.nodeGroup.isSelectedForConnection) ||
+    //   (nodes.state.focusedNode != null && this.isFocused)
+    // );
   }
 
   get position(): { x: number; y: number } {

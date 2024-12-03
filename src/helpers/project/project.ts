@@ -37,7 +37,6 @@ export class BaseProject extends BaseObj {
   private _doc: any; // raw data of the database
   private _filename: string;
   private _id: string; // id of the project
-  // @ts-ignore: Property '_modelDBStore' has no initializer and is not definitely assigned in the constructor.
   private _modelDBStore: TModelDBStore;
   private _name: string; // project name
   private _networkRevision: NetworkRevision; // network history

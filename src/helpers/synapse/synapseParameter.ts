@@ -3,12 +3,10 @@
 import { BaseParameter, IParamProps } from '@/helpers/common/parameter';
 import { TSynapse } from '@/types';
 
-export interface ISynapseParamProps extends IParamProps {}
-
 export class BaseSynapseParameter extends BaseParameter {
   public _synapse: TSynapse;
 
-  constructor(synapse: TSynapse, paramProps: ISynapseParamProps) {
+  constructor(synapse: TSynapse, paramProps: IParamProps) {
     super(paramProps);
     this._synapse = synapse;
   }
@@ -29,8 +27,8 @@ export class BaseSynapseParameter extends BaseParameter {
    * Serialize for JSON.
    * @return synapse parameter props
    */
-  override toJSON(): ISynapseParamProps {
-    const paramProps: ISynapseParamProps = {
+  override toJSON(): IParamProps {
+    const paramProps: IParamProps = {
       id: this.id,
       value: this.value,
     };

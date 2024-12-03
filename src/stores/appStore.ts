@@ -102,9 +102,9 @@ export const useAppStore = defineStore(
 
       if (themeInstance.global) {
         themeInstance.global.name.value = themeValue;
-        // @ts-ignore - Property 'window' does not exist on type 'ThemeInstance'.
+        // @ts-expect-error Property 'window' does not exist on type 'ThemeInstance'.
       } else if (themeInstance.window) {
-        // @ts-ignore - Property 'window' does not exist on type 'ThemeInstance'.
+        // @ts-expect-error Property 'window' does not exist on type 'ThemeInstance'.
         themeInstance.window.name.value = themeValue;
       }
 

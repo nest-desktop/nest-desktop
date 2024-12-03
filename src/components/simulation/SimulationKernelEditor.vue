@@ -24,6 +24,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import Card from "../common/Card.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 import { TSimulation } from "@/types";
@@ -32,6 +34,7 @@ const props = defineProps<{
   color?: string;
   simulation: TSimulation;
 }>();
+const simulation = computed(() => props.simulation)
 
 const options = {
   simulationTimeSettings: {

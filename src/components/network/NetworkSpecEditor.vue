@@ -23,11 +23,11 @@
       <v-spacer />
 
       <v-menu>
-        <template #activator="{ props }">
+        <template #activator="{ props:btnProps }">
           <v-btn
             icon="mdi:mdi-dots-vertical"
             size="small"
-            v-bind="props"
+            v-bind="btnProps"
           />
         </template>
 

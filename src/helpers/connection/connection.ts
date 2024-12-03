@@ -9,14 +9,13 @@ import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import {
   ConnectionParameter,
-  IConnectionParamProps,
 } from "./connectionParameter";
 import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
 
 export interface IConnectionProps {
-  params?: IConnectionParamProps[];
+  params?: IParamProps[];
   rule?: string;
   source: number;
   synapse?: ISynapseProps;
@@ -208,26 +207,26 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Add connection parameter.
-   * @param paramProps connection parameter props
+   * @param paramProps parameter props
    */
-  addParameter(paramProps: IConnectionParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     this._params[paramProps.id] = new ConnectionParameter(this, paramProps);
   }
 
   /**
    * Add connection parameters.
-   * @param paramsProps list of connection parameter props
+   * @param paramsProps list of parameter props
    */
-  addParameters(paramsProps: IConnectionParamProps[] = []): void {
+  addParameters(paramsProps: IParamProps[] = []): void {
     this.logger.trace("init parameter");
 
     this._paramsVisible = [];
     this._params = {};
     const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
-    ruleConfig.params.forEach((param: IConnectionParamProps) => {
+    ruleConfig.params.forEach((param: IParamProps) => {
       if (paramsProps != null) {
-        const paramProps: IConnectionParamProps | undefined = paramsProps.find(
-          (paramProps: IConnectionParamProps) => paramProps.id === param.id
+        const paramProps: IParamProps | undefined = paramsProps.find(
+          (paramProps: IParamProps) => paramProps.id === param.id
         );
         if (paramProps != null) {
           param.value = paramProps.value;

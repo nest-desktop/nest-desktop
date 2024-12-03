@@ -130,9 +130,9 @@
 
         <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
           <CopyModelEditor
-            v-for="(model, index) of project.network.modelsCopied.all"
-            :key="index"
-            :model="model"
+            v-for="(modelCopied, modelIdx) of project.network.modelsCopied.all"
+            :key="modelIdx"
+            :model="modelCopied"
           />
         </span>
       </template>
@@ -187,8 +187,8 @@
 
               <template #connectionEditor>
                 <ConnectionEditor
-                  v-for="(connection, index) in node.connections"
-                  :key="index"
+                  v-for="(connection, connectionIdx) in node.connections"
+                  :key="connectionIdx"
                   :connection
                 >
                   <template #panelTitle>

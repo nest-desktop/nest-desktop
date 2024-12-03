@@ -18,13 +18,13 @@
     />
 
     <v-menu :close-on-content-click="false">
-      <template #activator="{ props }">
+      <template #activator="{ props:btnProps }">
         <v-btn
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-order-bool-ascending-variant"
           size="small"
-          v-bind="props"
+          v-bind="btnProps"
         />
       </template>
 
@@ -50,13 +50,13 @@
     </v-menu>
 
     <v-menu>
-      <template #activator="{ props }">
+      <template #activator="{ props:btnProps }">
         <v-btn
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-dots-vertical"
           size="small"
-          v-bind="props"
+          v-bind="btnProps"
         />
       </template>
 

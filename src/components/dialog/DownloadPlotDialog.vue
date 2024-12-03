@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
-// @ts-ignore
+// @ts-expect-error Could not find a declaration file for module 'plotly.js-basic-dist-min'.
 import {  DownloadImgopts } from "plotly.js-basic-dist-min";
 
 const props = defineProps<{ filename: string }>()

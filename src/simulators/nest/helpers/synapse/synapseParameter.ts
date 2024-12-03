@@ -1,17 +1,13 @@
 // synapseParameter.ts
 
+import { BaseSynapseParameter } from "@/helpers/synapse/synapseParameter";
+import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import {
-  BaseSynapseParameter,
-  ISynapseParamProps,
-} from "@/helpers/synapse/synapseParameter";
 
 import { NESTSynapse } from "./synapse";
 
-export interface INESTSynapseParamProps extends ISynapseParamProps {}
-
 export class NESTSynapseParameter extends BaseSynapseParameter {
-  constructor(synapse: NESTSynapse, paramProps: INESTSynapseParamProps) {
+  constructor(synapse: NESTSynapse, paramProps: IParamProps) {
     super(synapse, paramProps);
   }
 
@@ -39,10 +35,10 @@ export class NESTSynapseParameter extends BaseSynapseParameter {
 
   /**
    * Serialize for JSON.
-   * @return synapse parameter props
+   * @return parameter props
    */
-  override toJSON(): INESTSynapseParamProps {
-    const paramProps: INESTSynapseParamProps = {
+  override toJSON(): IParamProps {
+    const paramProps: IParamProps = {
       id: this.id,
       value: this.value,
     };

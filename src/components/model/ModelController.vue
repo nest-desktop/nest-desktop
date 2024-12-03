@@ -12,12 +12,12 @@
       stacked
     >
       <v-tab
-        :key="index"
         v-for="(item, index) in controllerItems"
-        :disabled="!modelStore.model.isNeuron && item.id === 'code'"
         v-show="
           item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
         "
+        :key="index"
+        :disabled="!modelStore.model.isNeuron && item.id === 'code'"
         :ripple="false"
         :value="modelViewStore.state.controller.open ? item.id : null"
         class="justify-center"

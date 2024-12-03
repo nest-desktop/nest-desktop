@@ -13,8 +13,8 @@
     >
       <v-tab
         v-for="(item, index) in navItems"
-        :key="index"
         v-show="item.simulator === appStore.state.simulator"
+        :key="index"
         :ripple="false"
         class="justify-center"
         height="76"

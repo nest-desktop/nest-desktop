@@ -17,14 +17,14 @@
     />
 
     <v-menu :close-on-content-click="false">
-      <template #activator="{ props }">
+      <template #activator="{ props:btnProps }">
         <v-btn
           :disabled="Object.keys(connection.params).length === 0"
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-order-bool-ascending-variant"
           size="small"
-          v-bind="props"
+          v-bind="btnProps"
         />
       </template>
 

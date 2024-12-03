@@ -11,12 +11,10 @@ import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { PyNNProject } from "../project/project";
 import { PyNNSimulationCode } from "./simulationCode";
 
-export interface IPyNNSimulationProps extends ISimulationProps {}
-
 export class PyNNSimulation extends BaseSimulation {
   constructor(
     project: PyNNProject,
-    simulationProps: IPyNNSimulationProps = {}
+    simulationProps: ISimulationProps = {}
   ) {
     super(project, simulationProps);
   }

@@ -2,19 +2,20 @@
 
 import { AxiosError, AxiosResponse } from "axios";
 
-import { notifyError } from "@/helpers/common/notification";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { ISimulationCodeProps } from "@/helpers/simulation/simulationCode";
+import { notifyError } from "@/helpers/common/notification";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
-import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
+import { NESTSimulationCode } from "./simulationCode";
 import {
   INESTSimulationKernelProps,
   NESTSimulationKernel,
 } from "./simulationKernel";
 
 export interface INESTSimulationProps {
-  code?: INESTSimulationCodeProps;
+  code?: ISimulationCodeProps;
   kernel?: INESTSimulationKernelProps;
   time?: number;
   modules?: string[];

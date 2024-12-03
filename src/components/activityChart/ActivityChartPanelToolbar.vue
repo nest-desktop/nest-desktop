@@ -36,11 +36,11 @@
         />
 
         <v-menu :close-on-content-click="false">
-          <template #activator="{ props }">
+          <template #activator="{ props:itemProps }">
             <v-btn
               icon="mdi:mdi-dots-vertical"
               size="small"
-              v-bind="props"
+              v-bind="itemProps"
             />
           </template>
 

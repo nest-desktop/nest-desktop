@@ -1,18 +1,14 @@
 // modelReceptorParameters.ts
 
-import {
-  IModelParamProps,
-  ModelParameter,
-} from "@/helpers/model/modelParameter";
+import { IParamProps } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTModelReceptor } from "./modelReceptor";
-
-export interface INESTModelReceptorParamProps extends IModelParamProps {}
 
 export class NESTModelReceptorParameter extends ModelParameter {
   constructor(
     modelReceptor: NESTModelReceptor,
-    paramProps: INESTModelReceptorParamProps
+    paramProps: IParamProps
   ) {
     super(modelReceptor.model, paramProps);
   }

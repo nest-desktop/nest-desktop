@@ -229,7 +229,7 @@ export class NodeRecord extends BaseObj {
    */
   valueColor(value: number): string {
     const colorMap: string = `interpolate${this._state.colorMap.scale}`;
-    // @ts-ignore - Element implicitly has an 'any' type because expression of type 'string' can't be used to index type
+    // @ts-expect-error Element implicitly has an 'any' type because expression of type 'string' can't be used to index type
     // 'typeof import("./node_modules/@types/d3/index")'.
     const colorScale = d3[colorMap];
     return colorScale(this._state.colorMap.reverse ? 1 - value : value);

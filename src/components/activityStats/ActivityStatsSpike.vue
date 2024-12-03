@@ -10,15 +10,18 @@
     fixed-header
     loading-text="Loading... Please wait"
   >
-    <template #item.meanISI="{ item }">
+    <template #[`item.meanISI`]="{ item }">
       {{ toFixed(Number(item.meanISI)) }}
     </template>
-    <template #item.stdISI="{ item }">
+
+    <template #[`item.stdISI`]="{ item }">
       {{ toFixed(Number(item.stdISI)) }}
     </template>
-    <template #item.cvISI="{ item }">
+
+    <template #[`item.cvISI`]="{ item }">
       {{ toFixed(Number(item.cvISI)) }}
     </template>
+
     <template #bottom>
       <div class="pr-4 wrapper-table">
         <table class="py-2">

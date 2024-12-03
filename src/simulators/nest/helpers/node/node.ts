@@ -1,10 +1,10 @@
 // node.ts
 
-import { BaseParameter } from "@/helpers/common/parameter";
+import { BaseParameter, IParamProps } from "@/helpers/common/parameter";
 import { TElementType } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 import { onlyUnique, sortString } from "@/utils/array";
 
@@ -256,6 +256,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Get NEST or copied NEST model.
+   * @param modelId model ID
    */
   override getModel(modelId: string): NESTModel {
     // this.logger.trace("get model:", modelId);
@@ -265,6 +266,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Sets all params to invisible.
+   * @param emitChanges trigger emit changes.
    */
   override hideAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = [];
@@ -283,9 +285,10 @@ export class NESTNode extends BaseNode {
 
   /**
    * Load model.
+   * @param paramsProps list of param props
    * @remarks It adds parameters.
    */
-  override loadModel(paramsProps?: INodeParamProps[]): void {
+  override loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId);
 
     if (
@@ -304,7 +307,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Remove compartment from the node.
-   * @param compaartment: NEST node compartment
+   * @param compartment NEST node compartment
    */
   removeCompartment(compartment: NESTNodeCompartment): void {
     // Remove all receptors linking to this compartment.
@@ -319,6 +322,7 @@ export class NESTNode extends BaseNode {
 
   /**
    * Remove receptor from the node.
+   * @param receptor NEST node receptor
    */
   removeReceptor(receptor: NESTNodeReceptor): void {
     this._receptors.splice(this._receptors.indexOf(receptor), 1);

@@ -1,5 +1,6 @@
 <template>
   <v-slider
+    v-model="tickIdx"
     :max
     :min="0"
     :ticks
@@ -12,10 +13,9 @@
     step="1"
     style="position: relative"
     thumb-size="16"
-    @click:append="increment"
     track-size="2"
+    @click:append="increment"
     @click:prepend="decrement"
-    v-model="tickIdx"
   >
     <template #append>
       <div class="unit">

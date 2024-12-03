@@ -24,23 +24,19 @@ import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGr
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);
 
-const activityChartGraph = ref(null);
+const activityChartGraph = ref<HTMLDivElement>();
 
 const init = () => {
-  const ref: any = activityChartGraph.value;
+  const ref = activityChartGraph.value;
 
   if (ref) {
     graph.value?.newPlot(ref);
 
-    // On zoom behavior
-    ref.on("plotly_relayout", () => {
-      graph.value?.restyle();
-    });
+    // @ts-expect-error Property 'on' does not exist on type 'HTMLDivElement'.
+    ref.on("plotly_relayout", restyle);
 
-    // On resize behavior
-    ref.on("plotly_resize", () => {
-      graph.value?.restyle();
-    });
+    // @ts-expect-error Property 'on' does not exist on type 'HTMLDivElement'.
+    ref.on("plotly_resize", restyle);
 
     // if (graph.value?.plotData) {
     //   graph.value.react();
@@ -49,6 +45,7 @@ const init = () => {
 };
 
 const relayout = () => graph.value?.relayout();
+const restyle = () =>  graph.value?.restyle();
 
 onBeforeUnmount(() => {
   // graph.value.deleteTraces();

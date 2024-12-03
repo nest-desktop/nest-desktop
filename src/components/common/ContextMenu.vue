@@ -7,7 +7,7 @@
           props: {
             ...props,
             onClick: closeMenu(),
-            onContextmenu: (e: any) => onContextmenuPipe(props.onClick, e),
+            onContextmenu: (e: MouseEvent) => onContextmenuPipe(props.onClick, e),
             tabindex: '0',
           },
         }"
@@ -59,7 +59,7 @@ const closeMenu = () => {
   state.show = false;
 };
 
-const onContextmenuPipe = (fn: (e: any) => void, e: any) => {
+const onContextmenuPipe = (fn: (e: MouseEvent) => void, e: MouseEvent) => {
   e.preventDefault();
   fn(e);
 };

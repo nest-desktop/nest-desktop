@@ -238,11 +238,16 @@ export class Activity extends BaseObj {
     this.postInit();
   }
 
-  postInit(): void {}
+  /**
+   * Call after init call.
+   */
+  postInit(): void {};
 
-  postUpdate(activityProps: IActivityProps): void {
-    activityProps;
-  }
+  /**
+   * Call after update call.
+   * @param _activityProps activity props
+   */
+  postUpdate(_activityProps: IActivityProps): void {};
 
   /**
    * Reset activity.

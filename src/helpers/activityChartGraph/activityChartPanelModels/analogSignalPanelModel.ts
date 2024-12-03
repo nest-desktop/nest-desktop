@@ -2,18 +2,12 @@
 
 import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "../activityChartPanel";
-import {
-  ActivityChartPanelModel,
-  IActivityChartPanelModelProps,
-} from "../activityChartPanelModel";
-
-export interface IAnalogSignalPanelModelProps
-  extends IActivityChartPanelModelProps {}
+import { ActivityChartPanelModel, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: IAnalogSignalPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.activityType = "analog";

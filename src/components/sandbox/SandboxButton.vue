@@ -8,8 +8,8 @@
         class="my-3"
       >
         <v-btn
-          v-for="(button, index) in buttonGrp"
-          :key="index"
+          v-for="(button, btnIdx) in buttonGrp"
+          :key="btnIdx"
           :color="button.color || state.color"
           :size="button.size || state.size"
           :text="button.text"

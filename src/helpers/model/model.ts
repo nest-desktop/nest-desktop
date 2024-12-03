@@ -9,7 +9,7 @@ import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
 import { IDoc } from "../common/database";
 import { IParamProps } from "../common/parameter";
-import { IModelParamProps, ModelParameter } from "./modelParameter";
+import { ModelParameter } from "./modelParameter";
 
 export interface IModelProps extends IDoc {
   id?: string;
@@ -17,7 +17,7 @@ export interface IModelProps extends IDoc {
   elementType?: TElementType;
   favorite?: boolean;
   label?: string;
-  params?: IModelParamProps[];
+  params?: IParamProps[];
   recordables?: (IModelStateProps | string)[];
   states?: (IModelStateProps | string)[];
 }
@@ -197,7 +197,7 @@ export class BaseModel extends BaseObj {
    * Add a parameter to the model specifications.
    * @param paramProps parameter props
    */
-  addParameter(paramProps: IModelParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     this._params[paramProps.id] = new ModelParameter(this, paramProps);
   }
 
@@ -341,13 +341,13 @@ export class BaseModel extends BaseObj {
 
   /**
    * Update the model parameters.
-   * @param modelParams model parameter props
+   * @param modelParams parameter props
    */
-  updateParameters(modelParamsProps: IModelParamProps[]): void {
+  updateParameters(modelParamsProps: IParamProps[]): void {
     this.logger.trace("update model parameters");
 
     this._params = {};
-    modelParamsProps.forEach((modelParamProps: IModelParamProps) => {
+    modelParamsProps.forEach((modelParamProps: IParamProps) => {
       this.addParameter(modelParamProps);
     });
   }

@@ -6,11 +6,11 @@
         density="compact"
       >
         <v-list-item
-          v-for="(_, component) in components"
-          :key="component"
-          :title="component"
-          :to="`${component}`"
-          :value="component"
+          v-for="(_, componentItem) in components"
+          :key="componentItem"
+          :title="componentItem"
+          :to="`${componentItem}`"
+          :value="componentItem"
         />
       </v-list>
     </v-navigation-drawer>

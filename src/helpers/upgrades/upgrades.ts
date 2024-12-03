@@ -27,9 +27,7 @@ export function upgradeProject(projectProps: any): any {
     return {};
   }
 
-  if (!projectProps.hasOwnProperty("version")) {
-    return projectProps;
-  }
+  if (!("version" in projectProps)) return projectProps;
 
   const oldVersion = projectProps.version;
 

@@ -3,7 +3,7 @@
 import Mustache from "mustache";
 
 import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { INodeParamProps } from "@/helpers/node/nodeParameter";
+import { IParamProps } from "@/helpers/common/parameter";
 import { TConnection } from "@/types";
 
 import { NorseConnection } from "../connection/connection";
@@ -11,13 +11,11 @@ import { NorseModel } from "../model/model";
 import { NorseSimulation } from "../simulation/simulation";
 import { NorseNodes } from "./nodes";
 
-export interface INorseNodeProps extends INodeProps {}
-
 // export class NorseNode extends BaseNode<NorseModel> {
 export class NorseNode extends BaseNode {
   private _code: string = "";
 
-  constructor(nodes: NorseNodes, nodeProps: INorseNodeProps = {}) {
+  constructor(nodes: NorseNodes, nodeProps: INodeProps = {}) {
     super(nodes, nodeProps);
   }
 
@@ -118,7 +116,7 @@ export class NorseNode extends BaseNode {
   /**
    * Load model.
    */
-  override loadModel(paramsProps?: INodeParamProps[]): void {
+  override loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId, paramsProps);
 
     this._model = this.getModel(this._modelId);

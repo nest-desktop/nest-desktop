@@ -4,16 +4,13 @@ import { max, min } from "../../../utils/array";
 import { currentBackgroundColor } from "../../common/theme";
 import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  AnalogSignalPanelModel,
-  IAnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: IAnalogSignalPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bar";

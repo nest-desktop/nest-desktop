@@ -45,7 +45,7 @@ export class ConnectionGraph extends BaseObj {
   drag(event: MouseEvent, connection: TConnection): void {
     if (this.state.dragLine || !connection) return;
 
-    // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+    // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     if (connection.source.isNode) {
@@ -195,7 +195,7 @@ export class ConnectionGraph extends BaseObj {
       .transition(t)
       .style("opacity", 1);
 
-    // @ts-ignore - Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
+    // @ts-expect-error Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
     // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
     // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
     selector.each((connection: TConnection, idx: number, elements: any[]) => {

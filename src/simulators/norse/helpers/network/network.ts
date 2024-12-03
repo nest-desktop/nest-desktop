@@ -2,15 +2,15 @@
 
 import { BaseNetwork, INetworkProps } from "@/helpers/network/network";
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
+import { INodeProps } from "@/helpers/node/node";
 
 import { INorseConnectionProps } from "../connection/connection";
 import { NorseConnections } from "../connection/connections";
-import { INorseNodeProps } from "../node/node";
 import { NorseNodes } from "../node/nodes";
 import { NorseProject } from "../project/project";
 
 export interface INorseNetworkProps extends INetworkProps {
-  nodes?: (INodeGroupProps | INorseNodeProps)[];
+  nodes?: (INodeGroupProps | INodeProps)[];
   connections?: INorseConnectionProps[];
 }
 

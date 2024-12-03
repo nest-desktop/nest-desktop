@@ -82,9 +82,9 @@
         <v-spacer />
 
         <v-text-field
+          v-model="param.value"
           :label="param.id"
           :step="param.step"
-          v-model="param.value"
           :suffix="param.unit"
           density="compact"
           hide-details

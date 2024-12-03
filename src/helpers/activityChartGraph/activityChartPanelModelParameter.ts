@@ -3,14 +3,12 @@
 import { BaseParameter, IParamProps } from '../common/parameter';
 import { ActivityChartPanelModel } from './activityChartPanelModel';
 
-export interface IActivityChartPanelModelParamProps extends IParamProps {}
-
 export class ActivityChartPanelModelParameter extends BaseParameter {
   public _activityChartPanelModel: ActivityChartPanelModel;
 
   constructor(
     activityChartPanelModel: ActivityChartPanelModel,
-    paramProps: IActivityChartPanelModelParamProps
+    paramProps: IParamProps
   ) {
     super(paramProps, { minLevel: 3 });
 
@@ -29,8 +27,8 @@ export class ActivityChartPanelModelParameter extends BaseParameter {
    * Serialize for JSON.
    * @return parameter props
    */
-  override toJSON(): IActivityChartPanelModelParamProps {
-    const paramProps: IActivityChartPanelModelParamProps = {
+  override toJSON(): IParamProps {
+    const paramProps: IParamProps = {
       id: this.id,
       value: this.value,
     };

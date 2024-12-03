@@ -1,11 +1,11 @@
 <template>
   <v-data-table-virtual
     :key="state.activityHash"
+    v-model="activity.state.selected"
     :headers
     :items="state.items"
     :loading="state.loading"
     class="activityStatsAnalog"
-    v-model="activity.state.selected"
     density="compact"
     fixed-header
     loading-text="Loading... Please wait"
@@ -14,21 +14,20 @@
   >
     <template #top>
       <v-select
+        v-if="activity.recorder.model.isMultimeter"
+        v-model="state.selectedRecord"
         :readonly="activity.recorder.records.length < 2"
         :items="activity.recorder.records"
         chips
         class="mr-1"
         density="compact"
-        v-if="activity.recorder.model.isMultimeter"
         hide-details
-        v-model="state.selectedRecord"
         item-title="title"
         item-value="id"
         @update:model-value="selected()"
       >
         <template
           #chip="{ item }"
-          style="width: 100%"
         >
           {{ item.title }}
           <NodeRecordChip
@@ -38,9 +37,9 @@
           />
         </template>
 
-        <template #item="{ item, props }">
+        <template #item="{ item, props: itemProps }">
           <v-list-item
-            v-bind="props"
+            v-bind="itemProps"
             density="compact"
             title=""
           >
@@ -58,31 +57,31 @@
       </v-select>
     </template>
 
-    <template #item.id="{ item }">
+    <template #[`item.id`]="{ item }">
       <span style="color: rgb(var(--v-theme-primary))">{{ item.id }}</span>
     </template>
 
-    <template #item.mean="{ item }">
+    <template #[`item.mean`]="{ item }">
       <span style="color: rgb(var(--v-theme-primary))">
         {{ toFixed(Number(item.mean)) }}
       </span>
     </template>
 
-    <template #item.std="{ item }">
+    <template #[`item.std`]="{ item }">
       <span style="color: rgb(var(--v-theme-primary))">
         {{ toFixed(Number(item.std)) }}
       </span>
     </template>
 
-    <template #item.actions="{ index }">
+    <template #[`item.actions`]="{ index }">
       <v-menu transition="slide-y-transition">
-        <template #activator="{ props }">
+        <template #activator="{ props:iconProps }">
           <v-icon
             :color="record.state.traceColors[index]"
             class="me-2"
             icon="mdi:mdi-format-color-fill"
             size="small"
-            v-bind="props"
+            v-bind="iconProps"
           />
         </template>
 

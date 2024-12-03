@@ -102,10 +102,9 @@
           </template>
         </v-toolbar>
 
-        <div
-          class="px-4"
-          v-html="log.htmlContent"
-        />
+        <div class="px-4">
+          {{ log.htmlContent }}
+        </div>
 
         <v-divider class="my-1" />
       </v-list-item>

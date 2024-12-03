@@ -2,6 +2,7 @@
   <div>
     <v-select
       :key="node.hash"
+      v-model="node.records"
       :items="node.recordables"
       base-color="primary"
       chips
@@ -13,12 +14,11 @@
       hide-details
       item-title="title"
       item-value="groupId"
-      @update:model-value="nextTick(() => node.changes())"
       label="Record from"
       multiple
       persistent-hint
       return-object
-      v-model="node.records"
+      @update:model-value="nextTick(() => node.changes())"
     >
       <template
         v-if="node.records.length > 0"
@@ -32,10 +32,10 @@
 
       <template
         v-if="node.records.length > 0"
-        #item="{ item, props }"
+        #item="{ item, props:itemProps }"
       >
         <v-list-item
-          v-bind="props"
+          v-bind="itemProps"
           density="compact"
           title=""
         >
@@ -60,11 +60,12 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick } from "vue";
+import { computed, nextTick } from "vue";
 
 import NodeRecordChip from "./NodeRecordChip.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { TNode } from "@/types";
 
-defineProps<{ node: TNode }>();
+const props = defineProps<{ node: TNode }>();
+const node = computed(() => props.node)
 </script>

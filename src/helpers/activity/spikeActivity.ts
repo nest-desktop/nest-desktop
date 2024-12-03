@@ -4,12 +4,10 @@ import { TNode } from "@/types";
 
 import { Activity, IActivityProps, IEventProps } from "./activity";
 
-interface ISpikeActivityProps extends IActivityProps {}
-
 export class SpikeActivity extends Activity {
   private _times: number[][] = [];
 
-  constructor(recorder: TNode, activityProps: ISpikeActivityProps = {}) {
+  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
     super(recorder, activityProps);
   }
 
@@ -87,7 +85,7 @@ export class SpikeActivity extends Activity {
   /**
    * Post-update spike activity.
    */
-  override postUpdate(activityProps: ISpikeActivityProps): void {
+  override postUpdate(activityProps: IActivityProps): void {
     if (activityProps.events == undefined) return;
 
     this.updateTimes(activityProps.events);

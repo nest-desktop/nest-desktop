@@ -1,21 +1,19 @@
 // synapse.ts
 
-import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
+import { IParamProps } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
-import {
-  INESTSynapseParamProps,
-  NESTSynapseParameter,
-} from "./synapseParameter";
+import { NESTSynapseParameter } from "./synapseParameter";
 
 export interface INESTSynapseProps extends ISynapseProps {
   receptorIdx?: number;
   model?: string;
-  params?: INESTSynapseParamProps[];
+  params?: IParamProps[];
 }
 
 export class NESTSynapse extends BaseSynapse {
@@ -160,9 +158,9 @@ export class NESTSynapse extends BaseSynapse {
 
   /**
    * Add parameter component.
-   * @param paramProps - synapse parameter props
+   * @param paramProps parameter props
    */
-  addParameter(paramProps: INESTSynapseParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     // this._logger.trace("add parameter:", param)
     this.params[paramProps.id] = new NESTSynapseParameter(this, paramProps);
   }
@@ -176,7 +174,7 @@ export class NESTSynapse extends BaseSynapse {
   /**
    * Initialize synapse parameters.
    */
-  override initParameters(paramsProps?: INESTSynapseParamProps[]): void {
+  override initParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("init parameters");
 
     this._paramsVisible = [];

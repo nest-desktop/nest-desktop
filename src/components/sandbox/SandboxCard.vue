@@ -11,8 +11,8 @@
         <v-card-text>
           <v-list>
             <v-list-item
-              v-for="(item, index) in card.items"
-              :key="index"
+              v-for="(item, itemIdx) in card.items"
+              :key="itemIdx"
             >
               {{ item.title }}
             </v-list-item>

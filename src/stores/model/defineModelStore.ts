@@ -180,7 +180,11 @@ export function defineModelStore(
         logger.trace("select project", projectId);
 
         state.projectId = projectId;
-        callback ? callback() : updateProject();
+        if (callback) {
+          callback()
+        } else {
+          updateProject()
+        };
       };
 
       /**

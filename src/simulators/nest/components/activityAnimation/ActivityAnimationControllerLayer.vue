@@ -22,11 +22,11 @@
     <v-expansion-panel-text class="px-1 py-0">
       <v-card flat>
         <v-select
+          v-model="layer.modelSelected"
           :items="layer.models"
           class="my-2"
           density="compact"
           hide-details
-          v-model="layer.modelSelected"
           label="select geometry model"
           prepend-inner-icon="mdi-shape"
           return-object
@@ -41,6 +41,7 @@
       >
         <span v-if="layer.state.records.length > 0">
           <v-select
+            v-model="layer.state.record"
             :items="layer.state.records"
             attach
             chips
@@ -51,7 +52,6 @@
             label="recorded events"
             persistent-hint
             return-object
-            v-model="layer.state.record"
             @update:model-value="update"
           >
             <template #selection="{ item }">
@@ -98,10 +98,10 @@
             style="width: 100%"
           >
             <v-text-field
+              v-model="layer.state.record.state.colorMap.min"
               :label="`min [${layer.state.record.unit}]`"
               :step="0.1"
               density="compact"
-              v-model="layer.state.record.state.colorMap.min"
               hide-details
               rounded="e-0"
               style="flex-grow: 0"
@@ -119,8 +119,8 @@
               rounded="0"
               @update:model-value="update"
             >
-              <template #item="{ item, props }">
-                <v-list-item v-bind="props">
+              <template #item="{ item, props:itemProps }">
+                <v-list-item v-bind="itemProps">
                   <template #append>
                     <img
                       :class="{ 'flip-h': layer.state.record.state.colorMap.reverse }"
@@ -128,7 +128,7 @@
                       alt="img"
                       height="12"
                       width="72"
-                    />
+                    >
                   </template>
                 </v-list-item>
               </template>
@@ -140,15 +140,15 @@
                   alt="img"
                   height="12"
                   width="72"
-                />
+                >
               </template>
             </v-select>
 
             <v-text-field
+              v-model="layer.state.record.state.colorMap.max"
               :label="`max [${layer.state.record.unit}]`"
               :step="0.1"
               density="compact"
-              v-model="layer.state.record.state.colorMap.max"
               hide-details
               rounded="s-0"
               style="flex-grow: 0"
@@ -316,4 +316,4 @@ const update = () => {
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
 }
-</style
+</style>

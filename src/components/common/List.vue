@@ -65,11 +65,9 @@ interface IItem {
   items?: IItem[]
 }
 
-
-
 defineProps<{ items: IItem[] }>();
 
-const state = reactive<{ listOpen: any }>({
+const state = reactive<{ listOpen: string[] }>({
   listOpen: [],
 });
 </script>

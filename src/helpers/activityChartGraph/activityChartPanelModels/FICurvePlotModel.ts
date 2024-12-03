@@ -2,16 +2,13 @@
 
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";

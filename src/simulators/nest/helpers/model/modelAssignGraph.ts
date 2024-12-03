@@ -100,8 +100,8 @@ export class NESTModelAssignGraph {
     const selector = select("g#modelAssigned").selectAll("g.modelAssigned");
     selector.style("pointer-events", "none");
 
-    // @ts-ignore - Argument of type '(connection: Connection, idx: number, elements: any[]) => void' is not assignable
-    // to parameter of type 'ValueFn<BaseType, unknown, void>'.
+    // @ts-expect-error Argument of type '(connection: Connection, idx: number, elements: any[]) => void' is not
+    // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'.
     selector.each((connection: Connection, idx: number, elements: any[]) => {
       const elem = select(elements[idx]);
       const synapseModel = connection.synapse.model as NESTCopyModel;

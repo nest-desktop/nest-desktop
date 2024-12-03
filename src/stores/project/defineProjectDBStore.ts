@@ -41,7 +41,7 @@ export function defineProjectDBStore(
   });
 
   const db = new props.ProjectDB();
-  // @ts-ignore - Cannot find namespace 'props'.
+  // @ts-expect-error Cannot find namespace 'props'.
   type Project = props.Project;
 
   return defineStore(props.simulator + "-project-db", () => {

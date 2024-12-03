@@ -1,9 +1,9 @@
 <template>
   <v-list>
     <v-select
+      v-model="param.typeId"
       :items="param.types"
       density="compact"
-      v-model="param.typeId"
       hide-details
       item-title="label"
       item-value="id"
@@ -18,9 +18,9 @@
             <v-icon :icon="data.item.icon" left />
             {{ data.item.label }}
           </template> -->
-      <template #item="{ item, props }">
+      <template #item="{ item, props:itemProps }">
         <v-list-item
-          v-bind="props"
+          v-bind="itemProps"
           :prepend-icon="item.raw.icon"
         />
       </template>
@@ -45,7 +45,10 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import { BaseParameter } from "@/helpers/common/parameter";
 
-defineProps<{ param: BaseParameter }>();
+const props = defineProps<{ param: BaseParameter }>();
+const param = computed(() => props.param)
 </script>

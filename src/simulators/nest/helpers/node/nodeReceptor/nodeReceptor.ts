@@ -1,7 +1,6 @@
 // nodeReceptor.ts
 
 import { IParamProps, TParamValue } from "@/helpers/common/parameter";
-import { INodeParamProps } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NodeView } from "@/helpers/node/nodeView";
 
@@ -9,15 +8,12 @@ import { NESTModelReceptor } from "../../model/modelReceptor/modelReceptor";
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { NESTNode } from "../node";
 import { NESTNodeCompartment } from "../nodeCompartment/nodeCompartment";
-import {
-  INESTNodeReceptorParamProps,
-  NESTNodeReceptorParameter,
-} from "./nodeReceptorParameter";
+import { NESTNodeReceptorParameter } from "./nodeReceptorParameter";
 
 export interface INESTNodeReceptorProps {
   compIdx: number;
   id: string;
-  params?: INodeParamProps[];
+  params?: IParamProps[];
   type?: string;
 }
 
@@ -215,7 +211,7 @@ export class NESTNodeReceptor {
         );
       }
     } else if (receptorProps.params) {
-      receptorProps.params.forEach((paramProps: INESTNodeReceptorParamProps) =>
+      receptorProps.params.forEach((paramProps: IParamProps) =>
         this.addParameter(paramProps)
       );
     }

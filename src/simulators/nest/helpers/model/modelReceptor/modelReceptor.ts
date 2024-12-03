@@ -5,17 +5,15 @@ import { UnwrapRef, reactive } from "vue";
 import { BaseObj } from "@/helpers/common/base";
 import { IModelProps } from "@/helpers/model/model";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { IParamProps } from "@/helpers/common/parameter";
 
 import { NESTModel } from "../model";
-import {
-  INESTModelReceptorParamProps,
-  NESTModelReceptorParameter,
-} from "./modelReceptorParameter";
+import { NESTModelReceptorParameter } from "./modelReceptorParameter";
 
 export interface INESTModelReceptorProps {
   id: string;
   label: string;
-  params?: INESTModelReceptorParamProps[];
+  params?: IParamProps[];
   recordables?: string[];
 }
 
@@ -102,7 +100,7 @@ export class NESTModelReceptor extends BaseObj {
    * Add a parameter component.
    * @param param - parameter object
    */
-  addParameter(paramProps: INESTModelReceptorParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     this._params[paramProps.id] = new NESTModelReceptorParameter(
       this,
       paramProps
@@ -153,7 +151,7 @@ export class NESTModelReceptor extends BaseObj {
   initParameters(modelReceptorProps: INESTModelReceptorProps): void {
     if (modelReceptorProps.params) {
       modelReceptorProps.params.forEach(
-        (paramProps: INESTModelReceptorParamProps) => {
+        (paramProps: IParamProps) => {
           if (this.getParameter(paramProps.id)) {
             this.updateParameter(paramProps);
           } else {
@@ -223,7 +221,7 @@ export class NESTModelReceptor extends BaseObj {
   /**
    * Update a parameter.
    */
-  updateParameter(paramProps: INESTModelReceptorParamProps): void {
+  updateParameter(paramProps: IParamProps): void {
     this._params[paramProps.id].init(paramProps);
   }
 

@@ -5,12 +5,10 @@ import { TConnection } from '@/types';
 import { BaseParameter, IParamProps, IParamType } from '../common/parameter';
 import { IConnectionRuleConfig } from './connectionRule';
 
-export interface IConnectionParamProps extends IParamProps {}
-
 export class ConnectionParameter extends BaseParameter {
   public _connection: TConnection;
 
-  constructor(connection: TConnection, paramProps: IConnectionParamProps) {
+  constructor(connection: TConnection, paramProps: IParamProps) {
     super(paramProps, { minLevel: 3 });
     this._connection = connection;
   }
@@ -36,7 +34,7 @@ export class ConnectionParameter extends BaseParameter {
 
     const ruleConfig: IConnectionRuleConfig = this.connection.getRuleConfig();
     const p = ruleConfig.params.find(
-      (p: IConnectionParamProps) => p.id === this.id
+      (p: IParamProps) => p.id === this.id
     );
 
     if (p?.value) {

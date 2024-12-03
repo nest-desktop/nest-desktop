@@ -342,9 +342,11 @@ export class BaseNodes extends BaseObj {
   toggleNodeSelection(node: NodeGroup | TNode) {
     this._network.state.state.elementTypeIdx = 0;
 
-    this._state.selectedNodes.includes(node)
-      ? this.unselectNode(node)
-      : this.selectNode(node);
+    if (this._state.selectedNodes.includes(node)) {
+      this.unselectNode(node)
+    } else {
+      this.selectNode(node);
+    }
   }
 
   /**
@@ -380,9 +382,11 @@ export class BaseNodes extends BaseObj {
 
     if (nodesProps) {
       nodesProps.forEach((nodeProps: INodeProps | INodeGroupProps) => {
-        "nodes" in nodeProps
-          ? this.addNodeGroup(nodeProps as INodeGroupProps)
-          : this.addNode(nodeProps as INodeProps);
+        if ("nodes" in nodeProps) {
+          this.addNodeGroup(nodeProps as INodeGroupProps)
+        } else {
+          this.addNode(nodeProps as INodeProps);
+        }
       });
     }
 

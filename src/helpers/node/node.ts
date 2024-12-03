@@ -10,23 +10,24 @@ import {
   TSimulation,
 } from "@/types";
 
-import { onlyUnique, sortString } from "../../utils/array";
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
-import { SpikeActivity } from "../activity/spikeActivity";
-import { BaseObj } from "../common/base";
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
-import { ModelParameter } from "../model/modelParameter";
-import { NodeGroup } from "./nodeGroup";
-import { INodeParamProps, NodeParameter } from "./nodeParameter";
+import { BaseObj } from "../common/base";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
 import { INodeViewProps, NodeView } from "./nodeView";
+import { IParamProps } from "../common/parameter";
+import { ModelParameter } from "../model/modelParameter";
+import { NodeGroup } from "./nodeGroup";
+import { NodeParameter } from "./nodeParameter";
+import { SpikeActivity } from "../activity/spikeActivity";
+import { onlyUnique, sortString } from "../../utils/array";
 
 export interface INodeProps {
   activity?: IActivityProps;
   annotations?: string[];
   model?: string;
-  params?: INodeParamProps[];
+  params?: IParamProps[];
   records?: INodeRecordProps[];
   size?: number;
   view?: INodeViewProps;
@@ -243,7 +244,7 @@ export class BaseNode extends BaseObj {
   }
 
   get nodeIdx(): number {
-    // @ts-ignore - Argument of type 'this' is not assignable to parameter of type '(TNode & NESTNode) & NorseNode'.
+    // @ts-expect-error Argument of type 'this' is not assignable to parameter of type '(TNode & NESTNode) & NorseNode'.
     return this._nodes.nodes.indexOf(this);
   }
 
@@ -364,7 +365,7 @@ export class BaseNode extends BaseObj {
    * @param paramProps parameter props
    * @param visible boolean
    */
-  addParameter(paramProps: INodeParamProps, visible: boolean = false): void {
+  addParameter(paramProps: IParamProps, visible: boolean = false): void {
     this.logger.trace("add parameter", paramProps.id);
 
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
@@ -378,7 +379,7 @@ export class BaseNode extends BaseObj {
    * Add parameters to the node.
    * @param paramsProps list of parameter props
    */
-  addParameters(paramsProps?: INodeParamProps[]): void {
+  addParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("add parameters");
 
     this.emptyParams();
@@ -386,7 +387,7 @@ export class BaseNode extends BaseObj {
       this._model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
           const nodeParamProps = paramsProps.find(
-            (paramProps: INodeParamProps) => paramProps.id === modelParam.id
+            (paramProps: IParamProps) => paramProps.id === modelParam.id
           );
           if (nodeParamProps) {
             this.addParameter(
@@ -404,7 +405,7 @@ export class BaseNode extends BaseObj {
         }
       });
     } else if (paramsProps) {
-      paramsProps.forEach((param: INodeParamProps) =>
+      paramsProps.forEach((param: IParamProps) =>
         this.addParameter(param, true)
       );
     }
@@ -432,7 +433,7 @@ export class BaseNode extends BaseObj {
    * Clone this node component.
    * @return cloned node component.
    */
-  clone(_: boolean = true): TNode {
+  clone(): TNode {
     this.logger.trace("clone");
 
     const nodeProps = this.toJSON();
@@ -546,7 +547,7 @@ export class BaseNode extends BaseObj {
   /**
    * Load model.
    */
-  loadModel(paramsProps?: INodeParamProps[]): void {
+  loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId);
 
     this._model = this.getModel(this._modelId);

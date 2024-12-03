@@ -6,9 +6,9 @@
           fluid
           value="Analog signals"
         >
-          <template #activator="{ props }">
+          <template #activator="{ props:itemProps }">
             <v-list-item
-              v-bind="props"
+              v-bind="itemProps"
               title="Analog signals"
             />
           </template>
@@ -25,9 +25,9 @@
           fluid
           value="Spike activity"
         >
-          <template #activator="{ props }">
+          <template #activator="{ props:itemProps }">
             <v-list-item
-              v-bind="props"
+              v-bind="itemProps"
               title="Spike activity"
             />
           </template>

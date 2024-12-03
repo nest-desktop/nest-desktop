@@ -7,8 +7,6 @@ import {
 
 import { PyNNSimulation } from "./simulation";
 
-export interface IPyNNSimulationCodeProps extends ISimulationCodeProps {}
-
 const simulationCodeBlocks: string[] = [
   "importModules",
   "createNodes",
@@ -19,7 +17,7 @@ const simulationCodeBlocks: string[] = [
 export class PyNNSimulationCode extends BaseSimulationCode {
   constructor(
     simulation: PyNNSimulation,
-    simulationCodeProps: IPyNNSimulationCodeProps = {}
+    simulationCodeProps: ISimulationCodeProps = {}
   ) {
     simulationCodeProps.templateFilename = "pynn-master";
     super(simulation, {

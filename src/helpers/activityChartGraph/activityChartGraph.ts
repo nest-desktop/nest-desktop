@@ -3,7 +3,7 @@
 import moment from "moment";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
-// @ts-ignore
+// @ts-expect-error Could not find a declaration file for module 'plotly.js-basic-dist-min'.
 import * as PlotlyBasic from "plotly.js-basic-dist-min";
 
 import { TProject } from "@/types";
@@ -307,7 +307,7 @@ export class ActivityChartGraph extends BaseObj {
    * Delete traces.
    */
   deleteTraces(): void {
-    // @ts-ignore
+    // @ts-expect-error Cannot find name 'Plotly'.
     Plotly.deleteTraces(this._state.ref as Root, 0);
   }
 
@@ -319,7 +319,7 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("download Image:", options);
 
-    // @ts-ignore
+    // @ts-expect-error Cannot find name 'Plotly'.
     Plotly.downloadImage(this._state.ref, options);
   }
 
@@ -370,7 +370,6 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("init events");
 
-    // @ts-ignore - Property 'on' does not exist on type 'Root'. Property 'on' does not exist on type 'string'.
     this._state.ref.on("plotly_legendclick", (plot: any) => {
       nextTick(() => {
         if (plot && plot.data) {
@@ -399,7 +398,7 @@ export class ActivityChartGraph extends BaseObj {
 
     this._state.ref = ref;
 
-    // @ts-ignore
+    // @ts-expect-error Cannot find name 'Plotly'.
     Plotly.newPlot(
       this._state.ref,
       this._plotData,
@@ -418,7 +417,7 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("react");
 
-    // @ts-ignore
+    // @ts-expect-error Cannot find name 'Plotly'.
     Plotly.react(this._state.ref, this._plotData, this._plotLayout);
   }
 
@@ -430,7 +429,7 @@ export class ActivityChartGraph extends BaseObj {
     this.logger.trace("relayout");
 
     this.updateThemeColor();
-    // @ts-ignore
+    // @ts-expect-error Cannot find name 'Plotly'.
     Plotly.relayout(this._state.ref, this._plotLayout);
   }
 
@@ -462,7 +461,7 @@ export class ActivityChartGraph extends BaseObj {
     if (this.project.activities.state.hasSomeSpikeRecorders) {
       const restyleRaster = this.restyleMarkerHeightSpikeTimesRasterPlot();
 
-      // @ts-ignore
+      // @ts-expect-error Cannot find name 'Plotly'.
       Plotly.restyle(
         this._state.ref,
         restyleRaster.update,

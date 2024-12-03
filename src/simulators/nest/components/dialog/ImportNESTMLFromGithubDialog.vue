@@ -18,12 +18,12 @@
     <v-card-text>
       <v-row class="mb-2">
         <v-select
+          v-model="state.githubTag"
           :disabled="state.githubTags.length === 0"
           :items="state.githubTags"
           class="mx-2"
           density="compact"
           hide-details
-          v-model="state.githubTag"
           item-title="name"
           item-value="name"
           label="Select a tag"
@@ -31,12 +31,12 @@
         />
 
         <v-select
+          v-model="state.elementType"
           :disabled="state.elementTypes.length === 0"
           :items="state.elementTypes"
           class="mx-2"
           density="compact"
           hide-details
-          v-model="state.elementType"
           item-title="path"
           item-value="path"
           label="Select an element type"
@@ -44,12 +44,12 @@
         />
 
         <v-select
+          v-model="state.modelFilename"
           :disabled="state.modelFilenames.length === 0"
           :items="state.modelFilenames"
           class="mx-2"
           density="compact"
           hide-details
-          v-model="state.modelFilename"
           item-title="path"
           item-value="path"
           label="Select a nestml file"

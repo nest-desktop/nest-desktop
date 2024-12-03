@@ -121,10 +121,13 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import Card from "@/components/common/Card.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
 import { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
 
-defineProps<{ graph: ActivityAnimationGraph }>();
+const props = defineProps<{ graph: ActivityAnimationGraph }>();
+const graph = computed(() => props.graph);
 </script>

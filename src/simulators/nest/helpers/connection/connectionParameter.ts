@@ -5,8 +5,6 @@ import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 
 import { NESTConnection } from "./connection";
 
-export interface INESTConnectionParamProps extends IParamProps {}
-
 const PyNNParamIds: Record<string, string> = {
   N: "n",
   indegree: "n",
@@ -17,7 +15,7 @@ const PyNNParamIds: Record<string, string> = {
 export class NESTConnectionParameter extends ConnectionParameter {
   constructor(
     connection: NESTConnection,
-    paramProps: INESTConnectionParamProps
+    paramProps: IParamProps
   ) {
     super(connection, paramProps);
   }

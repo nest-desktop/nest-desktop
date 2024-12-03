@@ -59,7 +59,7 @@ export class NodeGroupGraph {
    * @param nodeGroup node group object
    */
   drag(event: MouseEvent, nodeGroup: NodeGroup): void {
-    // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+    // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
@@ -222,7 +222,7 @@ export class NodeGroupGraph {
       });
     });
 
-    // @ts-ignore - Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
+    // @ts-expect-error Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
     // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
     elem.call(dragging, null);
 

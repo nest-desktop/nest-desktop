@@ -1,8 +1,8 @@
 <template>
   <v-select
+    v-model="model.templateName"
     :items
     density="compact"
-    v-model="model.templateName"
     hide-details
     label="model template"
     max-width="400"
@@ -65,7 +65,7 @@ const loadFromGithub = () => {
     text: "",
     title: "",
   }).then(
-    // @ts-ignore
+    // @ts-expect-error Types of parameters 'response' and 'value' are incompatible.
     (response: { elementType: string; modelId: string; script: string }) => {
       if (response) {
         // model.value.elementType = response.elementType as TElementType;

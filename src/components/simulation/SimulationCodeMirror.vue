@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
@@ -20,9 +21,9 @@ import {
   basicSetup,
   languagePython,
   oneDark,
+  simulationCodeError
 } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
-import { simulationCodeError } from "@/plugins/codemirror";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -47,11 +48,11 @@ if (darkMode()) {
   extensions.push(oneDark);
 }
 
-const handleReady = (payload: any) => {
+const handleReady = (payload: MouseEvent) => {
   view.value = payload.view;
 };
 
-const updateView = (event: any) => {
+const updateView = (event: EditorView) => {
   state.cursor = event.state.selection.ranges[0];
 };
 

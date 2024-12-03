@@ -88,10 +88,10 @@
         "
       >
         <v-text-field
+          v-model="projectStore.state.project.name"
           append-inner-icon="mdi:mdi-content-save-edit-outline"
           autofocused
           class="pb-1"
-          v-model="projectStore.state.project.name"
           density="compact"
           hide-details
           label="Project name"
@@ -100,7 +100,7 @@
       </template>
 
       <template v-for="(project, index) in projects.slice().reverse()">
-        <v-hover v-slot="{ isHovering, props }">
+        <v-hover v-slot="{ isHovering, props:itemProps }">
           <v-list-item
             :key="index"
             :to="{
@@ -108,7 +108,7 @@
               params: { projectId: project.id },
             }"
             :ripple="!project.state?.editMode"
-            v-bind="props"
+            v-bind="itemProps"
           >
             <template
               v-if="!project.state?.editMode"
@@ -140,12 +140,12 @@
               #default
             >
               <v-text-field
+                v-model="project.name"
                 append-inner-icon="mdi:mdi-content-save-edit-outline"
                 autofocused
                 class="pt-2"
                 density="compact"
                 hide-details
-                v-model="project.name"
                 label="Project name"
                 @click.prevent
                 @click:append-inner="saveProject(project)"
@@ -205,7 +205,7 @@ import { createDialog } from "vuetify3-dialog";
 
 import { TProject } from "@/types";
 import { newProjectRoute } from "@/helpers/routes";
-// @ts-ignore - 'truncate' is declared but its value is never read.
+
 import { truncate } from "@/utils/truncate";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
@@ -223,7 +223,7 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-defineProps(["color"]);
+defineProps<{color: string}>();
 
 const projectStore = computed(
   () => appStore.currentSimulator.stores.projectStore

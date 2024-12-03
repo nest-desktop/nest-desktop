@@ -5,14 +5,8 @@ import { TNode } from "@/types";
 import { currentBackgroundColor, currentColor } from "../../common/theme";
 import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  AnalogSignalPanelModel,
-  IAnalogSignalPanelModelProps,
-} from "./analogSignalPanelModel";
-
-export interface IAnalogSignalPlotModelProps
-  extends IAnalogSignalPanelModelProps {}
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 
 interface IDataPoints {
   name: string;
@@ -23,7 +17,7 @@ interface IDataPoints {
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   constructor(
     panel: ActivityChartPanel,
-    modelProps: IAnalogSignalPlotModelProps = {}
+    modelProps: IActivityChartPanelModelProps = {}
   ) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";

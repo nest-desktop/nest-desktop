@@ -43,12 +43,12 @@
               v-model="state.menu"
               :close-on-content-click="false"
             >
-              <template #activator="{ props }">
+              <template #activator="{ props:btnProps }">
                 <v-btn
                   class="rounded-circle"
                   icon="mdi:mdi-order-bool-ascending-variant"
                   size="small"
-                  v-bind="props"
+                  v-bind="btnProps"
                 />
               </template>
 
@@ -148,13 +148,14 @@
           </v-list>
 
           <v-list class="py-0">
-            <ParamListItem
-              v-for="(paramId, index) in node.paramsVisible"
-              v-if="node.paramsVisible.length > 0"
-              :key="index"
-              :color="node.view.color"
-              :param="node.params[paramId]"
-            />
+            <template v-for="(paramId, index) in node.paramsVisible">
+              <ParamListItem
+                v-if="node.paramsVisible.length > 0"
+                :key="index"
+                :color="node.view.color"
+                :param="node.params[paramId]"
+              />
+            </template>
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -190,7 +191,7 @@ const node = computed(() => props.node);
 
 const state = reactive<{
   elementType: string;
-  items: (TModel | any)[];
+  items: (TModel)[];
   menu: boolean;
 }>({
   elementType: "",

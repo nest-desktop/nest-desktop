@@ -2,6 +2,7 @@
   <ModelNav color="nest-model">
     <template #newModel>
       <v-fab
+        v-show="appStore.currentSimulator.backends.nestml.state.enabled"
         class="ms-4"
         color="primary"
         icon="mdi:mdi-plus"
@@ -9,7 +10,6 @@
         size="40"
         absolute
         offset
-        v-show="appStore.currentSimulator.backends.nestml.state.enabled"
         title="Create a new model"
         @click="dialogNewModel()"
       />
@@ -178,7 +178,7 @@ const dialogNewModel = () => {
     },
     text: "",
     title: "",
-    // @ts-ignore - Dialog only returns string.
+    // @ts-expect-error Vuetify3 Dialog only returns string.
   }).then((model: NESTModel | undefined) => {
     if (model) {
       modelDBStore.value.state.models.unshift(model);

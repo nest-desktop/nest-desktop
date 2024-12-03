@@ -20,23 +20,23 @@
             </v-avatar>
 
             <v-select
+              v-model="model.existingModelId"
               :item-props="true"
               :items="state.items"
               :label="state.elementType + ' model'"
               class="model-select text-primary mx-1"
-              v-model="model.existingModelId"
               density="compact"
               hide-details
               item-title="label"
               item-value="id"
               @click.stop
             >
-              <template #item="{ props }">
+              <template #item="{ props:itemProps }">
                 <v-list-item
                   class="model-item"
-                  @click="select(props)"
+                  @click="select(itemProps)"
                 >
-                  {{ props.title }}
+                  {{ itemProps.title }}
 
                   <template #append>
                     <v-btn
@@ -45,7 +45,7 @@
                       icon="mdi:mdi-menu-right"
                       size="x-small"
                       variant="text"
-                      @click.stop="select(props, () => (state.menu = true))"
+                      @click.stop="select(itemProps, () => (state.menu = true))"
                     />
                   </template>
                 </v-list-item>
@@ -76,14 +76,14 @@
               v-model="state.menu"
               :close-on-content-click="false"
             >
-              <template #activator="{ props }">
+              <template #activator="{ props:btnProps }">
                 <v-btn
                   class="menu-btn"
                   icon="mdi:mdi-order-bool-ascending-variant"
                   size="small"
                   rounded="pill"
                   variant="text"
-                  v-bind="props"
+                  v-bind="btnProps"
                   @click.prevent
                   @click.stop
                 />
