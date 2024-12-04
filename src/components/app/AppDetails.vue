@@ -39,7 +39,7 @@
           </v-col>
         </v-row>
       </v-list-item>
-      <v-list-item>
+      <!-- <v-list-item>
         <v-row>
           <v-col class="font-weight-bold text-left" cols="4">
             <v-icon class="mx-2" icon="mdi:mdi-magnify" />
@@ -55,20 +55,21 @@
             <v-chip :text="state.osType" prepend-icon="mdi:mdi-desktop-tower-monitor" size="x-small" variant="text" />
           </v-col>
         </v-row>
-      </v-list-item>
+      </v-list-item> -->
     </v-list>
 
     <v-divider />
 
     <v-list class="my-2" density="compact">
-      <v-list-subheader>References</v-list-subheader>
+      <v-list-subheader>Links</v-list-subheader>
       <v-list-item
-        v-for="(item, index) in refItems"
+        v-for="(item, index) in linkItems"
         :key="index"
         append-icon="mdi:mdi-open-in-new"
         target="_blank"
         v-bind="item"
-        :title="item.title + ' (' + item.href + ')'"
+        :title="item.title"
+        :subtitle="item.href"
       />
     </v-list>
   </v-card>
@@ -119,21 +120,26 @@ if (info) {
   state.osType = info.os || "";
 }
 
-const refItems = [
+const linkItems = [
   {
     href: "https://nest-desktop.github.io",
-    prependIcon: "mdi:mdi-home",
-    title: "Official page",
+    prependIcon: "mdi:mdi-web",
+    title: "Project website",
   },
   {
     href: "https://nest-desktop.readthedocs.io",
-    prependIcon: "mdi:mdi-book-open",
-    title: "Guides",
+    prependIcon: "mdi:mdi-lifebuoy",
+    title: "Help",
   },
   {
-    href: "https://github.com/nest-desktop/nest-desktop",
-    prependIcon: "mdi:mdi-github",
-    title: "Source code",
+    href: "https://github.com/nest-desktop/nest-desktop/issues",
+    prependIcon: "mdi:mdi-flag",
+    title: "Report an issue",
+  },
+  {
+    href: "https://nest-desktop.readthedocs.io/en/latest/contribute.html",
+    prependIcon: "mdi:mdi-tools",
+    title: "Contribute to the app",
   },
 ];
 </script>
