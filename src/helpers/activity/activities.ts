@@ -22,7 +22,7 @@ export class Activities extends BaseObj {
   public _project: TProject;
 
   constructor(project: TProject) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._project = project;
     this._state = reactive<IActivitiesState>({
