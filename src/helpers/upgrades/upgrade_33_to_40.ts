@@ -5,7 +5,7 @@ const validateVersion = (version: string) => /^3\.3(\.\d+)?(\w+)?$/.test(version
 function upgradeParams(props: any): void {
   if (!props.params) return;
 
-  props.params = props.params.filter((paramProps: any) => paramProps.visible);
+  props.params = props.params.filter((paramProps: any) => ("visible" in paramProps ? paramProps.visible : true));
 
   if (props.params.length === 0) {
     delete props.params;
