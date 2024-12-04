@@ -4,6 +4,7 @@ import { BoxGeometry, Mesh, MeshLambertMaterial, Vector3 } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
+import { TMesh } from "@/types";
 
 export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {
@@ -22,7 +23,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
         color: this.layer.activity.recorder.view.color,
         transparent: true,
       });
-      const mesh: Mesh<any, MeshLambertMaterial, any> = new Mesh(geometry, material);
+      const mesh = new Mesh(geometry, material);
       mesh.userData.position = position;
       mesh.position.set(position.x, position.y, position.z);
       mesh.scale.set(scale, scale, scale);
@@ -38,7 +39,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
    * Update mesh object.
    */
   override updateMesh(
-    mesh: Mesh<any, MeshLambertMaterial, any>,
+    mesh: TMesh,
     options: {
       color?: string;
       height?: number;

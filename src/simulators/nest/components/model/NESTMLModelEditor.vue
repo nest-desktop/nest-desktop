@@ -41,7 +41,7 @@ import { NESTModel } from "../../helpers/model/model";
 import { updateSimulationModules } from "../../stores/model/modelStore";
 
 // import { useNESTModelStore } from "../../stores/model/modelStore";
-// const modelStore: TModelStore = useNESTModelStore();
+// const modelStore = useNESTModelStore();
 
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();

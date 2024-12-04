@@ -15,7 +15,6 @@
 import { computed } from "vue";
 
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { NESTActivityGraph } from "../helpers/activity/activityGraph";
 import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";
@@ -25,7 +24,7 @@ const appStore = useAppStore();
 const projectViewStore = appStore.currentSimulator.views.project;
 
 import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNESTProjectStore();
+const projectStore = useNESTProjectStore();
 
-const graph = computed(() => projectStore.state.project.activityGraph as NESTActivityGraph);
+const graph = computed(() => projectStore.state.project?.activityGraph as NESTActivityGraph);
 </script>

@@ -57,7 +57,7 @@ import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
 const state = reactive<{ selectedModule: IModule }>({
-  selectedModule: moduleStore.findModule("nestmlmodule"),
+  selectedModule: moduleStore.findModule("nestmlmodule") as IModule,
 });
 
 const emit = defineEmits(["closeDialog"]);

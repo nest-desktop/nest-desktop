@@ -1,9 +1,8 @@
 // synapse.ts
 
 import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
-import { IParamProps } from "@/helpers/common/parameter";
+import { IParamProps, TParamValue } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
@@ -36,12 +35,12 @@ export class NESTSynapse extends BaseSynapse {
     return this._connection as NESTConnection;
   }
 
-  get delay(): number {
-    const delay: any = this.params.delay;
+  get delay(): TParamValue {
+    const delay: NESTSynapseParameter = this.params.delay;
     return delay ? delay.value : 1;
   }
 
-  set delay(value: number) {
+  set delay(value: TParamValue) {
     this.params.delay.state.value = value;
   }
 
@@ -93,11 +92,11 @@ export class NESTSynapse extends BaseSynapse {
     this.modelChanges();
   }
 
-  get modelDBStore(): TModelDBStore {
+  get modelDBStore() {
     return this.connection.connections.network.project.modelDBStore;
   }
 
-  get modelId(): string {
+  override get modelId(): string {
     return this._modelId;
   }
 
@@ -176,7 +175,7 @@ export class NESTSynapse extends BaseSynapse {
     this._params = {};
     if (this.model && paramsProps) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = paramsProps?.find((param: any) => param.id === modelParam.id);
+        const param = paramsProps?.find((param: IParamProps) => param.id === modelParam.id);
         this.addParameter(param || modelParam);
         if (param && param.visible !== false) {
           this._paramsVisible.push(modelParam.id);
@@ -185,7 +184,7 @@ export class NESTSynapse extends BaseSynapse {
     } else if (this.model) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => this.addParameter(modelParam));
     } else if (paramsProps) {
-      paramsProps.forEach((param: any) => this.addParameter(param));
+      paramsProps.forEach((param: IParamProps) => this.addParameter(param));
     }
   }
 

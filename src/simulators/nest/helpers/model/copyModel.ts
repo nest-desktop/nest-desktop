@@ -6,7 +6,6 @@ import { BaseObj } from "@/helpers/common/base";
 import { BaseParameter, IParamProps, TParamValue } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTNetwork } from "../network/network";
@@ -195,7 +194,7 @@ export class NESTCopyModel extends BaseObj {
     return this.modelDBStore.findModel(this._existingModelId) as NESTModel;
   }
 
-  get modelDBStore(): TModelDBStore {
+  get modelDBStore() {
     return this.network.project.modelDBStore;
   }
 

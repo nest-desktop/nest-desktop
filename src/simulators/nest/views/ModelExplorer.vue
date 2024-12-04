@@ -10,12 +10,11 @@
 import { computed } from "vue";
 
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
-import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { NESTActivityGraph } from "../helpers/activity/activityGraph";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
+const modelStore = useNESTModelStore();
 
 defineProps<{ modelId: string }>();
 

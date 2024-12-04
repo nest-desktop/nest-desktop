@@ -1,11 +1,11 @@
 // defineProjectDBStore.ts
 
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { nextTick, reactive } from "vue";
 
 import { BaseProject } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { TProject, TProjectDB, TProjectProps } from "@/types";
+import { Class, TProject, TProjectDB, TProjectProps } from "@/types";
 import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
@@ -17,10 +17,6 @@ interface IProjectDBStoreState {
   searchTerm: string;
   tryImports: number;
 }
-
-type Class<T> = new (...props: any) => T;
-
-export type TProjectDBStore = Store<string, any>;
 
 export function defineProjectDBStore(
   props: {
@@ -34,7 +30,7 @@ export function defineProjectDBStore(
     ProjectDB: BaseProjectDB,
     simulator: "base",
   },
-): TProjectDBStore {
+) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " project DB store",

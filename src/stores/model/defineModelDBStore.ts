@@ -1,12 +1,12 @@
 // defineModelDBStore.ts
 
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { UnwrapRef, reactive } from "vue";
 
 import { IDoc } from "@/helpers/common/database";
 import { BaseModel, TElementType } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
-import { TModel, TModelDB, TModelProps } from "@/types";
+import { Class, TModel, TModelDB, TModelProps } from "@/types";
 import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
@@ -18,9 +18,6 @@ interface IModelDBStoreState {
   tryImports: number;
 }
 
-type Class<T> = new (...props: any) => T;
-
-export type TModelDBStore = Store<string, any>;
 // {
 //   deleteModel: (model: TModel) => Promise<void>;
 //   findModel: (modelId: string) => TModel | undefined;
@@ -51,7 +48,7 @@ export function defineModelDBStore(
     ModelDB: BaseModelDB,
     simulator: "base",
   },
-): TModelDBStore {
+) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " model DB store",

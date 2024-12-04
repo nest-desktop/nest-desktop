@@ -2,12 +2,12 @@
 
 import { projectBeforeEnter, projectNew, projectRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
+import { NESTNodes } from "../types";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
@@ -19,13 +19,11 @@ const nestProjectBeforeEnter = (to: any) => {
   projectBeforeEnter(to);
 
   const appStore = useAppStore();
-  const projectStore: TProjectStore = useNESTProjectStore();
+  const projectStore = useNESTProjectStore();
   const projectViewStore = appStore.currentSimulator.views.project;
-  if (projectStore.state.project) {
-    if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-      projectViewStore.state.views.activity = "abstract";
-    }
-  }
+
+  const nodes: NESTNodes = projectStore.state.project?.network.nodes as NESTNodes;
+  if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
 };
 
 const nestProjectRedirect = (to: any) => {
@@ -33,11 +31,11 @@ const nestProjectRedirect = (to: any) => {
   projectRedirect(to);
 
   const appStore = useAppStore();
-  const projectStore: TProjectStore = useNESTProjectStore();
+  const projectStore = useNESTProjectStore();
   const projectViewStore = appStore.currentSimulator.views.project;
-  if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-    projectViewStore.state.views.activity = "abstract";
-  }
+
+  const nodes: NESTNodes = projectStore.state.project?.network.nodes as NESTNodes;
+  if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
 
   return projectStore.routeTo();
 };

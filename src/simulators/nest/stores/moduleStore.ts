@@ -1,7 +1,7 @@
 // moduleStore.ts
 
 import { AxiosResponse } from "axios";
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
@@ -19,9 +19,7 @@ interface IModuleStoreState {
   modules: IModule[];
 }
 
-export type TModuleStore = Store<string, any>;
-
-export const useNESTModuleStore: TModuleStore = defineStore(
+export const useNESTModuleStore = defineStore(
   "nest-module-store",
   () => {
     const state = reactive<IModuleStoreState>({

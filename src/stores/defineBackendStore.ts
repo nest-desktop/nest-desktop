@@ -8,7 +8,7 @@ import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
-import { IEventProps } from "@/helpers/activity/activity";
+import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 
 export interface IAxiosRequestData {
   source: string;
@@ -31,6 +31,8 @@ export interface IAxiosErrorData {
 export interface IResponseData {
   events: IEventProps[];
   biological_time: number;
+  positions?: Record<string, number[]>;
+  activities?: IActivityProps[];
 }
 
 export function defineBackendStore(simulator: string, name: string, url: string, options?: Record<string, string>) {

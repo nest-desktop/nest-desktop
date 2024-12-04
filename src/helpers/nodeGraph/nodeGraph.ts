@@ -1,8 +1,8 @@
 // nodeGraph.ts
 
-import { DragBehavior, Selection, Transition, drag, select, transition } from "d3";
+import { drag, select, transition } from "d3";
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeGroup } from "../node/nodeGroup";
@@ -67,7 +67,7 @@ export class NodeGraph extends BaseObj {
   initNode(node: NodeGroup | TNode, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
     this.logger.trace("init node");
 
-    const elem: Selection<any, any, null, undefined> = select(elements[idx]);
+    const elem: TSelection = select(elements[idx]);
     elem.selectAll("*").remove();
 
     this._nodeGraphConnector.init(elem);
@@ -116,7 +116,7 @@ export class NodeGraph extends BaseObj {
     this._nodeGraphShape.render();
 
     const duration: number = this._networkGraph.workspace.state.dragging ? 0 : 250;
-    const t: Transition<any, any, null, undefined> = transition().duration(duration);
+    const t: TTransition = transition().duration(duration);
 
     const nodes = select("g#nodes").selectAll("g.node");
 
@@ -142,12 +142,12 @@ export class NodeGraph extends BaseObj {
 
     if (!this._networkGraph.selector) return;
 
-    const nodes: Selection<any, any, any, undefined> = this._networkGraph.selector
+    const nodes: TSelection = this._networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
       .data(this.network.nodes.all, (n: NodeGroup | TNode | any) => n.uuid);
 
-    const dragging: DragBehavior<any, any, any> = drag()
+    const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, n: NodeGroup | TNode | unknown) => this.drag(e, n as TNode))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));

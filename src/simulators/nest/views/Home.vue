@@ -181,9 +181,10 @@ import BackendSettings from "@/components/BackendSettings.vue";
 import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
+import { IModelProps } from "@/stores/model/defineModelStore";
 
 import NESTModuleSelect from "../components/module/NESTModuleSelect.vue";
-import nestSimulator, { IModelProps } from "../stores/backends/nestSimulatorStore";
+import nestSimulator from "../stores/backends/nestSimulatorStore";
 import { IModule, openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useAppStore } from "@/stores/appStore";

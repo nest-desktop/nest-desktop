@@ -17,14 +17,13 @@ import { useRoute, useRouter } from "vue-router";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { mountProjectLayout } from "@/helpers/routes";
 
 const router = useRouter();
 const route = useRoute();
 
 import { useNorseProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNorseProjectStore();
+const projectStore = useNorseProjectStore();
 
 onMounted(() => mountProjectLayout({ route, router }));
 </script>

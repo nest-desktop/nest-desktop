@@ -1,6 +1,5 @@
 // node.ts
 
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/types";
 
 import { Activity, IActivityProps } from "../activity/activity";
@@ -15,6 +14,7 @@ import { NodeGroup } from "./nodeGroup";
 import { NodeParameter } from "./nodeParameter";
 import { SpikeActivity } from "../activity/spikeActivity";
 import { onlyUnique, sortString } from "../../utils/array";
+import { BaseNodes } from "./nodes";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -38,7 +38,7 @@ export class BaseNode extends BaseObj {
   private _view: NodeView;
   public _model: TModel | undefined;
   public _modelId: string;
-  public _nodes: TNodes; // parent
+  public _nodes: BaseNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
     super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
@@ -125,6 +125,10 @@ export class BaseNode extends BaseObj {
     return this._paramsVisible.length > 0;
   }
 
+  get idx(): number {
+    return this._nodes.all.indexOf(this);
+  }
+
   /**
    * Check if it is an excitatory neuron.
    */
@@ -161,8 +165,8 @@ export class BaseNode extends BaseObj {
     return this.nodes.network.connections.state.selectedNode === this;
   }
 
-  get idx(): number {
-    return this._nodes.all.indexOf(this);
+  get isSpatial(): boolean {
+    return false;
   }
 
   get label(): string {
@@ -176,7 +180,7 @@ export class BaseNode extends BaseObj {
     return this._model as BaseModel;
   }
 
-  get modelDBStore(): TModelDBStore {
+  get modelDBStore() {
     return this.nodes.network.project.modelDBStore;
   }
 
@@ -224,7 +228,6 @@ export class BaseNode extends BaseObj {
   }
 
   get nodeIdx(): number {
-    // @ts-expect-error Argument of type 'this' is not assignable to parameter of type '(TNode & NESTNode) & NorseNode'.
     return this._nodes.nodes.indexOf(this);
   }
 

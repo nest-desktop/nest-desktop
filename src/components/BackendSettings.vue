@@ -45,8 +45,8 @@
 import { computed } from "vue";
 
 import BackendStatusIcon from "./iconsets/BackendStatusIcon.vue";
-import { TStore } from "@/types";
 import { isURL } from "@/utils/urls";
+import { TStore } from "@/types";
 
 const props = defineProps<{ store: TStore }>();
 const store = computed(() => props.store);

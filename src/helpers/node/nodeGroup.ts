@@ -46,10 +46,6 @@ export class NodeGroup extends BaseObj {
     return "group";
   }
 
-  get spatial(): { hasPosition: boolean } {
-    return { hasPosition: false };
-  }
-
   get idx(): number {
     return this._parent.all.indexOf(this);
   }
@@ -88,6 +84,10 @@ export class NodeGroup extends BaseObj {
    */
   get isSelectedForConnection(): boolean {
     return this.parentNodes.network.connections.state.selectedNode === this;
+  }
+
+  get isSpatial(): boolean {
+    return false;
   }
 
   get model(): boolean {
@@ -162,6 +162,10 @@ export class NodeGroup extends BaseObj {
 
   get size(): number {
     return 0;
+  }
+
+  get spatial(): undefined {
+    return;
   }
 
   get toCode(): string {

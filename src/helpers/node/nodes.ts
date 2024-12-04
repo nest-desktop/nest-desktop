@@ -39,7 +39,7 @@ export class BaseNodes extends BaseObj {
     return BaseNode;
   }
 
-  get all(): (NodeGroup | TNode)[] {
+  get all(): (NodeGroup | BaseNode)[] {
     return this._nodes;
   }
 

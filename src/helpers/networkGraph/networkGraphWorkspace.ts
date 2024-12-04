@@ -1,9 +1,9 @@
 // networkGraphWorkspace.ts
 
-import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
+import { max, min, pointer, select, zoomIdentity } from "d3";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NetworkGraphDragline } from "./networkGraphDragline";
@@ -26,10 +26,10 @@ export interface INetworkGraphWorkspaceState {
 export class NetworkGraphWorkspace extends BaseObj {
   private _dragline: NetworkGraphDragline;
   private _grid: NetworkGraphGrid;
-  private _handler: Selection<any, any, any, any>;
+  private _handler: TSelection;
   private _networkGraph: TNetworkGraph;
   private _nodeAddPanel: NetworkGraphNodeAddPanel;
-  private _selector: Selection<any, any, any, any>;
+  private _selector: TSelection;
   private _size: { height: number; width: number } = {
     height: 600,
     width: 800,
@@ -92,7 +92,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._nodeAddPanel;
   }
 
-  get selector(): Selection<any, any, any, any> {
+  get selector(): TSelection {
     return this._selector;
   }
 
@@ -100,7 +100,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._state;
   }
 
-  get handler(): Selection<any, any, any, any> {
+  get handler(): TSelection {
     return this._handler;
   }
 

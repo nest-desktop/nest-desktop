@@ -1,8 +1,8 @@
 // connectionGraph.ts
 
-import { DragBehavior, Selection, drag, select, transition } from "d3";
+import { drag, select, transition } from "d3";
 
-import { TConnection, TNetworkGraph, TNode } from "@/types";
+import { TConnection, TDragBehavior, TNetworkGraph, TNode, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
@@ -77,7 +77,7 @@ export class ConnectionGraph extends BaseObj {
    * @param elements SVG elements
    */
   init(connection: TConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
-    const elem: Selection<SVGGElement, TConnection, null, undefined> = select(elements[idx]);
+    const elem: TSelection = select(elements[idx]);
 
     elem.selectAll("*").remove();
 
@@ -173,8 +173,8 @@ export class ConnectionGraph extends BaseObj {
     // @ts-expect-error Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
     // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
     // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
-    connections.each((connection: TConnection, idx: number, elements: Selection[]) => {
-      const elem: Selection<SVGGElement, TConnection, null, undefined> = select(elements[idx]);
+    connections.each((connection: TConnection, idx: number, elements: any[]) => {
+      const elem: TSelection = select(elements[idx]);
 
       elem
         .selectAll("path")
@@ -229,7 +229,7 @@ export class ConnectionGraph extends BaseObj {
       .selectAll("g.connection")
       .data(this.networkGraph.network.connections.all, (c: TConnection | any) => c.uuid);
 
-    const dragging: DragBehavior<any, any, any> = drag()
+    const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, c: TConnection | unknown) => this.drag(e, c as TConnection))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));

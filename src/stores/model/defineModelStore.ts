@@ -1,51 +1,45 @@
 // defineModelStore.ts
 
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 
 import { TElementType } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
 import router from "@/router";
-import { TModel, TProject } from "@/types";
+import { TProject, TStore } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "../appStore";
-import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
+
+export interface IModelProps {
+  id: string;
+  label: string;
+  elementType: string;
+}
 
 interface IModelStoreState {
   modelId: string;
-  models: string[];
+  models: IModelProps[];
   project: TProject | null;
   projectId: string;
   projectFilename?: string;
   recentAddedModels: Record<TElementType, string[]>;
 }
 
-export type TModelStore = Store<
-  string,
-  | {
-      modelId: string;
-      model: () => TModel;
-      state: IModelStoreState;
-      toggle: (item?: { id: string }) => void;
-    }
-  | any
->;
-
 export function defineModelStore(
   props: {
     defaultView?: string;
     loggerMinLevel?: number;
     simulator: string;
-    useModelDBStore: TModelDBStore;
+    useModelDBStore: TStore;
   } = {
     simulator: "base",
     useModelDBStore,
   },
-): TModelStore {
+) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " model store",
@@ -74,7 +68,7 @@ export function defineModelStore(
        * @param modelId model Id
        * @returns model object
        */
-      const findModel = (modelId: string) => state.models.find((model: any) => model.id === modelId);
+      const findModel = (modelId: string) => state.models.find((model: IModelProps) => model.id === modelId);
 
       /**
        * Get model from the db list.
@@ -82,7 +76,7 @@ export function defineModelStore(
        * @returns model object
        */
       const getModel = (modelId: string) => {
-        const modelDBStore: TModelStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         return modelDBStore.findModel(modelId) || findModel(modelId);
       };
 
@@ -92,7 +86,7 @@ export function defineModelStore(
       const init = (): void => {
         logger.trace("init");
 
-        const modelDBStore: TModelDBStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         if (modelDBStore.state.models.length > 0) {
           state.modelId = modelDBStore.getRecentModelId();
         }
@@ -105,7 +99,7 @@ export function defineModelStore(
       const loadModel = (modelId: string = ""): void => {
         logger.trace("load model", truncate(modelId));
 
-        const modelDBStore: TModelStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         const model = modelDBStore.getModel(modelId);
         state.modelId = model.id;
       };
@@ -134,7 +128,7 @@ export function defineModelStore(
       const newModel = (modelId: string): void => {
         logger.trace("new model");
 
-        const modelDBStore: TModelStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         const model = modelDBStore.newModel({ id: modelId });
         state.modelId = model.id;
       };
@@ -158,7 +152,7 @@ export function defineModelStore(
       const saveModel = (): void => {
         logger.trace("save model");
 
-        const modelDBStore: TModelDBStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         modelDBStore.saveModel(model.value);
       };
 

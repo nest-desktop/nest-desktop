@@ -1,9 +1,9 @@
 // networkGraph.ts
 
-import { Selection, select } from "d3";
+import { select } from "d3";
 import { Ref, UnwrapRef, nextTick, reactive, watch } from "vue";
 
-import { TConnection, TNetwork, TNode } from "@/types";
+import { TConnection, TNetwork, TNode, TSelection } from "@/types";
 import { debounce } from "@/utils/events";
 
 import { BaseObj } from "../common/base";
@@ -30,7 +30,7 @@ export class BaseNetworkGraph extends BaseObj {
   private _nodeGraph: NodeGraph;
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
-  private _selector: Selection<any, any, null, undefined>;
+  private _selector: TSelection;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
   public _network: TNetwork;
@@ -73,7 +73,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   get network(): TNetwork {
     return this._network;
-    // const projectStore: TProjectStore = useProjectStore();
+    // const projectStore = useProjectStore();
     // return projectStore.state.project.network;
   }
 
@@ -89,7 +89,7 @@ export class BaseNetworkGraph extends BaseObj {
     return this._resizeObserver;
   }
 
-  get selector(): Selection<any, any, null, undefined> {
+  get selector(): TSelection {
     return this._selector;
   }
 

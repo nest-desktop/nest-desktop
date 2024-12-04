@@ -40,7 +40,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { computed, reactive, watch } from "vue";
 
-import { TModelStore } from "@/stores/model/defineModelStore";
 import { notifyError, notifySuccess } from "@/helpers/common/notification";
 
 import NESTMLModelEditor from "../components/model/NESTMLModelEditor.vue";
@@ -50,7 +49,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
+const modelStore = useNESTModelStore();
 
 import { useNESTMLServerStore } from "../stores/backends/nestmlServerStore";
 const nestmlServerStore = useNESTMLServerStore();

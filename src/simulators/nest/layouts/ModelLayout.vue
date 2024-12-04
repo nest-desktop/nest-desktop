@@ -85,7 +85,6 @@ import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vue";
-import { TModelStore } from "@/stores/model/defineModelStore";
 import { mountModelLayout } from "@/helpers/routes";
 
 import NewModelDialog from "../components/dialog/NewModelDialog.vue";
@@ -100,7 +99,7 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { updateProject, useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
+const modelStore = useNESTModelStore();
 
 import { useNESTModuleStore } from "../stores/moduleStore";
 const moduleStore = useNESTModuleStore();

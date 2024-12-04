@@ -1,6 +1,6 @@
 // activityAnimationGraph.ts
 
-import { Group } from "three";
+import { Group, Object3DEventMap } from "three";
 import { UnwrapRef, reactive } from "vue";
 
 import { Activity } from "@/helpers/activity/activity";
@@ -82,7 +82,7 @@ export class ActivityAnimationGraph {
   /**
    * Add layer groups to the parent group.
    */
-  addLayersToGroup(group: Group<any>): void {
+  addLayersToGroup(group: Group<Object3DEventMap>): void {
     this._layers.forEach((layer: ActivityAnimationLayer) => {
       if (layer.graphGroup) {
         group.add(layer.graphGroup);

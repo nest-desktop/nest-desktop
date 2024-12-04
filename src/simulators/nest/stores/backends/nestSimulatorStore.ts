@@ -4,8 +4,6 @@ import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 
 import { notifyError } from "@/helpers/common/notification";
 import { defineBackendStore, IAxiosRequestData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TStore } from "@/types";
 import { sortString } from "@/utils/array";
 
 import { useNESTModelStore } from "../model/modelStore";
@@ -14,14 +12,8 @@ export const useNESTSimulatorStore = defineBackendStore("nest", "nest", "http://
   axiosHeaderTokenValue: "NESTServerAuth",
 });
 
-export interface IModelProps {
-  id: string;
-  label: string;
-  elementType: string;
-}
-
 const fetchModels = (): void => {
-  const modelStore: TModelStore = useNESTModelStore();
+  const modelStore = useNESTModelStore();
   const nestSimulatorStore = useNESTSimulatorStore();
 
   nestSimulatorStore
@@ -91,9 +83,9 @@ const installModule = (moduleName?: string): void => {
     });
 };
 
-export const nestSimulatorInit = (): TStore => {
+export const nestSimulatorInit = () => {
   // Initialize backend NEST Simulator.
-  const nestSimulatorStore: TStore = useNESTSimulatorStore();
+  const nestSimulatorStore = useNESTSimulatorStore();
   nestSimulatorStore.init();
   return nestSimulatorStore;
 };

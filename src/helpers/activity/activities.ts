@@ -2,6 +2,7 @@
 
 import { UnwrapRef, reactive } from "vue";
 
+import { IResponseData } from "@/stores/defineBackendStore";
 import { TNode, TProject } from "@/types";
 
 import { SpikeActivity } from "../activity/spikeActivity";
@@ -174,15 +175,7 @@ export class Activities extends BaseObj {
   /**
    * Update activities in recorder nodes after simulation.
    */
-  update(
-    data:
-      | IActivityProps[]
-      | {
-          activities: IActivityProps[];
-          events: IEventProps[];
-          positions: Record<string, number[]>;
-        },
-  ): void {
+  update(data: IActivityProps[] | IResponseData): void {
     this.logger.trace("update");
 
     let activitiesProps: IActivityProps[] = [];
@@ -214,11 +207,11 @@ export class Activities extends BaseObj {
 
     // Get node positions.
     if ("positions" in data) {
+      const positions = data.positions as Record<string, number[]>;
+
       activitiesProps.forEach(
         (activityProps: IActivityProps) =>
-          (activityProps.nodePositions = activityProps.nodeIds?.map(
-            (nodeId: number) => data.positions[nodeId] as number[],
-          )),
+          (activityProps.nodePositions = activityProps.nodeIds?.map((nodeId: number) => positions[nodeId] as number[])),
       );
     }
 

@@ -3,9 +3,8 @@
 import { nextTick } from "vue";
 
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { TActivityGraph, TNetwork, TProject, TSimulation } from "@/types";
+import { TActivityGraph, TNetwork, TProject, TSimulation, TStore } from "@/types";
 import { truncate } from "@/utils/truncate";
 
 import { Activities } from "../activity/activities";
@@ -18,6 +17,8 @@ import { NetworkRevision } from "../network/networkRevision";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { ProjectState } from "./projectState";
 import { upgradeProject } from "../upgrades/upgrades";
+import { IAxiosResponseData } from "@/stores/defineBackendStore";
+import { AxiosResponse } from "axios";
 
 export interface IProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -31,10 +32,10 @@ export class BaseProject extends BaseObj {
   private _activities: Activities;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
-  private _doc: any; // raw data of the database
+  private _doc; // raw data of the database
   private _filename: string;
   private _id: string; // id of the project
-  private _modelDBStore: TModelDBStore;
+  private _modelDBStore: TStore;
   private _name: string; // project name
   private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
@@ -116,7 +117,7 @@ export class BaseProject extends BaseObj {
     return this._description;
   }
 
-  get doc(): any {
+  get doc() {
     return this._doc;
   }
 
@@ -132,11 +133,11 @@ export class BaseProject extends BaseObj {
     return this._id;
   }
 
-  get modelDBStore(): TModelDBStore {
+  get modelDBStore() {
     return this._modelDBStore;
   }
 
-  set modelDBStore(value: TModelDBStore) {
+  set modelDBStore(value: TStore) {
     this._modelDBStore = value;
   }
 
@@ -326,7 +327,7 @@ export class BaseProject extends BaseObj {
     const simtoc = Date.now();
     this._simulation
       .start()
-      .then((response: any) => {
+      .then((response: void | AxiosResponse<IAxiosResponseData>) => {
         this._state.state.stopwatch.simulation = Date.now() - simtoc;
 
         if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;

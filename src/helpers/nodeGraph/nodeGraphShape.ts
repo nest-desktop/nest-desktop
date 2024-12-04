@@ -1,8 +1,8 @@
 // nodeGraphShape.ts
 
-import { Selection, select } from "d3";
+import { select } from "d3";
 
-import { TNetworkGraph, TNode } from "@/types";
+import { TNetworkGraph, TNode, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeGroup } from "../node/nodeGroup";
@@ -95,7 +95,7 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  drawShape(selector: Selection<any, any, any, any>, node: NodeGroup | TNode): void {
+  drawShape(selector: TSelection, node: NodeGroup | TNode): void {
     this.logger.trace("draw shape");
 
     selector.attr("elementType", node.elementType);
@@ -138,10 +138,10 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  init(selector: Selection<any, any, any, any>, node: NodeGroup | TNode): void {
+  init(selector: TSelection, node: NodeGroup | TNode): void {
     this.logger.silly("init");
 
-    const elem: Selection<any, any, any, any> = selector.append("g").attr("class", "core");
+    const elem: TSelection = selector.append("g").attr("class", "core");
 
     this.drawShape(selector, node);
 
@@ -183,7 +183,7 @@ export class NodeGraphShape extends BaseObj {
    */
   render(): void {
     this.logger.silly("render");
-    const nodes: Selection<any, any, any, any> = select("g#nodes").selectAll("g.node");
+    const nodes: TSelection = select("g#nodes").selectAll("g.node");
 
     // Check if neuron has to change its shape.
     nodes.each((node: TNode, idx: number, elements: any) => {

@@ -1,10 +1,11 @@
 // activityAnimationLayerModel.ts
 
-import { Group, Mesh, MeshBasicMaterial, MeshLambertMaterial, Object3D, Object3DEventMap } from "three";
+import { Group, Object3D, Object3DEventMap } from "three";
 
 import { BaseObj } from "@/helpers/common/base";
 
 import { ActivityAnimationLayer, IActivityAnimationLayerFrame } from "./activityAnimationLayer";
+import { TMesh } from "@/types";
 
 export class ActivityAnimationLayerModel extends BaseObj {
   private _graphGroup: Group<Object3DEventMap>;
@@ -90,11 +91,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
 
     const scale: number = this._layer.state.object.size;
     this._graphGroup.children.forEach((child: Object3D<Object3DEventMap>) => {
-      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> = child as Mesh<
-        any,
-        MeshBasicMaterial | MeshLambertMaterial,
-        any
-      >;
+      const mesh = child as TMesh;
 
       mesh.material.opacity = 0.0;
       const position = mesh.userData.position;
@@ -108,7 +105,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
    * Update mesh objects.
    */
   updateMesh(
-    mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>,
+    mesh: TMesh,
     options?: {
       color?: string;
       height?: number;
@@ -168,11 +165,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
         height = size;
       }
 
-      const mesh: Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any> = this._graphGroup.children[sender] as Mesh<
-        any,
-        MeshBasicMaterial | MeshLambertMaterial,
-        any
-      >;
+      const mesh = this._graphGroup.children[sender] as TMesh;
 
       const options = {
         color,

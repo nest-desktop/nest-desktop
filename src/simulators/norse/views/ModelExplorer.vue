@@ -11,10 +11,9 @@ import { computed } from "vue";
 
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 import { BaseActivityGraph } from "@/helpers/activity/activityGraph";
-import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNorseModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNorseModelStore();
+const modelStore = useNorseModelStore();
 
 defineProps<{ modelId: string }>();
 

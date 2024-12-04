@@ -6,7 +6,7 @@
     permanent
     @transitionend="navStore.dispatchWindowResize()"
   >
-    <div class="resize-handle" @mousedown="navStore.resizeSidebar()" />
+    <div class="resize-handle" @mousedown="navStore.resizeSideNav()" />
 
     <v-toolbar :color class="fixed-bar" density="compact" extended extension-height="36">
       <v-text-field

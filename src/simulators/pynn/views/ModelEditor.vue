@@ -6,7 +6,7 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn text="save" @click="modelStore.save()" />
+      <v-btn text="save" @click="modelStore.saveModel()" />
     </v-card-actions>
   </v-card>
 </template>
@@ -16,10 +16,9 @@ import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
 
 import { PyNNModel } from "../helpers/model/model";
-import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { usePyNNModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = usePyNNModelStore();
+const modelStore = usePyNNModelStore();
 
 const model = computed(() => modelStore.model as PyNNModel);
 </script>

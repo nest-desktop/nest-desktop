@@ -43,9 +43,7 @@ import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TModel, TProject } from "@/types";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
+import { TModel, TProject, TStore } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
@@ -55,9 +53,7 @@ interface IDeleteProps {
   props: IModelProps | IProjectProps;
 }
 
-const props = defineProps<{
-  store: TModelDBStore | TProjectDBStore;
-}>();
+const props = defineProps<{ store: TStore }>();
 const store = computed(() => props.store);
 
 const state = reactive<{ items: IDeleteProps[]; selected: IDeleteProps[] }>({

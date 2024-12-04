@@ -30,10 +30,9 @@ import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NodeViewer from "@/components/node/NodeViewer.vue";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseNode } from "@/helpers/node/node";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = usePyNNProjectStore();
+const projectStore = usePyNNProjectStore();
 
-const network = computed(() => projectStore.state.project.network as BaseNetwork);
+const network = computed(() => projectStore.state.project?.network as BaseNetwork);
 </script>

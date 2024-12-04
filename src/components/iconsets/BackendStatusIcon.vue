@@ -11,7 +11,5 @@
 <script setup lang="ts">
 import { TStore } from "@/types";
 
-defineProps<{
-  backendStore: TStore;
-}>();
+defineProps<{ backendStore: TStore }>();
 </script>

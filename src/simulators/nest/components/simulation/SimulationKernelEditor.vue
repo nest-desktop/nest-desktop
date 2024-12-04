@@ -71,17 +71,16 @@ import { computed, onMounted, reactive } from "vue";
 import Card from "@/components/common/Card.vue";
 import TickSlider from "@/components/controls/TickSlider.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import NESTModuleSelect from "../module/NESTModuleSelect.vue";
 import { NESTSimulation } from "../../helpers/simulation/simulation";
 
 import { useNESTProjectStore } from "../../stores/project/projectStore";
-const projectStore: TProjectStore = useNESTProjectStore();
+const projectStore = useNESTProjectStore();
 
 const props = defineProps({ color: { default: "primary", type: String } });
 
-const simulation = computed(() => projectStore.state.project.simulation as NESTSimulation);
+const simulation = computed(() => projectStore.state.project?.simulation as NESTSimulation);
 
 const options = {
   autoRNGSeedSettings: {

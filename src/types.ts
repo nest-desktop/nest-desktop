@@ -1,5 +1,6 @@
 // types.ts
 
+import { Arc, DragBehavior, Selection, Transition, ZoomBehavior } from "d3";
 import { Store } from "pinia";
 
 import { BaseActivityGraph } from "./helpers/activity/activityGraph";
@@ -14,6 +15,7 @@ import { ModelParameter } from "./helpers/model/modelParameter";
 import { BaseNetwork, INetworkProps } from "./helpers/network/network";
 import { BaseNetworkGraph } from "./helpers/networkGraph/networkGraph";
 import { BaseNode, INodeProps } from "./helpers/node/node";
+import { NodeGroup } from "./helpers/node/nodeGroup";
 import { NodeParameter } from "./helpers/node/nodeParameter";
 import { BaseNodes } from "./helpers/node/nodes";
 import { BaseProject, IProjectProps } from "./helpers/project/project";
@@ -29,6 +31,7 @@ import { NESTSynapseParameter } from "./simulators/nest/helpers/synapse/synapseP
 import * as nest from "./simulators/nest/types";
 import * as norse from "./simulators/norse/types";
 import * as pynn from "./simulators/pynn/types";
+import { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
 
 export type TActivityGraph = BaseActivityGraph | nest.NESTActivityGraph;
 export type TConnection = BaseConnection | nest.NESTConnection | norse.NorseConnection;
@@ -42,6 +45,7 @@ export type TNetwork = BaseNetwork | nest.NESTNetwork | norse.NorseNetwork;
 export type TNetworkProps = INetworkProps | nest.INESTNetworkProps | norse.INorseNetworkProps;
 export type TNetworkGraph = BaseNetworkGraph | nest.NESTNetworkGraph;
 export type TNode = BaseNode | nest.NESTNode | norse.NorseNode;
+export type TNodeGroup = NodeGroup;
 export type TNodeParameterParent =
   | BaseNode
   | nest.NESTNode
@@ -74,7 +78,19 @@ export type TSimulationCode =
   | norse.NorseSimulationCode
   | pynn.PyNNSimulationCode;
 export type TSimulationProps = ISimulationProps | nest.INESTSimulationProps | norse.INorseSimulationProps;
-export type TStore = Store<string, any>;
 export type TSynapse = BaseSynapse | nest.NESTSynapse;
 export type TSynapseParameter = BaseSynapseParameter | NESTSynapseParameter;
 export type TSynapseProps = ISynapseProps | nest.INESTSynapseProps;
+
+// Pinia
+export type Class<T> = new (...props: any) => T;
+export type TStore = Store<string, any>;
+
+// D3
+export type TArc = Arc<any, any>;
+export type TDragBehavior = DragBehavior<any, any, any>;
+export type TSelection = Selection<any, any, any, any>;
+export type TTransition = Transition<any, any, null, undefined>;
+export type TZoomBehavior = ZoomBehavior<any, any>;
+
+export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;

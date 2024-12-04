@@ -97,6 +97,14 @@ export class NESTNode extends BaseNode {
     return this.paramsVisible.length > 0 || this.modelId === "multimeter";
   }
 
+  override get idx(): number {
+    return this._nodes.all.indexOf(this);
+  }
+
+  override get isSpatial(): boolean {
+    return this._spatial.hasPositions;
+  }
+
   override get model(): NESTModel {
     if (!this._model) {
       this._model = this.getModel(this._modelId);

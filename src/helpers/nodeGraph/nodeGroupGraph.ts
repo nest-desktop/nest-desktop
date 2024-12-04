@@ -3,9 +3,9 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, drag, polygonHull } from "d3";
+import { drag, polygonHull } from "d3";
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TDragBehavior, TNetwork, TNetworkGraph, TNode } from "@/types";
 
 import { NodeGroup } from "../node/nodeGroup";
 
@@ -112,7 +112,7 @@ export class NodeGroupGraph {
         n instanceof NodeGroup ? n.uuid : "",
       );
 
-    const dragging: DragBehavior<any, unknown, unknown> = drag()
+    const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, n: NodeGroup | unknown) => this.drag(e, n as NodeGroup))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
@@ -197,8 +197,6 @@ export class NodeGroupGraph {
       });
     });
 
-    // @ts-expect-error Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
-    // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
     elem.call(dragging, null);
 
     elem.exit().remove();

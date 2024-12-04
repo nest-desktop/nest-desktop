@@ -222,7 +222,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * It requires activity data.
    * It is a replacement for abstract component.
    */
-  addData(_activity: Activity): void {}
+  addData(activity: Activity): void {
+    this.logger.trace("Add data:", activity);
+  }
 
   addParameter(paramProps: IParamProps) {
     this._params[paramProps.id] = new ActivityChartPanelModelParameter(this, paramProps);
@@ -394,7 +396,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Update active marker.
    * @param _record node record object
    */
-  updateActiveMarker(_record?: NodeRecord): void {}
+  updateActiveMarker(record?: NodeRecord): void {
+    this.logger.trace("Update activity marker:", record);
+  }
 
   /**
    * Update activities.
@@ -495,7 +499,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @param _records list of node records
    * @remarks It is a replacement for abstract component.
    */
-  updateLayoutLabel(_records?: NodeRecord[]): void {}
+  updateLayoutLabel(record?: NodeRecord[]): void {
+    this.logger.trace("Update layout label:", record);
+  }
 
   /**
    * Update time of the panel model.

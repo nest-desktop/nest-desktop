@@ -54,6 +54,10 @@ export class BaseSynapse extends BaseObj {
     return false;
   }
 
+  get modelId(): string {
+    return "static";
+  }
+
   get name(): string {
     return this._name;
   }

@@ -1,10 +1,10 @@
 // networkGraphNodeAddPanel.ts
 
-import { Arc, Selection, arc } from "d3";
+import { arc } from "d3";
 import { UnwrapRef, reactive } from "vue";
 
 import { useAppStore } from "@/stores/appStore";
-import { TModel, TNetwork } from "@/types";
+import { TArc, TModel, TNetwork, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";
@@ -20,7 +20,7 @@ export interface INetworkGraphAddPanelState {
 
 export class NetworkGraphNodeAddPanel extends BaseObj {
   private _elementTypes: TElementType[] = ["recorder", "neuron", "stimulator"];
-  private _selector: Selection<any, any, any, any>;
+  private _selector: TSelection;
   private _state: UnwrapRef<INetworkGraphAddPanelState> = reactive({
     elementType: null,
     menuItems: [],
@@ -102,20 +102,20 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * @returns selection
    */
   drawArcFrame(
-    selector: Selection<any, any, any, any>,
+    selector: TSelection,
     radius: number,
     idx: number,
     sections: number,
     classFrame: string = "",
     title: string = "",
     label: string = "",
-  ): Selection<any, any, any, any> {
-    const arcFrame: Arc<any, any> = arc()
+  ) {
+    const arcFrame: TArc = arc()
       .innerRadius(radius - this.strokeWidth)
       .outerRadius(radius + 21)
       .cornerRadius(3);
 
-    const panel: Selection<any, any, any, any> = selector.append("g").attr("class", classFrame + " " + title);
+    const panel = selector.append("g").attr("class", classFrame + " " + title);
 
     panel
       .append("path")
@@ -169,12 +169,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * @param model
    * @returns selection
    */
-  drawModelMenuItem(
-    panel: Selection<any, any, any, any>,
-    idx: number,
-    elementType: TElementType,
-    model: TModel,
-  ): Selection<any, any, any, any> {
+  drawModelMenuItem(panel: TSelection, idx: number, elementType: TElementType, model: TModel) {
     const layer = Math.floor(idx / 3);
     const idxOffset = this._elementTypes.indexOf(elementType) * 3 + layer * 6;
 
@@ -267,9 +262,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     if (this._state.modelValue) {
       const currentElementType = this._state.elementType;
       this.closeModelsMenu();
-      if (currentElementType != elementType) {
-        setTimeout(() => this.openModelMenu(event, elementType), 200);
-      }
+      if (currentElementType != elementType) setTimeout(() => this.openModelMenu(event, elementType), 200);
       return;
     }
 
@@ -346,9 +339,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
       modelStore.state.recentAddedModels[elementType].forEach((modelId: string, modelIdx: number) => {
         const model = modelStore.getModel(modelId);
-        if (model) {
-          this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model);
-        }
+        if (model) this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model);
       });
 
       // Click on element type.

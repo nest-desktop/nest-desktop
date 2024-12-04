@@ -112,18 +112,18 @@
       <template #nodes>
         <div :key="project.network.nodes.length">
           <div v-for="(node, index) in project.network.nodes.all" :key="index">
-            <NodeEditor v-if="node.isNode" :node>
+            <NodeEditor v-if="node.isNode" :node="node as NESTNode">
               <template #nodeMenuContent>
-                <NESTNodeMenuList :node />
+                <NESTNodeMenuList :node="node as NESTNode" />
               </template>
 
               <template #nodeModelSelect="{ selectState }">
-                <NodeModelSelect :element-types :node @open-menu="() => (selectState.menu = true)" />
+                <NodeModelSelect :element-types :node="node as NESTNode" @open-menu="() => (selectState.menu = true)" />
               </template>
 
               <template #popItem>
                 <v-list-item class="param pl-0 pr-1">
-                  <NodePosition v-if="node.spatial.hasPositions" :node-spatial="node.spatial" />
+                  <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial as NESTNodeSpatial" />
 
                   <ValueSlider
                     v-else
@@ -136,7 +136,7 @@
                   />
 
                   <template #append>
-                    <Menu :items="getPopItems(node)" size="x-small" />
+                    <Menu :items="getPopItems(node as NESTNode)" size="x-small" />
                   </template>
                 </v-list-item>
               </template>
@@ -157,13 +157,13 @@
                   </template>
 
                   <template #synapseSpecEditor>
-                    <SynapseSpecEditor :synapse="connection.synapse" />
+                    <SynapseSpecEditor :synapse="connection.synapse as NESTSynapse" />
                   </template>
                 </ConnectionEditor>
               </template>
             </NodeEditor>
 
-            <NodeGroup v-else-if="node.isGroup" :node-group="node" />
+            <NodeGroup v-else-if="node.isGroup" :node-group="node as TNodeGroup" />
           </div>
         </div>
       </template>
@@ -185,13 +185,13 @@ import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
-import NodeGroup from "@/components/node/NodeGroup.vue";
 import NodeModelSelect from "@/components/node/NodeModelSelect.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNodeGroup } from "@/types";
 import { mountProjectLayout } from "@/helpers/routes";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
@@ -201,6 +201,7 @@ import NodePosition from "../components/node/NodePosition.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
 import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
 import { NESTNode } from "../helpers/node/node";
+import { NESTProject, NESTSynapse } from "../types";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useRoute, useRouter } from "vue-router";
@@ -211,9 +212,10 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNESTProjectStore();
+import { NESTNodeSpatial } from "../helpers/node/nodeSpatial/nodeSpatial";
+const projectStore = useNESTProjectStore();
 
-const project = computed(() => projectStore.state.project);
+const project = computed(() => projectStore.state.project as NESTProject);
 const projectViewStore = computed(() => appStore.currentSimulator.views.project);
 
 const model = ref("");

@@ -16,6 +16,10 @@ export class NESTNodes extends BaseNodes {
     return NESTNode;
   }
 
+  override get all() {
+    return this._nodes as (NodeGroup | NESTNode)[];
+  }
+
   /**
    * Check if the network has some nodes with compartments
    */

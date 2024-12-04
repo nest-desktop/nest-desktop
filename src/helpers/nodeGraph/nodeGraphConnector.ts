@@ -1,8 +1,8 @@
 // nodeGraphConnector.ts
 
-import { DragBehavior, Selection, Transition, drag, select, transition } from "d3";
+import { drag, select, transition } from "d3";
 
-import { TNetworkGraph, TNode } from "@/types";
+import { TDragBehavior, TNetworkGraph, TNode, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";
@@ -76,10 +76,10 @@ export class NodeGraphConnector extends BaseObj {
    * Initialize a node connector.
    * @param selector
    */
-  init(selector: Selection<any, any, any, any>): void {
+  init(selector: TSelection): void {
     this.logger.trace("init");
 
-    const connector: Selection<any, any, any, any> = selector
+    const connector: TSelection = selector
       .append("g")
       .attr("class", "connector")
       .style("cursor", "pointer")
@@ -90,7 +90,7 @@ export class NodeGraphConnector extends BaseObj {
 
     connector.append("path").attr("class", "color").attr("fill", "none").attr("stroke-width", this.strokeWidth);
 
-    const dragging: DragBehavior<any, unknown, unknown> = drag()
+    const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, n: NodeGroup | TNode | unknown) => this.drag(e, n as NodeGroup | TNode))
       .on("end", (e: MouseEvent) => this.dragEnd(e));
@@ -164,13 +164,13 @@ export class NodeGraphConnector extends BaseObj {
   render(): void {
     this.logger.trace("render");
 
-    const connector: Selection<any, any, any, any> = select("g#nodes").selectAll("g.node").selectAll("g.connector");
+    const connector: TSelection = select("g#nodes").selectAll("g.node").selectAll("g.connector");
 
     const workspace = this._networkGraph.workspace;
     const connectionDrag: boolean = workspace.state.dragLine || workspace.state.dragging;
 
     const duration: number = connectionDrag ? 0 : 250;
-    const t: Transition<any, any, any, any> = transition().duration(duration);
+    const t: TTransition = transition().duration(duration);
 
     connector
       .transition(t)

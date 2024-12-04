@@ -1,6 +1,6 @@
 // navStore.ts
 
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { nextTick, reactive } from "vue";
 
 interface INavStoreState {
@@ -10,10 +10,9 @@ interface INavStoreState {
   width: number;
 }
 
-export type TNavStore = Store<string, any>;
 // { state: INavStoreState; toggle: (navItem: any) => void }
 
-export const useNavStore: TNavStore = defineStore(
+export const useNavStore = defineStore(
   "nav-store",
   () => {
     const state = reactive<INavStoreState>({
@@ -59,7 +58,7 @@ export const useNavStore: TNavStore = defineStore(
      * Toggle side navigation.
      * @param navItem
      */
-    const toggle = (navItem: any) => {
+    const toggle = (navItem: { id: string }) => {
       if (!state.open || state.view === navItem.id) {
         state.open = !state.open;
       }
