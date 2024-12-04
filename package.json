@@ -41,7 +41,7 @@
     "moment": "~2.30",
     "mustache": "~4.2",
     "object-hash": "~3.0",
-    "pinia": "~2.2",
+    "pinia": "~2.3",
     "pinia-plugin-persistedstate": "~4.1",
     "plotly.js-basic-dist-min": "~2.35",
     "pouchdb": "~9.0",
