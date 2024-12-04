@@ -28,9 +28,7 @@ export class NESTActivityGraph extends BaseActivityGraph {
     this.activityChartGraph.init();
     this.activityAnimationGraph.init();
 
-    if (this.project.activities.state.hasSomeEvents) {
-      this.update();
-    }
+    if (this.project.activities.state.hasSomeEvents) this.update();
   }
 
   /**

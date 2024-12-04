@@ -48,9 +48,7 @@ export class NodeGroupView extends BaseObj {
   }
 
   get color(): string {
-    if (this._state.color) {
-      return this._state.color;
-    }
+    if (this._state.color) return this._state.color;
     return this._nodeGroup.parent.network.getNodeColor(this._nodeGroup.idx);
   }
 
@@ -86,9 +84,7 @@ export class NodeGroupView extends BaseObj {
   }
 
   get label(): string {
-    if (this._state.label) {
-      return this._state.label;
-    }
+    if (this._state.label) return this._state.label;
 
     const label = "g" + (this.idx + 1);
     return label;
@@ -144,9 +140,7 @@ export class NodeGroupView extends BaseObj {
   toJSON(): INodeGroupViewProps {
     const nodeGroupViewProps: INodeGroupViewProps = {};
 
-    if (this._state.color) {
-      nodeGroupViewProps.color = this._state.color;
-    }
+    if (this._state.color) nodeGroupViewProps.color = this._state.color;
 
     return nodeGroupViewProps;
   }

@@ -125,9 +125,7 @@ export class BaseNetworkGraph extends BaseObj {
       select(event.sourceEvent.srcElement.parentNode).classed("active", false);
       select(event.sourceEvent.srcElement).style("cursor", "pointer");
     }
-    if (this.network) {
-      this.network.clean();
-    }
+    if (this.network) this.network.clean();
 
     this._workspace?.updateTransform();
   }

@@ -1,7 +1,7 @@
 // node.ts
 
 import { BaseParameter, IParamProps } from "@/helpers/common/parameter";
-import { TElementType } from "@/helpers/model/model";
+import { IModelStateProps, TElementType } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseNode, INodeProps } from "@/helpers/node/node";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
@@ -389,42 +389,45 @@ export class NESTNode extends BaseNode {
    */
   override updateRecordables(): void {
     this.logger.trace("update recordables");
+    let modelStatesProps: IModelStateProps[] = [];
+    if (!this.model.isAnalogRecorder) return;
 
-    let recordables: INodeRecordProps[] = [];
-
-    // Initialize recordables.
+    // Get model states from target nodes.
     if (this.connections.length > 0) {
-      if (this.model.isAnalogRecorder) {
-        const recordablesNodes = this.targetNodes.map((target: NESTNode) => {
-          return (
-            target.modelId === "cm_default"
-              ? [...target.compartmentRecordables, ...target.receptorRecordables]
-              : [...target.modelStates]
-          ).flat();
-        });
+      const targetsModelStates = this.targetNodes.map((node: NESTNode) => {
+        return (
+          node.modelId === "cm_default"
+            ? [...node.compartmentRecordables, ...node.receptorRecordables]
+            : [...node.modelStates]
+        ).flat();
+      });
 
-        if (recordablesNodes.length > 0) {
-          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled.filter((recordProps: INodeRecordProps) => recordProps).filter(onlyUnique);
+      if (targetsModelStates.length > 0) {
+        const modelStatesPooled: IModelStateProps[] = targetsModelStates.flat();
+        modelStatesProps = modelStatesPooled
+          .filter((modelStateProps: IModelStateProps) => modelStateProps)
+          .filter(onlyUnique);
 
-          if (this.modelId === "voltmeter") {
-            recordables = recordables.filter((recordProps: INodeRecordProps) => ["V_m", "v"].includes(recordProps.id));
-          }
-
-          recordables.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
+        if (this.modelId === "voltmeter") {
+          modelStatesProps = modelStatesProps.filter((recordProps: INodeRecordProps) =>
+            ["V_m", "v"].includes(recordProps.id),
+          );
         }
+
+        modelStatesProps.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
       }
     } else if (this.modelId === "weight_recorder") {
-      const recordable = this.model.config?.localStorage.states.find(
-        (recordProps: INodeRecordProps) => recordProps.id === "weights",
+      const modelStateProps = this.model.config?.localStorage.states.find(
+        (modelStateProps: IModelStateProps) => modelStateProps.id === "weights",
       );
 
-      recordables.push(recordable);
+      modelStatesProps.push(modelStateProps);
     }
 
-    // if (recordables.length != this.recordables.length) {
-    this.recordables = recordables.map((recordProps: INodeRecordProps) => new NodeRecord(this, recordProps));
-    // }
+    // Convert model states to node records.
+    this.recordables = modelStatesProps.map(
+      (modelStateProps: IModelStateProps) => new NodeRecord(this, modelStateProps),
+    );
 
     this.updateRecordsColor();
   }

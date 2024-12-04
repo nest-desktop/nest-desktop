@@ -359,18 +359,16 @@ const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProje
           }
         });
 
-        axios
-          .get(githubRawURL("models") + `index.json`)
-          .then((response: AxiosResponse<any, { data: Record<string, string> }>) => {
-            if (!response.data) return;
+        axios.get(githubRawURL("models") + `index.json`).then((response: AxiosResponse<Record<string, string>>) => {
+          if (!response.data) return;
 
-            modelIds.forEach((modelId: string) => {
-              const path = response.data[modelId];
-              if (!path) return;
+          modelIds.forEach((modelId: string) => {
+            const path = response.data[modelId];
+            if (!path) return;
 
-              getModelFromGithub(path, modelId);
-            });
+            getModelFromGithub(path, modelId);
           });
+        });
 
         break;
     }
@@ -388,24 +386,22 @@ const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProje
  * Get model from github.
  */
 const getModelFromGithub = (path: string, modelId: string) => {
-  axios
-    .get(githubRawURL("models") + path)
-    .then((response: AxiosResponse<any, { data: TModelProps | TModelProps[] }>) => {
-      if (!response.data) return;
+  axios.get(githubRawURL("models") + path).then((response: AxiosResponse<TModelProps | TModelProps[]>) => {
+    if (!response.data) return;
 
-      const modelsProps: TModelProps[] = Array.isArray(response.data) ? response.data : [response.data];
+    const modelsProps: TModelProps[] = Array.isArray(response.data) ? response.data : [response.data];
 
-      const modelProps = modelsProps.find((modelProps: TModelProps) => modelProps.id === modelId);
-      if (!modelProps) return;
-      const valid = modelDBStore.value.validateModel(modelProps);
+    const modelProps = modelsProps.find((modelProps: TModelProps) => modelProps.id === modelId);
+    if (!modelProps) return;
+    const valid = modelDBStore.value.validateModel(modelProps);
 
-      state.items.push({
-        group: "model",
-        name: modelProps.label || "",
-        props: modelProps,
-        valid,
-      });
+    state.items.push({
+      group: "model",
+      name: modelProps.label || "",
+      props: modelProps,
+      valid,
     });
+  });
 };
 
 /**
@@ -415,7 +411,7 @@ const getFilesFromGithub = (tree: IGithubTree) => {
   state.githubSelectedFile = { path: "" } as IGithubTree;
   state.githubFiles = [];
 
-  axios.get(githubAPI() + tree.sha).then((response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
+  axios.get(githubAPI() + tree.sha).then((response: AxiosResponse<{ tree: IGithubTree[] }>) => {
     state.githubFiles = response.data.tree.filter((d: IGithubTree) => d.type === "blob" && d.path.endsWith(".json"));
   });
 };
@@ -431,7 +427,7 @@ const getTreesFromGithub = () => {
   nextTick(() => {
     axios
       .get(githubAPI() + `${state.githubTag}?recursive=true`)
-      .then((response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
+      .then((response: AxiosResponse<{ tree: IGithubTree[] }>) => {
         state.githubTrees = response.data.tree.filter((tree: IGithubTree) => tree.type === "tree");
       });
   });
@@ -466,16 +462,11 @@ const fetchFromOldDatabase = () => {
  */
 const fetchProps = (url?: string) => {
   if (state.url.length === 0) return;
-  axios.get(url || state.url).then(
-    (
-      response: AxiosResponse<
-        any,
-        {
-          data: TModelProps | TProjectProps | (TProjectProps | TModelProps)[];
-        }
-      >,
-    ) => addProps(response.data),
-  );
+  axios
+    .get(url || state.url)
+    .then((response: AxiosResponse<TModelProps | TProjectProps | (TProjectProps | TModelProps)[]>) =>
+      addProps(response.data),
+    );
 };
 
 /**

@@ -88,29 +88,28 @@ export class NorseNode extends BaseNode {
 
   /**
    * Observer for node changes.
-   *
-   * @remarks
-   * It emits network changes.
+   * @remarks It emits network changes.
    */
   override changes(): void {
     this.logger.trace("changes");
 
-    this.clean();
-    this.updateHash();
-    this.generateCode();
+    this.update();
+    this.renderNodeCode();
 
     this.nodes.network.changes();
   }
 
   /**
-   * Generate code.
+   * Render node code.
    */
-  generateCode(): void {
+  renderNodeCode(): void {
     this._code = Mustache.render(this.model.codeTemplate, this);
   }
 
   /**
    * Load model.
+   * @param paramsProps list of param props
+   * @remarks It adds parameters.
    */
   override loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId, paramsProps);
@@ -118,6 +117,6 @@ export class NorseNode extends BaseNode {
     this._model = this.getModel(this._modelId);
     this.addParameters(paramsProps);
 
-    this.generateCode();
+    this.renderNodeCode();
   }
 }

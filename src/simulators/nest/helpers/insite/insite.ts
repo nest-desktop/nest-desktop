@@ -2,7 +2,7 @@
 
 import { AxiosResponse } from "axios";
 
-import { IActivityProps } from "@/helpers/activity/activity";
+import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { SpikeActivity } from "@/helpers/activity/spikeActivity";
 import { notifySuccess } from "@/helpers/common/notification";
@@ -14,7 +14,7 @@ import { NESTProject } from "../project/project";
 const logger = mainLogger.getSubLogger({ minLevel: 3, name: "insite" });
 
 interface IInsiteActivityProps extends IActivityProps {
-  times: number;
+  times: number[];
 }
 
 interface IInsiteMultimeterResponseData {
@@ -113,17 +113,12 @@ export class Insite {
     this.simulationTimeIntervalId = window.setInterval(() => {
       insiteAccess.getSimulationTimeInfo().then(
         (
-          response: AxiosResponse<
-            any,
-            {
-              data: {
-                begin: number;
-                current: number;
-                end: number;
-                stepSize: number;
-              };
-            }
-          >,
+          response: AxiosResponse<{
+            begin: number;
+            current: number;
+            end: number;
+            stepSize: number;
+          }>,
         ) => {
           if (response === undefined) return;
 
@@ -200,64 +195,55 @@ export class Insite {
     if (!this._state.on) return;
     logger.trace("Get analog signal activities from Insite");
 
-    insiteAccess.getMultimeters().then(
-      (
-        response: AxiosResponse<
-          any,
-          {
-            data: IInsiteMultimeterResponseData[];
-          }
-        >,
-      ) => {
-        if (response == null) return;
+    insiteAccess.getMultimeters().then((response: AxiosResponse<IInsiteMultimeterResponseData[]>) => {
+      if (response == null) return;
 
-        if (response.status === 202) {
-          setTimeout(() => this.getAnalogSignalActivities(positions), 100);
-          return;
-        }
+      if (response.status === 202) {
+        setTimeout(() => this.getAnalogSignalActivities(positions), 100);
+        return;
+      }
 
-        const activities: IActivityProps[] = response.data.map((data: IInsiteMultimeterResponseData) => {
-          const events: Record<string, (number | string)[]> = {
-            times: [],
-            senders: [],
-          };
-          data.attributes.forEach((attribute: string) => {
-            events[attribute] = [];
-          });
-
-          const nodePositions: number[][] = [];
-          if (positions) {
-            if (Object.keys(positions).length > 0) {
-              data.nodeIds.forEach((nodeId: number) => {
-                if (nodeId in positions) {
-                  nodePositions.push(positions[nodeId]);
-                }
-              });
-            }
-          }
-
-          return {
-            events,
-            recorderUnitId: data.multimeterId,
-            nodeIds: data.nodeIds,
-            nodePositions,
-          };
+      const activities: IActivityProps[] = response.data.map((data: IInsiteMultimeterResponseData) => {
+        const events: IEventProps = {
+          times: [],
+          senders: [],
+        };
+        data.attributes.forEach((attribute: string) => {
+          events[attribute] = [];
         });
 
-        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
-        activities.sort((a: IActivityProps, b: IActivityProps) =>
-          a.recorderUnitId && b.recorderUnitId ? a.recorderUnitId - b.recorderUnitId : 0,
-        );
+        const nodePositions: number[][] = [];
+        if (positions) {
+          if (Object.keys(positions).length > 0) {
+            data.nodeIds.forEach((nodeId: number) => {
+              if (nodeId in positions) {
+                nodePositions.push(positions[nodeId]);
+              }
+            });
+          }
+        }
 
-        // Initialize activities.
-        this._project.activities.update(activities);
+        return {
+          events,
+          recorderUnitId: data.multimeterId,
+          nodeIds: data.nodeIds,
+          nodePositions,
+        };
+      });
 
-        // Get analog signal activities from each multimeter.
-        this._project.activities.analogSignals.forEach((activity: AnalogSignalActivity) =>
-          this.getAnalogSignalsFromRecorder(activity),
-        );
-      },
-    );
+      // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
+      activities.sort((a: IActivityProps, b: IActivityProps) =>
+        a.recorderUnitId && b.recorderUnitId ? a.recorderUnitId - b.recorderUnitId : 0,
+      );
+
+      // Initialize activities.
+      this._project.activities.update(activities);
+
+      // Get analog signal activities from each multimeter.
+      this._project.activities.analogSignals.forEach((activity: AnalogSignalActivity) =>
+        this.getAnalogSignalsFromRecorder(activity),
+      );
+    });
   }
 
   /**
@@ -271,7 +257,7 @@ export class Insite {
       .getMultimeterAttribute(activity.recorderUnitId, attribute, {
         fromTime: activity.lastTime,
       })
-      .then((response: AxiosResponse<any, { data: { nodeIds: number[]; simulationTimes: number[] } }>) => {
+      .then((response: AxiosResponse<{ nodeIds: number[]; simulationTimes: number[]; values: number[] }>) => {
         if (response == null) return;
 
         if (response.status === 202) {
@@ -307,15 +293,9 @@ export class Insite {
   getAllFirstSpikeActivity(): void {
     if (!this._state.on) return;
 
-    insiteAccess.getSpikes({ top: this._state.top, skip: this._state.skip }).then(
-      (
-        response: AxiosResponse<
-          any,
-          {
-            data: { nodeIds: number[]; simulationTimes: number[] };
-          }
-        >,
-      ) => {
+    insiteAccess
+      .getSpikes({ top: this._state.top, skip: this._state.skip })
+      .then((response: AxiosResponse<{ nodeIds: number[]; simulationTimes: number[] }>) => {
         if (response == null) return;
 
         if (response.status === 202) {
@@ -361,8 +341,7 @@ export class Insite {
 
         // Recursive call after timeout.
         setTimeout(() => this.getAllFirstSpikeActivity(), 250);
-      },
-    );
+      });
   }
 
   /**
@@ -374,27 +353,18 @@ export class Insite {
   async getNodePositions(): Promise<Record<number, number[]> | undefined> {
     logger.trace("Get node IDs from Insite");
 
-    return insiteAccess.getNodes().then(
-      (
-        response: AxiosResponse<
-          any,
-          {
-            data: TNodeData[];
-          }
-        >,
-      ) => {
-        if (response == null) return;
-        const positions: Record<number, number[]> = {};
+    return insiteAccess.getNodes().then((response: AxiosResponse<TNodeData[]>) => {
+      if (response == null) return;
+      const positions: Record<number, number[]> = {};
 
-        response.data.forEach((data: TNodeData) => {
-          if (data.position != null) {
-            positions[data.nodeId] = data.position;
-          }
-        });
+      response.data.forEach((data: TNodeData) => {
+        if (data.position != null) {
+          positions[data.nodeId] = data.position;
+        }
+      });
 
-        return positions;
-      },
-    );
+      return positions;
+    });
   }
 
   /**
@@ -409,51 +379,49 @@ export class Insite {
     if (!this._state.on) return;
     logger.trace("Get spike activities from Insite");
 
-    insiteAccess
-      .getSpikeRecorders()
-      .then((response: AxiosResponse<any, { data: IInsiteSpikeRecorderResponseData[] }>) => {
-        if (response == null) return;
+    insiteAccess.getSpikeRecorders().then((response: AxiosResponse<IInsiteSpikeRecorderResponseData[]>) => {
+      if (response == null) return;
 
-        if (response.status === 202) {
-          setTimeout(() => this.getSpikeActivities(positions), 100);
-          return;
+      if (response.status === 202) {
+        setTimeout(() => this.getSpikeActivities(positions), 100);
+        return;
+      }
+
+      const activities: IActivityProps[] = response.data.map((data: IInsiteSpikeRecorderResponseData) => {
+        const nodePositions: number[][] = [];
+        if (positions && Object.keys(positions).length > 0) {
+          data.nodeIds.forEach((nodeId: number) => {
+            if (nodeId in positions) {
+              nodePositions.push(positions[nodeId]);
+            }
+          });
         }
-
-        const activities: IActivityProps[] = response.data.map((data: IInsiteSpikeRecorderResponseData) => {
-          const nodePositions: number[][] = [];
-          if (positions && Object.keys(positions).length > 0) {
-            data.nodeIds.forEach((nodeId: number) => {
-              if (nodeId in positions) {
-                nodePositions.push(positions[nodeId]);
-              }
-            });
-          }
-          return {
-            events: { senders: [], times: [] },
-            recorderUnitId: data.spikerecorderId,
-            nodeIds: data.nodeIds,
-            nodePositions,
-          };
-        });
-
-        // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
-        // TODO: check in the future
-        activities.sort((a: IActivityProps, b: IActivityProps) =>
-          a.recorderUnitId && b.recorderUnitId ? a.recorderUnitId - b.recorderUnitId : 0,
-        );
-
-        // Initialize activities.
-        this._project.activities.update(activities);
-
-        // Get spike activities for each spike recorder.
-        // this._project.spikeActivities.forEach((activity: SpikeActivity) => {
-        //   this.getSpikeActivityFromEachRecorder(activity);
-        // });
-
-        // Get spikes from Insite.
-        this._state.skip = 0;
-        this.getAllFirstSpikeActivity();
+        return {
+          events: { senders: [], times: [] },
+          recorderUnitId: data.spikerecorderId,
+          nodeIds: data.nodeIds,
+          nodePositions,
+        };
       });
+
+      // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
+      // TODO: check in the future
+      activities.sort((a: IActivityProps, b: IActivityProps) =>
+        a.recorderUnitId && b.recorderUnitId ? a.recorderUnitId - b.recorderUnitId : 0,
+      );
+
+      // Initialize activities.
+      this._project.activities.update(activities);
+
+      // Get spike activities for each spike recorder.
+      // this._project.spikeActivities.forEach((activity: SpikeActivity) => {
+      //   this.getSpikeActivityFromEachRecorder(activity);
+      // });
+
+      // Get spikes from Insite.
+      this._state.skip = 0;
+      this.getAllFirstSpikeActivity();
+    });
   }
 
   /**
@@ -469,15 +437,10 @@ export class Insite {
       })
       .then(
         (
-          response: AxiosResponse<
-            any,
-            {
-              data: {
-                nodeIds: number[];
-                simulationTimes: number[];
-              };
-            }
-          >,
+          response: AxiosResponse<{
+            nodeIds: number[];
+            simulationTimes: number[];
+          }>,
         ) => {
           if (response == null) return;
 
@@ -511,7 +474,7 @@ export class Insite {
   simulationEndNotification(): void {
     insiteAccess
       .getSimulationTimeInfo()
-      .then((response: AxiosResponse<any, { data: { current: number; end: number; stepSize: number } }>) => {
+      .then((response: AxiosResponse<{ current: number; end: number; stepSize: number }>) => {
         const simulation = this._project.simulation;
 
         // Notify user when the simulation is finished.

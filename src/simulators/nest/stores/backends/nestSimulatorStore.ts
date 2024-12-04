@@ -1,9 +1,9 @@
 // nestSimulatorStore.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 
 import { notifyError } from "@/helpers/common/notification";
-import { defineBackendStore } from "@/stores/defineBackendStore";
+import { defineBackendStore, IAxiosRequestData, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { TModelStore } from "@/stores/model/defineModelStore";
 import { TStore } from "@/types";
 import { sortString } from "@/utils/array";
@@ -103,9 +103,9 @@ const resetKernel = (): void => {
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
 };
 
-const simulate = (data: { source: string; return?: string }): Promise<AxiosResponse> => {
+const simulate = (data: IAxiosRequestData): AxiosPromise<IAxiosResponseData> => {
   const nestSimulatorStore = useNESTSimulatorStore();
-  return nestSimulatorStore.axiosInstance().post("exec", data);
+  return nestSimulatorStore.axiosInstance().post<IAxiosResponseData>("exec", data);
 };
 
 export default {

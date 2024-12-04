@@ -24,7 +24,7 @@ export interface IModelProps extends IDoc {
 
 export interface IModelStateProps {
   id: string;
-  label: string;
+  label?: string;
   unit?: string;
 }
 

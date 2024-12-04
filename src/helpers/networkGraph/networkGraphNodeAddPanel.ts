@@ -354,7 +354,6 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       // Click on element type.
       panel.select(".menuItem").on("click", (event: MouseEvent) => {
         event.preventDefault();
-
         this.openModelMenu(event, elementType);
       });
     }

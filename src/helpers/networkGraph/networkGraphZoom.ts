@@ -46,9 +46,7 @@ export class NetworkGraphZoom {
         [this.width, this.height],
       ])
       .scaleExtent([0.5, 2])
-      .on("start", () => {
-        this._workspace.handler.style("cursor", "move");
-      })
+      .on("start", () => this._workspace.handler.style("cursor", "move"))
       .on("zoom", ({ transform }) => {
         this._transform = transform;
         if (this._workspace.state.transforming) {

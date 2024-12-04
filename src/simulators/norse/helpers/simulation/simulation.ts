@@ -3,6 +3,8 @@
 import { AxiosResponse } from "axios";
 
 import { BaseSimulation, ISimulationProps } from "@/helpers/simulation/simulation";
+import { IAxiosResponseData } from "@/stores/defineBackendStore";
+import { IEventProps } from "@/helpers/activity/activity";
 
 import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { NorseProject } from "../project/project";
@@ -31,11 +33,9 @@ export class NorseSimulation extends BaseSimulation {
 
   /**
    * Run simulation.
-   *
-   * @remarks
-   * After the simulation it updates the activities and commits the network.
+   * @remarks After the simulation it updates the activities and commits the network.
    */
-  override async run(): Promise<AxiosResponse<any, { data: any }>> {
+  override async run(): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation");
 
     return norseSimulator
@@ -43,11 +43,11 @@ export class NorseSimulation extends BaseSimulation {
         source: this.code.script,
         return: "response",
       })
-      .then((response: AxiosResponse<any, { data: any; status: number }>) => {
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
         if (response.data.data == null) return response;
 
         let data: {
-          events: any[];
+          events: IEventProps[];
           biological_time: number;
         };
         switch (response.status) {

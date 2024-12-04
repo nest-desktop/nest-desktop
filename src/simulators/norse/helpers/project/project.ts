@@ -41,7 +41,7 @@ export class NorseProject extends BaseProject {
    * It generates simulation code in the code editor.
    */
   override generateCodes(): void {
-    this.network.nodes.nodeItems.forEach((node: NorseNode) => node.generateCode());
+    this.network.nodes.nodeItems.forEach((node: NorseNode) => node.renderNodeCode());
     this._simulation.code.generate();
   }
 

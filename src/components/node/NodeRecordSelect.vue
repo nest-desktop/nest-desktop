@@ -8,7 +8,6 @@
       chips
       class="pa-1"
       clearable
-      closable-chips
       color="primary"
       density="compact"
       hide-details

@@ -37,9 +37,7 @@ export class BaseProjectDB extends DatabaseService {
     const projects: Promise<TProjectProps>[] = projectsProps.map(
       (projectProps: TProjectProps) =>
         new Promise<TProjectProps>((resolve) => {
-          this.create(projectProps as IDoc).then(() => {
-            resolve(projectProps);
-          });
+          this.create(projectProps as IDoc).then(() => resolve(projectProps));
         }),
     );
     return Promise.all(projects)

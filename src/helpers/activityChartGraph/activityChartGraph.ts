@@ -241,7 +241,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Add panel.
-   * @param panelProps
+   * @param panelProps panel props
    */
   addPanel(
     panelProps: IActivityChartPanelProps = {
@@ -255,7 +255,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Add panels.
-   * @param panelsProps
+   * @param panelsProps list of panel props
    */
   addPanels(panelsProps?: IActivityChartPanelProps[]): void {
     this.logger.trace("add panels");
@@ -320,7 +320,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Gather data for the chart graph.
-   * @param panel
+   * @param panel panel object
    */
   gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
@@ -384,10 +384,7 @@ export class ActivityChartGraph extends BaseObj {
     this._state.ref = ref;
 
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.newPlot(this._state.ref, this._plotData, this._plotLayout, this._plotConfig).then(() => {
-      // this.init();
-      this.initEvents();
-    });
+    Plotly.newPlot(this._state.ref, this._plotData, this._plotLayout, this._plotConfig).then(() => this.initEvents());
   }
 
   /**
@@ -415,7 +412,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Remove panel.
-   * @param panel
+   * @param panel panel object
    */
   removePanel(panel: ActivityChartPanel): void {
     this._panels = this._panels.filter((p: ActivityChartPanel) => p !== panel);
@@ -475,7 +472,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return activity chart graph props
+   * @return list of activity chart panel props
    */
   toJSON(): IActivityChartPanelProps[] {
     return this._panels.map((panel: ActivityChartPanel) => panel.toJSON());
@@ -516,17 +513,6 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Update the theme color of the chart graph.
-   */
-  updateThemeColor(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateBackgroundColor());
-
-    this._plotLayout.font.color = currentColor();
-    this._plotLayout.paper_bgcolor = currentBackgroundColor();
-    this._plotLayout.plot_bgcolor = currentBackgroundColor();
-  }
-
-  /**
    * Update the layout of the chart graph from each panel.
    * @param panel activity chart panel
    */
@@ -541,22 +527,22 @@ export class ActivityChartGraph extends BaseObj {
     this._plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] = panel.layout.xaxis;
   }
 
-  /**
-   * Update data in visible panels.
-   */
-  updateVisiblePanelsData(): void {
-    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
-      // panel.model.activities; // TODO: check if it is required.
-      this.gatherData(panel);
-      this.updateLayoutPanel(panel);
-    });
-  }
+  // /**
+  //  * Update panels.
+  //  */
+  // updatePanels(): void {
+  //   this.logger.trace("update panels");
+
+  //   const recorders = this._project.network.nodes.recorders;
+  //   this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
+  // }
 
   /**
    * Update panel models.
    */
   updatePanelModels(): void {
     this.logger.trace("update panel models");
+
     this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
   }
 
@@ -567,6 +553,28 @@ export class ActivityChartGraph extends BaseObj {
   updateRecordsColor(): void {
     this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateRecordsColor());
     this.react();
+  }
+
+  /**
+   * Update the theme color of the chart graph.
+   */
+  updateThemeColor(): void {
+    this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateBackgroundColor());
+
+    this._plotLayout.font.color = currentColor();
+    this._plotLayout.paper_bgcolor = currentBackgroundColor();
+    this._plotLayout.plot_bgcolor = currentBackgroundColor();
+  }
+
+  /**
+   * Update data in visible panels.
+   */
+  updateVisiblePanelsData(): void {
+    this.panelsVisible.forEach((panel: ActivityChartPanel) => {
+      // panel.model.activities; // TODO: check if it is required.
+      this.gatherData(panel);
+      this.updateLayoutPanel(panel);
+    });
   }
 
   /**

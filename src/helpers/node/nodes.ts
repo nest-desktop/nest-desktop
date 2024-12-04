@@ -428,9 +428,7 @@ export class BaseNodes extends BaseObj {
   updateRecords(): void {
     this.logger.trace("update records");
 
-    this.recorders
-      .filter((recorder: TNode) => recorder.model.isAnalogRecorder)
-      .forEach((recorder: TNode) => recorder.updateRecords());
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.updateRecords());
   }
 
   /**
@@ -440,15 +438,10 @@ export class BaseNodes extends BaseObj {
   updateRecordsColor(): void {
     this.logger.trace("update records color");
 
-    this.recorders.forEach((recorder: TNode) => {
-      recorder.updateRecordsColor();
-    });
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.updateRecordsColor());
 
     const activityGraph = this.network.project.activityGraph as TActivityGraph;
-
-    if (activityGraph.activityChartGraph) {
-      activityGraph.activityChartGraph.updateRecordsColor();
-    }
+    if (activityGraph.activityChartGraph) activityGraph.activityChartGraph.updateRecordsColor();
   }
 
   /**

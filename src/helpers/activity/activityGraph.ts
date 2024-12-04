@@ -40,9 +40,7 @@ export class BaseActivityGraph extends BaseObj {
 
     this._activityChartGraph.init();
 
-    if (this._project.activities.state.hasSomeEvents) {
-      this.update();
-    }
+    if (this._project.activities.state.hasSomeEvents) this.update();
   }
 
   /**

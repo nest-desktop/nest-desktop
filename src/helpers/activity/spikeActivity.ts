@@ -22,9 +22,7 @@ export class SpikeActivity extends Activity {
    * Get ISI of a node.
    */
   getISI(times: number[]): number[] {
-    if (times.length <= 1) {
-      return [0];
-    }
+    if (times.length <= 1) return [0];
 
     times.sort((a: number, b: number) => a - b);
     const values: number[] = [];
@@ -99,8 +97,6 @@ export class SpikeActivity extends Activity {
     )
       return;
 
-    eventProps.senders.forEach((sender: number, idx: number) => {
-      this._times[sender].push(this.events.times[idx]);
-    });
+    eventProps.senders.forEach((sender: number, idx: number) => this._times[sender].push(this.events.times[idx]));
   }
 }

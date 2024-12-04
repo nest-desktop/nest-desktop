@@ -5,16 +5,14 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TNode } from "@/types";
 
-import { max, min } from "../../utils/array";
 import { Activity } from "../activity/activity";
 import { BaseObj } from "../common/base";
+import { IModelStateProps } from "../model/model";
+import { max, min } from "../../utils/array";
 
-export interface INodeRecordProps {
-  id: string;
+export interface INodeRecordProps extends IModelStateProps {
   color?: string;
   recorderId?: string;
-  label?: string;
-  unit?: string;
 }
 interface INodeRecordState {
   color: string;
@@ -46,7 +44,7 @@ export class NodeRecord extends BaseObj {
     this._node = node;
     // this._activity = node.activity;
 
-    this._id = nodeRecordProps.id;
+    this._id = nodeRecordProps.id || "";
     this._recorderId = nodeRecordProps.recorderId || node.view.label;
     this._label = nodeRecordProps.label || "";
     this._unit = nodeRecordProps.unit || "";

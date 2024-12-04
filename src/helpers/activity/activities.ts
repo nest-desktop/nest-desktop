@@ -22,7 +22,7 @@ export class Activities extends BaseObj {
   public _project: TProject;
 
   constructor(project: TProject) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     this._project = project;
     this._state = reactive<IActivitiesState>({
@@ -42,18 +42,15 @@ export class Activities extends BaseObj {
   get all(): Activity[] {
     let activities = [] as Activity[];
 
-    if (this.project.network) {
+    if (this.project.network)
       activities = this.project.network.nodes.recorders.map((recorder: TNode) => recorder.activity as Activity);
-    }
 
     // Update activity idx.
-    if (activities.length > 0) {
-      activities.forEach((activity: Activity, idx: number) => {
-        if (activity) {
-          activity.idx = idx;
-        }
-      });
-    }
+    if (activities.length > 0)
+      activities
+        .filter((activity: Activity) => activity)
+        .forEach((activity: Activity, idx: number) => (activity.idx = idx));
+
     return activities;
   }
 
@@ -64,9 +61,7 @@ export class Activities extends BaseObj {
     const activities: AnalogSignalActivity[] = this._project.network
       ? this.project.network.nodes.recordersAnalog.map((recorder: TNode) => recorder.activity as AnalogSignalActivity)
       : [];
-    activities.forEach((activity: Activity, idx: number) => {
-      activity.idx = idx;
-    });
+    activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
 
@@ -95,9 +90,7 @@ export class Activities extends BaseObj {
     const activities: SpikeActivity[] = this._project.network
       ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as SpikeActivity)
       : [];
-    activities.forEach((activity: Activity, idx: number) => {
-      activity.idx = idx;
-    });
+    activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
 
@@ -221,17 +214,16 @@ export class Activities extends BaseObj {
 
     // Get node positions.
     if ("positions" in data) {
-      activitiesProps.forEach((activityProps: IActivityProps) => {
-        activityProps.nodePositions = activityProps.nodeIds?.map(
-          (nodeId: number) => data.positions[nodeId] as number[],
-        );
-      });
+      activitiesProps.forEach(
+        (activityProps: IActivityProps) =>
+          (activityProps.nodePositions = activityProps.nodeIds?.map(
+            (nodeId: number) => data.positions[nodeId] as number[],
+          )),
+      );
     }
 
     // Initialize recorded activities.
-    this.all.forEach((activity: Activity, idx: number) => {
-      activity.init(activitiesProps[idx]);
-    });
+    this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
 
     // Trigger activity changes.
     this.changes();

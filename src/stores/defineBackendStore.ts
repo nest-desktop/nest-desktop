@@ -1,6 +1,6 @@
 // defineBackendStore.ts
 
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
@@ -8,6 +8,30 @@ import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
+import { IEventProps } from "@/helpers/activity/activity";
+
+export interface IAxiosRequestData {
+  source: string;
+  return?: string;
+}
+
+export interface IAxiosResponseData {
+  data: IResponseData;
+  status: number;
+  statusText: string;
+  headers: AxiosResponseHeaders;
+  config: AxiosRequestConfig;
+}
+
+export interface IAxiosErrorData {
+  lineNumber: number;
+  message: string;
+}
+
+export interface IResponseData {
+  events: IEventProps[];
+  biological_time: number;
+}
 
 export function defineBackendStore(simulator: string, name: string, url: string, options?: Record<string, string>) {
   const logger = mainLogger.getSubLogger({
@@ -113,7 +137,7 @@ export function defineBackendStore(simulator: string, name: string, url: string,
 
         axiosInstance
           .get(baseURL)
-          .then((response: AxiosResponse<any, { status: number; statusText: string }>) => {
+          .then((response: AxiosResponse<IAxiosResponseData>) => {
             state.response = response;
             switch (response.status) {
               case 200:
@@ -125,7 +149,7 @@ export function defineBackendStore(simulator: string, name: string, url: string,
             }
             return baseURL;
           })
-          .catch((error: AxiosError<any, { message: string }>) => {
+          .catch((error: AxiosError<IAxiosResponseData>) => {
             state.error = error;
             notifyError(`Ping ${baseURL} (${name} backend): ${error.message}`);
           });

@@ -201,9 +201,9 @@ export class Activity extends BaseObj {
   }
 
   /**
-   * get activity from insite.
+   * get activity from Insite.
    */
-  getActivityInsite(): void {}
+  // getActivityInsite(): void {}
 
   /**
    * Initialize activity.

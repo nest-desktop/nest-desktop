@@ -41,7 +41,7 @@ export class BaseNode extends BaseObj {
   public _nodes: TNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
+    super({ config: { name: "Node" }, logger: { settings: { minLevel: 1 } } });
 
     this._nodes = nodes;
     this._modelId = nodeProps.model || "";
@@ -202,7 +202,7 @@ export class BaseNode extends BaseObj {
     return this.model.states;
   }
 
-  get models(): (TModel | any)[] {
+  get models(): TModel[] {
     // Get models of the same element type.
     return this.modelDBStore.getModelsByElementType(this.elementType);
   }
@@ -339,10 +339,7 @@ export class BaseNode extends BaseObj {
     this.logger.trace("add parameter", paramProps.id);
 
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
-
-    if (visible) {
-      this._paramsVisible.push(paramProps.id);
-    }
+    if (visible) this._paramsVisible.push(paramProps.id);
   }
 
   /**
@@ -419,7 +416,7 @@ export class BaseNode extends BaseObj {
    * @param activityProps activity props
    */
   createActivity(activityProps?: IActivityProps): void {
-    this.logger.trace("init activity");
+    this.logger.trace("create activity");
 
     if (!this.model.isRecorder) return;
 
@@ -492,17 +489,13 @@ export class BaseNode extends BaseObj {
 
   /**
    * Initialize node.
-   * @remarks Do not use it in the constructor.
+   * @remarks Do not call it in the constructor.
    */
   init(): void {
     this.logger.trace("init");
 
     this.loadModel(this._props.params);
-
-    if (this.model?.isRecorder) {
-      this.createActivity(this._props.activity);
-    }
-
+    if (this.model.isRecorder) this.updateRecorder();
     this.update();
   }
 
@@ -519,23 +512,38 @@ export class BaseNode extends BaseObj {
   /**
    * Observer for model changes.
    * @remarks It emits node changes.
+   * @remarks It corrects connection direction to the recorder.
+   * @remarks It updates as analog recorder or other connected analog recorders.
    */
-  modelChanges(emitChanges: boolean = true): void {
+  modelChanges(): void {
     this.logger.trace("model change");
+    let recorderModelChanged = false;
 
-    this.update();
+    if (this.model.isRecorder) {
+      // Correct connection direction to spike recorder.
+      this.connections
+        .filter((connection: TConnection) => connection.sourceNode.model.isSpikeRecorder)
+        .forEach((connection: TConnection) => connection.reverse());
 
-    if (this.model.isAnalogRecorder) {
-      this.updateRecords();
+      // Correct connection direction from analog recorder.
+      this.sourceNodes.forEach((recorder: TNode) =>
+        recorder.connections
+          .filter((connection: TConnection) => connection.targetNode.model.isAnalogRecorder)
+          .forEach((connection: TConnection) => connection.reverse()),
+      );
+
+      // Update records of this analog recorder
+      this.updateRecorder();
+      recorderModelChanged = true;
     } else if (!this.model.isSpikeRecorder) {
+      // Updates records of the connected analog recorder.
       this.sourceNodes
         .filter((node: TNode) => node.model.isAnalogRecorder)
-        .forEach((recorder: TNode) => {
-          recorder.update();
-        });
+        .forEach((recorder: TNode) => recorder.updateAnalogRecorder());
     }
 
-    if (emitChanges) this.nodes.network.changes();
+    this.update();
+    this.nodes.network.changes(recorderModelChanged);
   }
 
   /**
@@ -619,23 +627,16 @@ export class BaseNode extends BaseObj {
       view: this._view.toJSON(),
     };
 
-    if (this._size > 1) {
-      nodeProps.size = this._size;
-    }
+    if (this._size > 1) nodeProps.size = this._size;
 
-    if (this.filteredParams.length > 0) {
+    if (this.filteredParams.length > 0)
       nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
-    }
 
     // Add annotations if provided.
-    if (this._annotations.length > 0) {
-      nodeProps.annotations = this._annotations;
-    }
+    if (this._annotations.length > 0) nodeProps.annotations = this._annotations;
 
     // Add records if this model is multimeter.
-    if (this.model.isMultimeter) {
-      nodeProps.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
-    }
+    if (this.model.isMultimeter) nodeProps.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
 
     return nodeProps;
   }
@@ -660,7 +661,6 @@ export class BaseNode extends BaseObj {
   update(): void {
     this.clean();
 
-    this.updateRecordables();
     this.updateHash();
   }
 
@@ -678,31 +678,58 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Update as analog recorder.
+   */
+  updateAnalogRecorder(): void {
+    this.logger.trace("update analog recorder");
+
+    if (!this.model.isAnalogRecorder) return;
+
+    this.updateRecordables();
+    this.updateRecords();
+  }
+
+  /**
    * Update recordables.
+   * @remarks Convert model states to node records.
    */
   updateRecordables(): void {
     this.logger.trace("update recordables");
-    let recordables: INodeRecordProps[] = [];
 
-    // Initialize recordables.
-    if (this.connections.length > 0) {
-      if (this.model.isAnalogRecorder) {
-        const recordablesNodes = this.targetNodes.map((target: TNode) => [...target.modelStates].flat());
+    let modelStatesProps: IModelStateProps[] = [];
+    if (!this.model.isAnalogRecorder || this.connections.length == 0) return;
 
-        if (recordablesNodes.length > 0) {
-          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled.filter((recordProps: INodeRecordProps) => recordProps).filter(onlyUnique);
-
-          recordables.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
-        }
-      }
+    // Get model states from target nodes.
+    const targetsModelStates = this.targetNodes.map((node: TNode) => [...node.modelStates].flat());
+    if (targetsModelStates.length > 0) {
+      const modelStatesPooled: IModelStateProps[] = targetsModelStates.flat();
+      modelStatesProps = modelStatesPooled
+        .filter((modelStateProps: IModelStateProps) => modelStateProps)
+        .filter(onlyUnique);
+      modelStatesProps.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
     }
 
-    // if (recordables.length != this.recordables.length) {
-    this.recordables = recordables.map((recordProps: INodeRecordProps) => new NodeRecord(this, recordProps));
-    // }
+    // Convert model states to node records.
+    this.recordables = modelStatesProps.map(
+      (modelStateProps: IModelStateProps) => new NodeRecord(this, modelStateProps),
+    );
 
     this.updateRecordsColor();
+  }
+
+  /**
+   * Update as recorder.
+   */
+  updateRecorder(): void {
+    this.logger.trace("update analog recorder");
+
+    if (!this.model.isRecorder) return;
+
+    // Create activity.
+    this.createActivity();
+
+    // Update analog recorder.
+    if (this.model.isAnalogRecorder) this.updateAnalogRecorder();
   }
 
   /**
@@ -720,10 +747,7 @@ export class BaseNode extends BaseObj {
     } else if (this.records.length > 0) {
       const recordIds = this.recordables.map((record: NodeRecord) => record.id);
       this.records = [...this.records.filter((record: NodeRecord) => recordIds.includes(record.id))];
-
-      this.records.forEach((record: NodeRecord) => {
-        record.node = this;
-      });
+      this.records.forEach((record: NodeRecord) => (record.node = this));
     } else {
       this.records = [...this.recordables];
     }
@@ -734,8 +758,6 @@ export class BaseNode extends BaseObj {
    */
   updateRecordsColor(): void {
     const color = this._view.color;
-    this._recordables.forEach((record: NodeRecord) => {
-      record.state.color = color;
-    });
+    this._recordables.forEach((record: NodeRecord) => (record.state.color = color));
   }
 }

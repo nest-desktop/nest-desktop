@@ -198,7 +198,7 @@ export class BaseProject extends BaseObj {
    * It generates codes in the code editor.
    * It commits the network in the network history.
    */
-  changes(): void {
+  changes(props = { resetPanels: false }): void {
     this.updateHash();
 
     this._state.checkChanges();
@@ -211,12 +211,10 @@ export class BaseProject extends BaseObj {
 
     this._networkRevision.commit();
 
-    // Simulate when the configuration is set and the view mode is activity explorer.
-    const appStore = useAppStore();
-    const projectViewStore = appStore.currentSimulator.views.project;
-    if (projectViewStore.state.simulationEvents.onChange) {
-      nextTick(() => this.startSimulation());
-    }
+    // It resets panels of activity chart graph.
+    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
+
+    this.startSimulationOnChange();
   }
 
   /**
@@ -344,6 +342,15 @@ export class BaseProject extends BaseObj {
       .finally(() => {
         closeLoading();
       });
+  }
+
+  /**
+   * Simulate when the configuration is set.
+   */
+  startSimulationOnChange(): void {
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
+    if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
   }
 
   /**

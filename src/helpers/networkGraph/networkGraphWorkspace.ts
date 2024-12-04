@@ -170,14 +170,11 @@ export class NetworkGraphWorkspace extends BaseObj {
       .on("mousemove", (event: MouseEvent) => {
         const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
-        if (this._state.dragLine) {
-          this._dragline.update(event);
-        }
+        if (this._state.dragLine) this._dragline.update(event);
       })
       .on("click", () => {
         this.reset();
         this.network?.state.unselectAll();
-
         this.update();
       })
       .on("contextmenu", (event: MouseEvent) => {
