@@ -70,7 +70,7 @@ const emit = defineEmits(["openMenu"]);
 
 const state = reactive<{
   elementType: string;
-  items: (TModel | any)[];
+  items: (TModel | unknown)[];
 }>({
   elementType: "",
   items: [],

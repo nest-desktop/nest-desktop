@@ -355,7 +355,7 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("init events");
 
-    this._state.ref.on("plotly_legendclick", (plot: any) => {
+    this._state.ref.on("plotly_legendclick", (plot: PlotlyBasic.Root) => {
       nextTick(() => {
         if (plot && plot.data) {
           plot.data.forEach((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
@@ -447,7 +447,7 @@ export class ActivityChartGraph extends BaseObj {
    * Restyle marker height of spike times raster plot.
    */
   restyleMarkerHeightSpikeTimesRasterPlot(): {
-    update: any;
+    update: Record<string, string | number | number[]>;
     traceIndices: number[];
   } {
     if (!this._state.ref) return { update: {}, traceIndices: [] };

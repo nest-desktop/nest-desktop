@@ -1,6 +1,6 @@
 // connectionGraph.ts
 
-import { DragBehavior, Selection, Transition, drag, select, transition } from "d3";
+import { DragBehavior, Selection, drag, select, transition } from "d3";
 
 import { TConnection, TNetworkGraph, TNode } from "@/types";
 
@@ -77,7 +77,7 @@ export class ConnectionGraph extends BaseObj {
    * @param elements SVG elements
    */
   init(connection: TConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
-    const elem: Selection<any, any, any, any> = select(elements[idx]);
+    const elem: Selection<SVGGElement, TConnection, null, undefined> = select(elements[idx]);
 
     elem.selectAll("*").remove();
 
@@ -160,12 +160,11 @@ export class ConnectionGraph extends BaseObj {
     this.logger.trace("render");
 
     select("g#connections").style("pointer-events", () => (this._networkGraph.workspace.state.dragLine ? "none" : ""));
-    const selector = select("g#connections").selectAll("g.connection");
+    const connections = select("g#connections").selectAll("g.connection");
 
     const duration: number = this._networkGraph.workspace.state.dragging ? 0 : 250;
-    const t: Transition<any, any, any, any> = transition().duration(duration);
+    const t = transition().duration(duration);
 
-    const connections = select("g#connections").selectAll("g.connection");
     connections
       .style("color", (c: TConnection | any) => "var(--colorNode" + c.source.idx + ")")
       .transition(t)
@@ -174,8 +173,8 @@ export class ConnectionGraph extends BaseObj {
     // @ts-expect-error Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
     // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
     // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
-    selector.each((connection: TConnection, idx: number, elements: any[]) => {
-      const elem: Selection<any, any, any, any> = select(elements[idx]);
+    connections.each((connection: TConnection, idx: number, elements: Selection[]) => {
+      const elem: Selection<SVGGElement, TConnection, null, undefined> = select(elements[idx]);
 
       elem
         .selectAll("path")
@@ -225,12 +224,12 @@ export class ConnectionGraph extends BaseObj {
   update(): void {
     if (!this._networkGraph.selector) return;
 
-    const connections: Selection<any, any, any, any> = this._networkGraph.selector
+    const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
       .data(this.networkGraph.network.connections.all, (c: TConnection | any) => c.uuid);
 
-    const dragging: DragBehavior<any, unknown, unknown> = drag()
+    const dragging: DragBehavior<any, any, any> = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, c: TConnection | unknown) => this.drag(e, c as TConnection))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));

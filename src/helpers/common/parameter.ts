@@ -24,7 +24,7 @@ interface IParamOptions {
 export interface IParamProps {
   component?: string;
   disabled?: boolean;
-  factors?: any[];
+  factors?: string[];
   format?: string;
   handleOnUpdate?: (param: TParameter) => void;
   id: string;
