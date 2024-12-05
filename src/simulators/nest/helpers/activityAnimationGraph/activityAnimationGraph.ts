@@ -1,6 +1,6 @@
 // activityAnimationGraph.ts
 
-import { Group } from "three";
+import { Group, Object3DEventMap } from "three";
 import { UnwrapRef, reactive } from "vue";
 
 import { Activity } from "@/helpers/activity/activity";
@@ -82,7 +82,7 @@ export class ActivityAnimationGraph {
   /**
    * Add layer groups to the parent group.
    */
-  addLayersToGroup(group: Group<any>): void {
+  addLayersToGroup(group: Group<Object3DEventMap>): void {
     this._layers.forEach((layer: ActivityAnimationLayer) => {
       if (layer.graphGroup) {
         group.add(layer.graphGroup);
@@ -156,9 +156,7 @@ export class ActivityAnimationGraph {
    * Render frames of activity layers.
    */
   renderFrameLayers(): void {
-    this._layers.forEach((layer: ActivityAnimationLayer) => {
-      layer.renderFrame();
-    });
+    this._layers.forEach((layer: ActivityAnimationLayer) => layer.renderFrame());
   }
 
   /**
@@ -188,8 +186,7 @@ export class ActivityAnimationGraph {
    */
   stepBackwardFrame(): void {
     this.pauseFrameAnimation();
-    this.frameIdx =
-      (this.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
+    this.frameIdx = (this.frameIdx - 1 + this._state.nSamples) % this._state.nSamples;
   }
 
   /**
@@ -197,10 +194,7 @@ export class ActivityAnimationGraph {
    * @remarks It requires network activities.
    */
   update(): void {
-    this._state.nSamples =
-      this.project.simulation.state.biologicalTime *
-        this._state.frames.sampleRate -
-      1;
+    this._state.nSamples = this.project.simulation.state.biologicalTime * this._state.frames.sampleRate - 1;
 
     // Update activity layers and frames.
     this.project.activities.all.forEach((activity: Activity) => {
@@ -233,10 +227,7 @@ export class ActivityAnimationGraph {
       this.setFirstFrame();
     } else {
       this.frameIdx =
-        (currentFrameIdx +
-          frames.speed * frames.windowSize +
-          this._state.nSamples) %
-        this._state.nSamples;
+        (currentFrameIdx + frames.speed * frames.windowSize + this._state.nSamples) % this._state.nSamples;
     }
   }
 

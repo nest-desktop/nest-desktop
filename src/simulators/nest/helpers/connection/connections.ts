@@ -6,10 +6,7 @@ import { NESTNetwork } from "../network/network";
 import { INESTConnectionProps, NESTConnection } from "./connection";
 
 export class NESTConnections extends BaseConnections {
-  constructor(
-    network: NESTNetwork,
-    connectionsProps: INESTConnectionProps[] = []
-  ) {
+  constructor(network: NESTNetwork, connectionsProps: INESTConnectionProps[] = []) {
     super(network, connectionsProps);
   }
 
@@ -44,15 +41,10 @@ export class NESTConnections extends BaseConnections {
    * @param connectionProps connection props
    * @returns connection object
    */
-  override addConnection(
-    connectionProps: INESTConnectionProps
-  ): NESTConnection {
+  override addConnection(connectionProps: INESTConnectionProps): NESTConnection {
     this.logger.trace("add");
 
-    const connection: NESTConnection = new this.Connection(
-      this,
-      connectionProps
-    );
+    const connection: NESTConnection = new this.Connection(this, connectionProps);
     connection.updateHash();
     this.connections.push(connection);
     return connection;
@@ -73,8 +65,6 @@ export class NESTConnections extends BaseConnections {
   }
 
   getBySynapseModelId(modelId: string): NESTConnection | undefined {
-    return this.all.find(
-      (connection: NESTConnection) => connection.synapse.modelId === modelId
-    );
+    return this.all.find((connection: NESTConnection) => connection.synapse.modelId === modelId);
   }
 }

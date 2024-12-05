@@ -1,12 +1,10 @@
 // projectStore.ts
 
-import {
-  TProjectStore,
-  defineProjectStore,
-} from "@/stores/project/defineProjectStore";
+import { defineProjectStore } from "@/stores/project/defineProjectStore";
 
 import { NESTProject } from "../../helpers/project/project";
 import { useNESTProjectDBStore } from "./projectDBStore";
+import { NESTNetwork } from "../../types";
 
 export const useNESTProjectStore = defineProjectStore({
   simulator: "nest",
@@ -19,8 +17,9 @@ export const useNESTProjectStore = defineProjectStore({
  * @param modelId string
  */
 export const copyModel = (modelId: string): void => {
-  const projectStore: TProjectStore = useNESTProjectStore();
+  const projectStore = useNESTProjectStore();
 
-  projectStore.state.project.network.modelsCopied.copy(modelId);
-  projectStore.state.project.network.changes();
+  const network: NESTNetwork = projectStore.state.project?.network as NESTNetwork;
+  network.modelsCopied.copy(modelId);
+  network.changes();
 };

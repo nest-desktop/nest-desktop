@@ -2,10 +2,10 @@
 
 import { nextTick } from "vue";
 
-import { TModelStore, defineModelStore } from "@/stores/model/defineModelStore";
+import { defineModelStore } from "@/stores/model/defineModelStore";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { NESTNode } from "../../types";
+import { NESTNode, NESTSimulation } from "../../types";
 import { IModule, useNESTModuleStore } from "../moduleStore";
 import { useNESTModelDBStore } from "./modelDBStore";
 
@@ -22,30 +22,29 @@ const logger = mainLogger.getSubLogger({
 
 export const updateProject = () => {
   logger.trace("update project");
-  const modelStore: TModelStore = useNESTModelStore();
+  const modelStore = useNESTModelStore();
 
   if (!modelStore.model || !modelStore.model.isNeuron) {
-    modelStore.state.project = undefined;
+    modelStore.state.project = null;
     return;
   }
 
-  if (
-    modelStore.model?.project &&
-    modelStore.model.project?.filename === modelStore.state.projectId
-  ) {
+  if (modelStore.model?.project && modelStore.model.project?.filename === modelStore.state.projectId) {
     modelStore.state.project = modelStore.model.project;
     const project = modelStore.state.project;
 
     if (project) {
       updateSimulationModules(false);
 
-      project.network.nodes.neurons.forEach((neuron: NESTNode) => {
+      const neurons = project.network.nodes.neurons as NESTNode[];
+
+      neurons.forEach((neuron: NESTNode) => {
         neuron._modelId = modelStore.state.modelId;
         neuron.loadModel();
       });
 
       nextTick(() => {
-        project.network.nodes.neurons.forEach((neuron: NESTNode) => {
+        neurons.forEach((neuron: NESTNode) => {
           neuron.showAllParams(false);
         });
 
@@ -61,14 +60,13 @@ export const updateProject = () => {
 };
 
 export const updateSimulationModules = (emitChanges: boolean = true): void => {
-  const modelStore: TModelStore = useNESTModelStore();
+  const modelStore = useNESTModelStore();
   const moduleStore = useNESTModuleStore();
 
-  modelStore.state.project.simulation.modules = moduleStore.state.modules
-    .filter((module: IModule) =>
-      module.models.includes(modelStore.state.modelId)
-    )
+  const simulation = modelStore.state.project?.simulation as NESTSimulation;
+  simulation.modules = moduleStore.state.modules
+    .filter((module: IModule) => module.models.includes(modelStore.state.modelId))
     .map((module: IModule) => module.name);
 
-  if (emitChanges) modelStore.state.project.simulation.changes();
+  if (emitChanges) modelStore.state.project?.simulation.changes();
 };

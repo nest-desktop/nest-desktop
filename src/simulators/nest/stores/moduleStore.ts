@@ -1,16 +1,12 @@
 // moduleStore.ts
 
 import { AxiosResponse } from "axios";
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
-import {
-  fetchNESTMLModels,
-  generateModels,
-  useNESTMLServerStore,
-} from "./backends/nestmlServerStore";
+import { fetchNESTMLModels, generateModels, useNESTMLServerStore } from "./backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./model/modelDBStore";
 
 export interface IModule {
@@ -23,9 +19,7 @@ interface IModuleStoreState {
   modules: IModule[];
 }
 
-export type TModuleStore = Store<string, any>;
-
-export const useNESTModuleStore: TModuleStore = defineStore(
+export const useNESTModuleStore = defineStore(
   "nest-module-store",
   () => {
     const state = reactive<IModuleStoreState>({
@@ -37,11 +31,7 @@ export const useNESTModuleStore: TModuleStore = defineStore(
     });
 
     const addModule = (moduleName: string) => {
-      if (
-        typeof moduleName === "string" &&
-        moduleName.length > 0 &&
-        moduleName.trim()
-      ) {
+      if (typeof moduleName === "string" && moduleName.length > 0 && moduleName.trim()) {
         const moduleNames = state.modules.map((module: IModule) => module.name);
         if (!moduleNames.includes(moduleName)) {
           state.modules.push({ models: [], name: moduleName });
@@ -58,16 +48,14 @@ export const useNESTModuleStore: TModuleStore = defineStore(
         .catch(() => {});
     };
 
-    const findModule = (moduleName: string) =>
-      state.modules.find((module: IModule) => module.name === moduleName);
+    const findModule = (moduleName: string) => state.modules.find((module: IModule) => module.name === moduleName);
 
     const init = () => {
       const nestmlServerStore = useNESTMLServerStore();
       if (nestmlServerStore.state.enabled) fetchInstalledModels();
     };
 
-    const moduleNames = () =>
-      state.modules.map((module: IModule) => module.name);
+    const moduleNames = () => state.modules.map((module: IModule) => module.name);
 
     const removeModule = (module: string) => {
       const moduleIds = state.modules.map((module: IModule) => module.name);
@@ -92,7 +80,7 @@ export const useNESTModuleStore: TModuleStore = defineStore(
         storage: localStorage,
       },
     ],
-  }
+  },
 );
 
 export const openNESTModuleDialog = (): void => {

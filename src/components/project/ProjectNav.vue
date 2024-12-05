@@ -3,20 +3,15 @@
     :model-value="navStore.state.open"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
     :width="navStore.state.width"
-    @transitionend="navStore.dispatchWindowResize()"
     class="d-print-none"
     permanent
+    @transitionend="navStore.dispatchWindowResize()"
   >
-    <div @mousedown="navStore.resizeSideNav()" class="resize-handle" />
+    <div class="resize-handle" @mousedown="navStore.resizeSideNav()" />
 
-    <v-toolbar
-      :color
-      class="fixed-bar"
-      density="compact"
-      extended
-      extension-height="36"
-    >
+    <v-toolbar :color class="fixed-bar" density="compact" extended extension-height="36">
       <v-text-field
+        v-model="search"
         class="mx-1"
         clearable
         density="compact"
@@ -24,12 +19,10 @@
         placeholder="Search project"
         prepend-inner-icon="mdi:mdi-magnify"
         single-line
-        v-model="search"
       />
 
       <template #extension>
         <v-fab
-          @click="newProjectRoute(router)"
           class="ms-4"
           color="primary"
           icon="mdi:mdi-plus"
@@ -38,6 +31,7 @@
           absolute
           offset
           title="Create a new project"
+          @click="newProjectRoute(router)"
         />
 
         <v-row class="mx-4 text-subtitle-2" no-gutters>
@@ -65,36 +59,28 @@
       </v-menu> -->
     </v-toolbar>
 
-    <v-list
-      :key="projects.length"
-      class="pt-0"
-      density="compact"
-      lines="two"
-      nav
-    >
+    <v-list :key="projects.length" class="pt-0" density="compact" lines="two" nav>
       <v-list-subheader inset />
 
       <template
         v-if="
-          projectStore.state.project &&
-          !projectStore.state.project.docId &&
-          projectStore.state.project.state?.editMode
+          projectStore.state.project && !projectStore.state.project.docId && projectStore.state.project.state?.editMode
         "
       >
         <v-text-field
-          @click:append-inner="saveProject(projectStore.state.project)"
+          v-model="projectStore.state.project.name"
           append-inner-icon="mdi:mdi-content-save-edit-outline"
           autofocused
           class="pb-1"
           density="compact"
           hide-details
           label="Project name"
-          v-model="projectStore.state.project.name"
+          @click:append-inner="saveProject(projectStore.state.project)"
         />
       </template>
 
       <template v-for="(project, index) in projects.slice().reverse()">
-        <v-hover v-slot="{ isHovering, props }">
+        <v-hover v-slot="{ isHovering, props: itemProps }">
           <v-list-item
             :key="index"
             :to="{
@@ -102,70 +88,58 @@
               params: { projectId: project.id },
             }"
             :ripple="!project.state?.editMode"
-            v-bind="props"
+            v-bind="itemProps"
           >
-            <template #append v-if="!project.state?.editMode">
+            <template v-if="!project.state?.editMode" #append>
               <template v-if="project.doc">
                 <v-btn
-                  @click.prevent="saveProject(project)"
                   :disabled="!project.state?.changes"
                   :color="project.state?.changes ? 'orange' : 'primary'"
-                  :icon="
-                    project.state?.changes
-                      ? 'mdi:mdi-content-save-outline'
-                      : 'mdi:mdi-check'
-                  "
+                  :icon="project.state?.changes ? 'mdi:mdi-content-save-outline' : 'mdi:mdi-check'"
                   size="x-small"
                   variant="text"
+                  @click.prevent="saveProject(project)"
                 />
               </template>
 
-              <ProjectMenu
-                :color="isHovering ? 'primary' : 'transparent'"
-                :project
-              />
+              <ProjectMenu :color="isHovering ? 'primary' : 'transparent'" :project />
             </template>
 
-            <template #default v-if="project.state?.editMode">
+            <template v-if="project.state?.editMode" #default>
               <v-text-field
-                @click.prevent
-                @click:append-inner="saveProject(project)"
-                @update:model-value="project.state.state.changes = true"
+                v-model="project.name"
                 append-inner-icon="mdi:mdi-content-save-edit-outline"
                 autofocused
                 class="pt-2"
                 density="compact"
                 hide-details
                 label="Project name"
-                v-model="project.name"
+                @click.prevent
+                @click:append-inner="saveProject(project)"
+                @update:model-value="project.state.state.changes = true"
               />
             </template>
 
-            <template #default v-else-if="appStore.state.devMode">
+            <template v-else-if="appStore.state.devMode" #default>
               <v-list-item-title>
-                {{
-                  project.name || "undefined project " + truncate(project.id)
-                }}
+                {{ project.name || "undefined project " + truncate(project.id) }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                <span class="mx-1" v-if="project.id">
+                <span v-if="project.id" class="mx-1">
                   {{ truncate(project.id) }}
                 </span>
-                <span class="mx-1" v-if="project.doc">
+                <span v-if="project.doc" class="mx-1">
                   {{ truncate(project.docId) }}
                 </span>
               </v-list-item-subtitle>
             </template>
 
-            <template #default v-else>
+            <template v-else #default>
               <v-list-item-title>
-                {{
-                  project.name || "undefined project " + truncate(project.id)
-                }}
+                {{ project.name || "undefined project " + truncate(project.id) }}
               </v-list-item-title>
               <v-list-item-subtitle>
-                {{ project.network.nodes.length }} nodes,
-                {{ project.network.connections.length }} connections
+                {{ project.network.nodes.length }} nodes, {{ project.network.connections.length }} connections
               </v-list-item-subtitle>
             </template>
           </v-list-item>
@@ -181,7 +155,7 @@ import { createDialog } from "vuetify3-dialog";
 
 import { TProject } from "@/types";
 import { newProjectRoute } from "@/helpers/routes";
-// @ts-ignore - 'truncate' is declared but its value is never read.
+
 import { truncate } from "@/utils/truncate";
 
 import DeleteDialog from "../dialog/DeleteDialog.vue";
@@ -199,22 +173,16 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-defineProps(["color"]);
+defineProps<{ color: string }>();
 
-const projectStore = computed(
-  () => appStore.currentSimulator.stores.projectStore
-);
+const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
 
-const projectDBStore = computed(
-  () => appStore.currentSimulator.stores.projectDBStore
-);
+const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
 
 const projects = computed(() =>
   projectDBStore.value.state.projects.filter((project: TProject) =>
-    project.name
-      .toLocaleLowerCase()
-      .includes(search.value ? search.value.toLocaleLowerCase() : "")
-  )
+    project.name.toLocaleLowerCase().includes(search.value ? search.value.toLocaleLowerCase() : ""),
+  ),
 );
 
 const search = ref("");

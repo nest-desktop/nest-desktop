@@ -27,9 +27,7 @@ export function upgradeProject(projectProps: any): any {
     return {};
   }
 
-  if (!projectProps.hasOwnProperty("version")) {
-    return projectProps;
-  }
+  if (!("version" in projectProps)) return projectProps;
 
   const oldVersion = projectProps.version;
 
@@ -42,11 +40,7 @@ export function upgradeProject(projectProps: any): any {
   if (oldVersion != projectProps.version) {
     const projectId = projectProps.id;
     if (projectId) {
-      console.log(
-        `Upgrade project (${truncate(projectProps.id)}): ${oldVersion} -> ${
-          projectProps.version
-        }`
-      );
+      console.log(`Upgrade project (${truncate(projectProps.id)}): ${oldVersion} -> ${projectProps.version}`);
     }
   }
 

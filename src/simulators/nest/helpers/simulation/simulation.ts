@@ -2,19 +2,18 @@
 
 import { AxiosError, AxiosResponse } from "axios";
 
-import { notifyError } from "@/helpers/common/notification";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { IAxiosErrorData, IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import { ISimulationCodeProps } from "@/helpers/simulation/simulationCode";
+import { notifyError } from "@/helpers/common/notification";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
-import { INESTSimulationCodeProps, NESTSimulationCode } from "./simulationCode";
-import {
-  INESTSimulationKernelProps,
-  NESTSimulationKernel,
-} from "./simulationKernel";
+import { NESTSimulationCode } from "./simulationCode";
+import { INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 
 export interface INESTSimulationProps {
-  code?: INESTSimulationCodeProps;
+  code?: ISimulationCodeProps;
   kernel?: INESTSimulationKernelProps;
   time?: number;
   modules?: string[];
@@ -24,10 +23,7 @@ export class NESTSimulation extends BaseSimulation {
   private _kernel: NESTSimulationKernel; // simulation kernel
   private _modules: string[];
 
-  constructor(
-    project: NESTProject,
-    simulationProps: INESTSimulationProps = {}
-  ) {
+  constructor(project: NESTProject, simulationProps: INESTSimulationProps = {}) {
     super(project, simulationProps);
     this._modules = simulationProps.modules || [];
     this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
@@ -80,65 +76,41 @@ export class NESTSimulation extends BaseSimulation {
    * Run simulation.
    * @remarks It runs the simulation with or without Insite.
    */
-  override async run(): Promise<AxiosResponse<any, { data: any }> | void> {
+  override async run(): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation");
 
-    return this.code.runSimulationInsite
-      ? this.runWithInsite()
-      : this.runSimulation();
+    return this.code.runSimulationInsite ? this.runWithInsite() : this.runSimulation();
   }
 
   /**
    * Run simulation.
-   * @remarks After the simulation it updates the activities and commits the network.
    */
-  async runSimulation(): Promise<AxiosResponse<any, { data: any }>> {
+  async runSimulation(): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation");
 
-    return nest.simulate({ source: this.code.script, return: "response" }).then(
-      (
-        response: AxiosResponse<
-          any,
-          {
-            data: {
-              events: any[];
-              biological_time: number;
-            };
-            status: number;
-          }
-        >
-      ) => {
-        if (response.data.data == null) {
-          return response;
-        }
+    return nest
+      .simulate({ source: this.code.script, return: "response" })
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
+        if (response.data.data == null) return response;
 
-        let data: {
-          events: any[];
-          biological_time: number;
-        };
+        let data: IResponseData;
         switch (response.status) {
           case 200:
             data = response.data.data;
 
             // Get biological time
-            this.state.biologicalTime =
-              data.biological_time != null ? data.biological_time : this.time;
-
+            this.state.biologicalTime = data.biological_time != null ? data.biological_time : this.time;
             break;
         }
         return response;
-      }
-    );
+      });
   }
 
   /**
    * Run simulation with recording backend Insite.
    * @remarks During the simulation it gets and updates activities.
    */
-  private async runWithInsite(): Promise<AxiosResponse<
-    any,
-    { data: any }
-  > | void> {
+  private async runWithInsite(): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation with Insite");
 
     this.state.timeInfo = {
@@ -150,7 +122,7 @@ export class NESTSimulation extends BaseSimulation {
 
     return nest
       .simulate({ source: this.code.script })
-      .then((response: AxiosResponse<any, { data: any; status: number }>) => {
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
         switch (response.status) {
           case 200:
             if (this.code.runSimulation) {
@@ -164,11 +136,9 @@ export class NESTSimulation extends BaseSimulation {
         }
         return response;
       })
-      .catch((error: AxiosError<any, { response: { data: any } }>) => {
+      .catch((error: AxiosError<IAxiosErrorData | string>) => {
         this.project.insite.cancelAllIntervals();
-        if ("response" in error && error.response?.data != undefined) {
-          notifyError(error.response.data);
-        }
+        if ("response" in error && error.response?.data != undefined) notifyError(error.response.data as string);
       });
   }
 
@@ -181,12 +151,8 @@ export class NESTSimulation extends BaseSimulation {
       kernel: this._kernel.toJSON(),
       time: this.time,
     };
-    if (this.code.state.customBlocks) {
-      simulationProps.code = this.code.toJSON();
-    }
-    if (this._modules.length > 0) {
-      simulationProps.modules = this._modules;
-    }
+    if (this.code.state.customBlocks) simulationProps.code = this.code.toJSON();
+    if (this._modules.length > 0) simulationProps.modules = this._modules;
     return simulationProps;
   }
 

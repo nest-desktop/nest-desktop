@@ -5,16 +5,14 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TNode } from "@/types";
 
-import { max, min } from "../../utils/array";
 import { Activity } from "../activity/activity";
 import { BaseObj } from "../common/base";
+import { IModelStateProps } from "../model/model";
+import { max, min } from "../../utils/array";
 
-export interface INodeRecordProps {
-  id: string;
+export interface INodeRecordProps extends IModelStateProps {
   color?: string;
   recorderId?: string;
-  label?: string;
-  unit?: string;
 }
 interface INodeRecordState {
   color: string;
@@ -46,7 +44,7 @@ export class NodeRecord extends BaseObj {
     this._node = node;
     // this._activity = node.activity;
 
-    this._id = nodeRecordProps.id;
+    this._id = nodeRecordProps.id || "";
     this._recorderId = nodeRecordProps.recorderId || node.view.label;
     this._label = nodeRecordProps.label || "";
     this._unit = nodeRecordProps.unit || "";
@@ -180,9 +178,7 @@ export class NodeRecord extends BaseObj {
     this.logger.trace("update");
 
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
-    if (this._nodeSize != this.state.traceColors.length) {
-      this.updateTraceColors();
-    }
+    if (this._nodeSize != this.state.traceColors.length) this.updateTraceColors();
 
     this.updateColorMap();
   }
@@ -210,15 +206,11 @@ export class NodeRecord extends BaseObj {
     this._state.traceColors.slice(0, this._nodeSize);
 
     if (this._nodeSize > this._state.traceColors.length) {
-      const arrayIdx = [
-        ...Array(this._nodeSize - this._state.traceColors.length).keys(),
-      ];
+      const arrayIdx = [...Array(this._nodeSize - this._state.traceColors.length).keys()];
       this._state.traceColors = [
         ...this._state.traceColors,
         ...arrayIdx.map((idx) =>
-          this.nodeSize == 1
-            ? this._state.color
-            : this.getColor(idx + this._state.traceColors.length)
+          this.nodeSize == 1 ? this._state.color : this.getColor(idx + this._state.traceColors.length),
         ),
       ];
     }
@@ -229,7 +221,7 @@ export class NodeRecord extends BaseObj {
    */
   valueColor(value: number): string {
     const colorMap: string = `interpolate${this._state.colorMap.scale}`;
-    // @ts-ignore - Element implicitly has an 'any' type because expression of type 'string' can't be used to index type
+    // @ts-expect-error Element implicitly has an 'any' type because expression of type 'string' can't be used to index type
     // 'typeof import("./node_modules/@types/d3/index")'.
     const colorScale = d3[colorMap];
     return colorScale(this._state.colorMap.reverse ? 1 - value : value);

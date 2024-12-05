@@ -1,21 +1,11 @@
 // highlightLine.ts
 
 import { Extension, RangeSetBuilder } from "@codemirror/state";
-import {
-  Decoration,
-  DecorationSet,
-  EditorView,
-  ViewPlugin,
-  ViewUpdate,
-} from "@codemirror/view";
+import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
 
-export function highlightLineDeco(
-  view: EditorView,
-  lineNumber: number,
-  className: string
-): DecorationSet {
+export function highlightLineDeco(view: EditorView, lineNumber: number, className: string): DecorationSet {
   const builder = new RangeSetBuilder();
-  for (let { from, to } of view.visibleRanges) {
+  for (const { from, to } of view.visibleRanges) {
     for (let pos = from; pos <= to; ) {
       const line = view.state.doc.lineAt(pos);
       if (line.number == lineNumber)
@@ -24,7 +14,7 @@ export function highlightLineDeco(
           line.from,
           Decoration.line({
             attributes: { class: className },
-          })
+          }),
         );
       pos = line.to + 1;
     }
@@ -32,10 +22,7 @@ export function highlightLineDeco(
   return builder.finish() as DecorationSet;
 }
 
-export function highlightLine(
-  lineNumber: number,
-  className: string
-): Extension {
+export function highlightLine(lineNumber: number, className: string): Extension {
   const showHighlineLine = ViewPlugin.fromClass(
     class {
       className: string;
@@ -51,8 +38,7 @@ export function highlightLine(
       }
 
       update(update: ViewUpdate) {
-        if (update.docChanged || update.viewportChanged)
-          this.decorations = this.updateDecorations();
+        if (update.docChanged || update.viewportChanged) this.decorations = this.updateDecorations();
       }
 
       updateClassName(className: string) {
@@ -71,7 +57,7 @@ export function highlightLine(
     },
     {
       decorations: (v) => v.decorations,
-    }
+    },
   );
 
   return showHighlineLine;

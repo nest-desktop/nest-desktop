@@ -1,28 +1,23 @@
 <template>
   <codemirror
+    v-model="simulation.code.script"
     :extensions
+    style="font-size: 0.75rem; width: 100%"
     @blur="() => (state.focused = false)"
     @focus="() => (state.focused = true)"
     @ready="handleReady"
     @update="updateView($event)"
-    style="font-size: 0.75rem; width: 100%"
-    v-model="simulation.code.script"
   />
 </template>
 
 <script lang="ts" setup>
+import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
 import { TSimulation } from "@/types";
-import {
-  autocompletion,
-  basicSetup,
-  languagePython,
-  oneDark,
-} from "@/plugins/codemirror";
+import { autocompletion, basicSetup, languagePython, oneDark, simulationCodeError } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
-import { simulationCodeError } from "@/plugins/codemirror";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -47,11 +42,11 @@ if (darkMode()) {
   extensions.push(oneDark);
 }
 
-const handleReady = (payload: any) => {
+const handleReady = (payload: MouseEvent) => {
   view.value = payload.view;
 };
 
-const updateView = (event: any) => {
+const updateView = (event: EditorView) => {
   state.cursor = event.state.selection.ranges[0];
 };
 
@@ -65,12 +60,12 @@ watch(
         });
       });
     }
-  }
+  },
 );
 
 watch(
   () => simulation.value.state.error,
-  () => view.value.dispatch()
+  () => view.value.dispatch(),
 );
 </script>
 
@@ -81,10 +76,7 @@ watch(
 }
 
 .cm-errorLine {
-  background-color: rgba(
-    var(--v-theme-red),
-    var(--v-disabled-opacity)
-  ) !important;
+  background-color: rgba(var(--v-theme-red), var(--v-disabled-opacity)) !important;
 }
 
 .cm-panels-bottom {

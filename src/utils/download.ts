@@ -7,21 +7,11 @@ const filenamePrefix = "nest-desktop";
 /*
  * Download data.
  */
-export function download(
-  data: string,
-  filename: string = "",
-  format: string = "json"
-) {
+export function download(data: string, filename: string = "", format: string = "json") {
   const element: HTMLAnchorElement = document.createElement("a");
-  element.setAttribute(
-    "href",
-    `data:text/${format};charset=UTF-8,${encodeURIComponent(data)}`
-  );
+  element.setAttribute("href", `data:text/${format};charset=UTF-8,${encodeURIComponent(data)}`);
   const now = moment().format("YYYYMMDD_HHMMSS");
-  element.setAttribute(
-    "download",
-    `${filenamePrefix}-${filename}-${now}.${format}`
-  );
+  element.setAttribute("download", `${filenamePrefix}-${filename}-${now}.${format}`);
   element.style.display = "none";
   document.body.appendChild(element);
   element.click();
@@ -41,10 +31,7 @@ export function downloadSVGImage(svg: Node, filename: string): void {
     source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
   }
   if (!source.match(/^<svg[^>]+"http:\/\/www\.w3\.org\/1999\/xlink"/)) {
-    source = source.replace(
-      /^<svg/,
-      '<svg xmlns:xlink="http://www.w3.org/1999/xlink"'
-    );
+    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
   }
 
   // Add xml declaration.

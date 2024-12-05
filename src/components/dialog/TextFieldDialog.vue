@@ -1,13 +1,13 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-text-field density="compact" hide-details v-model="modelValue" />
+      <v-text-field v-model="modelValue" density="compact" hide-details />
     </v-card-text>
 
     <v-card-actions>
       <v-spacer />
-      <v-btn @click="closeDialog()" text="cancel" title="Cancel" />
-      <v-btn @click="closeDialog(modelValue)" text="submit" title="Submit" />
+      <v-btn text="cancel" title="Cancel" @click="closeDialog()" />
+      <v-btn text="submit" title="Submit" @click="closeDialog(modelValue)" />
     </v-card-actions>
   </v-card>
 </template>

@@ -118,16 +118,12 @@ export class ActivityAnimationScene {
     if (this._delta <= interval) return;
 
     // Start time step for stats.
-    if (this._stats) {
-      this._stats.begin();
-    }
+    if (this._stats) this._stats.begin();
 
     // Update camera.
     const camera: ICameraState = this._state.camera;
     if (camera.control) {
-      if (camera.rotation.speed > 0) {
-        this.moveCamera();
-      }
+      if (camera.rotation.speed > 0) this.moveCamera();
       this.setCameraPosition();
     }
 
@@ -140,9 +136,7 @@ export class ActivityAnimationScene {
     this.render();
 
     // End time step for stats.
-    if (this._stats) {
-      this._stats.end();
-    }
+    if (this._stats) this._stats.end();
 
     // Modulo delta.
     this._delta = this._delta % interval;
@@ -186,13 +180,8 @@ export class ActivityAnimationScene {
   destroy(): void {
     cancelAnimationFrame(this._animationFrameId);
 
-    if (this._ref.firstChild === this._renderer.domElement) {
-      this._ref.removeChild(this._renderer.domElement);
-    }
-
-    if (document.body.lastChild === this._stats.dom) {
-      document.body.removeChild(this._stats.dom);
-    }
+    if (this._ref.firstChild === this._renderer.domElement) this._ref.removeChild(this._renderer.domElement);
+    if (document.body.lastChild === this._stats.dom) document.body.removeChild(this._stats.dom);
 
     // https://stackoverflow.com/questions/21548247/clean-up-threejs-webgl-contexts
     // TODO: It shows message in the debug:
@@ -254,10 +243,8 @@ export class ActivityAnimationScene {
     camera.rotation.theta = camera.rotation.theta % 360;
     const thetaRad: number = camera.rotation.theta * (Math.PI / 180);
     const position: Vector3 = this._state.camera.position;
-    position.x =
-      camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
-    position.z =
-      camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
+    position.x = camera.distance * Math.abs(Math.cos(thetaRad) + Math.cos(thetaRad * 4));
+    position.z = camera.distance * Math.abs(Math.sin(thetaRad) + Math.sin(thetaRad * 4));
     this._camera.lookAt(this._scene.position);
   }
 
@@ -305,8 +292,6 @@ export class ActivityAnimationScene {
    * Update scene background.
    */
   updateSceneBackground(): void {
-    this._scene.background = darkMode()
-      ? new Color(0x121212)
-      : new Color(0xfefefe);
+    this._scene.background = darkMode() ? new Color(0x121212) : new Color(0xfefefe);
   }
 }

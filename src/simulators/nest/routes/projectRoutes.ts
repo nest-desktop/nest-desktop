@@ -1,17 +1,13 @@
 // projectRoutes.ts
 
-import {
-  projectBeforeEnter,
-  projectNew,
-  projectRedirect,
-} from "@/helpers/routes";
+import { projectBeforeEnter, projectNew, projectRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
+import { NESTNodes } from "../types";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
@@ -22,13 +18,13 @@ const nestProjectBeforeEnter = (to: any) => {
   logger.trace("before enter nest project route:", to.path);
   projectBeforeEnter(to);
 
-  const appStore = useAppStore();
-  const projectStore: TProjectStore = useNESTProjectStore();
-  const projectViewStore = appStore.currentSimulator.views.project;
+  const projectStore = useNESTProjectStore();
   if (projectStore.state.project) {
-    if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-      projectViewStore.state.views.activity = "abstract";
-    }
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
+
+    const nodes: NESTNodes = projectStore.state.project.network.nodes as NESTNodes;
+    if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
   }
 };
 
@@ -36,11 +32,13 @@ const nestProjectRedirect = (to: any) => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 
-  const appStore = useAppStore();
-  const projectStore: TProjectStore = useNESTProjectStore();
-  const projectViewStore = appStore.currentSimulator.views.project;
-  if (!projectStore.state.project.network.nodes.hasSomeSpatialNodes) {
-    projectViewStore.state.views.activity = "abstract";
+  const projectStore = useNESTProjectStore();
+  if (projectStore.state.project) {
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
+
+    const nodes: NESTNodes = projectStore.state.project?.network.nodes as NESTNodes;
+    if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
   }
 
   return projectStore.routeTo();

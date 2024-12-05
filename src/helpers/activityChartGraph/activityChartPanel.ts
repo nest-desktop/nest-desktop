@@ -5,10 +5,7 @@ import { UnwrapRef, reactive } from "vue";
 import { sum } from "../../utils/array";
 import { BaseObj } from "../common/base";
 import { ActivityChartGraph } from "./activityChartGraph";
-import {
-  ActivityChartPanelModel,
-  IActivityChartPanelModelProps,
-} from "./activityChartPanelModel";
+import { ActivityChartPanelModel, IActivityChartPanelModelProps } from "./activityChartPanelModel";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
 
 export interface IActivityChartPanelProps {
@@ -70,10 +67,7 @@ export class ActivityChartPanel extends BaseObj {
   private _state: UnwrapRef<IActivityChartPanelState>;
   private _xAxis = 1;
 
-  constructor(
-    graph: ActivityChartGraph,
-    panelProps: IActivityChartPanelProps = {}
-  ) {
+  constructor(graph: ActivityChartGraph, panelProps: IActivityChartPanelProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._graph = graph;
@@ -83,10 +77,7 @@ export class ActivityChartPanel extends BaseObj {
       visible: true,
     });
 
-    this.selectModel(
-      panelProps.model ? panelProps.model.id : "spikeTimesRasterPlot",
-      panelProps.model
-    );
+    this.selectModel(panelProps.model ? panelProps.model.id : "spikeTimesRasterPlot", panelProps.model);
   }
 
   get graph(): ActivityChartGraph {
@@ -166,18 +157,13 @@ export class ActivityChartPanel extends BaseObj {
    * @param modelId
    * @param modelProps
    */
-  selectModel(
-    modelId: string = "spikeTimesRasterPlot",
-    modelProps: IActivityChartPanelModelProps = {}
-  ): void {
+  selectModel(modelId: string = "spikeTimesRasterPlot", modelProps: IActivityChartPanelModelProps = {}): void {
     if (modelId) {
-      const model: IActivityChartPanelModelProps | undefined =
-        this._graph.models.find(
-          (modelProps: IActivityChartPanelModelProps) =>
-            modelProps.id === modelId
-        );
+      const model: IActivityChartPanelModelProps | undefined = this._graph.models.find(
+        (modelProps: IActivityChartPanelModelProps) => modelProps.id === modelId,
+      );
       if (model) {
-        // @ts-ignore - Property 'component' does not exist on type 'IActivityChartPanelModelProps'.
+        // @ts-expect-error Property 'component' does not exist on type 'IActivityChartPanelModelProps'.
         this._model = new model.component(this, modelProps);
       }
     }
@@ -204,25 +190,20 @@ export class ActivityChartPanel extends BaseObj {
    */
   updateLayout(): void {
     const panels: ActivityChartPanel[] = this.graph.panelsVisible;
-    const heights: number[] = panels.map(
-      (panel: ActivityChartPanel) => panel.layout.yaxis.height
-    );
+    const heights: number[] = panels.map((panel: ActivityChartPanel) => panel.layout.yaxis.height);
     const heightTotal: number = sum(heights);
     heights.reverse();
     const heightCumSum: number[] = heights.map(
       (
         (sum: number) => (value: number) =>
           (sum += value)
-      )(0)
+      )(0),
     );
     const steps = heightCumSum.map((h: number) => h / heightTotal);
     steps.unshift(0);
     steps.reverse();
     const margin: number = this.xAxis === 1 ? 0.02 : 0.07;
-    const domain: number[] = [
-      steps[this.yAxis],
-      steps[this.yAxis - 1] - margin,
-    ];
+    const domain: number[] = [steps[this.yAxis], steps[this.yAxis - 1] - margin];
     this.layout.yaxis.domain = domain;
     this.layout.xaxis.anchor = "y" + this.yAxis;
   }

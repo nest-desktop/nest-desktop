@@ -1,35 +1,29 @@
 <template>
   <Card
+    v-if="nodeGroup.show"
     :color="nodeGroup.view.color"
+    class="node-group ma-1"
     @mouseenter="nodeGroup.view.focus()"
     @mouseleave="nodeGroup.parentNodes.unfocusNode()"
-    class="node-group ma-1"
-    v-if="nodeGroup.show"
   >
     <v-card-title class="node-group-title">
       <v-row no-gutters>
-        <v-btn
-          @click.stop="nodeGroup.toggleSelection()"
-          class="mx-1"
-          flat
-          icon
-          variant="tonal"
-        >
+        <v-btn class="mx-1" flat icon variant="tonal" @click.stop="nodeGroup.toggleSelection()">
           <NodeAvatar :node="nodeGroup" size="48" />
         </v-btn>
 
         <v-btn-group class="mx-4" multiple rounded="xl">
           <v-btn
+            v-for="(node, index) in nodeGroup.nodes"
             :key="index"
+            class="btn-avatar px-0"
+            size="small"
             @click.stop="
               () => {
                 node.parentNodes.unselectNodes();
                 node.toggleSelection();
               }
             "
-            class="btn-avatar px-0"
-            size="small"
-            v-for="(node, index) in nodeGroup.nodes"
           >
             <NodeAvatar :node="(node as TNode)" size="32" />
           </v-btn>
@@ -38,15 +32,12 @@
         <v-spacer />
 
         <Menu>
-          <NodeGroupMenuList :nodeGroup />
+          <NodeGroupMenuList :node-group />
         </Menu>
       </v-row>
     </v-card-title>
 
-    <v-card-actions
-      style="min-height: 40px"
-      v-if="nodeGroup.connections.length > 0"
-    >
+    <v-card-actions v-if="nodeGroup.connections.length > 0" style="min-height: 40px">
       <v-row>
         <v-expansion-panels
           :key="nodeGroup.connections.length"
@@ -54,9 +45,9 @@
           variant="accordion"
         >
           <ConnectionEditor
-            :connection="(connection as TConnection)"
-            :key="index"
             v-for="(connection, index) in nodeGroup.connections"
+            :key="index"
+            :connection="(connection as TConnection)"
           />
         </v-expansion-panels>
       </v-row>
@@ -65,6 +56,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import Menu from "../common/Menu.vue";
@@ -73,7 +66,8 @@ import NodeGroupMenuList from "./NodeGroupMenuList.vue";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { TConnection, TNode } from "@/types";
 
-defineProps<{ nodeGroup: NodeGroup }>();
+const props = defineProps<{ nodeGroup: NodeGroup }>();
+const nodeGroup = computed(() => props.nodeGroup);
 </script>
 
 <style lang="scss">

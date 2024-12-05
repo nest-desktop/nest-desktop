@@ -1,5 +1,5 @@
 <template>
-  <v-layout class="networkGraphLayout" full-height id="networkGraphLayout">
+  <v-layout id="networkGraphLayout" class="networkGraphLayout" full-height>
     <NetworkEditorToolbar />
     <NetworkGraph :key="network.project.id" :network />
   </v-layout>
@@ -11,12 +11,9 @@ import { computed } from "vue";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import { BaseNetwork } from "@/helpers/network/network";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = usePyNNProjectStore();
+const projectStore = usePyNNProjectStore();
 
-const network = computed(
-  () => projectStore.state.project.network as BaseNetwork
-);
+const network = computed(() => projectStore.state.project?.network as BaseNetwork);
 </script>

@@ -29,21 +29,12 @@ export class NESTModelAssignGraph {
   /**
    * Initialize a connection graph.
    */
-  init(
-    connection: NESTConnection,
-    idx: number,
-    elements: SVGGElement[] | ArrayLike<SVGGElement>
-  ): void {
+  init(connection: NESTConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
     const elem: Selection<any, any, any, any> = select(elements[idx]);
 
     elem.selectAll("*").remove();
 
-    elem
-      .append("path")
-      .style("fill", "none")
-      .style("stroke", "black")
-      .style("opacity", 0)
-      .style("stroke-width", 40);
+    elem.append("path").style("fill", "none").style("stroke", "black").style("opacity", 0).style("stroke-width", 40);
 
     elem
       .append("path")
@@ -74,10 +65,8 @@ export class NESTModelAssignGraph {
     const models: Selection<any, any, any, any> = this._networkGraph.selector
       .select("g#modelAssigned")
       .selectAll("g.modelAssigned")
-      .data(
-        this._networkGraph.network.connections.recordedByWeightRecorder,
-        (c: NESTConnection | unknown) =>
-          c instanceof BaseConnection ? c.hash : ""
+      .data(this._networkGraph.network.connections.recordedByWeightRecorder, (c: NESTConnection | unknown) =>
+        c instanceof BaseConnection ? c.hash : "",
       );
 
     models
@@ -100,8 +89,8 @@ export class NESTModelAssignGraph {
     const selector = select("g#modelAssigned").selectAll("g.modelAssigned");
     selector.style("pointer-events", "none");
 
-    // @ts-ignore - Argument of type '(connection: Connection, idx: number, elements: any[]) => void' is not assignable
-    // to parameter of type 'ValueFn<BaseType, unknown, void>'.
+    // @ts-expect-error Argument of type '(connection: Connection, idx: number, elements: any[]) => void' is not
+    // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'.
     selector.each((connection: Connection, idx: number, elements: any[]) => {
       const elem = select(elements[idx]);
       const synapseModel = connection.synapse.model as NESTCopyModel;
@@ -110,13 +99,7 @@ export class NESTModelAssignGraph {
       if (weightRecorder) {
         elem
           .selectAll("path")
-          .attr(
-            "d",
-            drawPathMouse(
-              weightRecorder.view.position,
-              connection.view.markerEndPosition
-            )
-          )
+          .attr("d", drawPathMouse(weightRecorder.view.position, connection.view.markerEndPosition))
           .style("stroke-dasharray", 3);
         elem.select("path.color").style("stroke", weightRecorder.view.color);
       }

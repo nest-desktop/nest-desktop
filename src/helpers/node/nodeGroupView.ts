@@ -30,7 +30,7 @@ export class NodeGroupView extends BaseObj {
     nodeGroup: NodeGroup,
     viewProps: INodeGroupViewProps = {
       visible: true,
-    }
+    },
   ) {
     super({ logger: { settings: { minLevel: 3 } } });
 
@@ -48,9 +48,7 @@ export class NodeGroupView extends BaseObj {
   }
 
   get color(): string {
-    if (this._state.color) {
-      return this._state.color;
-    }
+    if (this._state.color) return this._state.color;
     return this._nodeGroup.parent.network.getNodeColor(this._nodeGroup.idx);
   }
 
@@ -68,9 +66,7 @@ export class NodeGroupView extends BaseObj {
   set expansionPanelIdx(value: number | null) {
     this._state.expansionPanelIdx = value;
 
-    if (this._state.expansionPanelIdx != null) {
-      this.nodeGroup.connections[this._state.expansionPanelIdx].state.select();
-    }
+    if (this._state.expansionPanelIdx != null) this.nodeGroup.connections[this._state.expansionPanelIdx].state.select();
   }
 
   get idx(): number {
@@ -86,9 +82,7 @@ export class NodeGroupView extends BaseObj {
   }
 
   get label(): string {
-    if (this._state.label) {
-      return this._state.label;
-    }
+    if (this._state.label) return this._state.label;
 
     const label = "g" + (this.idx + 1);
     return label;
@@ -99,15 +93,15 @@ export class NodeGroupView extends BaseObj {
   }
 
   get opacity(): boolean {
-    const connections = this.nodeGroup.parent.network.connections;
-    const nodes = this.nodeGroup.parentNodes;
-    return (
-      true ||
-      connections.state.selectedNode == null ||
-      (connections.state.selectedNode != null &&
-        this.nodeGroup.isSelectedForConnection) ||
-      (nodes.state.focusedNode != null && this.isFocused)
-    );
+    // const connections = this.nodeGroup.parent.network.connections;
+    // const nodes = this.nodeGroup.parentNodes;
+    return true;
+    // (
+    //   connections.state.selectedNode == null ||
+    //   (connections.state.selectedNode != null &&
+    //     this.nodeGroup.isSelectedForConnection) ||
+    //   (nodes.state.focusedNode != null && this.isFocused)
+    // );
   }
 
   get position(): { x: number; y: number } {
@@ -144,9 +138,7 @@ export class NodeGroupView extends BaseObj {
   toJSON(): INodeGroupViewProps {
     const nodeGroupViewProps: INodeGroupViewProps = {};
 
-    if (this._state.color) {
-      nodeGroupViewProps.color = this._state.color;
-    }
+    if (this._state.color) nodeGroupViewProps.color = this._state.color;
 
     return nodeGroupViewProps;
   }

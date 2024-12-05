@@ -1,21 +1,13 @@
 <template>
-  <Card
-    :color="nodeGroup.view.color"
-    style="border-width: 0 0 0 4px !important"
-  >
+  <Card :color="nodeGroup.view.color" style="border-width: 0 0 0 4px !important">
     <v-list density="compact">
-      <v-list-item
-        :key="index"
-        v-bind="item"
-        v-for="(item, index) in items"
-        v-show="item.show ? item.show() : true"
-      >
-        <template #prepend v-if="item.icon">
+      <v-list-item v-for="(item, index) in items" v-show="item.show ? item.show() : true" :key="index" v-bind="item">
+        <template v-if="item.icon" #prepend>
           <v-icon v-bind="item.icon" />
         </template>
       </v-list-item>
 
-      <slot name="appendItem" :nodeGroup />
+      <slot name="appendItem" :node-group />
     </v-list>
   </Card>
 </template>

@@ -1,23 +1,21 @@
 <template>
   <v-row class="mt-1">
     <v-col class="d-flex justify-center" cols="1">
-      <v-checkbox inset title="Enable backend" v-model="store.state.enabled" />
+      <v-checkbox v-model="store.state.enabled" inset title="Enable backend" />
     </v-col>
 
     <v-col cols="11">
       <v-text-field
+        v-model="store.state.url"
         :disabled="!store.state.enabled"
         :hide-details="store.state.response.data.length === 0"
         :placeholder="store.defaults"
-        :rules="[
-          (value) => value.length === 0 || isURL(value) || 'URL is not valid',
-        ]"
-        @update:focused="updateOnFocus"
+        :rules="[(value) => value.length === 0 || isURL(value) || 'URL is not valid']"
         class="my-2"
         density="compact"
         label="URL of backend"
         persistent-placeholder
-        v-model="store.state.url"
+        @update:focused="updateOnFocus"
       >
         <template #append>
           <v-btn @click="store.ping()">
@@ -47,8 +45,8 @@
 import { computed } from "vue";
 
 import BackendStatusIcon from "./iconsets/BackendStatusIcon.vue";
-import { TStore } from "@/types";
 import { isURL } from "@/utils/urls";
+import { TStore } from "@/types";
 
 const props = defineProps<{ store: TStore }>();
 const store = computed(() => props.store);

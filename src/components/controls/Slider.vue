@@ -1,15 +1,15 @@
 <template>
   <RangeSlider
-    v-bind="props.options"
     v-if="props.options.component === 'rangeSlider'"
-    v-model="modelValue"
+    v-bind="props.options"
+    v-model="(modelValue as number[])"
   />
   <TickSlider
-    v-bind="props.options"
     v-else-if="props.options.component === 'tickSlider'"
-    v-model="modelValue"
+    v-bind="props.options"
+    v-model="(modelValue as string | number)"
   />
-  <ValueSlider v-bind="props.options" v-else v-model="modelValue" />
+  <ValueSlider v-else v-bind="props.options" v-model="(modelValue as number)" />
 </template>
 
 <script lang="ts" setup>
@@ -19,7 +19,23 @@ import RangeSlider from "./RangeSlider.vue";
 import TickSlider from "./TickSlider.vue";
 import ValueSlider from "./ValueSlider.vue";
 
-const props = defineProps(["modelValue", "options"]);
+type TValue = number | string | number[];
+
+interface IOptions {
+  component?: "rangeSlider" | "tickSlider" | "valueSlider" | string;
+  color?: string;
+  id?: string;
+  inputLabel?: string[];
+  label?: string;
+  max?: number;
+  min?: number;
+  step?: number;
+  ticks?: (number | string)[];
+  unit?: string;
+  value: TValue;
+}
+
+const props = defineProps<{ modelValue: TValue; options: IOptions }>();
 const emit = defineEmits(["update:modelValue"]);
 
 const modelValue = computed({

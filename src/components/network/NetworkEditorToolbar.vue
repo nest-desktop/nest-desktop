@@ -1,8 +1,8 @@
 <template>
   <v-toolbar
+    :key="graph?.network.hash"
     :class="{ collapse: state.collapse }"
     :collapse="state.collapse"
-    :key="graph?.network.hash"
     absolute
     class="toolbar"
     color="background"
@@ -10,29 +10,23 @@
   >
     <div v-if="graph" style="position: absolute">
       <div style="width: 320px">
-        <ContextMenu
-          :target="graph.state.contextMenu.target"
-          v-model="graph.state.contextMenu.modelValue"
-        >
+        <ContextMenu v-model="graph.state.contextMenu.modelValue" :target="graph.state.contextMenu.target">
           <slot name="ContextMenuList" :graph>
             <ConnectionMenuList
-              :connection="(graph.state.contextMenu.connection as TConnection)"
               v-if="graph.state.contextMenu.connection"
+              :connection="(graph.state.contextMenu.connection as TConnection)"
             />
-            <NodeMenuList
-              :node="(graph.state.contextMenu.node as TNode)"
-              v-if="graph.state.contextMenu.node"
-            />
+            <NodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as TNode)" />
             <NodeGroupMenuList
-              :nodeGroup="(graph.state.contextMenu.nodeGroup as NodeGroup)"
               v-if="graph.state.contextMenu.nodeGroup"
+              :node-group="(graph.state.contextMenu.nodeGroup as NodeGroup)"
             />
           </slot>
         </ContextMenu>
 
         <v-menu
-          :target="graph.workspace.nodeAddPanel.state.target"
           v-model="graph.workspace.nodeAddPanel.state.modelValue"
+          :target="graph.workspace.nodeAddPanel.state.target"
         >
           <template #activator="{ props }">
             <slot name="activator" v-bind="props" />
@@ -44,10 +38,9 @@
               {{ graph.workspace.nodeAddPanel.state.elementType }} model
             </v-list-subheader>
             <v-list-item
+              v-for="(item, index) in graph.workspace.nodeAddPanel.state.menuItems"
               :key="index"
               @click="() => item.onClick()"
-              v-for="(item, index) in graph.workspace.nodeAddPanel.state
-                .menuItems"
             >
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
@@ -57,27 +50,27 @@
     </div>
 
     <v-btn
-      @click="state.collapse = !state.collapse"
       :icon="state.collapse ? 'mdi:mdi-chevron-right' : 'mdi:mdi-chevron-left'"
       class="icon"
       size="x-small"
+      @click="state.collapse = !state.collapse"
     />
 
     <v-btn
       :disabled="graph?.network.isEmpty"
-      @click="emptyNetwork()"
       class="icon"
       icon="mdi:mdi-trash-can-outline"
       size="x-small"
       title="Delete all network elements"
+      @click="emptyNetwork()"
     />
 
     <v-btn
       :disabled="!graph?.network.nodes.hasAnySelectedNodes"
-      @click="groupSelectedNodes()"
       class="icon"
       icon="mdi:mdi-select-group"
       size="x-small"
+      @click="groupSelectedNodes()"
     />
 
     <template v-if="!state.collapse">
@@ -89,23 +82,18 @@
       /> -->
 
       <v-btn
+        v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
         :key="index"
-        @click.stop="node.unselect()"
         icon
         size="x-small"
-        v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
+        @click.stop="node.unselect()"
       >
         <NodeAvatar :node="(node as TNode)" :size="32" />
       </v-btn>
 
       <v-spacer />
 
-      <v-chip
-        @click="graph.updateHash()"
-        size="small"
-        variant="text"
-        v-if="graph && appStore.state.devMode"
-      >
+      <v-chip v-if="graph && appStore.state.devMode" size="small" variant="text" @click="graph.updateHash()">
         {{ graph.hash }}
       </v-chip>
 
@@ -125,30 +113,28 @@
             ? 'mdi:mdi-image-filter-center-focus'
             : 'mdi:mdi-image-filter-center-focus-strong-outline'
         "
-        @click="() => graph?.workspace.toggleCenterSelected()"
         class="icon"
         size="x-small"
         title="Auto-center currently selected element"
+        @click="() => graph?.workspace.toggleCenterSelected()"
       />
 
       <v-btn
         :class="{ active: graph?.workspace.state.centerNetwork }"
-        @click="() => graph?.workspace.toggleCenterNetwork()"
         class="icon"
         icon="mdi:mdi-focus-field"
         size="x-small"
         title="Auto-center whole network graph"
+        @click="() => graph?.workspace.toggleCenterNetwork()"
       />
 
       <v-btn
         :class="{ active: graph?.workspace.state.showGrid }"
-        :icon="
-          graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'
-        "
-        @click="() => graph?.workspace.toggleGrid()"
+        :icon="graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'"
         class="icon"
         size="x-small"
         title="Show background grid"
+        @click="() => graph?.workspace.toggleGrid()"
       />
     </template>
   </v-toolbar>
@@ -211,7 +197,7 @@ const emptyNetwork = () => {
 };
 
 const groupSelectedNodes = () => {
-  if (graph && graph.value) {
+  if (graph.value && graph.value) {
     graph.value.network.nodes.groupSelected();
     graph.value.nodeGroupGraph.update();
   }

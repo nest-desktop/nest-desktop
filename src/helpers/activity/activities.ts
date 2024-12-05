@@ -2,6 +2,7 @@
 
 import { UnwrapRef, reactive } from "vue";
 
+import { IResponseData } from "@/stores/defineBackendStore";
 import { TNode, TProject } from "@/types";
 
 import { SpikeActivity } from "../activity/spikeActivity";
@@ -42,20 +43,15 @@ export class Activities extends BaseObj {
   get all(): Activity[] {
     let activities = [] as Activity[];
 
-    if (this.project.network) {
-      activities = this.project.network.nodes.recorders.map(
-        (recorder: TNode) => recorder.activity as Activity
-      );
-    }
+    if (this.project.network)
+      activities = this.project.network.nodes.recorders.map((recorder: TNode) => recorder.activity as Activity);
 
     // Update activity idx.
-    if (activities.length > 0) {
-      activities.forEach((activity: Activity, idx: number) => {
-        if (activity) {
-          activity.idx = idx;
-        }
-      });
-    }
+    if (activities.length > 0)
+      activities
+        .filter((activity: Activity) => activity)
+        .forEach((activity: Activity, idx: number) => (activity.idx = idx));
+
     return activities;
   }
 
@@ -64,13 +60,9 @@ export class Activities extends BaseObj {
    */
   get analogSignals(): AnalogSignalActivity[] {
     const activities: AnalogSignalActivity[] = this._project.network
-      ? this.project.network.nodes.recordersAnalog.map(
-          (recorder: TNode) => recorder.activity as AnalogSignalActivity
-        )
+      ? this.project.network.nodes.recordersAnalog.map((recorder: TNode) => recorder.activity as AnalogSignalActivity)
       : [];
-    activities.forEach((activity: Activity, idx: number) => {
-      activity.idx = idx;
-    });
+    activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
 
@@ -78,18 +70,14 @@ export class Activities extends BaseObj {
    * Get a list of neuronal analog signal activities.
    */
   get neuronAnalogSignals(): AnalogSignalActivity[] {
-    return this.analogSignals.filter(
-      (activity: AnalogSignalActivity) => activity.hasNeuronAnalogData
-    );
+    return this.analogSignals.filter((activity: AnalogSignalActivity) => activity.hasNeuronAnalogData);
   }
 
   /**
    * Get a list of input analog signal activities.
    */
   get inputAnalogSignals(): AnalogSignalActivity[] {
-    return this.analogSignals.filter(
-      (activity: AnalogSignalActivity) => activity.hasInputAnalogData
-    );
+    return this.analogSignals.filter((activity: AnalogSignalActivity) => activity.hasInputAnalogData);
   }
 
   get project(): TProject {
@@ -101,13 +89,9 @@ export class Activities extends BaseObj {
    */
   get spikes(): SpikeActivity[] {
     const activities: SpikeActivity[] = this._project.network
-      ? this.project.network.nodes.recordersSpike.map(
-          (recorder: TNode) => recorder.activity as SpikeActivity
-        )
+      ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as SpikeActivity)
       : [];
-    activities.forEach((activity: Activity, idx: number) => {
-      activity.idx = idx;
-    });
+    activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
 
@@ -145,16 +129,11 @@ export class Activities extends BaseObj {
 
     // Check if it has some activities.
     this._state.hasSomeEvents =
-      activities.length > 0
-        ? activities.some((activity: Activity) => activity.hasEvents)
-        : false;
+      activities.length > 0 ? activities.some((activity: Activity) => activity.hasEvents) : false;
 
     // Check if it has spatial activities.
     this._state.hasSomeSpatialActivities = this._state.hasSomeEvents
-      ? activities.some(
-          (activity: Activity) =>
-            activity.hasEvents && activity.nodePositions.length > 0
-        )
+      ? activities.some((activity: Activity) => activity.hasEvents && activity.nodePositions.length > 0)
       : false;
   }
 
@@ -165,12 +144,10 @@ export class Activities extends BaseObj {
     this.logger.trace("check recorders");
 
     // Check if the project contains some analog signal recorder.
-    this._state.hasSomeAnalogRecorders =
-      this.project.network.nodes.recordersAnalog.length > 0;
+    this._state.hasSomeAnalogRecorders = this.project.network.nodes.recordersAnalog.length > 0;
 
     // Check if the project contains some spike recorder.
-    this._state.hasSomeSpikeRecorders =
-      this.project.network.nodes.recordersSpike.length > 0;
+    this._state.hasSomeSpikeRecorders = this.project.network.nodes.recordersSpike.length > 0;
   }
 
   // Initialize activities.
@@ -198,15 +175,7 @@ export class Activities extends BaseObj {
   /**
    * Update activities in recorder nodes after simulation.
    */
-  update(
-    data:
-      | IActivityProps[]
-      | {
-          activities: IActivityProps[];
-          events: IEventProps[];
-          positions: Record<string, number[]>;
-        }
-  ): void {
+  update(data: IActivityProps[] | IResponseData): void {
     this.logger.trace("update");
 
     let activitiesProps: IActivityProps[] = [];
@@ -225,13 +194,11 @@ export class Activities extends BaseObj {
       if (!activityProps.nodeIds) {
         if (activityProps.events && activityProps.events.ports) {
           activityProps.nodeIds = activityProps.events.ports.filter(
-            (value: number, index: number, self: number[]) =>
-              self.indexOf(value) === index
+            (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         } else {
           activityProps.nodeIds = activityProps.events?.senders.filter(
-            (value: number, index: number, self: number[]) =>
-              self.indexOf(value) === index
+            (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         }
       }
@@ -240,17 +207,16 @@ export class Activities extends BaseObj {
 
     // Get node positions.
     if ("positions" in data) {
-      activitiesProps.forEach((activityProps: IActivityProps) => {
-        activityProps.nodePositions = activityProps.nodeIds?.map(
-          (nodeId: number) => data.positions[nodeId] as number[]
-        );
-      });
+      const positions = data.positions as Record<string, number[]>;
+
+      activitiesProps.forEach(
+        (activityProps: IActivityProps) =>
+          (activityProps.nodePositions = activityProps.nodeIds?.map((nodeId: number) => positions[nodeId] as number[])),
+      );
     }
 
     // Initialize recorded activities.
-    this.all.forEach((activity: Activity, idx: number) => {
-      activity.init(activitiesProps[idx]);
-    });
+    this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
 
     // Trigger activity changes.
     this.changes();
@@ -261,9 +227,7 @@ export class Activities extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      activities: this._project.activities.all.map(
-        (activity: Activity) => activity.hash
-      ),
+      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
     });
   }
 }

@@ -1,10 +1,10 @@
 // gridPositions.ts
 
-import { range } from '@/utils/array';
-import { round } from '@/utils/converter';
+import { range } from "@/utils/array";
+import { round } from "@/utils/converter";
 
-import { BasePositions, IBasePositionsProps } from './basePositions';
-import { NESTNodeSpatial } from './nodeSpatial';
+import { BasePositions, IBasePositionsProps } from "./basePositions";
+import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IGridPositionsProps extends IBasePositionsProps {
   center?: number[];
@@ -102,20 +102,9 @@ export class GridPositions extends BasePositions {
   }
 
   override update(positionProps?: IGridPositionsProps) {
-    if (positionProps?.numDimensions) {
-      this.numDimensions = positionProps.numDimensions;
-    }
-
-    if (positionProps?.center) {
-      this.center = positionProps.center;
-    }
-
-    if (positionProps?.extent) {
-      this.extent = positionProps.extent;
-    }
-
-    if (positionProps?.shape) {
-      this.shape = positionProps.shape;
-    }
+    if (positionProps?.numDimensions) this.numDimensions = positionProps.numDimensions;
+    if (positionProps?.center) this.center = positionProps.center;
+    if (positionProps?.extent) this.extent = positionProps.extent;
+    if (positionProps?.shape) this.shape = positionProps.shape;
   }
 }

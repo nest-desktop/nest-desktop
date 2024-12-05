@@ -1,16 +1,12 @@
 // modelCompartmentParameter.ts
 
-import {
-  IModelParamProps,
-  ModelParameter,
-} from "@/helpers/model/modelParameter";
+import { IParamProps } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTModel } from "./model";
 
-export interface INESTModelCompartmentParamProps extends IModelParamProps {}
-
 export class NESTModelCompartmentParameter extends ModelParameter {
-  constructor(model: NESTModel, param: INESTModelCompartmentParamProps) {
+  constructor(model: NESTModel, param: IParamProps) {
     super(model, param);
   }
 

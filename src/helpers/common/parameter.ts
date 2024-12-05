@@ -24,7 +24,7 @@ interface IParamOptions {
 export interface IParamProps {
   component?: string;
   disabled?: boolean;
-  factors?: any[];
+  factors?: string[];
   format?: string;
   handleOnUpdate?: (param: TParameter) => void;
   id: string;
@@ -84,11 +84,7 @@ export class BaseParameter extends BaseObj {
   private _unit: string = "";
   private _component: string = "";
 
-  constructor(
-    paramProps: IParamProps,
-    loggerProps?: ISettingsParam<ILogObj>,
-    configProps?: IConfigProps
-  ) {
+  constructor(paramProps: IParamProps, loggerProps?: ISettingsParam<ILogObj>, configProps?: IConfigProps) {
     super({
       config: { name: "Parameter", ...configProps },
       logger: { settings: { minLevel: 3, ...loggerProps } },
@@ -168,8 +164,7 @@ export class BaseParameter extends BaseObj {
     let label: string = "";
     label += `<span>${this.options.label || this.options.id}</span>`;
 
-    if (this.options.unit)
-      label += `<span>${this.value} ${this.options.unit}</span>`;
+    if (this.options.unit) label += `<span>${this.value} ${this.options.unit}</span>`;
 
     return label;
   }
@@ -285,14 +280,10 @@ export class BaseParameter extends BaseObj {
   }
 
   set typeId(value: string) {
-    this._type = this.config?.localStorage.types.find(
-      (type: IParamType) => type.id === value
-    );
+    this._type = this.config?.localStorage.types.find((type: IParamType) => type.id === value);
 
     if (!this.isConstant) {
-      this.specs.forEach(
-        (p: IParamTypeSpec) => (p.value = parseFloat(p.value as string))
-      );
+      this.specs.forEach((p: IParamTypeSpec) => (p.value = parseFloat(p.value as string)));
     }
   }
 
@@ -314,17 +305,13 @@ export class BaseParameter extends BaseObj {
 
   set value(value: TParamValue) {
     this._state.value = value;
-    if (this.props.handleOnUpdate) {
-      this.props.handleOnUpdate(this);
-    }
+    if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
     this.changes();
   }
 
   get valueFixed(): string {
     if (Array.isArray(this.value)) {
-      return (
-        "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]"
-      );
+      return "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]";
     } else if (typeof this.value === "number") {
       return this.toFixed(this.value);
     } else {
@@ -349,9 +336,7 @@ export class BaseParameter extends BaseObj {
     if (value && !isVisible) {
       this.parent.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
+      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
     }
   }
 
@@ -388,12 +373,8 @@ export class BaseParameter extends BaseObj {
     this._factors = paramProps.factors || [];
 
     if (paramProps.type) {
-      const type = this.config?.localStorage.types.find(
-        (t: IParamType) => t.id === paramProps.type?.id
-      );
-      if (type != null) {
-        this._type = { ...type, ...paramProps.type };
-      }
+      const type = this.config?.localStorage.types.find((t: IParamType) => t.id === paramProps.type?.id);
+      if (type != null) this._type = { ...type, ...paramProps.type };
     }
 
     this._format = paramProps.format || "";
@@ -416,9 +397,7 @@ export class BaseParameter extends BaseObj {
    */
   reset(): void {
     this.typeId = "constant";
-    if (this.options) {
-      this._state.value = this.options.defaultValue;
-    }
+    if (this.options) this._state.value = this.options.defaultValue;
   }
 
   /**
@@ -437,9 +416,7 @@ export class BaseParameter extends BaseObj {
    */
   toFixed(value: number | string, fractionDigits: number = 1): string {
     const valueAsString = value.toString();
-    if (valueAsString.includes(".") && fractionDigits > 0) {
-      fractionDigits = valueAsString.split(".")[1].length;
-    }
+    if (valueAsString.includes(".") && fractionDigits > 0) fractionDigits = valueAsString.split(".")[1].length;
     return Number(value).toFixed(fractionDigits);
   }
 
@@ -454,19 +431,13 @@ export class BaseParameter extends BaseObj {
     };
 
     // Add value factors if existed.
-    if (this._factors.length > 0) {
-      paramProps.factors = this._factors;
-    }
+    if (this._factors.length > 0) paramProps.factors = this._factors;
 
     // Add rules for validation if existed.
-    if (this._rules.length > 0) {
-      paramProps.rules = this._rules;
-    }
+    if (this._rules.length > 0) paramProps.rules = this._rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) {
-      paramProps.type = this.typeToJSON();
-    }
+    if (!this.isConstant) paramProps.type = this.typeToJSON();
 
     return paramProps;
   }
@@ -499,10 +470,7 @@ export class BaseParameter extends BaseObj {
       }
     } else if (this._type.id.startsWith("np")) {
       const specs: string = this.specs
-        .filter(
-          (spec: IParamTypeSpec) =>
-            !(spec.optional && spec.value === spec.default)
-        )
+        .filter((spec: IParamTypeSpec) => !(spec.optional && spec.value === spec.default))
         .map((spec: IParamTypeSpec) => spec.value)
         .join(", ");
       value = `${this._type.id}(${specs})`;
@@ -515,15 +483,11 @@ export class BaseParameter extends BaseObj {
       value += specs[1].value !== 0 ? ` + ${specs[1].value}` : "";
     } else if (this._type.id.startsWith("spatial")) {
       // Spatial distribution.
-      const specs: string = this.specs
-        .map((spec: IParamTypeSpec) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
       value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
-      const specs: string = this.specs
-        .map((spec: IParamTypeSpec) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
       value = `nest.${this._type.id}(${specs})`;
     }
     return value;
@@ -546,12 +510,11 @@ export class BaseParameter extends BaseObj {
       id: this._type.id,
     };
 
-    if (this._type.specs) {
+    if (this._type.specs)
       paramType.specs = this._type.specs.map((spec: IParamTypeSpec) => ({
         id: spec.id,
         value: Number(spec.value),
       }));
-    }
 
     return paramType;
   }

@@ -3,11 +3,11 @@
     <v-navigation-drawer permanent>
       <v-list nav density="compact">
         <v-list-item
-          :key="component"
-          :title="component"
-          :to="`${component}`"
-          :value="component"
-          v-for="(_, component) in components"
+          v-for="(_, componentItem) in components"
+          :key="componentItem"
+          :title="componentItem"
+          :to="`${componentItem}`"
+          :value="componentItem"
         />
       </v-list>
     </v-navigation-drawer>
@@ -36,7 +36,7 @@ const props = defineProps({
 
 const currentComponent = ref("");
 
-const components: Record<string, Object> = {
+const components: Record<string, object> = {
   alert: SandboxAlert,
   button: SandboxButton,
   buttonToggle: SandboxButtonToggle,
@@ -51,7 +51,7 @@ const components: Record<string, Object> = {
 
 watch(
   () => props.component,
-  () => (currentComponent.value = props.component)
+  () => (currentComponent.value = props.component),
 );
 </script>
 

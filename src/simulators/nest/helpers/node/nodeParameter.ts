@@ -1,6 +1,6 @@
 // nodeParameter.ts
 
-import { IParamProps } from "@/helpers/common/parameter";
+import { IParamProps, IParamTypeSpec } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";
@@ -38,28 +38,24 @@ export class NESTNodeParameter extends NodeParameter {
       }
     } else if (this.type.id.startsWith("np")) {
       const specs: string = this.specs
-        .filter((spec: any) => !(spec.optional && spec.value === spec.default))
-        .map((spec: any) => spec.value)
+        .filter((spec: IParamTypeSpec) => !(spec.optional && spec.value === spec.default))
+        .map((spec: IParamTypeSpec) => spec.value)
         .join(", ");
       value = `${this.type.id}(${specs})`;
     } else if (this.type.id === "spatial.distance") {
       // Distance-dependent linear function.
-      const specs: any[] = this.specs;
+      const specs: IParamTypeSpec[] = this.specs;
       value = "";
       value += specs[0].value !== 1 ? `${specs[0].value} * ` : "";
       value += `nest.${this.type.id}`;
       value += specs[1].value !== 0 ? ` + ${specs[1].value}` : "";
     } else if (this.type.id.startsWith("spatial")) {
       // Spatial distribution.
-      const specs: string = this.specs
-        .map((spec: any) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
       value = `nest.${this.type.id}(nest.spatial.distance, ${specs})`;
     } else {
       // Non-spatial distribution.
-      const specs: string = this.specs
-        .map((spec: any) => spec.value)
-        .join(", ");
+      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
       value = `nest.${this.type.id}(${specs})`;
     }
     return value;

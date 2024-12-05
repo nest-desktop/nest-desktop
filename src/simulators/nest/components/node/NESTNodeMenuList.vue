@@ -1,19 +1,18 @@
 <template>
-  <NodeMenuList :node="node as NESTNode">
-    <template #prependItem="{ node }">
-      <v-list-item v-if="!node.model?.isRecorder">
+  <NodeMenuList :node="(node as NESTNode)">
+    <template #prependItem="{ node: nestNode }">
+      <v-list-item v-if="!nestNode.model?.isRecorder">
         <!-- <template #prepend>
             <v-icon icon="mdi:mdi-contrast" />
           </template> -->
 
         <v-checkbox
           :class="{
-            'text-blue': node.view.state.synWeights === 'excitatory',
-            'text-red': node.view.state.synWeights === 'inhibitory',
+            'text-blue': nestNode.view.state.synWeights === 'excitatory',
+            'text-red': nestNode.view.state.synWeights === 'inhibitory',
           }"
-          :indeterminate="!node.view.state.synWeights"
-          :model-value="node.view.state.synWeights"
-          @update:model-value="(value) => updateSynWeights(node as NESTNode, value)"
+          :indeterminate="!nestNode.view.state.synWeights"
+          :model-value="nestNode.view.state.synWeights"
           density="compact"
           false-icon="mdi:mdi-minus"
           false-value="inhibitory"
@@ -21,6 +20,7 @@
           indeterminate-icon="mdi:mdi-plus-minus-variant"
           true-icon="mdi:mdi-plus"
           true-value="excitatory"
+          @update:model-value="(value) => updateSynWeights(nestNode as NESTNode, value)"
         >
           <template #label>
             <span class="ml-7">Set all synaptic weights</span>

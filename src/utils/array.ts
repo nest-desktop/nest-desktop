@@ -72,9 +72,9 @@ export function min(values: number[]): number {
  * https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
  */
 export function onlyUnique(
-  value: Object | number | string,
+  value: object | number | string,
   index: number,
-  array: (Object | number | string)[]
+  array: (object | number | string)[],
 ): boolean {
   return array.indexOf(value) === index;
 }
@@ -86,23 +86,13 @@ export function range(start: number, end?: number, step?: number): number[] {
   if (!end) {
     return Array.from({ length: start }, (_, index: number) => index);
   } else if (!step) {
-    return Array.from(
-      { length: end - start },
-      (_, index: number) => start + index
-    );
+    return Array.from({ length: end - start }, (_, index: number) => start + index);
   } else {
-    return Array.from(
-      { length: Math.ceil((end - start) / step) },
-      (_, index: number) => start + index * step
-    );
+    return Array.from({ length: Math.ceil((end - start) / step) }, (_, index: number) => start + index * step);
   }
 }
 
-export function sortString(
-  a: string = "",
-  b: string = "",
-  asc: boolean = true
-) {
+export function sortString(a: string = "", b: string = "", asc: boolean = true) {
   return (asc ? 1 : -1) * (a < b ? -1 : a > b ? 1 : 0);
 }
 

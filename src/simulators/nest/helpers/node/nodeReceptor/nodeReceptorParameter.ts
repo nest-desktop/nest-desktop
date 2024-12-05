@@ -1,17 +1,13 @@
 // nodeReceptorParameters.ts
 
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { IParamProps } from "@/helpers/common/parameter";
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { NESTNodeReceptor } from "./nodeReceptor";
 
-export interface INESTNodeReceptorParamProps extends INodeParamProps {}
-
 export class NESTNodeReceptorParameter extends NodeParameter {
-  constructor(
-    nodeReceptor: NESTNodeReceptor,
-    paramProps: INESTNodeReceptorParamProps
-  ) {
+  constructor(nodeReceptor: NESTNodeReceptor, paramProps: IParamProps) {
     super(nodeReceptor, paramProps);
   }
 
@@ -36,7 +32,7 @@ export class NESTNodeReceptorParameter extends NodeParameter {
       this.nodeReceptor.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
       this.nodeReceptor.paramsVisible = this.nodeReceptor.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
+        (paramId: string) => paramId !== this.id,
       );
     }
   }

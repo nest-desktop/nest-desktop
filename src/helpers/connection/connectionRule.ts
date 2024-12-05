@@ -1,8 +1,7 @@
 // connectionRule.ts
 
+import { IParamProps } from "../common/parameter";
 import { TConnection } from "@/types";
-
-import { IConnectionParamProps } from "./connectionParameter";
 
 enum Rule {
   AllToAll = "all_to_all",
@@ -17,7 +16,7 @@ enum Rule {
 export interface IConnectionRuleConfig {
   value: string;
   label: string;
-  params: IConnectionParamProps[];
+  params: IParamProps[];
 }
 
 export class ConnectionRule {

@@ -8,14 +8,12 @@ import { randomUniformFloat } from "@/utils/random";
 import { BasePositions, IBasePositionsProps } from "./basePositions";
 import { NESTNodeSpatial } from "./nodeSpatial";
 
-export interface IFreePositionsProps extends IBasePositionsProps {}
-
 export class FreePositions extends BasePositions {
   private readonly _name: string = "free";
   private _codeTemplate: string =
     "{{ #posExisted }}{{ posAsString }}{{ /posExisted }}{{ ^posExisted }}nest.spatial.free(\n\t\tnest.random.uniform({{ min }}, {{ max }}),\n\t\tnum_dimensions={{ numDimensions }}\n\t)\n{{ /posExisted }}";
 
-  constructor(spatial: NESTNodeSpatial, positionProps?: IFreePositionsProps) {
+  constructor(spatial: NESTNodeSpatial, positionProps?: IBasePositionsProps) {
     super(spatial, positionProps);
   }
 

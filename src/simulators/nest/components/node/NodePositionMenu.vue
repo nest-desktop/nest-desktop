@@ -1,30 +1,17 @@
 <template>
-  <v-menu
-    :close-on-content-click="false"
-    :width="400"
-    v-model="state.menuOpen"
-    activator="parent"
-  >
-    <v-card
-      :min-width="300"
-      v-if="nodeSpatial.positions"
-    >
+  <v-menu v-model="state.menuOpen" :close-on-content-click="false" :width="400" activator="parent">
+    <v-card v-if="nodeSpatial.positions" :min-width="300">
       <v-card-text>
         <v-select
+          v-model="state.selectedPositions"
           :items="state.positions"
-          @update:model-value="initPositions()"
           density="compact"
           hide-details
-          v-model="state.selectedPositions"
+          @update:model-value="initPositions()"
         />
 
         <v-switch
-          @update:model-value="
-            (value: boolean | null) => nextTick(() => {
-              nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 })
-              nodeSpatial.changes()
-            })
-          "
+          v-model="state.numDimensions"
           color="primary"
           false-icon="mdi:mdi-numeric-2"
           hide-details
@@ -34,18 +21,22 @@
           show-ticks="always"
           step="1"
           true-icon="mdi:mdi-numeric-3"
-          v-model="state.numDimensions"
-        >
-        </v-switch>
+          @update:model-value="
+            (value: boolean | null) => nextTick(() => {
+              nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 })
+              nodeSpatial.changes()
+            })
+          "
+        />
 
         <span v-if="nodeSpatial.positions.name === 'free'">
           <ValueSlider
-            :thumb-color="nodeSpatial.node.view.color"
-            @update:model-value="nodeSpatial.changes()"
             id="n"
+            v-model="nodeSpatial.node.size"
+            :thumb-color="nodeSpatial.node.view.color"
             input-label="n"
             label="population size"
-            v-model="nodeSpatial.node.size"
+            @update:model-value="nodeSpatial.changes()"
           />
         </span>
 
@@ -53,31 +44,23 @@
           <v-row class="mt-0">
             <v-col class="ma-auto" cols="3">shape</v-col>
             <v-spacer />
-            <v-col
-              :key="idx"
-              cols="3"
-              v-for="(item, idx) of nodeSpatial.positions.shape"
-            >
+            <v-col v-for="(item, idx) of nodeSpatial.positions.shape" :key="idx" cols="3">
               <v-text-field
-                :label="
-                  (nodeSpatial.positions.numDimensions === 2
-                    ? ['rows', 'columns']
-                    : ['x', 'y', 'z'])[idx]
-                "
+                :label="(nodeSpatial.positions.numDimensions === 2 ? ['rows', 'columns'] : ['x', 'y', 'z'])[idx]"
                 :min="1"
                 :model-value="item"
-                @update:model-value="
-            (value: string) => {
-              if (nodeSpatial.positions) {
-                const shape: number[] = nodeSpatial.positions.shape;
-                shape[idx] = parseInt(value);
-                nodeSpatial.updatePositionParams({ shape });
-              }
-            }
-          "
                 density="compact"
                 hide-details
                 type="number"
+                @update:model-value="
+                  (value: string) => {
+                    if (nodeSpatial.positions) {
+                      const shape: number[] = nodeSpatial.positions.shape;
+                      shape[idx] = parseInt(value);
+                      nodeSpatial.updatePositionParams({ shape });
+                    }
+                  }
+                "
               />
             </v-col>
           </v-row>
@@ -85,27 +68,23 @@
           <v-row class="mt-0">
             <v-col class="ma-auto" cols="3">center</v-col>
             <v-spacer />
-            <v-col
-              :key="idx"
-              cols="3"
-              v-for="(item, idx) of nodeSpatial.positions.center"
-            >
+            <v-col v-for="(item, idx) of nodeSpatial.positions.center" :key="idx" cols="3">
               <v-text-field
                 :label="['x', 'y', 'z'][idx]"
                 :model-value="item"
                 :step="0.1"
-                @update:model-value="
-            (value: string) => {
-              if (nodeSpatial.positions) {
-                const center: number[] = nodeSpatial.positions.center;
-                center[idx] = parseFloat(value);
-                nodeSpatial.updatePositionParams({ center });
-              }
-            }
-          "
                 density="compact"
                 hide-details
                 type="number"
+                @update:model-value="
+                  (value: string) => {
+                    if (nodeSpatial.positions) {
+                      const center: number[] = nodeSpatial.positions.center;
+                      center[idx] = parseFloat(value);
+                      nodeSpatial.updatePositionParams({ center });
+                    }
+                  }
+                "
               />
             </v-col>
           </v-row>
@@ -113,28 +92,24 @@
           <v-row class="mt-0">
             <v-col class="ma-auto" cols="3" title="">extent</v-col>
             <v-spacer />
-            <v-col
-              :key="idx"
-              cols="3"
-              v-for="(item, idx) of nodeSpatial.positions.extent"
-            >
+            <v-col v-for="(item, idx) of nodeSpatial.positions.extent" :key="idx" cols="3">
               <v-text-field
                 :label="['x', 'y', 'z'][idx]"
                 :min="0"
                 :model-value="item"
                 :step="0.1"
-                @update:model-value="
-          (value: string) => {
-            if (nodeSpatial.positions) {
-              const extent: number[] = nodeSpatial.positions.extent;
-              extent[idx] = parseFloat(value);
-              nodeSpatial.updatePositionParams({ extent });
-            }
-          }
-          "
                 density="compact"
                 hide-details
                 type="number"
+                @update:model-value="
+                  (value: string) => {
+                    if (nodeSpatial.positions) {
+                      const extent: number[] = nodeSpatial.positions.extent;
+                      extent[idx] = parseFloat(value);
+                      nodeSpatial.updatePositionParams({ extent });
+                    }
+                  }
+                "
               />
             </v-col>
           </v-row>
@@ -143,11 +118,11 @@
         <v-row class="mt-0">
           <v-col class="py-0">
             <v-checkbox
+              v-model="nodeSpatial.positions.edgeWrap"
               class="ma-0"
               color="accent"
               label="Edge wrap"
               hide-details
-              v-model="nodeSpatial.positions.edgeWrap"
             />
           </v-col>
         </v-row>
@@ -155,11 +130,7 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          @click="updatePositions()"
-          size="small"
-          text="update positions"
-        />
+        <v-btn size="small" text="update positions" @click="updatePositions()" />
       </v-card-actions>
     </v-card>
   </v-menu>
@@ -196,11 +167,7 @@ const state = reactive<{
     max: 1000,
     rules: [
       ["value > 0", "The value must be strictly positive.", "error"],
-      [
-        "value < 1000",
-        "Large values generate many data points and can put quite a load on your browser.",
-        "warning",
-      ],
+      ["value < 1000", "Large values generate many data points and can put quite a load on your browser.", "warning"],
     ],
     value: 1,
   },

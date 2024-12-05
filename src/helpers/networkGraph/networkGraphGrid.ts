@@ -1,8 +1,7 @@
 // networkGraphGrid.ts
 
-import { Selection } from "d3";
-
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { TSelection } from "@/types";
 
 interface INetworkGraphGridData {
   x1: number;
@@ -29,7 +28,7 @@ export class NetworkGraphGrid {
    * Get data for grid graph.
    */
   data(): INetworkGraphGridData[] {
-    const data = new Array();
+    const data = [];
     const offset = 10;
     const cellHeight = 25;
     const cellWidth = 25;
@@ -62,10 +61,7 @@ export class NetworkGraphGrid {
    * Update grid graph.
    */
   update(): void {
-    const gridLines: Selection<any, any, any, any> = this._workspace.selector
-      .selectAll(".grid")
-      .selectAll(".gridLine")
-      .data(this.data());
+    const gridLines: TSelection = this._workspace.selector.selectAll(".grid").selectAll(".gridLine").data(this.data());
 
     gridLines
       .enter()

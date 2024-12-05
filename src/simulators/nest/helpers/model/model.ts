@@ -7,14 +7,8 @@ import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 // import { loadText } from "@/utils/fetch";
-import {
-  INESTModelCompartmentParamProps,
-  NESTModelCompartmentParameter,
-} from "./modelCompartmentParameter";
-import {
-  INESTModelReceptorProps,
-  NESTModelReceptor,
-} from "./modelReceptor/modelReceptor";
+import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
+import { INESTModelReceptorProps, NESTModelReceptor } from "./modelReceptor/modelReceptor";
 
 export interface INESTModelProps extends IModelProps {
   compartmentParams?: IParamProps[];
@@ -24,8 +18,7 @@ export interface INESTModelProps extends IModelProps {
 }
 
 export class NESTModel extends BaseModel {
-  private _compartmentParams: Record<string, NESTModelCompartmentParameter> =
-    {}; // model compartmental parameters
+  private _compartmentParams: Record<string, NESTModelCompartmentParameter> = {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
   private _custom: boolean = false;
   private _nestmlScript: string = "";
@@ -107,11 +100,8 @@ export class NESTModel extends BaseModel {
    * Add a compartment parameter to the model specifications.
    * @param param parameter props
    */
-  addCompartmentParameter(param: INESTModelCompartmentParamProps): void {
-    this._compartmentParams[param.id] = new NESTModelCompartmentParameter(
-      this,
-      param
-    );
+  addCompartmentParameter(param: IParamProps): void {
+    this._compartmentParams[param.id] = new NESTModelCompartmentParameter(this, param);
   }
 
   /**
@@ -144,10 +134,8 @@ export class NESTModel extends BaseModel {
    */
   replaceModelId(modelLabel: string): void {
     if (this._templateName.length > 0) {
-      let elementType = this._templateName.split("_").pop() as TElementType;
-      if (["neuron", "synapse"].includes(elementType)) {
-        this.elementType = elementType;
-      }
+      const elementType = this._templateName.split("_").pop() as TElementType;
+      if (["neuron", "synapse"].includes(elementType)) this.elementType = elementType;
     }
 
     let modelId = modelLabel.trimEnd().replaceAll(" ", "_");
@@ -172,49 +160,29 @@ export class NESTModel extends BaseModel {
       elementType: this.elementType,
       id: this.id,
       label: this.state.label,
-      params: Object.values(this.params).map((param: ModelParameter) =>
-        param.toJSON()
-      ),
+      params: Object.values(this.params).map((param: ModelParameter) => param.toJSON()),
       version: process.env.APP_VERSION,
     };
 
-    if (this.abbreviation) {
-      modelProps.abbreviation = this.abbreviation;
-    }
-
-    if (this.custom) {
-      modelProps.custom = this.custom;
-    }
+    if (this.abbreviation) modelProps.abbreviation = this.abbreviation;
+    if (this.custom) modelProps.custom = this.custom;
 
     // Add the states if provided.
-    if (this.states.length > 0) {
-      modelProps.states = this.states.map(
-        (state: IModelStateProps) => state
-      );
-    }
+    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state);
 
     // Add the compartment parameters if provided.
-    if (this._compartmentParamsVisible.length > 0) {
+    if (this._compartmentParamsVisible.length > 0)
       modelProps.compartmentParams = Object.values(this._compartmentParams).map(
-        (param: NESTModelCompartmentParameter) => param.toJSON()
+        (param: NESTModelCompartmentParameter) => param.toJSON(),
       );
-    }
 
     // Add the receptors if provided.
-    if (Object.keys(this._receptors).length > 0) {
-      modelProps.receptors = Object.values(this._receptors).map(
-        (receptor: NESTModelReceptor) => receptor.toJSON()
-      );
-    }
+    if (Object.keys(this._receptors).length > 0)
+      modelProps.receptors = Object.values(this._receptors).map((receptor: NESTModelReceptor) => receptor.toJSON());
 
     // Add NESTML script if provided.
-    if (this._nestmlScript) {
-      modelProps.nestmlScript = this._nestmlScript;
-    }
-
-    if (this._templateName) {
-      modelProps.templateName = this._templateName;
-    }
+    if (this._nestmlScript) modelProps.nestmlScript = this._nestmlScript;
+    if (this._templateName) modelProps.templateName = this._templateName;
 
     return modelProps;
   }
@@ -270,10 +238,7 @@ export class NESTModel extends BaseModel {
    * @param paramProps parameter props
    */
   updateCompartmentParameter(paramProps: IParamProps): void {
-    this._compartmentParams[paramProps.id] = new NESTModelCompartmentParameter(
-      this,
-      paramProps
-    );
+    this._compartmentParams[paramProps.id] = new NESTModelCompartmentParameter(this, paramProps);
   }
 
   /**
@@ -282,13 +247,8 @@ export class NESTModel extends BaseModel {
    */
   updateReceptors(receptorsProps: INESTModelReceptorProps[]): void {
     this._receptors = {};
-    Object.values(receptorsProps).forEach(
-      (receptorProps: INESTModelReceptorProps) => {
-        this._receptors[receptorProps.id] = new NESTModelReceptor(
-          this,
-          receptorProps
-        );
-      }
-    );
+    Object.values(receptorsProps).forEach((receptorProps: INESTModelReceptorProps) => {
+      this._receptors[receptorProps.id] = new NESTModelReceptor(this, receptorProps);
+    });
   }
 }

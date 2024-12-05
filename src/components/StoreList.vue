@@ -7,25 +7,25 @@
 
       <v-btn-toggle class="mx-2" density="compact">
         <v-btn
-          @click="openImportDialog()"
-          icon="mdi:mdi-import"
           id="import-dialog"
+          icon="mdi:mdi-import"
           style="min-width: 40px"
           title="Open dialog to import"
+          @click="openImportDialog()"
         />
         <v-btn
-          @click="openExportDialog()"
-          icon="mdi:mdi-export"
           id="export-dialog"
+          icon="mdi:mdi-export"
           style="min-width: 40px"
           title="Open dialog to export"
+          @click="openExportDialog()"
         />
       </v-btn-toggle>
 
       <template #extension>
         <v-tabs v-model="databaseTab">
-          <v-tab value="project">Project</v-tab>
-          <v-tab value="model">Model</v-tab>
+          <v-tab value="project"> Project </v-tab>
+          <v-tab value="model"> Model </v-tab>
 
           <v-spacer />
         </v-tabs>
@@ -34,23 +34,11 @@
 
     <v-window v-model="databaseTab">
       <v-window-item value="project">
-        <v-card-subtitle
-          v-if="appStore.state.devMode"
-          :key="stores.projectStore.state.projectId"
-        >
+        <v-card-subtitle v-if="appStore.state.devMode" :key="stores.projectStore.state.projectId">
           Current project:
-          {{
-            truncate(
-              appStore.currentSimulator.stores.projectStore.state.projectId
-            )
-          }}
+          {{ truncate(appStore.currentSimulator.stores.projectStore.state.projectId) }}
         </v-card-subtitle>
-        <v-list
-          :key="stores.projectDBStore.state.projects.length"
-          density="compact"
-          lines="two"
-          nav
-        >
+        <v-list :key="stores.projectDBStore.state.projects.length" density="compact" lines="two" nav>
           <v-list-item :to="{ name: appStore.state.simulator + 'ProjectNew' }">
             <template #prepend>
               <v-icon icon="mdi:mdi-plus" />
@@ -62,29 +50,20 @@
 
           <v-list-subheader>Existing projects</v-list-subheader>
           <v-list-item
+            v-for="(project, index) in stores.projectDBStore.state.projects.slice().reverse()"
             :key="index"
             :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
-            :title="
-              project.name ||
-              'undefined project ' +
-                stores.projectDBStore.getProjectIdx(project)
-            "
+            :title="project.name || 'undefined project ' + stores.projectDBStore.getProjectIdx(project)"
             :to="{
               name: appStore.state.simulator + 'Project',
               params: { projectId: project.id },
             }"
-            v-for="(project, index) in stores.projectDBStore.state.projects
-              .slice()
-              .reverse()"
           />
         </v-list>
       </v-window-item>
 
       <v-window-item value="model">
-        <v-card-subtitle
-          :key="stores.modelStore.modelId"
-          v-if="appStore.state.devMode"
-        >
+        <v-card-subtitle v-if="appStore.state.devMode" :key="stores.modelStore.modelId">
           Current model: {{ stores.modelStore.modelId }}
         </v-card-subtitle>
 

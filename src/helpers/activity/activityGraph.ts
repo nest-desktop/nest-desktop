@@ -20,10 +20,7 @@ export class BaseActivityGraph extends BaseObj {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._project = project;
-    this._activityChartGraph = new ActivityChartGraph(
-      project,
-      activityGraphProps
-    );
+    this._activityChartGraph = new ActivityChartGraph(project, activityGraphProps);
   }
 
   get activityChartGraph(): ActivityChartGraph {
@@ -43,9 +40,7 @@ export class BaseActivityGraph extends BaseObj {
 
     this._activityChartGraph.init();
 
-    if (this._project.activities.state.hasSomeEvents) {
-      this.update();
-    }
+    if (this._project.activities.state.hasSomeEvents) this.update();
   }
 
   /**

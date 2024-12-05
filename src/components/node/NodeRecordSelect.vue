@@ -2,13 +2,12 @@
   <div>
     <v-select
       :key="node.hash"
+      v-model="node.records"
       :items="node.recordables"
-      @update:model-value="nextTick(() => node.changes())"
       base-color="primary"
       chips
       class="pa-1"
       clearable
-      closable-chips
       color="primary"
       density="compact"
       hide-details
@@ -18,28 +17,23 @@
       multiple
       persistent-hint
       return-object
-      v-model="node.records"
+      @update:model-value="nextTick(() => node.changes())"
     >
-      <template #chip="{ item }" v-if="node.records.length > 0">
+      <template v-if="node.records.length > 0" #chip="{ item }">
         <NodeRecordChip
-          :nodeRecord="(node.getNodeRecord(item.value) as NodeRecord)"
           v-if="node.getNodeRecord(item.value)"
+          :node-record="(node.getNodeRecord(item.value) as NodeRecord)"
         />
       </template>
 
-      <template #item="{ item, props }" v-if="node.records.length > 0">
-        <v-list-item v-bind="props" density="compact" title="">
-          <v-checkbox
-            :label="item.title"
-            :model-value="node.records.includes(item.raw)"
-            density="compact"
-            hide-details
-          >
+      <template v-if="node.records.length > 0" #item="{ item, props: itemProps }">
+        <v-list-item v-bind="itemProps" density="compact" title="">
+          <v-checkbox :label="item.title" :model-value="node.records.includes(item.raw)" density="compact" hide-details>
             <template #append>
               <NodeRecordChip
-                :nodeRecord="(node.getNodeRecord(item.value) as NodeRecord)"
-                class="my-auto"
                 v-if="node.getNodeRecord(item.value)"
+                :node-record="(node.getNodeRecord(item.value) as NodeRecord)"
+                class="my-auto"
               />
             </template>
           </v-checkbox>
@@ -50,11 +44,12 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick } from "vue";
+import { computed, nextTick } from "vue";
 
 import NodeRecordChip from "./NodeRecordChip.vue";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { TNode } from "@/types";
 
-defineProps<{ node: TNode }>();
+const props = defineProps<{ node: TNode }>();
+const node = computed(() => props.node);
 </script>

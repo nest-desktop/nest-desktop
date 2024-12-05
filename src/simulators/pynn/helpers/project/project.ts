@@ -1,12 +1,13 @@
 // project.ts
 
 import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { ISimulationProps } from "@/helpers/simulation/simulation";
 
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
-import { IPyNNSimulationProps, PyNNSimulation } from "../simulation/simulation";
+import { PyNNSimulation } from "../simulation/simulation";
 
 export interface IPyNNProjectProps extends IProjectProps {
-  simulation?: IPyNNSimulationProps;
+  simulation?: ISimulationProps;
 }
 
 export class PyNNProject extends BaseProject {
@@ -24,7 +25,7 @@ export class PyNNProject extends BaseProject {
    * @remarks
    * It generates new project id and empties updatedAt variable;
    */
-  clone(): PyNNProject {
+  override clone(): PyNNProject {
     this.logger.trace("clone");
 
     return new PyNNProject({

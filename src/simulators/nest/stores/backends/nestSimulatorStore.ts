@@ -1,30 +1,19 @@
 // nestSimulatorStore.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 
 import { notifyError } from "@/helpers/common/notification";
-import { defineBackendStore } from "@/stores/defineBackendStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
-import { TStore } from "@/types";
+import { defineBackendStore, IAxiosRequestData, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { sortString } from "@/utils/array";
 
 import { useNESTModelStore } from "../model/modelStore";
 
-export const useNESTSimulatorStore = defineBackendStore(
-  "nest",
-  "nest",
-  "http://localhost:52425",
-  { axiosHeaderTokenValue: "NESTServerAuth" }
-);
-
-export interface IModelProps {
-  id: string;
-  label: string;
-  elementType: string;
-}
+export const useNESTSimulatorStore = defineBackendStore("nest", "nest", "http://localhost:52425", {
+  axiosHeaderTokenValue: "NESTServerAuth",
+});
 
 const fetchModels = (): void => {
-  const modelStore: TModelStore = useNESTModelStore();
+  const modelStore = useNESTModelStore();
   const nestSimulatorStore = useNESTSimulatorStore();
 
   nestSimulatorStore
@@ -32,7 +21,7 @@ const fetchModels = (): void => {
     .post("/api/GetKernelStatus", { keys: ["node_models", "synapse_models"] })
     .then((response: AxiosResponse) => {
       if (response.data) {
-        let models = [...response.data[0], ...response.data[1]];
+        const models = [...response.data[0], ...response.data[1]];
         models.sort((a: string, b: string) => sortString(a, b));
 
         modelStore.state.models = models.map((modelId: string) => ({
@@ -47,11 +36,7 @@ const fetchModels = (): void => {
 const getElementType = (modelId: string): string => {
   if (modelId.endsWith("generator") || modelId.endsWith("dilutor")) {
     return "stimulator";
-  } else if (
-    modelId.endsWith("meter") ||
-    modelId.endsWith("detector") ||
-    modelId.endsWith("recorder")
-  ) {
+  } else if (modelId.endsWith("meter") || modelId.endsWith("detector") || modelId.endsWith("recorder")) {
     return "recorder";
   } else if (
     modelId.includes("synapse") ||
@@ -84,9 +69,7 @@ const installModule = (moduleName?: string): void => {
               }
             } else if ("request" in error) {
               // The request was made but no response was received.
-              notifyError(
-                "Failed to perform simulation (Simulator backend is not running)."
-              );
+              notifyError("Failed to perform simulation (Simulator backend is not running).");
             } else if ("message" in error && error.message != undefined) {
               // Something happened in setting up the request
               // that triggered an error.
@@ -100,9 +83,9 @@ const installModule = (moduleName?: string): void => {
     });
 };
 
-export const nestSimulatorInit = (): TStore => {
+export const nestSimulatorInit = () => {
   // Initialize backend NEST Simulator.
-  const nestSimulatorStore: TStore = useNESTSimulatorStore();
+  const nestSimulatorStore = useNESTSimulatorStore();
   nestSimulatorStore.init();
   return nestSimulatorStore;
 };
@@ -112,12 +95,9 @@ const resetKernel = (): void => {
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
 };
 
-const simulate = (data: {
-  source: string;
-  return?: string;
-}): Promise<AxiosResponse> => {
+const simulate = (data: IAxiosRequestData): AxiosPromise<IAxiosResponseData> => {
   const nestSimulatorStore = useNESTSimulatorStore();
-  return nestSimulatorStore.axiosInstance().post("exec", data);
+  return nestSimulatorStore.axiosInstance().post<IAxiosResponseData>("exec", data);
 };
 
 export default {

@@ -11,25 +11,13 @@
 
         <v-card-text>
           <v-window v-model="state.tab">
-            <v-window-item
-              reverse-transition="no-transition"
-              transition="no-transition"
-              value="one"
-            >
+            <v-window-item reverse-transition="no-transition" transition="no-transition" value="one">
               One
             </v-window-item>
-            <v-window-item
-              reverse-transition="no-transition"
-              transition="no-transition"
-              value="two"
-            >
+            <v-window-item reverse-transition="no-transition" transition="no-transition" value="two">
               Two
             </v-window-item>
-            <v-window-item
-              reverse-transition="no-transition"
-              transition="no-transition"
-              value="three"
-            >
+            <v-window-item reverse-transition="no-transition" transition="no-transition" value="three">
               Three
             </v-window-item>
           </v-window>

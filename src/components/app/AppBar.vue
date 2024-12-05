@@ -1,22 +1,9 @@
 <template>
-  <v-btn
-    class="mx-2"
-    flat
-    icon="mdi:mdi-home"
-    size="x-small"
-    to="/"
-    variant="text"
-  />
+  <v-btn class="mx-2" flat icon="mdi:mdi-home" size="x-small" to="/" variant="text" />
 
   <v-menu>
     <template #activator="{ props }">
-      <v-btn
-        append-icon="mdi:mdi-menu-down"
-        class="mx-1px"
-        size="x-small"
-        v-bind="props"
-        variant="text"
-      >
+      <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="x-small" v-bind="props" variant="text">
         <template #prepend>
           <v-icon
             :color="appStore.currentSimulator.id"
@@ -31,17 +18,17 @@
 
     <v-list density="compact">
       <v-list-item
+        v-for="(item, index) in appStore.simulatorItems"
         :key="index"
         :prepend-icon="item.id + ':logo'"
         :title="item.title"
         :to="'/' + item.id"
         :value="item.id"
-        v-for="(item, index) in appStore.simulatorItems"
       />
     </v-list>
   </v-menu>
 
-  <v-btn @click="openAboutDialog()" size="x-small" text="about" variant="text" />
+  <v-btn size="x-small" text="about" variant="text" @click="openAboutDialog()" />
 
   <v-btn
     append-icon="mdi:mdi-open-in-new"
@@ -55,23 +42,11 @@
 
   <v-menu>
     <template #activator="{ props }">
-      <v-btn
-        append-icon="mdi:mdi-menu-down"
-        class="mx-1px"
-        size="x-small"
-        text="more"
-        v-bind="props"
-        variant="text"
-      />
+      <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="x-small" text="more" v-bind="props" variant="text" />
     </template>
 
     <v-list density="compact">
-      <v-list-item
-        :key="index"
-        @click="item.onClick"
-        v-bind="item"
-        v-for="(item, index) in settingsItems"
-      />
+      <v-list-item v-for="(item, index) in settingsItems" v-bind="item" :key="index" @click="item.onClick" />
     </v-list>
   </v-menu>
 
@@ -79,10 +54,10 @@
 
   <v-btn
     :icon="appStore.state.themeIcon"
-    @click="appStore.toggleTheme()"
     size="x-small"
     title="Toggle theme"
     variant="text"
+    @click="appStore.toggleTheme()"
   />
 
   <v-spacer />
@@ -90,26 +65,26 @@
   <v-divider class="mx-1" vertical />
 
   <v-btn
-    :disabled="!backend.state.enabled"
-    :key="index"
-    :title="backend.state.url"
-    @click="backend.update()"
-    size="x-small"
     v-for="(backend, index) in appStore.currentSimulator.backends"
+    :key="index"
+    :disabled="!backend.state.enabled"
+    :title="backend.state.url"
+    size="x-small"
     variant="text"
+    @click="backend.update()"
   >
     {{ backend.state.name }}
-    <BackendStatusIcon :backendStore="backend" size="small" />
+    <BackendStatusIcon :backend-store="backend" size="small" />
   </v-btn>
 
   <v-divider class="mx-1" vertical />
 
   <v-btn
-    @click="appStore.state.logsOpen = !appStore.state.logsOpen"
     icon="mdi:mdi-menu-open"
     size="x-small"
     title="View request logs"
     variant="text"
+    @click="appStore.state.logsOpen = !appStore.state.logsOpen"
   />
 </template>
 
@@ -127,47 +102,49 @@ const appStore = useAppStore();
 const settingsItems = [
   {
     prependIcon: "mdi:mdi-cogs",
-    onClick: () => createDialog({
-      customComponent: {
-        component: SettingsDialog,
-        props: false
-      },
-      dialogOptions: {
-        width: "400px",
-      },
-      text: "",
-      title: "",
-    }),
+    onClick: () =>
+      createDialog({
+        customComponent: {
+          component: SettingsDialog,
+          props: false,
+        },
+        dialogOptions: {
+          width: "400px",
+        },
+        text: "",
+        title: "",
+      }),
     title: "Settings",
   },
   {
     prependIcon: "mdi:mdi-database",
-    onClick: () => createDialog({
-      customComponent: {
-        component: StoresDialog,
-        props: false
-      },
-      dialogOptions: {
-        width: "400px",
-      },
-      text: "",
-      title: "",
-    }),
+    onClick: () =>
+      createDialog({
+        customComponent: {
+          component: StoresDialog,
+          props: false,
+        },
+        dialogOptions: {
+          width: "400px",
+        },
+        text: "",
+        title: "",
+      }),
     title: "Stores",
-  }
+  },
 ];
 
-const openAboutDialog = () => 
-  createDialog({    
-    customComponent: {component: AboutDialog, props: false},
+const openAboutDialog = () =>
+  createDialog({
+    customComponent: { component: AboutDialog, props: false },
     dialogOptions: {
       scrollable: true,
       width: "800px",
       // height: "800px"
     },
-    title: "", 
-    text: "", 
-})
+    title: "",
+    text: "",
+  });
 </script>
 
 <style lang="scss">

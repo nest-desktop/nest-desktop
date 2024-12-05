@@ -1,30 +1,25 @@
 <template>
   <div>
     <v-btn
-      @click="connection.source.toggleSelection()"
-      @click.right.prevent="connection.source.unselect()"
       class="rounded-circle"
       icon
       size="small"
       variant="text"
+      @click="connection.source.toggleSelection()"
+      @click.right.prevent="connection.source.unselect()"
     >
       <NodeAvatar :node="connection.source" />
     </v-btn>
 
-    <v-btn
-      :color="connection.sourceNode.view.color"
-      :icon="connection.synapse.icon"
-      size="small"
-      variant="text"
-    />
+    <v-btn :color="connection.sourceNode.view.color" :icon="connection.synapse.icon" size="small" variant="text" />
 
     <v-btn
-      @click="connection.target.toggleSelection()"
-      @click.right.prevent="connection.target.unselect()"
       class="rounded-circle"
       icon
       size="small"
       variant="text"
+      @click="connection.target.toggleSelection()"
+      @click.right.prevent="connection.target.unselect()"
     >
       <NodeAvatar :node="connection.target" />
     </v-btn>

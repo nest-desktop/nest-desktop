@@ -1,8 +1,6 @@
 // nest/index.ts
 
 import { defineViewStore } from "@/stores/defineViewStore";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 import { logger as mainLogger } from "@/utils/logger";
 
 import { ISimulatorProps } from "../";
@@ -51,17 +49,13 @@ export const nest: ISimulatorProps = {
     logger.trace("init");
 
     // Initialize stores.
-    const modelDBStore: TModelDBStore = useNESTModelDBStore();
-    const projectDBStore: TProjectDBStore = useNESTProjectDBStore();
+    const modelDBStore = useNESTModelDBStore();
+    const projectDBStore = useNESTProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
     const modelStore = useNESTModelStore();
     if (modelStore.state.recentAddedModels.recorder.length === 0) {
-      modelStore.state.recentAddedModels.recorder = [
-        "multimeter",
-        "spike_recorder",
-        "voltmeter",
-      ];
+      modelStore.state.recentAddedModels.recorder = ["multimeter", "spike_recorder", "voltmeter"];
     }
     const projectStore = useNESTProjectStore();
 

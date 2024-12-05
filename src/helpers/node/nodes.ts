@@ -20,10 +20,7 @@ export class BaseNodes extends BaseObj {
   public _nodes: (NodeGroup | TNode)[] = [];
   public _network: TNetwork; // parent
 
-  constructor(
-    network: TNetwork,
-    nodesProps?: (INodeProps | INodeGroupProps)[]
-  ) {
+  constructor(network: TNetwork, nodesProps?: (INodeProps | INodeGroupProps)[]) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._network = network;
@@ -42,7 +39,7 @@ export class BaseNodes extends BaseObj {
     return BaseNode;
   }
 
-  get all(): (NodeGroup | TNode)[] {
+  get all(): (NodeGroup | BaseNode)[] {
     return this._nodes;
   }
 
@@ -90,15 +87,11 @@ export class BaseNodes extends BaseObj {
   }
 
   get nodeGroups(): NodeGroup[] {
-    return this._nodes.filter(
-      (node: NodeGroup | TNode) => node.isGroup
-    ) as NodeGroup[];
+    return this._nodes.filter((node: NodeGroup | TNode) => node.isGroup) as NodeGroup[];
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter(
-      (node: NodeGroup | TNode) => node.isNode
-    ) as TNode[];
+    return this._nodes.filter((node: NodeGroup | TNode) => node.isNode) as TNode[];
   }
 
   get nodes(): (NodeGroup | TNode)[] {
@@ -131,9 +124,7 @@ export class BaseNodes extends BaseObj {
    */
   get selectedNodeGroups(): NodeGroup[] {
     const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
-    return selectedNodes.filter(
-      (node: NodeGroup | TNode) => node.isGroup
-    ) as NodeGroup[];
+    return selectedNodes.filter((node: NodeGroup | TNode) => node.isGroup) as NodeGroup[];
   }
 
   /**
@@ -141,9 +132,7 @@ export class BaseNodes extends BaseObj {
    */
   get selectedNodeItems(): TNode[] {
     const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
-    return selectedNodes.filter(
-      (node: NodeGroup | TNode) => node.isNode
-    ) as TNode[];
+    return selectedNodes.filter((node: NodeGroup | TNode) => node.isNode) as TNode[];
   }
 
   // set selectedNode(node: TNode | null) {
@@ -283,9 +272,7 @@ export class BaseNodes extends BaseObj {
   removeInNodeGroups(node: NodeGroup | TNode): void {
     this.resetState();
 
-    this.nodeGroups.forEach((nodeGroup: NodeGroup) =>
-      nodeGroup.removeNode(node)
-    );
+    this.nodeGroups.forEach((nodeGroup: NodeGroup) => nodeGroup.removeNode(node));
   }
 
   /*
@@ -311,9 +298,8 @@ export class BaseNodes extends BaseObj {
     if (this._state.selectedNodes.length > 0) {
       // selected node
       return (
-        this.selectedNodeGroups.some((nodeGrp: NodeGroup) =>
-          nodeGrp.nodes.includes(node)
-        ) || this._state.selectedNodes.includes(node)
+        this.selectedNodeGroups.some((nodeGrp: NodeGroup) => nodeGrp.nodes.includes(node)) ||
+        this._state.selectedNodes.includes(node)
       );
     } else if (elementTypeIdx > 0) {
       // element type
@@ -342,9 +328,11 @@ export class BaseNodes extends BaseObj {
   toggleNodeSelection(node: NodeGroup | TNode) {
     this._network.state.state.elementTypeIdx = 0;
 
-    this._state.selectedNodes.includes(node)
-      ? this.unselectNode(node)
-      : this.selectNode(node);
+    if (this._state.selectedNodes.includes(node)) {
+      this.unselectNode(node);
+    } else {
+      this.selectNode(node);
+    }
   }
 
   /**
@@ -380,9 +368,11 @@ export class BaseNodes extends BaseObj {
 
     if (nodesProps) {
       nodesProps.forEach((nodeProps: INodeProps | INodeGroupProps) => {
-        "nodes" in nodeProps
-          ? this.addNodeGroup(nodeProps as INodeGroupProps)
-          : this.addNode(nodeProps as INodeProps);
+        if ("nodes" in nodeProps) {
+          this.addNodeGroup(nodeProps as INodeGroupProps);
+        } else {
+          this.addNode(nodeProps as INodeProps);
+        }
       });
     }
 
@@ -413,8 +403,7 @@ export class BaseNodes extends BaseObj {
     if (nodeAnnotationsDict) {
       Object.keys(nodeAnnotationsDict).forEach((userDictKey: string) => {
         const nodes = nodeAnnotationsDict[userDictKey];
-        const nodesStr =
-          nodes.length === 1 ? nodes[0] : "(" + nodes.join("+") + ")";
+        const nodesStr = nodes.length === 1 ? nodes[0] : "(" + nodes.join("+") + ")";
         this._state.annotations.push({
           key: userDictKey,
           value: nodesStr,
@@ -439,9 +428,7 @@ export class BaseNodes extends BaseObj {
   updateRecords(): void {
     this.logger.trace("update records");
 
-    this.recorders
-      .filter((recorder: TNode) => recorder.model.isAnalogRecorder)
-      .forEach((recorder: TNode) => recorder.updateRecords());
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.updateRecords());
   }
 
   /**
@@ -451,15 +438,10 @@ export class BaseNodes extends BaseObj {
   updateRecordsColor(): void {
     this.logger.trace("update records color");
 
-    this.recorders.forEach((recorder: TNode) => {
-      recorder.updateRecordsColor();
-    });
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.updateRecordsColor());
 
     const activityGraph = this.network.project.activityGraph as TActivityGraph;
-
-    if (activityGraph.activityChartGraph) {
-      activityGraph.activityChartGraph.updateRecordsColor();
-    }
+    if (activityGraph.activityChartGraph) activityGraph.activityChartGraph.updateRecordsColor();
   }
 
   /**

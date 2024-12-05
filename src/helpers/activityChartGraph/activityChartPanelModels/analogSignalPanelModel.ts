@@ -2,19 +2,10 @@
 
 import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "../activityChartPanel";
-import {
-  ActivityChartPanelModel,
-  IActivityChartPanelModelProps,
-} from "../activityChartPanelModel";
-
-export interface IAnalogSignalPanelModelProps
-  extends IActivityChartPanelModelProps {}
+import { ActivityChartPanelModel, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IAnalogSignalPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.activityType = "analog";
     this.id = "analogSignalPanelModel";
@@ -39,32 +30,20 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   get axisTitle(): string {
     let title = "";
     const records = this.recordsVisible;
-    const uniqueRecords = new Set(
-      records.map((record: NodeRecord) => record.id)
-    );
+    const uniqueRecords = new Set(records.map((record: NodeRecord) => record.id));
     if (uniqueRecords.size === 1) {
       const record = records[0];
       title = record.labelCapitalize;
       if (record.unit) {
         title += ` [${record.unit}]`;
       }
-    } else if (
-      records.every((record: NodeRecord) => record.id.includes("ct_"))
-    ) {
+    } else if (records.every((record: NodeRecord) => record.id.includes("ct_"))) {
       title = "Channel activation";
-    } else if (
-      records.every((record: NodeRecord) => record.id.includes("g_"))
-    ) {
+    } else if (records.every((record: NodeRecord) => record.id.includes("g_"))) {
       title = "Conductance [nS]";
-    } else if (
-      records.every((record: NodeRecord) => record.id.includes("I_syn_"))
-    ) {
+    } else if (records.every((record: NodeRecord) => record.id.includes("I_syn_"))) {
       title = "Total synaptic current [pA]";
-    } else if (
-      records.every((record: NodeRecord) =>
-        record.id.includes("weighted_spikes_")
-      )
-    ) {
+    } else if (records.every((record: NodeRecord) => record.id.includes("weighted_spikes_"))) {
       title = "Weighted incoming spikes";
     } else {
       title = "Multiple records";

@@ -10,12 +10,7 @@
 
     <span v-if="state.content == undefined">
       <v-list density="compact">
-        <v-list-item
-          :key="index"
-          v-bind="item"
-          v-for="(item, index) in items"
-          v-show="item.show()"
-        >
+        <v-list-item v-for="(item, index) in items" v-show="item.show()" :key="index" v-bind="item">
           <template #append>
             <template v-if="item.append">
               <v-icon icon="mdi:mdi-menu-right" size="small" />
@@ -47,7 +42,7 @@
 
     <span>
       <v-dialog :value="state.dialog" width="80%">
-        <ModelDocumentation :modelId="model.existingModelId" />
+        <ModelDocumentation :model-id="model.existingModelId" />
       </v-dialog>
     </span>
   </v-card>

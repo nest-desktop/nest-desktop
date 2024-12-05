@@ -2,7 +2,6 @@
 
 import { modelBeforeEnter, modelRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
-import { TModelStore } from "@/stores/model/defineModelStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 
@@ -10,7 +9,7 @@ const nestModelRedirect = (to: any) => {
   modelRedirect(to);
 
   const appStore = useAppStore();
-  const modelStore: TModelStore = useNESTModelStore();
+  const modelStore = useNESTModelStore();
   const modelViewStore = appStore.currentSimulator.views.model;
   if (modelStore.model && !modelStore.model.isNeuron) {
     if (modelViewStore.state.views.main === "explore") {

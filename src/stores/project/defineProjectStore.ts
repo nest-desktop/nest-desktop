@@ -1,16 +1,15 @@
 // defineProjectStore.ts
 
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { reactive, watch } from "vue";
 
 import { BaseProject } from "@/helpers/project/project";
 import router from "@/router";
-import { TProject } from "@/types";
+import { Class, TProject, TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "../appStore";
-import { TProjectDBStore } from "./defineProjectDBStore";
 import { useProjectDBStore } from "./projectDBStore";
 
 interface IProjectStoreState {
@@ -19,22 +18,18 @@ interface IProjectStoreState {
   projectId: string;
 }
 
-type Class<T> = new (...props: any) => T;
-
-export type TProjectStore = Store<string, any>;
-
 export function defineProjectStore(
   props: {
     Project: Class<TProject>;
     loggerMinLevel?: number;
     simulator: string;
-    useProjectDBStore: TProjectDBStore;
+    useProjectDBStore: TStore;
   } = {
     Project: BaseProject,
     simulator: "base",
     useProjectDBStore,
-  }
-): TProjectStore {
+  },
+) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " project store",
@@ -47,7 +42,7 @@ export function defineProjectStore(
       projectId: "",
     });
 
-    const projectDBStore: TProjectDBStore = props.useProjectDBStore();
+    const projectDBStore = props.useProjectDBStore();
 
     /**
      * Initialize project store.
@@ -56,7 +51,11 @@ export function defineProjectStore(
       logger.trace("init");
 
       if (projectDBStore.state.initialized) {
-        state.projectId ? loadProject(state.projectId) : loadFirstProject();
+        if (state.projectId) {
+          loadProject(state.projectId);
+        } else {
+          loadFirstProject();
+        }
       }
 
       watch(
@@ -64,8 +63,12 @@ export function defineProjectStore(
         () => {
           logger.trace("watch", state.projectId);
 
-          state.projectId ? loadProject(state.projectId) : loadFirstProject();
-        }
+          if (state.projectId) {
+            loadProject(state.projectId);
+          } else {
+            loadFirstProject();
+          }
+        },
       );
     };
 
@@ -74,8 +77,7 @@ export function defineProjectStore(
      * @param projectId project ID
      * @returns boolean
      */
-    const isProjectSelected = (projectId: string): boolean =>
-      state.projectId === projectId;
+    const isProjectSelected = (projectId: string): boolean => state.projectId === projectId;
 
     /**
      * Load first project
@@ -107,10 +109,7 @@ export function defineProjectStore(
 
       const appStore = useAppStore();
       const projectViewStore = appStore.currentSimulator.views.project;
-      if (
-        projectViewStore.state.simulationEvents.onLoad &&
-        projectViewStore.state.views.main === "explore"
-      ) {
+      if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
         startSimulation();
       }
     };
@@ -146,13 +145,7 @@ export function defineProjectStore(
       const projectViewStore = appStore.currentSimulator.views.project;
 
       return {
-        path:
-          "/" +
-          props.simulator +
-          "/project/" +
-          state.projectId +
-          "/" +
-          projectViewStore.state.views.main,
+        path: "/" + props.simulator + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
       };
     };
 

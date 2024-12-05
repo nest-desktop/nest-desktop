@@ -1,40 +1,34 @@
 // node.ts
 
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import {
-  TConnection,
-  TModel,
-  TNetwork,
-  TNode,
-  TNodes,
-  TSimulation,
-} from "@/types";
+import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/types";
 
-import { onlyUnique, sortString } from "../../utils/array";
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
-import { SpikeActivity } from "../activity/spikeActivity";
-import { BaseObj } from "../common/base";
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
-import { ModelParameter } from "../model/modelParameter";
-import { NodeGroup } from "./nodeGroup";
-import { INodeParamProps, NodeParameter } from "./nodeParameter";
+import { BaseNodes } from "./nodes";
+import { BaseObj } from "../common/base";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
 import { INodeViewProps, NodeView } from "./nodeView";
+import { IParamProps } from "../common/parameter";
+import { ModelParameter } from "../model/modelParameter";
+import { NodeGroup } from "./nodeGroup";
+import { NodeParameter } from "./nodeParameter";
+import { SpikeActivity } from "../activity/spikeActivity";
+import { notifyInfo } from "../common/notification";
+import { onlyUnique, sortString } from "../../utils/array";
 
 export interface INodeProps {
   activity?: IActivityProps;
   annotations?: string[];
   model?: string;
-  params?: INodeParamProps[];
+  params?: IParamProps[];
   records?: INodeRecordProps[];
   size?: number;
   view?: INodeViewProps;
 }
 // export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
 export class BaseNode extends BaseObj {
-  private _activity?: SpikeActivity | AnalogSignalActivity | Activity =
-    undefined;
+  private _activity?: SpikeActivity | AnalogSignalActivity | Activity = undefined;
   private _annotations: string[] = [];
   private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
@@ -45,7 +39,7 @@ export class BaseNode extends BaseObj {
   private _view: NodeView;
   public _model: TModel | undefined;
   public _modelId: string;
-  public _nodes: TNodes; // parent
+  public _nodes: BaseNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
     super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
@@ -83,42 +77,32 @@ export class BaseNode extends BaseObj {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter(
-      (connection: TConnection) => connection.sourceIdx === this.idx
-    );
+    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
   }
 
   get connectionsNeurons(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        (connection.sourceIdx === this.idx &&
-          connection.targetNode.model.isNeuron) ||
-        (connection.targetIdx === this.idx &&
-          connection.sourceNode.model.isNeuron)
+        (connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron) ||
+        (connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron),
     );
   }
 
   get connectionsNeuronSources(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) =>
-        connection.targetIdx === this.idx &&
-        connection.sourceNode.model.isNeuron
+      (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron,
     );
   }
 
   get connectionsNeuronTargets(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) =>
-        connection.sourceIdx === this.idx &&
-        connection.targetNode.model.isNeuron
+      (connection: TConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
     );
   }
 
   get connectionsStimulatorSources(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) =>
-        connection.targetIdx === this.idx &&
-        connection.sourceNode.model.isStimulator
+      (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isStimulator,
     );
   }
 
@@ -140,6 +124,10 @@ export class BaseNode extends BaseObj {
 
   get hasSomeVisibleParams(): boolean {
     return this._paramsVisible.length > 0;
+  }
+
+  get idx(): number {
+    return this._nodes.all.indexOf(this);
   }
 
   /**
@@ -178,8 +166,8 @@ export class BaseNode extends BaseObj {
     return this.nodes.network.connections.state.selectedNode === this;
   }
 
-  get idx(): number {
-    return this._nodes.all.indexOf(this);
+  get isSpatial(): boolean {
+    return false;
   }
 
   get label(): string {
@@ -193,7 +181,7 @@ export class BaseNode extends BaseObj {
     return this._model as BaseModel;
   }
 
-  get modelDBStore(): TModelDBStore {
+  get modelDBStore() {
     return this.nodes.network.project.modelDBStore;
   }
 
@@ -219,7 +207,7 @@ export class BaseNode extends BaseObj {
     return this.model.states;
   }
 
-  get models(): (TModel | any)[] {
+  get models(): TModel[] {
     // Get models of the same element type.
     return this.modelDBStore.getModelsByElementType(this.elementType);
   }
@@ -237,13 +225,10 @@ export class BaseNode extends BaseObj {
   }
 
   get nodeGroups(): NodeGroup[] {
-    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) =>
-      nodeGroup.nodeItemsDeep.includes(this)
-    );
+    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
   }
 
   get nodeIdx(): number {
-    // @ts-ignore - Argument of type 'this' is not assignable to parameter of type '(TNode & NESTNode) & NorseNode'.
     return this._nodes.nodes.indexOf(this);
   }
 
@@ -290,21 +275,11 @@ export class BaseNode extends BaseObj {
   }
 
   get recordsFixed(): string {
-    return (
-      "[" +
-      this._records
-        .map((record: NodeRecord) => '"' + record.id + '"')
-        .join(",") +
-      "]"
-    );
+    return "[" + this._records.map((record: NodeRecord) => '"' + record.id + '"').join(",") + "]";
   }
 
   get recordSpikes(): boolean {
-    return (
-      this.connections.filter((connection: TConnection) =>
-        connection.view.connectSpikeRecorder()
-      ).length > 0
-    );
+    return this.connections.filter((connection: TConnection) => connection.view.connectSpikeRecorder()).length > 0;
   }
 
   get show(): boolean {
@@ -364,37 +339,32 @@ export class BaseNode extends BaseObj {
    * @param paramProps parameter props
    * @param visible boolean
    */
-  addParameter(paramProps: INodeParamProps, visible: boolean = false): void {
+  addParameter(paramProps: IParamProps, visible: boolean = false): void {
     this.logger.trace("add parameter", paramProps.id);
 
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
-
-    if (visible) {
-      this._paramsVisible.push(paramProps.id);
-    }
+    if (visible) this._paramsVisible.push(paramProps.id);
   }
 
   /**
    * Add parameters to the node.
    * @param paramsProps list of parameter props
    */
-  addParameters(paramsProps?: INodeParamProps[]): void {
+  addParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("add parameters");
 
     this.emptyParams();
     if (this._model) {
       this._model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
-          const nodeParamProps = paramsProps.find(
-            (paramProps: INodeParamProps) => paramProps.id === modelParam.id
-          );
+          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
           if (nodeParamProps) {
             this.addParameter(
               {
                 ...nodeParamProps,
                 ...modelParam,
               },
-              true
+              true,
             );
           } else {
             this.addParameter(modelParam);
@@ -404,9 +374,7 @@ export class BaseNode extends BaseObj {
         }
       });
     } else if (paramsProps) {
-      paramsProps.forEach((param: INodeParamProps) =>
-        this.addParameter(param, true)
-      );
+      paramsProps.forEach((param: IParamProps) => this.addParameter(param, true));
     }
   }
 
@@ -432,7 +400,7 @@ export class BaseNode extends BaseObj {
    * Clone this node component.
    * @return cloned node component.
    */
-  clone(_: boolean = true): TNode {
+  clone(): TNode {
     this.logger.trace("clone");
 
     const nodeProps = this.toJSON();
@@ -448,11 +416,36 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Correct connections to/from recorder.
+   */
+  correctRecorderConnections(): void {
+    if (!this.model.isRecorder) return;
+
+    // Correct connection direction to spike recorder.
+    this.connections
+      .filter((connection: TConnection) => connection.sourceNode.model.isSpikeRecorder)
+      .forEach((connection: TConnection) => {
+        connection.reverse();
+        notifyInfo("The connection from spike recorder was corrected.");
+      });
+
+    // Correct connection direction from analog recorder.
+    this.sourceNodes.forEach((recorder: TNode) =>
+      recorder.connections
+        .filter((connection: TConnection) => connection.targetNode.model.isAnalogRecorder)
+        .forEach((connection: TConnection) => {
+          connection.reverse();
+          notifyInfo(`The connection to ${connection.recorder.model.label} recorder was corrected.`);
+        }),
+    );
+  }
+
+  /**
    * Create activity for the recorder.
    * @param activityProps activity props
    */
   createActivity(activityProps?: IActivityProps): void {
-    this.logger.trace("init activity");
+    this.logger.trace("create activity");
 
     if (!this.model.isRecorder) return;
 
@@ -496,9 +489,7 @@ export class BaseNode extends BaseObj {
    * @returns node record object
    */
   getNodeRecord(groupId: string): NodeRecord | undefined {
-    return this._records.find(
-      (record: NodeRecord) => record.groupId === groupId
-    );
+    return this._records.find((record: NodeRecord) => record.groupId === groupId);
   }
 
   /**
@@ -506,9 +497,7 @@ export class BaseNode extends BaseObj {
    * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
-    return Object.keys(this._params).some(
-      (paramKey: string) => paramKey === paramId
-    );
+    return Object.keys(this._params).some((paramKey: string) => paramKey === paramId);
   }
 
   /**
@@ -529,24 +518,20 @@ export class BaseNode extends BaseObj {
 
   /**
    * Initialize node.
-   * @remarks Do not use it in the constructor.
+   * @remarks Do not call it in the constructor.
    */
   init(): void {
     this.logger.trace("init");
 
     this.loadModel(this._props.params);
-
-    if (this.model?.isRecorder) {
-      this.createActivity(this._props.activity);
-    }
-
+    if (this.model.isRecorder) this.updateRecorder();
     this.update();
   }
 
   /**
    * Load model.
    */
-  loadModel(paramsProps?: INodeParamProps[]): void {
+  loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId);
 
     this._model = this.getModel(this._modelId);
@@ -556,23 +541,26 @@ export class BaseNode extends BaseObj {
   /**
    * Observer for model changes.
    * @remarks It emits node changes.
+   * @remarks It corrects connection direction to the recorder.
+   * @remarks It updates as analog recorder or other connected analog recorders.
    */
-  modelChanges(emitChanges: boolean = true): void {
+  modelChanges(): void {
     this.logger.trace("model change");
+    let recorderModelChanged = false;
 
-    this.update();
-
-    if (this.model.isAnalogRecorder) {
-      this.updateRecords();
+    if (this.model.isRecorder) {
+      this.correctRecorderConnections(); // Correct connection from/to recorder.
+      this.updateRecorder(); // Update records of this analog recorder.
+      recorderModelChanged = true;
     } else if (!this.model.isSpikeRecorder) {
+      // Updates records of the connected analog recorder.
       this.sourceNodes
         .filter((node: TNode) => node.model.isAnalogRecorder)
-        .forEach((recorder: TNode) => {
-          recorder.update();
-        });
+        .forEach((recorder: TNode) => recorder.updateAnalogRecorder());
     }
 
-    if (emitChanges) this.nodes.network.changes();
+    this.update();
+    this.nodes.network.changes(recorderModelChanged);
   }
 
   /**
@@ -656,27 +644,16 @@ export class BaseNode extends BaseObj {
       view: this._view.toJSON(),
     };
 
-    if (this._size > 1) {
-      nodeProps.size = this._size;
-    }
+    if (this._size > 1) nodeProps.size = this._size;
 
-    if (this.filteredParams.length > 0) {
-      nodeProps.params = this.filteredParams.map((param: NodeParameter) =>
-        param.toJSON()
-      );
-    }
+    if (this.filteredParams.length > 0)
+      nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
 
     // Add annotations if provided.
-    if (this._annotations.length > 0) {
-      nodeProps.annotations = this._annotations;
-    }
+    if (this._annotations.length > 0) nodeProps.annotations = this._annotations;
 
     // Add records if this model is multimeter.
-    if (this.model.isMultimeter) {
-      nodeProps.records = this._records.map((nodeRecord: NodeRecord) =>
-        nodeRecord.toJSON()
-      );
-    }
+    if (this.model.isMultimeter) nodeProps.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
 
     return nodeProps;
   }
@@ -701,7 +678,6 @@ export class BaseNode extends BaseObj {
   update(): void {
     this.clean();
 
-    this.updateRecordables();
     this.updateHash();
   }
 
@@ -713,47 +689,64 @@ export class BaseNode extends BaseObj {
       idx: this.idx,
       model: this._modelId,
       params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
-      recordables: this._recordables.map(
-        (recordable: NodeRecord) => recordable.uuid
-      ),
+      recordables: this._recordables.map((recordable: NodeRecord) => recordable.uuid),
       size: this._size,
     });
   }
 
   /**
+   * Update as analog recorder.
+   */
+  updateAnalogRecorder(): void {
+    this.logger.trace("update analog recorder");
+
+    if (!this.model.isAnalogRecorder) return;
+
+    this.updateRecordables();
+    this.updateRecords();
+  }
+
+  /**
    * Update recordables.
+   * @remarks Convert model states to node records.
    */
   updateRecordables(): void {
     this.logger.trace("update recordables");
-    let recordables: INodeRecordProps[] = [];
 
-    // Initialize recordables.
-    if (this.connections.length > 0) {
-      if (this.model.isAnalogRecorder) {
-        const recordablesNodes = this.targetNodes.map((target: TNode) =>
-          [...target.modelStates].flat()
-        );
+    let modelStatesProps: IModelStateProps[] = [];
+    if (!this.model.isAnalogRecorder || this.connections.length == 0) return;
 
-        if (recordablesNodes.length > 0) {
-          const recordablesPooled: INodeRecordProps[] = recordablesNodes.flat();
-          recordables = recordablesPooled
-            .filter((recordProps: INodeRecordProps) => recordProps)
-            .filter(onlyUnique);
-
-          recordables.sort((a: { id: string }, b: { id: string }) =>
-            sortString(a.id, b.id)
-          );
-        }
-      }
+    // Get model states from target nodes.
+    const targetsModelStates = this.targetNodes.map((node: TNode) => [...node.modelStates].flat());
+    if (targetsModelStates.length > 0) {
+      const modelStatesPooled: IModelStateProps[] = targetsModelStates.flat();
+      modelStatesProps = modelStatesPooled
+        .filter((modelStateProps: IModelStateProps) => modelStateProps)
+        .filter(onlyUnique);
+      modelStatesProps.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
     }
 
-    // if (recordables.length != this.recordables.length) {
-    this.recordables = recordables.map(
-      (recordProps: INodeRecordProps) => new NodeRecord(this, recordProps)
+    // Convert model states to node records.
+    this.recordables = modelStatesProps.map(
+      (modelStateProps: IModelStateProps) => new NodeRecord(this, modelStateProps),
     );
-    // }
 
     this.updateRecordsColor();
+  }
+
+  /**
+   * Update as recorder.
+   */
+  updateRecorder(): void {
+    this.logger.trace("update analog recorder");
+
+    if (!this.model.isRecorder) return;
+
+    // Create activity.
+    this.createActivity();
+
+    // Update analog recorder.
+    if (this.model.isAnalogRecorder) this.updateAnalogRecorder();
   }
 
   /**
@@ -766,25 +759,12 @@ export class BaseNode extends BaseObj {
     // Initialize selected records.
     if (this._props.records != null) {
       // Load record from stored nodes.
-      const recordIds = this._props.records.map(
-        (recordProps: INodeRecordProps) => recordProps.id
-      );
-      this.records = [
-        ...this.recordables.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
+      const recordIds = this._props.records.map((recordProps: INodeRecordProps) => recordProps.id);
+      this.records = [...this.recordables.filter((record: NodeRecord) => recordIds.includes(record.id))];
     } else if (this.records.length > 0) {
       const recordIds = this.recordables.map((record: NodeRecord) => record.id);
-      this.records = [
-        ...this.records.filter((record: NodeRecord) =>
-          recordIds.includes(record.id)
-        ),
-      ];
-
-      this.records.forEach((record: NodeRecord) => {
-        record.node = this;
-      });
+      this.records = [...this.records.filter((record: NodeRecord) => recordIds.includes(record.id))];
+      this.records.forEach((record: NodeRecord) => (record.node = this));
     } else {
       this.records = [...this.recordables];
     }
@@ -795,8 +775,6 @@ export class BaseNode extends BaseObj {
    */
   updateRecordsColor(): void {
     const color = this._view.color;
-    this._recordables.forEach((record: NodeRecord) => {
-      record.state.color = color;
-    });
+    this._recordables.forEach((record: NodeRecord) => (record.state.color = color));
   }
 }

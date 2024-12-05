@@ -22,7 +22,7 @@
         <ModelSelectProjectMenu
           :disabled="!modelStore.model.isNeuron"
           :projects
-          :modelValue="modelStore.state.projectId"
+          :model-value="modelStore.state.projectId"
           @update:model-value="(projectId: string) => modelStore.selectProject(projectId)"
         />
 
@@ -43,7 +43,6 @@ import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vue";
-import { TModelStore } from "@/stores/model/defineModelStore";
 import { mountModelLayout } from "@/helpers/routes";
 
 import { useRoute, useRouter } from "vue-router";
@@ -51,7 +50,7 @@ const route = useRoute();
 const router = useRouter();
 
 import { useNorseModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNorseModelStore();
+const modelStore = useNorseModelStore();
 
 const projects: { id: string; name: string; icon: string }[] = [
   {

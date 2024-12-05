@@ -1,30 +1,33 @@
 <template>
   <v-data-table-virtual
-    :headers="headers as any[]"
+    :key="state.activityHash"
+    :headers="headers as IHeader[]"
     :height="props.height"
     :items="state.items"
-    :key="state.activityHash"
     :loading="state.loading"
     class="activityStatsSpike"
     density="compact"
     fixed-header
     loading-text="Loading... Please wait"
   >
-    <template #item.meanISI="{ item }">
+    <template #[`item.meanISI`]="{ item }">
       {{ toFixed(Number(item.meanISI)) }}
     </template>
-    <template #item.stdISI="{ item }">
+
+    <template #[`item.stdISI`]="{ item }">
       {{ toFixed(Number(item.stdISI)) }}
     </template>
-    <template #item.cvISI="{ item }">
+
+    <template #[`item.cvISI`]="{ item }">
       {{ toFixed(Number(item.cvISI)) }}
     </template>
+
     <template #bottom>
       <div class="pr-4 wrapper-table">
         <table class="py-2">
           <tbody>
             <tr>
-              <td :key="idx" class="px-2" v-for="(header, idx) in headers">
+              <td v-for="(header, idx) in headers" :key="idx" class="px-2">
                 <div v-if="header.key === 'id'">Total</div>
                 <div v-else-if="header.key === 'count'">
                   <span>&#931;</span>
@@ -67,6 +70,12 @@ const state = reactive<{
   loading: false,
   search: "",
 });
+
+interface IHeader {
+  title: string;
+  align: "start" | "end" | "center" | undefined;
+  key: string;
+}
 
 const headers = [
   {
@@ -137,7 +146,7 @@ onMounted(() => {
 
 watch(
   () => activity.value.hash,
-  () => update()
+  () => update(),
 );
 </script>
 

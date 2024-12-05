@@ -1,21 +1,18 @@
 // synapse.ts
 
-import { ModelParameter } from "@/helpers/model/modelParameter";
 import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
+import { IParamProps, TParamValue } from "@/helpers/common/parameter";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
 // import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
-import {
-  INESTSynapseParamProps,
-  NESTSynapseParameter,
-} from "./synapseParameter";
+import { NESTSynapseParameter } from "./synapseParameter";
 
 export interface INESTSynapseProps extends ISynapseProps {
   receptorIdx?: number;
   model?: string;
-  params?: INESTSynapseParamProps[];
+  params?: IParamProps[];
 }
 
 export class NESTSynapse extends BaseSynapse {
@@ -38,12 +35,12 @@ export class NESTSynapse extends BaseSynapse {
     return this._connection as NESTConnection;
   }
 
-  get delay(): number {
-    const delay: any = this.params.delay;
+  get delay(): TParamValue {
+    const delay: NESTSynapseParameter = this.params.delay;
     return delay ? delay.value : 1;
   }
 
-  set delay(value: number) {
+  set delay(value: TParamValue) {
     this.params.delay.state.value = value;
   }
 
@@ -95,11 +92,11 @@ export class NESTSynapse extends BaseSynapse {
     this.modelChanges();
   }
 
-  get modelDBStore(): TModelDBStore {
+  get modelDBStore() {
     return this.connection.connections.network.project.modelDBStore;
   }
 
-  get modelId(): string {
+  override get modelId(): string {
     return this._modelId;
   }
 
@@ -118,9 +115,7 @@ export class NESTSynapse extends BaseSynapse {
 
   get models(): NESTModel[] {
     const elementType: string = this.model.elementType;
-    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(
-      elementType
-    ) as NESTModel[];
+    const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
 
     // const modelsCopied: NESTCopyModel[] =
     //   this.connection.network.modelsCopied.filterByElementType(elementType);
@@ -152,17 +147,14 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   get showReceptorType(): boolean {
-    return (
-      !this.connection.sourceNode.model.isRecorder &&
-      this.connection.targetNode.receptors.length > 0
-    );
+    return !this.connection.sourceNode.model.isRecorder && this.connection.targetNode.receptors.length > 0;
   }
 
   /**
    * Add parameter component.
-   * @param paramProps - synapse parameter props
+   * @param paramProps parameter props
    */
-  addParameter(paramProps: INESTSynapseParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     // this._logger.trace("add parameter:", param)
     this.params[paramProps.id] = new NESTSynapseParameter(this, paramProps);
   }
@@ -176,27 +168,23 @@ export class NESTSynapse extends BaseSynapse {
   /**
    * Initialize synapse parameters.
    */
-  override initParameters(paramsProps?: INESTSynapseParamProps[]): void {
+  override initParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("init parameters");
 
     this._paramsVisible = [];
     this._params = {};
     if (this.model && paramsProps) {
       Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = paramsProps?.find(
-          (param: any) => param.id === modelParam.id
-        );
+        const param = paramsProps?.find((param: IParamProps) => param.id === modelParam.id);
         this.addParameter(param || modelParam);
         if (param && param.visible !== false) {
           this._paramsVisible.push(modelParam.id);
         }
       });
     } else if (this.model) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) =>
-        this.addParameter(modelParam)
-      );
+      Object.values(this.model.params).forEach((modelParam: ModelParameter) => this.addParameter(modelParam));
     } else if (paramsProps) {
-      paramsProps.forEach((param: any) => this.addParameter(param));
+      paramsProps.forEach((param: IParamProps) => this.addParameter(param));
     }
   }
 
@@ -217,19 +205,10 @@ export class NESTSynapse extends BaseSynapse {
   override toJSON(): INESTSynapseProps {
     const synapseProps: INESTSynapseProps = {};
 
-    if (this.modelId !== "static_synapse") {
-      synapseProps.model = this.modelId;
-    }
-
-    if (this.filteredParams.length > 0) {
-      synapseProps.params = this.filteredParams.map(
-        (param: NESTSynapseParameter) => param.toJSON()
-      );
-    }
-
-    if (this._receptorIdx !== 0) {
-      synapseProps.receptorIdx = this._receptorIdx;
-    }
+    if (this.modelId !== "static_synapse") synapseProps.model = this.modelId;
+    if (this.filteredParams.length > 0)
+      synapseProps.params = this.filteredParams.map((param: NESTSynapseParameter) => param.toJSON());
+    if (this._receptorIdx !== 0) synapseProps.receptorIdx = this._receptorIdx;
 
     return synapseProps;
   }

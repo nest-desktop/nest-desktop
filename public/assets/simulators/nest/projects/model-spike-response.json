@@ -17,17 +17,11 @@
         "params": [
           {
             "id": "spike_times",
-            "value": [
-              100,
-              300
-            ]
+            "value": [100, 300]
           },
           {
             "id": "spike_weights",
-            "value": [
-              1,
-              -1
-            ]
+            "value": [1, -1]
           }
         ],
         "view": {
@@ -71,5 +65,5 @@
     },
     "time": 500
   },
-  "version": "3.2.0"
+  "version": "4.0"
 }

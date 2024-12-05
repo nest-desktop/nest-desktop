@@ -20,8 +20,6 @@ const _configNames = [
 export default {
   install() {
     // Load config files.
-    _configNames.forEach(
-      (configName: string) => new Config({ name: configName })
-    );
+    _configNames.forEach((configName: string) => new Config({ name: configName }));
   },
 };

@@ -9,10 +9,7 @@ export class NESTCopyModels extends BaseObj {
   private _models: NESTCopyModel[] = [];
   private _network: NESTNetwork; // parent
 
-  constructor(
-    network: NESTNetwork,
-    copyModelsProps: INESTCopyModelProps[] = []
-  ) {
+  constructor(network: NESTNetwork, copyModelsProps: INESTCopyModelProps[] = []) {
     super({ logger: { settings: { minLevel: 3 } } });
 
     this._network = network;
@@ -46,9 +43,7 @@ export class NESTCopyModels extends BaseObj {
   }
 
   get modelsRecordedByWeightRecorder(): NESTCopyModel[] {
-    return this._models.filter(
-      (model: NESTCopyModel) => model.hasWeightRecorderParam
-    );
+    return this._models.filter((model: NESTCopyModel) => model.hasWeightRecorderParam);
   }
 
   get network(): NESTNetwork {
@@ -109,24 +104,16 @@ export class NESTCopyModels extends BaseObj {
    * Filter models by element type.
    */
   filterByElementType(elementType: string = ""): NESTCopyModel[] {
-    if (elementType) {
-      return this._models;
-    }
-    return this._models.filter(
-      (model: NESTCopyModel) => model.elementType === elementType
-    );
+    if (elementType) return this._models;
+    return this._models.filter((model: NESTCopyModel) => model.elementType === elementType);
   }
 
   /**
    * Filter models by general element type.
    */
   filterByGeneralElementType(elementType: string = ""): NESTCopyModel[] {
-    if (elementType) {
-      return this._models;
-    }
-    return this._models.filter(
-      (model: NESTCopyModel) => model.elementTypeGeneral === elementType
-    );
+    if (elementType) return this._models;
+    return this._models.filter((model: NESTCopyModel) => model.elementTypeGeneral === elementType);
   }
 
   findByModelId(modelId: string): NESTCopyModel | undefined {
@@ -192,9 +179,7 @@ export class NESTCopyModels extends BaseObj {
     // } else
     if (elementTypeIdx > 0) {
       // element type view
-      return (
-        this._network.elementTypes[elementTypeIdx].id === model.elementType
-      );
+      return this._network.elementTypes[elementTypeIdx].id === model.elementType;
     } else if (this._network.state.state.displayIdx.nodes.length > 0) {
       // custom view
       return this._network.state.state.displayIdx.nodes.includes(model.idx);
@@ -217,9 +202,7 @@ export class NESTCopyModels extends BaseObj {
    * @param model props
    */
   update(modelsProps: INESTCopyModelProps[] = []): void {
-    modelsProps.forEach((modelProps: INESTCopyModelProps) =>
-      this.add(modelProps)
-    );
+    modelsProps.forEach((modelProps: INESTCopyModelProps) => this.add(modelProps));
   }
 
   /**
@@ -228,7 +211,7 @@ export class NESTCopyModels extends BaseObj {
   updateHash(): void {
     this._updateHash({
       models: this._models.map(
-        (model: NESTCopyModel) => model.toJSON() //TODO node.hash
+        (model: NESTCopyModel) => model.toJSON(), //TODO node.hash
       ),
     });
   }

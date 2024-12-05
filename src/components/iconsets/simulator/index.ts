@@ -8,16 +8,14 @@ import type { IconSet, IconProps } from "vuetify";
 
 // import pynn from "./PyNNIcon.vue";
 
-const simulatorSvgNameToComponent: any = {
-  // arbor,
+const simulatorSvgNameToComponent: Record<string, any> = {
   nest,
   norse,
   // pynn,
 };
 
 const simulator: IconSet = {
-  component: (props: IconProps) =>
-    h(simulatorSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(simulatorSvgNameToComponent[props.icon as string]),
 };
 
 export { simulator };

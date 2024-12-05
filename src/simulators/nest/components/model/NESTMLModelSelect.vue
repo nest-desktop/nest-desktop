@@ -1,20 +1,16 @@
 <template>
   <v-select
+    v-model="model.templateName"
     :items
-    @update:model-value="loadFromFile()"
     density="compact"
     hide-details
     label="model template"
     max-width="400"
     item-props="{ prependIcon: 'mdi:mdi-file-upload-outline' }"
-    v-model="model.templateName"
+    @update:model-value="loadFromFile()"
   >
     <template #append-item>
-      <v-list-item
-        @click="loadFromGithub()"
-        prepend-icon="mdi:mdi-github"
-        title="load from Github"
-      />
+      <v-list-item prepend-icon="mdi:mdi-github" title="load from Github" @click="loadFromGithub()" />
     </template>
   </v-select>
 </template>
@@ -43,9 +39,7 @@ const items = [
 
 const loadFromFile = () => {
   nextTick(() => {
-    loadText(
-      `assets/simulators/nest/models/nestml/${model.value.templateName}.nestml`
-    ).then((text: string) => {
+    loadText(`assets/simulators/nest/models/nestml/${model.value.templateName}.nestml`).then((text: string) => {
       model.value.emptyParams();
       model.value.nestmlScript = text;
       emit("update:model-value");
@@ -65,7 +59,7 @@ const loadFromGithub = () => {
     text: "",
     title: "",
   }).then(
-    // @ts-ignore
+    // @ts-expect-error Types of parameters 'response' and 'value' are incompatible.
     (response: { elementType: string; modelId: string; script: string }) => {
       if (response) {
         // model.value.elementType = response.elementType as TElementType;
@@ -74,7 +68,7 @@ const loadFromGithub = () => {
         model.value.emptyParams();
         emit("update:model-value");
       }
-    }
+    },
   );
 };
 

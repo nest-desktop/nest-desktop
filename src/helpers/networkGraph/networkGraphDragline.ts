@@ -5,10 +5,7 @@ import { pointer } from "d3";
 import { TNetwork } from "@/types";
 
 import { BaseObj } from "../common/base";
-import {
-  drawPathMouse,
-  drawPathNode,
-} from "../connectionGraph/connectionGraphPath";
+import { drawPathMouse, drawPathNode } from "../connectionGraph/connectionGraphPath";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 export class NetworkGraphDragline extends BaseObj {
@@ -46,12 +43,8 @@ export class NetworkGraphDragline extends BaseObj {
     if (this.network && this.network.connections.state.selectedNode != null) {
       const selectedNode = this.network.connections.state.selectedNode;
 
-      const sourcePosition: { x: number; y: number } =
-        selectedNode.view.position;
-      const position: number[] = pointer(
-        event,
-        this._workspace.selector.node()
-      );
+      const sourcePosition: { x: number; y: number } = selectedNode.view.position;
+      const position: number[] = pointer(event, this._workspace.selector.node());
       const targetPosition: { x: number; y: number } = {
         x: position[0],
         y: position[1],
@@ -73,10 +66,7 @@ export class NetworkGraphDragline extends BaseObj {
    * @param sourcePos source position
    * @param targetPos target position
    */
-  drawPath(
-    sourcePos: { x: number; y: number },
-    targetPos: { x: number; y: number }
-  ): void {
+  drawPath(sourcePos: { x: number; y: number }, targetPos: { x: number; y: number }): void {
     this.logger.trace("draw path");
 
     this._workspace.selector
@@ -92,11 +82,7 @@ export class NetworkGraphDragline extends BaseObj {
   hide(): void {
     this.logger.trace("hide");
 
-    this._workspace.selector
-      .select(".dragline")
-      .select("path")
-      .style("opacity", 0)
-      .attr("d", "M0,0L0,0");
+    this._workspace.selector.select(".dragline").select("path").style("opacity", 0).attr("d", "M0,0L0,0");
     this._workspace.state.dragLine = false;
   }
 }

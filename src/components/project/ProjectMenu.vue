@@ -21,9 +21,7 @@ const props = defineProps<{
 }>();
 
 const project = computed(() => props.project);
-const projectDBStore = computed(
-  () => appStore.currentSimulator.stores.projectDBStore
-);
+const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
 
 const items = [
   {

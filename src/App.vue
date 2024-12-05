@@ -61,13 +61,9 @@ onMounted(() => {
   logger.trace("on mounted");
 
   // Check if new updates existed.
-  document.addEventListener(
-    "swUpdated",
-    ((e: CustomEvent) => updateAvailable(e)) as EventListener,
-    {
-      once: true,
-    }
-  );
+  document.addEventListener("swUpdated", ((e: CustomEvent) => updateAvailable(e)) as EventListener, {
+    once: true,
+  });
 });
 </script>
 

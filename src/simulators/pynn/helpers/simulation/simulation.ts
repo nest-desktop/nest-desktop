@@ -2,22 +2,16 @@
 
 import { AxiosResponse } from "axios";
 
-import {
-  BaseSimulation,
-  ISimulationProps,
-} from "@/helpers/simulation/simulation";
+import { BaseSimulation, ISimulationProps } from "@/helpers/simulation/simulation";
+import { IAxiosResponseData } from "@/stores/defineBackendStore";
+import { IEventProps } from "@/helpers/activity/activity";
 
 import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { PyNNProject } from "../project/project";
 import { PyNNSimulationCode } from "./simulationCode";
 
-export interface IPyNNSimulationProps extends ISimulationProps {}
-
 export class PyNNSimulation extends BaseSimulation {
-  constructor(
-    project: PyNNProject,
-    simulationProps: IPyNNSimulationProps = {}
-  ) {
+  constructor(project: PyNNProject, simulationProps: ISimulationProps = {}) {
     super(project, simulationProps);
   }
 
@@ -31,7 +25,7 @@ export class PyNNSimulation extends BaseSimulation {
    * @remarks
    * After the simulation it updates the activities and commits the network.
    */
-  override async run(): Promise<AxiosResponse<any, { data: any }>> {
+  override async run(): Promise<AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation");
 
     return pynnSimulator
@@ -39,13 +33,11 @@ export class PyNNSimulation extends BaseSimulation {
         source: this.code.script,
         return: "response",
       })
-      .then((response: AxiosResponse<any, { data: any; status: number }>) => {
-        if (response.data.data == null) {
-          return response;
-        }
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
+        if (response.data.data == null) return response;
 
         let data: {
-          events: any[];
+          events: IEventProps[];
           biological_time: number;
         };
         switch (response.status) {

@@ -3,17 +3,14 @@
 // https://observablehq.com/d/a8c7c885db875085
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
-import { DragBehavior, drag, polygonHull } from "d3";
+import { drag, polygonHull } from "d3";
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TDragBehavior, TNetwork, TNetworkGraph, TNode } from "@/types";
 
 import { NodeGroup } from "../node/nodeGroup";
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
-  let nodeCoords: [number, number][] = nodes.map((node: TNode) => [
-    node.view.position.x,
-    node.view.position.y,
-  ]);
+  let nodeCoords: [number, number][] = nodes.map((node: TNode) => [node.view.position.x, node.view.position.y]);
 
   // The two additional points will be sufficient for the convex hull algorithm.
   if (nodes.length == 2) {
@@ -21,8 +18,8 @@ export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
     const pos2 = nodes[1].view.position;
 
     // [dx, dy] is the direction vector of the line.
-    var dx = pos2.x - pos1.x;
-    var dy = pos2.y - pos1.y;
+    let dx = pos2.x - pos1.x;
+    let dy = pos2.y - pos1.y;
 
     // Scale it to something very small.
     dx *= 0.001;
@@ -30,8 +27,8 @@ export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
 
     // Orthogonal directions to a 2D vector [dx, dy] are [dy, -dx] and [-dy, dx]
     // take the midpoint [mx, my] of the line and translate it in both directions.
-    var mx = (pos1.x + pos2.x) * 0.5;
-    var my = (pos1.y + pos2.y) * 0.5;
+    const mx = (pos1.x + pos2.x) * 0.5;
+    const my = (pos1.y + pos2.y) * 0.5;
     nodeCoords = nodeCoords.concat([
       [mx + dy, my - dx],
       [mx - dy, my + dx],
@@ -59,7 +56,7 @@ export class NodeGroupGraph {
    * @param nodeGroup node group object
    */
   drag(event: MouseEvent, nodeGroup: NodeGroup): void {
-    // @ts-ignore - Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+    // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
@@ -95,13 +92,12 @@ export class NodeGroupGraph {
               point[1] - nodeGroup.view.position.y,
             ])
             .join("L") +
-          "Z"
+          "Z",
       );
 
     nodeGroups.attr(
       "transform",
-      (n: NodeGroup | any) =>
-        `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`
+      (n: NodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`,
     );
   }
 
@@ -112,23 +108,16 @@ export class NodeGroupGraph {
     const elem = this._networkGraph.selector
       .select("#nodeGroups")
       .selectAll(".nodeGroupArea")
-      .data(
-        this.network.nodes.nodeGroups.toReversed(),
-        (n: NodeGroup | unknown) => (n instanceof NodeGroup ? n.uuid : "")
+      .data(this.network.nodes.nodeGroups.toReversed(), (n: NodeGroup | unknown) =>
+        n instanceof NodeGroup ? n.uuid : "",
       );
 
-    const dragging: DragBehavior<any, unknown, unknown> = drag()
+    const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: NodeGroup | unknown) =>
-        this.drag(e, n as NodeGroup)
-      )
+      .on("drag", (e: MouseEvent, n: NodeGroup | unknown) => this.drag(e, n as NodeGroup))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
-    const g = elem
-      .enter()
-      .append("g")
-      .style("cursor-events", "none")
-      .attr("class", "nodeGroupArea");
+    const g = elem.enter().append("g").style("cursor-events", "none").attr("class", "nodeGroupArea");
 
     g.append("path")
       .style("fill", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
@@ -155,16 +144,10 @@ export class NodeGroupGraph {
       n.view.focus();
 
       // Draw line between selected node and focused node.
-      if (
-        n.parent.network.connections.state.selectedNode &&
-        this._networkGraph.workspace.state.dragLine
-      ) {
+      if (n.parent.network.connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         const selectedNode = n.parent.network.connections.state.selectedNode;
         const sourcePos = selectedNode.view.position;
-        this._networkGraph.workspace.dragline.drawPath(
-          sourcePos,
-          n.view.state.centroid
-        );
+        this._networkGraph.workspace.dragline.drawPath(sourcePos, n.view.state.centroid);
       }
     });
 
@@ -176,21 +159,13 @@ export class NodeGroupGraph {
       const nodes = this._networkGraph.network.nodes;
       const connections = this._networkGraph.network.connections;
 
-      if (
-        connections.state.selectedNode &&
-        this._networkGraph.workspace.state.dragLine
-      ) {
+      if (connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         // Set cursor position of the focused node.
-        this._networkGraph.workspace.updateCursorPosition(
-          nodeGroup.view.state.centroid
-        );
+        this._networkGraph.workspace.updateCursorPosition(nodeGroup.view.state.centroid);
 
         this._networkGraph.workspace.animationOff();
 
-        this._networkGraph.network.connectNodes(
-          connections.state.selectedNode.idx,
-          nodeGroup.idx
-        );
+        this._networkGraph.network.connectNodes(connections.state.selectedNode.idx, nodeGroup.idx);
         this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {
@@ -222,8 +197,6 @@ export class NodeGroupGraph {
       });
     });
 
-    // @ts-ignore - Argument of type 'DragBehavior<any, unknown, unknown>' is not assignable to parameter of type
-    // '(selection: Selection<BaseType, NodeGroup, BaseType, any>, args_0: null) => void'.
     elem.call(dragging, null);
 
     elem.exit().remove();

@@ -1,14 +1,6 @@
 // network.ts
 
-import {
-  TConnection,
-  TConnections,
-  TModel,
-  TNetwork,
-  TNode,
-  TNodes,
-  TProject,
-} from "@/types";
+import { TConnection, TConnections, TModel, TNetwork, TNode, TNodes, TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
@@ -58,10 +50,7 @@ export class BaseNetwork extends BaseObj {
     this._state = new NetworkState(this);
 
     this._nodes = new this.Nodes(this, networkProps.nodes || []);
-    this._connections = new this.Connections(
-      this,
-      networkProps.connections || []
-    );
+    this._connections = new this.Connections(this, networkProps.connections || []);
   }
 
   get Connections() {
@@ -77,8 +66,7 @@ export class BaseNetwork extends BaseObj {
   }
 
   set colors(value: string[]) {
-    const color: { cycle: string[]; scheme: string } =
-      this.config?.localStorage.color;
+    const color: { cycle: string[]; scheme: string } = this.config?.localStorage.color;
     color.cycle = value;
     this.config?.localStorage.update({ color });
   }
@@ -123,13 +111,13 @@ export class BaseNetwork extends BaseObj {
    * It commits the network in the network history.
    * It emits project changes.
    */
-  changes(): void {
+  changes(modelChanged: boolean = false): void {
     this.logger.trace("changes");
 
     this.updateStyle();
     this.updateHash();
 
-    this.project.changes();
+    this.project.changes({ resetPanels: modelChanged });
   }
 
   /**
@@ -163,34 +151,41 @@ export class BaseNetwork extends BaseObj {
    * Connect node components by user interaction.
    * @param sourceIdx node index
    * @param targetIdx node index
-   * @param weight synapse weight
-   *
-   * @remarks
-   * When it connects to a recorder, it initializes activity graph.
+   * @remarks When it connects to a recorder, it initializes activity graph.
    */
   connectNodes(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
+    // Add connection.
     const connection: TConnection | undefined = this.connections.addConnection({
       source: sourceIdx,
       target: targetIdx,
     });
 
-    if (
-      connection.sourceNode.isNode &&
-      connection.sourceNode.view.state.synWeights
-    ) {
-      connection.synapse.weightLabel =
-        connection.sourceNode.view.state.synWeights;
+    // Initialize connection.
+    connection.init();
+    if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
+
+    // Update synaptic weight label.
+    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights) {
+      connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
+    }
+
+    if (connection.view.connectRecorder()) {
+      const recorder = connection.recorder;
+
+      // Update recorder.
+      recorder.updateRecorder();
+
+      // Add panels of activity graph.
+      const panelsProps = recorder.model.isSpikeRecorder
+        ? [{ model: { id: "spikeTimesRasterPlot" } }, { model: { id: "spikeTimesHistogram" } }]
+        : [{ model: { id: "analogSignalPlot" } }];
+      this._project.activityGraph.activityChartGraph.addPanels(panelsProps);
     }
 
     // Trigger network change.
     this.changes();
-
-    // Create activity graph.
-    if (connection.view.connectRecorder()) {
-      connection.recorder.createActivity();
-    }
   }
 
   /**
@@ -201,25 +196,32 @@ export class BaseNetwork extends BaseObj {
   createNode(model?: string, view?: INodeViewProps): void {
     this.logger.trace("create node");
 
+    // Add node.
     const node = this.nodes.addNode({
       model: model || this._defaultModels[view?.elementType || "neuron"],
       view,
     });
+
+    // Initialize node.
     node.init();
 
+    // Trigger network change.
     this.changes();
   }
 
   /**
    * Delete connection component from the network.
    * @param connection connection object
-   * @remarks It emits network changes.
+   * @remarks It update recorder and emits network changes.
    */
   deleteConnection(connection: TConnection): void {
     this.logger.trace("delete connection");
 
     // Remove connection from the list.
     this.connections.remove(connection);
+
+    // Update recorder.
+    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
     this.changes();
@@ -309,9 +311,7 @@ export class BaseNetwork extends BaseObj {
   updateHash(): void {
     this._updateHash({
       nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
-      connections: this.connections.all.map(
-        (connection: TConnection) => connection.hash
-      ),
+      connections: this.connections.all.map((connection: TConnection) => connection.hash),
     });
   }
 
@@ -321,8 +321,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: NodeGroup | TNode) =>
-      node.view.updateStyle()
-    );
+    this._nodes.all.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
   }
 }

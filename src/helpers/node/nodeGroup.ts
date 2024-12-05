@@ -29,9 +29,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter(
-      (connection: TConnection) => connection.sourceIdx === this.idx
-    );
+    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
   }
 
   get connectionsWithin(): TConnection[] {
@@ -40,17 +38,12 @@ export class NodeGroup extends BaseObj {
 
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        nodeIndices.includes(connection.sourceIdx) &&
-        nodeIndices.includes(connection.targetIdx)
+        nodeIndices.includes(connection.sourceIdx) && nodeIndices.includes(connection.targetIdx),
     );
   }
 
   get elementType(): string {
     return "group";
-  }
-
-  get spatial(): { hasPosition: boolean } {
-    return { hasPosition: false };
   }
 
   get idx(): number {
@@ -93,6 +86,10 @@ export class NodeGroup extends BaseObj {
     return this.parentNodes.network.connections.state.selectedNode === this;
   }
 
+  get isSpatial(): boolean {
+    return false;
+  }
+
   get model(): boolean {
     return false;
   }
@@ -102,9 +99,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get nodeGroups(): NodeGroup[] {
-    return this._nodes.filter(
-      (node: NodeGroup | TNode) => node.isGroup
-    ) as NodeGroup[];
+    return this._nodes.filter((node: NodeGroup | TNode) => node.isGroup) as NodeGroup[];
   }
 
   get nodeIndicesDeep(): number[] {
@@ -119,15 +114,13 @@ export class NodeGroup extends BaseObj {
             return [node.idx];
           })
           .flat()
-          .flat()
+          .flat(),
       ),
     ];
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter(
-      (node: NodeGroup | TNode) => node.isNode
-    ) as TNode[];
+    return this._nodes.filter((node: NodeGroup | TNode) => node.isNode) as TNode[];
   }
 
   get nodeItemsDeep(): TNode[] {
@@ -141,7 +134,7 @@ export class NodeGroup extends BaseObj {
             }
             return node as TNode;
           })
-          .flat()
+          .flat(),
       ),
     ];
   }
@@ -152,9 +145,7 @@ export class NodeGroup extends BaseObj {
 
   get nodesDeep(): (NodeGroup | TNode)[] {
     const nodeIndices = this.nodeIndicesDeep;
-    return this.parent.nodes.filter((node: NodeGroup | TNode) =>
-      nodeIndices.includes(node.idx)
-    );
+    return this.parent.nodes.filter((node: NodeGroup | TNode) => nodeIndices.includes(node.idx));
   }
 
   get parent(): NodeGroup | TNodes {
@@ -173,10 +164,12 @@ export class NodeGroup extends BaseObj {
     return 0;
   }
 
+  get spatial(): undefined {
+    return;
+  }
+
   get toCode(): string {
-    return this.nodes
-      .map((node: NodeGroup | TNode) => node.view.label)
-      .join(" + ");
+    return this.nodes.map((node: NodeGroup | TNode) => node.view.label).join(" + ");
   }
 
   get view(): NodeGroupView {
@@ -217,9 +210,10 @@ export class NodeGroup extends BaseObj {
   clone(withConnections: boolean = true): NodeGroup {
     this.logger.trace("clone");
 
-    const nodeEntries: [number, number][] = this.nodes.map(
-      (node: NodeGroup | TNode) => [node.idx, node.clone(false).idx]
-    );
+    const nodeEntries: [number, number][] = this.nodes.map((node: NodeGroup | TNode) => [
+      node.idx,
+      node.clone(false).idx,
+    ]);
     const indicesNew = nodeEntries.map((idx: [number, number]) => idx[1]);
 
     const nodeGroup = this.network.nodes.addNodeGroup({
@@ -231,9 +225,7 @@ export class NodeGroup extends BaseObj {
       const indicesDeepOld = this.nodeIndicesDeep;
       const indicesDeepNew = nodeGroup.nodeIndicesDeep;
 
-      const nodeIndices = Object.fromEntries(
-        indicesDeepOld.map((old, idx) => [old, indicesDeepNew[idx]])
-      );
+      const nodeIndices = Object.fromEntries(indicesDeepOld.map((old, idx) => [old, indicesDeepNew[idx]]));
       nodeIndices[this.idx] = nodeGroup.idx;
 
       this.connectionsWithin.forEach((connection: TConnection) => {

@@ -7,16 +7,13 @@ import { IConfigProps } from "../common/config";
 import { IParamProps } from "../common/parameter";
 import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
-import {
-  ConnectionParameter,
-  IConnectionParamProps,
-} from "./connectionParameter";
+import { ConnectionParameter } from "./connectionParameter";
 import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
 
 export interface IConnectionProps {
-  params?: IConnectionParamProps[];
+  params?: IParamProps[];
   rule?: string;
   source: number;
   synapse?: ISynapseProps;
@@ -38,11 +35,7 @@ export class BaseConnection extends BaseObj {
   public _connections: TConnections; // parent
   public _synapse: TSynapse;
 
-  constructor(
-    connections: TConnections,
-    connectionProps: IConnectionProps,
-    configProps?: IConfigProps
-  ) {
+  constructor(connections: TConnections, connectionProps: IConnectionProps, configProps?: IConfigProps) {
     super({
       config: { name: "Connection", ...configProps },
       logger: { settings: { minLevel: 3 } },
@@ -208,36 +201,32 @@ export class BaseConnection extends BaseObj {
 
   /**
    * Add connection parameter.
-   * @param paramProps connection parameter props
+   * @param paramProps parameter props
    */
-  addParameter(paramProps: IConnectionParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     this._params[paramProps.id] = new ConnectionParameter(this, paramProps);
   }
 
   /**
    * Add connection parameters.
-   * @param paramsProps list of connection parameter props
+   * @param paramsProps list of parameter props
    */
-  addParameters(paramsProps: IConnectionParamProps[] = []): void {
+  addParameters(paramsProps: IParamProps[] = []): void {
     this.logger.trace("init parameter");
 
     this._paramsVisible = [];
     this._params = {};
     const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
-    ruleConfig.params.forEach((param: IConnectionParamProps) => {
+    ruleConfig.params.forEach((param: IParamProps) => {
       if (paramsProps != null) {
-        const paramProps: IConnectionParamProps | undefined = paramsProps.find(
-          (paramProps: IConnectionParamProps) => paramProps.id === param.id
+        const paramProps: IParamProps | undefined = paramsProps.find(
+          (paramProps: IParamProps) => paramProps.id === param.id,
         );
         if (paramProps != null) {
           param.value = paramProps.value;
-          if (paramProps.type != null) {
-            param.type = paramProps.type;
-          }
+          if (paramProps.type != null) param.type = paramProps.type;
         }
-        if (param && param.visible !== false) {
-          this._paramsVisible.push(param.id);
-        }
+        if (param && param.visible !== false) this._paramsVisible.push(param.id);
       }
       this.addParameter(param);
     });
@@ -286,9 +275,7 @@ export class BaseConnection extends BaseObj {
    * Get all parameter of the rule.
    */
   getRuleConfig(): IConnectionRuleConfig {
-    return this.config?.localStorage.rules.find(
-      (r: IConnectionRuleConfig) => r.value === this._rule.value
-    );
+    return this.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this._rule.value);
   }
 
   /**
@@ -304,9 +291,7 @@ export class BaseConnection extends BaseObj {
     this.changes();
 
     // Initialize activity graph.
-    if (this._view.connectRecorder()) {
-      this.recorder.createActivity();
-    }
+    if (this._view.connectRecorder()) this.recorder.createActivity();
   }
 
   /**
@@ -354,15 +339,10 @@ export class BaseConnection extends BaseObj {
       target: this._targetIdx,
     };
 
-    if (this._rule.value !== "all_to_all") {
-      connectionProps.rule = this._rule.value;
-    }
+    if (this._rule.value !== "all_to_all") connectionProps.rule = this._rule.value;
 
-    if (this._paramsVisible.length > 0) {
-      connectionProps.params = this.filteredParams.map(
-        (param: ConnectionParameter) => param.toJSON()
-      );
-    }
+    if (this._paramsVisible.length > 0)
+      connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
 
     return connectionProps;
   }
@@ -387,19 +367,12 @@ export class BaseConnection extends BaseObj {
       targetModelId?: string;
     } = {
       idx: this.idx,
-      params: this.paramsAll.map((param: ConnectionParameter) =>
-        param.toJSON()
-      ),
+      params: this.paramsAll.map((param: ConnectionParameter) => param.toJSON()),
       synapse: this.synapse.hash,
     };
 
-    if (this.source.isNode) {
-      hashProps.sourceModelId = this.sourceNode.modelId;
-    }
-
-    if (this.target.isNode) {
-      hashProps.targetModelId = this.targetNode.modelId;
-    }
+    if (this.source.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
+    if (this.target.isNode) hashProps.targetModelId = this.targetNode.modelId;
 
     this._updateHash(hashProps);
   }

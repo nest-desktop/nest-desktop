@@ -1,12 +1,12 @@
 <template>
   <v-textarea
+    v-model="value"
     :rows="1"
     base-color="grey"
     class="mx-1 array-input"
     color="grey"
     density="compact"
     hide-details
-    v-model="value"
   />
 </template>
 
@@ -16,14 +16,14 @@ import { computed } from "vue";
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   id: { default: "", type: String },
-  modelValue: { default: "", required: true, type: Array<Number> },
+  modelValue: { default: "", required: true, type: Array<number> },
   unit: { default: "", type: String },
 });
 
 const value = computed({
   get: () => props.modelValue,
   set: (value) => {
-    let valueEmit: Number[] = [];
+    let valueEmit: number[] = [];
 
     switch (typeof value) {
       case "number":
@@ -31,10 +31,8 @@ const value = computed({
         break;
       case "string":
         valueEmit =
-          // @ts-ignore - Property 'startsWith' does not exist on type 'never'.
-          value.startsWith("[") && value.endsWith("]")
-            ? JSON.parse(value)
-            : JSON.parse(`[${value}]`);
+          // @ts-expect-error Property 'startsWith' does not exist on type 'never'.
+          value.startsWith("[") && value.endsWith("]") ? JSON.parse(value) : JSON.parse(`[${value}]`);
         break;
     }
 

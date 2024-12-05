@@ -35,12 +35,11 @@ export class BaseObj {
       ...props?.logger?.settings,
     });
 
-    if (props?.config) {
+    if (props?.config)
       this._config = new Config({
         name: this.constructor.name,
         ...props?.config,
       });
-    }
   }
 
   get config(): Config | undefined {
@@ -62,7 +61,7 @@ export class BaseObj {
   /**
    * Update hash.
    */
-  _updateHash(object: Object): void {
+  _updateHash(object: object): void {
     this._logger.trace("update hash");
 
     this._hash = truncate(sha1(object));
@@ -74,8 +73,6 @@ export class BaseObj {
    * @param text string
    */
   updateLoggerName(text: string): void {
-    this._logger.settings.name = `[${truncate(this._uuid)}] ${
-      this.constructor.name
-    } ${text}`;
+    this._logger.settings.name = `[${truncate(this._uuid)}] ${this.constructor.name} ${text}`;
   }
 }

@@ -1,34 +1,23 @@
 <template>
-  <v-card flat title="Model editor" v-if="model">
+  <v-card v-if="model" flat title="Model editor">
     <v-card-text>
       <v-row>
         <v-col cols="5">
-          <v-text-field
-            density="compact"
-            disabled
-            hide-details
-            label="model id"
-            v-model="state.modelId"
-          />
+          <v-text-field v-model="state.modelId" density="compact" disabled hide-details label="model id" />
         </v-col>
 
         <v-col cols="5">
           <v-text-field
+            v-if="model.state"
+            v-model="model.state.label"
             density="compact"
             hide-details
             label="model label"
-            v-model="model.state.label"
-            v-if="model.state"
           />
         </v-col>
 
         <v-col cols="2">
-          <v-btn
-            @click="saveModel()"
-            block
-            prepend-icon="mdi-content-save-outline"
-            text="save"
-          />
+          <v-btn block prepend-icon="mdi-content-save-outline" text="save" @click="saveModel()" />
         </v-col>
 
         <!-- <v-col cols="4">
@@ -51,7 +40,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { computed, reactive, watch } from "vue";
 
-import { TModelStore } from "@/stores/model/defineModelStore";
 import { notifyError, notifySuccess } from "@/helpers/common/notification";
 
 import NESTMLModelEditor from "../components/model/NESTMLModelEditor.vue";
@@ -61,7 +49,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 import { useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
+const modelStore = useNESTModelStore();
 
 import { useNESTMLServerStore } from "../stores/backends/nestmlServerStore";
 const nestmlServerStore = useNESTMLServerStore();
@@ -114,6 +102,6 @@ watch(
   () => modelStore.state.modelId,
   () => {
     state.modelId = modelStore.state.modelId;
-  }
+  },
 );
 </script>

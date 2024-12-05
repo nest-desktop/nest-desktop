@@ -1,25 +1,12 @@
 // simulationCode.ts
 
-import {
-  BaseSimulationCode,
-  ISimulationCodeProps,
-} from "@/helpers/simulation/simulationCode";
+import { BaseSimulationCode, ISimulationCodeProps } from "@/helpers/simulation/simulationCode";
 import { NorseSimulation } from "./simulation";
 
-export interface INorseSimulationCodeProps extends ISimulationCodeProps {}
-
-const simulationCodeBlocks: string[] = [
-  "importModules",
-  "createNodes",
-  "connectNodes",
-  "runSimulation",
-];
+const simulationCodeBlocks: string[] = ["importModules", "createNodes", "connectNodes", "runSimulation"];
 
 export class NorseSimulationCode extends BaseSimulationCode {
-  constructor(
-    simulation: NorseSimulation,
-    simulationCodeProps: INorseSimulationCodeProps = {}
-  ) {
+  constructor(simulation: NorseSimulation, simulationCodeProps: ISimulationCodeProps = {}) {
     super(simulation, {
       blocks: simulationCodeBlocks,
       ...simulationCodeProps,

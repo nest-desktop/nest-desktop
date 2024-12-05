@@ -8,10 +8,7 @@ import { IParamProps, TParamValue } from "../common/parameter";
 import { currentBackgroundColor } from "../common/theme";
 import { NodeRecord } from "../node/nodeRecord";
 import { ActivityChartPanel } from "./activityChartPanel";
-import {
-  ActivityChartPanelModelParameter,
-  IActivityChartPanelModelParamProps,
-} from "./activityChartPanelModelParameter";
+import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
 
 export interface IActivityChartPanelModelData {
   activityIdx: number;
@@ -94,10 +91,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _props: IActivityChartPanelModelProps;
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: IActivityChartPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
     this._props = modelProps;
 
@@ -213,9 +207,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   }
 
   get recordsVisible(): NodeRecord[] {
-    return this.records.filter((record: NodeRecord) =>
-      this._state.recordsVisible.includes(record.groupId)
-    );
+    return this.records.filter((record: NodeRecord) => this._state.recordsVisible.includes(record.groupId));
   }
 
   get state(): UnwrapRef<IActivityChartPanelModelState> {
@@ -224,21 +216,18 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Add data of this activity graph panel.
-   * @param activity activity object
+   * @param _activity activity object
    *
    * @remarks
    * It requires activity data.
    * It is a replacement for abstract component.
    */
   addData(activity: Activity): void {
-    activity;
+    this.logger.trace("Add data:", activity);
   }
 
   addParameter(paramProps: IParamProps) {
-    this._params[paramProps.id] = new ActivityChartPanelModelParameter(
-      this,
-      paramProps
-    );
+    this._params[paramProps.id] = new ActivityChartPanelModelParameter(this, paramProps);
   }
 
   /**
@@ -282,9 +271,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @returns node record object
    */
   getNodeRecord(groupId: string): NodeRecord | undefined {
-    return this.records.find(
-      (nodeRecord: NodeRecord) => nodeRecord.groupId === groupId
-    );
+    return this.records.find((nodeRecord: NodeRecord) => nodeRecord.groupId === groupId);
   }
 
   /**
@@ -334,8 +321,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Initialize params for controller.
    * @param paramsProps parameter props
    */
-  initParams(paramsProps: IActivityChartPanelModelParamProps[]): void {
-    paramsProps.forEach((paramProps: IActivityChartPanelModelParamProps) => {
+  initParams(paramsProps: IParamProps[]): void {
+    paramsProps.forEach((paramProps: IParamProps) => {
       this.addParameter(paramProps);
       if (paramProps.visible != false) {
         this.params[paramProps.id].visible = true;
@@ -355,9 +342,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Select all node records.
    */
   selectAllNodeRecords(): void {
-    this._state.recordsVisible = this.records.map(
-      (record: NodeRecord) => record.groupId
-    );
+    this._state.recordsVisible = this.records.map((record: NodeRecord) => record.groupId);
   }
 
   /**
@@ -377,10 +362,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       modelProps.params = params;
     }
 
-    if (
-      0 < this._state.recordsVisible.length &&
-      this._state.recordsVisible.length < this.state.records.length
-    ) {
+    if (0 < this._state.recordsVisible.length && this._state.recordsVisible.length < this.state.records.length) {
       modelProps.records = this._state.recordsVisible;
     }
     return modelProps;
@@ -412,10 +394,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update active marker.
-   * @param record node record object
+   * @param _record node record object
    */
   updateActiveMarker(record?: NodeRecord): void {
-    record;
+    this.logger.trace("Update activity marker:", record);
   }
 
   /**
@@ -431,9 +413,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   updateAnalogRecords(): void {
     // Remove old records from other recorder.
     this._state.records = this.records.filter((panelRecord: NodeRecord) =>
-      panelRecord.node.records.some(
-        (record: NodeRecord) => record.id === panelRecord.id
-      )
+      panelRecord.node.records.some((record: NodeRecord) => record.id === panelRecord.id),
     ) as NodeRecord[];
 
     // Add new records from current recorder.
@@ -477,7 +457,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateParams(paramsProps: Record<string, TParamValue> = {}): void {
     this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
-      if (paramsProps.hasOwnProperty(param.id)) {
+      if (param.id in paramsProps) {
         param.state.value = paramsProps[param.id];
       }
     });
@@ -491,17 +471,14 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       if (data.class === "background") return;
 
       const record = this.recordsVisible.find(
-        (record: NodeRecord) =>
-          record.id === data.recordId &&
-          record.activity.idx === data.activityIdx
+        (record: NodeRecord) => record.id === data.recordId && record.activity.idx === data.activityIdx,
       );
       if (!record) return;
 
       const nodeIds = record.activity.nodeIds;
       const idx = nodeIds.indexOf(data.nodeId as number);
 
-      const color =
-        record.color instanceof Array ? record.color[idx] : record.color;
+      const color = record.color instanceof Array ? record.color[idx] : record.color;
 
       if (data.type.includes("scatter")) {
         if (data.marker && data.marker.line && data.mode.includes("markers")) {
@@ -511,10 +488,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
         if (data.line && data.mode.includes("lines")) {
           data.line.color = color;
         }
-      } else if (
-        data.marker &&
-        (data.mode == "bar" || data.type == "histogram")
-      ) {
+      } else if (data.marker && (data.mode == "bar" || data.type == "histogram")) {
         data.marker.color = color;
       }
     });
@@ -522,11 +496,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update layout label.
-   * @param records list of node records
+   * @param _records list of node records
    * @remarks It is a replacement for abstract component.
    */
-  updateLayoutLabel(records?: NodeRecord[]): void {
-    records;
+  updateLayoutLabel(record?: NodeRecord[]): void {
+    this.logger.trace("Update layout label:", record);
   }
 
   /**
@@ -535,9 +509,6 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateTime(): void {
     this._state.time.start = 0;
-    this._state.time.end = Math.max(
-      this._state.time.end,
-      this._panel.graph.currentTime + 1
-    );
+    this._state.time.end = Math.max(this._state.time.end, this._panel.graph.currentTime + 1);
   }
 }

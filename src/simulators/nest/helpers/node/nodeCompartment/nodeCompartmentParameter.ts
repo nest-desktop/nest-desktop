@@ -1,17 +1,13 @@
 // nodeCompartmentParameter.ts
 
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { IParamProps } from "@/helpers/common/parameter";
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";
 import { NESTNodeCompartment } from "./nodeCompartment";
 
-export interface INESTNodeCompartmentParamProps extends INodeParamProps {}
-
 export class NESTNodeCompartmentParameter extends NodeParameter {
-  constructor(
-    nodeCompartment: NESTNodeCompartment,
-    paramProps: INESTNodeCompartmentParamProps
-  ) {
+  constructor(nodeCompartment: NESTNodeCompartment, paramProps: IParamProps) {
     super(nodeCompartment, paramProps);
   }
 
@@ -35,10 +31,9 @@ export class NESTNodeCompartmentParameter extends NodeParameter {
     if (value && !isVisible) {
       this.nodeCompartment.node.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.nodeCompartment.node.paramsVisible =
-        this.nodeCompartment.node.paramsVisible.filter(
-          (paramId: string) => paramId !== this.id
-        );
+      this.nodeCompartment.node.paramsVisible = this.nodeCompartment.node.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id,
+      );
     }
   }
 }

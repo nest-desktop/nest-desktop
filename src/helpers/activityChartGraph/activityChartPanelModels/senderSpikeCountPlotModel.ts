@@ -5,18 +5,12 @@ import { TParameter } from "@/types";
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "senderSpikeCountPlot";
@@ -33,8 +27,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         handleOnUpdate: (param: TParameter) => {
           const p = param as ActivityChartPanelModelParameter;
           const paramValue = p.value as string;
-          p.activityChartPanelModel.params.lineShape.visible =
-            paramValue.includes("lines");
+          p.activityChartPanelModel.params.lineShape.visible = paramValue.includes("lines");
         },
       },
       {
@@ -80,9 +73,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
 
     const spikeRate = this.params.spikeRate.value as boolean;
     const time = spikeRate ? activity.endTime / 1000 : 1;
-    const y: number[] = x.map((nodeId: number) =>
-      counts[nodeId] ? counts[nodeId] / time : 0
-    );
+    const y: number[] = x.map((nodeId: number) => (counts[nodeId] ? counts[nodeId] / time : 0));
     const size = x.length;
 
     const lineShape = this.params.lineShape.value as string;

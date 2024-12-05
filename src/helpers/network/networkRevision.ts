@@ -9,7 +9,7 @@ import { INodeProps } from "../node/node";
 import { INetworkProps } from "./network";
 
 interface INetworkRevisionProps extends INetworkProps {
-  codeHash?: String;
+  codeHash?: string;
 }
 
 export class NetworkRevision extends BaseObj {
@@ -40,9 +40,7 @@ export class NetworkRevision extends BaseObj {
     this.logger.trace("checkout network");
 
     // Update revision idx.
-    if (this._revisionIdx >= this._revisions.length) {
-      this._revisionIdx = this._revisions.length - 1;
-    }
+    if (this._revisionIdx >= this._revisions.length) this._revisionIdx = this._revisions.length - 1;
 
     // Update network.
     return this._revisions[this._revisionIdx];
@@ -63,25 +61,19 @@ export class NetworkRevision extends BaseObj {
     this.logger.trace("commit network");
 
     const codeHash = this._project.simulation.code.hash;
-    if (codeHash == null || codeHash == undefined || codeHash.length == 0)
-      return;
+    if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
 
     // Remove networks after the current.
     this._revisions = this._revisions.slice(0, this._revisionIdx + 1);
 
     // Limit max amount of network revisions.
     const maxRevisions: number = 9;
-    if (this._revisions.length > maxRevisions) {
-      this._revisions = this._revisions.slice(
-        this._revisions.length - maxRevisions
-      );
-    }
+    if (this._revisions.length > maxRevisions)
+      this._revisions = this._revisions.slice(this._revisions.length - maxRevisions);
 
     // Get last network of the revisions.
     const lastNetwork: INetworkRevisionProps =
-      this._revisions.length > 0
-        ? this._revisions[this._revisions.length - 1]
-        : {};
+      this._revisions.length > 0 ? this._revisions[this._revisions.length - 1] : {};
 
     const currentNetwork: INetworkRevisionProps =
       this._revisions.length > 0 && lastNetwork.codeHash === codeHash
@@ -95,9 +87,7 @@ export class NetworkRevision extends BaseObj {
       // Add activity to recorder nodes only if hashes is matched.
       this._project.network.nodes.recorders.forEach((node: TNode) => {
         const nodes = currentNetwork.nodes as INodeProps[];
-        if (nodes) {
-          nodes[node.idx].activity = node.activity?.toJSON();
-        }
+        if (nodes) nodes[node.idx].activity = node.activity?.toJSON();
       });
     }
 
@@ -120,9 +110,7 @@ export class NetworkRevision extends BaseObj {
    * Go to the newer network.
    */
   newer(): void {
-    if (this._revisionIdx < this._revisions.length) {
-      this._revisionIdx++;
-    }
+    if (this._revisionIdx < this._revisions.length) this._revisionIdx++;
     this._project.checkoutNetwork();
   }
 
@@ -138,9 +126,7 @@ export class NetworkRevision extends BaseObj {
    * Go to the older network.
    */
   older(): void {
-    if (this._revisionIdx > 0) {
-      this._revisionIdx--;
-    }
+    if (this._revisionIdx > 0) this._revisionIdx--;
     this._project.checkoutNetwork();
   }
 

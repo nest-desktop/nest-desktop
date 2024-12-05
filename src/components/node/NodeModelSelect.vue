@@ -1,34 +1,34 @@
 <template>
   <v-select
+    v-model="node.modelId"
     :item-props="true"
     :items="state.items"
     :label="state.elementType + ' model'"
-    @click.stop
     class="model-select text-primary mx-1"
     density="compact"
     hide-details
     item-title="label"
     item-value="id"
-    v-model="node.modelId"
+    @click.stop
   >
-    <template #item="{ props }">
-      <v-list-item @click="select(props)" class="node-model-item">
-        {{ props.title }}
+    <template #item="{ props: itemProps }">
+      <v-list-item class="node-model-item" @click="select(itemProps)">
+        {{ itemProps.title }}
 
         <template #append>
           <v-btn
-            @click="select(props, true)"
+            v-if="state.elementType"
             class="icon"
             icon="mdi:mdi-menu-right"
             size="x-small"
-            v-if="state.elementType"
             variant="text"
+            @click="select(itemProps, true)"
           />
         </template>
       </v-list-item>
     </template>
 
-    <template #prepend-item v-if="state.elementType">
+    <template v-if="state.elementType" #prepend-item>
       <v-list-item
         @click="
           () => {
@@ -48,9 +48,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive } from "vue";
 
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TModel, TNode } from "@/types";
+
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
 const props = defineProps<{
   elementTypes?: { title: string; value: string }[];
@@ -63,14 +68,14 @@ const elementTypes = computed(
       { title: "neuron", value: "neuron" },
       { title: "recorder", value: "recorder" },
       { title: "stimulator", value: "stimulator" },
-    ]
+    ],
 );
 
 const emit = defineEmits(["openMenu"]);
 
 const state = reactive<{
   elementType: string;
-  items: (TModel | any)[];
+  items: (TModel | unknown)[];
 }>({
   elementType: "",
   items: [],
@@ -81,9 +86,7 @@ const openMenu = () => emit("openMenu", true);
 const select = (props: Record<string, unknown>, open?: boolean) => {
   node.value.view.expandNodePanel();
 
-  const elementTypesValues = elementTypes.value.map(
-    (elementType) => elementType.value
-  );
+  const elementTypesValues = elementTypes.value.map((elementType) => elementType.value);
 
   if (elementTypesValues.includes(props.value as string)) {
     state.elementType = props.value as string;
@@ -92,9 +95,8 @@ const select = (props: Record<string, unknown>, open?: boolean) => {
     node.value.modelId = props.value as string;
   }
 
-  if (open) {
-    openMenu();
-  }
+  nextTick(() => graph.value?.render());
+  if (open) openMenu();
 };
 
 onMounted(() => {

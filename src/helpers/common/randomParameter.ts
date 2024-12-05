@@ -1,6 +1,6 @@
 // randomParameter.ts
 
-import { BaseObj } from './base';
+import { BaseObj } from "./base";
 
 interface IParameterRandomProps {
   distribution: string;
@@ -50,9 +50,7 @@ export class ParameterRandom extends BaseObj {
   toJSON(): IParameterRandomProps {
     const specs: Record<string, number> = {};
     Object.keys(this._defaults[this._distribution]).map((param: string) => {
-      if (param in this._specs) {
-        specs[param] = parseFloat(this._specs[param] as string);
-      }
+      if (param in this._specs) specs[param] = parseFloat(this._specs[param] as string);
     });
     return {
       distribution: this._distribution,

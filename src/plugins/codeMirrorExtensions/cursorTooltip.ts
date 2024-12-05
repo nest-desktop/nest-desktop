@@ -1,12 +1,7 @@
 // cursorTooltip.ts
 
 import { EditorState, StateField } from "@codemirror/state";
-import {
-  EditorView,
-  Tooltip,
-  hoverTooltip,
-  showTooltip,
-} from "@codemirror/view";
+import { EditorView, Tooltip, hoverTooltip, showTooltip } from "@codemirror/view";
 
 const cursorTooltipField = StateField.define<readonly Tooltip[]>({
   create: getCursorTooltips,
@@ -23,15 +18,15 @@ function getCursorTooltips(state: EditorState): readonly Tooltip[] {
   return state.selection.ranges
     .filter((range) => range.empty)
     .map((range) => {
-      let line = state.doc.lineAt(range.head);
-      let text = line.number + ":" + (range.head - line.from);
+      const line = state.doc.lineAt(range.head);
+      const text = line.number + ":" + (range.head - line.from);
       return {
         pos: range.head,
         above: true,
         strictSide: true,
         arrow: true,
         create: () => {
-          let dom = document.createElement("div");
+          const dom = document.createElement("div");
           dom.className = "cm-tooltip-cursor";
           dom.textContent = text;
           return { dom };
@@ -72,7 +67,7 @@ export const wordHover = hoverTooltip((view, pos, side) => {
     end,
     above: true,
     create() {
-      let dom = document.createElement("div");
+      const dom = document.createElement("div");
       dom.textContent = text.slice(start - from, end - from);
       return { dom };
     },

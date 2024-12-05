@@ -1,13 +1,5 @@
 <template>
-  <v-btn
-    @click.prevent
-    @click.stop
-    class="menu-btn"
-    icon
-    size="small"
-    rounded="pill"
-    variant="text"
-  >
+  <v-btn class="menu-btn" icon size="small" rounded="pill" variant="text" @click.prevent @click.stop>
     <slot name="icon">
       <v-icon icon="mdi:mdi-dots-vertical" />
     </slot>
@@ -17,11 +9,7 @@
         <v-list density="compact">
           <slot name="prependItem" />
 
-          <v-list-item
-            :key="index"
-            v-bind="item"
-            v-for="(item, index) in items"
-          >
+          <v-list-item v-for="(item, index) in items" :key="index" v-bind="item">
             <template #prepend>
               <v-icon size="small" v-bind="item.icon" />
             </template>

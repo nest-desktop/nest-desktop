@@ -49,9 +49,7 @@ export class BaseConnections extends BaseObj {
    * filter connection list without recorders.
    */
   get connectionsWithoutRecorders(): TConnection[] {
-    return this.connections.filter(
-      (connection: TConnection) => !connection.view.connectRecorder()
-    );
+    return this.connections.filter((connection: TConnection) => !connection.view.connectRecorder());
   }
 
   /**
@@ -142,18 +140,13 @@ export class BaseConnections extends BaseObj {
     this.resetState();
 
     this._connections = this.connections.filter(
-      (connection: TConnection) =>
-        connection.source !== node && connection.target !== node
+      (connection: TConnection) => connection.source !== node && connection.target !== node,
     );
 
     // Update source and target idx in connections
     this.connections.forEach((connection: TConnection) => {
-      if (connection.sourceIdx > node.idx) {
-        connection.sourceIdx -= 1;
-      }
-      if (connection.targetIdx > node.idx) {
-        connection.targetIdx -= 1;
-      }
+      if (connection.sourceIdx > node.idx) connection.sourceIdx -= 1;
+      if (connection.targetIdx > node.idx) connection.targetIdx -= 1;
     });
   }
 
@@ -170,9 +163,7 @@ export class BaseConnections extends BaseObj {
    * @return connection props
    */
   toJSON(): IConnectionProps[] {
-    return this.connections.map((connection: TConnection) =>
-      connection.toJSON()
-    );
+    return this.connections.map((connection: TConnection) => connection.toJSON());
   }
 
   unfocusConnection(): void {
@@ -195,11 +186,8 @@ export class BaseConnections extends BaseObj {
   update(connectionsProps?: IConnectionProps[]): void {
     this.logger.trace("update");
 
-    if (connectionsProps) {
-      connectionsProps.forEach((connectionProps: IConnectionProps) =>
-        this.addConnection(connectionProps)
-      );
-    }
+    if (connectionsProps)
+      connectionsProps.forEach((connectionProps: IConnectionProps) => this.addConnection(connectionProps));
 
     this.clean();
     this.updateHash();
@@ -210,9 +198,7 @@ export class BaseConnections extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      connections: this.connections.map(
-        (connection: TConnection) => connection.hash
-      ),
+      connections: this.connections.map((connection: TConnection) => connection.hash),
     });
   }
 }

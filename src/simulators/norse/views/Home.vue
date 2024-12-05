@@ -5,17 +5,13 @@
         <v-card>
           <v-img :src="norseLogo" alt="norse-logo" class="ma-2 mx-10" />
 
-          <v-card-subtitle>
-            Deep learning with spiking neural networks in PyTorch
-          </v-card-subtitle>
+          <v-card-subtitle> Deep learning with spiking neural networks in PyTorch </v-card-subtitle>
 
           <v-card-text>
-            Norse aims to exploit the advantages of bio-inspired neural
-            components, which are sparse and event-driven - a fundamental
-            difference from artificial neural networks. Norse expands PyTorch
-            with primitives for bio-inspired neural components, bringing you two
-            advantages: a modern and proven infrastructure based on PyTorch and
-            deep learning-compatible spiking neural network components.
+            Norse aims to exploit the advantages of bio-inspired neural components, which are sparse and event-driven -
+            a fundamental difference from artificial neural networks. Norse expands PyTorch with primitives for
+            bio-inspired neural components, bringing you two advantages: a modern and proven infrastructure based on
+            PyTorch and deep learning-compatible spiking neural network components.
           </v-card-text>
         </v-card>
 
@@ -23,11 +19,11 @@
           <v-card-text>
             <v-list density="compact">
               <v-list-item
+                v-for="(refItem, index) in refItems"
                 :key="index"
                 append-icon="mdi:mdi-open-in-new"
                 target="_blank"
                 v-bind="refItem"
-                v-for="(refItem, index) in refItems"
               />
             </v-list>
           </v-card-text>
@@ -41,10 +37,7 @@
               <v-expansion-panel-title>
                 Backend settings
                 <v-spacer />
-                <BackendStatusIcon
-                  :backend-store="norseSimulatorStore"
-                  :title="norseSimulatorStore.state.name"
-                />
+                <BackendStatusIcon :backend-store="norseSimulatorStore" :title="norseSimulatorStore.state.name" />
               </v-expansion-panel-title>
 
               <v-expansion-panel-text>

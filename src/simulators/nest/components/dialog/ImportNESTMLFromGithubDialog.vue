@@ -4,61 +4,56 @@
       <v-icon icon="mdi:mdi-github" size="small" />
       Load NESTML script from GitHub
 
-      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+      <v-btn flat icon="mdi:mdi-close" size="small" @click="closeDialog()" />
     </v-card-title>
 
     <v-card-text>
       <v-row class="mb-2">
         <v-select
+          v-model="state.githubTag"
           :disabled="state.githubTags.length === 0"
           :items="state.githubTags"
-          @update:model-value="fetchElementTypes"
           class="mx-2"
           density="compact"
           hide-details
           item-title="name"
           item-value="name"
           label="Select a tag"
-          v-model="state.githubTag"
+          @update:model-value="fetchElementTypes"
         />
 
         <v-select
+          v-model="state.elementType"
           :disabled="state.elementTypes.length === 0"
           :items="state.elementTypes"
-          @update:model-value="fetchModels()"
           class="mx-2"
           density="compact"
           hide-details
           item-title="path"
           item-value="path"
           label="Select an element type"
-          v-model="state.elementType"
+          @update:model-value="fetchModels()"
         />
 
         <v-select
+          v-model="state.modelFilename"
           :disabled="state.modelFilenames.length === 0"
           :items="state.modelFilenames"
-          @update:model-value="fetchNESTMLScript"
           class="mx-2"
           density="compact"
           hide-details
           item-title="path"
           item-value="path"
           label="Select a nestml file"
-          v-model="state.modelFilename"
+          @update:model-value="fetchNESTMLScript"
         />
 
-        <v-btn
-          :disabled="!state.script"
-          @click="loadNESTMLScript()"
-          text="load"
-          title="Load NESTML script"
-        />
+        <v-btn :disabled="!state.script" text="load" title="Load NESTML script" @click="loadNESTMLScript()" />
       </v-row>
 
-      <v-row class="text-h6" no-gutters>Preview</v-row>
+      <v-row class="text-h6" no-gutters> Preview </v-row>
       <v-window style="max-height: 500px; overflow: auto">
-        <codemirror disabled v-model="state.script" />
+        <codemirror v-model="state.script" disabled />
       </v-window>
     </v-card-text>
 
@@ -122,7 +117,7 @@ const githubAPI = "https://api.github.com/repos/nest/nestml";
 const githubRaw = "https://raw.githubusercontent.com/nest/nestml";
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (value?: Object) => emit("closeDialog", value);
+const closeDialog = (value?: object) => emit("closeDialog", value);
 
 const fetchElementTypes = () => {
   state.elementType = "";
@@ -130,18 +125,14 @@ const fetchElementTypes = () => {
   state.modelFilenames = [];
 
   nextTick(() => {
-    axios
-      .get(`${githubAPI}/git/trees/${state.githubTag}`)
-      .then((response: AxiosResponse) => {
-        const modelsTree = getTree(response.data.tree, "models");
-        if (modelsTree) {
-          axios
-            .get(`${githubAPI}/git/trees/${modelsTree.sha}`)
-            .then((response: AxiosResponse) => {
-              state.elementTypes = response.data.tree || [];
-            });
-        }
-      });
+    axios.get(`${githubAPI}/git/trees/${state.githubTag}`).then((response: AxiosResponse) => {
+      const modelsTree = getTree(response.data.tree, "models");
+      if (modelsTree) {
+        axios.get(`${githubAPI}/git/trees/${modelsTree.sha}`).then((response: AxiosResponse) => {
+          state.elementTypes = response.data.tree || [];
+        });
+      }
+    });
   });
 };
 
@@ -178,8 +169,7 @@ const fetchNESTMLScript = () => {
   });
 };
 
-const getTree = (trees: IGithubTree[], path: string) =>
-  trees.find((tree: IGithubTree) => tree.path === path);
+const getTree = (trees: IGithubTree[], path: string) => trees.find((tree: IGithubTree) => tree.path === path);
 
 const loadNESTMLScript = () => {
   const modelId = state.modelFilename.split(".")[0];

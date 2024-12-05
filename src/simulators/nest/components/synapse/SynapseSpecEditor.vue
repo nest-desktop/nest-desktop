@@ -1,11 +1,7 @@
 <template>
-  <v-btn-group
-    class="pt-2 mt-1"
-    style="width: 100%"
-    variant="text"
-    v-if="!synapse.connection.view.connectRecorder()"
-  >
+  <v-btn-group v-if="!synapse.connection.view.connectRecorder()" class="pt-2 mt-1" style="width: 100%" variant="text">
     <v-select
+      v-model="synapse.modelId"
       :disabled="synapse.models.length < 2"
       :items="synapse.models"
       class="mx-1"
@@ -14,31 +10,30 @@
       item-title="label"
       item-value="id"
       label="Synapse model"
-      v-model="synapse.modelId"
     />
 
     <v-menu :close-on-content-click="false">
-      <template #activator="{ props }">
+      <template #activator="{ props: btnProps }">
         <v-btn
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-order-bool-ascending-variant"
           size="small"
-          v-bind="props"
+          v-bind="btnProps"
         />
       </template>
 
       <v-card>
         <v-card-text>
           <v-checkbox
-            :color="synapse.connection.sourceNode.view.color"
+            v-for="(param, index) in synapse.model.paramsAll"
             :key="index"
+            v-model="synapse.paramsVisible"
+            :color="synapse.connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"
             density="compact"
             hide-details
-            v-for="(param, index) in synapse.model.paramsAll"
-            v-model="synapse.paramsVisible"
           >
             <template #append>
               {{ param.id }}: {{ param.value }}
@@ -50,22 +45,12 @@
     </v-menu>
 
     <v-menu>
-      <template #activator="{ props }">
-        <v-btn
-          class="rounded-circle"
-          color="primary"
-          icon="mdi:mdi-dots-vertical"
-          size="small"
-          v-bind="props"
-        />
+      <template #activator="{ props: btnProps }">
+        <v-btn class="rounded-circle" color="primary" icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
       </template>
 
       <v-list density="compact">
-        <v-list-item
-          :key="index"
-          @click="item.onClick"
-          v-for="(item, index) in items"
-        >
+        <v-list-item v-for="(item, index) in items" :key="index" @click="item.onClick">
           <template #prepend>
             <v-icon :icon="item.icon" />
           </template>
@@ -75,12 +60,12 @@
     </v-menu>
   </v-btn-group>
 
-  <v-list density="compact" v-if="synapse.paramsVisible.length > 0">
+  <v-list v-if="synapse.paramsVisible.length > 0" density="compact">
     <ParamListItem
+      v-for="(param, index) in synapse.filteredParams"
       :key="index"
       :color="synapse.connection.sourceNode.view.color"
       :param="(param as NESTSynapseParameter)"
-      v-for="(param, index) in synapse.filteredParams"
     />
   </v-list>
 </template>

@@ -1,7 +1,6 @@
 // upgrade_32_to_33.ts
 
-const validateVersion = (version: string) =>
-  /^3\.2(\.\d+)?(\w+)?$/.test(version);
+const validateVersion = (version: string) => /^3\.2(\.\d+)?(\w+)?$/.test(version);
 
 // Rename model ids of activity chart panels.
 const activityChartPanelModels: Record<string, string> = {

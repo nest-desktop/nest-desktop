@@ -1,12 +1,13 @@
 // synapse.ts
 
-import { TConnection, TSynapseParamProps, TSynapseParameter } from "@/types";
+import { TConnection, TSynapseParameter } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseSynapseParameter } from "./synapseParameter";
+import { IParamProps } from "../common/parameter";
 
 export interface ISynapseProps {
-  params?: TSynapseParamProps[];
+  params?: IParamProps[];
 }
 
 export class BaseSynapse extends BaseObj {
@@ -42,9 +43,7 @@ export class BaseSynapse extends BaseObj {
     if (this.connection.view.connectRecorder() || this.weight === 0) {
       return "network:synapse-recorder";
     } else {
-      return (
-        "network:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory")
-      );
+      return "network:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
     }
   }
 
@@ -53,6 +52,10 @@ export class BaseSynapse extends BaseObj {
    */
   get isSpatial(): boolean {
     return false;
+  }
+
+  get modelId(): string {
+    return "static";
   }
 
   get name(): string {
@@ -77,7 +80,7 @@ export class BaseSynapse extends BaseObj {
   }
 
   get weight(): number {
-    let weight: TSynapseParameter = this.params.weight;
+    const weight: TSynapseParameter = this.params.weight;
     return weight ? (weight.value as number) : 1;
   }
 
@@ -94,16 +97,11 @@ export class BaseSynapse extends BaseObj {
   }
 
   get weightLabel(): string {
-    return this.weight === 0
-      ? ""
-      : this.weight > 0
-      ? "excitatory"
-      : "inhibitory";
+    return this.weight === 0 ? "" : this.weight > 0 ? "excitatory" : "inhibitory";
   }
 
   set weightLabel(value: string) {
-    this.weight =
-      (value === "inhibitory" ? -1 : 1) * Math.abs(this.weight as number);
+    this.weight = (value === "inhibitory" ? -1 : 1) * Math.abs(this.weight as number);
     this.params.weight.visible = this.weight != 1;
   }
 
@@ -111,7 +109,7 @@ export class BaseSynapse extends BaseObj {
    * Add parameter component.
    * @param paramProps- synapse parameter props
    */
-  addParameter(paramProps: TSynapseParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     // this._logger.trace("add parameter:", param)
     this._params[paramProps.id] = new BaseSynapseParameter(this, paramProps);
   }
@@ -148,14 +146,12 @@ export class BaseSynapse extends BaseObj {
   /**
    * Initialize synapse parameters.
    */
-  initParameters(paramsProps?: TSynapseParamProps[]): void {
+  initParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("init parameters");
 
     this._paramsVisible = [];
     this._params = {};
-    if (paramsProps) {
-      paramsProps.forEach((param: any) => this.addParameter(param));
-    }
+    if (paramsProps) paramsProps.forEach((param: IParamProps) => this.addParameter(param));
   }
 
   /**
@@ -183,9 +179,7 @@ export class BaseSynapse extends BaseObj {
    * Sets all params to visible.
    */
   showAllParams(): void {
-    Object.values(this.params).forEach(
-      (param: TSynapseParameter) => (param.visible = true)
-    );
+    Object.values(this.params).forEach((param: TSynapseParameter) => (param.visible = true));
   }
 
   /**
@@ -195,11 +189,8 @@ export class BaseSynapse extends BaseObj {
   toJSON(): ISynapseProps {
     const synapseProps: ISynapseProps = {};
 
-    if (this.filteredParams.length > 0) {
-      synapseProps.params = this.filteredParams.map(
-        (param: TSynapseParameter) => param.toJSON()
-      );
-    }
+    if (this.filteredParams.length > 0)
+      synapseProps.params = this.filteredParams.map((param: TSynapseParameter) => param.toJSON());
 
     return synapseProps;
   }

@@ -1,8 +1,8 @@
 // simulationKernel.ts
 
-import { BaseObj } from '@/helpers/common/base';
+import { BaseObj } from "@/helpers/common/base";
 
-import { NESTSimulation } from './simulation';
+import { NESTSimulation } from "./simulation";
 
 export interface INESTSimulationKernelProps {
   resolution?: number;
@@ -16,10 +16,7 @@ export class NESTSimulationKernel extends BaseObj {
   private _simulation: NESTSimulation; // parent
   private _rngSeed: number; // seed for random renerator
 
-  constructor(
-    simulation: NESTSimulation,
-    kernelProps: INESTSimulationKernelProps = {}
-  ) {
+  constructor(simulation: NESTSimulation, kernelProps: INESTSimulationKernelProps = {}) {
     super({
       config: { name: "NESTSimulationKernel", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },

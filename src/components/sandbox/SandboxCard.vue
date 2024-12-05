@@ -2,15 +2,10 @@
   <v-card class="playground-card">
     <v-card-title>Card</v-card-title>
     <v-card-text>
-      <Card
-        :color="card.color"
-        :key="index"
-        :title="card.title"
-        v-for="(card, index) in cards"
-      >
+      <Card v-for="(card, index) in cards" :key="index" :color="card.color" :title="card.title">
         <v-card-text>
           <v-list>
-            <v-list-item :key="index" v-for="(item, index) in card.items">
+            <v-list-item v-for="(item, itemIdx) in card.items" :key="itemIdx">
               {{ item.title }}
             </v-list-item>
           </v-list>
@@ -23,12 +18,7 @@
 <script lang="ts" setup>
 import Card from "@/components/common/Card.vue";
 
-const items = [
-  { title: "Item 1" },
-  { title: "Item 2" },
-  { title: "Item 3" },
-  { title: "Item 4" },
-];
+const items = [{ title: "Item 1" }, { title: "Item 2" }, { title: "Item 3" }, { title: "Item 4" }];
 
 const cards = [
   { items, color: "blue", title: "card 1" },

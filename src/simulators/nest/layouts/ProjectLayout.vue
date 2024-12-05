@@ -1,11 +1,7 @@
 <template>
   <ProjectNav color="nest-project" />
 
-  <template
-    v-if="
-      projectStore.state.projectId && projectStore.props.simulator === 'nest'
-    "
-  >
+  <template v-if="projectStore.state.projectId && projectStore.props.simulator === 'nest'">
     <ProjectBar color="nest-project">
       <template #activityExplorer>
         <v-tab
@@ -35,21 +31,15 @@
 
           <v-menu activator="parent" target=".tab-activity-explorer">
             <v-list density="compact">
-              <v-list-item
-                @click="
-                  () => (projectViewStore.state.views.activity = 'abstract')
-                "
-              >
+              <v-list-item @click="() => (projectViewStore.state.views.activity = 'abstract')">
                 <template #prepend>
                   <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
                 </template>
                 abstract
               </v-list-item>
               <v-list-item
-                @click="
-                  () => (projectViewStore.state.views.activity = 'spatial')
-                "
                 prepend-icon="mdi:mdi-axis-arrow"
+                @click="() => (projectViewStore.state.views.activity = 'spatial')"
               >
                 spatial
               </v-list-item>
@@ -62,11 +52,11 @@
 
       <template #prependBtn>
         <v-btn
-          @click="openNESTModuleDialog()"
+          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
-          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
+          @click="openNESTModuleDialog()"
         />
       </template>
     </ProjectBar>
@@ -74,22 +64,17 @@
     <ProjectController>
       <template #activityController>
         <ActivityChartController
-          :graph="project.activityGraph.activityChartGraph"
           v-if="projectViewStore.state.views.activity === 'abstract'"
+          :graph="project.activityGraph.activityChartGraph"
         />
-        <template
-          v-else-if="projectViewStore.state.views.activity === 'spatial'"
-        >
-          <ActivityAnimationController
-            :graph="project.activityGraph.activityAnimationGraph"
-          />
+        <template v-else-if="projectViewStore.state.views.activity === 'spatial'">
+          <ActivityAnimationController :graph="project.activityGraph.activityAnimationGraph" />
 
           <v-expansion-panels>
             <ActivityAnimationControllerLayer
+              v-for="(layer, index) in project.activityGraph.activityAnimationGraph.layers"
               :key="index"
               :layer
-              v-for="(layer, index) in project.activityGraph
-                .activityAnimationGraph.layers"
             />
           </v-expansion-panels>
         </template>
@@ -98,6 +83,7 @@
       <template #model>
         <span v-if="project.network.state.elementTypeIdx === 5">
           <v-select
+            v-model="model"
             :items="project.modelDBStore.state.models"
             class="ma-1"
             density="compact"
@@ -107,76 +93,62 @@
             item-value="id"
             label="Existing model"
             prepend-icon="mdi:mdi-plus"
-            v-model="model"
           >
             <template #append>
-              <v-btn
-                :disabled="model.length === 0"
-                @click="copyModel(model)"
-                text="copy"
-              />
+              <v-btn :disabled="model.length === 0" text="copy" @click="copyModel(model)" />
             </template>
           </v-select>
         </span>
 
         <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
           <CopyModelEditor
-            :key="index"
-            :model="model"
-            v-for="(model, index) of project.network.modelsCopied.all"
+            v-for="(modelCopied, modelIdx) of project.network.modelsCopied.all"
+            :key="modelIdx"
+            :model="modelCopied"
           />
         </span>
       </template>
 
       <template #nodes>
         <div :key="project.network.nodes.length">
-          <div :key="index" v-for="(node, index) in project.network.nodes.all">
-            <NodeEditor :node v-if="node.isNode">
+          <div v-for="(node, index) in project.network.nodes.all" :key="index">
+            <NodeEditor v-if="node.isNode" :node="node as NESTNode">
               <template #nodeMenuContent>
-                <NESTNodeMenuList :node />
+                <NESTNodeMenuList :node="node as NESTNode" />
               </template>
 
               <template #nodeModelSelect="{ selectState }">
-                <NodeModelSelect
-                  :elementTypes
-                  :node
-                  @openMenu="() => (selectState.menu = true)"
-                />
+                <NodeModelSelect :element-types :node="node as NESTNode" @open-menu="() => (selectState.menu = true)" />
               </template>
 
               <template #popItem>
                 <v-list-item class="param pl-0 pr-1">
-                  <NodePosition
-                    :nodeSpatial="node.spatial"
-                    v-if="node.spatial.hasPositions"
-                  />
+                  <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial as NESTNodeSpatial" />
 
                   <ValueSlider
-                    :thumb-color="node.view.color"
-                    @update:model-value="node.changes()"
+                    v-else
                     id="n"
+                    v-model="node.size"
+                    :thumb-color="node.view.color"
                     input-label="n"
                     label="population size"
-                    v-else
-                    v-model="node.size"
+                    @update:model-value="node.changes()"
                   />
 
                   <template #append>
-                    <Menu :items="getPopItems(node)" size="x-small" />
+                    <Menu :items="getPopItems(node as NESTNode)" size="x-small" />
                   </template>
                 </v-list-item>
               </template>
 
               <template #connectionEditor>
                 <ConnectionEditor
+                  v-for="(connection, connectionIdx) in node.connections"
+                  :key="connectionIdx"
                   :connection
-                  :key="index"
-                  v-for="(connection, index) in node.connections"
                 >
                   <template #panelTitle>
-                    <div
-                      class="d-flex flex-column justify-center align-center text-grey"
-                    >
+                    <div class="d-flex flex-column justify-center align-center text-grey">
                       {{ connection.rule.value }}
                       <div v-if="connection.view.connectOnlyNeurons()">
                         {{ connection.synapse.modelId }}
@@ -185,13 +157,13 @@
                   </template>
 
                   <template #synapseSpecEditor>
-                    <SynapseSpecEditor :synapse="connection.synapse" />
+                    <SynapseSpecEditor :synapse="connection.synapse as NESTSynapse" />
                   </template>
                 </ConnectionEditor>
               </template>
             </NodeEditor>
 
-            <NodeGroup :nodeGroup="node" v-else-if="node.isGroup" />
+            <NodeGroup v-else-if="node.isGroup" :node-group="node as TNodeGroup" />
           </div>
         </div>
       </template>
@@ -213,13 +185,13 @@ import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
-import NodeGroup from "@/components/node/NodeGroup.vue";
 import NodeModelSelect from "@/components/node/NodeModelSelect.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TProjectStore } from "@/stores/project/defineProjectStore";
+import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNodeGroup } from "@/types";
 import { mountProjectLayout } from "@/helpers/routes";
 
 import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
@@ -229,6 +201,7 @@ import NodePosition from "../components/node/NodePosition.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
 import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
 import { NESTNode } from "../helpers/node/node";
+import { NESTProject, NESTSynapse } from "../types";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useRoute, useRouter } from "vue-router";
@@ -239,12 +212,11 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore: TProjectStore = useNESTProjectStore();
+import { NESTNodeSpatial } from "../helpers/node/nodeSpatial/nodeSpatial";
+const projectStore = useNESTProjectStore();
 
-const project = computed(() => projectStore.state.project);
-const projectViewStore = computed(
-  () => appStore.currentSimulator.views.project
-);
+const project = computed(() => projectStore.state.project as NESTProject);
+const projectViewStore = computed(() => appStore.currentSimulator.views.project);
 
 const model = ref("");
 

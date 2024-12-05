@@ -1,6 +1,6 @@
 // defineBackendStore.ts
 
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
@@ -8,13 +8,34 @@ import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
+import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 
-export function defineBackendStore(
-  simulator: string,
-  name: string,
-  url: string,
-  options?: Record<string, string>
-) {
+export interface IAxiosRequestData {
+  source: string;
+  return?: string;
+}
+
+export interface IAxiosResponseData {
+  data: IResponseData;
+  status: number;
+  statusText: string;
+  headers: AxiosResponseHeaders;
+  config: AxiosRequestConfig;
+}
+
+export interface IAxiosErrorData {
+  lineNumber: number;
+  message: string;
+}
+
+export interface IResponseData {
+  events: IEventProps[];
+  biological_time: number;
+  positions?: Record<string, number[]>;
+  activities?: IActivityProps[];
+}
+
+export function defineBackendStore(simulator: string, name: string, url: string, options?: Record<string, string>) {
   const logger = mainLogger.getSubLogger({
     minLevel: 3,
     name: name + " backend store",
@@ -49,9 +70,7 @@ export function defineBackendStore(
       const defaults = computed((): string => url);
       const isOK = computed((): boolean => state.response.status === 200);
       const isValid = computed((): boolean => name in state.response.data);
-      const versions = computed((): string[][] =>
-        Object.entries(state.response.data)
-      );
+      const versions = computed((): string[][] => Object.entries(state.response.data));
 
       /**
        * Check backend.
@@ -87,9 +106,7 @@ export function defineBackendStore(
           .then((data) => {
             const config = data[name];
             const baseURL =
-              (window.location.protocol.includes("http")
-                ? window.location.protocol
-                : "http:") +
+              (window.location.protocol.includes("http") ? window.location.protocol : "http:") +
               "//" +
               (window.location.hostname || "localhost");
 
@@ -122,28 +139,19 @@ export function defineBackendStore(
 
         axiosInstance
           .get(baseURL)
-          .then(
-            (
-              response: AxiosResponse<
-                any,
-                { status: number; statusText: string }
-              >
-            ) => {
-              state.response = response;
-              switch (response.status) {
-                case 200:
-                  notifySuccess(`${baseURL} (${name} backend) found.`);
-                  break;
-                default:
-                  notifyError(
-                    `${baseURL} (${name} backend) ${response.statusText.toLowerCase()}.`
-                  );
-                  break;
-              }
-              return baseURL;
+          .then((response: AxiosResponse<IAxiosResponseData>) => {
+            state.response = response;
+            switch (response.status) {
+              case 200:
+                notifySuccess(`${baseURL} (${name} backend) found.`);
+                break;
+              default:
+                notifyError(`${baseURL} (${name} backend) ${response.statusText.toLowerCase()}.`);
+                break;
             }
-          )
-          .catch((error: AxiosError<any, { message: string }>) => {
+            return baseURL;
+          })
+          .catch((error: AxiosError<IAxiosResponseData>) => {
             state.error = error;
             notifyError(`Ping ${baseURL} (${name} backend): ${error.message}`);
           });
@@ -194,9 +202,7 @@ export function defineBackendStore(
 
         // Add token to axios instance header.
         if (state.accessToken) {
-          axiosInstance.defaults.headers.common[
-            options?.axiosHeaderTokenValue || "AccessToken"
-          ] = state.accessToken;
+          axiosInstance.defaults.headers.common[options?.axiosHeaderTokenValue || "AccessToken"] = state.accessToken;
         }
       };
 
@@ -241,6 +247,6 @@ export function defineBackendStore(
           storage: sessionStorage,
         },
       ],
-    }
+    },
   );
 }

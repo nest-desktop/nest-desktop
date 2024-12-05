@@ -4,20 +4,16 @@
       <v-row>
         <v-col cols="6">
           <v-text-field
-            @update:model-value="updateModelId"
+            v-model="model.state.label"
             class="py-1"
             density="compact"
             label="model label"
-            v-model="model.state.label"
+            @update:model-value="updateModelId"
           />
         </v-col>
 
         <v-col cols="6">
-          <NESTMLModelSelect
-            :model="(model as NESTModel)"
-            @update:model-value="updateOnSelect"
-            class="pt-1"
-          />
+          <NESTMLModelSelect :model="(model as NESTModel)" class="pt-1" @update:model-value="updateOnSelect" />
         </v-col>
       </v-row>
 
@@ -37,8 +33,8 @@
       />
 
       <v-spacer />
-      <v-btn @click="closeDialog(true)" text="create" title="Create" />
-      <v-btn @click="closeDialog(false)" text="cancel" title="Cancel" />
+      <v-btn text="create" title="Create" @click="closeDialog(true)" />
+      <v-btn text="cancel" title="Cancel" @click="closeDialog(false)" />
     </v-card-actions>
   </v-card>
 </template>
@@ -52,11 +48,9 @@ const props = defineProps<{ modelValue: string }>();
 const model = ref(new NESTModel({ custom: true }));
 
 const emit = defineEmits(["closeDialog"]);
-const closeDialog = (response: boolean) =>
-  emit("closeDialog", response ? model.value : undefined);
+const closeDialog = (response: boolean) => emit("closeDialog", response ? model.value : undefined);
 
-const updateModelId = (modelLabel: string) =>
-  nextTick(() => model.value.replaceModelId(modelLabel));
+const updateModelId = (modelLabel: string) => nextTick(() => model.value.replaceModelId(modelLabel));
 
 const updateOnSelect = () => {
   const modelLabel = model.value.state.label;

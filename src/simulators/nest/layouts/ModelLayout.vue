@@ -2,7 +2,7 @@
   <ModelNav color="nest-model">
     <template #newModel>
       <v-fab
-        @click="dialogNewModel()"
+        v-show="appStore.currentSimulator.backends.nestml.state.enabled"
         class="ms-4"
         color="primary"
         icon="mdi:mdi-plus"
@@ -11,14 +11,12 @@
         absolute
         offset
         title="Create a new model"
-        v-show="appStore.currentSimulator.backends.nestml.state.enabled"
+        @click="dialogNewModel()"
       />
     </template>
   </ModelNav>
 
-  <template
-    v-if="modelStore.model && modelStore.model.id === modelStore.state.modelId"
-  >
+  <template v-if="modelStore.model && modelStore.model.id === modelStore.state.modelId">
     <ModelBar color="nest-model">
       <template #modelExplorer>
         <v-tab
@@ -39,7 +37,7 @@
         <ModelSelectProjectMenu
           :disabled="!modelStore.model.isNeuron"
           :projects
-          :modelValue="modelStore.state.projectId"
+          :model-value="modelStore.state.projectId"
           @update:model-value="(projectId: string) => modelStore.selectProject(projectId, updateProject)"
         />
 
@@ -48,20 +46,15 @@
 
       <template #prependBtn>
         <v-btn
-          @click="openNESTModuleDialog()"
+          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
-          v-if="appStore.currentSimulator.backends.nestml.state.enabled"
+          @click="openNESTModuleDialog()"
         />
       </template>
 
-      <v-btn
-        @click="openNESTModuleDialog()"
-        prepend-icon="mdi:mdi-memory"
-        text="module"
-        title="Generate module"
-      />
+      <v-btn prepend-icon="mdi:mdi-memory" text="module" title="Generate module" @click="openNESTModuleDialog()" />
 
       <template #prependTabs>
         <v-tab
@@ -92,7 +85,6 @@ import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
 import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vue";
-import { TModelStore } from "@/stores/model/defineModelStore";
 import { mountModelLayout } from "@/helpers/routes";
 
 import NewModelDialog from "../components/dialog/NewModelDialog.vue";
@@ -107,14 +99,12 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 import { updateProject, useNESTModelStore } from "../stores/model/modelStore";
-const modelStore: TModelStore = useNESTModelStore();
+const modelStore = useNESTModelStore();
 
 import { useNESTModuleStore } from "../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
-const modelDBStore = computed(
-  () => appStore.currentSimulator.stores.modelDBStore
-);
+const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
 
 const projects: { id: string; name: string; icon: string }[] = [
   {
@@ -175,17 +165,14 @@ const dialogNewModel = () => {
     },
     text: "",
     title: "",
-    // @ts-ignore - Dialog only returns string.
+    // @ts-expect-error Vuetify3 Dialog only returns string.
   }).then((model: NESTModel | undefined) => {
     if (model) {
       modelDBStore.value.state.models.unshift(model);
       modelStore.state.modelId = model.id;
 
       // Add model to first module.
-      if (
-        moduleStore.state.modules.length > 0 &&
-        !moduleStore.state.modules[0].models.includes(model.id)
-      ) {
+      if (moduleStore.state.modules.length > 0 && !moduleStore.state.modules[0].models.includes(model.id)) {
         moduleStore.state.modules[0].models.push(model.id);
       }
 

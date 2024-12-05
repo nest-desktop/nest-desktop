@@ -9,7 +9,7 @@ import { BaseObj } from "../common/base";
 import { IConfigProps } from "../common/config";
 import { IDoc } from "../common/database";
 import { IParamProps } from "../common/parameter";
-import { IModelParamProps, ModelParameter } from "./modelParameter";
+import { ModelParameter } from "./modelParameter";
 
 export interface IModelProps extends IDoc {
   id?: string;
@@ -17,15 +17,15 @@ export interface IModelProps extends IDoc {
   elementType?: TElementType;
   favorite?: boolean;
   label?: string;
-  params?: IModelParamProps[];
+  params?: IParamProps[];
   recordables?: (IModelStateProps | string)[];
   states?: (IModelStateProps | string)[];
 }
 
 export interface IModelStateProps {
-  id: string,
-  label: string,
-  unit?: string,
+  id: string;
+  label?: string;
+  unit?: string;
 }
 
 interface IBaseModelState {
@@ -197,7 +197,7 @@ export class BaseModel extends BaseObj {
    * Add a parameter to the model specifications.
    * @param paramProps parameter props
    */
-  addParameter(paramProps: IModelParamProps): void {
+  addParameter(paramProps: IParamProps): void {
     this._params[paramProps.id] = new ModelParameter(this, paramProps);
   }
 
@@ -258,9 +258,8 @@ export class BaseModel extends BaseObj {
       step: 1,
       value,
     };
-    if (Array.isArray(value)) {
-      paramProps.component = "arrayInput";
-    }
+    if (Array.isArray(value)) paramProps.component = "arrayInput";
+
     this.addParameter(paramProps);
     // this._params.sort();
   }
@@ -283,22 +282,14 @@ export class BaseModel extends BaseObj {
       elementType: this._elementType,
       id: this._id,
       label: this.state.label,
-      params: Object.values(this._params).map((param: ModelParameter) =>
-        param.toJSON()
-      ),
+      params: Object.values(this._params).map((param: ModelParameter) => param.toJSON()),
       version: process.env.APP_VERSION,
     };
 
-    if (this._favorite) {
-      modelProps.favorite = true;
-    }
+    if (this._favorite) modelProps.favorite = true;
 
     // Add model states if provided.
-    if (this.states.length > 0) {
-      modelProps.states = this.states.map(
-        (state: IModelStateProps | string) => state
-      );
-    }
+    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps | string) => state);
 
     return modelProps;
   }
@@ -321,9 +312,7 @@ export class BaseModel extends BaseObj {
     }
 
     // Update the model parameters.
-    if (modelProps.params) {
-      this.updateParameters(modelProps.params);
-    }
+    if (modelProps.params) this.updateParameters(modelProps.params);
 
     this.updateHash();
   }
@@ -341,15 +330,13 @@ export class BaseModel extends BaseObj {
 
   /**
    * Update the model parameters.
-   * @param modelParams model parameter props
+   * @param modelParams parameter props
    */
-  updateParameters(modelParamsProps: IModelParamProps[]): void {
+  updateParameters(modelParamsProps: IParamProps[]): void {
     this.logger.trace("update model parameters");
 
     this._params = {};
-    modelParamsProps.forEach((modelParamProps: IModelParamProps) => {
-      this.addParameter(modelParamProps);
-    });
+    modelParamsProps.forEach((modelParamProps: IParamProps) => this.addParameter(modelParamProps));
   }
 
   /**
@@ -357,14 +344,10 @@ export class BaseModel extends BaseObj {
    * @param statesProps list of model state props or string
    */
   updateStates(statesProps: (IModelStateProps | string)[]): void {
-    this._states = statesProps.map(
-      (stateProps: IModelStateProps | string) =>
-        stateProps instanceof Object
-          ? stateProps
-          : this.config?.localStorage.states.find(
-              (state: IModelStateProps) =>
-                state.id === stateProps
-            )
+    this._states = statesProps.map((stateProps: IModelStateProps | string) =>
+      stateProps instanceof Object
+        ? stateProps
+        : this.config?.localStorage.states.find((state: IModelStateProps) => state.id === stateProps),
     );
   }
 }

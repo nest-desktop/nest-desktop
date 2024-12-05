@@ -1,9 +1,9 @@
 // networkGraph.ts
 
-import { Selection, select } from "d3";
+import { select } from "d3";
 import { Ref, UnwrapRef, nextTick, reactive, watch } from "vue";
 
-import { TConnection, TNetwork, TNode } from "@/types";
+import { TConnection, TNetwork, TNode, TSelection } from "@/types";
 import { debounce } from "@/utils/events";
 
 import { BaseObj } from "../common/base";
@@ -30,7 +30,7 @@ export class BaseNetworkGraph extends BaseObj {
   private _nodeGraph: NodeGraph;
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
-  private _selector: Selection<any, any, null, undefined>;
+  private _selector: TSelection;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
   public _network: TNetwork;
@@ -60,11 +60,7 @@ export class BaseNetworkGraph extends BaseObj {
       hash: "",
     });
 
-    this._resizeObserver = new ResizeObserver(
-      debounce(() => {
-        this._workspace.updateTransform();
-      })
-    );
+    this._resizeObserver = new ResizeObserver(debounce(() => this._workspace.updateTransform()));
   }
 
   get connectionGraph(): ConnectionGraph {
@@ -73,7 +69,7 @@ export class BaseNetworkGraph extends BaseObj {
 
   get network(): TNetwork {
     return this._network;
-    // const projectStore: TProjectStore = useProjectStore();
+    // const projectStore = useProjectStore();
     // return projectStore.state.project.network;
   }
 
@@ -89,7 +85,7 @@ export class BaseNetworkGraph extends BaseObj {
     return this._resizeObserver;
   }
 
-  get selector(): Selection<any, any, null, undefined> {
+  get selector(): TSelection {
     return this._selector;
   }
 
@@ -125,9 +121,7 @@ export class BaseNetworkGraph extends BaseObj {
       select(event.sourceEvent.srcElement.parentNode).classed("active", false);
       select(event.sourceEvent.srcElement).style("cursor", "pointer");
     }
-    if (this.network) {
-      this.network.clean();
-    }
+    if (this.network) this.network.clean();
 
     this._workspace?.updateTransform();
   }
@@ -148,15 +142,12 @@ export class BaseNetworkGraph extends BaseObj {
         this.network.connections.state.selectedNode,
         this.hash,
       ],
-      () => this.render()
+      () => this.render(),
     );
 
     watch(
-      () => [
-        this.network.nodes.all.length,
-        this.network.connections.all.length,
-      ],
-      () => this.update()
+      () => [this.network.nodes.all.length, this.network.connections.all.length],
+      () => this.update(),
     );
   }
 
@@ -167,7 +158,7 @@ export class BaseNetworkGraph extends BaseObj {
    */
   openContextMenu(
     target: [number, number],
-    props: { connection?: TConnection; node?: TNode; nodeGroup?: NodeGroup }
+    props: { connection?: TConnection; node?: TNode; nodeGroup?: NodeGroup },
   ): void {
     this.logger.trace("open context menu");
 
@@ -177,8 +168,7 @@ export class BaseNetworkGraph extends BaseObj {
       return;
     }
 
-    this._state.contextMenu.connection =
-      (props.connection as TConnection) || null;
+    this._state.contextMenu.connection = (props.connection as TConnection) || null;
     this._state.contextMenu.node = (props.node as TNode) || null;
     this._state.contextMenu.nodeGroup = (props.nodeGroup as NodeGroup) || null;
 
@@ -229,9 +219,7 @@ export class BaseNetworkGraph extends BaseObj {
         model: node.modelId,
         size: node.size,
       })),
-      connections: this.network.connections.all.map(
-        (connection: TConnection) => connection.idx
-      ),
+      connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
     });
   }
 }

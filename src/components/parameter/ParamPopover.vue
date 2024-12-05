@@ -10,7 +10,7 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="param.changes()" text="update parameter" />
+          <v-btn text="update parameter" @click="param.changes()" />
         </v-card-actions>
       </v-card>
     </v-menu>

@@ -4,12 +4,10 @@ import { TNode } from "@/types";
 
 import { Activity, IActivityProps, IEventProps } from "./activity";
 
-interface ISpikeActivityProps extends IActivityProps {}
-
 export class SpikeActivity extends Activity {
   private _times: number[][] = [];
 
-  constructor(recorder: TNode, activityProps: ISpikeActivityProps = {}) {
+  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
     super(recorder, activityProps);
   }
 
@@ -24,9 +22,7 @@ export class SpikeActivity extends Activity {
    * Get ISI of a node.
    */
   getISI(times: number[]): number[] {
-    if (times.length <= 1) {
-      return [0];
-    }
+    if (times.length <= 1) return [0];
 
     times.sort((a: number, b: number) => a - b);
     const values: number[] = [];
@@ -52,11 +48,7 @@ export class SpikeActivity extends Activity {
   getVariance(values: number[]): number {
     const n: number = values.length;
     const avg: number = this.getAverage(values);
-    return (
-      values
-        .map((x: number) => Math.pow(x - avg, 2))
-        .reduce((a: number, b: number) => a + b) / n
-    );
+    return values.map((x: number) => Math.pow(x - avg, 2)).reduce((a: number, b: number) => a + b) / n;
   }
 
   /**
@@ -87,7 +79,7 @@ export class SpikeActivity extends Activity {
   /**
    * Post-update spike activity.
    */
-  override postUpdate(activityProps: ISpikeActivityProps): void {
+  override postUpdate(activityProps: IActivityProps): void {
     if (activityProps.events == undefined) return;
 
     this.updateTimes(activityProps.events);
@@ -105,8 +97,6 @@ export class SpikeActivity extends Activity {
     )
       return;
 
-    eventProps.senders.forEach((sender: number, idx: number) => {
-      this._times[sender].push(this.events.times[idx]);
-    });
+    eventProps.senders.forEach((sender: number, idx: number) => this._times[sender].push(this.events.times[idx]));
   }
 }

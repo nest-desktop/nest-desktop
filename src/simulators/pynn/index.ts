@@ -1,8 +1,6 @@
 // pynn/index.ts
 
 import { defineViewStore } from "@/stores/defineViewStore";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 import { ISimulatorProps } from "../";
 import iconSet from "./components/iconSet";
@@ -22,8 +20,8 @@ export const pynn: ISimulatorProps = {
   id: "pynn",
   init: () => {
     // Initialize stores
-    const modelDBStore: TModelDBStore = usePyNNModelDBStore();
-    const projectDBStore: TProjectDBStore = usePyNNProjectDBStore();
+    const modelDBStore = usePyNNModelDBStore();
+    const projectDBStore = usePyNNProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
     const modelStore = usePyNNModelStore();

@@ -1,9 +1,9 @@
 // networkGraphWorkspace.ts
 
-import { Selection, max, min, pointer, select, zoomIdentity } from "d3";
+import { max, min, pointer, select, zoomIdentity } from "d3";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
-import { TNetwork, TNetworkGraph, TNode } from "@/types";
+import { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NetworkGraphDragline } from "./networkGraphDragline";
@@ -26,10 +26,10 @@ export interface INetworkGraphWorkspaceState {
 export class NetworkGraphWorkspace extends BaseObj {
   private _dragline: NetworkGraphDragline;
   private _grid: NetworkGraphGrid;
-  private _handler: Selection<any, any, any, any>;
+  private _handler: TSelection;
   private _networkGraph: TNetworkGraph;
   private _nodeAddPanel: NetworkGraphNodeAddPanel;
-  private _selector: Selection<any, any, any, any>;
+  private _selector: TSelection;
   private _size: { height: number; width: number } = {
     height: 600,
     width: 800,
@@ -92,7 +92,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._nodeAddPanel;
   }
 
-  get selector(): Selection<any, any, any, any> {
+  get selector(): TSelection {
     return this._selector;
   }
 
@@ -100,7 +100,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     return this._state;
   }
 
-  get handler(): Selection<any, any, any, any> {
+  get handler(): TSelection {
     return this._handler;
   }
 
@@ -162,22 +162,17 @@ export class NetworkGraphWorkspace extends BaseObj {
           this.update();
         }
       })
-      .on("keydown", (event: { keyCode: number }) => {
-        this._state.keyCode = event.keyCode;
-      });
+      .on("keydown", (event: { keyCode: number }) => (this._state.keyCode = event.keyCode));
 
     this._handler
       .on("mousemove", (event: MouseEvent) => {
         const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });
-        if (this._state.dragLine) {
-          this._dragline.update(event);
-        }
+        if (this._state.dragLine) this._dragline.update(event);
       })
       .on("click", () => {
         this.reset();
         this.network?.state.unselectAll();
-
         this.update();
       })
       .on("contextmenu", (event: MouseEvent) => {
@@ -200,9 +195,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     this._zoom.transform.y = (this._size.height / 2) * this._zoom.transform.k;
     this._handler.call(
       this._zoom.handler.transform,
-      zoomIdentity
-        .translate(this._zoom.transform.x, this._zoom.transform.y)
-        .scale(this._zoom.transform.k)
+      zoomIdentity.translate(this._zoom.transform.x, this._zoom.transform.y).scale(this._zoom.transform.k),
     );
   }
 
@@ -260,9 +253,7 @@ export class NetworkGraphWorkspace extends BaseObj {
    * Update cursor position.
    * @param position mouse position
    */
-  updateCursorPosition(
-    position: { x: number; y: number } = { x: 0, y: 0 }
-  ): void {
+  updateCursorPosition(position: { x: number; y: number } = { x: 0, y: 0 }): void {
     this._state.cursorPosition.x = position.x;
     this._state.cursorPosition.y = position.y;
   }
@@ -281,11 +272,7 @@ export class NetworkGraphWorkspace extends BaseObj {
    * Update transform of the workspace.
    */
   updateTransform(): void {
-    if (
-      this.network == undefined ||
-      (!this._state.centerNetwork && !this._state.centerSelected)
-    )
-      return;
+    if (this.network == undefined || (!this._state.centerNetwork && !this._state.centerSelected)) return;
 
     const bbox = this._handler.node().getBBox();
 
@@ -295,13 +282,11 @@ export class NetworkGraphWorkspace extends BaseObj {
     const nodes = this.network.nodes;
     const connections = this.network.connections;
     if (this._state.centerSelected && connections.state.selectedNode) {
-      const nodePosition: { x: number; y: number } =
-        connections.state.selectedNode.view.position;
+      const nodePosition: { x: number; y: number } = connections.state.selectedNode.view.position;
       x = nodePosition.x;
       y = nodePosition.y;
     } else if (this._state.centerNetwork && nodes.all.length > 0) {
-      const networkCenterPos: { x: number; y: number } =
-        this.centerNetworkPos();
+      const networkCenterPos: { x: number; y: number } = this.centerNetworkPos();
       x = networkCenterPos.x;
       y = networkCenterPos.y;
     }
@@ -312,9 +297,7 @@ export class NetworkGraphWorkspace extends BaseObj {
     this._state.transforming = true;
     this._handler.call(
       this._zoom.handler.transform,
-      zoomIdentity
-        .translate(this._zoom.transform.x, this._zoom.transform.y)
-        .scale(this._zoom.transform.k)
+      zoomIdentity.translate(this._zoom.transform.x, this._zoom.transform.y).scale(this._zoom.transform.k),
     );
     this._state.transforming = false;
   }

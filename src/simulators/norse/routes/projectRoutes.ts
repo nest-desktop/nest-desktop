@@ -1,10 +1,6 @@
 // projectRoutes.ts
 
-import {
-  projectBeforeEnter,
-  projectNew,
-  projectRedirect,
-} from "@/helpers/routes";
+import { projectBeforeEnter, projectNew, projectRedirect } from "@/helpers/routes";
 
 export default [
   {

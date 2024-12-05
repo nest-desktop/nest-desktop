@@ -1,26 +1,13 @@
 // simulationCode.ts
 
-import {
-  BaseSimulationCode,
-  ISimulationCodeProps,
-} from "@/helpers/simulation/simulationCode";
+import { BaseSimulationCode, ISimulationCodeProps } from "@/helpers/simulation/simulationCode";
 
 import { PyNNSimulation } from "./simulation";
 
-export interface IPyNNSimulationCodeProps extends ISimulationCodeProps {}
-
-const simulationCodeBlocks: string[] = [
-  "importModules",
-  "createNodes",
-  "connectNodes",
-  "runSimulation",
-];
+const simulationCodeBlocks: string[] = ["importModules", "createNodes", "connectNodes", "runSimulation"];
 
 export class PyNNSimulationCode extends BaseSimulationCode {
-  constructor(
-    simulation: PyNNSimulation,
-    simulationCodeProps: IPyNNSimulationCodeProps = {}
-  ) {
+  constructor(simulation: PyNNSimulation, simulationCodeProps: ISimulationCodeProps = {}) {
     simulationCodeProps.templateFilename = "pynn-master";
     super(simulation, {
       blocks: simulationCodeBlocks,

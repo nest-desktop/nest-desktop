@@ -5,10 +5,8 @@ import { TNode } from "@/types";
 import { NodeRecord } from "../node/nodeRecord";
 import { Activity, IActivityProps } from "./activity";
 
-interface IAnalogSignalActivityProps extends IActivityProps {}
-
 export class AnalogSignalActivity extends Activity {
-  constructor(recorder: TNode, activityProps: IAnalogSignalActivityProps = {}) {
+  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
     super(recorder, activityProps);
   }
 
@@ -28,9 +26,7 @@ export class AnalogSignalActivity extends Activity {
   getNodeRecord(groupId: string): NodeRecord | undefined {
     if (this.recorder.records.length === 0) return;
 
-    return this.recorder.records.find(
-      (record: NodeRecord) => record.groupId === groupId
-    );
+    return this.recorder.records.find((record: NodeRecord) => record.groupId === groupId);
   }
 
   /**

@@ -1,17 +1,13 @@
 // synapseParameter.ts
 
+import { BaseSynapseParameter } from "@/helpers/synapse/synapseParameter";
+import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import {
-  BaseSynapseParameter,
-  ISynapseParamProps,
-} from "@/helpers/synapse/synapseParameter";
 
 import { NESTSynapse } from "./synapse";
 
-export interface INESTSynapseParamProps extends ISynapseParamProps {}
-
 export class NESTSynapseParameter extends BaseSynapseParameter {
-  constructor(synapse: NESTSynapse, paramProps: INESTSynapseParamProps) {
+  constructor(synapse: NESTSynapse, paramProps: IParamProps) {
     super(synapse, paramProps);
   }
 
@@ -28,9 +24,7 @@ export class NESTSynapseParameter extends BaseSynapseParameter {
 
   override get types(): any[] {
     const types: any[] = this.config?.localStorage.types;
-    return !this.synapse.isSpatial
-      ? types.filter((type: any) => !type.id.startsWith("spatial"))
-      : types;
+    return !this.synapse.isSpatial ? types.filter((type: any) => !type.id.startsWith("spatial")) : types;
   }
 
   override get parent(): NESTSynapse {
@@ -39,28 +33,22 @@ export class NESTSynapseParameter extends BaseSynapseParameter {
 
   /**
    * Serialize for JSON.
-   * @return synapse parameter props
+   * @return parameter props
    */
-  override toJSON(): INESTSynapseParamProps {
-    const paramProps: INESTSynapseParamProps = {
+  override toJSON(): IParamProps {
+    const paramProps: IParamProps = {
       id: this.id,
       value: this.value,
     };
 
     // Add the value factors if existed.
-    if (this.factors.length > 0) {
-      paramProps.factors = this.factors;
-    }
+    if (this.factors.length > 0) paramProps.factors = this.factors;
 
     // Add the rules for validation if existed.
-    if (this.rules.length > 0) {
-      paramProps.rules = this.rules;
-    }
+    if (this.rules.length > 0) paramProps.rules = this.rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) {
-      paramProps.type = this.typeToJSON();
-    }
+    if (!this.isConstant) paramProps.type = this.typeToJSON();
 
     return paramProps;
   }

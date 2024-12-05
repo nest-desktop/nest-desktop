@@ -5,18 +5,12 @@ import { TParameter } from "@/types";
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "senderCVISIPlot";
@@ -33,8 +27,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
         handleOnUpdate: (param: TParameter) => {
           const p = param as ActivityChartPanelModelParameter;
           const paramValue = p.value as string;
-          p.activityChartPanelModel.params.lineShape.visible =
-            paramValue.includes("lines");
+          p.activityChartPanelModel.params.lineShape.visible = paramValue.includes("lines");
         },
       },
       {
@@ -67,9 +60,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
     const x: number[] = activity.nodeIds;
     const isi: number[][] = activity.ISI();
     const y: number[] = isi.map((ii: number[]) =>
-      ii.length > 1
-        ? activity.getStandardDeviation(ii) / activity.getAverage(ii)
-        : 0
+      ii.length > 1 ? activity.getStandardDeviation(ii) / activity.getAverage(ii) : 0,
     );
 
     const lineShape = this.params.lineShape.value as string;

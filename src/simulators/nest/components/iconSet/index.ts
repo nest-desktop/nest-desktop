@@ -10,7 +10,7 @@ import nestIcon from "./NESTIcon.vue";
 
 import type { IconProps } from "vuetify";
 
-const nestSvgNameToComponent: Record<string, Object> = {
+const nestSvgNameToComponent: Record<string, object> = {
   logo: nestIcon,
   "build-models": buildModelsIcon,
   "copy-model": copyModelIcon,
@@ -18,6 +18,5 @@ const nestSvgNameToComponent: Record<string, Object> = {
 };
 
 export default {
-  component: (props: IconProps) =>
-    h(nestSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(nestSvgNameToComponent[props.icon as string]),
 };

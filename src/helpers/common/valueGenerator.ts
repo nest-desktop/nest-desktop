@@ -1,11 +1,7 @@
 // valueGenerator.ts
 
 import { fill, linSpace, range } from "../../utils/array";
-import {
-  randomNormalArray,
-  randomUniformFloatArray,
-  randomUniformIntArray,
-} from "../../utils/random";
+import { randomNormalArray, randomUniformFloatArray, randomUniformIntArray } from "../../utils/random";
 
 interface IValueGeneratorOption {
   id: string;
@@ -93,10 +89,7 @@ export class ValueGenerator {
    */
   updateParamViews(): void {
     const params: string[] = this._inputs[this._type];
-    this._options.forEach(
-      (option: IValueGeneratorOption) =>
-        (option.visible = params.includes(option.id))
-    );
+    this._options.forEach((option: IValueGeneratorOption) => (option.visible = params.includes(option.id)));
   }
 
   /**
@@ -107,58 +100,39 @@ export class ValueGenerator {
     let array: number[] = [];
     switch (this._type) {
       case "fill":
-        array = fill(
-          parseFloat(p.value as string),
-          parseInt(p.size as string, 0)
-        );
+        array = fill(parseFloat(p.value as string), parseInt(p.size as string, 0));
         break;
       case "range":
-        array = range(
-          parseFloat(p.start as string),
-          parseFloat(p.end as string),
-          parseFloat(p.step as string)
-        );
+        array = range(parseFloat(p.start as string), parseFloat(p.end as string), parseFloat(p.step as string));
         break;
       case "linSpace":
-        array = linSpace(
-          parseFloat(p.start as string),
-          parseFloat(p.end as string),
-          parseInt(p.size as string, 0)
-        );
-        array = array.map((a: number) =>
-          p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))
-        );
+        array = linSpace(parseFloat(p.start as string), parseFloat(p.end as string), parseInt(p.size as string, 0));
+        array = array.map((a: number) => (p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))));
         break;
       case "randomUniformInt":
         array = randomUniformIntArray(
           parseFloat(p.min as string),
           parseFloat(p.max as string),
-          parseInt(p.size as string, 0)
+          parseInt(p.size as string, 0),
         );
         break;
       case "randomUniformFloat":
         array = randomUniformFloatArray(
           parseFloat(p.min as string),
           parseFloat(p.max as string),
-          parseInt(p.size as string, 0)
+          parseInt(p.size as string, 0),
         );
-        array = array.map((a: number) =>
-          p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))
-        );
+        array = array.map((a: number) => (p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))));
         break;
       case "randomNormal":
         array = randomNormalArray(
           parseFloat(p.mu as string),
           parseFloat(p.sigma as string),
-          parseInt(p.size as string, 0)
+          parseInt(p.size as string, 0),
         );
-        array = array.map((a: number) =>
-          p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))
-        );
+        array = array.map((a: number) => (p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))));
     }
-    if (array.length > 0 && this._sort) {
-      array.sort((a: number, b: number) => a - b);
-    }
+    if (array.length > 0 && this._sort) array.sort((a: number, b: number) => a - b);
     return array;
   }
 }

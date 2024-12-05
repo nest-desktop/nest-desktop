@@ -5,26 +5,18 @@ import { AxiosResponse } from "axios";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
 
-export const useInsiteAccessStore = defineBackendStore(
-  "nest",
-  "insite",
-  "http://localhost:52056"
-);
+export const useInsiteAccessStore = defineBackendStore("nest", "insite", "http://localhost:52056");
 
 const getMultimeterAttribute = (
   recorderUnitId: number,
   attribute: string,
-  query?: { fromTime?: number }
+  query?: { fromTime?: number },
 ): Promise<AxiosResponse> => {
   const insiteAccessStore = useInsiteAccessStore();
 
   let path = `nest/multimeters/${recorderUnitId}/attributes/${attribute}/`;
   if (query) {
-    path +=
-      "?" +
-      Object.entries(
-        (queryKey: string, queryValue: string) => queryKey + "=" + queryValue
-      ).join("&");
+    path += "?" + Object.entries((queryKey: string, queryValue: string) => queryKey + "=" + queryValue).join("&");
   }
 
   return insiteAccessStore.axiosInstance().get(path);
@@ -55,11 +47,7 @@ const getSpikes = (query?: {
 
   let path = "nest/spikes/";
   if (query) {
-    path +=
-      "?" +
-      Object.entries(
-        (queryKey: string, queryValue: string) => queryKey + "=" + queryValue
-      ).join("&");
+    path += "?" + Object.entries((queryKey: string, queryValue: string) => queryKey + "=" + queryValue).join("&");
   }
 
   return insiteAccessStore.axiosInstance().get(path);

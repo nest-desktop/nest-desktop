@@ -59,14 +59,7 @@ export class BasePositions {
   }
 
   get posAsString(): string {
-    return (
-      "[" +
-      this._pos.map(
-        (p: number[]) =>
-          "[" + p.map((pp: number) => pp.toFixed(2)).join(",") + "]"
-      ) +
-      "]"
-    );
+    return "[" + this._pos.map((p: number[]) => "[" + p.map((pp: number) => pp.toFixed(2)).join(",") + "]") + "]";
   }
 
   get posExisted(): boolean {
@@ -106,16 +99,8 @@ export class BasePositions {
   }
 
   update(positionProps?: IBasePositionsProps) {
-    if (positionProps?.pos) {
-      this._pos = positionProps.pos;
-    }
-
-    if (positionProps?.numDimensions) {
-      this._numDimensions = positionProps.numDimensions;
-    }
-
-    if (positionProps?.edgeWrap) {
-      this._edgeWrap = positionProps.edgeWrap;
-    }
+    if (positionProps?.pos) this._pos = positionProps.pos;
+    if (positionProps?.numDimensions) this._numDimensions = positionProps.numDimensions;
+    if (positionProps?.edgeWrap) this._edgeWrap = positionProps.edgeWrap;
   }
 }

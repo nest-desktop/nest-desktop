@@ -35,7 +35,7 @@ export class NodeView extends BaseObj {
     viewProps: INodeViewProps = {
       position: { x: 0, y: 0 },
       visible: true,
-    }
+    },
   ) {
     super({ logger: { settings: { minLevel: 3 } } });
 
@@ -54,21 +54,12 @@ export class NodeView extends BaseObj {
     if (this._state.color) {
       return this._state.color;
     } else if (this.node.model?.isRecorder) {
-      const connections: TConnection[] =
-        this.node.network.connections.all.filter(
-          (connection: TConnection) =>
-            connection.sourceIdx === this.node.idx ||
-            connection.targetIdx === this.node.idx
-        );
-      if (
-        connections.length === 1 &&
-        connections[0].sourceIdx !== connections[0].targetIdx
-      ) {
+      const connections: TConnection[] = this.node.network.connections.all.filter(
+        (connection: TConnection) => connection.sourceIdx === this.node.idx || connection.targetIdx === this.node.idx,
+      );
+      if (connections.length === 1 && connections[0].sourceIdx !== connections[0].targetIdx) {
         const connection: TConnection = connections[0];
-        const node: TNode =
-          connection.sourceIdx === this.node.idx
-            ? connection.targetNode
-            : connection.sourceNode;
+        const node: TNode = connection.sourceIdx === this.node.idx ? connection.targetNode : connection.sourceNode;
         return node.view.color;
       }
     }
@@ -90,9 +81,7 @@ export class NodeView extends BaseObj {
   }
 
   get label(): string {
-    if (this._state.label) {
-      return this._state.label;
-    }
+    if (this._state.label) return this._state.label;
 
     let nodes: TNode[];
     let idx: number;
@@ -136,15 +125,15 @@ export class NodeView extends BaseObj {
   }
 
   get opacity(): boolean {
-    const connections = this.node.nodes.network.connections;
-    const nodes = this.node.nodes;
-    return (
-      true ||
-      connections.state.selectedNode == null ||
-      (connections.state.selectedNode != null &&
-        this.node.isSelectedForConnection) ||
-      (nodes.state.focusedNode != null && this.isFocused)
-    );
+    // const connections = this.node.nodes.network.connections;
+    // const nodes = this.node.nodes;
+    return true;
+    // (
+    //   connections.state.selectedNode == null ||
+    //   (connections.state.selectedNode != null &&
+    //     this.node.isSelectedForConnection) ||
+    //   (nodes.state.focusedNode != null && this.isFocused)
+    // );
   }
 
   get position(): { x: number; y: number } {
@@ -166,8 +155,7 @@ export class NodeView extends BaseObj {
     this._state.synWeights = value;
     this._node.connections.forEach((connection: TConnection) => {
       connection.synapse.params.weight.value =
-        (this._state.synWeights === "inhibitory" ? -1 : 1) *
-        Math.abs(connection.synapse.params.weight.value as number);
+        (this._state.synWeights === "inhibitory" ? -1 : 1) * Math.abs(connection.synapse.params.weight.value as number);
       connection.synapse.params.weight.visible = true;
     });
   }
@@ -190,7 +178,7 @@ export class NodeView extends BaseObj {
    * Focus this node.
    */
   focus(): void {
-    this.node.nodes.state.focusedNode = this.node;
+    this.node.nodes.state.focusedNode = this.node as TNode;
   }
 
   /**
@@ -199,18 +187,12 @@ export class NodeView extends BaseObj {
    */
   recordLabel(recordId: string): string {
     const recordables = this.node.recordables;
-    const recordable = recordables.find(
-      (recordable: NodeRecord) => recordable.id == recordId
-    );
-    if (recordable == undefined) {
-      return recordId;
-    }
-    let label = `${recordable.label
-      .slice(0, 1)
-      .toUpperCase()}${recordable.label.slice(1)}`;
-    if (recordable.unit) {
-      label += ` (${recordable.unit})`;
-    }
+    const recordable = recordables.find((recordable: NodeRecord) => recordable.id == recordId);
+    if (!recordable) return recordId;
+
+    let label = `${recordable.label.slice(0, 1).toUpperCase()}${recordable.label.slice(1)}`;
+    if (recordable.unit) label += ` (${recordable.unit})`;
+
     return label;
   }
 
@@ -223,13 +205,8 @@ export class NodeView extends BaseObj {
       position: this._state.position,
     };
 
-    if (this._state.synWeights) {
-      nodeViewProps.synWeights = this._state.synWeights;
-    }
-
-    if (this._state.color) {
-      nodeViewProps.color = this._state.color;
-    }
+    if (this._state.synWeights) nodeViewProps.synWeights = this._state.synWeights;
+    if (this._state.color) nodeViewProps.color = this._state.color;
 
     return nodeViewProps;
   }

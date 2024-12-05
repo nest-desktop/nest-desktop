@@ -3,14 +3,7 @@
 import { UnwrapRef } from "vue";
 
 import { Extension } from "@codemirror/state";
-import {
-  DecorationSet,
-  EditorView,
-  Panel,
-  ViewPlugin,
-  ViewUpdate,
-  showPanel,
-} from "@codemirror/view";
+import { DecorationSet, EditorView, Panel, ViewPlugin, ViewUpdate, showPanel } from "@codemirror/view";
 
 import { highlightLineDeco } from "./highlightLine";
 
@@ -26,11 +19,7 @@ export function simulationCodeError(state: UnwrapRef<IErrorState>): Extension {
 
       constructor(view: EditorView) {
         this.view = view;
-        this.decorations = highlightLineDeco(
-          this.view,
-          state.error.lineNumber,
-          "cm-errorLine"
-        );
+        this.decorations = highlightLineDeco(this.view, state.error.lineNumber, "cm-errorLine");
       }
 
       update(update: ViewUpdate) {
@@ -39,16 +28,12 @@ export function simulationCodeError(state: UnwrapRef<IErrorState>): Extension {
           state.error.message = "";
         }
 
-        this.decorations = highlightLineDeco(
-          this.view,
-          state.error.lineNumber,
-          "cm-errorLine"
-        );
+        this.decorations = highlightLineDeco(this.view, state.error.lineNumber, "cm-errorLine");
       }
     },
     {
       decorations: (v) => v.decorations,
-    }
+    },
   );
 
   function showErrorMessage(): Panel {

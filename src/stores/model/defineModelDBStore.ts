@@ -1,12 +1,12 @@
 // defineModelDBStore.ts
 
-import { Store, _UnwrapAll, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { UnwrapRef, reactive } from "vue";
 
 import { IDoc } from "@/helpers/common/database";
 import { BaseModel, TElementType } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
-import { TModel, TModelDB, TModelProps } from "@/types";
+import { Class, TModel, TModelDB, TModelProps } from "@/types";
 import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
@@ -18,9 +18,6 @@ interface IModelDBStoreState {
   tryImports: number;
 }
 
-type Class<T> = new (...props: any) => T;
-
-export type TModelDBStore = Store<string, any>;
 // {
 //   deleteModel: (model: TModel) => Promise<void>;
 //   findModel: (modelId: string) => TModel | undefined;
@@ -50,15 +47,15 @@ export function defineModelDBStore(
     Model: BaseModel,
     ModelDB: BaseModelDB,
     simulator: "base",
-  }
-): TModelDBStore {
+  },
+) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " model DB store",
   });
 
   const db = new props.ModelDB();
-  // @ts-ignore - Cannot find namespace 'props'.
+  // @ts-expect-error Cannot find namespace 'props'.
   type Model = props.Model;
 
   return defineStore(props.simulator + "-model-db", () => {
@@ -122,10 +119,7 @@ export function defineModelDBStore(
      * Export model from the list.
      * @param modelId model ID
      */
-    const exportModel = (
-      model: Model | TModelProps,
-      withActivities: boolean = false
-    ): void => {
+    const exportModel = (model: Model | TModelProps, withActivities: boolean = false): void => {
       logger.trace("export model:", truncate(model.id));
 
       if (model.doc && withActivities) {
@@ -143,18 +137,14 @@ export function defineModelDBStore(
     const findModel = (modelId: string): Model | undefined => {
       logger.trace("find model:", modelId);
 
-      return state.models.find(
-        (model: UnwrapRef<TModel>) => model.id === modelId
-      ) as Model;
+      return state.models.find((model: UnwrapRef<TModel>) => model.id === modelId) as Model;
     };
 
     /**
      * Get models by elementType.
      * @param elementType  neuron, recorder, stimulator
      */
-    const getModelsByElementType = (
-      elementType: TElementType | "device"
-    ): UnwrapRef<TModel[]> => {
+    const getModelsByElementType = (elementType: TElementType | "device"): UnwrapRef<TModel[]> => {
       logger.trace("get model by element type:", elementType);
 
       return state.models.filter((model: UnwrapRef<TModel>) => {
@@ -170,17 +160,14 @@ export function defineModelDBStore(
      * Get recent model ID.
      * @returns model ID
      */
-    const getRecentModelId = (): string | undefined =>
-      state.models.length > 0 ? state.models[0].id : undefined;
+    const getRecentModelId = (): string | undefined => (state.models.length > 0 ? state.models[0].id : undefined);
 
     /**
      * Check if model list has model.
      * @param modelId model ID
      */
     const hasModel = (modelId: string): boolean => {
-      return state.models.some(
-        (model: UnwrapRef<TModel>) => model.id === modelId
-      );
+      return state.models.some((model: UnwrapRef<TModel>) => model.id === modelId);
     };
 
     /**
@@ -202,9 +189,9 @@ export function defineModelDBStore(
       let promises: Promise<TModelProps>[] = [];
       if (props.modelAssets) {
         promises = props.modelAssets.map(async (file: string) => {
-          return loadJSON(
-            `assets/simulators/${props.simulator}/models/${file}.json`
-          ).then((modelProps: TModelProps) => db.create(modelProps as IDoc));
+          return loadJSON(`assets/simulators/${props.simulator}/models/${file}.json`).then((modelProps: TModelProps) =>
+            db.create(modelProps as IDoc),
+          );
         });
       }
       return Promise.all(promises);

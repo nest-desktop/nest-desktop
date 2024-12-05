@@ -1,36 +1,26 @@
 <template>
   <v-chip
+    v-if="nodeRecord.state"
     :color="nodeRecord.state.color || ''"
     :title="nodeRecord.title"
-    @click.prevent
-    @click.stop
     class="nodeRecordChip"
     label
     size="small"
-    v-if="nodeRecord.state"
+    @click.prevent
+    @click.stop
   >
-    <v-menu
-      :close-on-content-click="false"
-      activator="parent"
-      transition="slide-y-transition"
-    >
+    <v-menu :close-on-content-click="false" activator="parent" transition="slide-y-transition">
       <v-card>
         <ColorPicker
-          :colorScheme
+          v-model="nodeRecord.state.color"
+          :color-scheme
           hide-inputs
           @update:model-value="updateRecordsColor()"
-          v-model="nodeRecord.state.color"
         />
 
         <v-card-actions>
-          <v-select
-            :items="colorSchemes"
-            class="mx-2"
-            density="compact"
-            hide-details
-            v-model="colorScheme"
-          />
-          <v-btn @click="resetColor" size="small" text="reset" />
+          <v-select v-model="colorScheme" :items="colorSchemes" class="mx-2" density="compact" hide-details />
+          <v-btn size="small" text="reset" @click="resetColor" />
         </v-card-actions>
       </v-card>
     </v-menu>
@@ -78,9 +68,7 @@ const resetColor = () => {
  * Triggers when record color is changed.
  */
 const updateRecordsColor = () => {
-  nextTick(() =>
-    nodeRecord.value.node.network.project.activityGraph.activityChartGraph.updateRecordsColor()
-  );
+  nextTick(() => nodeRecord.value.node.network.project.activityGraph.activityChartGraph.updateRecordsColor());
 };
 </script>
 

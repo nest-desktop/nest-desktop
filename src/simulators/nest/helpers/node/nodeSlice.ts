@@ -1,8 +1,9 @@
 // nodeSlice.ts
 
 import { BaseObj } from "@/helpers/common/base";
+import { IParamProps } from "@/helpers/common/parameter";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { INodeParamProps, NodeParameter } from "@/helpers/node/nodeParameter";
+import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";
 
@@ -12,7 +13,7 @@ export class NESTNodeSlice extends BaseObj {
   private _params: Record<string, NodeParameter> = {};
   private _visible: boolean = false;
 
-  constructor(node: NESTNode | NodeGroup, paramsProps: INodeParamProps[] = []) {
+  constructor(node: NESTNode | NodeGroup, paramsProps: IParamProps[] = []) {
     super({
       config: { name: "NESTNodeSlice", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },
@@ -44,9 +45,7 @@ export class NESTNodeSlice extends BaseObj {
       params.push(step);
     }
 
-    const indices = params.map((param: NodeParameter) =>
-      param.disabled ? null : param.value
-    );
+    const indices = params.map((param: NodeParameter) => (param.disabled ? null : param.value));
     return `[${indices.join(":")}]`;
   }
 
@@ -77,12 +76,12 @@ export class NESTNodeSlice extends BaseObj {
   /**
    * Initialize parameters.
    */
-  initParameters(paramsProps: INodeParamProps[] = []): void {
+  initParameters(paramsProps: IParamProps[] = []): void {
     this._params = {};
-    this.config?.localStorage.params.forEach((param: INodeParamProps) => {
+    this.config?.localStorage.params.forEach((param: IParamProps) => {
       if (paramsProps.length > 0) {
-        const paramProps: INodeParamProps | undefined = paramsProps.find(
-          (paramProps: INodeParamProps) => paramProps.id === param.id
+        const paramProps: IParamProps | undefined = paramsProps.find(
+          (paramProps: IParamProps) => paramProps.id === param.id,
         );
         if (paramProps) {
           param.value = paramProps.value;
@@ -99,9 +98,9 @@ export class NESTNodeSlice extends BaseObj {
 
   /**
    * Serialize for JSON.
-   * @return node slice object
+   * @return param props of node slice
    */
-  toJSON(): INodeParamProps[] {
+  toJSON(): IParamProps[] {
     return Object.values(this._params)
       .filter((param: NodeParameter) => !param.disabled)
       .map((param: NodeParameter) => {
@@ -116,8 +115,6 @@ export class NESTNodeSlice extends BaseObj {
    * Update node slice.
    */
   update(): void {
-    if (this._node.isNode && this._params.stop.disabled) {
-      this._params.stop.state.value = this.nodeItem.size;
-    }
+    if (this._node.isNode && this._params.stop.disabled) this._params.stop.state.value = this.nodeItem.size;
   }
 }

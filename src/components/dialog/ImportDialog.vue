@@ -4,45 +4,30 @@
       <v-icon icon="mdi:mdi-import" size="small" />
       Import
 
-      <v-btn @click="closeDialog()" flat icon="mdi:mdi-close" size="small" />
+      <v-btn flat icon="mdi:mdi-close" size="small" @click="closeDialog()" />
     </v-card-title>
 
     <v-toolbar class="px-2" color="transparent" density="compact">
-      <v-btn-toggle
-        class="mr-1"
-        density="compact"
-        mandatory
-        v-model="state.source"
-      >
-        <v-btn
-          :key="index"
-          style="min-width: 40px"
-          v-bind="source"
-          v-for="(source, index) in sources"
-        />
+      <v-btn-toggle v-model="state.source" class="mr-1" density="compact" mandatory>
+        <v-btn v-for="(source, index) in sources" :key="index" style="min-width: 40px" v-bind="source" />
       </v-btn-toggle>
 
       <template v-if="state.source === 'github'">
         <v-btn-toggle
-          @update:model-value="getTreesFromGithub()"
+          v-model="state.githubGroup"
           class="mx-1"
           density="compact"
           mandatory
-          v-model="state.githubGroup"
+          @update:model-value="getTreesFromGithub()"
         >
-          <v-btn
-            :key="index"
-            style="min-width: 40px"
-            v-bind="source"
-            v-for="(source, index) in groups"
-          />
+          <v-btn v-for="(source, index) in groups" :key="index" style="min-width: 40px" v-bind="source" />
         </v-btn-toggle>
 
         <v-select
+          v-model="state.githubSelectedTree"
           :disabled="state.githubTrees.length === 0"
           :items="state.githubTrees"
           :label="state.githubGroup + ' path'"
-          @update:model-value="getFilesFromGithub"
           class="mx-1"
           density="compact"
           flat
@@ -50,13 +35,13 @@
           item-title="path"
           prepend-icon="mdi:mdi-github"
           return-object
-          v-model="state.githubSelectedTree"
+          @update:model-value="getFilesFromGithub"
         />
 
         <v-select
+          v-model="state.githubSelectedFile"
           :disabled="state.githubFiles.length === 0"
           :items="state.githubFiles"
-          @update:model-value="updateURLFromGithub"
           class="mx-1"
           density="compact"
           flat
@@ -64,21 +49,14 @@
           item-title="path"
           label="File"
           return-object
-          v-model="state.githubSelectedFile"
+          @update:model-value="updateURLFromGithub"
         />
 
-        <v-btn
-          @click="fetchProps()"
-          flat
-          prepend-icon="mdi:mdi-download"
-          text="fetch"
-          variant="outlined"
-        />
+        <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" variant="outlined" @click="fetchProps()" />
       </template>
 
       <template v-else-if="state.source === 'drive'">
         <v-file-input
-          @update:model-value="loadProjectsFromDrive"
           density="compact"
           flat
           hide-details
@@ -86,20 +64,17 @@
           show-size
           title="Click to select a file"
           truncate-length="100"
+          @update:model-value="loadProjectsFromDrive"
         >
           <template #append>
-            <v-btn
-              @upload="loadProjectsFromDrive"
-              flat
-              prepend-icon="mdi:mdi-upload"
-              text="upload"
-            />
+            <v-btn flat prepend-icon="mdi:mdi-upload" text="upload" @upload="loadProjectsFromDrive" />
           </template>
         </v-file-input>
       </template>
 
       <template v-else-if="state.source === 'url'">
         <v-text-field
+          v-model="state.url"
           class="ma-0 pa-0"
           clearable
           density="compact"
@@ -109,15 +84,9 @@
           label="URL"
           prepend-icon="mdi:mdi-web"
           title="Please enter the project's URL"
-          v-model="state.url"
         >
           <template #append>
-            <v-btn
-              @click="fetchProps()"
-              flat
-              prepend-icon="mdi:mdi-download"
-              text="fetch"
-            />
+            <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" @click="fetchProps()" />
           </template>
         </v-text-field>
       </template>
@@ -129,6 +98,7 @@
     </v-toolbar>
 
     <v-data-table-virtual
+      v-model="state.selected"
       :group-by="[{ key: 'group', order: 'asc' }]"
       :headers
       :items="state.items"
@@ -137,7 +107,6 @@
       item-value="name"
       return-object
       show-select
-      v-model="state.selected"
     >
       <!-- <template #group-header="{ item, columns, toggleGroup, isGroupOpen }">
             <tr>
@@ -166,11 +135,8 @@
         />
       </template> -->
 
-      <template #item.valid="{ value }">
-        <v-icon
-          :color="value ? 'success' : 'error'"
-          :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'"
-        />
+      <template #[`item.valid`]="{ value }">
+        <v-icon :color="value ? 'success' : 'error'" :icon="value ? 'mdi:mdi-check' : 'mdi:mdi-close'" />
       </template>
 
       <!-- <template #expanded-row="{ columns, item }">
@@ -185,33 +151,29 @@
 
     <v-card-actions>
       <v-btn
-        @click="fetchFromOldDatabase()"
+        v-if="currentSimulator === 'nest'"
         icon="mdi:mdi-database-arrow-up-outline"
         size="small"
         title="fetch from old database"
         variant="text"
-        v-if="currentSimulator === 'nest'"
+        @click="fetchFromOldDatabase()"
       />
 
       <v-spacer />
 
       <v-btn
         :disabled="state.selected.length === 0"
+        prepend-icon="mdi:mdi-import"
+        text="import selected"
         @click="
           () => {
             importSelected();
             closeDialog();
           }
         "
-        prepend-icon="mdi:mdi-import"
-        text="import selected"
       />
-      <v-btn
-        @click="state.items = []"
-        prepend-icon="mdi:mdi-delete-empty-outline"
-        text="clear"
-      />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn prepend-icon="mdi:mdi-delete-empty-outline" text="clear" @click="state.items = []" />
+      <v-btn text="close" @click="closeDialog()" />
     </v-card-actions>
   </v-card>
 </template>
@@ -252,12 +214,8 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
 const currentSimulator = computed(() => appStore.state.simulator);
 
-const modelDBStore = computed(
-  () => appStore.currentSimulator.stores.modelDBStore
-);
-const projectDBStore = computed(
-  () => appStore.currentSimulator.stores.projectDBStore
-);
+const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
+const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
 
 const state = reactive<{
   githubFiles: IGithubTree[];
@@ -339,34 +297,21 @@ const headers = [
 ];
 
 const githubAPI = (group?: string) =>
-  `https://api.github.com/repos/nest-desktop/nest-desktop-${
-    group || state.githubGroup
-  }/git/trees/`;
+  `https://api.github.com/repos/nest-desktop/nest-desktop-${group || state.githubGroup}/git/trees/`;
 const githubRawURL = (group?: string) =>
-  `https://raw.githubusercontent.com/nest-desktop/nest-desktop-${
-    group || state.githubGroup
-  }/${state.githubTag}/`;
+  `https://raw.githubusercontent.com/nest-desktop/nest-desktop-${group || state.githubGroup}/${state.githubTag}/`;
 
 /**
  * Add and validate props.
  */
-const addProps = (
-  dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProjectProps)[]
-) => {
+const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProjectProps)[]) => {
   if (dataRaw == undefined) return;
 
-  const dataProps: (TModelProps | TProjectProps)[] = Array.isArray(dataRaw)
-    ? dataRaw
-    : [dataRaw];
+  const dataProps: (TModelProps | TProjectProps)[] = Array.isArray(dataRaw) ? dataRaw : [dataRaw];
   dataProps.forEach((props: TModelProps | TProjectProps) => {
     let valid = false;
 
-    const group =
-      "elementType" in props
-        ? "model"
-        : "network" in props
-        ? "project"
-        : undefined;
+    const group = "elementType" in props ? "model" : "network" in props ? "project" : undefined;
 
     if (group === undefined) return;
 
@@ -374,6 +319,7 @@ const addProps = (
     let projectProps: TProjectProps;
     let modelProps: TModelProps;
     let name: string = "";
+    let networkProps: TNetworkProps;
 
     switch (group) {
       case "model":
@@ -386,54 +332,43 @@ const addProps = (
         name = projectProps.name || "";
         valid = projectDBStore.value.validateProject(projectProps);
 
-        const networkProps = projectProps.network as TNetworkProps;
+        networkProps = projectProps.network as TNetworkProps;
 
         // Get model Ids from copied models if not installed in NEST Desktop.
         if (networkProps && isNESTNetworkProps(networkProps)) {
           networkProps.models?.forEach((modelProps: INESTCopyModelProps) => {
             if (!modelProps.existing) return;
 
-            if (
-              !modelDBStore.value.hasModel(modelProps.existing) &&
-              !modelIds.includes(modelProps.existing)
-            ) {
+            if (!modelDBStore.value.hasModel(modelProps.existing) && !modelIds.includes(modelProps.existing)) {
               modelIds.push(modelProps.existing);
             }
           });
         }
 
         // Get model Ids from node models if not installed in NEST Desktop.
-        networkProps.nodes?.forEach(
-          (nodeProps: INodeProps | INodeGroupProps) => {
-            if (!("model" in nodeProps)) return;
+        networkProps.nodes?.forEach((nodeProps: INodeProps | INodeGroupProps) => {
+          if (!("model" in nodeProps)) return;
 
-            const nodeItemProps = nodeProps as INodeProps;
-            if (
-              nodeItemProps.model &&
-              !modelDBStore.value.hasModel(nodeItemProps.model) &&
-              !modelIds.includes(nodeItemProps.model)
-            ) {
-              modelIds.push(nodeItemProps.model);
-            }
+          const nodeItemProps = nodeProps as INodeProps;
+          if (
+            nodeItemProps.model &&
+            !modelDBStore.value.hasModel(nodeItemProps.model) &&
+            !modelIds.includes(nodeItemProps.model)
+          ) {
+            modelIds.push(nodeItemProps.model);
           }
-        );
+        });
 
-        axios
-          .get(githubRawURL("models") + `index.json`)
-          .then(
-            (
-              response: AxiosResponse<any, { data: Record<string, string> }>
-            ) => {
-              if (!response.data) return;
+        axios.get(githubRawURL("models") + `index.json`).then((response: AxiosResponse<Record<string, string>>) => {
+          if (!response.data) return;
 
-              modelIds.forEach((modelId: string) => {
-                const path = response.data[modelId];
-                if (!path) return;
+          modelIds.forEach((modelId: string) => {
+            const path = response.data[modelId];
+            if (!path) return;
 
-                getModelFromGithub(path, modelId);
-              });
-            }
-          );
+            getModelFromGithub(path, modelId);
+          });
+        });
 
         break;
     }
@@ -451,30 +386,22 @@ const addProps = (
  * Get model from github.
  */
 const getModelFromGithub = (path: string, modelId: string) => {
-  axios
-    .get(githubRawURL("models") + path)
-    .then(
-      (response: AxiosResponse<any, { data: TModelProps | TModelProps[] }>) => {
-        if (!response.data) return;
+  axios.get(githubRawURL("models") + path).then((response: AxiosResponse<TModelProps | TModelProps[]>) => {
+    if (!response.data) return;
 
-        const modelsProps: TModelProps[] = Array.isArray(response.data)
-          ? response.data
-          : [response.data];
+    const modelsProps: TModelProps[] = Array.isArray(response.data) ? response.data : [response.data];
 
-        const modelProps = modelsProps.find(
-          (modelProps: TModelProps) => modelProps.id === modelId
-        );
-        if (!modelProps) return;
-        const valid = modelDBStore.value.validateModel(modelProps);
+    const modelProps = modelsProps.find((modelProps: TModelProps) => modelProps.id === modelId);
+    if (!modelProps) return;
+    const valid = modelDBStore.value.validateModel(modelProps);
 
-        state.items.push({
-          group: "model",
-          name: modelProps.label || "",
-          props: modelProps,
-          valid,
-        });
-      }
-    );
+    state.items.push({
+      group: "model",
+      name: modelProps.label || "",
+      props: modelProps,
+      valid,
+    });
+  });
 };
 
 /**
@@ -484,13 +411,9 @@ const getFilesFromGithub = (tree: IGithubTree) => {
   state.githubSelectedFile = { path: "" } as IGithubTree;
   state.githubFiles = [];
 
-  axios
-    .get(githubAPI() + tree.sha)
-    .then((response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
-      state.githubFiles = response.data.tree.filter(
-        (d: IGithubTree) => d.type === "blob" && d.path.endsWith(".json")
-      );
-    });
+  axios.get(githubAPI() + tree.sha).then((response: AxiosResponse<{ tree: IGithubTree[] }>) => {
+    state.githubFiles = response.data.tree.filter((d: IGithubTree) => d.type === "blob" && d.path.endsWith(".json"));
+  });
 };
 
 /**
@@ -504,13 +427,9 @@ const getTreesFromGithub = () => {
   nextTick(() => {
     axios
       .get(githubAPI() + `${state.githubTag}?recursive=true`)
-      .then(
-        (response: AxiosResponse<any, { data: { tree: IGithubTree[] } }>) => {
-          state.githubTrees = response.data.tree.filter(
-            (tree: IGithubTree) => tree.type === "tree"
-          );
-        }
-      );
+      .then((response: AxiosResponse<{ tree: IGithubTree[] }>) => {
+        state.githubTrees = response.data.tree.filter((tree: IGithubTree) => tree.type === "tree");
+      });
   });
 };
 
@@ -521,42 +440,33 @@ const fetchFromOldDatabase = () => {
   const modelDB = new BaseModelDB("MODEL_STORE");
   const projectDB = new BaseProjectDB("PROJECT_STORE");
 
-  modelDB
-    .list("updatedAt", true)
-    .then((modelsProps: TModelProps[]) =>
-      modelsProps.forEach((modelProps: TModelProps) => {
-        delete modelProps._id;
-        delete modelProps._rev;
-        addProps(modelProps);
-      })
-    );
+  modelDB.list("updatedAt", true).then((modelsProps: TModelProps[]) =>
+    modelsProps.forEach((modelProps: TModelProps) => {
+      delete modelProps._id;
+      delete modelProps._rev;
+      addProps(modelProps);
+    }),
+  );
 
-  projectDB
-    .list("updatedAt", true)
-    .then((projectsProps: TProjectProps[]) =>
-      projectsProps.forEach((projectProps: TProjectProps) => {
-        delete projectProps._id;
-        delete projectProps._rev;
-        addProps(projectProps);
-      })
-    );
-}
+  projectDB.list("updatedAt", true).then((projectsProps: TProjectProps[]) =>
+    projectsProps.forEach((projectProps: TProjectProps) => {
+      delete projectProps._id;
+      delete projectProps._rev;
+      addProps(projectProps);
+    }),
+  );
+};
 
 /**
  * Fetch props from URL.
  */
 const fetchProps = (url?: string) => {
   if (state.url.length === 0) return;
-  axios.get(url || state.url).then(
-    (
-      response: AxiosResponse<
-        any,
-        {
-          data: TModelProps | TProjectProps | (TProjectProps | TModelProps)[];
-        }
-      >
-    ) => addProps(response.data)
-  );
+  axios
+    .get(url || state.url)
+    .then((response: AxiosResponse<TModelProps | TProjectProps | (TProjectProps | TModelProps)[]>) =>
+      addProps(response.data),
+    );
 };
 
 /**
@@ -598,7 +508,7 @@ const loadProjectsFromDrive = (files: File | File[]) => {
   const fileReader = new FileReader();
   fileReader.readAsText(file);
   fileReader.addEventListener("load", (event: ProgressEvent<FileReader>) =>
-    addProps(JSON.parse(event.target?.result as string))
+    addProps(JSON.parse(event.target?.result as string)),
   );
 };
 
@@ -610,8 +520,7 @@ const updateURLFromGithub = () => {
     const tree = state.githubSelectedTree;
     if (!tree && !Object.keys(tree).includes("path")) return;
 
-    state.url =
-      githubRawURL() + `${tree.path}/${state.githubSelectedFile.path}`;
+    state.url = githubRawURL() + `${tree.path}/${state.githubSelectedFile.path}`;
   });
 };
 </script>

@@ -1,10 +1,9 @@
 <template>
   <v-slider
+    v-model="tickIdx"
     :max
     :min="0"
     :ticks
-    @click:append="increment"
-    @click:prepend="decrement"
     append-icon="mdi:mdi-plus"
     class="mx-1 py-3 tick-slider"
     color="grey"
@@ -15,14 +14,19 @@
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    v-model="tickIdx"
+    @click:append="increment"
+    @click:prepend="decrement"
   >
     <template #append>
-      <div class="unit">{{ props.unit }}</div>
+      <div class="unit">
+        {{ props.unit }}
+      </div>
     </template>
 
     <template #tick-label="{ index }">
-      <div class="label">{{ state.ticks[index] }}</div>
+      <div class="label">
+        {{ state.ticks[index] }}
+      </div>
     </template>
   </v-slider>
 </template>
@@ -59,9 +63,7 @@ const tickIdx = computed({
   },
 });
 
-const ticks = computed(() =>
-  Object.keys(state.ticks).map((tick: string) => JSON.parse(tick))
-);
+const ticks = computed(() => Object.keys(state.ticks).map((tick: string) => JSON.parse(tick)));
 
 const max = computed(() => ticks.value.length - 1);
 

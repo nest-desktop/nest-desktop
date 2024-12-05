@@ -1,13 +1,7 @@
 <template>
   <v-toolbar color="transparent" density="compact">
     <v-btn-toggle class="mx-1" color="blue" multiple rounded="0" variant="text">
-      <IconBtn
-        :icon="item.icon"
-        :key="index"
-        :title="item.title"
-        size="x-small"
-        v-for="(item, index) in codeBlocks"
-      />
+      <IconBtn v-for="(item, index) in codeBlocks" :key="index" :icon="item.icon" :title="item.title" size="x-small" />
     </v-btn-toggle>
     <v-spacer />
     <v-btn icon="mdi:mdi-download" size="small" />
@@ -23,11 +17,7 @@
     title="Edit mode"
   /> -->
 
-  <SimulationCodeMirror
-    :disabled="state.disabled"
-    :simulation="simulation"
-    v-if="simulation"
-  />
+  <SimulationCodeMirror v-if="simulation" :disabled="state.disabled" :simulation="simulation" />
 </template>
 
 <script lang="ts" setup>

@@ -2,6 +2,8 @@
 
 import { loadJSON } from "@/utils/fetch";
 
+type TValue = any;
+
 export interface IConfigProps {
   name: string;
   simulator?: string;
@@ -15,9 +17,7 @@ export class Config {
     this._name = configProps.name;
     this._simulator = configProps.simulator;
 
-    if (this._name != undefined && !this.isValid) {
-      this.upgrade();
-    }
+    if (this._name != undefined && !this.isValid) this.upgrade();
   }
 
   get configItemName(): string {
@@ -30,38 +30,33 @@ export class Config {
 
   get isValid(): boolean {
     const storedData = this.localStorage;
-    if (process.env.APP_VERSION == undefined || storedData == undefined) {
-      return false;
-    }
+    if (process.env.APP_VERSION == undefined || storedData == undefined) return false;
+
     const appVersion: string[] = process.env.APP_VERSION.split(".");
     const configVersion: string[] = storedData.version?.split(".");
-    return configVersion
-      ? appVersion[0] === configVersion[0] && appVersion[1] === configVersion[1]
-      : false;
+    return configVersion ? appVersion[0] === configVersion[0] && appVersion[1] === configVersion[1] : false;
   }
 
-  get localStorage(): any {
+  get localStorage(): TValue {
     // Check if item is existed in localStorage.
     if (this.configItemName in localStorage) {
       const dataJSON: string | null = localStorage.getItem(this.configItemName);
-      if (dataJSON) {
-        return JSON.parse(dataJSON);
-      }
+      if (dataJSON) return JSON.parse(dataJSON);
     }
     return {};
   }
 
-  set localStorage(value: any) {
-    value.version = process.env.APP_VERSION; // Update version of config in localStorage.
+  set localStorage(value: TValue) {
+    value.version = process.env.APP_VERSION as string; // Update version of config in localStorage.
     const dataJSON = JSON.stringify(value); // Convert object to string.
     localStorage.setItem(this.configItemName, dataJSON); // Save item in localsStorage.
   }
 
-  copy(item: any): any {
+  copy(item: Record<string, TValue>): Record<string, TValue> {
     return { ...item };
   }
 
-  async import(): Promise<any> {
+  async import(): Promise<Record<string, TValue>> {
     const path = this._simulator
       ? `assets/simulators/${this._simulator}/config/${this._name}`
       : `assets/config/${this._name}`;
@@ -72,19 +67,17 @@ export class Config {
     localStorage.removeItem(this.configItemName);
   }
 
-  update(value: any): void {
-    const storedData: any = this.localStorage;
-    Object.entries(value).forEach((v: any) => (storedData[v[0]] = v[1]));
+  update(value: Record<string, TValue>): void {
+    const storedData: Record<string, TValue> = this.localStorage;
+    Object.entries(value).forEach((v: [string, TValue]) => (storedData[v[0]] = v[1]));
     this.localStorage = storedData;
   }
 
   upgrade(): void {
     this.import().then((importedData) => {
-      const storedData: any = this.localStorage || {};
-      Object.entries(importedData).forEach((entry: any) => {
-        if (!(entry[0] in storedData)) {
-          storedData[entry[0]] = entry[1];
-        }
+      const storedData: Record<string, TValue> = this.localStorage || {};
+      Object.entries(importedData).forEach((entry: [string, TValue]) => {
+        if (!(entry[0] in storedData)) storedData[entry[0]] = entry[1];
       });
       this.localStorage = storedData;
     });

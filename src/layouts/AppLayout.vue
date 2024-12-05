@@ -8,11 +8,7 @@
 
     <router-view />
 
-    <v-overlay
-      :model-value="appStore.state.loading"
-      class="align-center justify-center"
-      scroll-strategy="block"
-    >
+    <v-overlay :model-value="appStore.state.loading" class="align-center justify-center" scroll-strategy="block">
       <v-card>
         <v-card-text>
           <v-row align-content="center" class="fill-height" justify="center">

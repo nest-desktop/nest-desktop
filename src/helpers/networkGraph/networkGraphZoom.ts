@@ -1,11 +1,12 @@
 // networkGraphZoom.ts
 
-import { ZoomBehavior, zoom } from "d3";
+import { zoom } from "d3";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { TZoomBehavior } from "@/types";
 
 export class NetworkGraphZoom {
-  private _handler: ZoomBehavior<any, any>;
+  private _handler: TZoomBehavior;
   private _transform: { k: number; x: number; y: number } = {
     k: 1,
     x: 0,
@@ -20,7 +21,7 @@ export class NetworkGraphZoom {
     this.init();
   }
 
-  get handler(): ZoomBehavior<any, any> {
+  get handler(): TZoomBehavior {
     return this._handler;
   }
 
@@ -46,9 +47,7 @@ export class NetworkGraphZoom {
         [this.width, this.height],
       ])
       .scaleExtent([0.5, 2])
-      .on("start", () => {
-        this._workspace.handler.style("cursor", "move");
-      })
+      .on("start", () => this._workspace.handler.style("cursor", "move"))
       .on("zoom", ({ transform }) => {
         this._transform = transform;
         if (this._workspace.state.transforming) {

@@ -6,12 +6,10 @@ import { TModel } from "@/types";
 
 import { NESTCopyModel } from "./copyModel";
 
-export interface INESTCopyModelParamProps extends IParamProps {}
-
 export class NESTCopyModelParameter extends BaseParameter {
   private _copyModel: NESTCopyModel;
 
-  constructor(model: NESTCopyModel, paramProps: INESTCopyModelParamProps) {
+  constructor(model: NESTCopyModel, paramProps: IParamProps) {
     super(paramProps, { minLevel: 3 });
     this._copyModel = model;
   }
@@ -45,9 +43,7 @@ export class NESTCopyModelParameter extends BaseParameter {
     if (value && !isVisible) {
       this.parent.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id
-      );
+      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
     }
   }
 
@@ -55,8 +51,8 @@ export class NESTCopyModelParameter extends BaseParameter {
    * Serialize for JSON.
    * @return model parameter object
    */
-  override toJSON(): INESTCopyModelParamProps {
-    const paramProps: INESTCopyModelParamProps = {
+  override toJSON(): IParamProps {
+    const paramProps: IParamProps = {
       id: this.id,
       component: this.component,
       label: this.label,
@@ -74,9 +70,7 @@ export class NESTCopyModelParameter extends BaseParameter {
     }
 
     // Add rules for validation if existed.
-    if (this.rules.length > 0) {
-      paramProps.rules = this.rules;
-    }
+    if (this.rules.length > 0) paramProps.rules = this.rules;
 
     return paramProps;
   }

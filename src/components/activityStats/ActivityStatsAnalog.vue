@@ -1,49 +1,49 @@
 <template>
   <v-data-table-virtual
+    :key="state.activityHash"
+    v-model="activity.state.selected"
     :headers
     :items="state.items"
-    :key="state.activityHash"
     :loading="state.loading"
-    @update:model-value="updateGraph()"
     class="activityStatsAnalog"
     density="compact"
     fixed-header
     loading-text="Loading... Please wait"
     show-select
-    v-model="activity.state.selected"
+    @update:model-value="updateGraph()"
   >
     <template #top>
       <v-select
+        v-if="activity.recorder.model.isMultimeter"
+        v-model="state.selectedRecord"
         :readonly="activity.recorder.records.length < 2"
         :items="activity.recorder.records"
-        @update:model-value="selected()"
         chips
         class="mr-1"
         density="compact"
         hide-details
         item-title="title"
         item-value="id"
-        v-if="activity.recorder.model.isMultimeter"
-        v-model="state.selectedRecord"
+        @update:model-value="selected()"
       >
-        <template #chip="{ item }" style="width: 100%">
+        <template #chip="{ item }">
           {{ item.title }}
           <NodeRecordChip
-            :nodeRecord="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
-            style="position: absolute; right: 4px"
             v-if="item.raw.groupId"
+            :node-record="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+            style="position: absolute; right: 4px"
           />
         </template>
 
-        <template #item="{ item, props }">
-          <v-list-item v-bind="props" density="compact" title="">
+        <template #item="{ item, props: itemProps }">
+          <v-list-item v-bind="itemProps" density="compact" title="">
             <v-row no-gutters>
               {{ item.title }}
               <v-spacer />
               <NodeRecordChip
-                :nodeRecord="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
-                class="my-auto"
                 v-if="item.raw.groupId"
+                :node-record="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+                class="my-auto"
               />
             </v-row>
           </v-list-item>
@@ -51,39 +51,39 @@
       </v-select>
     </template>
 
-    <template #item.id="{ item }">
+    <template #[`item.id`]="{ item }">
       <span style="color: rgb(var(--v-theme-primary))">{{ item.id }}</span>
     </template>
 
-    <template #item.mean="{ item }">
+    <template #[`item.mean`]="{ item }">
       <span style="color: rgb(var(--v-theme-primary))">
         {{ toFixed(Number(item.mean)) }}
       </span>
     </template>
 
-    <template #item.std="{ item }">
+    <template #[`item.std`]="{ item }">
       <span style="color: rgb(var(--v-theme-primary))">
         {{ toFixed(Number(item.std)) }}
       </span>
     </template>
 
-    <template #item.actions="{ index }">
+    <template #[`item.actions`]="{ index }">
       <v-menu transition="slide-y-transition">
-        <template #activator="{ props }">
+        <template #activator="{ props: iconProps }">
           <v-icon
             :color="record.state.traceColors[index]"
             class="me-2"
             icon="mdi:mdi-format-color-fill"
             size="small"
-            v-bind="props"
+            v-bind="iconProps"
           />
         </template>
 
         <ColorPicker
-          @update:model-value="updateRecordsColor()"
-          colorScheme="google20c"
-          hide-inputs
           v-model="record.state.traceColors[index]"
+          color-scheme="google20c"
+          hide-inputs
+          @update:model-value="updateRecordsColor()"
         />
       </v-menu>
     </template>
@@ -93,16 +93,16 @@
         <table class="py-2">
           <tbody>
             <tr>
-              <td style="width: 48px" >
+              <td style="width: 48px">
                 <v-btn
-                  @click="unselectAll()"
                   icon="mdi:mdi-checkbox-blank-outline"
                   class="ma-0 pa-0"
                   size="x-small"
                   variant="text"
+                  @click="unselectAll()"
                 />
               </td>
-              <td :key="idx" class="px-2" v-for="(header, idx) in headers">
+              <td v-for="(header, idx) in headers" :key="idx" class="px-2">
                 <div v-if="header.key === 'id'">Total</div>
                 <div v-else-if="['mean', 'std'].includes(header.key)">
                   <span>&#956;</span>
@@ -182,8 +182,8 @@ const selected = () => {
 
 const unselectAll = () => {
   activity.value.state.selected = [];
-  activity.value.chartGraph.update()
-}
+  activity.value.chartGraph.update();
+};
 
 /**
  * Update stats of analog activity.
@@ -239,7 +239,7 @@ onMounted(() => update());
 
 watch(
   () => activity.value.hash,
-  () => update()
+  () => update(),
 );
 </script>
 

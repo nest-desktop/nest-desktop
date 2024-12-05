@@ -24,10 +24,7 @@
     <v-spacer />
 
     <v-app-bar-title
-      :text="
-        projectStore.state.project.name ||
-        'undefined project ' + truncate(projectStore.state.project.id)
-      "
+      :text="projectStore.state.project.name || 'undefined project ' + truncate(projectStore.state.project.id)"
       style="min-width: auto"
     />
     <!-- <v-btn
@@ -37,7 +34,7 @@
     /> -->
     <v-spacer />
 
-    <v-card class="mx-1" v-if="appStore.state.devMode && !appStore.state.loading" variant="outlined">
+    <v-card v-if="appStore.state.devMode && !appStore.state.loading" class="mx-1" variant="outlined">
       <v-list class="py-1" density="compact" style="font-size: 10px; line-height: 1em">
         <v-list-item class="auto-min-height">
           Simulation: {{ projectStore.state.project.state.state.stopwatch.simulation / 1000 }}s
@@ -69,9 +66,7 @@ import { truncate } from "@/utils/truncate";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const projectStore = computed(
-  () => appStore.currentSimulator.stores.projectStore
-);
+const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
 
 const tabItems = [
   {
@@ -112,6 +107,6 @@ const tabItems = [
 <style lang="scss" scoped>
 .auto-min-height {
   padding: 2px;
-  min-height: 1em
+  min-height: 1em;
 }
 </style>

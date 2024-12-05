@@ -1,51 +1,45 @@
 // defineModelStore.ts
 
-import { Store, defineStore } from "pinia";
+import { defineStore } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 
 import { TElementType } from "@/helpers/model/model";
 import { IProjectProps } from "@/helpers/project/project";
 import router from "@/router";
-import { TModel, TProject } from "@/types";
+import { TProject, TStore } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "../appStore";
-import { TModelDBStore } from "./defineModelDBStore";
 import { useModelDBStore } from "./modelDBStore";
+
+export interface IModelProps {
+  id: string;
+  label: string;
+  elementType: string;
+}
 
 interface IModelStoreState {
   modelId: string;
-  models: string[];
+  models: IModelProps[];
   project: TProject | null;
   projectId: string;
   projectFilename?: string;
   recentAddedModels: Record<TElementType, string[]>;
 }
 
-export type TModelStore = Store<
-  string,
-  | {
-      modelId: string;
-      model: () => TModel;
-      state: IModelStoreState;
-      toggle: (item?: { id: string }) => void;
-    }
-  | any
->;
-
 export function defineModelStore(
   props: {
     defaultView?: string;
     loggerMinLevel?: number;
     simulator: string;
-    useModelDBStore: TModelDBStore;
+    useModelDBStore: TStore;
   } = {
     simulator: "base",
     useModelDBStore,
-  }
-): TModelStore {
+  },
+) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
     name: props.simulator + " model store",
@@ -74,8 +68,7 @@ export function defineModelStore(
        * @param modelId model Id
        * @returns model object
        */
-      const findModel = (modelId: string) =>
-        state.models.find((model: any) => model.id === modelId);
+      const findModel = (modelId: string) => state.models.find((model: IModelProps) => model.id === modelId);
 
       /**
        * Get model from the db list.
@@ -83,7 +76,7 @@ export function defineModelStore(
        * @returns model object
        */
       const getModel = (modelId: string) => {
-        const modelDBStore: TModelStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         return modelDBStore.findModel(modelId) || findModel(modelId);
       };
 
@@ -93,7 +86,7 @@ export function defineModelStore(
       const init = (): void => {
         logger.trace("init");
 
-        const modelDBStore: TModelDBStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         if (modelDBStore.state.models.length > 0) {
           state.modelId = modelDBStore.getRecentModelId();
         }
@@ -106,7 +99,7 @@ export function defineModelStore(
       const loadModel = (modelId: string = ""): void => {
         logger.trace("load model", truncate(modelId));
 
-        const modelDBStore: TModelStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         const model = modelDBStore.getModel(modelId);
         state.modelId = model.id;
       };
@@ -119,13 +112,13 @@ export function defineModelStore(
         const appStore = useAppStore();
         const projectStore = appStore.currentSimulator.stores.projectStore;
 
-        loadJSON(
-          `assets/simulators/${props.simulator}/projects/${state.projectId}.json`
-        ).then((projectProps: IProjectProps) => {
-          projectProps.filename = state.projectId;
-          model.value.project = new projectStore.props.Project(projectProps);
-          updateProject();
-        });
+        loadJSON(`assets/simulators/${props.simulator}/projects/${state.projectId}.json`).then(
+          (projectProps: IProjectProps) => {
+            projectProps.filename = state.projectId;
+            model.value.project = new projectStore.props.Project(projectProps);
+            updateProject();
+          },
+        );
       };
 
       /**
@@ -135,7 +128,7 @@ export function defineModelStore(
       const newModel = (modelId: string): void => {
         logger.trace("new model");
 
-        const modelDBStore: TModelStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         const model = modelDBStore.newModel({ id: modelId });
         state.modelId = model.id;
       };
@@ -149,13 +142,7 @@ export function defineModelStore(
         const modelViewStore = appStore.currentSimulator.views.model;
 
         return {
-          path:
-            "/" +
-            props.simulator +
-            "/model/" +
-            state.modelId +
-            "/" +
-            modelViewStore.state.views.main,
+          path: "/" + props.simulator + "/model/" + state.modelId + "/" + modelViewStore.state.views.main,
         };
       };
 
@@ -165,7 +152,7 @@ export function defineModelStore(
       const saveModel = (): void => {
         logger.trace("save model");
 
-        const modelDBStore: TModelDBStore = props.useModelDBStore();
+        const modelDBStore = props.useModelDBStore();
         modelDBStore.saveModel(model.value);
       };
 
@@ -173,14 +160,15 @@ export function defineModelStore(
        * Select project
        * @param projectId
        */
-      const selectProject = (
-        projectId: string,
-        callback?: () => void
-      ): void => {
+      const selectProject = (projectId: string, callback?: () => void): void => {
         logger.trace("select project", projectId);
 
         state.projectId = projectId;
-        callback ? callback() : updateProject();
+        if (callback) {
+          callback();
+        } else {
+          updateProject();
+        }
       };
 
       /**
@@ -203,15 +191,12 @@ export function defineModelStore(
       const updateProject = () => {
         logger.trace("update");
 
-        if (!model || !model.value.isNeuron) {
+        if (!model.value || !model.value.isNeuron) {
           state.project = null;
           return;
         }
 
-        if (
-          model.value.project &&
-          model.value.project?.filename === state.projectId
-        ) {
+        if (model.value.project && model.value.project?.filename === state.projectId) {
           state.project = model.value.project;
           const project = state.project;
 
@@ -242,10 +227,7 @@ export function defineModelStore(
        * @param modelId string
        * @param elementType neuron, recorder, stimulator
        */
-      const updateRecentAddedModels = (
-        modelId: string,
-        elementType: TElementType
-      ) => {
+      const updateRecentAddedModels = (modelId: string, elementType: TElementType) => {
         const models = state.recentAddedModels[elementType];
         if (models.includes(modelId)) models.splice(models.indexOf(modelId), 1);
         models.unshift(modelId);
@@ -280,6 +262,6 @@ export function defineModelStore(
           storage: sessionStorage,
         },
       ],
-    }
+    },
   );
 }

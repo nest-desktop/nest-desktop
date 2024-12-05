@@ -1,8 +1,6 @@
 // norse/index.ts
 
 import { defineViewStore } from "@/stores/defineViewStore";
-import { TModelDBStore } from "@/stores/model/defineModelDBStore";
-import { TProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
 import { ISimulatorProps } from "../";
 import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
@@ -24,8 +22,8 @@ export const norse: ISimulatorProps = {
   id: "norse",
   init: () => {
     // Initialize stores.
-    const modelDBStore: TModelDBStore = useNorseModelDBStore();
-    const projectDBStore: TProjectDBStore = useNorseProjectDBStore();
+    const modelDBStore = useNorseModelDBStore();
+    const projectDBStore = useNorseProjectDBStore();
     Promise.all([modelDBStore.init(), projectDBStore.init()]);
 
     const modelStore = useNorseModelStore();

@@ -7,11 +7,7 @@ import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
 
-export const useNESTMLServerStore = defineBackendStore(
-  "nest",
-  "nestml",
-  "http://localhost:52426"
-);
+export const useNESTMLServerStore = defineBackendStore("nest", "nestml", "http://localhost:52426");
 
 export const generateModels = (
   module: {
@@ -20,7 +16,7 @@ export const generateModels = (
   } = {
     models: [],
     name: "nestmlmodule",
-  }
+  },
 ): Promise<void> => {
   const nestmlServerStore = useNESTMLServerStore();
 
@@ -35,9 +31,9 @@ export const generateModels = (
       switch (response.status) {
         case 200:
           notifySuccess(
-            `Models (${response.data.status["INSTALLED"].join(
-              ","
-            )}) are successfully generated in "${module.name}" module.`
+            `Models (${response.data.status["INSTALLED"].join(",")}) are successfully generated in "${
+              module.name
+            }" module.`,
           );
           break;
         case 400:
@@ -53,13 +49,9 @@ export const generateModels = (
     });
 };
 
-export const fetchNESTMLModels = (
-  moduleName: string
-): Promise<AxiosResponse> => {
+export const fetchNESTMLModels = (moduleName: string): Promise<AxiosResponse> => {
   const nestmlServerStore = useNESTMLServerStore();
-  return nestmlServerStore
-    .axiosInstance()
-    .get(`/module/${moduleName}/installed`);
+  return nestmlServerStore.axiosInstance().get(`/module/${moduleName}/installed`);
 };
 
 export const nestmlServerInit = (): TStore => {

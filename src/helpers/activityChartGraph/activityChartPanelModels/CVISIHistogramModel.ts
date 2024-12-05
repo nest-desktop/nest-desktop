@@ -3,17 +3,11 @@
 import { SpikeActivity } from "../../activity/spikeActivity";
 import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import {
-  ISpikeTimesPanelModelProps,
-  SpikeTimesPanelModel,
-} from "./spikeTimesPanelModel";
+import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
-  constructor(
-    panel: ActivityChartPanel,
-    modelProps: ISpikeTimesPanelModelProps = {}
-  ) {
+  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "CVISIHistogram";
@@ -44,9 +38,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     const end = 5;
     const size = this.params.binSize.value as number;
     const isi: number[][] = activity.ISI();
-    const x: number[] = isi.map(
-      (i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i)
-    );
+    const x: number[] = isi.map((i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i));
 
     this.data.push({
       activityIdx: activity.idx,

@@ -3,13 +3,8 @@
     <v-list density="compact">
       <slot name="prependItem" :node />
 
-      <v-list-item
-        :key="index"
-        v-bind="item"
-        v-for="(item, index) in items"
-        v-show="item.show ? item.show() : true"
-      >
-        <template #prepend v-if="item.icon">
+      <v-list-item v-for="(item, index) in items" v-show="item.show ? item.show() : true" :key="index" v-bind="item">
+        <template v-if="item.icon" #prepend>
           <v-icon v-bind="item.icon" />
         </template>
       </v-list-item>
@@ -91,10 +86,7 @@ const items: {
       });
     },
     prependIcon: "mdi:mdi-download",
-    show: () =>
-      node.value.model.isRecorder &&
-      node.value.activity &&
-      node.value.activity.hasEvents,
+    show: () => node.value.model.isRecorder && node.value.activity && node.value.activity.hasEvents,
     title: "Export events",
   },
   {

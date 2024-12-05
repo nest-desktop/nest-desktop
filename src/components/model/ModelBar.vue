@@ -32,10 +32,10 @@
     <slot name="prependBtn" />
 
     <SimulationButton
+      v-if="modelStore.state.project"
       :disabled="!modelStore.model.isNeuron"
       :simulation="modelStore.state.project.simulation"
       @click:simulate="modelStore.startSimulation()"
-      v-if="modelStore.state.project"
     />
   </v-app-bar>
 </template>

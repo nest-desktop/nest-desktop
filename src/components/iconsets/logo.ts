@@ -7,13 +7,12 @@ import ebrainsLogo from "@/assets/img/logo/ebrains-logo.svg";
 
 import type { IconSet, IconProps } from "vuetify";
 
-const customSvgNameToComponent: Record<string, any> = {
+const customSvgNameToComponent: Record<string, string> = {
   ebrainsLogo,
 };
 
 const logo: IconSet = {
-  component: (props: IconProps) =>
-    h(customSvgNameToComponent[props.icon as string]),
+  component: (props: IconProps) => h(customSvgNameToComponent[props.icon as string]),
 };
 
 export { logo };

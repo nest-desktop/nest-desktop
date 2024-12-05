@@ -1,23 +1,17 @@
 <template>
   <v-card>
     <ColorPicker
-      :colorScheme="state.colorScheme"
-      @update:model-value="nodeColorChange()"
-      hide-inputs
       v-model="node.view.color"
+      :color-scheme="state.colorScheme"
+      hide-inputs
+      @update:model-value="nodeColorChange()"
     />
 
-    <v-select
-      :items="colorSchemes"
-      class="mx-2"
-      density="compact"
-      hide-details
-      v-model="state.colorScheme"
-    />
+    <v-select v-model="state.colorScheme" :items="colorSchemes" class="mx-2" density="compact" hide-details />
 
     <v-card-actions>
-      <v-btn @click="resetColor()" text="reset" />
-      <v-btn @click="closeDialog()" text="close" />
+      <v-btn text="reset" @click="resetColor()" />
+      <v-btn text="close" @click="closeDialog()" />
     </v-card-actions>
   </v-card>
 </template>
@@ -26,12 +20,13 @@
 import { computed, reactive, nextTick } from "vue";
 
 import ColorPicker from "../common/ColorPicker.vue";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { TNode } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
-const graph = computed(() => networkGraphStore.state.graph);
+const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
 const props = defineProps<{ node?: NodeGroup | TNode }>();
 const node = computed(() => props.node as TNode);
@@ -64,9 +59,7 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
  */
 const nodeColorChange = () => {
   node.value?.changes();
-  if (node.value?.isNode) {
-    nextTick(() => node.value?.nodes.updateRecordsColor());
-  }
+  if (node.value?.isNode) nextTick(() => node.value?.nodes.updateRecordsColor());
 
   // Render network graph
   graph.value?.updateHash();

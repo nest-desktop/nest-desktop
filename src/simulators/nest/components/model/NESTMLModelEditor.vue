@@ -1,29 +1,24 @@
 <template>
-  <v-card class="my-2" flat v-if="model.custom">
+  <v-card v-if="model.custom" class="my-2" flat>
     <v-toolbar color="transparent" density="compact">
-      <NESTMLModelSelect
-        :model
-        :model-value="model.templateName"
-        @update:model-value="updateOnSelect"
-        class="pt-1"
-      />
+      <NESTMLModelSelect :model :model-value="model.templateName" class="pt-1" @update:model-value="updateOnSelect" />
 
       <v-spacer />
 
       <NESTModuleCombobox
-        @click.stop
-        @update:model-value="updateModules()"
+        v-model="state.selectedModules"
         chips
         class="pt-1"
         label="module"
         max-width="400"
         multiple
-        v-model="state.selectedModules"
+        @click.stop
+        @update:model-value="updateModules()"
       />
     </v-toolbar>
 
     <v-card-text>
-      <codemirror :extensions v-model="model.nestmlScript" />
+      <codemirror v-model="model.nestmlScript" :extensions />
     </v-card-text>
   </v-card>
 </template>
@@ -46,7 +41,7 @@ import { NESTModel } from "../../helpers/model/model";
 import { updateSimulationModules } from "../../stores/model/modelStore";
 
 // import { useNESTModelStore } from "../../stores/model/modelStore";
-// const modelStore: TModelStore = useNESTModelStore();
+// const modelStore = useNESTModelStore();
 
 import { IModule, useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
@@ -60,9 +55,7 @@ const model = computed(() => props.model as NESTModel);
 const state = reactive<{
   selectedModules: IModule[];
 }>({
-  selectedModules: moduleStore.state.modules.filter((module: IModule) =>
-    module.models.includes(model.value.id)
-  ),
+  selectedModules: moduleStore.state.modules.filter((module: IModule) => module.models.includes(model.value.id)),
 });
 
 const extensions: Extension[] = [basicSetup];
@@ -72,9 +65,7 @@ if (darkMode()) {
 }
 
 const update = () => {
-  state.selectedModules = moduleStore.state.modules.filter((module: IModule) =>
-    module.models.includes(model.value.id)
-  );
+  state.selectedModules = moduleStore.state.modules.filter((module: IModule) => module.models.includes(model.value.id));
 };
 
 const updateModules = () => {
@@ -86,10 +77,7 @@ const updateModules = () => {
         model.value.nestmlScript.length > 0
       ) {
         module.models.push(model.value.id);
-      } else if (
-        !state.selectedModules.includes(module) &&
-        module.models.includes(model.value.id)
-      ) {
+      } else if (!state.selectedModules.includes(module) && module.models.includes(model.value.id)) {
         module.models.splice(module.models.indexOf(model.value.id), 1);
       }
 

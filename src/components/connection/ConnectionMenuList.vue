@@ -1,18 +1,10 @@
 <template>
-  <Card
-    :color="connection.sourceNode.view.color"
-    style="border-width: 0 0 0 4px !important"
-  >
+  <Card :color="connection.sourceNode.view.color" style="border-width: 0 0 0 4px !important">
     <v-list density="compact">
       <slot name="prependItem" :connection />
 
-      <v-list-item
-        :key="index"
-        v-bind="item"
-        v-for="(item, index) in items"
-        v-show="item.show ? item.show() : true"
-      >
-        <template #prepend v-if="item.icon">
+      <v-list-item v-for="(item, index) in items" v-show="item.show ? item.show() : true" :key="index" v-bind="item">
+        <template v-if="item.icon" #prepend>
           <v-icon v-bind="item.icon" />
         </template>
       </v-list-item>
@@ -23,11 +15,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 
 import Card from "../common/Card.vue";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TConnection } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
+
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
 const props = defineProps<{ connection: TConnection }>();
 const connection = computed(() => props.connection);
@@ -74,6 +71,7 @@ const items: {
     onClick: () => {
       connection.value.reverse();
       connection.value.changes();
+      nextTick(() => graph.value?.render());
     },
     prependIcon: "mdi:mdi-rotate-3d-variant",
     title: "Reverse connection",
@@ -82,6 +80,7 @@ const items: {
     id: "weightInverse",
     onClick: () => {
       connection.value.synapse.inverseWeight();
+      nextTick(() => graph.value?.render());
     },
     prependIcon: "mdi:mdi-contrast",
     title: "Inverse synaptic weight",

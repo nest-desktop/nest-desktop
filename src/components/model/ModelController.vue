@@ -8,18 +8,16 @@
       stacked
     >
       <v-tab
-        :disabled="!modelStore.model.isNeuron && item.id === 'code'"
+        v-for="(item, index) in controllerItems"
+        v-show="item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)"
         :key="index"
+        :disabled="!modelStore.model.isNeuron && item.id === 'code'"
         :ripple="false"
         :value="modelViewStore.state.controller.open ? item.id : null"
-        @click.stop="modelViewStore.toggleController(item)"
         class="justify-center"
         height="76"
         min-width="0"
-        v-for="(item, index) in controllerItems"
-        v-show="
-          item.show !== 'dev' || (item.show === 'dev' && appStore.state.devMode)
-        "
+        @click.stop="modelViewStore.toggleController(item)"
       >
         <v-icon class="ma-1" size="large" v-bind="item.icon" />
         <span style="font-size: 9px">{{ item.id }}</span>
@@ -29,14 +27,10 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="
-            modelViewStore.state.bottomNav.active
-              ? 'mdi:mdi-arrow-expand-down'
-              : 'mdi:mdi-arrow-expand-up'
-          "
-          @click.stop="modelViewStore.toggleBottomNav()"
+          :icon="modelViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
           value="code"
           variant="plain"
+          @click.stop="modelViewStore.toggleBottomNav()"
         />
       </v-row>
     </template>
@@ -45,38 +39,27 @@
   <v-navigation-drawer
     :model-value="modelViewStore.state.controller.open"
     :width="modelViewStore.state.controller.width"
-    @transitionend="modelViewStore.dispatchWindowResize()"
     location="right"
     permanent
+    @transitionend="modelViewStore.dispatchWindowResize()"
   >
-    <div
-      @mousedown="modelViewStore.resizeRightNav()"
-      class="resize-handle left"
-    />
+    <div class="resize-handle left" @mousedown="modelViewStore.resizeRightNav()" />
 
     <template v-if="modelViewStore.state.views.controller === 'specs'">
-      <v-toolbar
-        color="transparent"
-        density="compact"
-        title="Model specifications"
-      />
+      <v-toolbar color="transparent" density="compact" title="Model specifications" />
 
       <v-list>
         <v-list-subheader>States</v-list-subheader>
         <ParamViewer
+          v-for="(state, index) in modelStore.model.states"
           :key="index"
           :param="(state as TModelParameter)"
-          v-for="(state, index) in modelStore.model.states"
         />
       </v-list>
 
       <v-list>
         <v-list-subheader>Parameters</v-list-subheader>
-        <ParamViewer
-          :key="index"
-          :param="(param as TModelParameter)"
-          v-for="(param, index) in modelParams"
-        />
+        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param="(param as TModelParameter)" />
       </v-list>
     </template>
 
@@ -108,18 +91,9 @@
         </v-card>
       </template> -->
 
-      <v-toolbar
-        color="transparent"
-        density="compact"
-        title="Default parameter values"
-      >
+      <v-toolbar color="transparent" density="compact" title="Default parameter values">
         <template #append>
-          <v-btn
-            @click="resetAllParamValues()"
-            icon
-            size="small"
-            title="reset all param values"
-          >
+          <v-btn icon size="small" title="reset all param values" @click="resetAllParamValues()">
             <v-icon class="mdi-flip-h" icon="mdi:mdi-reload" />
           </v-btn>
         </template>
@@ -127,44 +101,31 @@
 
       <v-list>
         <ParamListItem
+          v-for="(param, index) in modelParams"
           :key="index"
           :param="(param as TModelParameter)"
-          @update:paramValue="updateCode()"
-          v-for="(param, index) in modelParams"
+          @update:param-value="updateCode()"
         >
           <template #append>
-            <Menu
-              :items="paramMenuItems(param as TModelParameter)"
-              size="x-small"
-            />
+            <Menu :items="paramMenuItems(param as TModelParameter)" size="x-small" />
           </template>
         </ParamListItem>
       </v-list>
 
       <v-card-actions>
-        <v-btn @click="updateCode()" text="apply params for simulation" />
+        <v-btn text="apply params for simulation" @click="updateCode()" />
       </v-card-actions>
     </template>
 
-    <template
-      v-else-if="
-        appStore.state.devMode &&
-        modelViewStore.state.views.controller === 'raw'
-      "
-    >
-      <codemirror
-        :extensions="extensions"
-        :model-value="modelJSON"
-        disabled
-        style="font-size: 0.75rem; width: 100%"
-      />
+    <template v-else-if="appStore.state.devMode && modelViewStore.state.views.controller === 'raw'">
+      <codemirror :extensions="extensions" :model-value="modelJSON" disabled style="font-size: 0.75rem; width: 100%" />
     </template>
 
     <template v-if="modelViewStore.state.views.controller === 'code'">
       <slot name="simulationCodeEditor">
         <SimulationCodeEditor
-          :simulation="(modelStore.state.project.simulation as BaseSimulation)"
           v-if="modelStore.state.project"
+          :simulation="(modelStore.state.project.simulation as BaseSimulation)"
         />
       </slot>
     </template>
@@ -182,19 +143,16 @@
     :active="modelViewStore.state.bottomNav.active"
     :height="modelViewStore.state.bottomNav.height"
     :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    @transitionend="modelViewStore.dispatchWindowResize()"
     class="no-print"
     location="bottom"
+    @transitionend="modelViewStore.dispatchWindowResize()"
   >
-    <div
-      @mousedown="modelViewStore.resizeBottomNav()"
-      class="resize-handle bottom"
-    />
+    <div class="resize-handle bottom" @mousedown="modelViewStore.resizeBottomNav()" />
 
     <slot name="simulationCodeMirror">
       <SimulationCodeMirror
-        :simulation="(modelStore.state.project.simulation as BaseSimulation)"
         v-if="modelStore.state.project"
+        :simulation="(modelStore.state.project.simulation as BaseSimulation)"
       />
     </slot>
   </v-bottom-navigation>
@@ -229,9 +187,7 @@ const modelViewStore = computed(() => appStore.currentSimulator.views.model);
 
 const modelParams = computed(() => modelStore.value.model.paramsAll);
 
-const modelJSON = computed(() =>
-  JSON.stringify(modelStore.value.model.toJSON(), null, 2)
-);
+const modelJSON = computed(() => JSON.stringify(modelStore.value.model.toJSON(), null, 2));
 
 interface IControllerItem {
   id: string;

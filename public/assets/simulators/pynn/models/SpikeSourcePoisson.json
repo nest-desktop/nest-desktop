@@ -28,14 +28,12 @@
       "component": "valueSlider",
       "id": "duration",
       "label": "duration of spike sequence",
-      "max": 1E10,
+      "max": 1e10,
       "min": 1,
       "step": 1,
       "unit": "ms",
-      "value": 1E10
+      "value": 1e10
     }
   ],
-  "states": [
-    "spikes"
-  ]
+  "states": ["spikes"]
 }

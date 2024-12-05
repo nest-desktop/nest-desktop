@@ -11,7 +11,5 @@
       "unit": "ms"
     }
   ],
-  "states": [
-    "spikes"
-  ]
+  "states": ["spikes"]
 }
