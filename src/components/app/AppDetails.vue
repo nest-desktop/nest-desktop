@@ -1,45 +1,43 @@
 <template>
-  <v-card class="appDetails">
-    <v-list density="compact">
-      <v-list-item href="https://github.com/nest-desktop/nest-desktop/blob/dev/LICENSE" target="_blank">
-        <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-license" />
-            License
-          </v-col>
-          <v-col class="text-right" cols="8">
-            {{ license }}
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <v-list-item
-        href="
-          https://github.com/nest-desktop/nest-desktop/releases/
-        "
-        target="_blank"
-      >
-        <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-tag-outline" />
-            Current version
-          </v-col>
-          <v-col class="text-right" cols="8">
-            {{ appVersion }}
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <v-list-item :href="mailText" target="_blank">
-        <v-row>
-          <v-col class="font-weight-bold text-left" cols="4">
-            <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
-            Contact
-          </v-col>
-          <v-col class="text-caption text-right" cols="8">
-            {{ contactName }}
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <!-- <v-list-item>
+  <v-list class="appDetails" density="compact">
+    <v-list-item href="https://github.com/nest-desktop/nest-desktop/blob/dev/LICENSE" target="_blank">
+      <v-row>
+        <v-col class="font-weight-bold text-left" cols="4">
+          <v-icon class="mx-2" icon="mdi:mdi-license" />
+          License
+        </v-col>
+        <v-col class="text-right" cols="8">
+          {{ license }}
+        </v-col>
+      </v-row>
+    </v-list-item>
+
+    <v-list-item href="https://github.com/nest-desktop/nest-desktop/releases/" target="_blank">
+      <v-row>
+        <v-col class="font-weight-bold text-left" cols="4">
+          <v-icon class="mx-2" icon="mdi:mdi-tag-outline" />
+          Current version
+        </v-col>
+        <v-col class="text-right" cols="8">
+          {{ appVersion }}
+        </v-col>
+      </v-row>
+    </v-list-item>
+
+    <v-list-item :href="mailText" target="_blank">
+      <v-row>
+        <v-col class="font-weight-bold text-left" cols="4">
+          <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
+          Contact
+        </v-col>
+        <v-col class="text-caption text-right" cols="8">
+          {{ contactName }}
+        </v-col>
+      </v-row>
+    </v-list-item>
+
+    <template v-if="appStore.state.devMode">
+      <v-list-item>
         <v-row>
           <v-col class="font-weight-bold text-left" cols="4">
             <v-icon class="mx-2" icon="mdi:mdi-magnify" />
@@ -55,29 +53,17 @@
             <v-chip :text="state.osType" prepend-icon="mdi:mdi-desktop-tower-monitor" size="x-small" variant="text" />
           </v-col>
         </v-row>
-      </v-list-item> -->
-    </v-list>
-
-    <v-divider />
-
-    <v-list class="my-2" density="compact">
-      <v-list-subheader>Links</v-list-subheader>
-      <v-list-item
-        v-for="(item, index) in linkItems"
-        :key="index"
-        append-icon="mdi:mdi-open-in-new"
-        target="_blank"
-        v-bind="item"
-        :title="item.title"
-        :subtitle="item.href"
-      />
-    </v-list>
-  </v-card>
+      </v-list-item>
+    </template>
+  </v-list>
 </template>
 
 <script lang="ts" setup>
 import { computed, reactive } from "vue";
 import { detect } from "detect-browser";
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 const appVersion = process.env.APP_VERSION;
 const license = "MIT License";
@@ -119,40 +105,12 @@ if (info) {
   state.browserVersion = info.version || "";
   state.osType = info.os || "";
 }
-
-const linkItems = [
-  {
-    href: "https://nest-desktop.github.io",
-    prependIcon: "mdi:mdi-web",
-    title: "Project website",
-  },
-  {
-    href: "https://nest-desktop.readthedocs.io",
-    prependIcon: "mdi:mdi-lifebuoy",
-    title: "Help",
-  },
-  {
-    href: "https://github.com/nest-desktop/nest-desktop/issues",
-    prependIcon: "mdi:mdi-flag",
-    title: "Report an issue",
-  },
-  {
-    href: "https://nest-desktop.readthedocs.io/en/latest/contribute.html",
-    prependIcon: "mdi:mdi-tools",
-    title: "Contribute to the app",
-  },
-];
 </script>
 
 <style lang="scss">
 .appDetails {
-  .col-4,
-  .col-8 {
-    padding: 4px;
-  }
-  .v-list {
-    font-size: 12px;
-  }
+  font-size: 12px;
+
   .v-list-item {
     min-height: 28px !important;
   }
