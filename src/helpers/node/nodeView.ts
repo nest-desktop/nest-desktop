@@ -81,9 +81,7 @@ export class NodeView extends BaseObj {
   }
 
   get label(): string {
-    if (this._state.label) {
-      return this._state.label;
-    }
+    if (this._state.label) return this._state.label;
 
     let nodes: TNode[];
     let idx: number;
@@ -180,7 +178,7 @@ export class NodeView extends BaseObj {
    * Focus this node.
    */
   focus(): void {
-    this.node.nodes.state.focusedNode = this.node;
+    this.node.nodes.state.focusedNode = this.node as TNode;
   }
 
   /**
@@ -190,13 +188,11 @@ export class NodeView extends BaseObj {
   recordLabel(recordId: string): string {
     const recordables = this.node.recordables;
     const recordable = recordables.find((recordable: NodeRecord) => recordable.id == recordId);
-    if (recordable == undefined) {
-      return recordId;
-    }
+    if (!recordable) return recordId;
+
     let label = `${recordable.label.slice(0, 1).toUpperCase()}${recordable.label.slice(1)}`;
-    if (recordable.unit) {
-      label += ` (${recordable.unit})`;
-    }
+    if (recordable.unit) label += ` (${recordable.unit})`;
+
     return label;
   }
 
@@ -209,13 +205,8 @@ export class NodeView extends BaseObj {
       position: this._state.position,
     };
 
-    if (this._state.synWeights) {
-      nodeViewProps.synWeights = this._state.synWeights;
-    }
-
-    if (this._state.color) {
-      nodeViewProps.color = this._state.color;
-    }
+    if (this._state.synWeights) nodeViewProps.synWeights = this._state.synWeights;
+    if (this._state.color) nodeViewProps.color = this._state.color;
 
     return nodeViewProps;
   }

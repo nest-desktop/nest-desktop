@@ -59,12 +59,9 @@ export class ActivityAnimationLayerModel extends BaseObj {
     this.resetObjects();
 
     if (frame.senders == null) return;
-
-    if (this._layer.activity.recorder.model.isSpikeRecorder) {
-      this.renderTrails();
-    }
-
+    if (this._layer.activity.recorder.model.isSpikeRecorder) this.renderTrails();
     if (frame.senders.length === 0) return;
+
     this.updateObjects(frame);
   }
 
@@ -76,9 +73,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
     if (trail.length > 0) {
       for (let trailIdx = trail.length; trailIdx > 0; trailIdx--) {
         const frame: IActivityAnimationLayerFrame = this.layer.frames[this.layer.graph.state.frameIdx - trailIdx];
-        if (frame) {
-          this.updateObjects(frame, trailIdx);
-        }
+        if (frame) this.updateObjects(frame, trailIdx);
       }
     }
   }

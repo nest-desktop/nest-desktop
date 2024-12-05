@@ -205,17 +205,10 @@ export class NESTSynapse extends BaseSynapse {
   override toJSON(): INESTSynapseProps {
     const synapseProps: INESTSynapseProps = {};
 
-    if (this.modelId !== "static_synapse") {
-      synapseProps.model = this.modelId;
-    }
-
-    if (this.filteredParams.length > 0) {
+    if (this.modelId !== "static_synapse") synapseProps.model = this.modelId;
+    if (this.filteredParams.length > 0)
       synapseProps.params = this.filteredParams.map((param: NESTSynapseParameter) => param.toJSON());
-    }
-
-    if (this._receptorIdx !== 0) {
-      synapseProps.receptorIdx = this._receptorIdx;
-    }
+    if (this._receptorIdx !== 0) synapseProps.receptorIdx = this._receptorIdx;
 
     return synapseProps;
   }

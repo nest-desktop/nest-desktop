@@ -164,6 +164,7 @@ export class BaseNetwork extends BaseObj {
 
     // Initialize connection.
     connection.init();
+    if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
     // Update synaptic weight label.
     if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights) {
@@ -220,9 +221,7 @@ export class BaseNetwork extends BaseObj {
     this.connections.remove(connection);
 
     // Update recorder.
-    if (connection.view.connectRecorder()) {
-      connection.recorder.updateRecorder();
-    }
+    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
     this.changes();

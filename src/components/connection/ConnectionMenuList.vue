@@ -15,11 +15,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 
 import Card from "../common/Card.vue";
+import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TConnection } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
+
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
 const props = defineProps<{ connection: TConnection }>();
 const connection = computed(() => props.connection);
@@ -66,6 +71,7 @@ const items: {
     onClick: () => {
       connection.value.reverse();
       connection.value.changes();
+      nextTick(() => graph.value?.render());
     },
     prependIcon: "mdi:mdi-rotate-3d-variant",
     title: "Reverse connection",
@@ -74,6 +80,7 @@ const items: {
     id: "weightInverse",
     onClick: () => {
       connection.value.synapse.inverseWeight();
+      nextTick(() => graph.value?.render());
     },
     prependIcon: "mdi:mdi-contrast",
     title: "Inverse synaptic weight",

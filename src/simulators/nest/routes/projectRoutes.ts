@@ -18,24 +18,28 @@ const nestProjectBeforeEnter = (to: any) => {
   logger.trace("before enter nest project route:", to.path);
   projectBeforeEnter(to);
 
-  const appStore = useAppStore();
   const projectStore = useNESTProjectStore();
-  const projectViewStore = appStore.currentSimulator.views.project;
+  if (projectStore.state.project) {
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
 
-  const nodes: NESTNodes = projectStore.state.project?.network.nodes as NESTNodes;
-  if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+    const nodes: NESTNodes = projectStore.state.project.network.nodes as NESTNodes;
+    if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+  }
 };
 
 const nestProjectRedirect = (to: any) => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 
-  const appStore = useAppStore();
   const projectStore = useNESTProjectStore();
-  const projectViewStore = appStore.currentSimulator.views.project;
+  if (projectStore.state.project) {
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentSimulator.views.project;
 
-  const nodes: NESTNodes = projectStore.state.project?.network.nodes as NESTNodes;
-  if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+    const nodes: NESTNodes = projectStore.state.project?.network.nodes as NESTNodes;
+    if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+  }
 
   return projectStore.routeTo();
 };

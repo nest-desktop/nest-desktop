@@ -104,12 +104,7 @@ export class NESTNodes extends BaseNodes {
 
     const activityGraph = this.network.project.activityGraph as NESTActivityGraph;
 
-    if (activityGraph.activityChartGraph) {
-      activityGraph.activityChartGraph.updateRecordsColor();
-    }
-
-    if (activityGraph.activityAnimationGraph) {
-      activityGraph.activityAnimationGraph.renderFrameLayers();
-    }
+    if (activityGraph.activityChartGraph) activityGraph.activityChartGraph.updateRecordsColor();
+    if (activityGraph.activityAnimationGraph) activityGraph.activityAnimationGraph.renderFrameLayers();
   }
 }

@@ -258,9 +258,8 @@ export class BaseModel extends BaseObj {
       step: 1,
       value,
     };
-    if (Array.isArray(value)) {
-      paramProps.component = "arrayInput";
-    }
+    if (Array.isArray(value)) paramProps.component = "arrayInput";
+
     this.addParameter(paramProps);
     // this._params.sort();
   }
@@ -287,14 +286,10 @@ export class BaseModel extends BaseObj {
       version: process.env.APP_VERSION,
     };
 
-    if (this._favorite) {
-      modelProps.favorite = true;
-    }
+    if (this._favorite) modelProps.favorite = true;
 
     // Add model states if provided.
-    if (this.states.length > 0) {
-      modelProps.states = this.states.map((state: IModelStateProps | string) => state);
-    }
+    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps | string) => state);
 
     return modelProps;
   }
@@ -317,9 +312,7 @@ export class BaseModel extends BaseObj {
     }
 
     // Update the model parameters.
-    if (modelProps.params) {
-      this.updateParameters(modelProps.params);
-    }
+    if (modelProps.params) this.updateParameters(modelProps.params);
 
     this.updateHash();
   }
@@ -343,9 +336,7 @@ export class BaseModel extends BaseObj {
     this.logger.trace("update model parameters");
 
     this._params = {};
-    modelParamsProps.forEach((modelParamProps: IParamProps) => {
-      this.addParameter(modelParamProps);
-    });
+    modelParamsProps.forEach((modelParamProps: IParamProps) => this.addParameter(modelParamProps));
   }
 
   /**

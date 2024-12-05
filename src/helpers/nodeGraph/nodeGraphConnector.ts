@@ -20,10 +20,7 @@ export class NodeGraphConnector extends BaseObj {
   }
 
   get bgColor(): string {
-    if (this._networkGraph.network == undefined) {
-      return "white";
-    }
-
+    if (!this._networkGraph.network) return "white";
     return darkMode() ? "#121212" : "white";
   }
 

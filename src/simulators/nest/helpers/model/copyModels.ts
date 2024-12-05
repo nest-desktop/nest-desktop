@@ -104,9 +104,7 @@ export class NESTCopyModels extends BaseObj {
    * Filter models by element type.
    */
   filterByElementType(elementType: string = ""): NESTCopyModel[] {
-    if (elementType) {
-      return this._models;
-    }
+    if (elementType) return this._models;
     return this._models.filter((model: NESTCopyModel) => model.elementType === elementType);
   }
 
@@ -114,9 +112,7 @@ export class NESTCopyModels extends BaseObj {
    * Filter models by general element type.
    */
   filterByGeneralElementType(elementType: string = ""): NESTCopyModel[] {
-    if (elementType) {
-      return this._models;
-    }
+    if (elementType) return this._models;
     return this._models.filter((model: NESTCopyModel) => model.elementTypeGeneral === elementType);
   }
 

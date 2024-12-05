@@ -39,9 +39,7 @@ export class ModelParameter extends BaseParameter {
       // visible: this.visible as boolean,
     };
 
-    if (this.unit) {
-      paramProps.unit = this.unit;
-    }
+    if (this.unit) paramProps.unit = this.unit;
 
     if (this.component) {
       paramProps.component = this.component;
@@ -55,9 +53,7 @@ export class ModelParameter extends BaseParameter {
     }
 
     // Add rules for validation if existed.
-    if (this.rules.length > 0) {
-      paramProps.rules = this.rules;
-    }
+    if (this.rules.length > 0) paramProps.rules = this.rules;
 
     return paramProps;
   }

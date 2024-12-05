@@ -38,7 +38,7 @@ export class NorseModel extends BaseModel {
    * Serialize to JSON.
    * @returns norse model props
    */
-  toJSON(): INorseModelProps {
+  override toJSON(): INorseModelProps {
     const modelProps: INorseModelProps = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
@@ -49,13 +49,9 @@ export class NorseModel extends BaseModel {
     };
 
     // Add the states if provided.
-    if (this.states.length > 0) {
-      modelProps.states = this.states.map((state: IModelStateProps) => state.id);
-    }
+    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state.id);
 
-    if (this.codeTemplate) {
-      modelProps.codeTemplate = this.codeTemplate;
-    }
+    if (this.codeTemplate) modelProps.codeTemplate = this.codeTemplate;
 
     return modelProps;
   }

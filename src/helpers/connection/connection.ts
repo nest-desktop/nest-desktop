@@ -224,13 +224,9 @@ export class BaseConnection extends BaseObj {
         );
         if (paramProps != null) {
           param.value = paramProps.value;
-          if (paramProps.type != null) {
-            param.type = paramProps.type;
-          }
+          if (paramProps.type != null) param.type = paramProps.type;
         }
-        if (param && param.visible !== false) {
-          this._paramsVisible.push(param.id);
-        }
+        if (param && param.visible !== false) this._paramsVisible.push(param.id);
       }
       this.addParameter(param);
     });
@@ -295,9 +291,7 @@ export class BaseConnection extends BaseObj {
     this.changes();
 
     // Initialize activity graph.
-    if (this._view.connectRecorder()) {
-      this.recorder.createActivity();
-    }
+    if (this._view.connectRecorder()) this.recorder.createActivity();
   }
 
   /**
@@ -345,13 +339,10 @@ export class BaseConnection extends BaseObj {
       target: this._targetIdx,
     };
 
-    if (this._rule.value !== "all_to_all") {
-      connectionProps.rule = this._rule.value;
-    }
+    if (this._rule.value !== "all_to_all") connectionProps.rule = this._rule.value;
 
-    if (this._paramsVisible.length > 0) {
+    if (this._paramsVisible.length > 0)
       connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
-    }
 
     return connectionProps;
   }
@@ -380,13 +371,8 @@ export class BaseConnection extends BaseObj {
       synapse: this.synapse.hash,
     };
 
-    if (this.source.isNode) {
-      hashProps.sourceModelId = this.sourceNode.modelId;
-    }
-
-    if (this.target.isNode) {
-      hashProps.targetModelId = this.targetNode.modelId;
-    }
+    if (this.source.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
+    if (this.target.isNode) hashProps.targetModelId = this.targetNode.modelId;
 
     this._updateHash(hashProps);
   }

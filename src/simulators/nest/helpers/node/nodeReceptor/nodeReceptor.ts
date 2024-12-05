@@ -167,9 +167,7 @@ export class NESTNodeReceptor {
    * @return parameter component
    */
   getParameter(paramId: string): TParamValue | undefined {
-    if (this.hasParameter(paramId)) {
-      return this._params[paramId].value;
-    }
+    if (this.hasParameter(paramId)) return this._params[paramId].value;
   }
 
   /**

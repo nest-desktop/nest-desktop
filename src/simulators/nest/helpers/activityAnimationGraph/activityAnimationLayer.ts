@@ -238,18 +238,14 @@ export class ActivityAnimationLayer {
     this._graphGroup = new Group();
     this._graphGroup.userData.layer = this;
     this._graphGroup.add(this.createGrids(this.bins));
-    if (this._model) {
-      this._graphGroup.add(this._model.graphGroup);
-    }
+    if (this._model) this._graphGroup.add(this._model.graphGroup);
   }
 
   /**
    * Initialize geometry model for activity layer.
    */
   initModel(): void {
-    if (this._state.modelSelected == null) {
-      this._state.modelSelected = this._models[1]; // sphere geometry
-    }
+    if (this._state.modelSelected == null) this._state.modelSelected = this._models[1]; // sphere geometry
     this._model = new this._state.modelSelected.component(this);
   }
 

@@ -34,9 +34,7 @@ export class PyNNSimulation extends BaseSimulation {
         return: "response",
       })
       .then((response: AxiosResponse<IAxiosResponseData>) => {
-        if (response.data.data == null) {
-          return response;
-        }
+        if (response.data.data == null) return response;
 
         let data: {
           events: IEventProps[];

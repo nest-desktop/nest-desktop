@@ -145,9 +145,7 @@ export class NESTNode extends BaseNode {
   override get models(): NESTModel[] {
     // Get models of the same element type.
     const elementType: string = this.model?.elementType;
-
     const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
-
     return models;
   }
 
@@ -358,36 +356,25 @@ export class NESTNode extends BaseNode {
       view: this.view.toJSON(),
     };
 
-    if (this.size > 1) {
-      nodeProps.size = this.size;
-    }
+    if (this.size > 1) nodeProps.size = this.size;
 
-    if (this.filteredParams.length > 0) {
+    if (this.filteredParams.length > 0)
       nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
-    }
 
     // Add annotations if provided.
-    if (this.annotations.length > 0) {
-      nodeProps.annotations = this.annotations;
-    }
+    if (this.annotations.length > 0) nodeProps.annotations = this.annotations;
 
     // Add records if this model is multimeter.
-    if (this.model.isMultimeter) {
-      nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
-    }
+    if (this.model.isMultimeter) nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
 
     // Add positions if this node is spatial.
-    if (this._spatial.hasPositions) {
-      nodeProps.spatial = this._spatial.toJSON();
-    }
+    if (this._spatial.hasPositions) nodeProps.spatial = this._spatial.toJSON();
 
-    if (this._compartments.length > 0) {
+    if (this._compartments.length > 0)
       nodeProps.compartments = this._compartments.map((compartment: NESTNodeCompartment) => compartment.toJSON());
-    }
 
-    if (this._receptors.length > 0) {
+    if (this._receptors.length > 0)
       nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
-    }
 
     return nodeProps;
   }

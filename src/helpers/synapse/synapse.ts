@@ -151,9 +151,7 @@ export class BaseSynapse extends BaseObj {
 
     this._paramsVisible = [];
     this._params = {};
-    if (paramsProps) {
-      paramsProps.forEach((param: any) => this.addParameter(param));
-    }
+    if (paramsProps) paramsProps.forEach((param: IParamProps) => this.addParameter(param));
   }
 
   /**
@@ -191,9 +189,8 @@ export class BaseSynapse extends BaseObj {
   toJSON(): ISynapseProps {
     const synapseProps: ISynapseProps = {};
 
-    if (this.filteredParams.length > 0) {
+    if (this.filteredParams.length > 0)
       synapseProps.params = this.filteredParams.map((param: TSynapseParameter) => param.toJSON());
-    }
 
     return synapseProps;
   }

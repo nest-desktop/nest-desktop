@@ -66,9 +66,7 @@ export class NodeGroupView extends BaseObj {
   set expansionPanelIdx(value: number | null) {
     this._state.expansionPanelIdx = value;
 
-    if (this._state.expansionPanelIdx != null) {
-      this.nodeGroup.connections[this._state.expansionPanelIdx].state.select();
-    }
+    if (this._state.expansionPanelIdx != null) this.nodeGroup.connections[this._state.expansionPanelIdx].state.select();
   }
 
   get idx(): number {

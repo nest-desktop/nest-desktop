@@ -51,7 +51,7 @@ export class NorseProject extends BaseProject {
    * @remarks
    * It generates new project id and empties updatedAt variable;
    */
-  clone(): NorseProject {
+  override clone(): NorseProject {
     this.logger.trace("clone");
 
     return new NorseProject({

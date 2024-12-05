@@ -156,9 +156,7 @@ export class ActivityAnimationGraph {
    * Render frames of activity layers.
    */
   renderFrameLayers(): void {
-    this._layers.forEach((layer: ActivityAnimationLayer) => {
-      layer.renderFrame();
-    });
+    this._layers.forEach((layer: ActivityAnimationLayer) => layer.renderFrame());
   }
 
   /**

@@ -127,29 +127,17 @@ export class NESTConnection extends BaseConnection {
       target: this.targetIdx,
     };
 
-    if (this.rule.value !== "all_to_all") {
-      connectionProps.rule = this.rule.value;
-    }
+    if (this.rule.value !== "all_to_all") connectionProps.rule = this.rule.value;
 
-    if (this.paramsVisible.length > 0) {
+    if (this.paramsVisible.length > 0)
       connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
-    }
 
-    if (this.synapse.modelId !== "static_synapse" || this.synapse.paramsVisible.length > 0) {
+    if (this.synapse.modelId !== "static_synapse" || this.synapse.paramsVisible.length > 0)
       connectionProps.synapse = this._synapse.toJSON();
-    }
 
-    if (this._sourceSlice.visible) {
-      connectionProps.sourceSlice = this._sourceSlice.toJSON();
-    }
-
-    if (this._targetSlice.visible) {
-      connectionProps.targetSlice = this._targetSlice.toJSON();
-    }
-
-    if (this._mask.hasMask) {
-      connectionProps.mask = this._mask.toJSON();
-    }
+    if (this._sourceSlice.visible) connectionProps.sourceSlice = this._sourceSlice.toJSON();
+    if (this._targetSlice.visible) connectionProps.targetSlice = this._targetSlice.toJSON();
+    if (this._mask.hasMask) connectionProps.mask = this._mask.toJSON();
 
     return connectionProps;
   }

@@ -233,7 +233,9 @@ export class Activity extends BaseObj {
    * Call after update call.
    * @param _activityProps activity props
    */
-  postUpdate(_activityProps: IActivityProps): void {}
+  postUpdate(activityProps: IActivityProps): void {
+    this.logger.trace("Postupdate: ", activityProps);
+  }
 
   /**
    * Reset activity.
@@ -293,9 +295,7 @@ export class Activity extends BaseObj {
       }
     });
 
-    if (updated) {
-      this.updateHash();
-    }
+    if (updated) this.updateHash();
   }
 
   /**

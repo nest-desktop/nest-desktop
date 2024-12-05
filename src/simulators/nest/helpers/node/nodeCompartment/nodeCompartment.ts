@@ -278,9 +278,7 @@ export class NESTNodeCompartment {
       params: this.filteredParams.map((param: NESTNodeCompartmentParameter) => param.toJSON()),
     };
 
-    if (this._label) {
-      nodeCompartmentProps.label = this._label;
-    }
+    if (this._label) nodeCompartmentProps.label = this._label;
 
     return nodeCompartmentProps;
   }

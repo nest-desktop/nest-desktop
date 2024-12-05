@@ -46,9 +46,7 @@ export class BaseSimulationCode extends BaseObj {
       script: "",
     });
 
-    if (this._state.templateFilename) {
-      this.loadTemplate();
-    }
+    if (this._state.templateFilename) this.loadTemplate();
     this.clean();
   }
 

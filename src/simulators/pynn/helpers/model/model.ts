@@ -33,7 +33,11 @@ export class PyNNModel extends BaseModel {
     return new PyNNModel({ ...this.toJSON() });
   }
 
-  toJSON(): IPyNNModelProps {
+  /**
+   * Serialize to JSON.
+   * @returns pynn model props
+   */
+  override toJSON(): IPyNNModelProps {
     const modelProps: IPyNNModelProps = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
@@ -44,13 +48,8 @@ export class PyNNModel extends BaseModel {
     };
 
     // Add the states if provided.
-    if (this.states.length > 0) {
-      modelProps.states = this.states.map((state: IModelStateProps) => state.id);
-    }
-
-    if (this.codeTemplate) {
-      modelProps.codeTemplate = this.codeTemplate;
-    }
+    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state.id);
+    if (this.codeTemplate) modelProps.codeTemplate = this.codeTemplate;
 
     return modelProps;
   }

@@ -178,9 +178,7 @@ export class NodeRecord extends BaseObj {
     this.logger.trace("update");
 
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
-    if (this._nodeSize != this.state.traceColors.length) {
-      this.updateTraceColors();
-    }
+    if (this._nodeSize != this.state.traceColors.length) this.updateTraceColors();
 
     this.updateColorMap();
   }

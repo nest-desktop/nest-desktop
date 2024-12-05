@@ -34,19 +34,13 @@ export class BaseSynapseParameter extends BaseParameter {
     };
 
     // Add the value factors if existed.
-    if (this.factors.length > 0) {
-      paramProps.factors = this.factors;
-    }
+    if (this.factors.length > 0) paramProps.factors = this.factors;
 
     // Add the rules for validation if existed.
-    if (this.rules.length > 0) {
-      paramProps.rules = this.rules;
-    }
+    if (this.rules.length > 0) paramProps.rules = this.rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) {
-      paramProps.type = this.typeToJSON();
-    }
+    if (!this.isConstant) paramProps.type = this.typeToJSON();
 
     return paramProps;
   }

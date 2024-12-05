@@ -172,14 +172,10 @@ export class Insite {
       this._project.activities.checkActivities();
 
       // Get spike activities from Insite.
-      if (this._project.activities.state.hasSomeSpikeRecorders) {
-        this.getSpikeActivities(positions);
-      }
+      if (this._project.activities.state.hasSomeSpikeRecorders) this.getSpikeActivities(positions);
 
       // Get analog signal activities from Insite.
-      if (this._project.activities.state.hasSomeAnalogRecorders) {
-        this.getAnalogSignalActivities(positions);
-      }
+      if (this._project.activities.state.hasSomeAnalogRecorders) this.getAnalogSignalActivities(positions);
     });
   }
 
@@ -216,9 +212,7 @@ export class Insite {
         if (positions) {
           if (Object.keys(positions).length > 0) {
             data.nodeIds.forEach((nodeId: number) => {
-              if (nodeId in positions) {
-                nodePositions.push(positions[nodeId]);
-              }
+              if (nodeId in positions) nodePositions.push(positions[nodeId]);
             });
           }
         }

@@ -99,16 +99,8 @@ export class BasePositions {
   }
 
   update(positionProps?: IBasePositionsProps) {
-    if (positionProps?.pos) {
-      this._pos = positionProps.pos;
-    }
-
-    if (positionProps?.numDimensions) {
-      this._numDimensions = positionProps.numDimensions;
-    }
-
-    if (positionProps?.edgeWrap) {
-      this._edgeWrap = positionProps.edgeWrap;
-    }
+    if (positionProps?.pos) this._pos = positionProps.pos;
+    if (positionProps?.numDimensions) this._numDimensions = positionProps.numDimensions;
+    if (positionProps?.edgeWrap) this._edgeWrap = positionProps.edgeWrap;
   }
 }

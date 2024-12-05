@@ -5,6 +5,7 @@ import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/typ
 import { Activity, IActivityProps } from "../activity/activity";
 import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
+import { BaseNodes } from "./nodes";
 import { BaseObj } from "../common/base";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
 import { INodeViewProps, NodeView } from "./nodeView";
@@ -13,8 +14,8 @@ import { ModelParameter } from "../model/modelParameter";
 import { NodeGroup } from "./nodeGroup";
 import { NodeParameter } from "./nodeParameter";
 import { SpikeActivity } from "../activity/spikeActivity";
+import { notifyInfo } from "../common/notification";
 import { onlyUnique, sortString } from "../../utils/array";
-import { BaseNodes } from "./nodes";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -415,6 +416,31 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Correct connections to/from recorder.
+   */
+  correctRecorderConnections(): void {
+    if (!this.model.isRecorder) return;
+
+    // Correct connection direction to spike recorder.
+    this.connections
+      .filter((connection: TConnection) => connection.sourceNode.model.isSpikeRecorder)
+      .forEach((connection: TConnection) => {
+        connection.reverse();
+        notifyInfo("The connection from spike recorder was corrected.");
+      });
+
+    // Correct connection direction from analog recorder.
+    this.sourceNodes.forEach((recorder: TNode) =>
+      recorder.connections
+        .filter((connection: TConnection) => connection.targetNode.model.isAnalogRecorder)
+        .forEach((connection: TConnection) => {
+          connection.reverse();
+          notifyInfo(`The connection to ${connection.recorder.model.label} recorder was corrected.`);
+        }),
+    );
+  }
+
+  /**
    * Create activity for the recorder.
    * @param activityProps activity props
    */
@@ -523,20 +549,8 @@ export class BaseNode extends BaseObj {
     let recorderModelChanged = false;
 
     if (this.model.isRecorder) {
-      // Correct connection direction to spike recorder.
-      this.connections
-        .filter((connection: TConnection) => connection.sourceNode.model.isSpikeRecorder)
-        .forEach((connection: TConnection) => connection.reverse());
-
-      // Correct connection direction from analog recorder.
-      this.sourceNodes.forEach((recorder: TNode) =>
-        recorder.connections
-          .filter((connection: TConnection) => connection.targetNode.model.isAnalogRecorder)
-          .forEach((connection: TConnection) => connection.reverse()),
-      );
-
-      // Update records of this analog recorder
-      this.updateRecorder();
+      this.correctRecorderConnections(); // Correct connection from/to recorder.
+      this.updateRecorder(); // Update records of this analog recorder.
       recorderModelChanged = true;
     } else if (!this.model.isSpikeRecorder) {
       // Updates records of the connected analog recorder.

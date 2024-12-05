@@ -118,16 +118,12 @@ export class ActivityAnimationScene {
     if (this._delta <= interval) return;
 
     // Start time step for stats.
-    if (this._stats) {
-      this._stats.begin();
-    }
+    if (this._stats) this._stats.begin();
 
     // Update camera.
     const camera: ICameraState = this._state.camera;
     if (camera.control) {
-      if (camera.rotation.speed > 0) {
-        this.moveCamera();
-      }
+      if (camera.rotation.speed > 0) this.moveCamera();
       this.setCameraPosition();
     }
 
@@ -140,9 +136,7 @@ export class ActivityAnimationScene {
     this.render();
 
     // End time step for stats.
-    if (this._stats) {
-      this._stats.end();
-    }
+    if (this._stats) this._stats.end();
 
     // Modulo delta.
     this._delta = this._delta % interval;
@@ -186,13 +180,8 @@ export class ActivityAnimationScene {
   destroy(): void {
     cancelAnimationFrame(this._animationFrameId);
 
-    if (this._ref.firstChild === this._renderer.domElement) {
-      this._ref.removeChild(this._renderer.domElement);
-    }
-
-    if (document.body.lastChild === this._stats.dom) {
-      document.body.removeChild(this._stats.dom);
-    }
+    if (this._ref.firstChild === this._renderer.domElement) this._ref.removeChild(this._renderer.domElement);
+    if (document.body.lastChild === this._stats.dom) document.body.removeChild(this._stats.dom);
 
     // https://stackoverflow.com/questions/21548247/clean-up-threejs-webgl-contexts
     // TODO: It shows message in the debug:

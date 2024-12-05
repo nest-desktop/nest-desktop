@@ -48,9 +48,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from "vue";
+import { computed, nextTick, onMounted, reactive } from "vue";
 
 import { TModel, TNode } from "@/types";
+
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
 const props = defineProps<{
   elementTypes?: { title: string; value: string }[];
@@ -90,9 +94,8 @@ const select = (props: Record<string, unknown>, open?: boolean) => {
     node.value.modelId = props.value as string;
   }
 
-  if (open) {
-    openMenu();
-  }
+  nextTick(() => graph.value?.render());
+  if (open) openMenu();
 };
 
 onMounted(() => {

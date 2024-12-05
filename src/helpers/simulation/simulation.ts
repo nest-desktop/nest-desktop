@@ -237,9 +237,8 @@ export class BaseSimulation extends BaseObj {
     const simulationProps: ISimulationProps = {
       time: this._time,
     };
-    if (this.code.state.customBlocks) {
-      simulationProps.code = this.code.toJSON();
-    }
+    if (this.code.state.customBlocks) simulationProps.code = this.code.toJSON();
+
     return simulationProps;
   }
 

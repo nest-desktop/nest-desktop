@@ -193,9 +193,8 @@ export class NESTModelReceptor extends BaseObj {
     };
 
     // Add recordables if provided.
-    if (this._recordables.length > 0) {
+    if (this._recordables.length > 0)
       receptorProps.recordables = this._recordables.map((recordable: INodeRecordProps) => recordable.id);
-    }
 
     return receptorProps;
   }
@@ -218,10 +217,9 @@ export class NESTModelReceptor extends BaseObj {
    * Update the recordables from the config.
    */
   updateRecordables(modelProps: IModelProps): void {
-    if (modelProps.recordables) {
+    if (modelProps.recordables)
       this._recordables = this._model.config?.localStorage.recordables.filter((recordable: INodeRecordProps) =>
         modelProps?.recordables?.includes(recordable.id),
       );
-    }
   }
 }

@@ -132,9 +132,7 @@ export class ValueGenerator {
         );
         array = array.map((a: number) => (p.toFixed === -1 ? a : parseFloat(a.toFixed(p.toFixed as number))));
     }
-    if (array.length > 0 && this._sort) {
-      array.sort((a: number, b: number) => a - b);
-    }
+    if (array.length > 0 && this._sort) array.sort((a: number, b: number) => a - b);
     return array;
   }
 }

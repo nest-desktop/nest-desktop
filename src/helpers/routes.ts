@@ -73,9 +73,7 @@ export const modelBeforeEnter = (to: { params: { modelId: string }; path: string
   const modelViewStore = appStore.currentSimulator.views.model;
 
   let modelId: string = "";
-  if (to.params.modelId) {
-    modelId = to.params.modelId;
-  }
+  if (to.params.modelId) modelId = to.params.modelId;
 
   const path = to.path.split("/");
   modelViewStore.state.views.main = path[path.length - 1] || "edit";
@@ -94,9 +92,7 @@ export const modelRedirect = (to: { params: { modelId: string }; path: string })
   const appStore = useAppStore();
   const modelStore = appStore.currentSimulator.stores.modelStore;
 
-  if (to.params.modelId) {
-    modelStore.state.modelId = to.params.modelId;
-  }
+  if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
 
   return modelStore.routeTo();
 };
@@ -117,11 +113,10 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
     if (modelStore.state.modelId === modelId) return;
 
     const modelIds = modelDBStore.state.models.map((model: TModel) => model.id);
-    if (!modelIds.includes(modelId)) {
+    if (!modelIds.includes(modelId))
       errorDialog({
         text: `Model "${props.route.params.modelId}" not found.`,
       });
-    }
   }, 250);
 };
 

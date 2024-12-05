@@ -103,13 +103,8 @@ export class DatabaseService extends BaseObj {
       .allDocs({ include_docs: true })
       .then((res: IRes) => {
         const docs: IDoc[] = res.rows.map((row: { doc: IDoc }) => row.doc);
-        if (sortedBy) {
-          docs.sort((a: IDoc, b: IDoc) => sortString(a[sortedBy], b[sortedBy]));
-        }
-
-        if (reverse) {
-          docs.reverse();
-        }
+        if (sortedBy) docs.sort((a: IDoc, b: IDoc) => sortString(a[sortedBy], b[sortedBy]));
+        if (reverse) docs.reverse();
         return docs;
       })
       .catch((err: IErr) => this.logger.error("Get all docs:", err.stack));
@@ -118,9 +113,7 @@ export class DatabaseService extends BaseObj {
   async reset(): Promise<IDoc | void> {
     this.logger.trace("reset");
 
-    return this.destroy().then(() => {
-      this._db = new PouchDB(this._url, this._options);
-    });
+    return this.destroy().then(() => (this._db = new PouchDB(this._url, this._options)));
   }
 
   clean(data: IDoc): void {

@@ -25,7 +25,7 @@ export class PyNNProject extends BaseProject {
    * @remarks
    * It generates new project id and empties updatedAt variable;
    */
-  clone(): PyNNProject {
+  override clone(): PyNNProject {
     this.logger.trace("clone");
 
     return new PyNNProject({

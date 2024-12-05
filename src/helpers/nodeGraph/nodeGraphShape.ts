@@ -189,9 +189,8 @@ export class NodeGraphShape extends BaseObj {
     nodes.each((node: TNode, idx: number, elements: any) => {
       const elem = select(elements[idx]);
 
-      if (elem.attr("elementType") !== node.elementType || elem.attr("weight") !== node.view.synWeights) {
+      if (elem.attr("elementType") !== node.elementType || elem.attr("weight") !== node.view.synWeights)
         this.drawShape(elem, node);
-      }
 
       elem
         .select(".shape")

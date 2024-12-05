@@ -305,9 +305,7 @@ export class BaseParameter extends BaseObj {
 
   set value(value: TParamValue) {
     this._state.value = value;
-    if (this.props.handleOnUpdate) {
-      this.props.handleOnUpdate(this);
-    }
+    if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
     this.changes();
   }
 
@@ -376,9 +374,7 @@ export class BaseParameter extends BaseObj {
 
     if (paramProps.type) {
       const type = this.config?.localStorage.types.find((t: IParamType) => t.id === paramProps.type?.id);
-      if (type != null) {
-        this._type = { ...type, ...paramProps.type };
-      }
+      if (type != null) this._type = { ...type, ...paramProps.type };
     }
 
     this._format = paramProps.format || "";
@@ -401,9 +397,7 @@ export class BaseParameter extends BaseObj {
    */
   reset(): void {
     this.typeId = "constant";
-    if (this.options) {
-      this._state.value = this.options.defaultValue;
-    }
+    if (this.options) this._state.value = this.options.defaultValue;
   }
 
   /**
@@ -422,9 +416,7 @@ export class BaseParameter extends BaseObj {
    */
   toFixed(value: number | string, fractionDigits: number = 1): string {
     const valueAsString = value.toString();
-    if (valueAsString.includes(".") && fractionDigits > 0) {
-      fractionDigits = valueAsString.split(".")[1].length;
-    }
+    if (valueAsString.includes(".") && fractionDigits > 0) fractionDigits = valueAsString.split(".")[1].length;
     return Number(value).toFixed(fractionDigits);
   }
 
@@ -439,19 +431,13 @@ export class BaseParameter extends BaseObj {
     };
 
     // Add value factors if existed.
-    if (this._factors.length > 0) {
-      paramProps.factors = this._factors;
-    }
+    if (this._factors.length > 0) paramProps.factors = this._factors;
 
     // Add rules for validation if existed.
-    if (this._rules.length > 0) {
-      paramProps.rules = this._rules;
-    }
+    if (this._rules.length > 0) paramProps.rules = this._rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) {
-      paramProps.type = this.typeToJSON();
-    }
+    if (!this.isConstant) paramProps.type = this.typeToJSON();
 
     return paramProps;
   }
@@ -524,12 +510,11 @@ export class BaseParameter extends BaseObj {
       id: this._type.id,
     };
 
-    if (this._type.specs) {
+    if (this._type.specs)
       paramType.specs = this._type.specs.map((spec: IParamTypeSpec) => ({
         id: spec.id,
         value: Number(spec.value),
       }));
-    }
 
     return paramType;
   }

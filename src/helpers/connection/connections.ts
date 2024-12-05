@@ -145,12 +145,8 @@ export class BaseConnections extends BaseObj {
 
     // Update source and target idx in connections
     this.connections.forEach((connection: TConnection) => {
-      if (connection.sourceIdx > node.idx) {
-        connection.sourceIdx -= 1;
-      }
-      if (connection.targetIdx > node.idx) {
-        connection.targetIdx -= 1;
-      }
+      if (connection.sourceIdx > node.idx) connection.sourceIdx -= 1;
+      if (connection.targetIdx > node.idx) connection.targetIdx -= 1;
     });
   }
 
@@ -190,9 +186,8 @@ export class BaseConnections extends BaseObj {
   update(connectionsProps?: IConnectionProps[]): void {
     this.logger.trace("update");
 
-    if (connectionsProps) {
+    if (connectionsProps)
       connectionsProps.forEach((connectionProps: IConnectionProps) => this.addConnection(connectionProps));
-    }
 
     this.clean();
     this.updateHash();

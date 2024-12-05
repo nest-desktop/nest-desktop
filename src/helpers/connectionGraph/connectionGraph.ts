@@ -106,12 +106,12 @@ export class ConnectionGraph extends BaseObj {
         c.state.focus();
 
         // Draw line between selected node and focused connection.
-        if (c.network.connections.state.selectedNode && this.state.dragLine) {
+        if (c.network.connections.state.selectedNode && this.state.dragLine)
           this._networkGraph.workspace.dragline.drawPath(
             c.network.connections.state.selectedNode.view.position,
             c.view.markerEndPosition,
           );
-        }
+
         this._networkGraph.update();
       })
       .on("mouseout", () => {

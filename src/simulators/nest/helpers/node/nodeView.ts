@@ -62,12 +62,8 @@ export class NESTNodeView extends NodeView {
       (connection: NESTConnection) => connection.synapse.params.weight.value as number,
     );
 
-    if (weights.every((weight: number) => weight > 0)) {
-      return "excitatory";
-    }
-    if (weights.every((weight: number) => weight < 0)) {
-      return "inhibitory";
-    }
+    if (weights.every((weight: number) => weight > 0)) return "excitatory";
+    if (weights.every((weight: number) => weight < 0)) return "inhibitory";
     return "mixed";
   }
 
@@ -101,9 +97,7 @@ export class NESTNodeView extends NodeView {
       if (copiedSynapseModels.length === 1) {
         const copiedSynapseModel = copiedSynapseModels[0];
         const connection = this.node.nodes.network.connections.getBySynapseModelId(copiedSynapseModel.id);
-        if (connection) {
-          this.state.position = connection.view.centerPosition;
-        }
+        if (connection) this.state.position = connection.view.centerPosition;
       }
     }
   }

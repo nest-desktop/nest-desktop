@@ -162,9 +162,7 @@ export class NetworkGraphWorkspace extends BaseObj {
           this.update();
         }
       })
-      .on("keydown", (event: { keyCode: number }) => {
-        this._state.keyCode = event.keyCode;
-      });
+      .on("keydown", (event: { keyCode: number }) => (this._state.keyCode = event.keyCode));
 
     this._handler
       .on("mousemove", (event: MouseEvent) => {

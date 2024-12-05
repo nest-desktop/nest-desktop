@@ -35,12 +35,11 @@ export class BaseObj {
       ...props?.logger?.settings,
     });
 
-    if (props?.config) {
+    if (props?.config)
       this._config = new Config({
         name: this.constructor.name,
         ...props?.config,
       });
-    }
   }
 
   get config(): Config | undefined {

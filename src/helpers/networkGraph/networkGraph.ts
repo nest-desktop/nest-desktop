@@ -60,11 +60,7 @@ export class BaseNetworkGraph extends BaseObj {
       hash: "",
     });
 
-    this._resizeObserver = new ResizeObserver(
-      debounce(() => {
-        this._workspace.updateTransform();
-      }),
-    );
+    this._resizeObserver = new ResizeObserver(debounce(() => this._workspace.updateTransform()));
   }
 
   get connectionGraph(): ConnectionGraph {

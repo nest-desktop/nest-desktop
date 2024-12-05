@@ -37,9 +37,7 @@ export class ConnectionView {
    */
   get colorWeight(): string {
     const value: number = this._connection.synapse.weight;
-    if (value === 0) {
-      return "black";
-    }
+    if (value === 0) return "black";
     return value > 0 ? this._colorExcitation : this._colorInhibition;
   }
 

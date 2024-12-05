@@ -138,9 +138,7 @@ export class NESTSimulation extends BaseSimulation {
       })
       .catch((error: AxiosError<IAxiosErrorData | string>) => {
         this.project.insite.cancelAllIntervals();
-        if ("response" in error && error.response?.data != undefined) {
-          notifyError(error.response.data as string);
-        }
+        if ("response" in error && error.response?.data != undefined) notifyError(error.response.data as string);
       });
   }
 
@@ -153,12 +151,8 @@ export class NESTSimulation extends BaseSimulation {
       kernel: this._kernel.toJSON(),
       time: this.time,
     };
-    if (this.code.state.customBlocks) {
-      simulationProps.code = this.code.toJSON();
-    }
-    if (this._modules.length > 0) {
-      simulationProps.modules = this._modules;
-    }
+    if (this.code.state.customBlocks) simulationProps.code = this.code.toJSON();
+    if (this._modules.length > 0) simulationProps.modules = this._modules;
     return simulationProps;
   }
 

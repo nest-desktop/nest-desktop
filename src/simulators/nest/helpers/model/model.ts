@@ -135,9 +135,7 @@ export class NESTModel extends BaseModel {
   replaceModelId(modelLabel: string): void {
     if (this._templateName.length > 0) {
       const elementType = this._templateName.split("_").pop() as TElementType;
-      if (["neuron", "synapse"].includes(elementType)) {
-        this.elementType = elementType;
-      }
+      if (["neuron", "synapse"].includes(elementType)) this.elementType = elementType;
     }
 
     let modelId = modelLabel.trimEnd().replaceAll(" ", "_");
@@ -166,39 +164,25 @@ export class NESTModel extends BaseModel {
       version: process.env.APP_VERSION,
     };
 
-    if (this.abbreviation) {
-      modelProps.abbreviation = this.abbreviation;
-    }
-
-    if (this.custom) {
-      modelProps.custom = this.custom;
-    }
+    if (this.abbreviation) modelProps.abbreviation = this.abbreviation;
+    if (this.custom) modelProps.custom = this.custom;
 
     // Add the states if provided.
-    if (this.states.length > 0) {
-      modelProps.states = this.states.map((state: IModelStateProps) => state);
-    }
+    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state);
 
     // Add the compartment parameters if provided.
-    if (this._compartmentParamsVisible.length > 0) {
+    if (this._compartmentParamsVisible.length > 0)
       modelProps.compartmentParams = Object.values(this._compartmentParams).map(
         (param: NESTModelCompartmentParameter) => param.toJSON(),
       );
-    }
 
     // Add the receptors if provided.
-    if (Object.keys(this._receptors).length > 0) {
+    if (Object.keys(this._receptors).length > 0)
       modelProps.receptors = Object.values(this._receptors).map((receptor: NESTModelReceptor) => receptor.toJSON());
-    }
 
     // Add NESTML script if provided.
-    if (this._nestmlScript) {
-      modelProps.nestmlScript = this._nestmlScript;
-    }
-
-    if (this._templateName) {
-      modelProps.templateName = this._templateName;
-    }
+    if (this._nestmlScript) modelProps.nestmlScript = this._nestmlScript;
+    if (this._templateName) modelProps.templateName = this._templateName;
 
     return modelProps;
   }

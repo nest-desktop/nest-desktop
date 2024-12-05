@@ -298,9 +298,7 @@ export class NESTCopyModel extends BaseObj {
 
     this._params[paramProps.id] = new NESTCopyModelParameter(this, paramProps);
 
-    if (visible) {
-      this._paramsVisible.push(paramProps.id);
-    }
+    if (visible) this._paramsVisible.push(paramProps.id);
   }
 
   /**
@@ -340,9 +338,7 @@ export class NESTCopyModel extends BaseObj {
 
       if (paramsProps) {
         const weightRecorderParam = paramsProps.find((paramProps: IParamProps) => paramProps.id === "weight_recorder");
-        if (weightRecorderParam && weightRecorderParam.value) {
-          weightRecorder = weightRecorderParam.value;
-        }
+        if (weightRecorderParam && weightRecorderParam.value) weightRecorder = weightRecorderParam.value;
       }
 
       if (weightRecorder) {

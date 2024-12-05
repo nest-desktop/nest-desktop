@@ -102,20 +102,9 @@ export class GridPositions extends BasePositions {
   }
 
   override update(positionProps?: IGridPositionsProps) {
-    if (positionProps?.numDimensions) {
-      this.numDimensions = positionProps.numDimensions;
-    }
-
-    if (positionProps?.center) {
-      this.center = positionProps.center;
-    }
-
-    if (positionProps?.extent) {
-      this.extent = positionProps.extent;
-    }
-
-    if (positionProps?.shape) {
-      this.shape = positionProps.shape;
-    }
+    if (positionProps?.numDimensions) this.numDimensions = positionProps.numDimensions;
+    if (positionProps?.center) this.center = positionProps.center;
+    if (positionProps?.extent) this.extent = positionProps.extent;
+    if (positionProps?.shape) this.shape = positionProps.shape;
   }
 }

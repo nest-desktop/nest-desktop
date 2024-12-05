@@ -35,9 +35,7 @@ export class BaseModelDB extends DatabaseService {
     const models: Promise<TModelProps>[] = modelsProps.map(
       (modelProps: TModelProps) =>
         new Promise<TModelProps>((resolve) => {
-          this.create(modelProps as IDoc).then(() => {
-            resolve(modelProps);
-          });
+          this.create(modelProps as IDoc).then(() => resolve(modelProps));
         }),
     );
     return Promise.all(models);
@@ -63,10 +61,7 @@ export class BaseModelDB extends DatabaseService {
   async deleteModels(models: (TModel | TModelProps)[]): Promise<IDoc[]> {
     this.logger.trace("delete models");
 
-    const modelDocIds: string[] = models.map((model: TModel | TModelProps) => {
-      const modelDocId: string = model.docId || model.id;
-      return modelDocId;
-    });
+    const modelDocIds: string[] = models.map((model: TModel | TModelProps) => model.docId || model.id);
     return this.deleteBulk(modelDocIds);
   }
 

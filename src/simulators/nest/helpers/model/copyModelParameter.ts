@@ -70,9 +70,7 @@ export class NESTCopyModelParameter extends BaseParameter {
     }
 
     // Add rules for validation if existed.
-    if (this.rules.length > 0) {
-      paramProps.rules = this.rules;
-    }
+    if (this.rules.length > 0) paramProps.rules = this.rules;
 
     return paramProps;
   }
