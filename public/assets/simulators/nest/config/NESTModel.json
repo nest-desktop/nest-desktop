@@ -136,6 +136,15 @@
       "label": "potassium channel activation"
     },
     {
+      "id": "noise",
+      "label": "noise"
+    },
+    {
+      "id": "noisy_rate",
+      "label": "noisy rate",
+      "unit": "spikes/s"
+    },
+    {
       "id": "rate",
       "label": "firing rate",
       "unit": "spikes/s"

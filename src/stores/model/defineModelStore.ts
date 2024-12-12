@@ -27,6 +27,9 @@ interface IModelStoreState {
   projectId: string;
   projectFilename?: string;
   recentAddedModels: Record<TElementType, string[]>;
+  stopwatch: {
+    build: number;
+  };
 }
 
 export function defineModelStore(
@@ -58,6 +61,9 @@ export function defineModelStore(
           recorder: [],
           stimulator: [],
           synapse: [],
+        },
+        stopwatch: {
+          build: 0,
         },
       });
 

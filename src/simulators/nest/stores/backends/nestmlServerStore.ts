@@ -2,10 +2,11 @@
 
 import { AxiosError, AxiosResponse } from "axios";
 
-import { notifyError, notifySuccess } from "@/helpers/common/notification";
+import { TStore } from "@/types";
 import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
-import { TStore } from "@/types";
+import { notifyError, notifySuccess } from "@/helpers/common/notification";
+import { useNESTModelStore } from "../model/modelStore";
 
 export const useNESTMLServerStore = defineBackendStore("nest", "nestml", "http://localhost:52426");
 
@@ -19,8 +20,10 @@ export const generateModels = (
   },
 ): Promise<void> => {
   const nestmlServerStore = useNESTMLServerStore();
+  const modelStore = useNESTModelStore();
 
   openLoading("Models are building... Please wait");
+  const buildtoc = Date.now();
   return nestmlServerStore
     .axiosInstance()
     .post("/generateModels", {
@@ -28,6 +31,7 @@ export const generateModels = (
       models: module.models,
     })
     .then((response: AxiosResponse) => {
+      modelStore.state.stopwatch.build = Date.now() - buildtoc;
       switch (response.status) {
         case 200:
           notifySuccess(
@@ -42,6 +46,7 @@ export const generateModels = (
       }
     })
     .catch((error: AxiosError) => {
+      modelStore.state.stopwatch.build = Date.now() - buildtoc;
       notifyError((error.response?.data || error.message) as string);
     })
     .finally(() => {
