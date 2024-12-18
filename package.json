@@ -78,7 +78,7 @@
     "@vue/test-utils": "~2.4",
     "electron": "~33.2",
     "electron-builder": "~25.1",
-    "electron-devtools-installer": "~3.2",
+    "electron-devtools-installer": "~4.0",
     "eslint": "~9.17",
     "eslint-config-prettier": "~9.1",
     "eslint-plugin-vue": "~9.32",
