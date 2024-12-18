@@ -1,6 +1,6 @@
 // pynnSimulatorStore.ts
 
-import { defineBackendStore } from "@/stores/defineBackendStore";
+import { defineBackendStore, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
 
 export const usePyNNSimulatorStore = defineBackendStore("pynn", "pynn", "http://localhost:91198");
@@ -12,9 +12,11 @@ export const pynnSimulatorInit = (): TStore => {
   return pynnSimulatorStore;
 };
 
-const simulate = (data: { source: string; return?: string }) => {
+const simulate = (source: string, responseKeys: string | string[] = "response") => {
   const pynnSimulatorStore = usePyNNSimulatorStore();
-  return pynnSimulatorStore.axiosInstance().post("exec", data);
+  return pynnSimulatorStore
+    .axiosInstance()
+    .post<IAxiosResponseData>("exec", { source, response_keys: responseKeys, return: responseKeys });
 };
 
 export default { simulate };

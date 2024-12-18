@@ -1,6 +1,6 @@
 // norseSimulatorStore.ts
 
-import { defineBackendStore } from "@/stores/defineBackendStore";
+import { defineBackendStore, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { TStore } from "@/types";
 
 export const useNorseSimulatorStore = defineBackendStore("norse", "norse", "http://localhost:11428");
@@ -12,9 +12,11 @@ export const norseSimulatorInit = (): TStore => {
   return norseSimulatorStore;
 };
 
-const simulate = (data: { source: string; return?: string }) => {
+const simulate = (source: string, responseKeys: string | string[] = "response") => {
   const norseSimulatorStore = useNorseSimulatorStore();
-  return norseSimulatorStore.axiosInstance().post("exec", data);
+  return norseSimulatorStore
+    .axiosInstance()
+    .post<IAxiosResponseData>("exec", { source, response_keys: responseKeys, return: responseKeys });
 };
 
 export default { simulate };

@@ -10,11 +10,6 @@ import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 
-export interface IAxiosRequestData {
-  source: string;
-  return?: string;
-}
-
 export interface IAxiosResponseData {
   data: IResponseData;
   status: number;

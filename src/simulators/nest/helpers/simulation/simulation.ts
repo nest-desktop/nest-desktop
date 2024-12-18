@@ -88,22 +88,20 @@ export class NESTSimulation extends BaseSimulation {
   async runSimulation(): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation");
 
-    return nest
-      .simulate({ source: this.code.script, return: "response" })
-      .then((response: AxiosResponse<IAxiosResponseData>) => {
-        if (response.data.data == null) return response;
+    return nest.simulate(this.code.script).then((response: AxiosResponse<IAxiosResponseData>) => {
+      if (response.data.data == null) return response;
 
-        let data: IResponseData;
-        switch (response.status) {
-          case 200:
-            data = response.data.data;
+      let data: IResponseData;
+      switch (response.status) {
+        case 200:
+          data = response.data.data;
 
-            // Get biological time
-            this.state.biologicalTime = data.biological_time != null ? data.biological_time : this.time;
-            break;
-        }
-        return response;
-      });
+          // Get biological time
+          this.state.biologicalTime = data.biological_time != null ? data.biological_time : this.time;
+          break;
+      }
+      return response;
+    });
   }
 
   /**
@@ -121,7 +119,7 @@ export class NESTSimulation extends BaseSimulation {
     };
 
     return nest
-      .simulate({ source: this.code.script })
+      .simulate(this.code.script, "")
       .then((response: AxiosResponse<IAxiosResponseData>) => {
         switch (response.status) {
           case 200:

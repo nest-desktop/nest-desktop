@@ -28,29 +28,24 @@ export class PyNNSimulation extends BaseSimulation {
   override async run(): Promise<AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("run simulation");
 
-    return pynnSimulator
-      .simulate({
-        source: this.code.script,
-        return: "response",
-      })
-      .then((response: AxiosResponse<IAxiosResponseData>) => {
-        if (response.data.data == null) return response;
+    return pynnSimulator.simulate(this.code.script).then((response: AxiosResponse<IAxiosResponseData>) => {
+      if (response.data.data == null) return response;
 
-        let data: {
-          events: IEventProps[];
-          biological_time: number;
-        };
-        switch (response.status) {
-          case 200:
-            data = response.data.data;
+      let data: {
+        events: IEventProps[];
+        biological_time: number;
+      };
+      switch (response.status) {
+        case 200:
+          data = response.data.data;
 
-            // Get biological time
-            this.state.biologicalTime = data.biological_time || this.time;
+          // Get biological time
+          this.state.biologicalTime = data.biological_time || this.time;
 
-            break;
-        }
+          break;
+      }
 
-        return response;
-      });
+      return response;
+    });
   }
 }
