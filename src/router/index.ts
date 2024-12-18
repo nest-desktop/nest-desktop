@@ -29,8 +29,8 @@ const routes: RouteRecordRaw[] = [
       logger.trace("before enter app layout");
 
       const appStore = useAppStore();
-      if (!appStore.hasSimulator) {
-        appStore.resetSimulator();
+      if (!appStore.hasWorkspace) {
+        appStore.resetWorkspace();
       }
     },
     component: () => import("@/layouts/AppLayout.vue"),

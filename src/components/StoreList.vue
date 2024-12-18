@@ -36,10 +36,10 @@
       <v-window-item value="project">
         <v-card-subtitle v-if="appStore.state.devMode" :key="stores.projectStore.state.projectId">
           Current project:
-          {{ truncate(appStore.currentSimulator.stores.projectStore.state.projectId) }}
+          {{ truncate(appStore.currentWorkspace.stores.projectStore.state.projectId) }}
         </v-card-subtitle>
         <v-list :key="stores.projectDBStore.state.projects.length" density="compact" lines="two" nav>
-          <v-list-item :to="{ name: appStore.state.simulator + 'ProjectNew' }">
+          <v-list-item :to="{ name: appStore.state.workspace + 'ProjectNew' }">
             <template #prepend>
               <v-icon icon="mdi:mdi-plus" />
             </template>
@@ -55,7 +55,7 @@
             :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
             :title="project.name || 'undefined project ' + stores.projectDBStore.getProjectIdx(project)"
             :to="{
-              name: appStore.state.simulator + 'Project',
+              name: appStore.state.workspace + 'Project',
               params: { projectId: project.id },
             }"
           />
@@ -75,7 +75,7 @@
             :subtitle="model.elementType"
             :title="model.state.label"
             :to="{
-              name: appStore.state.simulator + 'Model',
+              name: appStore.state.workspace + 'Model',
               params: { modelId: model.id },
             }"
           />
@@ -96,7 +96,7 @@ import { truncate } from "@/utils/truncate";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const stores = computed(() => appStore.currentSimulator.stores);
+const stores = computed(() => appStore.currentWorkspace.stores);
 
 const databaseTab = ref("project");
 

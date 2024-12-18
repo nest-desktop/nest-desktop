@@ -182,8 +182,8 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
-const modelViewStore = computed(() => appStore.currentSimulator.views.model);
+const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
+const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
 
 const modelParams = computed(() => modelStore.value.model.paramsAll);
 

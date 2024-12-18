@@ -285,7 +285,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this.close();
 
     const appStore = useAppStore();
-    const modelStore = appStore.currentSimulator.stores.modelStore;
+    const modelStore = appStore.currentWorkspace.stores.modelStore;
 
     if (!this.network) return;
     modelStore.updateRecentAddedModels(modelId, elementType);
@@ -335,7 +335,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
     if (this.network) {
       const appStore = useAppStore();
-      const modelStore = appStore.currentSimulator.stores.modelStore;
+      const modelStore = appStore.currentWorkspace.stores.modelStore;
 
       modelStore.state.recentAddedModels[elementType].forEach((modelId: string, modelIdx: number) => {
         const model = modelStore.getModel(modelId);

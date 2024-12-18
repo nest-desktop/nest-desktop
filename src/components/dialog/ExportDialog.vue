@@ -70,8 +70,8 @@ const props = defineProps({
   },
 });
 
-const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
-const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
+const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
+const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 
 const state = reactive<{ items: IExportProps[]; selected: IExportProps[] }>({
   items: [],

@@ -42,8 +42,8 @@
           <v-card>
             <v-card-text>
               <v-select
-                v-model="simulator"
-                :items="simulatorItems"
+                v-model="workspace"
+                :items="workspaceItems"
                 density="compact"
                 hide-details
                 item-value="id"
@@ -51,7 +51,7 @@
               />
 
               <v-list>
-                <v-list-item v-for="(database, index) in simulators[simulator].databases" :key="index">
+                <v-list-item v-for="(database, index) in workspaces[workspace].databases" :key="index">
                   {{ database }}
                   <template #append>
                     <v-btn
@@ -76,14 +76,14 @@ import { computed, ref } from "vue";
 import PouchDB from "pouchdb";
 
 import { confirmDialog } from "@/helpers/common/confirmDialog";
-import { simulators } from "@/simulators";
+import { workspaces } from "@/workspaces";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
-const simulatorItems = computed(() => Object.values(simulators));
+const workspaceItems = computed(() => Object.values(workspaces));
 
-const simulator = ref("nest");
+const workspace = ref("nest");
 
 const configs = ["App", "Connection", "Network", "NetworkGraph", "Node", "NodeRecord", "Simulation"];
 

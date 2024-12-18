@@ -15,11 +15,11 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import { TValue } from "@/types";
+
 import RangeSlider from "./RangeSlider.vue";
 import TickSlider from "./TickSlider.vue";
 import ValueSlider from "./ValueSlider.vue";
-
-type TValue = number | string | number[];
 
 interface IOptions {
   component?: "rangeSlider" | "tickSlider" | "valueSlider" | string;

@@ -3,7 +3,7 @@
     <v-tabs :mandatory="false" :model-value="navStore.state.view" color="primary" direction="vertical" stacked>
       <v-tab
         v-for="(item, index) in navItems"
-        v-show="item.simulator === appStore.state.simulator"
+        v-show="item.workspace === appStore.state.workspace"
         :key="index"
         :ripple="false"
         class="justify-center"
@@ -30,7 +30,7 @@
         @click.stop="navStore.toggle(item)"
         class="py-3 my-0 justify-center"
         v-for="(item, index) in navItems"
-        v-show="item.simulator === appStore.state.simulator"
+        v-show="item.workspace === appStore.state.workspace"
       >
         <v-icon :icon="item.icon" size="large" />
         <span class="text-button" style="font-size: 9px !important">
@@ -70,7 +70,7 @@ defineProps<{
   navItems: {
     id: string;
     icon: string;
-    simulator: string;
+    workspace: string;
     title: string;
     to: { name: string };
   }[];

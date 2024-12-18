@@ -34,7 +34,7 @@ const state = reactive({
 const extensions: Extension[] = [
   basicSetup,
   languagePython(),
-  autocompletion({ override: appStore.currentSimulator.completionSources }),
+  autocompletion({ override: appStore.currentWorkspace.completionSources }),
   simulationCodeError(simulation.value.state),
 ];
 

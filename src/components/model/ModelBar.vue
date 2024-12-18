@@ -9,7 +9,7 @@
             :key="index"
             :title="tabItem.title"
             :to="{
-              name: appStore.state.simulator + tabItem.to.name,
+              name: appStore.state.workspace + tabItem.to.name,
               params: {
                 modelId: modelStore.state.modelId,
               },
@@ -57,7 +57,7 @@ import SimulationButton from "../simulation/SimulationButton.vue";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
+const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
 
 const tabItems = [
   {

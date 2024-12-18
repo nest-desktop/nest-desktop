@@ -232,7 +232,7 @@ export class BaseProject extends BaseObj {
     this._simulation.code.generate();
 
     const appStore = useAppStore();
-    const projectViewStore = appStore.currentSimulator.views.project;
+    const projectViewStore = appStore.currentWorkspace.views.project;
     if (projectViewStore.state.simulationEvents.onCheckout) {
       // Run simulation.
       nextTick(() => this.startSimulation());
@@ -321,7 +321,7 @@ export class BaseProject extends BaseObj {
     this.activities.reset();
 
     const appStore = useAppStore();
-    const projectViewStore = appStore.currentSimulator.views.project;
+    const projectViewStore = appStore.currentWorkspace.views.project;
     if (!projectViewStore.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
 
     const simtoc = Date.now();
@@ -350,7 +350,7 @@ export class BaseProject extends BaseObj {
    */
   startSimulationOnChange(): void {
     const appStore = useAppStore();
-    const projectViewStore = appStore.currentSimulator.views.project;
+    const projectViewStore = appStore.currentWorkspace.views.project;
     if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
   }
 

@@ -42,23 +42,23 @@ export function defineModelDBStore(
     ModelDB: Class<TModelDB>;
     loggerMinLevel?: number;
     modelAssets?: string[];
-    simulator: string;
+    workspace: string;
   } = {
     Model: BaseModel,
     ModelDB: BaseModelDB,
-    simulator: "base",
+    workspace: "base",
   },
 ) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
-    name: props.simulator + " model DB store",
+    name: props.workspace + " model DB store",
   });
 
   const db = new props.ModelDB();
   // @ts-expect-error Cannot find namespace 'props'.
   type Model = props.Model;
 
-  return defineStore(props.simulator + "-model-db", () => {
+  return defineStore(props.workspace + "-model-db", () => {
     const state = reactive<IModelDBStoreState>({
       initialized: false,
       models: [],
@@ -189,7 +189,7 @@ export function defineModelDBStore(
       let promises: Promise<TModelProps>[] = [];
       if (props.modelAssets) {
         promises = props.modelAssets.map(async (file: string) => {
-          return loadJSON(`assets/simulators/${props.simulator}/models/${file}.json`).then((modelProps: TModelProps) =>
+          return loadJSON(`assets/workspaces/${props.workspace}/models/${file}.json`).then((modelProps: TModelProps) =>
             db.create(modelProps as IDoc),
           );
         });

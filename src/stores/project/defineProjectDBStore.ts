@@ -24,23 +24,23 @@ export function defineProjectDBStore(
     ProjectDB: Class<TProjectDB>;
     loggerMinLevel?: number;
     projectAssets?: string[];
-    simulator: string;
+    workspace: string;
   } = {
     Project: BaseProject,
     ProjectDB: BaseProjectDB,
-    simulator: "base",
+    workspace: "base",
   },
 ) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
-    name: props.simulator + " project DB store",
+    name: props.workspace + " project DB store",
   });
 
   const db = new props.ProjectDB();
   // @ts-expect-error Cannot find namespace 'props'.
   type Project = props.Project;
 
-  return defineStore(props.simulator + "-project-db", () => {
+  return defineStore(props.workspace + "-project-db", () => {
     const state = reactive<IProjectDBStoreState>({
       initialized: false,
       projects: [] as (Project | TProjectProps)[],
@@ -211,7 +211,7 @@ export function defineProjectDBStore(
       let promises: Promise<TProjectProps>[] = [];
       if (props.projectAssets) {
         promises = props.projectAssets.map(async (file: string) => {
-          return loadJSON(`assets/simulators/${props.simulator}/projects/${file}.json`).then((data) => db.create(data));
+          return loadJSON(`assets/workspaces/${props.workspace}/projects/${file}.json`).then((data) => db.create(data));
         });
       }
       return Promise.all(promises);

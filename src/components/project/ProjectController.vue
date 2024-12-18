@@ -151,9 +151,9 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
+const projectStore = computed(() => appStore.currentWorkspace.stores.projectStore);
 const project = computed(() => projectStore.value.state.project);
-const projectViewStore = computed(() => appStore.currentSimulator.views.project);
+const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
 
 const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
 

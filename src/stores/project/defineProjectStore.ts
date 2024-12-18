@@ -22,20 +22,20 @@ export function defineProjectStore(
   props: {
     Project: Class<TProject>;
     loggerMinLevel?: number;
-    simulator: string;
+    workspace: string;
     useProjectDBStore: TStore;
   } = {
     Project: BaseProject,
-    simulator: "base",
+    workspace: "base",
     useProjectDBStore,
   },
 ) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
-    name: props.simulator + " project store",
+    name: props.workspace + " project store",
   });
 
-  return defineStore(props.simulator + "-project", () => {
+  return defineStore(props.workspace + "-project", () => {
     const state = reactive<IProjectStoreState>({
       code: "print('hello world!')",
       project: null,
@@ -108,7 +108,7 @@ export function defineProjectStore(
       // const projectViewStore = useProjectViewStore();
 
       const appStore = useAppStore();
-      const projectViewStore = appStore.currentSimulator.views.project;
+      const projectViewStore = appStore.currentWorkspace.views.project;
       if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
         startSimulation();
       }
@@ -142,10 +142,10 @@ export function defineProjectStore(
      */
     const routeTo = (): { path: string } => {
       const appStore = useAppStore();
-      const projectViewStore = appStore.currentSimulator.views.project;
+      const projectViewStore = appStore.currentWorkspace.views.project;
 
       return {
-        path: "/" + props.simulator + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
+        path: "/" + props.workspace + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
       };
     };
 
@@ -166,7 +166,7 @@ export function defineProjectStore(
 
       router
         .push({
-          name: props.simulator + "ActivityExplorer",
+          name: props.workspace + "ActivityExplorer",
           params: { projectId: state.projectId },
         })
         .then(() => {

@@ -36,7 +36,7 @@ import { TSimulation } from "@/types";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const projectViewStore = appStore.currentSimulator.views.project;
+const projectViewStore = appStore.currentWorkspace.views.project;
 
 const props = defineProps<{
   simulation: TSimulation;

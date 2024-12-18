@@ -36,20 +36,20 @@ export function defineModelStore(
   props: {
     defaultView?: string;
     loggerMinLevel?: number;
-    simulator: string;
+    workspace: string;
     useModelDBStore: TStore;
   } = {
-    simulator: "base",
+    workspace: "base",
     useModelDBStore,
   },
 ) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
-    name: props.simulator + " model store",
+    name: props.workspace + " model store",
   });
 
   return defineStore(
-    props.simulator + "-model",
+    props.workspace + "-model",
     () => {
       const state = reactive<IModelStoreState>({
         modelId: "",
@@ -116,9 +116,9 @@ export function defineModelStore(
       const loadProjectfromAssets = (): void => {
         logger.trace("load project from assets:", state.projectId);
         const appStore = useAppStore();
-        const projectStore = appStore.currentSimulator.stores.projectStore;
+        const projectStore = appStore.currentWorkspace.stores.projectStore;
 
-        loadJSON(`assets/simulators/${props.simulator}/projects/${state.projectId}.json`).then(
+        loadJSON(`assets/workspaces/${props.workspace}/projects/${state.projectId}.json`).then(
           (projectProps: IProjectProps) => {
             projectProps.filename = state.projectId;
             model.value.project = new projectStore.props.Project(projectProps);
@@ -145,10 +145,10 @@ export function defineModelStore(
        */
       const routeTo = (): { path: string } => {
         const appStore = useAppStore();
-        const modelViewStore = appStore.currentSimulator.views.model;
+        const modelViewStore = appStore.currentWorkspace.views.model;
 
         return {
-          path: "/" + props.simulator + "/model/" + state.modelId + "/" + modelViewStore.state.views.main,
+          path: "/" + props.workspace + "/model/" + state.modelId + "/" + modelViewStore.state.views.main,
         };
       };
 
@@ -185,7 +185,7 @@ export function defineModelStore(
 
         router
           .push({
-            name: props.simulator + "ModelExplorer",
+            name: props.workspace + "ModelExplorer",
             params: { modelId: state.modelId },
           })
           .then(() => {

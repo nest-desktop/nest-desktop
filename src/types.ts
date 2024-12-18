@@ -1,6 +1,7 @@
 // types.ts
 
 import { Arc, DragBehavior, Selection, Transition, ZoomBehavior } from "d3";
+import { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
 import { Store } from "pinia";
 
 import { BaseActivityGraph } from "./helpers/activity/activityGraph";
@@ -24,14 +25,12 @@ import { BaseSimulation, ISimulationProps } from "./helpers/simulation/simulatio
 import { BaseSimulationCode } from "./helpers/simulation/simulationCode";
 import { BaseSynapse, ISynapseProps } from "./helpers/synapse/synapse";
 import { BaseSynapseParameter } from "./helpers/synapse/synapseParameter";
-import { NESTSynapseParameter } from "./simulators/nest/helpers/synapse/synapseParameter";
 //
-// Simulators
+// Workspaces
 //
-import * as nest from "./simulators/nest/types";
-import * as norse from "./simulators/norse/types";
-import * as pynn from "./simulators/pynn/types";
-import { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
+import * as nest from "./workspaces/nest/types";
+import * as norse from "./workspaces/norse/types";
+import * as pynn from "./workspaces/pynn/types";
 
 export type TActivityGraph = BaseActivityGraph | nest.NESTActivityGraph;
 export type TConnection = BaseConnection | nest.NESTConnection | norse.NorseConnection;
@@ -79,7 +78,7 @@ export type TSimulationCode =
   | pynn.PyNNSimulationCode;
 export type TSimulationProps = ISimulationProps | nest.INESTSimulationProps | norse.INorseSimulationProps;
 export type TSynapse = BaseSynapse | nest.NESTSynapse;
-export type TSynapseParameter = BaseSynapseParameter | NESTSynapseParameter;
+export type TSynapseParameter = BaseSynapseParameter | nest.NESTSynapseParameter;
 export type TSynapseProps = ISynapseProps | nest.INESTSynapseProps;
 
 // Pinia
@@ -94,3 +93,5 @@ export type TTransition = Transition<any, any, null, undefined>;
 export type TZoomBehavior = ZoomBehavior<any, any>;
 
 export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
+
+export type TValue = any;

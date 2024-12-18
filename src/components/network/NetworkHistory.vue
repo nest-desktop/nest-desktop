@@ -46,7 +46,7 @@ import { computed } from "vue";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const project = computed(() => appStore.currentSimulator.stores.projectStore.state.project);
+const project = computed(() => appStore.currentWorkspace.stores.projectStore.state.project);
 
 /**
  * Count networks before the current.

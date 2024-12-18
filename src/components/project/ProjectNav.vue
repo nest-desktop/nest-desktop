@@ -84,7 +84,7 @@
           <v-list-item
             :key="index"
             :to="{
-              name: appStore.state.simulator + 'Project',
+              name: appStore.state.workspace + 'Project',
               params: { projectId: project.id },
             }"
             :ripple="!project.state?.editMode"
@@ -175,9 +175,9 @@ const navStore = useNavStore();
 
 defineProps<{ color: string }>();
 
-const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
+const projectStore = computed(() => appStore.currentWorkspace.stores.projectStore);
 
-const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
+const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 
 const projects = computed(() =>
   projectDBStore.value.state.projects.filter((project: TProject) =>

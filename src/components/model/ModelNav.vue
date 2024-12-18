@@ -91,7 +91,7 @@
               :subtitle="(item as TModel).elementType"
               :title="(item as TModel).state.label || (item as TModel).id"
               :to="{
-                name: appStore.state.simulator + 'Model',
+                name: appStore.state.workspace + 'Model',
                 params: { modelId: (item as TModel).id },
               }"
               v-bind="props"
@@ -134,13 +134,13 @@ const navStore = useNavStore();
 
 defineProps<{ color: string }>();
 
-const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
-const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
+const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
+const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
 
 const models = computed(() => {
   let models: TModel[] = [];
 
-  if (state.source == appStore.currentSimulator.id) {
+  if (state.source == appStore.currentWorkspace.id) {
     models = modelStore.value.state.models;
   } else {
     models = modelDBStore.value.state.models;
@@ -178,7 +178,7 @@ const state = reactive<{
   source: "installed",
 });
 
-const sources = ["installed", "custom", appStore.currentSimulator.id];
+const sources = ["installed", "custom", appStore.currentWorkspace.id];
 const elementTypes: TElementType[] = ["neuron", "recorder", "stimulator", "synapse"];
 
 const items = [
@@ -263,7 +263,7 @@ const items = [
 
 //       nextTick(() => {
 //         router.push({
-//           name: appStore.state.simulator + "ModelEditor",
+//           name: appStore.state.workspace + "ModelEditor",
 //           params: { modelId: model.id },
 //         });
 //       });

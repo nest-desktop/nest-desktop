@@ -21,7 +21,7 @@ const props = defineProps<{
 }>();
 
 const model = computed(() => props.model);
-const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
+const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
 
 const items = [
   {
@@ -36,7 +36,7 @@ const items = [
       const newModel = modelDBStore.value.duplicateModel(model.value);
       if (!route.path.endsWith(newModel.id)) {
         router.push({
-          name: appStore.state.simulator + "ModelEditor",
+          name: appStore.state.workspace + "ModelEditor",
           params: { modelId: newModel.id },
         });
       }
