@@ -6,6 +6,7 @@ process.env.DIST = join(__dirname, "../dist");
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST, "../public");
 
 import { BrowserWindow, app } from "electron";
+// import { installExtension, REDUX_DEVTOOLS, VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { join } from "path";
 
 // https://github.com/electron/electron/issues/32760
@@ -46,6 +47,10 @@ async function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+  // installExtension([REDUX_DEVTOOLS, VUEJS_DEVTOOLS])
+  //   .then(([redux, vuejs]: Electron.Extension[]) => console.log(`Added Extensions:  ${redux.name}, ${vuejs.name}`))
+  //   .catch((err: any) => console.log("An error occurred: ", err));
+
   createWindow();
 
   app.on("activate", function () {
@@ -60,7 +65,5 @@ app.whenReady().then(async () => {
 // explicitly with Cmd + Q.
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  if (process.platform !== "darwin") app.quit();
 });
