@@ -82,7 +82,7 @@
     "eslint": "~9.17",
     "eslint-config-prettier": "~9.1",
     "eslint-plugin-vue": "~9.32",
-    "globals": "~15.13",
+    "globals": "~15.14",
     "js-yaml": "~4.1",
     "register-service-worker": "~1.7",
     "sass": "~1.83",
