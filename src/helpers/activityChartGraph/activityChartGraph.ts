@@ -123,10 +123,12 @@ export class ActivityChartGraph extends BaseObj {
   private _models: IActivityChartPanelModelProps[] = models;
   private _panels: ActivityChartPanel[] = [];
   private _project: TProject;
+  private _props: IBaseActivityGraphProps | undefined;
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
     super({ logger: { settings: { minLevel: 3 } } });
+    this._props = activityGraphProps;
 
     this._project = project;
     this._plotConfig = {
@@ -185,8 +187,6 @@ export class ActivityChartGraph extends BaseObj {
       initialized: false,
       traceColor: activityGraphProps?.color || "record",
     });
-
-    this.addPanels(activityGraphProps?.panels);
   }
 
   get currentTime(): number {
@@ -235,6 +235,10 @@ export class ActivityChartGraph extends BaseObj {
     return this._project;
   }
 
+  get props(): IBaseActivityGraphProps | undefined {
+    return this._props;
+  }
+
   get state(): UnwrapRef<IActivityChartGraphState> {
     return this._state;
   }
@@ -255,12 +259,11 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Add panels.
-   * @param panelsProps list of panel props
    */
   addPanels(panelsProps?: IActivityChartPanelProps[]): void {
     this.logger.trace("add panels");
 
-    if (panelsProps != undefined && panelsProps.length > 0) {
+    if (panelsProps && panelsProps.length > 0) {
       panelsProps.forEach((panelProps: IActivityChartPanelProps) => this.addPanel(panelProps));
     } else {
       if (this._project.activities.state.hasSomeAnalogRecorders) {
@@ -338,6 +341,8 @@ export class ActivityChartGraph extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
+
+    this.addPanels(this.props?.panels);
 
     this.updateVisiblePanelsLayout();
 

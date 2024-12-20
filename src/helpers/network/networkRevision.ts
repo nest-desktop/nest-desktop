@@ -59,6 +59,7 @@ export class NetworkRevision extends BaseObj {
    */
   commit(): void {
     this.logger.trace("commit network");
+    if (!("network" in this._project)) return;
 
     const codeHash = this._project.simulation.code.hash;
     if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
@@ -110,6 +111,7 @@ export class NetworkRevision extends BaseObj {
    * Go to the newer network.
    */
   newer(): void {
+    if (!("network" in this._project)) return;
     if (this._revisionIdx < this._revisions.length) this._revisionIdx++;
     this._project.checkoutNetwork();
   }
@@ -118,6 +120,7 @@ export class NetworkRevision extends BaseObj {
    * Go to the newest network.
    */
   newest(): void {
+    if (!("network" in this._project)) return;
     this._revisionIdx = this._revisions.length - 1;
     this._project.checkoutNetwork();
   }
@@ -126,6 +129,7 @@ export class NetworkRevision extends BaseObj {
    * Go to the older network.
    */
   older(): void {
+    if (!("network" in this._project)) return;
     if (this._revisionIdx > 0) this._revisionIdx--;
     this._project.checkoutNetwork();
   }
@@ -134,6 +138,7 @@ export class NetworkRevision extends BaseObj {
    * Go to the oldest network.
    */
   oldest(): void {
+    if (!("network" in this._project)) return;
     this._revisionIdx = 0;
     this._project.checkoutNetwork();
   }

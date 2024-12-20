@@ -3,12 +3,13 @@
 import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { UnwrapRef, reactive } from "vue";
 
+import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { TProject, TSimulationCode } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { notifyError, notifySuccess } from "../common/notification";
+import { BaseProject } from "../project/project";
 import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
+import { notifyError, notifySuccess } from "../common/notification";
 
 export interface IResponseProps {
   data: object | string;
@@ -36,9 +37,9 @@ export class BaseSimulation extends BaseObj {
   private _time: number; // simulation time
 
   public _code: TSimulationCode;
-  public _project: TProject; // parent
+  public _project: BaseProject | TProject; // parent
 
-  constructor(project: TProject, simulationProps: ISimulationProps = {}) {
+  constructor(project: BaseProject | TProject, simulationProps: ISimulationProps = {}) {
     super({
       config: { name: "Simulation" },
       logger: { settings: { minLevel: 3 } },
@@ -77,7 +78,7 @@ export class BaseSimulation extends BaseObj {
     return this._code;
   }
 
-  get project(): TProject {
+  get project(): BaseProject | TProject {
     return this._project;
   }
 

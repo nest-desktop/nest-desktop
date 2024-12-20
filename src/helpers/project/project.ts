@@ -2,29 +2,24 @@
 
 import { nextTick } from "vue";
 
-import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { TActivityGraph, TNetwork, TProject, TSimulation, TStore } from "@/types";
+import { TActivityGraph, TStore, TSimulation, TProject } from "@/types";
 import { truncate } from "@/utils/truncate";
 
 import { Activities } from "../activity/activities";
-import { Activity } from "../activity/activity";
+import { AxiosResponse } from "axios";
 import { BaseActivityGraph, IBaseActivityGraphProps } from "../activity/activityGraph";
 import { BaseObj } from "../common/base";
-import { IDoc } from "../common/database";
-import { BaseNetwork, INetworkProps } from "../network/network";
-import { NetworkRevision } from "../network/networkRevision";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
-import { ProjectState } from "./projectState";
-import { upgradeProject } from "../upgrades/upgrades";
 import { IAxiosResponseData } from "@/stores/defineBackendStore";
-import { AxiosResponse } from "axios";
+import { IDoc } from "../common/database";
+import { ProjectState } from "./projectState";
+import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 
-export interface IProjectProps extends IDoc {
+export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
   description?: string;
   name?: string;
-  network?: INetworkProps;
   simulation?: ISimulationProps;
 }
 
@@ -37,18 +32,13 @@ export class BaseProject extends BaseObj {
   private _id: string; // id of the project
   private _modelDBStore: TStore;
   private _name: string; // project name
-  private _networkRevision: NetworkRevision; // network history
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
   public _activityGraph: TActivityGraph; // activity graph
-  public _network: TNetwork; // network of neurons and devices
   public _simulation: TSimulation; // settings for the simulation
 
-  constructor(projectProps: IProjectProps = {}) {
+  constructor(projectProps: IBaseProjectProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
-
-    // Upgrade project props.
-    projectProps = upgradeProject(projectProps);
 
     // Database instance.
     this._doc = projectProps || {};
@@ -66,23 +56,17 @@ export class BaseProject extends BaseObj {
 
     // Construct components.
     this._state = new ProjectState(this);
-    this._simulation = new this.Simulation(this, projectProps.simulation);
-    this._network = new this.Network(this, projectProps.network);
 
-    this._networkRevision = new NetworkRevision(this);
+    this._simulation = new this.Simulation(this, projectProps.simulation);
     this._activities = new Activities(this);
     this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
 
     // Initialize components.
-    nextTick(() => this.init());
+    // nextTick(() => this.init());
   }
 
   get ActivityGraph() {
     return BaseActivityGraph;
-  }
-
-  get Network() {
-    return BaseNetwork;
   }
 
   get Simulation() {
@@ -95,10 +79,6 @@ export class BaseProject extends BaseObj {
 
   get activityGraph(): TActivityGraph {
     return this._activityGraph;
-  }
-
-  get baseNetwork(): BaseNetwork {
-    return this._network as BaseNetwork;
   }
 
   get baseSimulation(): BaseSimulation {
@@ -149,17 +129,6 @@ export class BaseProject extends BaseObj {
     this._name = value;
   }
 
-  get network(): TNetwork {
-    return this._network;
-  }
-
-  /**
-   * Get network revision.
-   */
-  get networkRevision(): NetworkRevision {
-    return this._networkRevision;
-  }
-
   get simulation(): TSimulation {
     return this._simulation;
   }
@@ -185,7 +154,7 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Generate simulation code.
+   * Generate code.
    */
   generateCodes(): void {
     this._simulation.code.generate();
@@ -210,42 +179,10 @@ export class BaseProject extends BaseObj {
 
     this.generateCodes();
 
-    this._networkRevision.commit();
-
     // It resets panels of activity chart graph.
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
 
     this.startSimulationOnChange();
-  }
-
-  /**
-   * Checkout network.
-   */
-  checkoutNetwork(): void {
-    this.logger.trace("checkout network");
-
-    const network = this._networkRevision.load();
-    this.network.update(network);
-    this.network.clean();
-
-    // Generate simulation code.
-    this._simulation.code.generate();
-
-    const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (projectViewStore.state.simulationEvents.onCheckout) {
-      // Run simulation.
-      nextTick(() => this.startSimulation());
-    } else {
-      // Update activities.
-      this.activities.update(this.activities.all.map((activity: Activity) => activity.toJSON()));
-
-      // Update activities in activity graph.
-      this._activityGraph.activityChartGraph.updateActivities();
-
-      // Update activity graph.
-      this._activityGraph.update();
-    }
   }
 
   /**
@@ -266,7 +203,7 @@ export class BaseProject extends BaseObj {
    * Clone a new project of this current project.
    *
    * @remarks
-   * It generates ne project id and empties updatedAt variable;
+   * It generates new project id and empties updatedAt variable;
    */
   clone(): TProject {
     this.logger.trace("clone");
@@ -279,12 +216,6 @@ export class BaseProject extends BaseObj {
    */
   init(): void {
     this.logger.trace("init");
-
-    // Initialize network.
-    this.network.init();
-
-    // Initialize network history.
-    this.networkRevision.init();
 
     // Initialize simulation.
     this.simulation.init();
@@ -315,8 +246,6 @@ export class BaseProject extends BaseObj {
   startSimulation(): void {
     this.logger.trace("start simulation");
 
-    this._network.clean();
-
     // Reset activities and activity graphs.
     this.activities.reset();
 
@@ -328,17 +257,14 @@ export class BaseProject extends BaseObj {
     this._simulation
       .start()
       .then((response: void | AxiosResponse<IAxiosResponseData>) => {
-        this._state.state.stopwatch.simulation = Date.now() - simtoc;
+        this.state.state.stopwatch.simulation = Date.now() - simtoc;
 
         if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;
 
         const vistoc = Date.now();
         // Update activities.
         this.activities.update(response.data.data);
-        this._state.state.stopwatch.visualization = Date.now() - vistoc;
-
-        // Commit network for the history.
-        this.networkRevision.commit();
+        this.state.state.stopwatch.visualization = Date.now() - vistoc;
       })
       .finally(() => {
         closeLoading();
@@ -358,15 +284,13 @@ export class BaseProject extends BaseObj {
    * Serialize for JSON.
    * @return project props
    */
-  toJSON(): IProjectProps {
-    const projectProps: IProjectProps = {
+  toJSON(): IBaseProjectProps {
+    const projectProps: IBaseProjectProps = {
       activityGraph: this._activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,
       name: this._name,
-      network: this._network.toJSON(),
-      simulation: this._simulation.toJSON(),
       updatedAt: this._updatedAt,
       version: process.env.APP_VERSION as string,
     };
@@ -381,8 +305,6 @@ export class BaseProject extends BaseObj {
       description: this._description,
       id: this._id,
       name: this._name,
-      network: this._network.hash,
-      simulation: this._simulation.hash,
     });
   }
 }

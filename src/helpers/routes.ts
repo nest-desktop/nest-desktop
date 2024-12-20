@@ -5,7 +5,7 @@ import { errorDialog } from "vuetify3-dialog";
 
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
-import { TModel, TProject } from "@/types";
+import { TModel, TModelRoute, TProject, TProjectRoute } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -64,9 +64,9 @@ const loadProject = (projectId?: string): void => {
 
 /**
  * Before enter model route.
- * @param to {path: string}
+ * @param to model route
  */
-export const modelBeforeEnter = (to: { params: { modelId: string }; path: string }): void => {
+export const modelBeforeEnter = (to: TModelRoute): void => {
   logger.trace("before enter:", to.path);
 
   const appStore = useAppStore();
@@ -83,16 +83,17 @@ export const modelBeforeEnter = (to: { params: { modelId: string }; path: string
 
 /**
  * Redirect to model route.
- * @param to router object
- * @returns {path: string}
+ * @param to model router
+ * @returns model router
  */
-export const modelRedirect = (to: { params: { modelId: string }; path: string }): { path: string } => {
+export const modelRedirect = (to: TModelRoute): TModelRoute => {
   logger.trace("redirect to model:", to.params.modelId);
 
   const appStore = useAppStore();
   const modelStore = appStore.currentWorkspace.stores.modelStore;
 
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
+  console.log(to);
 
   return modelStore.routeTo();
 };
@@ -157,15 +158,15 @@ export const newProjectRoute = (router: Router) => {
   const appStore = useAppStore();
 
   router.push({
-    name: appStore.state.workspace + "ProjectNew",
+    name: appStore.state.currentWorkspace + "ProjectNew",
   });
 };
 
 /**
  * Before enter project route.
- * @param to {path: string}
+ * @param to project route
  */
-export const projectBeforeEnter = (to: { params: { projectId: string }; path: string }): void => {
+export const projectBeforeEnter = (to: TProjectRoute): void => {
   logger.trace("before enter project route:", to.path);
 
   const appStore = useAppStore();
@@ -178,9 +179,9 @@ export const projectBeforeEnter = (to: { params: { projectId: string }; path: st
 
 /**
  * Create a new project.
- * @returns {path: string}
+ * @returns project route
  */
-export const projectNew = (): { path: string } => {
+export const projectNew = (): TProjectRoute => {
   logger.trace("create a new project");
 
   const appStore = useAppStore();
@@ -192,11 +193,12 @@ export const projectNew = (): { path: string } => {
 
 /**
  * Redirect to project route.
- * @param to router object
- * @returns {path: string}
+ * @param to project route
+ * @returns project route
  */
-export const projectRedirect = (to: { params: { projectId: string }; path: string }): { path: string } => {
+export const projectRedirect = (to: TProjectRoute): TProjectRoute => {
   logger.trace("redirect to project:", truncate(to.params.projectId));
+  logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
   const projectStore = appStore.currentWorkspace.stores.projectStore;

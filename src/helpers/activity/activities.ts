@@ -33,8 +33,6 @@ export class Activities extends BaseObj {
       hasSomeSpatialActivities: false,
       hasSomeSpikeRecorders: false,
     });
-
-    this.checkRecorders();
   }
 
   /**
@@ -43,7 +41,7 @@ export class Activities extends BaseObj {
   get all(): Activity[] {
     let activities = [] as Activity[];
 
-    if (this.project.network)
+    if ("network" in this.project)
       activities = this.project.network.nodes.recorders.map((recorder: TNode) => recorder.activity as Activity);
 
     // Update activity idx.
@@ -59,9 +57,10 @@ export class Activities extends BaseObj {
    * Get a list of analog signal activities.
    */
   get analogSignals(): AnalogSignalActivity[] {
-    const activities: AnalogSignalActivity[] = this._project.network
-      ? this.project.network.nodes.recordersAnalog.map((recorder: TNode) => recorder.activity as AnalogSignalActivity)
-      : [];
+    const activities: AnalogSignalActivity[] =
+      "network" in this.project
+        ? this.project.network.nodes.recordersAnalog.map((recorder: TNode) => recorder.activity as AnalogSignalActivity)
+        : [];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
@@ -88,9 +87,10 @@ export class Activities extends BaseObj {
    * Get a list of spike activities.
    */
   get spikes(): SpikeActivity[] {
-    const activities: SpikeActivity[] = this._project.network
-      ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as SpikeActivity)
-      : [];
+    const activities: SpikeActivity[] =
+      "network" in this.project
+        ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as SpikeActivity)
+        : [];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
@@ -141,6 +141,7 @@ export class Activities extends BaseObj {
    * Check whether the project has some recorders of each type.
    */
   checkRecorders(): void {
+    if (!("network" in this.project)) return;
     this.logger.trace("check recorders");
 
     // Check if the project contains some analog signal recorder.
@@ -152,6 +153,8 @@ export class Activities extends BaseObj {
 
   // Initialize activities.
   init(): void {
+    this.logger.trace("init");
+
     this.checkRecorders();
   }
 
