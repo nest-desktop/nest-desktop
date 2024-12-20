@@ -8,6 +8,7 @@ import { defineConfig } from "vite";
 import electron from "vite-plugin-electron";
 import { VitePWA } from "vite-plugin-pwa";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+// import vueDevTools from "vite-plugin-vue-devtools";
 
 // Plugins
 import vue from "@vitejs/plugin-vue";
@@ -123,6 +124,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
         navigateFallback: null,
       },
     }),
+    // vueDevTools(),
     electron([
       {
         entry: "electron/main.ts",
