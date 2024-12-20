@@ -1,4 +1,4 @@
-// eslint.config.mjs
+// eslint.config.js
 // https://eslint.vuejs.org/user-guide/
 
 import eslint from "@eslint/js";
