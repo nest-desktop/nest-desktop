@@ -1,18 +1,18 @@
 // project.ts
 
-import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 import { INorseNetworkProps, NorseNetwork } from "../network/network";
 import { NorseNode } from "../node/node";
 import { INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
 
-export interface INorseProjectProps extends IProjectProps {
+export interface INorseProjectProps extends INetworkProjectProps {
   network?: INorseNetworkProps;
   simulation?: INorseSimulationProps;
 }
 
-export class NorseProject extends BaseProject {
+export class NorseProject extends NetworkProject {
   constructor(projectProps: INorseProjectProps = {}) {
     super(projectProps);
   }

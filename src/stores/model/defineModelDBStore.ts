@@ -12,7 +12,7 @@ import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
-interface IModelDBStoreState {
+interface IModelDBStoreState<TModel extends BaseModel = BaseModel> {
   initialized: boolean;
   models: TModel[];
   tryImports: number;
@@ -36,6 +36,7 @@ interface IModelDBStoreState {
 //   validateModel: (modelProps: TModelProps) => boolean;
 // }
 
+// export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
 export function defineModelDBStore(
   props: {
     Model: Class<TModel>;
@@ -56,10 +57,10 @@ export function defineModelDBStore(
 
   const db = new props.ModelDB();
   // @ts-expect-error Cannot find namespace 'props'.
-  type Model = props.Model;
+  type TModel = props.Model;
 
   return defineStore(props.workspace + "-model-db", () => {
-    const state = reactive<IModelDBStoreState>({
+    const state = reactive<IModelDBStoreState<TModel>>({
       initialized: false,
       models: [],
       tryImports: 3,
@@ -80,10 +81,10 @@ export function defineModelDBStore(
      * @remarks
      * It pushes new model to the first line of the list.
      */
-    const addModel = (modelProps?: TModelProps): Model => {
+    const addModel = (modelProps?: TModelProps): TModel => {
       logger.trace("add model:", modelProps?.id);
 
-      const model = new props.Model(modelProps);
+      const model = new props.Model(modelProps) as TModel;
       _addToList(model);
       return model;
     };
@@ -93,7 +94,7 @@ export function defineModelDBStore(
      * @param model model object
      * @returns
      */
-    const deleteModel = async (model: Model): Promise<void> => {
+    const deleteModel = async (model: TModel): Promise<void> => {
       logger.trace("delete model:", model.id);
 
       return db.deleteModel(model).then(() => updateList());
@@ -105,7 +106,7 @@ export function defineModelDBStore(
      * @remarks
      * It pushes new model to the first line of the list.
      */
-    const duplicateModel = (model: Model): Model => {
+    const duplicateModel = (model: TModel): TModel => {
       logger.trace("duplicate model", truncate(model.id));
 
       const modelDoc = model.doc ? model.toJSON() : model;
@@ -119,7 +120,7 @@ export function defineModelDBStore(
      * Export model from the list.
      * @param modelId model ID
      */
-    const exportModel = (model: Model | TModelProps, withActivities: boolean = false): void => {
+    const exportModel = (model: TModel | TModelProps, withActivities: boolean = false): void => {
       logger.trace("export model:", truncate(model.id));
 
       if (model.doc && withActivities) {
@@ -134,10 +135,10 @@ export function defineModelDBStore(
      * @param modelId model ID
      * @returns model object or undefined
      */
-    const findModel = (modelId: string): Model | undefined => {
+    const findModel = (modelId: string): TModel | undefined => {
       logger.trace("find model:", modelId);
 
-      return state.models.find((model: UnwrapRef<TModel>) => model.id === modelId) as Model;
+      return state.models.find((model: UnwrapRef<TModel>) => model.id === modelId) as TModel;
     };
 
     /**
@@ -221,7 +222,7 @@ export function defineModelDBStore(
      * @remarks
      * It pushes new model to the first line of the list.
      */
-    const newModel = (modelProps?: TModelProps): Model => {
+    const newModel = (modelProps?: TModelProps): TModel => {
       logger.trace("new model");
 
       const model = addModel(modelProps);
@@ -242,7 +243,7 @@ export function defineModelDBStore(
      * Save model object to the database.
      * @param model model object
      */
-    const saveModel = async (model: Model): Promise<TModelProps | void> => {
+    const saveModel = async (model: TModel): Promise<TModelProps | void> => {
       logger.trace("save model:", truncate(model.id));
 
       return db.importModel(model).then(() => {

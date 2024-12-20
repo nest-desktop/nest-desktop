@@ -1,11 +1,12 @@
 // modelRoutes.ts
 
+import { TModelRoute, TRoute } from "@/types";
 import { modelBeforeEnter, modelRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 
-const nestModelRedirect = (to: any) => {
+const nestModelRedirect = (to: TModelRoute): TRoute => {
   modelRedirect(to);
 
   const appStore = useAppStore();

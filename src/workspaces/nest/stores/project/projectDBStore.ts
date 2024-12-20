@@ -13,6 +13,7 @@ const projectAssets = [
   "step-current-response",
 ];
 
+// export const useNESTProjectDBStore = defineProjectDBStore<NESTProject>({
 export const useNESTProjectDBStore = defineProjectDBStore({
   Project: NESTProject,
   ProjectDB: NESTProjectDB,

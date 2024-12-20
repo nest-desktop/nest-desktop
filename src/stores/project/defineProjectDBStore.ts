@@ -11,13 +11,14 @@ import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
-interface IProjectDBStoreState {
+interface IProjectDBStoreState<TProject extends BaseProject = BaseProject> {
   initialized: boolean;
   projects: (TProject | TProjectProps)[];
   searchTerm: string;
   tryImports: number;
 }
 
+// export function defineProjectDBStore<TProject extends BaseProject = BaseProject>(
 export function defineProjectDBStore(
   props: {
     Project: Class<TProject>;
@@ -38,12 +39,12 @@ export function defineProjectDBStore(
 
   const db = new props.ProjectDB();
   // @ts-expect-error Cannot find namespace 'props'.
-  type Project = props.Project;
+  type TProject = props.Project;
 
   return defineStore(props.workspace + "-project-db", () => {
-    const state = reactive<IProjectDBStoreState>({
+    const state = reactive<IProjectDBStoreState<TProject>>({
       initialized: false,
-      projects: [] as (Project | TProjectProps)[],
+      projects: [] as (TProject | TProjectProps)[],
       searchTerm: "",
       tryImports: 3,
     });
@@ -63,10 +64,10 @@ export function defineProjectDBStore(
      * @remarks
      * It pushes new project to the first line of the list.
      */
-    const addProject = (projectProps?: TProjectProps): Project => {
+    const addProject = (projectProps?: TProjectProps): TProject => {
       logger.trace("add project:", truncate(projectProps?.id));
 
-      const project = new props.Project(projectProps);
+      const project = new props.Project(projectProps) as TProject;
       addToList(project);
       return project;
     };
@@ -87,7 +88,7 @@ export function defineProjectDBStore(
      * Delete project in database and then update the list.
      * @param project project object or props
      */
-    const deleteProject = (project: Project | TProjectProps): void => {
+    const deleteProject = (project: TProject | TProjectProps): void => {
       logger.trace("delete project:", truncate(project.id));
 
       db.deleteProject(project).then(() => removeFromList(project));
@@ -97,7 +98,7 @@ export function defineProjectDBStore(
      * Delete projects and then update the list.
      * @param projects project objects or props
      */
-    const deleteProjects = (projects: (Project | TProjectProps)[]): void => {
+    const deleteProjects = (projects: (TProject | TProjectProps)[]): void => {
       if (projects.length === 0) return;
       logger.trace("delete projects");
 
@@ -110,7 +111,7 @@ export function defineProjectDBStore(
      * @remarks
      * It pushes new project to the first line of the list.
      */
-    const duplicateProject = (project: Project): Project => {
+    const duplicateProject = (project: TProject): TProject => {
       logger.trace("duplicate project", truncate(project.id));
 
       const projectDoc = project.doc ? project.toJSON() : project;
@@ -122,12 +123,11 @@ export function defineProjectDBStore(
      * Export project from the list.
      * @param projectId project ID
      */
-    const exportProject = (project: Project | TProjectProps, withActivities: boolean = false): void => {
+    const exportProject = (project: TProject | TProjectProps, withActivities: boolean = false): void => {
       logger.trace("export project:", truncate(project.id));
+      if (!project) return;
 
-      if (project.doc && withActivities) {
-        project.activities = project.activities.toJSON();
-      }
+      if (project.doc && withActivities) project.activities = project.activities.toJSON();
 
       download(JSON.stringify(project), "project");
     };
@@ -137,21 +137,21 @@ export function defineProjectDBStore(
      * @param projectId project ID
      * @returns project object or props
      */
-    const findProject = (projectId: string): Project | TProjectProps | undefined => {
+    const findProject = (projectId: string): TProject | TProjectProps | undefined => {
       logger.trace("find project:", truncate(projectId));
 
-      return state.projects.find((project: Project | TProjectProps) => project.id === projectId);
+      return state.projects.find((project: TProject | TProjectProps) => project.id === projectId);
     };
 
     /**
      * Get filtered projects.
      * @returns project list.
      */
-    const filteredProjects = (): (Project | TProjectProps)[] => {
+    const filteredProjects = (): (TProject | TProjectProps)[] => {
       if (state.searchTerm === "" || state.searchTerm == null) {
         return state.projects;
       } else {
-        return state.projects.filter((project: Project | TProjectProps) => {
+        return state.projects.filter((project: TProject | TProjectProps) => {
           if (project.name) {
             return project.name.toLowerCase().indexOf(state.searchTerm.toLowerCase()) !== -1;
           }
@@ -164,24 +164,24 @@ export function defineProjectDBStore(
      * @param projectId project ID
      * @returns project object
      */
-    const getProject = (projectId: string = ""): Project | undefined => {
+    const getProject = (projectId: string = ""): TProject | undefined => {
       logger.trace("get project:", truncate(projectId));
 
-      let project: Project | TProjectProps | undefined;
+      let project: TProject | TProjectProps | undefined;
 
       if (projectId && hasProjectId(projectId)) {
         project = findProject(projectId);
 
         if (project && !isProjectLoaded(project)) {
           loadProject(project);
-          project = findProject(projectId) as Project;
+          project = findProject(projectId) as TProject;
         }
         return project;
       }
     };
 
     const getProjectIds = (): (string | undefined)[] =>
-      state.projects.map((project: Project | TProjectProps) => project.id);
+      state.projects.map((project: TProject | TProjectProps) => project.id);
 
     const getProjectIdx = (project: TProject | TProjectProps): number => state.projects.indexOf(project);
 
@@ -239,7 +239,7 @@ export function defineProjectDBStore(
      * @param project project object or props
      * @returns boolean
      */
-    const isProjectLoaded = (project: Project | TProjectProps): boolean => {
+    const isProjectLoaded = (project: TProject | TProjectProps): boolean => {
       return project instanceof BaseProject;
     };
 
@@ -248,7 +248,7 @@ export function defineProjectDBStore(
      * @param project project object or props
      * @returns
      */
-    const loadProject = (project: Project | TProjectProps): Project | undefined => {
+    const loadProject = (project: TProject | TProjectProps): TProject | undefined => {
       logger.trace("load project:", truncate(project.id));
       if (isProjectLoaded(project)) return project;
 
@@ -270,7 +270,7 @@ export function defineProjectDBStore(
      * @remarks
      * It pushes new project to the first line of the list.
      */
-    const newProject = (projectProps?: TProjectProps): Project => {
+    const newProject = (projectProps?: TProjectProps): TProject => {
       logger.trace("new project");
 
       const project = addProject(projectProps);
@@ -281,7 +281,7 @@ export function defineProjectDBStore(
      * Reload the project in the list.
      * @param projectId project object or props
      */
-    const reloadProject = (project: Project | TProjectProps): void => {
+    const reloadProject = (project: TProject | TProjectProps): void => {
       logger.trace("reload project:", truncate(project.id));
 
       unloadProject(project);
@@ -292,7 +292,7 @@ export function defineProjectDBStore(
      * Remove project from the list.
      * @param projectId project object or props
      */
-    const removeFromList = (project: Project | TProjectProps): void => {
+    const removeFromList = (project: TProject | TProjectProps): void => {
       logger.trace("remove project from the list:", truncate(project.id));
 
       const projectIds = getProjectIds();
@@ -308,7 +308,7 @@ export function defineProjectDBStore(
      * Save project from the list.
      * @param project project object
      */
-    const saveProject = (project: Project): void => {
+    const saveProject = (project: TProject): void => {
       logger.trace("save project:", truncate(project.id));
 
       db.importProject(project).then(() => {
@@ -324,10 +324,10 @@ export function defineProjectDBStore(
      * Unload the project in the list.
      * @param project project object or props
      */
-    const unloadProject = (project: Project | TProjectProps): void => {
+    const unloadProject = (project: TProject | TProjectProps): void => {
       logger.trace("unload project:", truncate(project.id));
 
-      if (isProjectLoaded(project) && project != undefined) {
+      if (project && isProjectLoaded(project)) {
         const projectIdx: number = getProjectIds().indexOf(project.id);
         state.projects[projectIdx] = project.doc;
       }

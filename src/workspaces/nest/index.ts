@@ -11,7 +11,6 @@ import {
   nestSpatialDistributionsCompletions,
 } from "./codemirror";
 import nestIconSet from "./components/iconSet";
-import types from "./helpers/types";
 import route from "./routes";
 // import { insiteAccessInit } from "./stores/backends/insiteAccessStore";
 import { nestSimulatorInit } from "./stores/backends/nestSimulatorStore";
@@ -100,6 +99,5 @@ export const nest: IWorkspaceProps = {
     "nest-project": "1281b3",
   },
   title: "NEST",
-  types,
   views: {},
 };

@@ -36,19 +36,23 @@ export const updateProject = () => {
     if (project) {
       updateSimulationModules(false);
 
-      const neurons = project.network.nodes.neurons as NESTNode[];
-
-      neurons.forEach((neuron: NESTNode) => {
-        neuron._modelId = modelStore.state.modelId;
-        neuron.loadModel();
-      });
+      if ("network" in project) {
+        const neurons = project.network.nodes.neurons as NESTNode[];
+        neurons.forEach((neuron: NESTNode) => {
+          neuron._modelId = modelStore.state.modelId;
+          neuron.loadModel();
+        });
+      }
 
       nextTick(() => {
-        neurons.forEach((neuron: NESTNode) => {
-          neuron.showAllParams(false);
-        });
+        if ("network" in project) {
+          const neurons = project.network.nodes.neurons as NESTNode[];
+          neurons.forEach((neuron: NESTNode) => {
+            neuron.showAllParams(false);
+          });
+          project.network.nodes.updateRecords();
+        }
 
-        project.network.nodes.updateRecords();
         project.simulation.init();
         project.activities.init();
         project.activityGraph.init();

@@ -13,6 +13,7 @@ const projectAssets = [
   "step-current-input",
 ];
 
+// export const useNorseProjectDBStore = defineProjectDBStore<NorseProject>({
 export const useNorseProjectDBStore = defineProjectDBStore({
   Project: NorseProject,
   ProjectDB: NorseProjectDB,

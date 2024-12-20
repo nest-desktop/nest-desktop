@@ -177,7 +177,7 @@ const dialogNewModel = () => {
       }
 
       router.push({
-        name: appStore.state.workspace + "ModelEditor",
+        name: appStore.state.currentWorkspace + "ModelEditor",
         params: {
           modelId: model.id,
         },

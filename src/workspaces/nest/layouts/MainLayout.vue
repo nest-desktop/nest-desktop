@@ -1,7 +1,7 @@
 <template>
   <AppNavigation :nav-items />
 
-  <v-main v-if="appStore.state.workspace === 'nest'">
+  <v-main v-if="appStore.state.currentWorkspace === 'nest'">
     <router-view />
   </v-main>
 </template>

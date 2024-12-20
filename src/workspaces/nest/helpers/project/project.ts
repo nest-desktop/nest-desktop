@@ -1,6 +1,6 @@
 // project.ts
 
-import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 import { NESTActivityGraph } from "../activity/activityGraph";
@@ -8,12 +8,12 @@ import { Insite } from "../insite/insite";
 import { INESTNetworkProps, NESTNetwork } from "../network/network";
 import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
 
-export interface INESTProjectProps extends IProjectProps {
+export interface INESTProjectProps extends INetworkProjectProps {
   network?: INESTNetworkProps;
   simulation?: INESTSimulationProps;
 }
 
-export class NESTProject extends BaseProject {
+export class NESTProject extends NetworkProject {
   private _insite: Insite;
 
   constructor(projectProps: INESTProjectProps = {}) {

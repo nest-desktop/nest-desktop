@@ -1,7 +1,7 @@
 <template>
   <AppNavigation :nav-items />
 
-  <v-main v-if="appStore.state.workspace === 'pynn'">
+  <v-main v-if="appStore.state.currentWorkspace === 'pynn'">
     <router-view />
   </v-main>
 </template>

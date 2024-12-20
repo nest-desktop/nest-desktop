@@ -63,7 +63,7 @@ const items = [
       const newProject = projectDBStore.value.duplicateProject(project.value);
       if (!route.path.endsWith(newProject.id)) {
         router.push({
-          name: appStore.state.workspace + "NetworkEditor",
+          name: appStore.state.currentWorkspace + "NetworkEditor",
           params: { projectId: newProject.id },
         });
       }

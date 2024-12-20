@@ -1,17 +1,17 @@
 // types.ts
 
-import { IPyNNModelProps, PyNNModel } from "./helpers/model/model";
-import { PyNNModelDB } from "./helpers/model/modelDB";
-import { IPyNNProjectProps, PyNNProject } from "./helpers/project/project";
-import { PyNNProjectDB } from "./helpers/project/projectDB";
-import { PyNNSimulation } from "./helpers/simulation/simulation";
-import { PyNNSimulationCode } from "./helpers/simulation/simulationCode";
+import type { IPyNNModelProps, PyNNModel } from "./helpers/model/model";
+import type { PyNNModelDB } from "./helpers/model/modelDB";
+import type { IPyNNProjectProps, PyNNProject } from "./helpers/project/project";
+import type { PyNNProjectDB } from "./helpers/project/projectDB";
+import type { PyNNSimulation } from "./helpers/simulation/simulation";
+import type { PyNNSimulationCode } from "./helpers/simulation/simulationCode";
 
 export {
-  type IPyNNModelProps,
+  IPyNNModelProps,
+  IPyNNProjectProps,
   PyNNModel,
   PyNNModelDB,
-  type IPyNNProjectProps,
   PyNNProject,
   PyNNProjectDB,
   PyNNSimulation,

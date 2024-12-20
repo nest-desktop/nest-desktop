@@ -3,21 +3,22 @@
 import { defineStore } from "pinia";
 import { reactive, watch } from "vue";
 
-import { BaseProject } from "@/helpers/project/project";
 import router from "@/router";
-import { Class, TProject, TStore } from "@/types";
+import { BaseProject } from "@/helpers/project/project";
+import { Class, TProject, TRoute, TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "../appStore";
 import { useProjectDBStore } from "./projectDBStore";
 
-interface IProjectStoreState {
+interface IProjectStoreState<TProject extends BaseProject = BaseProject> {
   code: string;
   project: TProject | null;
   projectId: string;
 }
 
+// export function defineProjectStore<TProject extends BaseProject = BaseProject>(
 export function defineProjectStore(
   props: {
     Project: Class<TProject>;
@@ -35,8 +36,11 @@ export function defineProjectStore(
     name: props.workspace + " project store",
   });
 
+  // @ts-expect-error Cannot find namespace 'props'.
+  type TProject = props.Project;
+
   return defineStore(props.workspace + "-project", () => {
-    const state = reactive<IProjectStoreState>({
+    const state = reactive<IProjectStoreState<TProject>>({
       code: "print('hello world!')",
       project: null,
       projectId: "",
@@ -120,9 +124,11 @@ export function defineProjectStore(
     const newProject = (): void => {
       logger.trace("new project");
 
-      state.project = new props.Project();
-      state.projectId = state.project.id;
-      state.project.state.state.editMode = true;
+      state.project = new props.Project() as TProject;
+      if (state.project) {
+        state.projectId = state.project.id;
+        state.project.state.state.editMode = true;
+      }
     };
 
     /**
@@ -140,7 +146,7 @@ export function defineProjectStore(
      * Get route path of current model.
      * @returns
      */
-    const routeTo = (): { path: string } => {
+    const routeTo = (): TRoute => {
       const appStore = useAppStore();
       const projectViewStore = appStore.currentWorkspace.views.project;
 

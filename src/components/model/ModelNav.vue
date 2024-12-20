@@ -91,7 +91,7 @@
               :subtitle="(item as TModel).elementType"
               :title="(item as TModel).state.label || (item as TModel).id"
               :to="{
-                name: appStore.state.workspace + 'Model',
+                name: appStore.state.currentWorkspace+ 'Model',
                 params: { modelId: (item as TModel).id },
               }"
               v-bind="props"
@@ -263,7 +263,7 @@ const items = [
 
 //       nextTick(() => {
 //         router.push({
-//           name: appStore.state.workspace + "ModelEditor",
+//           name: appStore.state.currentWorkspace+ "ModelEditor",
 //           params: { modelId: model.id },
 //         });
 //       });

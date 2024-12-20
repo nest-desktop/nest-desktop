@@ -46,12 +46,12 @@
     <v-card flat subtitle="Workspaces">
       <v-card-text>
         <v-select
-          v-model="appStore.state.workspaceVisible"
+          v-model="appStore.state.workspacesEnabled"
           :items="workspaceItems"
           chips
           hide-details
           item-value="id"
-          label="Visible workspaces"
+          label="Enabled workspaces"
           multiple
         >
           <template #chip="{ item }">

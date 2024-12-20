@@ -4,7 +4,6 @@ import { defineViewStore } from "@/stores/defineViewStore";
 
 import { IWorkspaceProps } from "../";
 import iconSet from "./components/iconSet";
-import types from "./helpers/types";
 import route from "./routes";
 import { pynnSimulatorInit } from "./stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
@@ -65,6 +64,5 @@ export const pynn: IWorkspaceProps = {
     pynn: "#0F9959",
   },
   title: "PyNN",
-  types,
   views: {},
 };

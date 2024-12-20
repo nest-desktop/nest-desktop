@@ -36,7 +36,7 @@ const items = [
       const newModel = modelDBStore.value.duplicateModel(model.value);
       if (!route.path.endsWith(newModel.id)) {
         router.push({
-          name: appStore.state.workspace + "ModelEditor",
+          name: appStore.state.currentWorkspace + "ModelEditor",
           params: { modelId: newModel.id },
         });
       }

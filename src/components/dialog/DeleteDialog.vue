@@ -42,7 +42,7 @@
 import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
-import { IProjectProps } from "@/helpers/project/project";
+import { INetworkProjectProps } from "@/helpers/project/networkProject";
 import { TModel, TProject, TStore } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
@@ -50,7 +50,7 @@ import { TModel, TProject, TStore } from "@/types";
 
 interface IDeleteProps {
   name: string;
-  props: IModelProps | IProjectProps;
+  props: IModelProps | INetworkProjectProps;
 }
 
 const props = defineProps<{ store: TStore }>();
@@ -84,7 +84,7 @@ const update = (): void => {
   state.items = [];
 
   if (store.value.state.projects) {
-    store.value.state.projects.forEach((project: TProject | IProjectProps) => {
+    store.value.state.projects.forEach((project: TProject | INetworkProjectProps) => {
       state.items.push({
         name: project.name as string,
         props: project.doc ? project.toJSON() : project,

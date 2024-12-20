@@ -8,13 +8,14 @@ import { truncate } from "@/utils/truncate";
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { useNESTProjectStore } from "../stores/project/projectStore";
 import { NESTNodes } from "../types";
+import { TProjectRoute, TRoute } from "@/types";
 
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
   name: "nest project route",
 });
 
-const nestProjectBeforeEnter = (to: any) => {
+const nestProjectBeforeEnter = (to: TProjectRoute): void => {
   logger.trace("before enter nest project route:", to.path);
   projectBeforeEnter(to);
 
@@ -23,12 +24,14 @@ const nestProjectBeforeEnter = (to: any) => {
     const appStore = useAppStore();
     const projectViewStore = appStore.currentWorkspace.views.project;
 
-    const nodes: NESTNodes = projectStore.state.project.network.nodes as NESTNodes;
-    if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+    if ("network" in projectStore.state.project) {
+      const nodes: NESTNodes = projectStore.state.project.network.nodes as NESTNodes;
+      if (!nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+    }
   }
 };
 
-const nestProjectRedirect = (to: any) => {
+const nestProjectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 

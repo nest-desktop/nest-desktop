@@ -1,32 +1,32 @@
 // types.ts
 
-import { INorseConnectionProps, NorseConnection } from "./helpers/connection/connection";
-import { NorseConnections } from "./helpers/connection/connections";
-import { INorseModelProps, NorseModel } from "./helpers/model/model";
-import { NorseModelDB } from "./helpers/model/modelDB";
-import { INorseNetworkProps, NorseNetwork } from "./helpers/network/network";
-import { NorseNode } from "./helpers/node/node";
-import { NorseNodes } from "./helpers/node/nodes";
-import { INorseProjectProps, NorseProject } from "./helpers/project/project";
-import { NorseProjectDB } from "./helpers/project/projectDB";
-import { INorseSimulationProps, NorseSimulation } from "./helpers/simulation/simulation";
-import { NorseSimulationCode } from "./helpers/simulation/simulationCode";
+import type { INorseConnectionProps, NorseConnection } from "./helpers/connection/connection";
+import type { NorseConnections } from "./helpers/connection/connections";
+import type { INorseModelProps, NorseModel } from "./helpers/model/model";
+import type { NorseModelDB } from "./helpers/model/modelDB";
+import type { INorseNetworkProps, NorseNetwork } from "./helpers/network/network";
+import type { NorseNode } from "./helpers/node/node";
+import type { NorseNodes } from "./helpers/node/nodes";
+import type { INorseProjectProps, NorseProject } from "./helpers/project/project";
+import type { NorseProjectDB } from "./helpers/project/projectDB";
+import type { INorseSimulationProps, NorseSimulation } from "./helpers/simulation/simulation";
+import type { NorseSimulationCode } from "./helpers/simulation/simulationCode";
 
 export {
-  type INorseConnectionProps,
+  INorseConnectionProps,
+  INorseModelProps,
+  INorseNetworkProps,
+  INorseProjectProps,
+  INorseSimulationProps,
   NorseConnection,
   NorseConnections,
-  type INorseModelProps,
   NorseModel,
   NorseModelDB,
-  type INorseNetworkProps,
   NorseNetwork,
   NorseNode,
   NorseNodes,
-  type INorseProjectProps,
   NorseProject,
   NorseProjectDB,
-  type INorseSimulationProps,
   NorseSimulation,
   NorseSimulationCode,
 };

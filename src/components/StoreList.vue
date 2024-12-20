@@ -39,7 +39,7 @@
           {{ truncate(appStore.currentWorkspace.stores.projectStore.state.projectId) }}
         </v-card-subtitle>
         <v-list :key="stores.projectDBStore.state.projects.length" density="compact" lines="two" nav>
-          <v-list-item :to="{ name: appStore.state.workspace + 'ProjectNew' }">
+          <v-list-item :to="{ name: appStore.state.currentWorkspace + 'ProjectNew' }">
             <template #prepend>
               <v-icon icon="mdi:mdi-plus" />
             </template>
@@ -55,7 +55,7 @@
             :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
             :title="project.name || 'undefined project ' + stores.projectDBStore.getProjectIdx(project)"
             :to="{
-              name: appStore.state.workspace + 'Project',
+              name: appStore.state.currentWorkspace + 'Project',
               params: { projectId: project.id },
             }"
           />
@@ -75,7 +75,7 @@
             :subtitle="model.elementType"
             :title="model.state.label"
             :to="{
-              name: appStore.state.workspace + 'Model',
+              name: appStore.state.currentWorkspace + 'Model',
               params: { modelId: model.id },
             }"
           />

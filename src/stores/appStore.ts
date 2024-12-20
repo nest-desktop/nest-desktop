@@ -13,6 +13,7 @@ export const useAppStore = defineStore(
 
     const state = reactive<{
       autoUpdate: boolean;
+      currentWorkspace: string;
       devMode: boolean;
       filterTag: string;
       initialized: boolean;
@@ -20,12 +21,12 @@ export const useAppStore = defineStore(
       loadingText: string;
       logsOpen: boolean;
       requestLogs: { date: string; htmlContent: string; level: string }[];
-      workspace: string;
-      workspaceVisible: string[];
+      workspacesEnabled: string[];
       theme: string;
       themeIcon: string;
     }>({
       autoUpdate: false,
+      currentWorkspace: "nest",
       devMode: false,
       filterTag: "",
       initialized: false,
@@ -33,8 +34,7 @@ export const useAppStore = defineStore(
       loadingText: "Loading... Please wait",
       logsOpen: false,
       requestLogs: [] as { date: string; htmlContent: string; level: string }[],
-      workspace: "nest",
-      workspaceVisible: ["nest"],
+      workspacesEnabled: ["nest"],
       theme: "auto", // auto, light, dark
       themeIcon: "mdi:mdi-system",
     });
@@ -43,7 +43,7 @@ export const useAppStore = defineStore(
       state.requestLogs = [];
     };
 
-    const currentWorkspace = computed(() => workspaces[state.workspace]);
+    const currentWorkspace = computed(() => workspaces[state.currentWorkspace]);
 
     const darkMode = computed((): boolean => {
       const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -52,7 +52,7 @@ export const useAppStore = defineStore(
 
     const hasWorkspace = computed((): boolean => {
       const workspaceIds = Object.keys(workspaces);
-      return workspaceIds.includes(state.workspace);
+      return workspaceIds.includes(state.currentWorkspace);
     });
 
     const init = (theme: ThemeInstance) => {
@@ -65,10 +65,12 @@ export const useAppStore = defineStore(
     };
 
     const resetWorkspace = (): void => {
-      state.workspace = Object.keys(workspaces)[0];
+      state.currentWorkspace = Object.keys(workspaces)[0];
     };
 
-    const workspaceItems = computed(() => state.workspaceVisible.map((workspaceId: string) => workspaces[workspaceId]));
+    const workspaceItems = computed(() =>
+      state.workspacesEnabled.map((workspaceId: string) => workspaces[workspaceId]),
+    );
 
     const toggleTheme = (): void => {
       const themes = ["light", "dark", "auto"];
@@ -111,7 +113,13 @@ export const useAppStore = defineStore(
   {
     persist: [
       {
-        pick: ["state.autoUpdate", "state.theme", "state.themeIcon", "state.workspace", "state.workspaceVisible"],
+        pick: [
+          "state.autoUpdate",
+          "state.theme",
+          "state.themeIcon",
+          "state.currentWorkspace",
+          "state.workspacesEnabled",
+        ],
         storage: localStorage,
       },
       {
@@ -141,7 +149,7 @@ export const closeLoading = () => {
 export const setCurrentWorkspace = (name: string) => {
   const appStore = useAppStore();
 
-  appStore.state.workspace = name;
+  appStore.state.currentWorkspace = name;
 };
 
 /**

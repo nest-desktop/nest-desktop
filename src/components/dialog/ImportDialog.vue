@@ -212,7 +212,7 @@ interface IGithubTree {
 const emit = defineEmits(["closeDialog"]);
 const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
-const currentWorkspace = computed(() => appStore.state.workspace);
+const currentWorkspace = computed(() => appStore.state.currentWorkspace);
 const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
 const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 

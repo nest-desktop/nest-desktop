@@ -3,10 +3,10 @@
 import { defineStore } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 
-import { TElementType } from "@/helpers/model/model";
-import { IProjectProps } from "@/helpers/project/project";
 import router from "@/router";
-import { TProject, TStore } from "@/types";
+import { BaseProject, IBaseProjectProps } from "@/helpers/project/project";
+import { TElementType } from "@/helpers/model/model";
+import { TProject, TRoute, TStore } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -20,7 +20,7 @@ export interface IModelProps {
   elementType: string;
 }
 
-interface IModelStoreState {
+interface IModelStoreState<TProject extends BaseProject = BaseProject> {
   modelId: string;
   models: IModelProps[];
   project: TProject | null;
@@ -51,7 +51,7 @@ export function defineModelStore(
   return defineStore(
     props.workspace + "-model",
     () => {
-      const state = reactive<IModelStoreState>({
+      const state = reactive<IModelStoreState<TProject>>({
         modelId: "",
         models: [],
         project: null,
@@ -119,7 +119,7 @@ export function defineModelStore(
         const projectStore = appStore.currentWorkspace.stores.projectStore;
 
         loadJSON(`assets/workspaces/${props.workspace}/projects/${state.projectId}.json`).then(
-          (projectProps: IProjectProps) => {
+          (projectProps: IBaseProjectProps) => {
             projectProps.filename = state.projectId;
             model.value.project = new projectStore.props.Project(projectProps);
             updateProject();
@@ -141,9 +141,9 @@ export function defineModelStore(
 
       /**
        * Redirect to route path of current model.
-       * @returns { path: string }
+       * @returns route
        */
-      const routeTo = (): { path: string } => {
+      const routeTo = (): TRoute => {
         const appStore = useAppStore();
         const modelViewStore = appStore.currentWorkspace.views.model;
 
@@ -207,17 +207,19 @@ export function defineModelStore(
           const project = state.project;
 
           if (project) {
-            project.network.nodes.neurons.forEach((neuron) => {
-              neuron._modelId = state.modelId;
-              neuron.loadModel();
-            });
+            if ("network" in project) {
+              project.network.nodes.neurons.forEach((neuron) => {
+                neuron._modelId = state.modelId;
+                neuron.loadModel();
+              });
+            }
 
             nextTick(() => {
-              project.network.nodes.neurons.forEach((neuron) => {
-                neuron.showAllParams(false);
-              });
+              if ("network" in project) {
+                project.network.nodes.neurons.forEach((neuron) => neuron.showAllParams(false));
+                project.network.nodes.updateRecords();
+              }
 
-              project.network.nodes.updateRecords();
               project.simulation.init();
               project.activities.init();
               project.activityGraph.init();

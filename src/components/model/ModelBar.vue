@@ -9,7 +9,7 @@
             :key="index"
             :title="tabItem.title"
             :to="{
-              name: appStore.state.workspace + tabItem.to.name,
+              name: appStore.state.currentWorkspace + tabItem.to.name,
               params: {
                 modelId: modelStore.state.modelId,
               },

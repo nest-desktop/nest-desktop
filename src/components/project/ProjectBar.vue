@@ -7,7 +7,7 @@
             <v-tab
               :key="index"
               :to="{
-                name: appStore.state.workspace + tabItem.to.name,
+                name: appStore.state.currentWorkspace + tabItem.to.name,
                 params: { projectId: projectStore.state.projectId },
               }"
               :title="tabItem.title"

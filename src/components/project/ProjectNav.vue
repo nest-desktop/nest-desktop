@@ -84,7 +84,7 @@
           <v-list-item
             :key="index"
             :to="{
-              name: appStore.state.workspace + 'Project',
+              name: appStore.state.currentWorkspace + 'Project',
               params: { projectId: project.id },
             }"
             :ripple="!project.state?.editMode"

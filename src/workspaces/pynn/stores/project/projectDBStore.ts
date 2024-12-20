@@ -9,6 +9,7 @@ import { PyNNProjectDB } from "../../helpers/project/projectDB";
 
 const projectAssets = ["spike-activity", "spike-input", "current-input"];
 
+// export const usePyNNProjectDBStore = defineProjectDBStore<PyNNProject>({
 export const usePyNNProjectDBStore = defineProjectDBStore({
   Project: PyNNProject,
   ProjectDB: PyNNProjectDB,

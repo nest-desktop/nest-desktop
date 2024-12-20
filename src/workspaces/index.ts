@@ -12,7 +12,7 @@ import { Config } from "@/helpers/common/config";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
 import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
-import { TStore, TValue } from "@/types";
+import { TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { CompletionSource } from "@codemirror/autocomplete";
 
@@ -37,7 +37,6 @@ export interface IWorkspaceProps {
   stores: Record<string, TStore>;
   theme: Record<string, string>;
   title: string;
-  types: Record<string, TValue>;
   views: Record<string, TStore>;
 }
 
@@ -49,32 +48,43 @@ export const workspaces: Record<string, IWorkspaceProps> = {
 };
 
 export function registerWorkspaces(app: App) {
-  // Add IconSets, Themes and Routes of all workspaces.
-  Object.values(workspaces).forEach((workspaceProps: IWorkspaceProps) => {
-    // Add icon set for vuetify.
-    addIconSet(Object.fromEntries([[workspaceProps.id, workspaceProps.iconSet]]));
+  Object.values(workspaces).forEach(registerWorkspace);
 
-    // Add theme to vuetify.
-    addTheme(workspaceProps.theme);
-
-    // Add route.
-    router.addRoute("appLayout", workspaceProps.route);
-  });
-
-  // Register only visible workspaces.
+  // Initialize only visible workspaces.
   const appStore = useAppStore();
-  appStore.state.workspaceVisible.forEach((workspaceId: string) => {
-    app.use({
-      async install() {
-        logger.trace("install", workspaceId);
-        const workspaceProps = workspaces[workspaceId];
+  appStore.state.workspacesEnabled.forEach((workspaceId: string) => initEnabledWorkspace(app, workspaceId));
+}
 
-        // Load config files.
-        workspaceProps.configNames.forEach((name: string) => new Config({ name, workspace: workspaceProps.id }));
+/**
+ * Register all workspaces
+ * @remarks add iconSets, themes and routes
+ */
+function registerWorkspace(workspaceProps: IWorkspaceProps): void {
+  // Add icon set for vuetify.
+  addIconSet(Object.fromEntries([[workspaceProps.id, workspaceProps.iconSet]]));
 
-        // Initialize workspace.
-        workspaceProps.init();
-      },
-    });
+  // Add theme to vuetify.
+  addTheme(workspaceProps.theme);
+
+  // Add route.
+  router.addRoute("appLayout", workspaceProps.route);
+}
+
+/**
+ * Initialize enabled workspace.
+ * @remarks add iconSets, themes and routes
+ */
+function initEnabledWorkspace(app: App, workspaceId: string): void {
+  app.use({
+    async install() {
+      logger.trace("install", workspaceId);
+      const workspaceProps = workspaces[workspaceId];
+
+      // Load config files.
+      workspaceProps.configNames.forEach((name: string) => new Config({ name, workspace: workspaceProps.id }));
+
+      // Initialize workspace.
+      workspaceProps.init();
+    },
   });
 }

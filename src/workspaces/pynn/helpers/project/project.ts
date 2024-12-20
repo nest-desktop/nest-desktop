@@ -1,16 +1,16 @@
 // project.ts
 
-import { BaseProject, IProjectProps } from "@/helpers/project/project";
+import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 import { ISimulationProps } from "@/helpers/simulation/simulation";
 
-import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 import { PyNNSimulation } from "../simulation/simulation";
+import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 
-export interface IPyNNProjectProps extends IProjectProps {
+export interface IPyNNProjectProps extends INetworkProjectProps {
   simulation?: ISimulationProps;
 }
 
-export class PyNNProject extends BaseProject {
+export class PyNNProject extends NetworkProject {
   constructor(projectProps: IPyNNProjectProps = {}) {
     super(projectProps);
   }

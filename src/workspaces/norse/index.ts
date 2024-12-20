@@ -5,7 +5,6 @@ import { defineViewStore } from "@/stores/defineViewStore";
 import { IWorkspaceProps } from "../";
 import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 import iconSet from "./components/iconSet";
-import types from "./helpers/types";
 import route from "./routes";
 import { norseSimulatorInit } from "./stores/backends/norseSimulatorStore";
 import { useNorseModelDBStore } from "./stores/model/modelDBStore";
@@ -68,6 +67,5 @@ export const norse: IWorkspaceProps = {
     norse: "#e6007e",
   },
   title: "Norse",
-  types,
   views: {},
 };
