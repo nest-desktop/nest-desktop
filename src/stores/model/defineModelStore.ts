@@ -6,7 +6,7 @@ import { computed, nextTick, reactive } from "vue";
 import router from "@/router";
 import { BaseProject, IBaseProjectProps } from "@/helpers/project/project";
 import { TElementType } from "@/helpers/model/model";
-import { TProject, TRoute, TStore } from "@/types";
+import { Class, TNetwork, TRoute, TStore } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -32,15 +32,17 @@ interface IModelStoreState<TProject extends BaseProject = BaseProject> {
   };
 }
 
-export function defineModelStore(
+export function defineModelStore<TProject extends BaseProject = BaseProject>(
   props: {
+    Project: Class<TProject | BaseProject>;
     defaultView?: string;
     loggerMinLevel?: number;
-    workspace: string;
     useModelDBStore: TStore;
+    workspace: string;
   } = {
-    workspace: "base",
+    Project: BaseProject,
     useModelDBStore,
+    workspace: "base",
   },
 ) {
   const logger = mainLogger.getSubLogger({
@@ -51,7 +53,7 @@ export function defineModelStore(
   return defineStore(
     props.workspace + "-model",
     () => {
-      const state = reactive<IModelStoreState<TProject>>({
+      const state = reactive<IModelStoreState<TProject | BaseProject>>({
         modelId: "",
         models: [],
         project: null,
@@ -115,13 +117,11 @@ export function defineModelStore(
        */
       const loadProjectfromAssets = (): void => {
         logger.trace("load project from assets:", state.projectId);
-        const appStore = useAppStore();
-        const projectStore = appStore.currentWorkspace.stores.projectStore;
 
         loadJSON(`assets/workspaces/${props.workspace}/projects/${state.projectId}.json`).then(
           (projectProps: IBaseProjectProps) => {
             projectProps.filename = state.projectId;
-            model.value.project = new projectStore.props.Project(projectProps);
+            model.value.project = new props.Project(projectProps);
             updateProject();
           },
         );
@@ -204,11 +204,12 @@ export function defineModelStore(
 
         if (model.value.project && model.value.project?.filename === state.projectId) {
           state.project = model.value.project;
-          const project = state.project;
+          const project = state.project as TProject;
 
           if (project) {
             if ("network" in project) {
-              project.network.nodes.neurons.forEach((neuron) => {
+              const network = project.network as TNetwork;
+              network.nodes.neurons.forEach((neuron) => {
                 neuron._modelId = state.modelId;
                 neuron.loadModel();
               });
@@ -216,8 +217,9 @@ export function defineModelStore(
 
             nextTick(() => {
               if ("network" in project) {
-                project.network.nodes.neurons.forEach((neuron) => neuron.showAllParams(false));
-                project.network.nodes.updateRecords();
+                const network = project.network as TNetwork;
+                network.nodes.neurons.forEach((neuron) => neuron.showAllParams(false));
+                network.nodes.updateRecords();
               }
 
               project.simulation.init();

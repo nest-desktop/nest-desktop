@@ -5,14 +5,16 @@ import { nextTick } from "vue";
 import { defineModelStore } from "@/stores/model/defineModelStore";
 import { logger as mainLogger } from "@/utils/logger";
 
+import { NESTProject } from "../../helpers/project/project";
 import { NESTNode, NESTSimulation } from "../../types";
 import { IModule, useNESTModuleStore } from "../moduleStore";
 import { useNESTModelDBStore } from "./modelDBStore";
 
-export const useNESTModelStore = defineModelStore({
-  workspace: "nest",
-  useModelDBStore: useNESTModelDBStore,
+export const useNESTModelStore = defineModelStore<NESTProject>({
+  Project: NESTProject,
   defaultView: "doc",
+  useModelDBStore: useNESTModelDBStore,
+  workspace: "nest",
 });
 
 const logger = mainLogger.getSubLogger({
