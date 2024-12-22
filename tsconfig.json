@@ -8,6 +8,9 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
 
+    // Allow property without initialization.
+    "strictPropertyInitialization": false,
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
