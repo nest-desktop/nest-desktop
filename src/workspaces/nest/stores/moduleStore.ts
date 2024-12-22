@@ -8,6 +8,7 @@ import { createDialog } from "vuetify3-dialog";
 import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
 import { fetchNESTMLModels, generateModels, useNESTMLServerStore } from "./backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./model/modelDBStore";
+import type { NESTModel } from "../types";
 
 export interface IModule {
   models: string[];
@@ -102,7 +103,7 @@ export const openNESTModuleDialog = (): void => {
       const models = module.models
         .filter((modelId: string) => modelDBStore.hasModel(modelId))
         .map((modelId: string) => {
-          const model = modelDBStore.findModel(modelId);
+          const model = modelDBStore.findModel(modelId) as NESTModel;
           return {
             element_type: model.elementType,
             name: model.id,

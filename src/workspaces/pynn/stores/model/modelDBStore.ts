@@ -16,8 +16,7 @@ const modelAssets = [
   "StepCurrentSource",
 ];
 
-// export const usePyNNModelDBStore = defineModelDBStore<PyNNModel>({
-export const usePyNNModelDBStore = defineModelDBStore({
+export const usePyNNModelDBStore = defineModelDBStore<PyNNModel>({
   Model: PyNNModel,
   ModelDB: PyNNModelDB,
   modelAssets,

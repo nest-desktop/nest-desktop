@@ -75,6 +75,10 @@ export class BaseModel extends BaseObj {
     return false;
   }
 
+  set custom(value: boolean) {
+    value;
+  }
+
   get doc(): IModelProps {
     return this._doc;
   }

@@ -23,8 +23,7 @@ const modelAssets = [
   "voltmeter",
 ];
 
-// export const useNESTModelDBStore = defineModelDBStore<NESTModel>({
-export const useNESTModelDBStore = defineModelDBStore({
+export const useNESTModelDBStore = defineModelDBStore<NESTModel>({
   Model: NESTModel,
   ModelDB: NESTModelDB,
   modelAssets,

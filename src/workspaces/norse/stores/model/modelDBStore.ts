@@ -18,8 +18,7 @@ const modelAssets = [
   "voltmeter",
 ];
 
-// export const useNorseModelDBStore = defineModelDBStore<NorseModel>({
-export const useNorseModelDBStore = defineModelDBStore({
+export const useNorseModelDBStore = defineModelDBStore<NorseModel>({
   Model: NorseModel,
   ModelDB: NorseModelDB,
   modelAssets,
