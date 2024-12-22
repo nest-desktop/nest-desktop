@@ -342,6 +342,7 @@ export class ActivityChartGraph extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
+    this.panels = [];
     this.addPanels(this.props?.panels);
 
     this.updateVisiblePanelsLayout();
