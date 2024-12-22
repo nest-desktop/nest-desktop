@@ -13,7 +13,7 @@
         />
       </template>
     </NetworkEditorToolbar>
-    <NetworkGraph :key="network.project.id" :network>
+    <NetworkGraph :key="currentProject.id" :network="currentProject.network">
       <template #marker="{ connection }">
         <circle
           v-if="connection.view.markerEndLabel === 'assigned'"
@@ -35,8 +35,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import ConnectionMenuList from "@/components/connection/ConnectionMenuList.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
@@ -45,11 +43,7 @@ import { NodeGroup } from "@/helpers/node/nodeGroup";
 
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import { NESTConnection } from "../helpers/connection/connection";
-import { NESTNetwork } from "../helpers/network/network";
 import { NESTNode } from "../helpers/node/node";
 
-import { useNESTProjectStore } from "../stores/project/projectStore";
-const projectStore = useNESTProjectStore();
-
-const network = computed(() => projectStore.state.project?.network as NESTNetwork);
+import { currentProject } from "../stores/project/projectStore";
 </script>

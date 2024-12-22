@@ -5,7 +5,7 @@ import { reactive, watch } from "vue";
 
 import router from "@/router";
 import { BaseProject } from "@/helpers/project/project";
-import { Class, TProject, TRoute, TStore } from "@/types";
+import { Class, TRoute, TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -18,10 +18,9 @@ interface IProjectStoreState<TProject extends BaseProject = BaseProject> {
   projectId: string;
 }
 
-// export function defineProjectStore<TProject extends BaseProject = BaseProject>(
-export function defineProjectStore(
+export function defineProjectStore<TProject extends BaseProject = BaseProject>(
   props: {
-    Project: Class<TProject>;
+    Project: Class<TProject | BaseProject>;
     loggerMinLevel?: number;
     workspace: string;
     useProjectDBStore: TStore;
@@ -36,11 +35,8 @@ export function defineProjectStore(
     name: props.workspace + " project store",
   });
 
-  // @ts-expect-error Cannot find namespace 'props'.
-  type TProject = props.Project;
-
   return defineStore(props.workspace + "-project", () => {
-    const state = reactive<IProjectStoreState<TProject>>({
+    const state = reactive<IProjectStoreState<TProject | BaseProject>>({
       code: "print('hello world!')",
       project: null,
       projectId: "",

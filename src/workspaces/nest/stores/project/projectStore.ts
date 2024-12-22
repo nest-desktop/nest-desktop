@@ -1,10 +1,11 @@
 // projectStore.ts
 
+import { computed } from "vue";
+
 import { defineProjectStore } from "@/stores/project/defineProjectStore";
 
 import { NESTProject } from "../../helpers/project/project";
 import { useNESTProjectDBStore } from "./projectDBStore";
-import { NESTNetwork } from "../../types";
 
 // export const useNESTProjectStore = defineProjectStore<NESTProject>({
 export const useNESTProjectStore = defineProjectStore({
@@ -19,8 +20,13 @@ export const useNESTProjectStore = defineProjectStore({
  */
 export const copyModel = (modelId: string): void => {
   const projectStore = useNESTProjectStore();
-
-  const network: NESTNetwork = projectStore.state.project?.network as NESTNetwork;
-  network.modelsCopied.copy(modelId);
-  network.changes();
+  if (!projectStore.state.project) return;
+  const project = projectStore.state.project as NESTProject;
+  project.network.modelsCopied.copy(modelId);
+  project.network.changes();
 };
+
+export const currentProject = computed(() => {
+  const projectStore = useNESTProjectStore();
+  return projectStore.state.project as NESTProject;
+});
