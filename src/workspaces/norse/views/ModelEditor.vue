@@ -1,9 +1,9 @@
 <template>
-  <v-card :title="model.state.label" subtitle="model editor">
+  <v-card :title="currentModel.state.label" subtitle="model editor">
     <v-card-text>
       <h3>Code template</h3>
 
-      <codemirror ref="codeMirror" v-model="model.codeTemplate" style="font-size: 0.75rem; width: 100%" />
+      <codemirror ref="codeMirror" v-model="currentModel.codeTemplate" style="font-size: 0.75rem; width: 100%" />
     </v-card-text>
 
     <v-card-actions>
@@ -13,13 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
 import { Codemirror } from "vue-codemirror";
 
-import { NorseModel } from "../helpers/model/model";
-
-import { useNorseModelStore } from "../stores/model/modelStore";
+import { currentModel, useNorseModelStore } from "../stores/model/modelStore";
 const modelStore = useNorseModelStore();
-
-const model = computed(() => modelStore.model as NorseModel);
 </script>

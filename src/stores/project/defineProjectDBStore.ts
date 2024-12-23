@@ -3,25 +3,32 @@
 import { defineStore } from "pinia";
 import { nextTick, reactive } from "vue";
 
-import { BaseProject } from "@/helpers/project/project";
+import { BaseProject, IBaseProjectProps } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { Class, TProject, TProjectDB, TProjectProps } from "@/types";
+import { Class, TProjectDB } from "@/types";
+import { IActivityProps } from "@/helpers/activity/activity";
+import { IDoc, IRes } from "@/helpers/common/database";
 import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
-interface IProjectDBStoreState<TProject extends BaseProject = BaseProject> {
+interface IProjectDBStoreState<
+  TProject extends BaseProject = BaseProject,
+  TProjectProps extends IBaseProjectProps = IBaseProjectProps,
+> {
   initialized: boolean;
   projects: (TProject | TProjectProps)[];
   searchTerm: string;
   tryImports: number;
 }
 
-// export function defineProjectDBStore<TProject extends BaseProject = BaseProject>(
-export function defineProjectDBStore(
+export function defineProjectDBStore<
+  TProject extends BaseProject = BaseProject,
+  TProjectProps extends IBaseProjectProps = IBaseProjectProps,
+>(
   props: {
-    Project: Class<TProject>;
+    Project: Class<TProject | BaseProject>;
     ProjectDB: Class<TProjectDB>;
     loggerMinLevel?: number;
     projectAssets?: string[];
@@ -38,11 +45,9 @@ export function defineProjectDBStore(
   });
 
   const db = new props.ProjectDB();
-  // @ts-expect-error Cannot find namespace 'props'.
-  type TProject = props.Project;
 
   return defineStore(props.workspace + "-project-db", () => {
-    const state = reactive<IProjectDBStoreState<TProject>>({
+    const state = reactive<IProjectDBStoreState<TProject | BaseProject, TProjectProps | IBaseProjectProps>>({
       initialized: false,
       projects: [] as (TProject | TProjectProps)[],
       searchTerm: "",
@@ -54,7 +59,11 @@ export function defineProjectDBStore(
      * @param project project object or props
      */
     const addToList = (project: TProject | TProjectProps): void => {
-      state.projects.push(project);
+      if (project instanceof props.Project) {
+        state.projects.push(project as TProject);
+      } else {
+        state.projects.push(project);
+      }
     };
 
     /**
@@ -114,22 +123,29 @@ export function defineProjectDBStore(
     const duplicateProject = (project: TProject): TProject => {
       logger.trace("duplicate project", truncate(project.id));
 
-      const projectDoc = project.doc ? project.toJSON() : project;
+      const projectDoc = (project.doc ? project.toJSON() : project) as TProjectProps;
       projectDoc.id = undefined;
       return addProject(projectDoc);
     };
 
     /**
      * Export project from the list.
-     * @param projectId project ID
+     * @param project project object or props
+     * @param withActivities boolean if exported data includes activities
      */
     const exportProject = (project: TProject | TProjectProps, withActivities: boolean = false): void => {
       logger.trace("export project:", truncate(project.id));
       if (!project) return;
 
-      if (project.doc && withActivities) project.activities = project.activities.toJSON();
+      // @ts-expect-error Interface 'IProjectExportProps' incorrectly extends interface 'TProjectProps'.
+      interface IProjectExportProps extends TProjectProps {
+        activities?: IActivityProps[];
+      }
 
-      download(JSON.stringify(project), "project");
+      const projectDoc = (project.doc ? project.toJSON() : project) as IProjectExportProps;
+      if (withActivities) projectDoc.activities = project.activities.toJSON();
+
+      download(JSON.stringify(projectDoc), "project");
     };
 
     /**
@@ -140,22 +156,25 @@ export function defineProjectDBStore(
     const findProject = (projectId: string): TProject | TProjectProps | undefined => {
       logger.trace("find project:", truncate(projectId));
 
-      return state.projects.find((project: TProject | TProjectProps) => project.id === projectId);
+      // @ts-expect-error No overload matches this call.
+      return state.projects.find((project: TProject | TProjectProps) => project.id === projectId) as
+        | TProject
+        | TProjectProps
+        | undefined;
     };
 
     /**
      * Get filtered projects.
-     * @returns project list.
+     * @returns list of project object or props
      */
     const filteredProjects = (): (TProject | TProjectProps)[] => {
       if (state.searchTerm === "" || state.searchTerm == null) {
-        return state.projects;
+        return state.projects as (TProject | TProjectProps)[];
       } else {
+        // @ts-expect-error No overload matches this call.
         return state.projects.filter((project: TProject | TProjectProps) => {
-          if (project.name) {
-            return project.name.toLowerCase().indexOf(state.searchTerm.toLowerCase()) !== -1;
-          }
-        });
+          if (project.name) return project.name.toLowerCase().indexOf(state.searchTerm.toLowerCase()) !== -1;
+        }) as (TProject | TProjectProps)[];
       }
     };
 
@@ -176,12 +195,13 @@ export function defineProjectDBStore(
           loadProject(project);
           project = findProject(projectId) as TProject;
         }
-        return project;
+        return project as TProject;
       }
     };
 
-    const getProjectIds = (): (string | undefined)[] =>
-      state.projects.map((project: TProject | TProjectProps) => project.id);
+    const getProjectIds = (): string[] =>
+      // @ts-expect-error No overload matches this call.
+      state.projects.map((project: TProject | TProjectProps) => project.id) as string[];
 
     const getProjectIdx = (project: TProject | TProjectProps): number => state.projects.indexOf(project);
 
@@ -205,10 +225,10 @@ export function defineProjectDBStore(
     /**
      * Import multiple projects from assets and add them to the database.
      */
-    const importProjectsFromAssets = async (): Promise<TProjectProps[]> => {
+    const importProjectsFromAssets = async (): Promise<(TProjectProps | IRes)[]> => {
       logger.trace("import projects from assets");
 
-      let promises: Promise<TProjectProps>[] = [];
+      let promises: Promise<TProjectProps | IRes>[] = [];
       if (props.projectAssets) {
         promises = props.projectAssets.map(async (file: string) => {
           return loadJSON(`assets/workspaces/${props.workspace}/projects/${file}.json`).then((data) => db.create(data));
@@ -239,25 +259,25 @@ export function defineProjectDBStore(
      * @param project project object or props
      * @returns boolean
      */
-    const isProjectLoaded = (project: TProject | TProjectProps): boolean => {
+    const isProjectLoaded = (project: TProject | BaseProject | TProjectProps): boolean => {
       return project instanceof BaseProject;
     };
 
     /**
      * Load a project in the list.
      * @param project project object or props
-     * @returns
+     * @returns project object
      */
     const loadProject = (project: TProject | TProjectProps): TProject | undefined => {
       logger.trace("load project:", truncate(project.id));
-      if (isProjectLoaded(project)) return project;
+      if (isProjectLoaded(project)) return project as TProject;
 
       const projectIds = getProjectIds();
-      const projectIdx = projectIds.indexOf(project.id);
+      const projectIdx = projectIds.indexOf(project.id as string);
 
       if (projectIdx === -1) return;
 
-      project = new props.Project(project);
+      project = new props.Project(project) as TProject;
       state.projects[projectIdx] = project;
 
       return project;
@@ -296,7 +316,7 @@ export function defineProjectDBStore(
       logger.trace("remove project from the list:", truncate(project.id));
 
       const projectIds = getProjectIds();
-      const projectIdx: number = projectIds.indexOf(project.id);
+      const projectIdx: number = projectIds.indexOf(project.id as string);
 
       if (projectIdx !== -1) {
         // Remove project from the project list.
@@ -328,7 +348,7 @@ export function defineProjectDBStore(
       logger.trace("unload project:", truncate(project.id));
 
       if (project && isProjectLoaded(project)) {
-        const projectIdx: number = getProjectIds().indexOf(project.id);
+        const projectIdx: number = getProjectIds().indexOf(project.id as string);
         state.projects[projectIdx] = project.doc;
       }
     };
@@ -340,7 +360,7 @@ export function defineProjectDBStore(
       logger.trace("update list");
 
       state.projects = [];
-      return db.list("updatedAt", false).then((projectsProps: TProjectProps[]) => {
+      return db.list("updatedAt", false).then((projectsProps: IDoc[]) => {
         state.projects = projectsProps as TProjectProps[];
         state.initialized = true;
       });

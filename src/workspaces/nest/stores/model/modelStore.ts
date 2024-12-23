@@ -1,13 +1,13 @@
 // modelStore.ts
 
-import { nextTick } from "vue";
+import { computed, nextTick } from "vue";
 
 import { defineModelStore } from "@/stores/model/defineModelStore";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { NESTProject } from "../../helpers/project/project";
-import { NESTNode, NESTSimulation } from "../../types";
 import { IModule, useNESTModuleStore } from "../moduleStore";
+import { NESTModel, NESTNode, NESTSimulation } from "../../types";
+import { NESTProject } from "../../helpers/project/project";
 import { useNESTModelDBStore } from "./modelDBStore";
 
 export const useNESTModelStore = defineModelStore<NESTProject>({
@@ -20,6 +20,16 @@ export const useNESTModelStore = defineModelStore<NESTProject>({
 const logger = mainLogger.getSubLogger({
   minLevel: 3,
   name: "nest model store",
+});
+
+export const currentModel = computed(() => {
+  const modelStore = useNESTModelStore();
+  return modelStore.getModel(modelStore.state.modelId) as NESTModel;
+});
+
+export const currentProject = computed(() => {
+  const modelStore = useNESTModelStore();
+  return modelStore.state.project as NESTProject;
 });
 
 export const updateProject = () => {

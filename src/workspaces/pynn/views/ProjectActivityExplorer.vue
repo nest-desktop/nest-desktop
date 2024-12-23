@@ -4,17 +4,11 @@
     <v-btn icon="mdi:mdi-minus" />
   </v-toolbar> -->
 
-  <ActivityChartGraph :graph="graph.activityChartGraph" />
+  <ActivityChartGraph :graph="currentProject.activityGraph.activityChartGraph" />
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
-import { BaseActivityGraph } from "@/helpers/activity/activityGraph";
 
-import { usePyNNProjectStore } from "../stores/project/projectStore";
-const projectStore = usePyNNProjectStore();
-
-const graph = computed(() => projectStore.state.project?.activityGraph as BaseActivityGraph);
+import { currentProject } from "../stores/project/projectStore";
 </script>
