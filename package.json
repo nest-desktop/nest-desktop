@@ -98,7 +98,7 @@
     "vite-plugin-vuetify": "~2.0",
     "vitest": "~2.1",
     "vue-eslint-parser": "~9.4",
-    "vue-tsc": "~2.1"
+    "vue-tsc": "~2.2"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
