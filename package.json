@@ -89,7 +89,7 @@
     "semver": "~7.6",
     "sharp": "~0.33",
     "tslog": "~4.9",
-    "typescript": "~5.6",
+    "typescript": "~5.7",
     "typescript-eslint": "~8.18",
     "vite": "~6.0",
     "vite-plugin-electron": "~0.29",
