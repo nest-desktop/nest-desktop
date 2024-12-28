@@ -5,10 +5,10 @@ import { URL, fileURLToPath } from "node:url";
 // Utilities
 import { defineConfig } from "vite";
 // Vite plugins
+import ViteFonts from "unplugin-fonts/vite";
+import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import electron from "vite-plugin-electron";
 import { VitePWA } from "vite-plugin-pwa";
-import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-// import ViteFonts from 'unplugin-fonts/vite'
 // import vueDevTools from "vite-plugin-vue-devtools";
 
 // Plugins
