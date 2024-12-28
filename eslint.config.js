@@ -1,47 +1,53 @@
-// eslint.config.js
-// https://eslint.vuejs.org/user-guide/
+/**
+ * .eslint.js
+ *
+ * ESLint configuration file.
+ */
 
-import eslint from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
-import eslintPluginVue from "eslint-plugin-vue";
-import globals from "globals";
-import typescriptEslint from "typescript-eslint";
+import pluginVue from "eslint-plugin-vue";
+import vueTsEslintConfig from "@vue/eslint-config-typescript";
+import pluginVitest from "@vitest/eslint-plugin";
+import skipFormatting from "@vue/eslint-config-prettier/skip-formatting";
 
-export default typescriptEslint.config(
+export default [
   {
-    ignores: [
-      ".gitignore",
-      ".github",
-      "**/coverage",
-      "**/dev-dist",
-      "**/dist",
-      "**/dist-electron",
-      "**/nest_desktop",
-      "**/nest_desktop.egg-info",
-      "**/node_modules",
-      "**/release",
-      "**/*.d.ts",
-    ],
+    name: "app/files-to-lint",
+    files: ["**/*.{ts,mts,tsx,vue}"],
   },
   {
-    extends: [
-      eslint.configs.recommended,
-      ...typescriptEslint.configs.recommended,
-      ...eslintPluginVue.configs["flat/recommended"],
+    name: "app/files-to-ignore",
+    ignores: [
+      "**/*.d.ts",
+      "**/dev-dist/**",
+      "**/dist/**",
+      "**/dist-electron/**",
+      "**/coverage/**",
+      "**/nest_desktop/**",
+      "**/node_modules/**",
+      "**/release/**",
+      "**/vendors/**",
     ],
-    files: ["**/*.{ts,vue}"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      globals: globals.browser,
-      parserOptions: {
-        parser: typescriptEslint.parser,
-      },
-    },
+  },
+
+  ...pluginVue.configs["flat/recommended"],
+  ...vueTsEslintConfig(),
+
+  {
+    ...pluginVitest.configs.recommended,
+    files: ["src/**/__tests__/*"],
+  },
+
+  {
     rules: {
-      // your rules
+      "@typescript-eslint/no-unused-expressions": [
+        "error",
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
+        },
+      ],
       "vue/multi-word-component-names": "off",
     },
   },
-  eslintConfigPrettier,
-);
+  skipFormatting,
+];
