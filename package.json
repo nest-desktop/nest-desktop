@@ -103,8 +103,7 @@
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: Use node LTS version (v22)",
-    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.",
-    "typescript>=5.7: Error because vue-tsc doesn't work with it. https://github.com/vuejs/language-tools/issues/5018"
+    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
