@@ -123,6 +123,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     const getModelsByElementType = (elementType: TElementType | "device"): UnwrapRef<(TModel | BaseModel)[]> => {
       logger.trace("get model by element type:", elementType);
 
+      // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
       return state.models.filter((model: UnwrapRef<TModel | BaseModel>) => {
         if (elementType === "device") {
           return ["stimulator", "recorder"].includes(model.elementType);
@@ -144,7 +145,6 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * @returns boolean
      */
     const hasModel = (modelId: string): boolean => {
-      // @ts-ignore
       return state.models.some((model: UnwrapRef<TModel | BaseModel>) => model.id === modelId);
     };
 
