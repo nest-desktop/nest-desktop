@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@babel/types": "~7.26",
-    "@tsconfig/node22": "~22.0",
+    "@tsconfig/node-lts": "~22.0",
     "@types/d3": "~7.4",
     "@types/js-yaml": "~4.0",
     "@types/mustache": "~4.2",

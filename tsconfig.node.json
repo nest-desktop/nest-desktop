@@ -1,16 +1,15 @@
-
 {
   // "compilerOptions": {
-    //   "allowSyntheticDefaultImports": true,
-    //   "composite": true,
-    //   "isolatedModules": true,
-    //   "module": "ESNext",
-    //   "moduleResolution": "Node"
-    // },
-    // "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"]
+  //   "allowSyntheticDefaultImports": true,
+  //   "composite": true,
+  //   "isolatedModules": true,
+  //   "module": "ESNext",
+  //   "moduleResolution": "Node"
+  // },
+  // "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"]
 
-  // https://github.com/tsconfig/bases/blob/main/bases/node22.json
-  "extends": "@tsconfig/node22/tsconfig.json",
+  // https://github.com/tsconfig/bases/blob/main/bases/node-lts.json
+  "extends": "@tsconfig/node-lts/tsconfig.json",
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"],
   "compilerOptions": {
     "composite": true,
@@ -22,6 +21,6 @@
     "types": ["node"],
 
     // Allow property without initialization.
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": false
   }
 }
