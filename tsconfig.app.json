@@ -1,4 +1,3 @@
-
 {
   // https://github.com/vuejs/tsconfig/blob/main/tsconfig.dom.json
   // "extends": "@vue/tsconfig/tsconfig.dom.json",
@@ -13,7 +12,7 @@
       "@/*": ["./src/*"]
     },
 
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "types": []
   }
 }
