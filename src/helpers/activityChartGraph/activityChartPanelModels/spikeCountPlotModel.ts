@@ -2,12 +2,13 @@
 
 import { TNode, TParameter } from "@/types";
 
-import { deviation, max, mean, min, sum } from "../../../utils/array";
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeActivity } from "../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { deviation, max, mean, min, sum } from "../../../utils/array";
+import { line } from "../graphObjects/line";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -147,21 +148,17 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       y = h;
     }
 
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: "x+y",
-      legendgroup: "spikes" + activity.idx,
-      line: {
+    this.data.push(
+      line({
+        activityIdx: activity.idx,
         color: activity.recorder.view.color,
-        width: 1.5,
-      },
-      mode: "lines",
-      showlegend: false,
-      type: plotType,
-      visible: this.state.visible,
-      x,
-      y,
-    } as IActivityChartPanelModelData);
+        legendgroup: "spikes" + activity.idx,
+        showlegend: false,
+        visible: this.state.visible,
+        x,
+        y,
+      }),
+    );
 
     if (horizontalLine) {
       const y = 0.63;

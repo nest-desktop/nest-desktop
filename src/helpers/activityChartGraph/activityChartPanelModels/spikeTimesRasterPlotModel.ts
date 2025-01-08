@@ -1,9 +1,10 @@
 // spikeTimesRasterPlotModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { SpikeActivity } from "../../activity/spikeActivity";
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { scatterSpikes } from "../graphObjects/scatter";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -44,32 +45,18 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: "x",
-      legendgroup: "spikes" + activity.idx,
-      marker: {
-        line: {
-          color: activity.recorder.view.color,
-          width: 2,
-        },
+    this.data.push(
+      scatterSpikes({
+        activityIdx: activity.idx,
         color: activity.recorder.view.color,
-        size: 5,
-        symbol: "line-ns",
-      },
-      // marker: {
-      //   color: activity.recorder.view.color,
-      //   size: 3,
-      // },
-      mode: "markers",
-      modelId: this.id,
-      name: "Spikes of " + activity.recorder.view.label,
-      showlegend: true,
-      type: plotType,
-      visible: this.state.visible,
-      x: activity.events.times,
-      y: activity.events.senders,
-    } as IActivityChartPanelModelData);
+        legendgroup: "spikes" + activity.idx,
+        modelId: this.id,
+        name: "Spikes of " + activity.recorder.view.label,
+        visible: this.state.visible,
+        x: activity.events.times,
+        y: activity.events.senders,
+      }),
+    );
   }
 
   /**

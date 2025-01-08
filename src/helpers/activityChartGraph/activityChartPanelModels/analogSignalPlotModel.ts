@@ -2,11 +2,12 @@
 
 import { TNode } from "@/types";
 
-import { currentBackgroundColor, currentColor } from "../../common/theme";
-import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { NodeRecord } from "../../node/nodeRecord";
+import { currentBackgroundColor, currentColor } from "../../common/theme";
+import { line } from "../graphObjects/line";
 
 interface IDataPoints {
   name: string;
@@ -47,23 +48,20 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   addActiveLine(record: NodeRecord): void {
     // active line
-    this.data.push({
-      activityIdx: record.activity.idx,
-      hoverinfo: "x+y",
-      legendgroup: record.groupId,
-      line: {
+    this.data.push(
+      line({
         color: currentColor(),
-        width: 1.5,
-      },
-      mode: "lines",
-      opacity: 0.5,
-      recordId: record.id,
-      showlegend: false,
-      type: plotType,
-      visible: false,
-      x: [],
-      y: [],
-    });
+        activityIdx: record.activity.idx,
+        legendgroup: record.groupId,
+        opacity: 0.5,
+        recordId: record.id,
+        showlegend: false,
+        type: plotType,
+        visible: false,
+        x: [],
+        y: [],
+      }),
+    );
   }
 
   /**
@@ -87,43 +85,42 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       return avg;
     });
 
-    this.data.push({
-      activityIdx: record.activity.idx,
-      class: "background",
-      hoverinfo: "none",
-      legendgroup: record.groupId,
-      line: {
-        color: currentBackgroundColor(),
-        width: 4.5,
-      },
-      mode: "lines",
-      opacity: 0.7,
-      recordId: record.id,
-      showlegend: false,
-      type: plotType,
-      visible: this.state.visible,
-      x,
-      y,
-    } as IActivityChartPanelModelData);
+    this.data.push(
+      line({
+        activityIdx: record.activity.idx,
+        class: "background",
+        hoverinfo: "none",
+        legendgroup: record.groupId,
+        line: {
+          color: currentBackgroundColor(),
+          width: 4.5,
+        },
+        opacity: 0.7,
+        recordId: record.id,
+        showlegend: false,
+        visible: this.state.visible,
+        x,
+        y,
+      }),
+    );
 
     // average line
-    this.data.push({
-      activityIdx: record.activity.idx,
-      hoverinfo: "x+y",
-      legendgroup: record.groupId,
-      line: {
-        color: record.state.color,
-        dash: "dot",
-        width: 1.5,
-      },
-      mode: "lines",
-      recordId: record.id,
-      showlegend: false,
-      type: plotType,
-      visible: this.state.visible,
-      x,
-      y,
-    } as IActivityChartPanelModelData);
+    this.data.push(
+      line({
+        activityIdx: record.activity.idx,
+        legendgroup: record.groupId,
+        line: {
+          color: record.state.color,
+          dash: "dot",
+          width: 1.5,
+        },
+        recordId: record.id,
+        showlegend: false,
+        visible: this.state.visible,
+        x,
+        y,
+      }),
+    );
   }
 
   /**
@@ -141,27 +138,19 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
     data.forEach((d: IDataPoints, idx: number) => {
       if (selected.includes(nodeIds[idx])) {
-        this.data.push({
-          activityIdx: record.activity.idx,
-          hoverinfo: "x+y",
-          legendgroup: record.groupId,
-          line: {
+        this.data.push(
+          line({
             color: color instanceof Array ? color[idx] : color,
-            width: 1.5,
-          },
-          mode: "lines",
-          name: d.name,
-          nodeId: nodeIds[idx],
-          // opacity: idx === 0 ? 0.5 : 0.3,
-          recordId: record.id,
-          showlegend: idx === 0,
-          type: plotType,
-          visible: this.state.visible,
-          // yaxis: 'y' + idx,
-          x: d.x,
-          y: d.y,
-          // y: d.y.map(y => y+= 15*idx),
-        } as IActivityChartPanelModelData);
+            legendgroup: record.groupId,
+            name: d.name,
+            nodeId: nodeIds[idx],
+            recordId: record.id,
+            showlegend: idx === 0,
+            visible: this.state.visible,
+            x: d.x,
+            y: d.y,
+          }),
+        );
       }
     });
   }
@@ -173,23 +162,18 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
   addSingleLine(record: NodeRecord): void {
     if (!record.hasEvent) return;
 
-    this.data.push({
-      activityIdx: record.activity.idx,
-      hoverinfo: "x+y",
-      legendgroup: record.groupId,
-      line: {
+    this.data.push(
+      line({
+        activityIdx: record.activity.idx,
         color: record.state.color,
-        width: 1.5,
-      },
-      mode: "lines",
-      name: record.id + " of " + record.nodeLabel,
-      recordId: record.id,
-      showlegend: true,
-      type: plotType,
-      visible: this.state.visible,
-      x: record.times,
-      y: record.values,
-    } as IActivityChartPanelModelData);
+        legendgroup: record.groupId,
+        name: record.id + " of " + record.nodeLabel,
+        recordId: record.id,
+        visible: this.state.visible,
+        x: record.times,
+        y: record.values,
+      }),
+    );
   }
 
   /**

@@ -1,10 +1,10 @@
 // spikeTimesHistogramModel.ts
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeActivity } from "../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { histogram } from "../graphObjects/histogram";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -39,31 +39,21 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     const end: number = this.state.time.end;
     const size: number = this.params.binSize.value as number;
 
-    this.data.push({
-      activityIdx: activity.idx,
-      histfunc: "count",
-      hoverinfo: "x+y",
-      legendgroup: "spikes" + activity.idx,
-      marker: {
+    this.data.push(
+      histogram({
+        activityIdx: activity.idx,
         color: activity.recorder.view.color,
-        line: {
-          color: currentBackgroundColor(),
-          width: (end - start) / size > 100 ? 0 : 1,
+        legendgroup: "spikes" + activity.idx,
+        name: "Histogram of spike times in" + activity.recorder.view.label,
+        visible: this.state.visible,
+        x,
+        xbins: {
+          end,
+          size,
+          start,
         },
-      },
-      name: "Histogram of spike times in" + activity.recorder.view.label,
-      opacity: 0.6,
-      showlegend: false,
-      source: "x+y",
-      type: "histogram",
-      visible: this.state.visible,
-      x,
-      xbins: {
-        end,
-        size,
-        start,
-      },
-    } as IActivityChartPanelModelData);
+      }),
+    );
   }
 
   /**

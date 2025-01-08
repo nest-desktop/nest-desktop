@@ -1,8 +1,8 @@
 // inputAnalogSignalPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {

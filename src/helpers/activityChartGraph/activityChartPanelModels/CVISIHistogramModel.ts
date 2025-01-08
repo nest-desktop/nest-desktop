@@ -1,10 +1,10 @@
 // CVISIHistogramModel.ts
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeActivity } from "../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { histogram } from "../graphObjects/histogram";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -34,37 +34,25 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const start = 0;
-    const end = 5;
+    const start: number = 0;
+    const end: number = 5;
     const size = this.params.binSize.value as number;
     const isi: number[][] = activity.ISI();
     const x: number[] = isi.map((i: number[]) => activity.getStandardDeviation(i) / activity.getAverage(i));
 
-    this.data.push({
-      activityIdx: activity.idx,
-      histfunc: "count",
-      hoverinfo: "y",
-      legendgroup: "spikes" + activity.idx,
-      marker: {
+    this.data.push(
+      histogram({
+        activityIdx: activity.idx,
         color: activity.recorder.view.color,
-        line: {
-          color: currentBackgroundColor(),
-          width: (end - start) / size > 100 ? 0 : 1,
-        },
-      },
-      name: "Histogram of CV(ISI) in" + activity.recorder.view.label,
-      opacity: 0.6,
-      showlegend: false,
-      source: "x+y",
-      type: "histogram",
-      visible: this.state.visible,
-      x,
-      xbins: {
         end,
+        legendgroup: "spikes" + activity.idx,
+        name: "Histogram of CV(ISI) in" + activity.recorder.view.label,
         size,
         start,
-      },
-    } as IActivityChartPanelModelData);
+        visible: this.state.visible,
+        x,
+      }),
+    );
   }
 
   /**

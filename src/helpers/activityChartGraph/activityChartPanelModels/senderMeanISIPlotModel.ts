@@ -2,12 +2,12 @@
 
 import { TParameter } from "@/types";
 
-import { SpikeActivity } from "../../activity/spikeActivity";
-import { currentBackgroundColor } from "../../common/theme";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { SpikeActivity } from "../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { plot } from "../graphObjects/plot";
 
 export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -63,31 +63,25 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
-    const plotType = plotMode === "bar" ? plotMode : "scattergl";
+    const plotType = plotMode === "bar" ? plotMode : "scatter";
 
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: "x+y",
-      legendgroup: "spikes" + activity.idx,
-      line: {
-        shape: lineShape,
-      },
-      marker: {
+    this.data.push(
+      plot(plotMode, {
+        activityIdx: activity.idx,
         color: activity.recorder.view.color,
+        legendgroup: "spikes" + activity.idx,
         line: {
-          color: currentBackgroundColor(),
-          width: x.length > 100 ? 0 : 1,
+          shape: lineShape,
         },
-      },
-      mode: plotMode,
-      name: "Mean ISI in each sender in" + activity.recorder.view.label,
-      opacity: 0.6,
-      showlegend: false,
-      type: plotType,
-      visible: this.state.visible,
-      x,
-      y,
-    } as IActivityChartPanelModelData);
+        mode: plotMode,
+        name: "Mean ISI in each sender in" + activity.recorder.view.label,
+        type: plotType,
+        showlegend: false,
+        visible: this.state.visible,
+        x,
+        y,
+      }),
+    );
   }
 
   /**

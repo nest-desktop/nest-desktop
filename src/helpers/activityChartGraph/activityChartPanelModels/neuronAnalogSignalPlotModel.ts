@@ -1,8 +1,8 @@
 // neuronAnalogSignalPlotModel.ts
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 
 export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {

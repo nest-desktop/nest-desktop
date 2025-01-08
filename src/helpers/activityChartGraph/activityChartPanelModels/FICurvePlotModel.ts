@@ -1,9 +1,10 @@
 // FICurvePlotModel.ts
 
+import { ActivityChartPanel } from "../activityChartPanel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { SpikeActivity } from "../../activity/spikeActivity";
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { line } from "../graphObjects/line";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -22,22 +23,21 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    this.data.push({
-      activityIdx: activity.idx,
-      hoverinfo: "none",
-      legendgroup: "spikes" + activity.idx,
-      marker: {
-        size: 5,
-        color: activity.recorder.view.color,
-      },
-      mode: "lines",
-      name: "Spikes of " + activity.recorder.view.label,
-      showlegend: true,
-      type: plotType,
-      visible: this.state.visible,
-      x: activity.events.times,
-      y: activity.events.senders,
-    } as IActivityChartPanelModelData);
+    this.data.push(
+      line({
+        activityIdx: activity.idx,
+        hoverinfo: "none",
+        legendgroup: "spikes" + activity.idx,
+        marker: {
+          color: activity.recorder.view.color,
+          size: 5,
+        },
+        name: "Spikes of " + activity.recorder.view.label,
+        visible: this.state.visible,
+        x: activity.events.times,
+        y: activity.events.senders,
+      }),
+    );
   }
 
   /**

@@ -11,13 +11,14 @@ import { ActivityChartPanel } from "./activityChartPanel";
 import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
 
 export interface IActivityChartPanelModelData {
-  activityIdx: number;
+  activityIdx?: number;
   class?: string;
+  color?: string;
   dataIdx?: number;
   histfunc?: string;
-  hoverinfo: string;
-  legendgroup: string;
-  line: {
+  hoverinfo?: string;
+  legendgroup?: string;
+  line?: {
     color?: string;
     dash?: string;
     shape?: string;
@@ -26,31 +27,31 @@ export interface IActivityChartPanelModelData {
   marker?: {
     color: string;
     line?: {
-      color: string;
-      width: number;
+      color?: string;
+      width?: number;
     };
     size?: number;
     symbol?: string;
   };
-  mode: string;
+  mode?: string;
   modelId?: string;
   name?: string;
   nodeId?: number;
   opacity?: number;
   panelIdx?: number;
-  recordId: string;
-  showlegend: boolean;
+  recordId?: string;
+  showlegend?: boolean;
   source?: string;
-  type: string;
-  visible: boolean;
-  x: number[];
+  type?: string;
+  visible?: boolean;
+  x?: number[];
   xaxis?: string;
   xbins?: {
     end: number;
     size: number;
     start: number;
   };
-  y: number[];
+  y?: number[];
   yaxis?: string;
 }
 
@@ -469,16 +470,25 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   updateRecordsColor(): void {
     this._data.forEach((data: IActivityChartPanelModelData) => {
       if (data.class === "background") return;
+      const activity = this.activities[data.activityIdx];
 
-      const record = this.recordsVisible.find(
-        (record: NodeRecord) => record.id === data.recordId && record.activity.idx === data.activityIdx,
-      );
-      if (!record) return;
+      let color: string;
+      if (activity && activity.recorder.model.isSpikeRecorder) {
+        color = activity.recorder.view.color;
+      } else {
+        const record = this.recordsVisible.find(
+          (record: NodeRecord) => record.id === data.recordId && record.activity.idx === data.activityIdx,
+        );
+        if (!record) return;
 
-      const nodeIds = record.activity.nodeIds;
-      const idx = nodeIds.indexOf(data.nodeId as number);
-
-      const color = record.color instanceof Array ? record.color[idx] : record.color;
+        if (record.color instanceof Array) {
+          const nodeIds = record.activity.nodeIds;
+          const idx = nodeIds.indexOf(data.nodeId as number);
+          color = record.color[idx];
+        } else {
+          color = record.color;
+        }
+      }
 
       if (data.type.includes("scatter")) {
         if (data.marker && data.marker.line && data.mode.includes("markers")) {

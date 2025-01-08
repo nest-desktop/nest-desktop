@@ -1,11 +1,11 @@
 // analogSignalHistogramModel.ts
 
-import { max, min } from "../../../utils/array";
-import { currentBackgroundColor } from "../../common/theme";
-import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "../activityChartPanel";
-import { IActivityChartPanelModelData, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
+import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { NodeRecord } from "../../node/nodeRecord";
+import { histogram } from "../graphObjects/histogram";
+import { max, min } from "../../../utils/array";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -69,33 +69,24 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     const end: number = this.state.histogram.end + 1;
     const size: number = (end - start) / bins;
 
-    this.data.push({
-      activityIdx: record.activity.idx,
-      histfunc: "count",
-      hoverinfo: "x+y",
-      legendgroup: record.groupId,
-      marker: {
+    this.data.push(
+      histogram({
+        activityIdx: record.activity.idx,
         color: record.state.color,
-        line: {
-          color: currentBackgroundColor(),
-          width: bins > 100 ? 0 : 1,
+        legendgroup: record.groupId,
+        name: "Histogram of " + record.nodeLabel,
+        recordId: record.id,
+        source: "x",
+        visible: this.state.visible,
+        x: record.values,
+        xaxis: "x" + this.panel.xAxis,
+        xbins: {
+          end,
+          size,
+          start,
         },
-      },
-      name: "Histogram of " + record.nodeLabel,
-      opacity: 0.6,
-      recordId: record.id,
-      showlegend: false,
-      source: "x",
-      type: "histogram",
-      visible: this.state.visible,
-      x: record.values,
-      xaxis: "x" + this.panel.xAxis,
-      xbins: {
-        end,
-        size,
-        start,
-      },
-    } as IActivityChartPanelModelData);
+      }),
+    );
   }
 
   /**
