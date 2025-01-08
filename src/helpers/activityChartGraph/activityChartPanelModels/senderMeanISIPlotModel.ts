@@ -63,7 +63,6 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
-    const plotType = plotMode === "bar" ? plotMode : "scatter";
 
     this.data.push(
       plot(plotMode, {
@@ -75,7 +74,6 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
         },
         mode: plotMode,
         name: "Mean ISI in each sender in" + activity.recorder.view.label,
-        type: plotType,
         showlegend: false,
         visible: this.state.visible,
         x,

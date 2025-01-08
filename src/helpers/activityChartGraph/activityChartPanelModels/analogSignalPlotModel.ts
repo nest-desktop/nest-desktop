@@ -2,7 +2,7 @@
 
 import { TNode } from "@/types";
 
-import { ActivityChartPanel, plotType } from "../activityChartPanel";
+import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { NodeRecord } from "../../node/nodeRecord";
@@ -53,10 +53,9 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         color: currentColor(),
         activityIdx: record.activity.idx,
         legendgroup: record.groupId,
-        opacity: 0.5,
+        opacity: 0.6,
         recordId: record.id,
         showlegend: false,
-        type: plotType,
         visible: false,
         x: [],
         y: [],
@@ -95,7 +94,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
           color: currentBackgroundColor(),
           width: 4.5,
         },
-        opacity: 0.7,
+        opacity: 0.6,
         recordId: record.id,
         showlegend: false,
         visible: this.state.visible,
@@ -137,7 +136,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     const color = record.color;
 
     data.forEach((d: IDataPoints, idx: number) => {
-      if (selected.includes(nodeIds[idx])) {
+      if (selected.includes(nodeIds[idx]))
         this.data.push(
           line({
             color: color instanceof Array ? color[idx] : color,
@@ -151,7 +150,6 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
             y: d.y,
           }),
         );
-      }
     });
   }
 
@@ -185,7 +183,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       .forEach((node: TNode) => {
         const Vth = node.getParameter("V_th").value as number;
 
-        if (Vth) {
+        if (Vth)
           this.panel.layout.shapes.push({
             label: {
               font: { size: 10 },
@@ -205,7 +203,6 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
             y1: Vth,
             yref: "y",
           });
-        }
       });
   }
 
@@ -254,10 +251,8 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.updateTime();
 
     this.recordsVisible.forEach((record: NodeRecord) => {
-      if (["V_m", "v"].includes(record.id) && this.params.spikeThreshold.value) {
-        // Add spike threshold for membrane potential.
-        this.addSpikeThresholdLine(record);
-      }
+      // Add spike threshold for membrane potential.
+      if (["V_m", "v"].includes(record.id) && this.params.spikeThreshold.value) this.addSpikeThresholdLine(record);
 
       if (record.nodeSize === 1) {
         // Add line for a single node.
@@ -267,9 +262,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
         this.addMultipleLines(record);
 
         // Add average line for the population.
-        if (this.params.averageLine.value) {
-          this.addAverageLine(record);
-        }
+        if (this.params.averageLine.value) this.addAverageLine(record);
       }
 
       // Add active line.

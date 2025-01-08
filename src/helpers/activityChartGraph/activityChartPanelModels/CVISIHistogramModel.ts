@@ -44,13 +44,15 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
       histogram({
         activityIdx: activity.idx,
         color: activity.recorder.view.color,
-        end,
         legendgroup: "spikes" + activity.idx,
         name: "Histogram of CV(ISI) in" + activity.recorder.view.label,
-        size,
-        start,
         visible: this.state.visible,
         x,
+        xbins: {
+          end,
+          size,
+          start,
+        },
       }),
     );
   }

@@ -77,7 +77,6 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
-    const plotType = plotMode === "bar" ? plotMode : "scatter";
 
     this.data.push(
       plot(plotMode, {
@@ -90,7 +89,6 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         mode: plotMode,
         name: "Spike count in each sender in" + activity.recorder.view.label,
         showlegend: false,
-        type: plotType,
         visible: this.state.visible,
         x,
         y,

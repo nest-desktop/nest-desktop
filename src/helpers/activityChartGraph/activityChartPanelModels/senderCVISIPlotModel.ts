@@ -65,7 +65,6 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
-    const plotType = plotMode === "bar" ? plotMode : "scatter";
 
     this.data.push(
       plot(plotMode, {
@@ -77,9 +76,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
         },
         mode: plotMode,
         name: "CV of ISI in each sender in" + activity.recorder.view.label,
-        opacity: 0.6,
         showlegend: false,
-        type: plotType,
         visible: this.state.visible,
         x,
         y,

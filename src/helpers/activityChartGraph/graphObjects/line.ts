@@ -1,7 +1,6 @@
 // line.ts
 
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import { plotType } from "../activityChartPanel";
 
 export const line = (args: IActivityChartPanelModelData) => ({
   hoverinfo: "x+y",
@@ -11,6 +10,6 @@ export const line = (args: IActivityChartPanelModelData) => ({
   },
   mode: "lines",
   showlegend: true,
-  type: plotType,
+  type: "scattergl",
   ...args,
 });

@@ -1,7 +1,6 @@
 // scatter.ts
 
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
-import { plotType } from "../activityChartPanel";
 
 export const scatter = (args: IActivityChartPanelModelData) => ({
   hoverinfo: "x",
@@ -12,7 +11,7 @@ export const scatter = (args: IActivityChartPanelModelData) => ({
   },
   mode: "markers",
   showlegend: true,
-  type: plotType,
+  type: "scattergl",
   ...args,
 });
 
@@ -30,6 +29,6 @@ export const scatterSpikes = (args: IActivityChartPanelModelData) => ({
   },
   mode: "markers",
   showlegend: true,
-  type: plotType,
+  type: "scattergl",
   ...args,
 });

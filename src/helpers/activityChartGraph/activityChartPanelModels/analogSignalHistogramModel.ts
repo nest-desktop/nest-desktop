@@ -39,7 +39,6 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     if (this.recordsVisible.length === 0) return;
 
     this.recordsVisible.forEach((record: NodeRecord) => this.updateHistogramRange(record.values));
-
     this.recordsVisible.forEach((record: NodeRecord) => this.updateEventData(record));
   }
 

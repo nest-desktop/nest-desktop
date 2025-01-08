@@ -45,8 +45,6 @@ interface IActivityChartPanelState {
   visible: boolean;
 }
 
-export const plotType = "scattergl";
-
 export class ActivityChartPanel extends BaseObj {
   // private static readonly _name = 'ActivityGraphPanel';
   // private _activities: Activity[] = [];

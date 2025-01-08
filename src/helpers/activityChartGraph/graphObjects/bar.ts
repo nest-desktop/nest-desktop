@@ -13,6 +13,7 @@ export const bar = (args: IActivityChartPanelModelData) => ({
     },
   },
   mode: "bar",
+  opacity: 0.6,
   showlegend: true,
   type: "bar",
   ...args,

@@ -34,9 +34,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
     if (uniqueRecords.size === 1) {
       const record = records[0];
       title = record.labelCapitalize;
-      if (record.unit) {
-        title += ` [${record.unit}]`;
-      }
+      if (record.unit) title += ` [${record.unit}]`;
     } else if (records.every((record: NodeRecord) => record.id.includes("ct_"))) {
       title = "Channel activation";
     } else if (records.every((record: NodeRecord) => record.id.includes("g_"))) {
