@@ -1,21 +1,20 @@
 // activityChartGraph.ts
 
+import * as PlotlyBasic from "plotly.js-basic-dist-min";
 import moment from "moment";
 import { UnwrapRef, nextTick, reactive } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
-// @ts-expect-error Could not find a declaration file for module 'plotly.js-basic-dist-min'.
-import * as PlotlyBasic from "plotly.js-basic-dist-min";
-
+import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
 import { TProject } from "@/types";
 
-import { IBaseActivityGraphProps } from "../activity/activityGraph";
-import { BaseObj } from "../common/base";
-import { currentBackgroundColor, currentColor } from "../common/theme";
 import { ActivityChartPanel, IActivityChartPanelProps } from "./activityChartPanel";
-import { IActivityChartPanelModelData } from "./activityChartPanelModel";
-import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
+import { BaseObj } from "../common/base";
+import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
+import { IActivityChartPanelModelData } from "./activityChartPanelModel";
+import { IBaseActivityGraphProps } from "../activity/activityGraph";
 import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
 import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";
@@ -23,8 +22,7 @@ import { SenderSpikeCountPlotModel } from "./activityChartPanelModels/senderSpik
 import { SpikeCountPlotModel } from "./activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
-import { createDialog } from "vuetify3-dialog";
-import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
+import { currentBackgroundColor, currentColor } from "../common/theme";
 
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
