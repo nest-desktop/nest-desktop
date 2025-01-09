@@ -2,12 +2,11 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-// import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { TNode, TProject } from "@/types";
+import { TProject } from "@/types";
 
-import { download } from "../../utils/download";
 import { ActivityChartGraph } from "../activityGraph/activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";
+import { download } from "../../utils/download";
 
 export interface IActivityProps {
   events?: IEventProps;
@@ -19,7 +18,6 @@ export interface IActivityProps {
 interface IActivityState {
   activeNodeId: number | undefined;
   fromTime: number;
-  // records: NodeRecord[];
   selected: number[];
 }
 

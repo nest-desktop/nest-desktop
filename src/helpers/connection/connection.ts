@@ -3,14 +3,14 @@
 import { TConnection, TConnections, TNetwork, TNode, TSynapse } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { IConfigProps } from "../common/config";
-import { IParamProps } from "../common/parameter";
-import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import { ConnectionParameter } from "./connectionParameter";
 import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
+import { IConfigProps } from "../common/config";
+import { IParamProps } from "../common/parameter";
+import { NodeGroup } from "../node/nodeGroup";
 
 export interface IConnectionProps {
   params?: IParamProps[];

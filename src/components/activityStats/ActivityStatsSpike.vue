@@ -49,15 +49,15 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
 
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { deviation, diff, mean, sum } from "@/utils/array";
 import { toFixed } from "@/utils/converter";
 
 const props = defineProps({
-  activity: SpikeActivity,
+  activity: NodeSpikeActivity,
   height: { default: 500, type: Number },
 });
-const activity = computed(() => props.activity as SpikeActivity);
+const activity = computed(() => props.activity as NodeSpikeActivity);
 
 const state = reactive<{
   activityHash: string;

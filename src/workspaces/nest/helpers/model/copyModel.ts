@@ -4,17 +4,17 @@ import { UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "@/helpers/common/base";
 import { BaseParameter, IParamProps, TParamValue } from "@/helpers/common/parameter";
-import { ModelParameter } from "@/helpers/model/modelParameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
-import { NESTNetwork } from "../network/network";
-import { NESTNode } from "../node/node";
 import { NESTCopyModelParameter } from "./copyModelParameter";
 import { NESTCopyModels } from "./copyModels";
 import { NESTModel } from "./model";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTNetwork } from "../network/network";
+import { NESTNode } from "../node/node";
 
 export interface INESTCopyModelProps {
   existing: string;

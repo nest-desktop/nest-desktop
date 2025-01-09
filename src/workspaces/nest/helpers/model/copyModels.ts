@@ -2,8 +2,8 @@
 
 import { BaseObj } from "@/helpers/common/base";
 
-import { NESTNetwork } from "../network/network";
 import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
+import { NESTNetwork } from "../network/network";
 
 export class NESTCopyModels extends BaseObj {
   private _models: NESTCopyModel[] = [];

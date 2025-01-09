@@ -3,13 +3,13 @@
 import { arc } from "d3";
 import { UnwrapRef, reactive } from "vue";
 
-import { useAppStore } from "@/stores/appStore";
 import { TArc, TModel, TNetwork, TSelection } from "@/types";
+import { useAppStore } from "@/stores/appStore";
 
 import { BaseObj } from "../common/base";
-import { darkMode } from "../common/theme";
-import { TElementType } from "../model/model";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { TElementType } from "../model/model";
+import { darkMode } from "../common/theme";
 
 export interface INetworkGraphAddPanelState {
   elementType: TElementType | null;

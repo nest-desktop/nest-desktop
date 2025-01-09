@@ -4,8 +4,8 @@ import { drag, select, transition } from "d3";
 
 import { TConnection, TDragBehavior, TNetworkGraph, TNode, TSelection } from "@/types";
 
-import { BaseObj } from "../common/base";
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
+import { BaseObj } from "../common/base";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
 import { NodeGroup } from "../node/nodeGroup";
 import { drawPathNode } from "./connectionGraphPath";

@@ -8,13 +8,13 @@ import { NodeParameter } from "@/helpers/node/nodeParameter";
 import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 import { onlyUnique, sortString } from "@/utils/array";
 
+import { INESTNodeCompartmentProps, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
+import { INESTNodeReceptorProps, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
+import { INESTNodeSpatialProps, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
-import { INESTNodeCompartmentProps, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
-import { INESTNodeReceptorProps, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
-import { INESTNodeSpatialProps, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
 import { NESTNodes } from "./nodes";
 
 export interface INESTNodeProps extends INodeProps {

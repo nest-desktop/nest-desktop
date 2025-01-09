@@ -1,7 +1,7 @@
 // networkGraphWorkspace.ts
 
-import { max, min, pointer, select, zoomIdentity } from "d3";
 import { UnwrapRef, nextTick, reactive } from "vue";
+import { max, min, pointer, select, zoomIdentity } from "d3";
 
 import { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
 

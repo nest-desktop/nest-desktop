@@ -123,12 +123,12 @@ import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
 import ColorPicker from "../common/ColorPicker.vue";
 import NodeRecordChip from "../node/NodeRecordChip.vue";
-import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
+import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { deviation, mean } from "@/utils/array";
 import { toFixed } from "@/utils/converter";
 
-const props = defineProps<{ activity: AnalogSignalActivity }>();
+const props = defineProps<{ activity: NodeAnalogSignalActivity }>();
 const activity = computed(() => props.activity);
 const record = computed(() => activity.value.recorder.records[0]);
 

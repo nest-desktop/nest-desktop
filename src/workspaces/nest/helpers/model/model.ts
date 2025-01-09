@@ -6,9 +6,9 @@ import { BaseModel, IModelProps, IModelStateProps, TElementType } from "@/helper
 import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
-// import { loadText } from "@/utils/fetch";
-import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 import { INESTModelReceptorProps, NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
+// import { loadText } from "@/utils/fetch";
 
 export interface INESTModelProps extends IModelProps {
   compartmentParams?: IParamProps[];

@@ -2,10 +2,9 @@
 
 import { TNode } from "@/types";
 
-import { NodeRecord } from "../node/nodeRecord";
 import { IActivityProps } from "../activity/activity";
-
 import { NodeActivity } from "./nodeActivity";
+import { NodeRecord } from "../node/nodeRecord";
 
 export class NodeAnalogSignalActivity extends NodeActivity {
   constructor(recorder: TNode, activityProps: IActivityProps = {}) {

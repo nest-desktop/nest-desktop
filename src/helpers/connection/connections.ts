@@ -4,9 +4,9 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TConnection, TNetwork, TNode } from "@/types";
 
+import { BaseConnection, IConnectionProps } from "./connection";
 import { BaseObj } from "../common/base";
 import { NodeGroup } from "../node/nodeGroup";
-import { BaseConnection, IConnectionProps } from "./connection";
 
 interface IConnectionsState {
   focusedConnection: TConnection | null;

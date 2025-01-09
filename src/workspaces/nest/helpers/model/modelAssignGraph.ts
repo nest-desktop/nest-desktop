@@ -5,11 +5,11 @@ import { Selection, select } from "d3";
 import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 import { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
 
+import { BaseConnection } from "@/helpers/connection/connection";
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "./copyModel";
 import { NESTNetworkGraph } from "../network/networkGraph";
 import { NESTNode } from "../node/node";
-import { BaseConnection } from "@/helpers/connection/connection";
 
 export class NESTModelAssignGraph {
   private _networkGraph: NESTNetworkGraph;

@@ -4,8 +4,8 @@ import { openLoading } from "@/stores/appStore";
 import { TProject } from "@/types";
 
 import { ActivityChartGraph } from "./activityChartGraph/activityChartGraph";
-import { IActivityChartPanelProps } from "./activityChartGraph/activityChartPanel";
 import { BaseObj } from "../common/base";
+import { IActivityChartPanelProps } from "./activityChartGraph/activityChartPanel";
 
 export interface IBaseActivityGraphProps {
   color: string;

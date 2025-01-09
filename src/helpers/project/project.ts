@@ -14,8 +14,8 @@ import { BaseObj } from "../common/base";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { IAxiosResponseData } from "@/stores/defineBackendStore";
 import { IDoc } from "../common/database";
-import { ProjectState } from "./projectState";
 import { NodeActivities } from "../nodeActivity/nodeAactivities";
+import { ProjectState } from "./projectState";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;

@@ -5,11 +5,11 @@ import { INodeGroupProps, NodeGroup } from "@/helpers/node/nodeGroup";
 import { TNetworkProps, TNode } from "@/types";
 
 import { INESTConnectionProps, NESTConnection } from "../connection/connection";
-import { NESTConnections } from "../connection/connections";
 import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
+import { INESTNodeProps } from "../node/node";
+import { NESTConnections } from "../connection/connections";
 import { NESTCopyModels } from "../model/copyModels";
 import { NESTModel } from "../model/model";
-import { INESTNodeProps } from "../node/node";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
 

@@ -5,8 +5,8 @@
 import { TNode, TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { INodeProps } from "../node/node";
 import { INetworkProps } from "./network";
+import { INodeProps } from "../node/node";
 
 interface INetworkRevisionProps extends INetworkProps {
   codeHash?: string;

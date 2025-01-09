@@ -6,13 +6,13 @@ import { Ref, UnwrapRef, nextTick, reactive, watch } from "vue";
 import { TConnection, TNetwork, TNode, TSelection } from "@/types";
 import { debounce } from "@/utils/events";
 
+import { BaseNode } from "../node/node";
 import { BaseObj } from "../common/base";
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
-import { BaseNode } from "../node/node";
-import { NodeGroup } from "../node/nodeGroup";
-import { NodeGraph } from "../nodeGraph/nodeGraph";
-import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
+import { NodeGraph } from "../nodeGraph/nodeGraph";
+import { NodeGroup } from "../node/nodeGroup";
+import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
 
 interface IBaseNetworkGraphState {
   contextMenu: {

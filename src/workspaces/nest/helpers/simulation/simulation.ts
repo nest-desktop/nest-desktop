@@ -8,9 +8,9 @@ import { ISimulationCodeProps } from "@/helpers/simulation/simulationCode";
 import { notifyError } from "@/helpers/common/notification";
 
 import nest from "../../stores/backends/nestSimulatorStore";
+import { INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 import { NESTProject } from "../project/project";
 import { NESTSimulationCode } from "./simulationCode";
-import { INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 
 export interface INESTSimulationProps {
   code?: ISimulationCodeProps;

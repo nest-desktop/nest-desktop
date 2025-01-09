@@ -1,6 +1,6 @@
 // spikeActivity.ts
 
-import { TNode, TProject } from "@/types";
+import { TProject } from "@/types";
 
 import { Activity, IActivityProps, IEventProps } from "./activity";
 

@@ -11,8 +11,8 @@ import { Activity } from "../activity/activity";
 import { BaseProject, IBaseProjectProps } from "./project";
 import { INetworkProps, BaseNetwork } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
-import { upgradeProject } from "../upgrades/upgrades";
 import { NodeActivities } from "../nodeActivity/nodeAactivities";
+import { upgradeProject } from "../upgrades/upgrades";
 
 export interface INetworkProjectProps extends IBaseProjectProps {
   network?: INetworkProps;

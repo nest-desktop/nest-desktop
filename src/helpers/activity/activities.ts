@@ -3,14 +3,14 @@
 import { UnwrapRef, reactive } from "vue";
 
 import { IResponseData } from "@/stores/defineBackendStore";
-import { TNode, TProject } from "@/types";
+import { TProject } from "@/types";
 
-import { SpikeActivity } from "../activity/spikeActivity";
-import { BaseObj } from "../common/base";
 import { Activity, IActivityProps, IEventProps } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
+import { BaseObj } from "../common/base";
 import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
 import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
+import { SpikeActivity } from "../activity/spikeActivity";
 
 interface IActivitiesState {
   activityStatsPanelId: number;

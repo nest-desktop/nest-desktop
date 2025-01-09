@@ -3,7 +3,6 @@
 import { TNode } from "@/types";
 
 import { IActivityProps, IEventProps } from "../activity/activity";
-
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeSpikeActivity extends NodeActivity {

@@ -1,7 +1,7 @@
 // model.ts
 
-import { v4 as uuidv4 } from "uuid";
 import { UnwrapRef, reactive } from "vue";
+import { v4 as uuidv4 } from "uuid";
 
 import { TProject } from "@/types";
 

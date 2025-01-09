@@ -3,9 +3,9 @@
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { BaseNodes } from "@/helpers/node/nodes";
 
+import { INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTNetwork } from "../network/network";
-import { INESTNodeProps, NESTNode } from "./node";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {

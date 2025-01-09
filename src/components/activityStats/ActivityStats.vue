@@ -36,13 +36,13 @@
           <v-expansion-panel-text :key="activities.hash" class="ma-0 pa-0">
             <ActivityStatsSpike
               v-if="activity.recorder.model.isSpikeRecorder"
-              :activity="activity as SpikeActivity"
+              :activity="activity as NodeSpikeActivity"
               :height="state.height"
             />
 
             <ActivityStatsAnalog
               v-if="activity.recorder.model.isAnalogRecorder"
-              :activity="activity as AnalogSignalActivity"
+              :activity="activity as NodeAnalogSignalActivity"
               :height="state.height - (activity.recorder.model.isMultimeter ? 40 : 0)"
             />
           </v-expansion-panel-text>
@@ -58,13 +58,13 @@ import { computed, reactive } from "vue";
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
-import { Activities } from "@/helpers/activity/activities";
-import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import { NodeActivities } from "@/helpers/nodeActivity/nodeAactivities";
+import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
+import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { TNode } from "@/types";
 import { nextTick } from "vue";
 
-const props = defineProps<{ activities: Activities }>();
+const props = defineProps<{ activities: NodeActivities }>();
 const activities = computed(() => props.activities);
 
 const state = reactive<{ height: number }>({

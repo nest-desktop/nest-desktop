@@ -2,13 +2,13 @@
 
 import { TConnection, TConnections, TModel, TNetwork, TNode, TNodes, TProject } from "@/types";
 
+import { BaseConnections } from "../connection/connections";
+import { BaseNodes } from "../node/nodes";
 import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
-import { BaseConnections } from "../connection/connections";
-import { INodeProps } from "../node/node";
 import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
+import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
-import { BaseNodes } from "../node/nodes";
 import { NetworkState } from "./networkState";
 
 export interface INetworkProps {

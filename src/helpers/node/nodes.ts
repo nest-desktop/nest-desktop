@@ -4,8 +4,8 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TActivityGraph, TNetwork, TNode } from "@/types";
 
-import { BaseObj } from "../common/base";
 import { BaseNode, INodeProps } from "./node";
+import { BaseObj } from "../common/base";
 import { INodeGroupProps, NodeGroup } from "./nodeGroup";
 
 interface INodesState {

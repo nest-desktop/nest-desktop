@@ -10,8 +10,8 @@
 // 5 - error
 // 6 - fatal
 
-import { sha1 } from "object-hash";
 import { ILogObj, ISettingsParam, Logger } from "tslog";
+import { sha1 } from "object-hash";
 import { v4 as uuidv4 } from "uuid";
 
 import { truncate } from "@/utils/truncate";

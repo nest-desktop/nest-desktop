@@ -4,7 +4,6 @@ import { TNode, TProject } from "@/types";
 
 import { Activities } from "../activity/activities";
 import { Activity } from "../activity/activity";
-
 import { NodeActivity } from "./nodeActivity";
 import { NodeAnalogSignalActivity } from "./nodeAnalogSignalActivity";
 import { NodeSpikeActivity } from "./nodeSpikeActivity";

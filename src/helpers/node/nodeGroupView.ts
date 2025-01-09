@@ -4,8 +4,8 @@ import { polygonCentroid } from "d3";
 import { UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "../common/base";
-import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
 import { NodeGroup } from "./nodeGroup";
+import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
 
 export interface INodeGroupViewProps {
   color?: string;
