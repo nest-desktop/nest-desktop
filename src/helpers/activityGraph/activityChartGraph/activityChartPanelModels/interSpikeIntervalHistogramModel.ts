@@ -47,10 +47,10 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
     this.data.push(
       histogram({
         activityIdx: activity.idx,
-        color: activity.recorder.view.color,
+        color: activity.traceColor,
         hoverinfo: "x-y",
         legendgroup: "spikes" + activity.idx,
-        name: "Histogram of ISI in" + activity.recorder.view.label,
+        name: "Histogram of ISI" + "record" in activity ? " in " + activity.traceLabel : "",
         source: "x",
         visible: this.state.visible,
         x,

@@ -335,7 +335,7 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Initialize network chart graph.
+   * Initialize activity chart graph.
    */
   init(): void {
     this.logger.trace("init");
@@ -484,7 +484,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Updates chart graph with activities.
-   * @remarks It required network activities.
+   * @remarks It required activities.
    */
   update(): void {
     if (!this._state.ref) return;
@@ -496,7 +496,6 @@ export class ActivityChartGraph extends BaseObj {
 
     this.updateVisiblePanelsLayout();
     this.updatePanelModels();
-    // this.updateLayoutColor();
 
     this.updateVisiblePanelsData();
 
@@ -530,16 +529,6 @@ export class ActivityChartGraph extends BaseObj {
     this._plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] = panel.layout.yaxis;
     this._plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] = panel.layout.xaxis;
   }
-
-  // /**
-  //  * Update panels.
-  //  */
-  // updatePanels(): void {
-  //   this.logger.trace("update panels");
-
-  //   const recorders = this._project.network.nodes.recorders;
-  //   this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
-  // }
 
   /**
    * Update panel models.

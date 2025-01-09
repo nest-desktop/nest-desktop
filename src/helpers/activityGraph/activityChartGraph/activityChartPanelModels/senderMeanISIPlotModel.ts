@@ -73,7 +73,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
           shape: lineShape,
         },
         mode: plotMode,
-        name: "Mean ISI in each sender in" + activity.traceLabel,
+        name: "Mean ISI in each sender" + "record" in activity ? " in " + activity.traceLabel : "",
         showlegend: false,
         visible: this.state.visible,
         x,

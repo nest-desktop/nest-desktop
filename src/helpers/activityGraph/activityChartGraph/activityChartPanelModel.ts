@@ -297,16 +297,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this.activities
       .filter((activity: NodeActivity) => "recorder" in activity && activity.recorder.model.isAnalogRecorder)
       .forEach((activity: NodeAnalogSignalActivity) => {
-        if (activity.recorder.records) {
-          activity.recorder.records.forEach((record: NodeRecord) => {
-            this.records.push(record);
-          });
-        }
+        if (activity.recorder.records)
+          activity.recorder.records.forEach((record: NodeRecord) => this.records.push(record));
       });
 
-    if (this._state.recordsVisible.length === 0) {
-      this.selectAllNodeRecords();
-    }
+    if (this._state.recordsVisible.length === 0) this.selectAllNodeRecords();
   }
 
   /**
@@ -316,9 +311,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     const recordsProps: string[] = this.props.records || [];
     this.logger.trace("init visible analog records:", recordsProps);
 
-    if (recordsProps && recordsProps.length > 0) {
-      this._state.recordsVisible = recordsProps;
-    }
+    if (recordsProps && recordsProps.length > 0) this._state.recordsVisible = recordsProps;
   }
 
   /**
@@ -328,9 +321,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   initParams(paramsProps: IParamProps[]): void {
     paramsProps.forEach((paramProps: IParamProps) => {
       this.addParameter(paramProps);
-      if (paramProps.visible != false) {
-        this.params[paramProps.id].visible = true;
-      }
+      if (paramProps.visible != false) this.params[paramProps.id].visible = true;
     });
   }
 
@@ -366,9 +357,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       modelProps.params = params;
     }
 
-    if (0 < this._state.recordsVisible.length && this._state.recordsVisible.length < this.state.records.length) {
+    if (0 < this._state.recordsVisible.length && this._state.recordsVisible.length < this.state.records.length)
       modelProps.records = this._state.recordsVisible;
-    }
+
     return modelProps;
   }
 
@@ -425,9 +416,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       .forEach((activity: NodeAnalogSignalActivity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
-            if (!this.records.includes(record)) {
-              this.records.push(record);
-            }
+            if (!this.records.includes(record)) this.records.push(record);
           });
         }
       });
@@ -448,9 +437,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateBackgroundColor(): void {
     this._data.forEach((data: IActivityChartPanelModelData) => {
-      if (data.marker && data.marker.line && data.type === "histogram") {
+      if (data.marker && data.marker.line && data.type === "histogram")
         data.marker.line.color = currentBackgroundColor();
-      }
     });
   }
 
@@ -460,9 +448,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateParams(paramsProps: Record<string, TParamValue> = {}): void {
     this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
-      if (param.id in paramsProps) {
-        param.state.value = paramsProps[param.id];
-      }
+      if (param.id in paramsProps) param.state.value = paramsProps[param.id];
     });
   }
 

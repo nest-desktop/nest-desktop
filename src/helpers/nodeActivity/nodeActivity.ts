@@ -4,6 +4,7 @@
 import { TNode } from "@/types";
 
 import { Activity, IActivityProps } from "../activity/activity";
+import { sum } from "@/utils/array";
 
 export class NodeActivity extends Activity {
   private _recorder: TNode; // parent
@@ -39,6 +40,10 @@ export class NodeActivity extends Activity {
    */
   get hasNeuronAnalogData(): boolean {
     return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("neuron");
+  }
+
+  override get nodeSize(): number {
+    return sum(this.recorder.nodes.nodeItems.map((node: TNode) => node.size));
   }
 
   get recorder(): TNode {

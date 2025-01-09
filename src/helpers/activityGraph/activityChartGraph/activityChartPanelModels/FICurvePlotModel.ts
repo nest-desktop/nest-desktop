@@ -32,7 +32,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
           color: activity.traceColor,
           size: 5,
         },
-        name: "Spikes of " + activity.traceLabel,
+        name: "Spikes" + "record" in activity ? " of " + activity.traceLabel : "",
         visible: this.state.visible,
         x: activity.events.times,
         y: activity.events.senders,

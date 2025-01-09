@@ -75,7 +75,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
           shape: lineShape,
         },
         mode: plotMode,
-        name: "CV of ISI in each sender in" + activity.traceLabel,
+        name: "CV of ISI in each sender" + "record" in activity ? " in " + activity.traceLabel : "",
         showlegend: false,
         visible: this.state.visible,
         x,

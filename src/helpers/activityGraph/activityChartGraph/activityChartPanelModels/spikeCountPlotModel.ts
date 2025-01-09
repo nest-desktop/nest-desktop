@@ -115,10 +115,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const nodeSizeTotal =
-      "recorder" in activity
-        ? sum(activity.recorder.nodes.nodeItems.map((node: TNode) => node.size))
-        : activity.nodeIds.length;
+    const nodeSize = activity.nodeSize;
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
@@ -147,7 +144,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       const std = deviation(h) as number;
       y = h.map((val: number) => (val - m) / std);
     } else if (normalization.includes("rate")) {
-      y = h.map((val: number) => (val / nodeSizeTotal / binSize) * 1000);
+      y = h.map((val: number) => (val / nodeSize / binSize) * 1000);
     } else {
       y = h;
     }

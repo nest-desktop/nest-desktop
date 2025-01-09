@@ -3,6 +3,7 @@
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { NodeActivities } from "@/helpers/nodeActivity/nodeAactivities";
 
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -18,6 +19,7 @@ export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
    * Update activities of input analog signals.
    */
   override updateActivities(): void {
-    this.activities = this.panel.graph.project.activities.inputAnalogSignals;
+    const activities = this.panel.graph.project.activities as NodeActivities;
+    this.activities = activities.inputAnalogSignals;
   }
 }

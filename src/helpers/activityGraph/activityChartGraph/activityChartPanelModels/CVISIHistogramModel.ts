@@ -45,7 +45,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
         activityIdx: activity.idx,
         color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
-        name: "Histogram of CV(ISI) in" + activity.traceColor,
+        name: "Histogram of CV(ISI)" + "record" in activity ? " in " + activity.traceLabel : "",
         visible: this.state.visible,
         x,
         xbins: {

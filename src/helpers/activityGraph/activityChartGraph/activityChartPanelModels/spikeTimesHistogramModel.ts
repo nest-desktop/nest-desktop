@@ -45,7 +45,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
         activityIdx: activity.idx,
         color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
-        name: "Histogram of spike times in" + activity.traceLabel,
+        name: "Histogram of spike times" + "record" in activity ? " in " + activity.traceLabel : "",
         visible: this.state.visible,
         x,
         xbins: {

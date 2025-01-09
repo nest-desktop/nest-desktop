@@ -87,7 +87,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
           shape: lineShape,
         },
         mode: plotMode,
-        name: "Spike count in each sender in" + activity.traceLabel,
+        name: "Spike count in each sender" + "record" in activity ? " in " + activity.traceLabel : "",
         showlegend: false,
         visible: this.state.visible,
         x,

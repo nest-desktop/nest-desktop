@@ -115,6 +115,10 @@ export class Activity extends BaseObj {
     this._nodePositions = value;
   }
 
+  get nodeSize(): number {
+    return this.nodeIds.length;
+  }
+
   get project(): TProject {
     return this._project;
   }
