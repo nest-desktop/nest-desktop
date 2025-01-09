@@ -11,10 +11,10 @@ import { TProject } from "@/types";
 import { ActivityChartPanel, IActivityChartPanelProps } from "./activityChartPanel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
-import { BaseObj } from "../common/base";
+import { BaseObj } from "../../common/base";
 import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import { IActivityChartPanelModelData } from "./activityChartPanelModel";
-import { IBaseActivityGraphProps } from "../activity/activityGraph";
+import { IBaseActivityGraphProps } from "../activityGraph";
 import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
 import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";
@@ -22,7 +22,7 @@ import { SenderSpikeCountPlotModel } from "./activityChartPanelModels/senderSpik
 import { SpikeCountPlotModel } from "./activityChartPanelModels/spikeCountPlotModel";
 import { SpikeTimesHistogramModel } from "./activityChartPanelModels/spikeTimesHistogramModel";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
-import { currentBackgroundColor, currentColor } from "../common/theme";
+import { currentBackgroundColor, currentColor } from "../../common/theme";
 
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";

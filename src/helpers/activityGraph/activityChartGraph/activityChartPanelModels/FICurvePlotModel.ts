@@ -2,7 +2,7 @@
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { SpikeActivity } from "../../activity/spikeActivity";
+import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { line } from "../graphObjects/line";
 
@@ -29,10 +29,10 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
         hoverinfo: "none",
         legendgroup: "spikes" + activity.idx,
         marker: {
-          color: activity.recorder.view.color,
+          color: activity.traceColor,
           size: 5,
         },
-        name: "Spikes of " + activity.recorder.view.label,
+        name: "Spikes of " + activity.traceLabel,
         visible: this.state.visible,
         x: activity.events.times,
         y: activity.events.senders,

@@ -9,6 +9,8 @@ import { SpikeActivity } from "../activity/spikeActivity";
 import { BaseObj } from "../common/base";
 import { Activity, IActivityProps, IEventProps } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
+import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
+import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
 
 interface IActivitiesState {
   activityStatsPanelId: number;
@@ -19,11 +21,12 @@ interface IActivitiesState {
 }
 
 export class Activities extends BaseObj {
+  private _activities: Activity[];
   private _state: UnwrapRef<IActivitiesState>;
   public _project: TProject;
 
   constructor(project: TProject) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     this._project = project;
     this._state = reactive<IActivitiesState>({
@@ -35,48 +38,26 @@ export class Activities extends BaseObj {
     });
   }
 
+  get activities(): Activity[] {
+    return this._activities;
+  }
+
   /**
    * Get all activities.
    */
   get all(): Activity[] {
-    let activities = [] as Activity[];
-
-    if ("network" in this.project)
-      activities = this.project.network.nodes.recorders.map((recorder: TNode) => recorder.activity as Activity);
-
-    // Update activity idx.
-    if (activities.length > 0)
-      activities
-        .filter((activity: Activity) => activity)
-        .forEach((activity: Activity, idx: number) => (activity.idx = idx));
-
-    return activities;
+    return this._activities;
   }
 
   /**
    * Get a list of analog signal activities.
    */
-  get analogSignals(): AnalogSignalActivity[] {
-    const activities: AnalogSignalActivity[] =
-      "network" in this.project
-        ? this.project.network.nodes.recordersAnalog.map((recorder: TNode) => recorder.activity as AnalogSignalActivity)
-        : [];
+  get analogSignals(): (AnalogSignalActivity | NodeAnalogSignalActivity)[] {
+    const activities: AnalogSignalActivity[] = this._activities.filter((activity: Activity) =>
+      activity.constructor.name.includes("AnalogSignal"),
+    ) as AnalogSignalActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
-  }
-
-  /**
-   * Get a list of neuronal analog signal activities.
-   */
-  get neuronAnalogSignals(): AnalogSignalActivity[] {
-    return this.analogSignals.filter((activity: AnalogSignalActivity) => activity.hasNeuronAnalogData);
-  }
-
-  /**
-   * Get a list of input analog signal activities.
-   */
-  get inputAnalogSignals(): AnalogSignalActivity[] {
-    return this.analogSignals.filter((activity: AnalogSignalActivity) => activity.hasInputAnalogData);
   }
 
   get project(): TProject {
@@ -86,11 +67,10 @@ export class Activities extends BaseObj {
   /**
    * Get a list of spike activities.
    */
-  get spikes(): SpikeActivity[] {
-    const activities: SpikeActivity[] =
-      "network" in this.project
-        ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as SpikeActivity)
-        : [];
+  get spikes(): (SpikeActivity | NodeSpikeActivity)[] {
+    const activities: SpikeActivity[] = this._activities.filter((activity: Activity) =>
+      activity.constructor.name.includes("SpikeActivity"),
+    ) as SpikeActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
@@ -154,8 +134,6 @@ export class Activities extends BaseObj {
   // Initialize activities.
   init(): void {
     this.logger.trace("init");
-
-    this.checkRecorders();
   }
 
   /**

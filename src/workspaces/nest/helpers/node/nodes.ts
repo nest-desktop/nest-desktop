@@ -3,7 +3,7 @@
 import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { BaseNodes } from "@/helpers/node/nodes";
 
-import { NESTActivityGraph } from "../activity/activityGraph";
+import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTNetwork } from "../network/network";
 import { INESTNodeProps, NESTNode } from "./node";
 

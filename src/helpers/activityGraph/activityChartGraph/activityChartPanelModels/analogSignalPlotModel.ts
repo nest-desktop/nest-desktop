@@ -5,8 +5,8 @@ import { TNode } from "@/types";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { NodeRecord } from "../../node/nodeRecord";
-import { currentBackgroundColor, currentColor } from "../../common/theme";
+import { NodeRecord } from "../../../node/nodeRecord";
+import { currentBackgroundColor, currentColor } from "../../../common/theme";
 import { line } from "../graphObjects/line";
 
 interface IDataPoints {

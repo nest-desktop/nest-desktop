@@ -2,9 +2,10 @@
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { SpikeActivity } from "../../activity/spikeActivity";
+import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { histogram } from "../graphObjects/histogram";
+import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -31,7 +32,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
    * Add data of spike times for histogram panel.
    * @param activity spike activity object
    */
-  override addData(activity: SpikeActivity): void {
+  override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const x: number[] = activity.events.times;
@@ -42,9 +43,9 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     this.data.push(
       histogram({
         activityIdx: activity.idx,
-        color: activity.recorder.view.color,
+        color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
-        name: "Histogram of spike times in" + activity.recorder.view.label,
+        name: "Histogram of spike times in" + activity.traceLabel,
         visible: this.state.visible,
         x,
         xbins: {

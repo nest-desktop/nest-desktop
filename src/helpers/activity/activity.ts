@@ -6,7 +6,7 @@ import { UnwrapRef, reactive } from "vue";
 import { TNode, TProject } from "@/types";
 
 import { download } from "../../utils/download";
-import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "../activityGraph/activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";
 
 export interface IActivityProps {
@@ -32,14 +32,17 @@ export class Activity extends BaseObj {
   private _idx: number = 0; // generative
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
-  private _recorder: TNode; // parent
+  private _project: TProject;
   private _recorderUnitId: number = -1;
   private _state: UnwrapRef<IActivityState>;
 
-  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+  constructor(project: TProject, activityProps: IActivityProps = {}) {
+    super({
+      config: { name: "Activity" },
+      logger: { settings: { minLevel: 1 } },
+    });
 
-    this._recorder = recorder;
+    this._project = project;
     this._state = reactive<IActivityState>({
       activeNodeId: undefined,
       fromTime: 0,
@@ -54,17 +57,17 @@ export class Activity extends BaseObj {
     return this.project.activityGraph.activityChartGraph;
   }
 
+  get colors(): string[] {
+    return this.config?.localStorage.color.cycle;
+  }
+
   get currentTime(): number {
-    const simulationState = this.recorder.network.project.simulation.state;
+    const simulationState = this.project.simulation.state;
     return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
   }
 
-  get elementTypes(): string[] {
-    return this.recorder.nodes.nodeItems.map((node: TNode) => node.model.elementType);
-  }
-
   get endTime(): number {
-    return this.recorder.network.project.simulation.state.biologicalTime;
+    return this.project.simulation.state.biologicalTime;
   }
 
   get events(): IEventProps {
@@ -80,20 +83,6 @@ export class Activity extends BaseObj {
    */
   get hasEvents(): boolean {
     return this.nEvents > 0;
-  }
-
-  /**
-   * Check if activity contains analog signal data from input devices.
-   */
-  get hasInputAnalogData(): boolean {
-    return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("stimulator");
-  }
-
-  /**
-   * Check if activity contains analog signal data from neurons.
-   */
-  get hasNeuronAnalogData(): boolean {
-    return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("neuron");
   }
 
   get idx(): number {
@@ -129,11 +118,7 @@ export class Activity extends BaseObj {
   }
 
   get project(): TProject {
-    return this.recorder.network.project;
-  }
-
-  get recorder(): TNode {
-    return this._recorder;
+    return this._project;
   }
 
   get recorderUnitId(): number {
@@ -149,7 +134,15 @@ export class Activity extends BaseObj {
   }
 
   get simulationTimeInfo(): number {
-    return this.recorder.network.project.simulation.state.timeInfo.value;
+    return this.project.simulation.state.timeInfo.value;
+  }
+
+  get traceColor(): string {
+    return this.colors[this._idx];
+  }
+
+  get traceLabel(): string {
+    return "tr";
   }
 
   changes(): void {
@@ -162,7 +155,7 @@ export class Activity extends BaseObj {
    * Clone activity.
    */
   clone(): Activity {
-    return new Activity(this.recorder, this.toJSON());
+    return new Activity(this._project, this.toJSON());
   }
 
   /**

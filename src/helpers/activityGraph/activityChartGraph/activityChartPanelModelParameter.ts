@@ -1,6 +1,6 @@
 // activityChartPanelModelParameter.ts
 
-import { BaseParameter, IParamProps } from "../common/parameter";
+import { BaseParameter, IParamProps } from "../../common/parameter";
 import { ActivityChartPanelModel } from "./activityChartPanelModel";
 
 export class ActivityChartPanelModelParameter extends BaseParameter {

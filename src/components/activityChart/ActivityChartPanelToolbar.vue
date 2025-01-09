@@ -31,8 +31,8 @@
 import { computed } from "vue";
 
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
+import { ActivityChartPanel } from "@/helpers/activityGraph/activityChartGraph/activityChartPanel";
 
 const props = defineProps<{ panel: ActivityChartPanel }>();
 const panel = computed(() => props.panel);

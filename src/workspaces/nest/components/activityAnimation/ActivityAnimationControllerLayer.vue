@@ -210,7 +210,7 @@ import { computed, nextTick } from "vue";
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
-import { ActivityAnimationLayer } from "../../helpers/activityAnimationGraph/activityAnimationLayer";
+import { ActivityAnimationLayer } from "../../helpers/activityGraph/activityAnimationGraph/activityAnimationLayer";
 
 const props = defineProps<{ layer: ActivityAnimationLayer }>();
 const layer = computed(() => props.layer);

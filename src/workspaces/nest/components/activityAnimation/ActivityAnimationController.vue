@@ -87,7 +87,7 @@ import { computed } from "vue";
 import Card from "@/components/common/Card.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 
-import { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
+import { ActivityAnimationGraph } from "../../helpers/activityGraph/activityAnimationGraph/activityAnimationGraph";
 
 const props = defineProps<{ graph: ActivityAnimationGraph }>();
 const graph = computed(() => props.graph);

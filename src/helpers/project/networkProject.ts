@@ -12,6 +12,7 @@ import { BaseProject, IBaseProjectProps } from "./project";
 import { INetworkProps, BaseNetwork } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
 import { upgradeProject } from "../upgrades/upgrades";
+import { NodeActivities } from "../nodeActivity/nodeAactivities";
 
 export interface INetworkProjectProps extends IBaseProjectProps {
   network?: INetworkProps;
@@ -39,8 +40,16 @@ export class NetworkProject extends BaseProject {
     nextTick(() => this.init());
   }
 
+  override get Activities() {
+    return NodeActivities;
+  }
+
   get Network() {
     return BaseNetwork;
+  }
+
+  override get activities(): NodeActivities {
+    return this._activities as NodeActivities;
   }
 
   get baseNetwork(): BaseNetwork {
@@ -172,7 +181,7 @@ export class NetworkProject extends BaseProject {
     const simtoc = Date.now();
     this._simulation
       .start()
-      .then((response: void | AxiosResponse<IAxiosResponseData>) => {
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
         this.state.state.stopwatch.simulation = Date.now() - simtoc;
 
         if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;

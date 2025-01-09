@@ -1,20 +1,20 @@
-// senderCVISIPlotModel.ts
+//senderMeanISIPlotModel.ts
 
 import { TParameter } from "@/types";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { SpikeActivity } from "../../activity/spikeActivity";
+import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { plot } from "../graphObjects/plot";
 
-export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
+export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
-    this.id = "senderCVISIPlot";
-    this.label = "CV of ISI in each sender";
+    this.id = "senderMeanISIPlot";
+    this.label = "mean ISI in each sender";
     this.panel.xAxis = 4;
 
     this.initParams([
@@ -42,8 +42,8 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
           { title: "horizontal-vertical steps", value: "hv" },
         ],
         label: "Line shape",
-        value: "linear",
         visible: false,
+        value: "linear",
       },
     ]);
 
@@ -51,7 +51,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Add data of CV of ISI in each sender for histogram panel.
+   * Add data of mean ISI in each sender for histogram panel.
    * @param activity spike activity object
    */
   override addData(activity: SpikeActivity): void {
@@ -59,9 +59,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
 
     const x: number[] = activity.nodeIds;
     const isi: number[][] = activity.ISI();
-    const y: number[] = isi.map((ii: number[]) =>
-      ii.length > 1 ? activity.getStandardDeviation(ii) / activity.getAverage(ii) : 0,
-    );
+    const y: number[] = isi.map((ii: number[]) => (ii.length > 0 ? activity.getAverage(ii) : 0));
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
@@ -69,13 +67,13 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
     this.data.push(
       plot(plotMode, {
         activityIdx: activity.idx,
-        color: activity.recorder.view.color,
+        color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
         line: {
           shape: lineShape,
         },
         mode: plotMode,
-        name: "CV of ISI in each sender in" + activity.recorder.view.label,
+        name: "Mean ISI in each sender in" + activity.traceLabel,
         showlegend: false,
         visible: this.state.visible,
         x,
@@ -90,6 +88,6 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.type = this.state.xaxisType;
     this.panel.layout.xaxis.title = "Senders";
-    this.panel.layout.yaxis.title = "CV of ISI";
+    this.panel.layout.yaxis.title = "Mean ISI [ms]";
   }
 }

@@ -2,13 +2,16 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { Activity } from "../activity/activity";
-import { BaseObj } from "../common/base";
-import { IParamProps, TParamValue } from "../common/parameter";
-import { currentBackgroundColor } from "../common/theme";
-import { NodeRecord } from "../node/nodeRecord";
+import { Activity } from "../../activity/activity";
+import { BaseObj } from "../../common/base";
+import { IParamProps, TParamValue } from "../../common/parameter";
+import { currentBackgroundColor } from "../../common/theme";
+import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "./activityChartPanel";
 import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
+import { NodeAnalogSignalActivity } from "../../nodeActivity/nodeAnalogSignalActivity";
+import { NodeActivity } from "../../nodeActivity/nodeActivity";
+import { TNode } from "@/types";
 
 export interface IActivityChartPanelModelData {
   activityIdx?: number;
@@ -292,8 +295,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this._state.records = [] as NodeRecord[];
 
     this.activities
-      .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
-      .forEach((activity: Activity) => {
+      .filter((activity: NodeActivity) => "recorder" in activity && activity.recorder.model.isAnalogRecorder)
+      .forEach((activity: NodeAnalogSignalActivity) => {
         if (activity.recorder.records) {
           activity.recorder.records.forEach((record: NodeRecord) => {
             this.records.push(record);
@@ -374,7 +377,6 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @remarks It requires activity data.
    */
   update(): void {
-    this.logger.trace("update");
     this.empty();
 
     // Update time.
@@ -419,8 +421,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
     // Add new records from current recorder.
     this._activities
-      .filter((activity: Activity) => activity.recorder.model.isAnalogRecorder)
-      .forEach((activity: Activity) => {
+      .filter((activity: NodeActivity) => "recorder" in activity && activity.recorder.model.isAnalogRecorder)
+      .forEach((activity: NodeAnalogSignalActivity) => {
         if (activity.recorder.records != null) {
           activity.recorder.records.forEach((record: NodeRecord) => {
             if (!this.records.includes(record)) {
@@ -473,8 +475,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       const activity = this.activities[data.activityIdx];
 
       let color: string;
-      if (activity && activity.recorder.model.isSpikeRecorder) {
-        color = activity.recorder.view.color;
+      if (activity && "recorder" in activity) {
+        const recorder = activity.recorder as TNode;
+        if (recorder.model.isSpikeRecorder) color = recorder.view.color;
       } else {
         const record = this.recordsVisible.find(
           (record: NodeRecord) => record.id === data.recordId && record.activity.idx === data.activityIdx,

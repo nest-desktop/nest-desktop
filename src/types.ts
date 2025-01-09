@@ -4,8 +4,8 @@ import type { Arc, DragBehavior, Selection, Transition, ZoomBehavior } from "d3"
 import type { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
 import type { Store } from "pinia";
 
-import type { BaseActivityGraph } from "./helpers/activity/activityGraph";
-import type { ActivityChartPanelModelParameter } from "./helpers/activityChartGraph/activityChartPanelModelParameter";
+import type { BaseActivityGraph } from "./helpers/activityGraph/activityGraph";
+import type { ActivityChartPanelModelParameter } from "./helpers/activityGraph/activityChartGraph/activityChartPanelModelParameter";
 import type { BaseParameter } from "./helpers/common/parameter";
 import type { BaseConnection, IConnectionProps } from "./helpers/connection/connection";
 import type { ConnectionParameter } from "./helpers/connection/connectionParameter";

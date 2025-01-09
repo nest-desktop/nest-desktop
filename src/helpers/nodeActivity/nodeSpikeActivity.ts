@@ -1,21 +1,23 @@
-// spikeActivity.ts
+// recorderSpikeActivity.ts
 
-import { TNode, TProject } from "@/types";
+import { TNode } from "@/types";
 
-import { Activity, IActivityProps, IEventProps } from "./activity";
+import { IActivityProps, IEventProps } from "../activity/activity";
 
-export class SpikeActivity extends Activity {
+import { NodeActivity } from "./nodeActivity";
+
+export class NodeSpikeActivity extends NodeActivity {
   private _times: number[][] = [];
 
-  constructor(project: TProject, activityProps: IActivityProps = {}) {
-    super(project, activityProps);
+  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
+    super(recorder, activityProps);
   }
 
   /**
    * Clone spike activity.
    */
-  override clone(): SpikeActivity {
-    return new SpikeActivity(this.project, this.toJSON());
+  override clone(): NodeSpikeActivity {
+    return new NodeSpikeActivity(this.recorder, this.toJSON());
   }
 
   /**

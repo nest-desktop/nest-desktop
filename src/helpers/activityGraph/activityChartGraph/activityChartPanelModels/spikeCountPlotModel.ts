@@ -5,10 +5,11 @@ import { TNode, TParameter } from "@/types";
 import { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { SpikeActivity } from "../../activity/spikeActivity";
+import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { deviation, max, mean, min, sum } from "../../../utils/array";
+import { deviation, max, mean, min, sum } from "../../../../utils/array";
 import { line } from "../graphObjects/line";
+import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -111,10 +112,13 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    * TODO: Improve checks (div-0-error, ...).
    * @param activity spike activity object
    */
-  override addData(activity: SpikeActivity): void {
+  override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const nodeSizeTotal = sum(activity.recorder.nodes.nodeItems.map((node: TNode) => node.size));
+    const nodeSizeTotal =
+      "recorder" in activity
+        ? sum(activity.recorder.nodes.nodeItems.map((node: TNode) => node.size))
+        : activity.nodeIds.length;
     const times: number[] = activity.events.times;
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
@@ -151,7 +155,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     this.data.push(
       line({
         activityIdx: activity.idx,
-        color: activity.recorder.view.color,
+        color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
         showlegend: false,
         visible: this.state.visible,

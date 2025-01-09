@@ -1,6 +1,6 @@
 // types.ts
 
-import { NESTActivityGraph } from "./activity/activityGraph";
+import { NESTActivityGraph } from "./activityGraph/activityGraph";
 import { NESTConnection } from "./connection/connection";
 import { NESTModel } from "./model/model";
 import { NESTModelDB } from "./model/modelDB";

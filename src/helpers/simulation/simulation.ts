@@ -187,7 +187,7 @@ export class BaseSimulation extends BaseObj {
 
     this._state.running = true;
     return this.run()
-      .then((response: void | AxiosResponse<IAxiosResponseData>) => {
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
         switch (response?.status) {
           case 0:
             notifyError("Failed to find Simulator.");

@@ -3,18 +3,19 @@
 import { GridHelper, Group, Object3DEventMap, Vector3 } from "three";
 import { UnwrapRef, reactive } from "vue";
 
-import { Activity, IEventProps } from "@/helpers/activity/activity";
+import { IEventProps } from "@/helpers/activity/activity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { range } from "@/utils/array";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
 import { BoxGeometryLayerModel } from "./activityAnimationLayerModels/boxGeometryLayerModel";
+import { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
 import { SphereGeometryLayerModel } from "./activityAnimationLayerModels/sphereGeometryLayerModel";
 
 export interface IActivityAnimationLayerFrame {
   [key: string]: number[];
-  senders: number[];
+  senders?: number[];
 }
 
 interface IActivityAnimationLayerModel {
@@ -41,7 +42,7 @@ export interface IActivityAnimationLayerState {
 }
 
 export class ActivityAnimationLayer {
-  private _activity: Activity;
+  private _activity: NodeActivity;
   private _frames: IActivityAnimationLayerFrame[] = [];
   private _graph: ActivityAnimationGraph;
   private _graphGroup?: Group<Object3DEventMap>;
@@ -87,12 +88,12 @@ export class ActivityAnimationLayer {
     visible: true,
   });
 
-  constructor(graph: ActivityAnimationGraph, activity: Activity) {
+  constructor(graph: ActivityAnimationGraph, activity: NodeActivity) {
     this._graph = graph;
     this._activity = activity;
   }
 
-  get activity(): Activity {
+  get activity(): NodeActivity {
     return this._activity;
   }
 
@@ -216,7 +217,7 @@ export class ActivityAnimationLayer {
    * Initialize records from analog activities.
    */
   initAnalogRecords(): void {
-    if (!this._activity.recorder.model?.isAnalogRecorder) return;
+    if (!("recorder" in this._activity && this._activity.recorder.model?.isAnalogRecorder)) return;
 
     this._state.records = [] as NodeRecord[];
     if (this._activity.recorder.records == null) return;
@@ -288,7 +289,7 @@ export class ActivityAnimationLayer {
     if (events.senders == null) return;
 
     // Update records of analog signals.
-    if (this._activity.recorder.model?.isAnalogRecorder) {
+    if ("recorder" in this._activity && this._activity.recorder.model?.isAnalogRecorder) {
       const records = this._state.records as NodeRecord[];
       records.forEach((record: NodeRecord) => record.update());
     }

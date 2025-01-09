@@ -3,9 +3,9 @@
 import { Group, Object3DEventMap } from "three";
 import { UnwrapRef, reactive } from "vue";
 
-import { Activity } from "@/helpers/activity/activity";
+import { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
 
-import { NESTProject } from "../project/project";
+import { NESTProject } from "../../project/project";
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
 
@@ -197,7 +197,7 @@ export class ActivityAnimationGraph {
     this._state.nSamples = this.project.simulation.state.biologicalTime * this._state.frames.sampleRate - 1;
 
     // Update activity layers and frames.
-    this.project.activities.all.forEach((activity: Activity) => {
+    this.project.activities.all.forEach((activity: NodeActivity) => {
       const layer = new ActivityAnimationLayer(this, activity);
       let position = activity.idx;
       if (this._layers[position] == null) {

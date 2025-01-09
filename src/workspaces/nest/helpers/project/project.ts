@@ -3,7 +3,7 @@
 import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
-import { NESTActivityGraph } from "../activity/activityGraph";
+import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { Insite } from "../insite/insite";
 import { INESTNetworkProps, NESTNetwork } from "../network/network";
 import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
@@ -18,6 +18,7 @@ export class NESTProject extends NetworkProject {
 
   constructor(projectProps: INESTProjectProps = {}) {
     super(projectProps);
+
     this._insite = new Insite(this);
   }
 

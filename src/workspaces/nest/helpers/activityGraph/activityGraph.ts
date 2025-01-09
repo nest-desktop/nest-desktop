@@ -1,8 +1,8 @@
 // activityGraph.ts
 
-import { BaseActivityGraph, IBaseActivityGraphProps } from "@/helpers/activity/activityGraph";
+import { BaseActivityGraph, IBaseActivityGraphProps } from "@/helpers/activityGraph/activityGraph";
 
-import { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
+import { ActivityAnimationGraph } from "./activityAnimationGraph/activityAnimationGraph";
 import { NESTProject } from "../project/project";
 
 export class NESTActivityGraph extends BaseActivityGraph {

@@ -169,7 +169,7 @@ import ParamListItem from "../parameter/ParamListItem.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
 import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { TModelParameter, TNode } from "@/types";
 import { TParamValue } from "@/helpers/common/parameter";

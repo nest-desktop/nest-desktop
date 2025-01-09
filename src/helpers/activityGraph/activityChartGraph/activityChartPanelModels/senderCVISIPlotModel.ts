@@ -1,20 +1,20 @@
-// senderSpikeCountPlotModel.ts
+// senderCVISIPlotModel.ts
 
 import { TParameter } from "@/types";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { SpikeActivity } from "../../activity/spikeActivity";
+import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { plot } from "../graphObjects/plot";
 
-export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
+export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super(panel, modelProps);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
-    this.id = "senderSpikeCountPlot";
-    this.label = "spike count in each sender";
+    this.id = "senderCVISIPlot";
+    this.label = "CV of ISI in each sender";
     this.panel.xAxis = 4;
 
     this.initParams([
@@ -45,35 +45,23 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
         value: "linear",
         visible: false,
       },
-      {
-        component: "checkbox",
-        id: "spikeRate",
-        label: "Spikes per seconds (spikes/s)",
-        value: false,
-      },
     ]);
 
     this.updateParams(modelProps.params);
   }
 
   /**
-   * Add data of spike count in each sender for histogram panel.
+   * Add data of CV of ISI in each sender for histogram panel.
    * @param activity spike activity object
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     const x: number[] = activity.nodeIds;
-    const senders: number[] = activity.events.senders;
-
-    const counts: Record<string, number> = {};
-    for (const sender of senders) {
-      counts[sender] = counts[sender] ? counts[sender] + 1 : 1;
-    }
-
-    const spikeRate = this.params.spikeRate.value as boolean;
-    const time = spikeRate ? activity.endTime / 1000 : 1;
-    const y: number[] = x.map((nodeId: number) => (counts[nodeId] ? counts[nodeId] / time : 0));
+    const isi: number[][] = activity.ISI();
+    const y: number[] = isi.map((ii: number[]) =>
+      ii.length > 1 ? activity.getStandardDeviation(ii) / activity.getAverage(ii) : 0,
+    );
 
     const lineShape = this.params.lineShape.value as string;
     const plotMode = this.params.plotMode.value as string;
@@ -81,13 +69,13 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
     this.data.push(
       plot(plotMode, {
         activityIdx: activity.idx,
-        color: activity.recorder.view.color,
+        color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
         line: {
           shape: lineShape,
         },
         mode: plotMode,
-        name: "Spike count in each sender in" + activity.recorder.view.label,
+        name: "CV of ISI in each sender in" + activity.traceLabel,
         showlegend: false,
         visible: this.state.visible,
         x,
@@ -97,12 +85,11 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   }
 
   /**
-   * Update layout label for spike sender histogram.
+   * Update layout label for mean ISI histogram.
    */
   override updateLayoutLabel(): void {
-    const spikeRate = this.params.spikeRate.value as boolean;
-
-    this.panel.layout.xaxis.title = "Neuron ID";
-    this.panel.layout.yaxis.title = spikeRate ? "Spikes/s" : "Spike count";
+    this.panel.layout.xaxis.type = this.state.xaxisType;
+    this.panel.layout.xaxis.title = "Senders";
+    this.panel.layout.yaxis.title = "CV of ISI";
   }
 }

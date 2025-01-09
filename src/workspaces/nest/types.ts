@@ -1,6 +1,6 @@
 // types.ts
 
-import type { NESTActivityGraph } from "./helpers/activity/activityGraph";
+import type { NESTActivityGraph } from "./helpers/activityGraph/activityGraph";
 import type { INESTConnectionProps, NESTConnection } from "./helpers/connection/connection";
 import type { NESTConnections } from "./helpers/connection/connections";
 import type { INESTCopyModelProps, NESTCopyModel } from "./helpers/model/copyModel";

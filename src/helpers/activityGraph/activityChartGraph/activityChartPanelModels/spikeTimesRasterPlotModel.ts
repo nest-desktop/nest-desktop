@@ -2,9 +2,10 @@
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { SpikeActivity } from "../../activity/spikeActivity";
+import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { scatterSpikes } from "../graphObjects/scatter";
+import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -42,16 +43,16 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * Add data of spike times for raster plot.
    * @param activity spike activity object
    */
-  override addData(activity: SpikeActivity): void {
+  override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
     this.data.push(
       scatterSpikes({
         activityIdx: activity.idx,
-        color: activity.recorder.view.color,
+        color: activity.traceColor,
         legendgroup: "spikes" + activity.idx,
         modelId: this.id,
-        name: "Spikes of " + activity.recorder.view.label,
+        name: "Spikes of " + activity.traceLabel,
         visible: this.state.visible,
         x: activity.events.times,
         y: activity.events.senders,

@@ -2,18 +2,19 @@
 
 import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/types";
 
-import { Activity, IActivityProps } from "../activity/activity";
-import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
 import { BaseObj } from "../common/base";
+import { IActivityProps } from "../activity/activity";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
 import { INodeViewProps, NodeView } from "./nodeView";
 import { IParamProps } from "../common/parameter";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeGroup } from "./nodeGroup";
 import { NodeParameter } from "./nodeParameter";
-import { SpikeActivity } from "../activity/spikeActivity";
+import { NodeActivity } from "../nodeActivity/nodeActivity";
+import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
+import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
 import { notifyInfo } from "../common/notification";
 import { onlyUnique, sortString } from "../../utils/array";
 
@@ -28,7 +29,7 @@ export interface INodeProps {
 }
 // export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
 export class BaseNode extends BaseObj {
-  private _activity?: SpikeActivity | AnalogSignalActivity | Activity = undefined;
+  private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;
   private _annotations: string[] = [];
   private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
@@ -54,11 +55,11 @@ export class BaseNode extends BaseObj {
     this._view = new NodeView(this, nodeProps.view);
   }
 
-  get activity(): SpikeActivity | AnalogSignalActivity | Activity | undefined {
+  get activity(): NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined {
     return this._activity;
   }
 
-  set activity(value: SpikeActivity | AnalogSignalActivity | Activity) {
+  set activity(value: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity) {
     this._activity = value;
   }
 
@@ -450,9 +451,9 @@ export class BaseNode extends BaseObj {
     if (!this.model.isRecorder) return;
 
     if (this.model.isSpikeRecorder) {
-      this._activity = new SpikeActivity(this, activityProps);
+      this._activity = new NodeSpikeActivity(this, activityProps);
     } else if (this.model.isAnalogRecorder) {
-      this._activity = new AnalogSignalActivity(this, activityProps);
+      this._activity = new NodeAnalogSignalActivity(this, activityProps);
     }
   }
 

@@ -1,6 +1,6 @@
 // histogram.ts
 
-import { currentBackgroundColor } from "../../common/theme";
+import { currentBackgroundColor } from "../../../common/theme";
 import { IActivityChartPanelModelData } from "../activityChartPanelModel";
 
 export const histogram = (args: IActivityChartPanelModelData) => ({

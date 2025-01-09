@@ -139,7 +139,7 @@ import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
 import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";

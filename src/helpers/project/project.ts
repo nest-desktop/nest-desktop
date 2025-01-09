@@ -2,19 +2,20 @@
 
 import { nextTick } from "vue";
 
-import { useModelDBStore } from "@/stores/model/modelDBStore";
 import { TActivityGraph, TStore, TSimulation, TProject } from "@/types";
+import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 import { truncate } from "@/utils/truncate";
+import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 import { Activities } from "../activity/activities";
 import { AxiosResponse } from "axios";
-import { BaseActivityGraph, IBaseActivityGraphProps } from "../activity/activityGraph";
+import { BaseActivityGraph, IBaseActivityGraphProps } from "../activityGraph/activityGraph";
 import { BaseObj } from "../common/base";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { IAxiosResponseData } from "@/stores/defineBackendStore";
 import { IDoc } from "../common/database";
 import { ProjectState } from "./projectState";
-import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
+import { NodeActivities } from "../nodeActivity/nodeAactivities";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -24,7 +25,6 @@ export interface IBaseProjectProps extends IDoc {
 }
 
 export class BaseProject extends BaseObj {
-  private _activities: Activities;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc; // raw data of the database
@@ -34,6 +34,7 @@ export class BaseProject extends BaseObj {
   private _name: string; // project name
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
+  public _activities: Activities | NodeActivities;
   public _activityGraph: TActivityGraph; // activity graph
   public _simulation: TSimulation; // settings for the simulation
 
@@ -58,11 +59,15 @@ export class BaseProject extends BaseObj {
     this._state = new ProjectState(this);
 
     this._simulation = new this.Simulation(this, projectProps.simulation);
-    this._activities = new Activities(this);
+    this._activities = new this.Activities(this);
     this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
 
     // Initialize components.
     // nextTick(() => this.init());
+  }
+
+  get Activities() {
+    return Activities;
   }
 
   get ActivityGraph() {
@@ -256,7 +261,7 @@ export class BaseProject extends BaseObj {
     const simtoc = Date.now();
     this._simulation
       .start()
-      .then((response: void | AxiosResponse<IAxiosResponseData>) => {
+      .then((response: AxiosResponse<IAxiosResponseData>) => {
         this.state.state.stopwatch.simulation = Date.now() - simtoc;
 
         if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;

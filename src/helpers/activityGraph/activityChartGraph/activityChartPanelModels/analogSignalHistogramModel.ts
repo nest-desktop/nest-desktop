@@ -3,9 +3,9 @@
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { NodeRecord } from "../../node/nodeRecord";
+import { NodeRecord } from "../../../node/nodeRecord";
 import { histogram } from "../graphObjects/histogram";
-import { max, min } from "../../../utils/array";
+import { max, min } from "../../../../utils/array";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
