@@ -1,9 +1,9 @@
-{{ #code.importModules }}
+{{ #code.doImportModules }}
 import nest
 import numpy as np
 import pyNN.nest as sim
-{{ /code.importModules }}
-{{ #code.setKernelStatus }}
+{{ /code.doImportModules }}
+{{ #code.doSetKernelStatus }}
 
 sim = pyNN.nest    # Only for NEST Server
 
@@ -13,8 +13,8 @@ sim.setup(
   timestep={{ simulation.kernel.resolution }},
   rng_seed={{ simulation.kernel.rngSeed }}
 )
-{{ /code.setKernelStatus }}
-{{ #code.createNodes }}
+{{ /code.doSetKernelStatus }}
+{{ #code.doCreateNodes }}
 
 # Create populations
 {{ #network.stimulators }}
@@ -32,8 +32,8 @@ sim.setup(
 {{ #recordSpikes }}{{ view.label }}.record('spikes'){{ /recordSpikes }}
 {{ #recordAnalogSignals }}{{ view.label }}.record(){{ /recordAnalogSignals }}
 {{ /network.neurons }}
-{{ /code.createNodes }}
-{{ #code.connectNodes }}
+{{ /code.doCreateNodes }}
+{{ #code.doConnectNodes }}
 
 # Connect nodes
 {{ #network.connectionsExcludeRecorders }}
@@ -43,9 +43,9 @@ conn_spec = sim.{{ rule.toPyNN }}Connector({{ #hasSomeVisibleParams }}{{ #filter
 syn_spec = sim.StaticSynapse(weight={{ synapse.weight }})
 sim.Projection({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}, conn_spec, syn_spec)
 {{ /network.connectionsExcludeRecorders }}
-{{ /code.connectNodes }}
+{{ /code.doConnectNodes }}
 
-{{ #code.runSimulation }}
+{{ #code.doRunSimulation }}
 # Run simulation
 sim.run({{ simulation.time }})
 
@@ -55,4 +55,4 @@ response = {
     if n.element_type == 'recorder' and n.n_events>0{{ /network.recorders }}
   ]
 }
-{{ /code.runSimulation }}
+{{ /code.doRunSimulation }}

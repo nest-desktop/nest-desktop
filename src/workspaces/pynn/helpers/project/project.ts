@@ -2,7 +2,7 @@
 
 import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
-import { PyNNSimulationCode } from "../code/simulationCode";
+import { PyNNSimulationCode } from "../simulation/simulationCode";
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 
 export class PyNNProject extends NetworkProject {

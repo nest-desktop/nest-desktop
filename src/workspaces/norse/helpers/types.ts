@@ -10,7 +10,7 @@ import { NorseNodes } from "./node/nodes";
 import { NorseProject } from "./project/project";
 import { NorseProjectDB } from "./project/projectDB";
 import { NorseSimulation } from "./simulation/simulation";
-import { NorseSimulationCode } from "./code/simulationCode";
+import { NorseSimulationCode } from "./simulation/simulationCode";
 
 export default {
   connection: NorseConnection,

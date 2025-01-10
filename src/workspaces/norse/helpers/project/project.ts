@@ -5,7 +5,7 @@ import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkP
 import { INorseNetworkProps, NorseNetwork } from "../network/network";
 import { INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
 import { NorseNode } from "../node/node";
-import { NorseSimulationCode } from "../code/simulationCode";
+import { NorseSimulationCode } from "../simulation/simulationCode";
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INorseProjectProps extends INetworkProjectProps {
