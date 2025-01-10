@@ -1,5 +1,6 @@
 // code.ts
 
+// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 import axios, { AxiosHeaders, AxiosResponse } from "axios";
 import { UnwrapRef, nextTick, reactive } from "vue";

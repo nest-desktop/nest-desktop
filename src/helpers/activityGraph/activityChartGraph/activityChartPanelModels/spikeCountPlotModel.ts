@@ -1,13 +1,13 @@
 // spikeCountPlotModel.ts
 
-import { TNode, TParameter } from "@/types";
+import { TParameter } from "@/types";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { SpikeActivity } from "../../../activity/spikeActivity";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { deviation, max, mean, min, sum } from "../../../../utils/array";
+import { deviation, max, mean, min } from "../../../../utils/array";
 import { line } from "../graphObjects/line";
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 

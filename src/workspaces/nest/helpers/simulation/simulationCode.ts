@@ -1,11 +1,11 @@
 // simulationCode.ts
 
-import { BaseCode, ICodeProps } from "@/helpers/code/code";
+import { ICodeProps } from "@/helpers/code/code";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
 import { AxiosError, AxiosResponse } from "axios";
-import { IAxiosErrorData, IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { notifyError } from "@/helpers/common/notification";
 import { SimulationCode } from "@/helpers/simulation/simulationCode";
 

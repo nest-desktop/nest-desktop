@@ -140,7 +140,6 @@ import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { BaseCode } from "@/helpers/code/code";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";

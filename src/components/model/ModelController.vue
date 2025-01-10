@@ -164,7 +164,6 @@ import Menu from "../common/Menu.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
 import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { TModelParameter, TNode } from "@/types";
 import { TParamValue } from "@/helpers/common/parameter";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";

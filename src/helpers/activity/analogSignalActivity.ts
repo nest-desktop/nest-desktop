@@ -3,7 +3,6 @@
 import { TProject } from "@/types";
 
 import { Activity, IActivityProps } from "./activity";
-import { NodeRecord } from "../node/nodeRecord";
 
 export class AnalogSignalActivity extends Activity {
   constructor(project: TProject, activityProps: IActivityProps = {}) {
