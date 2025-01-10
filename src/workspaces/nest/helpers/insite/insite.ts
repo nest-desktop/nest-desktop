@@ -2,11 +2,11 @@
 
 import { AxiosResponse } from "axios";
 
-import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { SpikeActivity } from "@/helpers/activity/spikeActivity";
-import { notifySuccess } from "@/helpers/common/notification";
+import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
+import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { logger as mainLogger } from "@/utils/logger";
+import { notifySuccess } from "@/helpers/common/notification";
 
 import insiteAccess from "../../stores/backends/insiteAccessStore";
 import { NESTProject } from "../project/project";
@@ -313,7 +313,7 @@ export class Insite {
         }
 
         // Get spike activities from each spike recorder.
-        this._project.activities.spikes.forEach((activity: SpikeActivity) => {
+        this._project.activities.spikes.forEach((activity: NodeSpikeActivity) => {
           const events: Record<string, number[]> = {
             senders: [],
             times: [],
@@ -421,7 +421,7 @@ export class Insite {
   /**
    * Get spikes for each recorder from Insite.
    */
-  getSpikeActivityFromEachRecorder(activity: SpikeActivity): void {
+  getSpikeActivityFromEachRecorder(activity: NodeSpikeActivity): void {
     if (!this._state.on) return;
 
     insiteAccess

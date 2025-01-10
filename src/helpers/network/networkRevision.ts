@@ -61,7 +61,7 @@ export class NetworkRevision extends BaseObj {
     this.logger.trace("commit network");
     if (!("network" in this._project)) return;
 
-    const codeHash = this._project.simulation.code.hash;
+    const codeHash = this._project.code.hash;
     if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
 
     // Remove networks after the current.

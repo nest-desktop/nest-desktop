@@ -1,7 +1,7 @@
 // recorderActivity.ts
 
 // import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { TNode } from "@/types";
+import { TNetworkProject, TNode } from "@/types";
 
 import { Activity, IActivityProps } from "../activity/activity";
 import { sum } from "@/utils/array";
@@ -24,8 +24,13 @@ export class NodeActivity extends Activity {
     return this.recorder.nodes.nodeItems.map((node: TNode) => node.model.elementType);
   }
 
+  get currentTime(): number {
+    const simulationState = this.project.simulation.state;
+    return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
+  }
+
   get endTime(): number {
-    return this.recorder.network.project.simulation.state.biologicalTime;
+    return this.project.simulation.state.biologicalTime;
   }
 
   /**
@@ -46,8 +51,16 @@ export class NodeActivity extends Activity {
     return sum(this.recorder.nodes.nodeItems.map((node: TNode) => node.size));
   }
 
+  override get project(): TNetworkProject {
+    return this._recorder.network.project as TNetworkProject;
+  }
+
   get recorder(): TNode {
     return this._recorder;
+  }
+
+  get simulationTimeInfo(): number {
+    return this.project.simulation.state.timeInfo.value;
   }
 
   /**

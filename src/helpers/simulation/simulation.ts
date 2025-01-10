@@ -1,33 +1,19 @@
 // simulation.ts
 
-import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { UnwrapRef, reactive } from "vue";
 
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TProject, TSimulationCode } from "@/types";
+import { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import { TNetworkProject } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { BaseProject } from "../project/project";
-import { BaseSimulationCode, ISimulationCodeProps } from "./simulationCode";
-import { notifyError, notifySuccess } from "../common/notification";
-
-export interface IResponseProps {
-  data: object | string;
-  config: object;
-  headers: AxiosHeaders;
-  request: XMLHttpRequest;
-  status: number;
-  statusText: string;
-}
 
 export interface ISimulationProps {
-  code?: ISimulationCodeProps;
   time?: number;
 }
 
 interface ISimulationState {
   biologicalTime: number;
-  error: IAxiosErrorData;
   running: boolean;
   timeInfo: Record<string, number>;
 }
@@ -36,10 +22,9 @@ export class BaseSimulation extends BaseObj {
   private _state: UnwrapRef<ISimulationState>;
   private _time: number; // simulation time
 
-  public _code: TSimulationCode;
-  public _project: BaseProject | TProject; // parent
+  public _project: TNetworkProject; // parent
 
-  constructor(project: BaseProject | TProject, simulationProps: ISimulationProps = {}) {
+  constructor(project: TNetworkProject, simulationProps: ISimulationProps = {}) {
     super({
       config: { name: "Simulation" },
       logger: { settings: { minLevel: 3 } },
@@ -50,16 +35,9 @@ export class BaseSimulation extends BaseObj {
     // Initialize time.
     this._time = simulationProps.time ? simulationProps.time : 1000;
 
-    // Initialize simulation code.
-    this._code = new this.SimulationCode(this, simulationProps.code);
-
     // Initialize simulation state.
     this._state = reactive<ISimulationState>({
       biologicalTime: 0,
-      error: {
-        lineNumber: -1,
-        message: "",
-      },
       running: false,
       timeInfo: {
         begin: 0,
@@ -70,15 +48,7 @@ export class BaseSimulation extends BaseObj {
     });
   }
 
-  get SimulationCode() {
-    return BaseSimulationCode;
-  }
-
-  get code(): TSimulationCode {
-    return this._code;
-  }
-
-  get project(): BaseProject | TProject {
+  get project(): TNetworkProject {
     return this._project;
   }
 
@@ -117,7 +87,6 @@ export class BaseSimulation extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this._code.init();
     this.updateHash();
   }
 
@@ -138,16 +107,6 @@ export class BaseSimulation extends BaseObj {
   // }
 
   /**
-   * Reset error state.
-   */
-  resetErrorState(): void {
-    this._state.error = {
-      lineNumber: -1,
-      message: "",
-    };
-  }
-
-  /**
    * Reset simulation states.
    */
   resetState(): void {
@@ -160,19 +119,6 @@ export class BaseSimulation extends BaseObj {
       end: 0,
       stepSize: 1,
     };
-
-    this.resetErrorState();
-  }
-
-  /**
-   * Run simulation.
-   * @remarks It sends request to the backend to start the simulation.
-   */
-  async run(): Promise<void | AxiosResponse<IAxiosResponseData>> {
-    this.logger.trace("run simulation");
-
-    const axiosInstance = axios.create();
-    return axiosInstance.get<IAxiosResponseData>("");
   }
 
   /**
@@ -186,44 +132,20 @@ export class BaseSimulation extends BaseObj {
     this.beforeSimulation();
 
     this._state.running = true;
-    return this.run()
+    return this.project.code
+      .runSimulation()
       .then((response: AxiosResponse<IAxiosResponseData>) => {
-        switch (response?.status) {
-          case 0:
-            notifyError("Failed to find Simulator.");
-            break;
+        let data: IResponseData;
+
+        switch (response.status) {
           case 200:
-            notifySuccess("Simulation finished.");
-            break;
-          case 400:
-            if (typeof response.data === "string") {
-              notifyError(response.data);
-            }
-            break;
-          default:
+            data = response.data.data;
+
+            // Get biological time
+            this.state.biologicalTime = data.biological_time != null ? data.biological_time : this.time;
             break;
         }
         return response;
-      })
-      .catch((error: AxiosError<IAxiosErrorData | string>) => {
-        if ("response" in error && error.response?.data != undefined) {
-          // The request made and the server responded.
-          const responseData = error.response.data;
-          if (typeof responseData === "string") {
-            notifyError(responseData);
-            this._state.error.message = responseData as string;
-          } else if ("message" in responseData) {
-            notifyError(responseData.message as string);
-            this._state.error = responseData;
-          }
-        } else if ("request" in error) {
-          // The request was made but no response was received.
-          notifyError("Failed to perform simulation (Simulator backend is not running).");
-        } else if ("message" in error && error.message != undefined) {
-          // Something happened in setting up the request
-          // that triggered an error.
-          notifyError(error.message);
-        }
       })
       .finally(() => {
         this._state.running = false;
@@ -238,7 +160,6 @@ export class BaseSimulation extends BaseObj {
     const simulationProps: ISimulationProps = {
       time: this._time,
     };
-    if (this.code.state.customBlocks) simulationProps.code = this.code.toJSON();
 
     return simulationProps;
   }

@@ -2,8 +2,8 @@
 
 import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 
-import { notifyError } from "@/helpers/common/notification";
 import { defineBackendStore, IAxiosResponseData } from "@/stores/defineBackendStore";
+import { notifyError } from "@/helpers/common/notification";
 import { sortString } from "@/utils/array";
 
 import { useNESTModelStore } from "../model/modelStore";
@@ -95,7 +95,7 @@ const resetKernel = (): void => {
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
 };
 
-const simulate = (source: string, responseKeys: string | string[] = "response"): AxiosPromise<IAxiosResponseData> => {
+const exec = (source: string, responseKeys: string | string[] = "response"): AxiosPromise<IAxiosResponseData> => {
   const nestSimulatorStore = useNESTSimulatorStore();
   return nestSimulatorStore
     .axiosInstance()
@@ -103,8 +103,8 @@ const simulate = (source: string, responseKeys: string | string[] = "response"):
 };
 
 export default {
+  exec,
   fetchModels,
   installModule,
   resetKernel,
-  simulate,
 };

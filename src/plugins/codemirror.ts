@@ -12,7 +12,7 @@ import { Compartment, Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 
 import { highlightLine } from "./codeMirrorExtensions/highlightLine";
-import { simulationCodeError } from "./codeMirrorExtensions/simulationCodeError";
+import { codeError } from "./codeMirrorExtensions/codeError";
 import { zebraStripes } from "./codeMirrorExtensions/zebraStripes";
 
 export default VueCodemirror;
@@ -38,14 +38,14 @@ function languageYAML(): Extension[] {
 }
 
 export {
+  // languageNESTML,
   autocompletion,
   basicSetup,
+  codeError,
+  highlightLine,
   languageJSON,
-  // languageNESTML,
   languagePython,
   languageYAML,
   oneDark,
   zebraStripes,
-  highlightLine,
-  simulationCodeError,
 };

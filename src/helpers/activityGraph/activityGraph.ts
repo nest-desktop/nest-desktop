@@ -73,7 +73,7 @@ export class BaseActivityGraph extends BaseObj {
   updateHash(): void {
     this._updateHash({
       activities: this.project.activities.hash,
-      code: this.project.simulation.code.hash,
+      code: this.project.code.hash,
     });
   }
 }

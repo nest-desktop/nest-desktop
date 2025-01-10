@@ -10,7 +10,7 @@ import type { NorseNodes } from "./helpers/node/nodes";
 import type { INorseProjectProps, NorseProject } from "./helpers/project/project";
 import type { NorseProjectDB } from "./helpers/project/projectDB";
 import type { INorseSimulationProps, NorseSimulation } from "./helpers/simulation/simulation";
-import type { NorseSimulationCode } from "./helpers/simulation/simulationCode";
+import type { NorseSimulationCode } from "./helpers/code/simulationCode";
 
 export {
   INorseConnectionProps,

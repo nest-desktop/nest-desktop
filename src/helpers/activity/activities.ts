@@ -26,7 +26,7 @@ export class Activities extends BaseObj {
   public _project: TProject;
 
   constructor(project: TProject) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._project = project;
     this._state = reactive<IActivitiesState>({
@@ -154,7 +154,7 @@ export class Activities extends BaseObj {
   }
 
   /**
-   * Update activities in recorder nodes after simulation.
+   * Update activities in recorder nodes after executing code.
    */
   update(data: IActivityProps[] | IResponseData): void {
     this.logger.trace("update");

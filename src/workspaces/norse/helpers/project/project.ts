@@ -2,10 +2,11 @@
 
 import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
-import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 import { INorseNetworkProps, NorseNetwork } from "../network/network";
-import { NorseNode } from "../node/node";
 import { INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
+import { NorseNode } from "../node/node";
+import { NorseSimulationCode } from "../code/simulationCode";
+import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INorseProjectProps extends INetworkProjectProps {
   network?: INorseNetworkProps;
@@ -17,12 +18,20 @@ export class NorseProject extends NetworkProject {
     super(projectProps);
   }
 
+  override get Code() {
+    return NorseSimulationCode;
+  }
+
   override get Network() {
     return NorseNetwork;
   }
 
   override get Simulation() {
     return NorseSimulation;
+  }
+
+  override get code(): NorseSimulationCode {
+    return this._code as NorseSimulationCode;
   }
 
   override get network(): NorseNetwork {
@@ -34,15 +43,12 @@ export class NorseProject extends NetworkProject {
   }
 
   /**
-   * Generate codes
-   *
-   * @remarks
-   * It generates node codes.
-   * It generates simulation code in the code editor.
+   * Generate simulation code.
+   * @remarks It generates node codes.
    */
-  override generateCodes(): void {
+  override generateCode(): void {
     this.network.nodes.nodeItems.forEach((node: NorseNode) => node.renderNodeCode());
-    this._simulation.code.generate();
+    this.code.generate();
   }
 
   /**

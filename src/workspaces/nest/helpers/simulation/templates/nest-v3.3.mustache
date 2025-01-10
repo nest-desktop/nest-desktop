@@ -1,19 +1,19 @@
-{{ #simulation.code.importModules }}
+{{ #code.importModules }}
 import nest
 import numpy as np
-{{ /simulation.code.importModules }}
-{{ #simulation.code.resetKernel }}
+{{ /code.importModules }}
+{{ #code.resetKernel }}
 
 nest.ResetKernel()
-{{ /simulation.code.resetKernel }}
-{{ #simulation.code.runSimulationInsite }}
+{{ /code.resetKernel }}
+{{ #code.runSimulationInsite }}
 
 try:
   nest.Install('insitemodule')
 except:
   pass
-{{ /simulation.code.runSimulationInsite }}
-{{ #simulation.code.setKernelStatus }}
+{{ /code.runSimulationInsite }}
+{{ #code.setKernelStatus }}
 
 # Set simulation kernel
 nest.SetKernelStatus({
@@ -21,8 +21,8 @@ nest.SetKernelStatus({
   "resolution": {{ simulation.kernel.resolution }},
   "rng_seed": {{ simulation.kernel.rngSeed }}
 })
-{{ /simulation.code.setKernelStatus }}
-{{ #simulation.code.createNodes }}
+{{ /code.setKernelStatus }}
+{{ #code.createNodes }}
 {{ #network.hasNodeModels }}
 
 # Copy node models
@@ -45,9 +45,9 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ #model.isMultimeter }}
   "record_from": {{ &recordsFixed }},
 {{ /model.isMultimeter }}
-{{ #simulation.code.runSimulationInsite }}
+{{ #code.runSimulationInsite }}
   "record_to": "insite",
-{{ /simulation.code.runSimulationInsite }}
+{{ /code.runSimulationInsite }}
 {{ /model.isRecorder }}
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }}, positions={{ &spatial.code }}{{ /spatial.positions }})
 {{ /network.nodes }}
@@ -83,8 +83,8 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /hasReceptors }}
 {{ /network.nodes }}
 {{ /network.hasSomeNodeReceptors }}
-{{ /simulation.code.createNodes }}
-{{ #simulation.code.connectNodes }}
+{{ /code.createNodes }}
+{{ #code.connectNodes }}
 {{ #network.modelsCopied.hasSynapseModels }}
 
 # Copy synapse models
@@ -114,17 +114,17 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 {{ /synapse.hasReceptorIndices }}
 }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
 {{ /network.connections }}
-{{ /simulation.code.connectNodes }}
+{{ /code.connectNodes }}
 
-{{ #simulation.code.prepareSimulation }}
+{{ #code.prepareSimulation }}
 # Prepare simulation
 nest.Prepare()
-{{ /simulation.code.prepareSimulation }}
-{{ #simulation.code.runSimulation }}
+{{ /code.prepareSimulation }}
+{{ #code.runSimulation }}
 # Run simulation
 nest.Simulate({{ simulation.time }})
 
-{{ ^simulation.code.runSimulationInsite }}
+{{ ^code.runSimulationInsite }}
 {{ #network.someSpatialNodes }}
 # Get positions
 def getPositions(nodes):
@@ -140,5 +140,5 @@ response = {
   "events": [{{ #network.recorders }}{{ view.label }}.events, {{ /network.recorders }}]{{ #network.someSpatialNodes }},
   "positions": getPositions([{{ #network.spatial }}{{ view.label }},{{ /network.spatial }}]){{ /network.someSpatialNodes }}
 }
-{{ /simulation.code.runSimulationInsite }}
-{{ /simulation.code.runSimulation }}
+{{ /code.runSimulationInsite }}
+{{ /code.runSimulation }}

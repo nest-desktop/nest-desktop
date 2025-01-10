@@ -14,7 +14,7 @@ import { NodeGraph } from "./nodeGraph/nodeGraph";
 import { BaseProject } from "./project/project";
 import { BaseProjectDB } from "./project/projectDB";
 import { BaseSimulation } from "./simulation/simulation";
-import { BaseSimulationCode } from "./simulation/simulationCode";
+import { BaseSimulationCode } from "./code/code";
 import { BaseSynapse } from "./synapse/synapse";
 
 export default {

@@ -5,7 +5,7 @@ import type { PyNNModelDB } from "./helpers/model/modelDB";
 import type { IPyNNProjectProps, PyNNProject } from "./helpers/project/project";
 import type { PyNNProjectDB } from "./helpers/project/projectDB";
 import type { PyNNSimulation } from "./helpers/simulation/simulation";
-import type { PyNNSimulationCode } from "./helpers/simulation/simulationCode";
+import type { PyNNSimulationCode } from "./helpers/code/simulationCode";
 
 export {
   IPyNNModelProps,

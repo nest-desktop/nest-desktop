@@ -4,24 +4,28 @@ import { nextTick } from "vue";
 import { AxiosResponse } from "axios";
 
 import { IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TNetwork, TProject } from "@/types";
+import { TNetwork, TProject, TSimulation, TSimulationCode } from "@/types";
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 
 import { Activity } from "../activity/activity";
 import { BaseProject, IBaseProjectProps } from "./project";
 import { INetworkProps, BaseNetwork } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
-import { NodeActivities } from "../nodeActivity/nodeAactivities";
+import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { upgradeProject } from "../upgrades/upgrades";
+import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
+import { SimulationCode } from "../simulation/simulationCode";
 
 export interface INetworkProjectProps extends IBaseProjectProps {
   network?: INetworkProps;
+  simulation?: ISimulationProps;
 }
 
 // export class NetworkProject<TNode extends BaseNode<BaseModel>> extends BaseProject {
 export class NetworkProject extends BaseProject {
   private _networkRevision: NetworkRevision; // network history
   public _network: BaseNetwork; // network of neurons and devices
+  public _simulation: TSimulation; // settings for the simulation
 
   constructor(projectProps: INetworkProjectProps = {}) {
     super(projectProps);
@@ -36,6 +40,8 @@ export class NetworkProject extends BaseProject {
     this._network = new this.Network(this, projectProps.network);
     this._networkRevision = new NetworkRevision(this);
 
+    this._simulation = new this.Simulation(this, projectProps.simulation);
+
     // Initialize components.
     nextTick(() => this.init());
   }
@@ -44,16 +50,32 @@ export class NetworkProject extends BaseProject {
     return NodeActivities;
   }
 
+  override get Code() {
+    return SimulationCode;
+  }
+
   get Network() {
     return BaseNetwork;
+  }
+
+  get Simulation() {
+    return BaseSimulation;
   }
 
   override get activities(): NodeActivities {
     return this._activities as NodeActivities;
   }
 
+  override get code(): TSimulationCode {
+    return this._code as TSimulationCode;
+  }
+
   get baseNetwork(): BaseNetwork {
     return this._network;
+  }
+
+  get baseSimulation(): BaseSimulation {
+    return this._simulation;
   }
 
   get network(): TNetwork {
@@ -65,6 +87,10 @@ export class NetworkProject extends BaseProject {
    */
   get networkRevision(): NetworkRevision {
     return this._networkRevision;
+  }
+
+  get simulation(): TSimulation {
+    return this._simulation;
   }
 
   /**
@@ -84,9 +110,9 @@ export class NetworkProject extends BaseProject {
 
     this.activities.checkRecorders();
 
-    this.generateCodes();
+    this.generateCode();
 
-    this._networkRevision.commit();
+    this.networkRevision.commit();
 
     // It resets panels of activity chart graph.
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
@@ -105,7 +131,7 @@ export class NetworkProject extends BaseProject {
     this.network.clean();
 
     // Generate simulation code.
-    this._simulation.code.generate();
+    this.generateCode();
 
     const appStore = useAppStore();
     const projectViewStore = appStore.currentWorkspace.views.project;
@@ -151,6 +177,9 @@ export class NetworkProject extends BaseProject {
     // Initialize simulation.
     this.simulation.init();
 
+    // Generate code.
+    this.generateCode();
+
     // Initialize activities.
     this.activities.init();
 
@@ -166,7 +195,7 @@ export class NetworkProject extends BaseProject {
   /**
    * Start simulation.
    */
-  override startSimulation(): void {
+  startSimulation(): void {
     this.logger.trace("start simulation");
 
     this._network.clean();
@@ -197,6 +226,15 @@ export class NetworkProject extends BaseProject {
       .finally(() => {
         closeLoading();
       });
+  }
+
+  /**
+   * Simulate when the configuration is set.
+   */
+  startSimulationOnChange(): void {
+    const appStore = useAppStore();
+    const projectViewStore = appStore.currentWorkspace.views.project;
+    if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
   }
 
   /**

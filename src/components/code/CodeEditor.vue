@@ -17,17 +17,17 @@
     title="Edit mode"
   /> -->
 
-  <SimulationCodeMirror v-if="simulation" :disabled="state.disabled" :simulation="simulation" />
+  <CodeMirror v-if="code" :disabled="state.disabled" :code="code" />
 </template>
 
 <script lang="ts" setup>
 import { reactive } from "vue";
 
+import CodeMirror from "./CodeMirror.vue";
 import IconBtn from "../common/IconBtn.vue";
-import SimulationCodeMirror from "./SimulationCodeMirror.vue";
-import { TSimulation } from "@/types";
+import { TCode } from "@/types";
 
-defineProps<{ simulation: TSimulation }>();
+defineProps<{ code: TCode }>();
 
 const state = reactive<{
   disabled: boolean;

@@ -3,7 +3,7 @@
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
 import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import { NodeActivities } from "@/helpers/nodeActivity/nodeAactivities";
+import { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
 
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {

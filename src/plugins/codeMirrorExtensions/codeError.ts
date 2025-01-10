@@ -1,4 +1,4 @@
-// simulationCodeError.ts
+// codeError.ts
 
 import { UnwrapRef } from "vue";
 
@@ -11,7 +11,7 @@ interface IErrorState {
   error: { message: string; lineNumber: number };
 }
 
-export function simulationCodeError(state: UnwrapRef<IErrorState>): Extension {
+export function codeError(state: UnwrapRef<IErrorState>): Extension {
   const errorLine = ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;

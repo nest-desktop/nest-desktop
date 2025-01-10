@@ -1,6 +1,6 @@
 <template>
   <codemirror
-    v-model="simulation.code.script"
+    v-model="code.script"
     :extensions
     style="font-size: 0.75rem; width: 100%"
     @blur="() => (state.focused = false)"
@@ -15,15 +15,15 @@ import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 
-import { TSimulation } from "@/types";
-import { autocompletion, basicSetup, languagePython, oneDark, simulationCodeError } from "@/plugins/codemirror";
+import { TCode } from "@/types";
+import { autocompletion, basicSetup, languagePython, oneDark, codeError } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const props = defineProps<{ simulation: TSimulation }>();
-const simulation = computed(() => props.simulation);
+const props = defineProps<{ code: TCode }>();
+const code = computed(() => props.code);
 
 const view = shallowRef();
 const state = reactive({
@@ -35,7 +35,7 @@ const extensions: Extension[] = [
   basicSetup,
   languagePython(),
   autocompletion({ override: appStore.currentWorkspace.completionSources }),
-  simulationCodeError(simulation.value.state),
+  codeError(code.value.state),
 ];
 
 if (darkMode()) {
@@ -51,7 +51,7 @@ const updateView = (event: EditorView) => {
 };
 
 watch(
-  () => simulation.value.code.script,
+  () => code.value.script,
   () => {
     if (!state.focused && state.cursor.from > 0) {
       nextTick(() => {
@@ -64,7 +64,7 @@ watch(
 );
 
 watch(
-  () => simulation.value.state.error,
+  () => code.value.state.error,
   () => view.value.dispatch(),
 );
 </script>

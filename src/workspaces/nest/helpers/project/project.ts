@@ -6,6 +6,7 @@ import { INESTNetworkProps, NESTNetwork } from "../network/network";
 import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
 import { Insite } from "../insite/insite";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
+import { NESTSimulationCode } from "../simulation/simulationCode";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INESTProjectProps extends INetworkProjectProps {
@@ -26,6 +27,10 @@ export class NESTProject extends NetworkProject {
     return NESTActivityGraph;
   }
 
+  override get Code() {
+    return NESTSimulationCode;
+  }
+
   override get Network() {
     return NESTNetwork;
   }
@@ -36,6 +41,10 @@ export class NESTProject extends NetworkProject {
 
   override get activityGraph(): NESTActivityGraph {
     return this._activityGraph as NESTActivityGraph;
+  }
+
+  override get code(): NESTSimulationCode {
+    return this._code as NESTSimulationCode;
   }
 
   get insite(): Insite {

@@ -1,7 +1,7 @@
 <template>
   <v-btn-group v-if="simulation" class="mx-2" density="compact" divided theme="dark">
     <v-btn :disabled :loading class="border-white" prepend-icon="mdi:mdi-play" title="Simulate" @click="simulate()">
-      <span v-if="simulation.code.runSimulation">Simulate</span>
+      <span v-if="simulation.project.code.doRunSimulation">Simulate</span>
       <span v-else>Prepare</span>
     </v-btn>
 

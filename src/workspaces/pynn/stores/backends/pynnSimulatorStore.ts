@@ -12,11 +12,11 @@ export const pynnSimulatorInit = (): TStore => {
   return pynnSimulatorStore;
 };
 
-const simulate = (source: string, responseKeys: string | string[] = "response") => {
+const exec = (source: string, responseKeys: string | string[] = "response") => {
   const pynnSimulatorStore = usePyNNSimulatorStore();
   return pynnSimulatorStore
     .axiosInstance()
     .post<IAxiosResponseData>("exec", { source, response_keys: responseKeys, return: responseKeys });
 };
 
-export default { simulate };
+export default { exec };

@@ -94,8 +94,8 @@
       </template>
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
-        <slot name="simulationCodeEditor">
-          <SimulationCodeEditor :simulation="(project.simulation as BaseSimulation)" />
+        <slot name="codeEditor">
+          <CodeEditor :code="project.code" />
         </slot>
       </template>
 
@@ -121,8 +121,8 @@
   >
     <div class="resize-handle bottom" @mousedown="projectViewStore.resizeBottomNav()" />
 
-    <slot name="simulationCodeMirror">
-      <SimulationCodeMirror :simulation="(project.simulation as BaseSimulation)" />
+    <slot name="bottomCodeMirror">
+      <CodeMirror :code="project.code" />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -134,12 +134,13 @@ import { computed, ref } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
+import CodeEditor from "../code/CodeEditor.vue";
+import CodeMirror from "../code/CodeMirror.vue";
 import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
-import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
-import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
 import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
+import { BaseCode } from "@/helpers/code/code";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";

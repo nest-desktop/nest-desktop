@@ -1,27 +1,22 @@
 // project.ts
 
-import { nextTick } from "vue";
-
-import { TActivityGraph, TStore, TSimulation, TProject } from "@/types";
-import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
+import { TActivityGraph, TStore, TProject, TCode } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 import { Activities } from "../activity/activities";
-import { AxiosResponse } from "axios";
 import { BaseActivityGraph, IBaseActivityGraphProps } from "../activityGraph/activityGraph";
+import { BaseCode, ICodeProps } from "../code/code";
 import { BaseObj } from "../common/base";
-import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
-import { IAxiosResponseData } from "@/stores/defineBackendStore";
 import { IDoc } from "../common/database";
-import { NodeActivities } from "../nodeActivity/nodeAactivities";
+import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
+  code?: ICodeProps;
   description?: string;
   name?: string;
-  simulation?: ISimulationProps;
 }
 
 export class BaseProject extends BaseObj {
@@ -36,7 +31,7 @@ export class BaseProject extends BaseObj {
   private _updatedAt: string | undefined; // when is it updated in database
   public _activities: Activities | NodeActivities;
   public _activityGraph: TActivityGraph; // activity graph
-  public _simulation: TSimulation; // settings for the simulation
+  public _code: TCode;
 
   constructor(projectProps: IBaseProjectProps = {}) {
     super({ logger: { settings: { minLevel: 3 } } });
@@ -58,7 +53,7 @@ export class BaseProject extends BaseObj {
     // Construct components.
     this._state = new ProjectState(this);
 
-    this._simulation = new this.Simulation(this, projectProps.simulation);
+    this._code = new this.Code(this, projectProps.code);
     this._activities = new this.Activities(this);
     this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
 
@@ -74,8 +69,8 @@ export class BaseProject extends BaseObj {
     return BaseActivityGraph;
   }
 
-  get Simulation() {
-    return BaseSimulation;
+  get Code() {
+    return BaseCode;
   }
 
   get activities(): Activities {
@@ -86,8 +81,8 @@ export class BaseProject extends BaseObj {
     return this._activityGraph;
   }
 
-  get baseSimulation(): BaseSimulation {
-    return this._simulation;
+  get code(): TCode {
+    return this._code;
   }
 
   get createdAt(): string {
@@ -134,10 +129,6 @@ export class BaseProject extends BaseObj {
     this._name = value;
   }
 
-  get simulation(): TSimulation {
-    return this._simulation;
-  }
-
   /**
    * Returns the first six digits of the project ID.
    * @returns 6-digit id value
@@ -159,13 +150,6 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Generate code.
-   */
-  generateCodes(): void {
-    this._simulation.code.generate();
-  }
-
-  /**
    * Observer for network changes
    *
    * @remarks
@@ -176,18 +160,16 @@ export class BaseProject extends BaseObj {
   changes(props = { resetPanels: false }): void {
     this.updateHash();
 
-    this._state.checkChanges();
+    this.state.checkChanges();
 
     this.logger.trace("changes");
 
-    this._activities.checkRecorders();
+    this.activities.checkRecorders();
 
-    this.generateCodes();
+    this.generateCode();
 
     // It resets panels of activity chart graph.
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
-
-    this.startSimulationOnChange();
   }
 
   /**
@@ -217,13 +199,20 @@ export class BaseProject extends BaseObj {
   }
 
   /**
+   * Generate code.
+   */
+  generateCode(): void {
+    this.code.generate();
+  }
+
+  /**
    * Initialize project.
    */
   init(): void {
     this.logger.trace("init");
 
-    // Initialize simulation.
-    this.simulation.init();
+    // Generate code.
+    this.generateCode();
 
     // Initialize activities.
     this.activities.init();
@@ -246,46 +235,6 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Start simulation.
-   */
-  startSimulation(): void {
-    this.logger.trace("start simulation");
-
-    // Reset activities and activity graphs.
-    this.activities.reset();
-
-    const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (!projectViewStore.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
-
-    const simtoc = Date.now();
-    this._simulation
-      .start()
-      .then((response: AxiosResponse<IAxiosResponseData>) => {
-        this.state.state.stopwatch.simulation = Date.now() - simtoc;
-
-        if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;
-
-        const vistoc = Date.now();
-        // Update activities.
-        this.activities.update(response.data.data);
-        this.state.state.stopwatch.visualization = Date.now() - vistoc;
-      })
-      .finally(() => {
-        closeLoading();
-      });
-  }
-
-  /**
-   * Simulate when the configuration is set.
-   */
-  startSimulationOnChange(): void {
-    const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
-  }
-
-  /**
    * Serialize for JSON.
    * @return project props
    */
@@ -299,6 +248,9 @@ export class BaseProject extends BaseObj {
       updatedAt: this._updatedAt,
       version: process.env.APP_VERSION as string,
     };
+
+    if (this.code.state.customBlocks) projectProps.code = this.code.toJSON();
+
     return projectProps;
   }
 

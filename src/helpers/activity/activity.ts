@@ -37,7 +37,7 @@ export class Activity extends BaseObj {
   constructor(project: TProject, activityProps: IActivityProps = {}) {
     super({
       config: { name: "Activity" },
-      logger: { settings: { minLevel: 1 } },
+      logger: { settings: { minLevel: 3 } },
     });
 
     this._project = project;
@@ -57,15 +57,6 @@ export class Activity extends BaseObj {
 
   get colors(): string[] {
     return this.config?.localStorage.color.cycle;
-  }
-
-  get currentTime(): number {
-    const simulationState = this.project.simulation.state;
-    return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
-  }
-
-  get endTime(): number {
-    return this.project.simulation.state.biologicalTime;
   }
 
   get events(): IEventProps {
@@ -133,10 +124,6 @@ export class Activity extends BaseObj {
 
   get state(): UnwrapRef<IActivityState> {
     return this._state;
-  }
-
-  get simulationTimeInfo(): number {
-    return this.project.simulation.state.timeInfo.value;
   }
 
   get traceColor(): string {
