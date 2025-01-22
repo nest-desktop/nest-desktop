@@ -302,15 +302,18 @@ export class BaseNode extends BaseObj {
   }
 
   get size(): number {
-    return this._size;
+    return this.codeNodes.node ? this.codeNodes.node.inputs.size.value : this._size;
   }
 
   /**
    * Set network size.
    */
   set size(value: number) {
-    this._size = value;
-    this.changes();
+    if (this.codeNodes.node) this.codeNodes.node.inputs.size.value = value;
+    else {
+      this._size = value;
+      this.changes();
+    }
   }
 
   get sizeVisible(): boolean {

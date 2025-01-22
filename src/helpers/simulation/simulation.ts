@@ -54,12 +54,15 @@ export class BaseSimulation extends BaseObj {
   }
 
   get time(): number {
-    return this._time;
+    return this._codeNodes.node ? this._codeNodes.node.inputs.time.value : this._time;
   }
 
   set time(value: number) {
-    this._time = value;
-    this.changes();
+    if (this._codeNodes.node) this._codeNodes.node.inputs.time.value = value;
+    else {
+      this._time = value;
+      this.changes();
+    }
   }
 
   get timeFixed(): string {
