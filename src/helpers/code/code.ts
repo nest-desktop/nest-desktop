@@ -1,14 +1,16 @@
 // code.ts
 
-// @ts-expect-error Mustache has no default export.
+// // @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 import axios, { AxiosHeaders, AxiosResponse } from "axios";
+import { IGraphState } from "baklavajs";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
 import { TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
+import { CodeGraph } from "../codeGraph/codeGraph";
 import { download } from "../../utils/download";
 
 export interface IResponseProps {
@@ -21,6 +23,7 @@ export interface IResponseProps {
 }
 
 export interface ICodeProps {
+  graph?: IGraphState;
   templateFilename?: string;
 }
 
@@ -32,6 +35,7 @@ interface ICodeState {
 }
 
 export class BaseCode extends BaseObj {
+  private _graph: CodeGraph;
   private _state: UnwrapRef<ICodeState>;
   public _project: TProject; // parent
 
@@ -44,13 +48,20 @@ export class BaseCode extends BaseObj {
         lineNumber: -1,
         message: "",
       },
-      templateFilename: codeProps?.templateFilename || "code",
-      template: "",
       script: "",
+      template: "",
+      templateFilename: "code",
     });
 
+    if (codeProps) this._state.templateFilename = codeProps?.templateFilename ?? "code";
     if (this._state.templateFilename) this.loadTemplate();
+
+    this._graph = new CodeGraph(this, codeProps?.graph);
     this.clean();
+  }
+
+  get graph(): CodeGraph {
+    return this._graph;
   }
 
   get project(): TProject {
@@ -75,13 +86,25 @@ export class BaseCode extends BaseObj {
    */
   clean(): void {
     this.logger.trace("clean");
+
+    // this.sortNodes();
+    // this.graph.onUpdate();
+  }
+
+  /**
+   * Triggers on changes.
+   */
+  changes(): void {
+    this.generate();
+    this.updateHash();
+    // this.clean();
   }
 
   /**
    * Execute code.
    * @remarks It sends request to the backend to execute the code.
    */
-  async exec(): Promise<void | AxiosResponse<IAxiosResponseData>> {
+  async exec(): Promise<AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("exec code");
 
     const axiosInstance = axios.create();
@@ -142,12 +165,19 @@ export class BaseCode extends BaseObj {
   generate(): void {
     this.logger.trace("generate");
 
-    if (this._state.template) {
-      this.script = Mustache.render(this._state.template || "", this.project);
-      this.updateHash();
-    } else {
+    if (!this.state.template) {
       this.loadTemplate().then(() => nextTick(() => this.generate()));
+      return;
     }
+
+    // Render code of nodes
+    this.graph.renderCodes();
+
+    nextTick(() => {
+      // Render script of the code component.
+      this.renderCode();
+      this.updateHash();
+    });
   }
 
   /**
@@ -167,7 +197,17 @@ export class BaseCode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.generate();
+    this.initGraph();
+    this.changes();
+  }
+
+  /**
+   * Initialize code node graph.
+   */
+  initGraph(): void {
+    this.logger.trace("init graph");
+
+    this.graph.init();
   }
 
   /**
@@ -182,6 +222,13 @@ export class BaseCode extends BaseObj {
   }
 
   /**
+   * Render code.
+   */
+  renderCode(): void {
+    this.script = Mustache.render(this.state.template || "", this.graph);
+  }
+
+  /**
    * Reset error state.
    */
   resetErrorState(): void {
@@ -192,12 +239,22 @@ export class BaseCode extends BaseObj {
   }
 
   /**
+   * Sort code nodes.
+   */
+  sortNodes(): void {}
+
+  /**
    * Serialize for JSON.
    * @return code props
    */
   toJSON(): ICodeProps {
-    return {};
+    return { graph: this.graph.state.graph };
   }
+
+  /**
+   * Update code.
+   */
+  update(): void {}
 
   /**
    * Update hash.

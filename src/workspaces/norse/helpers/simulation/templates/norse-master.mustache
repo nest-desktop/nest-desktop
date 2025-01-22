@@ -2,7 +2,7 @@ import norse
 import torch
 import numpy as np
 
-torch.manual_seed({{ simulation.seed}})
+torch.manual_seed({{ simulation.seed }})
 
 {{ #network.nodes.hasSomeSpikeRecorder }}
 def simulateSpikes(neuron, layer, input, offset=0):

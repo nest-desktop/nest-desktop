@@ -56,7 +56,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
         },
       },
     },
-    sourcemap: configEnv.mode === "development",
+    // sourcemap: configEnv.mode === "development",
   },
   define: {
     global: "window",

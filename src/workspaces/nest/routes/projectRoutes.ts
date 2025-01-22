@@ -19,6 +19,10 @@ const nestProjectBeforeEnter = (to: TProjectRoute): void => {
 
   const appStore = useAppStore();
   const projectViewStore = appStore.currentWorkspace.views.project;
+
+  if (to.query?.graphView) projectViewStore.state.views.graph = to.query.graphView;
+  if (to.query?.activityView) projectViewStore.state.views.activity = to.query.activityView;
+
   if (!currentProject.value.network.nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
 };
 
@@ -26,9 +30,13 @@ const nestProjectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 
-  if (currentProject) {
+  if (currentProject.value) {
     const appStore = useAppStore();
     const projectViewStore = appStore.currentWorkspace.views.project;
+
+    if (to.query?.graphView) projectViewStore.state.views.graph = to.query.graphView;
+    if (to.query?.activityView) projectViewStore.state.views.activity = to.query.activityView;
+
     if (!currentProject.value.network.nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
   }
 
@@ -59,9 +67,9 @@ export default [
       },
       {
         path: "edit",
-        name: "nestNetworkEditor",
+        name: "nestGraphEditor",
         components: {
-          project: () => import("../views/ProjectNetworkEditor.vue"),
+          project: () => import("../views/ProjectGraphEditor.vue"),
         },
         props: true,
         beforeEnter: nestProjectBeforeEnter,

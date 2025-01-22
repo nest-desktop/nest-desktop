@@ -20,7 +20,7 @@ const norseSimulatorStore: TStore = useNorseSimulatorStore();
 
 const navItems = [
   {
-    icon: "network:network",
+    icon: "graph:network",
     id: "norseProject",
     workspace: "norse",
     title: "Project",

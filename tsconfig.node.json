@@ -13,12 +13,18 @@
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"],
   "compilerOptions": {
     "composite": true,
-    "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"],
+
+    /* Bundler mode */
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
 
     // Allow property without initialization.
     "strictPropertyInitialization": false

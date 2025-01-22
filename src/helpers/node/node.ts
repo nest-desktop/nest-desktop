@@ -1,6 +1,6 @@
 // node.ts
 
-import { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import { TConnection, TModel, TNetwork, TNetworkProject, TNode, TNodeGroup, TNodes, TSimulation } from "@/types";
 
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
@@ -260,8 +260,8 @@ export class BaseNode extends BaseObj {
     return this._nodes;
   }
 
-  get project(): TProject {
-    return this._nodes.network.project as TProject;
+  get project(): TNetworkProject {
+    return this.nodes.network.project as TNetworkProject;
   }
 
   get props(): INodeProps {
@@ -297,16 +297,23 @@ export class BaseNode extends BaseObj {
     return this._nodes.showNode(this);
   }
 
+  get simulation(): TSimulation {
+    return this.project.simulation;
+  }
+
   get size(): number {
-    return this._size;
+    return this.codeNodes.node ? this.codeNodes.node.inputs.size.value : this._size;
   }
 
   /**
    * Set network size.
    */
   set size(value: number) {
-    this._size = value;
-    this.changes();
+    if (this.codeNodes.node) this.codeNodes.node.inputs.size.value = value;
+    else {
+      this._size = value;
+      this.changes();
+    }
   }
 
   get sizeVisible(): boolean {
@@ -595,6 +602,16 @@ export class BaseNode extends BaseObj {
   }
 
   /**
+   * Remove code nodes.
+   */
+  removeCodeNodes(): void {
+    Object.keys(this.codeNodes).forEach((key: string) => {
+      this.codeNodes[key].remove();
+      delete this.codeNodes[key];
+    });
+  }
+
+  /**
    * Remove record.
    * @param recordId string
    */
@@ -635,7 +652,7 @@ export class BaseNode extends BaseObj {
    * Select this node as source for connection.
    */
   selectForConnection(): void {
-    this._nodes.network.connections.state.selectedNode = this;
+    this.nodes.network.connections.state.selectedNode = this;
   }
 
   /**
@@ -657,7 +674,7 @@ export class BaseNode extends BaseObj {
       view: this._view.toJSON(),
     };
 
-    if (this._size > 1) nodeProps.size = this._size;
+    if (this.size > 1) nodeProps.size = this.size;
 
     if (this.filteredParams.length > 0)
       nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
@@ -690,21 +707,8 @@ export class BaseNode extends BaseObj {
    */
   update(): void {
     this.clean();
-
+    // this.updateCodeNodes();
     this.updateHash();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      idx: this.idx,
-      model: this._modelId,
-      params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
-      recordables: this._recordables.map((recordable: NodeRecord) => recordable.uuid),
-      size: this._size,
-    });
   }
 
   /**
@@ -717,6 +721,24 @@ export class BaseNode extends BaseObj {
 
     this.updateRecordables();
     this.updateRecords();
+  }
+
+  /**
+   * Update code node.
+   */
+  updateCodeNodes(): void {}
+
+  /**
+   * Update hash.
+   */
+  updateHash(): void {
+    this._updateHash({
+      idx: this.idx,
+      model: this.modelId,
+      params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
+      recordables: this.recordables.map((recordable: NodeRecord) => recordable.uuid),
+      size: this.size,
+    });
   }
 
   /**

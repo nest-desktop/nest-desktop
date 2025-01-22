@@ -29,30 +29,39 @@ export class NESTSimulationKernel extends BaseObj {
   }
 
   get localNumThreads(): number {
-    return this._localNumThreads;
+    return this.codeNodes.node ? this.codeNodes.node.inputs.local_num_threads.value : this._localNumThreads;
   }
 
   set localNumThreads(value: number) {
-    this._localNumThreads = value;
-    this._simulation.changes();
+    if (this.codeNodes.node) this.codeNodes.node.inputs.local_num_threads.value = value;
+    else {
+      this._localNumThreads = value;
+      this._simulation.changes();
+    }
   }
 
   get rngSeed(): number {
-    return this._rngSeed;
+    return this.codeNodes.node ? this.codeNodes.node.inputs.rng_seed.value : this._rngSeed;
   }
 
   set rngSeed(value: number) {
-    this._rngSeed = value;
-    this._simulation.changes();
+    if (this.codeNodes.node) this.codeNodes.node.inputs.rng_seed.value = value;
+    else {
+      this._rngSeed = value;
+      this._simulation.changes();
+    }
   }
 
   get resolution(): number {
-    return this._resolution;
+    return this.codeNodes.node ? this.codeNodes.node.inputs.resolution.value : this._resolution;
   }
 
   set resolution(value: number) {
-    this._resolution = value;
-    this._simulation.changes();
+    if (this.codeNodes.node) this.codeNodes.node.inputs.resolution.value = value;
+    else {
+      this._resolution = value;
+      this._simulation.changes();
+    }
   }
 
   get simulation(): NESTSimulation {
@@ -65,9 +74,20 @@ export class NESTSimulationKernel extends BaseObj {
    */
   toJSON(): INESTSimulationKernelProps {
     return {
-      localNumThreads: this._localNumThreads,
-      resolution: this._resolution,
-      rngSeed: this._rngSeed,
+      localNumThreads: this.localNumThreads,
+      resolution: this.resolution,
+      rngSeed: this.rngSeed,
     };
+  }
+
+  /**
+   * Update code node.
+   */
+  updateCodeNodes(): void {
+    if (!this.codeNodes.node) return;
+
+    this.codeNodes.node.inputs.local_num_threads.value = this._localNumThreads;
+    this.codeNodes.node.inputs.resolution.value = this._resolution;
+    this.codeNodes.node.inputs.rng_seed.value = this._rngSeed;
   }
 }

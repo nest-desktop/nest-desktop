@@ -20,7 +20,7 @@ const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
 
 const navItems = [
   {
-    icon: "network:network",
+    icon: "graph:network",
     id: "pynnProject",
     workspace: "pynn",
     title: "Project",

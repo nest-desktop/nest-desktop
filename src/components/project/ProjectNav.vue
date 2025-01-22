@@ -130,6 +130,9 @@
                 <span v-if="project.doc" class="mx-1">
                   {{ truncate(project.docId) }}
                 </span>
+                <span v-if="project.code && project.code.graph" class="mx-1">
+                  {{ truncate(project.code.graph.state.graph.id) }}
+                </span>
               </v-list-item-subtitle>
             </template>
 
@@ -137,7 +140,7 @@
               <v-list-item-title>
                 {{ project.name || "undefined project " + truncate(project.id) }}
               </v-list-item-title>
-              <v-list-item-subtitle>
+              <v-list-item-subtitle v-if="project.network">
                 {{ project.network.nodes.length }} nodes, {{ project.network.connections.length }} connections
               </v-list-item-subtitle>
             </template>

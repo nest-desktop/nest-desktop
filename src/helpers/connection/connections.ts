@@ -77,6 +77,15 @@ export class BaseConnections extends BaseObj {
   // }
 
   /**
+   * Add code nodes.
+   * @param connection connection component.
+   *
+   */
+  addCodeNodes(connection: TConnection): void {
+    connection;
+  }
+
+  /**
    * Add connection component to the network.
    * @param connectionProps connection props
    * @returns connection object
@@ -85,10 +94,9 @@ export class BaseConnections extends BaseObj {
     this.logger.trace("add");
 
     const connection: TConnection = new this.Connection(this, connectionProps);
-    this._connections.push(connection);
+    this.connections.push(connection);
 
     this.clean();
-
     return connection;
   }
 
@@ -130,6 +138,8 @@ export class BaseConnections extends BaseObj {
 
     this.resetState();
 
+    connection.removeCodeNodes();
+
     // Remove connection from the connection list.
     this._connections.splice(connection.idx, 1);
 
@@ -142,6 +152,10 @@ export class BaseConnections extends BaseObj {
    */
   removeByNode(node: TNode | TNodeGroup): void {
     this.resetState();
+
+    this.connections
+      .filter((connection: TConnection) => connection.source === node || connection.target == node)
+      .forEach((connection: TConnection) => connection.removeCodeNodes());
 
     this._connections = this.connections.filter(
       (connection: TConnection) => connection.source !== node && connection.target !== node,

@@ -21,7 +21,7 @@ export class PyNNSimulationCode extends SimulationCode {
    * Execute simulation code.
    * @remarks It sends request to the backend to execute the code.
    */
-  async exec(): Promise<void | AxiosResponse<IAxiosResponseData>> {
+  override async exec(): Promise<AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("exec code");
 
     return pynnSimulator.exec(this.script);

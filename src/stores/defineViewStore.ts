@@ -112,6 +112,24 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
       };
 
       /**
+       * Set activity view
+       * @param activityView string
+       */
+      const setActivityView = (activityView: string) => {
+        if (!activityView || !["abstract", "spatial"].includes(activityView)) return;
+        state.views.graph = activityView;
+      };
+
+      /**
+       * Set graph view
+       * @param graphView string
+       */
+      const setGraphView = (graphView: string) => {
+        if (!graphView || !["code", "network"].includes(graphView)) return;
+        state.views.graph = graphView;
+      };
+
+      /**
        * Toggle bottom navigation.
        */
       const toggleBottomNav = () => {
@@ -135,6 +153,8 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
         dispatchWindowResize,
         resizeBottomNav,
         resizeRightNav,
+        setGraphView,
+        setActivityView,
         state,
         toggleController,
         toggleBottomNav,

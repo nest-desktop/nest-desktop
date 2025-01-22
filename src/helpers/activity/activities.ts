@@ -21,7 +21,7 @@ interface IActivitiesState {
 }
 
 export class Activities extends BaseObj {
-  private _activities: Activity[];
+  private _activities: Activity[] = [];
   private _state: UnwrapRef<IActivitiesState>;
   public _project: TProject;
 
@@ -167,37 +167,39 @@ export class Activities extends BaseObj {
       }));
     } else if ("activities" in data) {
       activitiesProps = data.activities as IActivityProps[];
-    } else {
-      activitiesProps = data;
     }
 
-    activitiesProps.forEach((activityProps: IActivityProps) => {
-      if (!activityProps.nodeIds) {
-        if (activityProps.events && activityProps.events.ports) {
-          activityProps.nodeIds = activityProps.events.ports.filter(
-            (value: number, index: number, self: number[]) => self.indexOf(value) === index,
-          );
-        } else {
-          activityProps.nodeIds = activityProps.events?.senders.filter(
-            (value: number, index: number, self: number[]) => self.indexOf(value) === index,
-          );
+    if (activitiesProps) {
+      activitiesProps.forEach((activityProps: IActivityProps) => {
+        if (!activityProps.nodeIds) {
+          if (activityProps.events && activityProps.events.ports) {
+            activityProps.nodeIds = activityProps.events.ports.filter(
+              (value: number, index: number, self: number[]) => self.indexOf(value) === index,
+            );
+          } else {
+            activityProps.nodeIds = activityProps.events?.senders.filter(
+              (value: number, index: number, self: number[]) => self.indexOf(value) === index,
+            );
+          }
         }
+        activityProps.nodeIds?.sort((a: number, b: number) => a - b);
+      });
+
+      // Get node positions.
+      if ("positions" in data) {
+        const positions = data.positions as Record<string, number[]>;
+
+        activitiesProps.forEach(
+          (activityProps: IActivityProps) =>
+            (activityProps.nodePositions = activityProps.nodeIds?.map(
+              (nodeId: number) => positions[nodeId] as number[],
+            )),
+        );
       }
-      activityProps.nodeIds?.sort((a: number, b: number) => a - b);
-    });
 
-    // Get node positions.
-    if ("positions" in data) {
-      const positions = data.positions as Record<string, number[]>;
-
-      activitiesProps.forEach(
-        (activityProps: IActivityProps) =>
-          (activityProps.nodePositions = activityProps.nodeIds?.map((nodeId: number) => positions[nodeId] as number[])),
-      );
+      // Initialize recorded activities.
+      this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
     }
-
-    // Initialize recorded activities.
-    this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
 
     // Trigger activity changes.
     this.changes();

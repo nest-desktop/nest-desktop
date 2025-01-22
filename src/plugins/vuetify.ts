@@ -7,17 +7,20 @@
 // Styles
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
+
+// custom
 import "./main.scss";
 
 import { IconSet, createVuetify } from "vuetify";
 // Composables
 import * as components from "vuetify/components";
+import { VTreeview } from "vuetify/labs/VTreeview";
 import * as directives from "vuetify/directives";
 // import { md1, md2, md3 } from "vuetify/blueprints";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 
 import { custom } from "@/components/iconsets/custom";
-import { network } from "@/components/iconsets/network";
+import { graph } from "@/components/iconsets/graph";
 
 const colors = {
   blue: ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
@@ -46,6 +49,7 @@ const colors = {
 export const vuetify = createVuetify({
   components: {
     ...components,
+    VTreeview,
   },
   // blueprint: md2,
   defaults: {
@@ -112,7 +116,7 @@ export const vuetify = createVuetify({
     sets: {
       custom,
       mdi: mdi as IconSet,
-      network,
+      graph,
     },
   },
 });

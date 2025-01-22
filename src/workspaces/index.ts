@@ -5,8 +5,8 @@
  */
 
 import { App } from "vue";
-import { RouteRecordRaw } from "vue-router";
 import { IconSet } from "vuetify";
+import { RouteRecordRaw } from "vue-router";
 
 import { Config } from "@/helpers/common/config";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
@@ -16,6 +16,7 @@ import { TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { CompletionSource } from "@codemirror/autocomplete";
 
+import { elephant } from "./elephant";
 import { nest } from "./nest";
 import { norse } from "./norse";
 // import { pynn } from "./pynn";
@@ -25,7 +26,7 @@ const logger = mainLogger.getSubLogger({ name: "workspace index" });
 export interface IWorkspaceProps {
   backends: Record<string, TStore>;
   completionSources?: CompletionSource[];
-  configNames: string[];
+  configNames?: string[];
   databases: string[];
   iconSet: IconSet;
   id: string;
@@ -38,10 +39,10 @@ export interface IWorkspaceProps {
 }
 
 export const workspaces: Record<string, IWorkspaceProps> = {
+  elephant,
   nest,
   norse,
   // pynn,
-  // elephant,
 };
 
 export function registerWorkspaces(app: App) {
@@ -75,10 +76,11 @@ function initEnabledWorkspace(app: App, workspaceId: string): void {
   app.use({
     async install() {
       logger.trace("install", workspaceId);
+
       const workspaceProps = workspaces[workspaceId];
 
       // Load config files.
-      workspaceProps.configNames.forEach((name: string) => new Config({ name, workspace: workspaceProps.id }));
+      workspaceProps.configNames?.forEach((name: string) => new Config({ name, workspace: workspaceProps.id }));
 
       // Initialize workspace.
       workspaceProps.init();

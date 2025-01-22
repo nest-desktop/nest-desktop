@@ -1,12 +1,13 @@
 // simulationCode.ts
 
+import { AxiosResponse } from "axios";
+
 import { ICodeProps } from "@/helpers/code/code";
+import { SimulationCode } from "@/helpers/simulation/simulationCode";
+import { IAxiosResponseData } from "@/stores/defineBackendStore";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
-import { AxiosResponse } from "axios";
-import { IAxiosResponseData } from "@/stores/defineBackendStore";
-import { SimulationCode } from "@/helpers/simulation/simulationCode";
 
 export class NESTSimulationCode extends SimulationCode {
   constructor(project: NESTProject, simulationCodeProps: ICodeProps = {}) {
@@ -24,7 +25,7 @@ export class NESTSimulationCode extends SimulationCode {
    * Execute simulation code with or without insite.
    * @remarks It sends request to the backend to execute the code.
    */
-  async exec(): Promise<void | AxiosResponse<IAxiosResponseData>> {
+  override async exec(): Promise<AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("exec code");
 
     // return this.doRunSimulationInsite ? this.execWithInsite() : nest.exec(this.script);
@@ -69,7 +70,7 @@ export class NESTSimulationCode extends SimulationCode {
 
   /**
    * Import template from the file.
-   * @return promise
+   * @return Promise of dict
    */
   override async importTemplate(): Promise<{ default: string }> {
     this.logger.trace("import template:", this.state.templateFilename);

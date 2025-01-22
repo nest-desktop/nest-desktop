@@ -29,12 +29,12 @@ export class NetworkState {
     recorder: {
       off: "mdi:mdi-alpha-r-box-outline",
       on: "mdi:mdi-alpha-r-box",
-      tab: "network:recorder",
+      tab: "graph:recorder",
     },
     stimulator: {
       off: "mdi:mdi-alpha-s-box-outline",
       on: "mdi:mdi-alpha-s-box",
-      tab: "network:stimulator",
+      tab: "graph:stimulator",
     },
     synapse: {
       off: "mdi:mdi-alpha-s-circle-outline",

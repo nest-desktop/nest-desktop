@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
@@ -42,6 +43,11 @@ const emitUpdate = (k?: KeyboardEvent) => {
 
   emit("update:modelValue", valueEmit);
 };
+
+watch(
+  () => props.modelValue,
+  () => (value.value = props.modelValue),
+);
 </script>
 
 <style lang="scss">

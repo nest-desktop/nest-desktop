@@ -2,9 +2,9 @@
 
 import { expect, test } from "vitest";
 
-import { getBoolean } from "./boolean";
+import { getBoolean, parseBoolean } from "./boolean";
 
-test("Get true as boolean value.", () => {
+test("Get boolean value as boolean type.", () => {
   expect(getBoolean("1")).toBe(true);
   expect(getBoolean("ON")).toBe(true);
   expect(getBoolean("On")).toBe(true);
@@ -19,4 +19,9 @@ test("Get true as boolean value.", () => {
   expect(getBoolean("yes")).toBe(true);
   expect(getBoolean(1)).toBe(true);
   expect(getBoolean(true)).toBe(true);
+});
+
+test("Parse boolean value to Python string.", () => {
+  expect(parseBoolean(true)).toBe("True");
+  expect(parseBoolean(false)).toBe("False");
 });

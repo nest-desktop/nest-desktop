@@ -1,11 +1,13 @@
 // nodes.ts
 
 import { BaseNodes } from "@/helpers/node/nodes";
-import { TNodeGroup } from "@/types";
+import { TNode, TNodeGroup } from "@/types";
 
 import { INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
+import { NESTCode } from "../code/code";
 import { NESTNetwork } from "../network/network";
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
@@ -82,6 +84,32 @@ export class NESTNodes extends BaseNodes {
    */
   get weightRecorders(): NESTNode[] {
     return this.nodeItems.filter((node: NESTNode) => node.model.isWeightRecorder);
+  }
+
+  /**
+   * Add code nodes.
+   * @param node node component.
+   */
+  override addCodeNodes(node: TNode | TNodeGroup, codeNodes: Record<string, AbstractCodeNode> = {}): void {
+    if (node.isGroup) return;
+    const code = this.network.project.code as NESTCode;
+    node = node as NESTNode;
+    node.codeNodes = codeNodes;
+
+    node.codeNodes.node = node.codeNodes.node ?? code.addCreateNode(node as NESTNode);
+
+    if (node.hasSomeVisibleParams)
+      node.codeNodes.params = node.codeNodes.params ?? code.addNodeParams(node as NESTNode);
+
+    if (node.codeNodes.params)
+      code.graph.addConnection(node.codeNodes.params.outputs.out, node.codeNodes.node.inputs.params);
+
+    node.updateCodeNodes();
+
+    if (node.model.isRecorder) {
+      const responseNode = code.graph.nodes.find((node) => node.state.role === "nestDataResponse");
+      if (responseNode) code.graph.addConnection(node.codeNodes.node.outputs.events, responseNode.inputs.events);
+    }
   }
 
   /**

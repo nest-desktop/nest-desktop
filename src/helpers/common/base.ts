@@ -9,8 +9,11 @@ import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { Config } from "./config";
+import { AbstractCodeNode } from "../codeGraph/codeNode";
 
 export class BaseObj {
+  private _codeNodes: Record<string, AbstractCodeNode> = {};
+
   private _config?: Config;
   private _hash: string = "";
   private _logger: Logger<ILogObj>;
@@ -31,6 +34,10 @@ export class BaseObj {
         name: this.constructor.name,
         ...props?.config,
       });
+  }
+
+  get codeNodes(): Record<string, AbstractCodeNode> {
+    return this._codeNodes;
   }
 
   get config(): Config | undefined {

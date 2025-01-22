@@ -10,7 +10,7 @@ const activityChartPanelModels: Record<string, string> = {
   spikeTimesHistogram: "spikeTimeHistogram",
 };
 
-export function upgradeProject_32_to_33(projectProps: any): any {
+function upgradeProject(projectProps: any): any {
   if (!validateVersion(projectProps.version)) return projectProps;
 
   if (
@@ -26,6 +26,11 @@ export function upgradeProject_32_to_33(projectProps: any): any {
     });
   }
 
-  projectProps.version = "3.3";
   return projectProps;
 }
+
+export default {
+  currentVersion: "3.2",
+  newVersion: "3.3",
+  upgradeProject,
+};

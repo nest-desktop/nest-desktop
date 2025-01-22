@@ -1,5 +1,6 @@
 // simulationCode.ts
 
+import Mustache from "mustache";
 import { AxiosError, AxiosResponse } from "axios";
 
 import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
@@ -15,6 +16,10 @@ export class SimulationCode extends BaseCode {
 
   get project(): TNetworkProject {
     return this._project as TNetworkProject;
+  }
+
+  override renderCode(): void {
+    this.script = Mustache.render(this.state.template || "", this.project);
   }
 
   /**

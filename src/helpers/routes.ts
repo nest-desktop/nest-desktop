@@ -90,7 +90,6 @@ export const modelRedirect = (to: TModelRoute): TModelRoute => {
   const modelStore = appStore.currentWorkspace.stores.modelStore;
 
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
-  console.log(to);
 
   return modelStore.routeTo();
 };
@@ -142,7 +141,7 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
         if (answer) newProjectRoute(props.router);
       });
     }
-  }, 250);
+  }, 500);
 };
 
 /**
@@ -168,6 +167,7 @@ export const projectBeforeEnter = (to: TProjectRoute): void => {
 
   const appStore = useAppStore();
   const projectViewStore = appStore.currentWorkspace.views.project;
+
   const path = to.path.split("/");
   projectViewStore.state.views.main = path[path.length - 1] || "edit";
 
@@ -195,7 +195,6 @@ export const projectNew = (): TProjectRoute => {
  */
 export const projectRedirect = (to: TProjectRoute): TProjectRoute => {
   logger.trace("redirect to project:", truncate(to.params.projectId));
-  logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
   const projectStore = appStore.currentWorkspace.stores.projectStore;

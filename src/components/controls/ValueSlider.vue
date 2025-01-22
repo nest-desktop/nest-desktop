@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
@@ -64,6 +65,11 @@ const increment = () => {
 const onUpdate = (val: string) => {
   value.value = parseFloat(val);
 };
+
+watch(
+  () => props.modelValue,
+  () => (value.value = props.modelValue),
+);
 </script>
 
 <style lang="scss">

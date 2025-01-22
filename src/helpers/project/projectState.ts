@@ -8,6 +8,7 @@ export interface IProjectState {
   changes: boolean;
   editMode: boolean;
   stopwatch: {
+    analysis: number;
     simulation: number;
     visualization: number;
   };
@@ -25,6 +26,7 @@ export class ProjectState {
       changes: false,
       editMode: false,
       stopwatch: {
+        analysis: 0,
         simulation: 0,
         visualization: 0,
       },

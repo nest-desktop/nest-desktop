@@ -11,7 +11,6 @@ import { BaseProject, IBaseProjectProps } from "./project";
 import { INetworkProps, BaseNetwork } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
 import { NodeActivities } from "../nodeActivity/nodeActivities";
-import { upgradeProject } from "../upgrades/upgrades";
 import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
 import { SimulationCode } from "../simulation/simulationCode";
 
@@ -32,9 +31,6 @@ export class NetworkProject extends BaseProject {
     // Initialize model database.
     this.initModelStore();
 
-    // Upgrade project props.
-    projectProps = upgradeProject(projectProps);
-
     // Construct components.
     this._network = new this.Network(this, projectProps.network);
     this._networkRevision = new NetworkRevision(this);
@@ -42,7 +38,7 @@ export class NetworkProject extends BaseProject {
     this._simulation = new this.Simulation(this, projectProps.simulation);
 
     // Initialize components.
-    nextTick(() => this.init());
+    // nextTick(() => this.init());
   }
 
   override get Activities() {
@@ -109,7 +105,7 @@ export class NetworkProject extends BaseProject {
 
     this.activities.checkRecorders();
 
-    this.generateCode();
+    // this.initCode();
 
     this.networkRevision.commit();
 
@@ -130,7 +126,7 @@ export class NetworkProject extends BaseProject {
     this.network.clean();
 
     // Generate simulation code.
-    this.generateCode();
+    this.initCode();
 
     const appStore = useAppStore();
     const projectViewStore = appStore.currentWorkspace.views.project;
@@ -161,14 +157,14 @@ export class NetworkProject extends BaseProject {
     // Initialize simulation.
     this.simulation.init();
 
-    // Generate code.
-    this.generateCode();
-
     // Initialize activities.
     this.activities.init();
 
     // Initialize activity graph.
     this.activityGraph.init();
+
+    // Initialize code.
+    this.code.init();
 
     this.updateHash();
     this.doc.hash = this.hash;
@@ -199,10 +195,17 @@ export class NetworkProject extends BaseProject {
 
         if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;
 
-        const vistoc = Date.now();
-        // Update activities.
-        this.activities.update(response.data.data);
-        this.state.state.stopwatch.visualization = Date.now() - vistoc;
+        if (response.data.data.plotly) {
+          const plotly_json = response.data.data.plotly;
+          const vistoc = Date.now();
+          this.activityGraph.activityChartGraph.react(plotly_json.data, plotly_json.layout);
+          this.state.state.stopwatch.visualization = Date.now() - vistoc;
+        } else {
+          const vistoc = Date.now();
+          // Update activities.
+          this.activities.update(response.data.data);
+          this.state.state.stopwatch.visualization = Date.now() - vistoc;
+        }
 
         // Commit network for the history (with activity).
         this.networkRevision.commit(true);
@@ -221,24 +224,26 @@ export class NetworkProject extends BaseProject {
     if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
   }
 
-  /**
-   * Serialize for JSON.
-   * @return project props
-   */
-  override toJSON(): INetworkProjectProps {
-    const projectProps: INetworkProjectProps = {
-      activityGraph: this.activityGraph.toJSON(),
-      createdAt: this.createdAt,
-      description: this.description,
-      id: this.id,
-      name: this.name,
-      network: this.network.toJSON(),
-      simulation: this.simulation.toJSON(),
-      updatedAt: this.updatedAt,
-      version: process.env.APP_VERSION as string,
-    };
-    return projectProps;
-  }
+  // /**
+  //  * Serialize for JSON.
+  //  * @return project props
+  //  */
+  // override toJSON(): INetworkProjectProps {
+  //   const projectProps: INetworkProjectProps = {
+  //     activityGraph: this.activityGraph.toJSON(),
+  //     code: this.code.toJSON(),
+  //     createdAt: this.createdAt,
+  //     description: this.description,
+  //     id: this.id,
+  //     name: this.name,
+  //     // network: this.network.toJSON(),
+  //     // simulation: this.simulation.toJSON(),
+  //     updatedAt: this.updatedAt,
+  //     version: process.env.APP_VERSION as string,
+  //   };
+
+  //   return projectProps;
+  // }
 
   /**
    * Update hash.

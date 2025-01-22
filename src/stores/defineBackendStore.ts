@@ -1,5 +1,6 @@
 // defineBackendStore.ts
 
+import * as PlotlyBasic from "plotly.js-basic-dist-min";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
@@ -24,10 +25,14 @@ export interface IAxiosErrorData {
 }
 
 export interface IResponseData {
-  events: IEventProps[];
-  biological_time: number;
-  positions?: Record<string, number[]>;
   activities?: IActivityProps[];
+  biological_time: number;
+  events: IEventProps[];
+  plotly?: {
+    data?: PlotlyBasic.Data[];
+    layout?: PlotlyBasic.Partial<PlotlyBasic.Layout>;
+  };
+  positions?: Record<string, number[]>;
 }
 
 export function defineBackendStore(workspace: string, name: string, url: string, options?: Record<string, string>) {
@@ -80,10 +85,7 @@ export function defineBackendStore(workspace: string, name: string, url: string,
       const init = (): void => {
         logger.trace("init");
 
-        if (!state.loadedFromAssets) {
-          loadFromAssets();
-        }
-
+        if (!state.loadedFromAssets) loadFromAssets();
         // state.loadedFromAssets ? update() : loadFromAssets().then(update);
       };
 

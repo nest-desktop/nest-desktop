@@ -25,9 +25,9 @@ export default [
       },
       {
         path: "edit",
-        name: "pynnNetworkEditor",
+        name: "pynnGraphEditor",
         components: {
-          project: () => import("../views/ProjectNetworkEditor.vue"),
+          project: () => import("../views/ProjectGraphEditor.vue"),
         },
         props: true,
         beforeEnter: projectBeforeEnter,

@@ -850,6 +850,49 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
+"@baklavajs/core@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/core/-/core-2.5.1.tgz#8428a243efb505876170e09574bd21271d7867e6"
+  integrity sha512-BSt70jZmZgDG1jrki59mwUjibB3W5oX+sK/bX4VZOIGlWiRDAqeURDE9B+Pswszs7aZUdz1sfH5ps0YRFNzz/w==
+  dependencies:
+    "@baklavajs/events" "^2.5.0"
+    uuid "^10.0.0"
+
+"@baklavajs/engine@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/engine/-/engine-2.5.1.tgz#f3c3191ceaf8846b88f07a53d44ba881f89b4cb7"
+  integrity sha512-RQj3Rrs4hvxUSWjtpIraamDNa5azP4/NOpFZ3NiMqNbsmfQhdKsZ4TWsZlfJk9/fSXzV9rBCX3yTx6yzjJF8qw==
+  dependencies:
+    "@baklavajs/core" "^2.5.1"
+    "@baklavajs/events" "^2.5.0"
+
+"@baklavajs/events@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@baklavajs/events/-/events-2.5.0.tgz#d755a0e140c4546754b8b187d63a52f7f97f385a"
+  integrity sha512-XsfzmPcUHJ5wyRSSfjI+Ulz04fKlva5gTqRBSsARiw+8H1HzhRiOb0nJfDxwUmxWQuO46Z99uUgzI3C6bi1LKg==
+
+"@baklavajs/interface-types@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@baklavajs/interface-types/-/interface-types-2.6.0.tgz#c4e1ddf53210bd0c237091a8bb89262a82533c05"
+  integrity sha512-/LXpQIHnVry9iJ377liiPRKxVMWtbjLlGqdIX+NFY6HiUUbIywhCAmIopSJDHsk/b/G+onsxqt41HweZGwrd4A==
+  dependencies:
+    "@baklavajs/core" "^2.5.1"
+    "@baklavajs/engine" "^2.5.1"
+    "@baklavajs/renderer-vue" "^2.6.0"
+
+"@baklavajs/renderer-vue@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@baklavajs/renderer-vue/-/renderer-vue-2.6.0.tgz#32476f67c1464835b2976f46684bc70485c3af59"
+  integrity sha512-Jo9Pp9cSDucz6C639VmPPHGLaJGNCcQqudbu5Js5uViBFLy6FrY4li4FgxzmZCNFy6yD/A5HRMAwCajrZH0ahQ==
+  dependencies:
+    "@baklavajs/core" "^2.5.1"
+    "@baklavajs/events" "^2.5.0"
+
+"@baklavajs/themes@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@baklavajs/themes/-/themes-2.5.0.tgz#9fc55e7799bfb5772685acbcd6a16a79d07a6a46"
+  integrity sha512-hjps5Myq+u/7A9pRFCjKduI4XOvoyyDmIRx1SlnnbuL+5qAkn3CRK3rp3swI0e17s63V+pHDR0rjs9Y5yWMedw==
+
 "@bcoe/v8-coverage@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-1.0.2.tgz#bbe12dca5b4ef983a0d0af4b07b9bc90ea0ababa"
@@ -2569,6 +2612,11 @@
   resolved "https://registry.yarnpkg.com/@types/verror/-/verror-1.10.11.tgz#d3d6b418978c8aa202d41e5bb3483227b6ecc1bb"
   integrity sha512-RlDm9K7+o5stv0Co8i8ZRGxDbrTxhJtgjqjFyVh/tXQyl/rYtTKlnTvZ88oSTeYREWurwx20Js4kTuKCsFkUtg==
 
+"@types/web-bluetooth@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz#525433c784aed9b457aaa0ee3d92aeb71f346b63"
+  integrity sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==
+
 "@types/webfontloader@~1.6":
   version "1.6.38"
   resolved "https://registry.yarnpkg.com/@types/webfontloader/-/webfontloader-1.6.38.tgz#2cb965a7e7e4a83af6bac67688bc7d1c076107e8"
@@ -3031,6 +3079,25 @@
   dependencies:
     upath "^2.0.1"
 
+"@vueuse/core@~13.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-13.0.0.tgz#60bf419e3f9fb003b51f1dfed550afffdb1691ff"
+  integrity sha512-rkgb4a8/0b234lMGCT29WkCjPfsX0oxrIRR7FDndRoW3FsaC9NBzefXg/9TLhAgwM11f49XnutshM4LzJBrQ5g==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.21"
+    "@vueuse/metadata" "13.0.0"
+    "@vueuse/shared" "13.0.0"
+
+"@vueuse/metadata@13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-13.0.0.tgz#f9c70e1d4958869693e6dcf385d3294cdd304b58"
+  integrity sha512-TRNksqmvtvqsuHf7bbgH9OSXEV2b6+M3BSN4LR5oxWKykOFT9gV78+C2/0++Pq9KCp9KQ1OQDPvGlWNQpOb2Mw==
+
+"@vueuse/shared@13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-13.0.0.tgz#4bc454ac359303904d4cf9b23e0dd265be90bf2d"
+  integrity sha512-9MiHhAPw+sqCF/RLo8V6HsjRqEdNEWVpDLm2WBRW2G/kSQjb8X901sozXpSCaeLG0f7TEfMrT4XNaA5m1ez7Dg==
+
 "@webgpu/types@*":
   version "0.1.60"
   resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.60.tgz#4f58e763ce060a81b03ab7ee1ad879c7024923fd"
@@ -3323,6 +3390,17 @@ babel-plugin-polyfill-regenerator@^0.6.1:
   integrity sha512-7gD3pRadPrbjhjLyxebmx/WrFYcuSjZ0XbdUujQMZ/fcE9oeewk2U/7PCvez84UeuK3oSjmPZ0Ch0dlupQvGzw==
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.6.4"
+
+baklavajs@~2.6:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/baklavajs/-/baklavajs-2.6.0.tgz#9f6138d30d7e4742a6f5402ef69403cab5961f7b"
+  integrity sha512-eXPU4LxqtfkVs10eh3A6FkBS9sHOVVevOqZQeZa2QOTMsbRUiIMPevDbl3Bms+rnj5TE3zbX/xr4o+QrTmWakQ==
+  dependencies:
+    "@baklavajs/core" "^2.5.1"
+    "@baklavajs/engine" "^2.5.1"
+    "@baklavajs/interface-types" "^2.6.0"
+    "@baklavajs/renderer-vue" "^2.6.0"
+    "@baklavajs/themes" "^2.5.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -7677,6 +7755,11 @@ socks@^2.6.2:
     ip-address "^9.0.5"
     smart-buffer "^4.2.0"
 
+sortablejs@1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.14.0.tgz#6d2e17ccbdb25f464734df621d4f35d4ab35b3d8"
+  integrity sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==
+
 "source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.2.0, source-map-js@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.2.1.tgz#1ce5650fddd87abc099eda37dcff024c2667ae46"
@@ -8418,6 +8501,11 @@ uuid@8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
+uuid@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
+  integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
+
 uuid@~11.1:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-11.1.0.tgz#9549028be1753bb934fc96e2bca09bb4105ae912"
@@ -8615,6 +8703,13 @@ vue@~3.5:
     "@vue/runtime-dom" "3.5.13"
     "@vue/server-renderer" "3.5.13"
     "@vue/shared" "3.5.13"
+
+vuedraggable@~4.1:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-4.1.0.tgz#edece68adb8a4d9e06accff9dfc9040e66852270"
+  integrity sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==
+  dependencies:
+    sortablejs "1.14.0"
 
 vuetify3-dialog@~1.5:
   version "1.5.4"

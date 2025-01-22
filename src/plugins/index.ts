@@ -14,8 +14,9 @@ import pinia from "@/stores";
 // Plugins
 import codeMirror, { basicSetup } from "./codemirror";
 import configs from "./configs";
-import { vuetify } from "./vuetify";
+import { baklavajs } from "./baklava";
 import { loadFonts } from "./webfontloader";
+import { vuetify } from "./vuetify";
 
 export function registerPlugins(app: App) {
   // Load fonts
@@ -26,6 +27,8 @@ export function registerPlugins(app: App) {
 
   // Use pinia store
   app.use(pinia);
+
+  app.use(baklavajs);
 
   // Register workspaces
   registerWorkspaces(app);
