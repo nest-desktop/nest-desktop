@@ -7,11 +7,13 @@
     color="grey"
     density="compact"
     hide-details
+    @blur="emitUpdate()"
+    @keydown.enter="emitUpdate"
   />
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -20,25 +22,27 @@ const props = defineProps({
   unit: { default: "", type: String },
 });
 
-const value = computed({
-  get: () => props.modelValue,
-  set: (value) => {
-    let valueEmit: number[] = [];
+const value = ref(props.modelValue);
 
-    switch (typeof value) {
-      case "number":
-        valueEmit = [value];
-        break;
-      case "string":
-        valueEmit =
-          // @ts-expect-error Property 'startsWith' does not exist on type 'never'.
-          value.startsWith("[") && value.endsWith("]") ? JSON.parse(value) : JSON.parse(`[${value}]`);
-        break;
-    }
+const emitUpdate = (k?: KeyboardEvent) => {
+  if (props.modelValue === value.value) return;
+  k?.preventDefault();
 
-    emit("update:modelValue", valueEmit);
-  },
-});
+  let valueEmit: number[] = [];
+
+  switch (typeof value.value) {
+    case "number":
+      valueEmit = [value.value];
+      break;
+    case "string":
+      valueEmit =
+        // @ts-expect-error Property 'startsWith' does not exist on type 'never'.
+        value.value.startsWith("[") && value.value.endsWith("]") ? JSON.parse(value) : JSON.parse(`[${value.value}]`);
+      break;
+  }
+
+  emit("update:modelValue", valueEmit);
+};
 </script>
 
 <style lang="scss">

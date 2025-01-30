@@ -14,8 +14,8 @@
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    @click:append="increment"
-    @click:prepend="decrement"
+    @click:append="increment()"
+    @click:prepend="decrement()"
   >
     <template #append>
       <div class="unit">

@@ -21,6 +21,8 @@
         style="max-width: 80px"
         type="number"
         variant="underlined"
+        @blur="emitUpdate()"
+        @keyup.enter="emitUpdate()"
       />
     </template>
     <template #append>
@@ -34,6 +36,8 @@
         style="max-width: 80px"
         type="number"
         variant="underlined"
+        @blur="emitUpdate()"
+        @keyup.enter="emitUpdate()"
       />
     </template>
   </v-range-slider>
@@ -57,20 +61,15 @@ const modelRef = reactive<{
   upper: 1,
 });
 
-const value = computed({
-  get: () => [modelRef.lower, modelRef.upper],
-  set: (value) => {
-    modelRef.lower = value[0];
-    modelRef.upper = value[1];
-    emit("update:modelValue", [modelRef.lower, modelRef.upper]);
-  },
-});
+const emitUpdate = () => {
+  if (props.modelValue[0] === modelRef.lower && props.modelValue[1] === modelRef.upper) return;
+  emit("update:modelValue", [modelRef.lower, modelRef.upper]);
+};
 
 const lower = computed({
   get: () => modelRef.lower,
   set: (value) => {
     modelRef.lower = typeof value === "string" ? parseFloat(value) : value;
-    emit("update:modelValue", [modelRef.lower, modelRef.upper]);
   },
 });
 
@@ -78,7 +77,15 @@ const upper = computed({
   get: () => modelRef.upper,
   set: (value) => {
     modelRef.upper = typeof value === "string" ? parseFloat(value) : value;
-    emit("update:modelValue", [modelRef.lower, modelRef.upper]);
+  },
+});
+
+const value = computed({
+  get: () => [modelRef.lower, modelRef.upper],
+  set: (value) => {
+    modelRef.lower = value[0];
+    modelRef.upper = value[1];
+    emitUpdate();
   },
 });
 
