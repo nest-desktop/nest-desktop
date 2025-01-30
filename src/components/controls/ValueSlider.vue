@@ -25,6 +25,7 @@
         style="max-width: 80px"
         type="number"
         variant="underlined"
+        @blur="emitUpdate()"
         @keyup.enter="emitUpdate()"
         @update:model-value="onUpdate"
       />
@@ -51,6 +52,7 @@ const decrement = () => {
 };
 
 const emitUpdate = () => {
+  if (props.modelValue === value.value) return;
   emit("update:modelValue", value.value);
 };
 

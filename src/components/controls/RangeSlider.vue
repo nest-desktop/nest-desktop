@@ -21,6 +21,7 @@
         style="max-width: 80px"
         type="number"
         variant="underlined"
+        @blur="emitUpdate()"
         @keyup.enter="emitUpdate()"
       />
     </template>
@@ -35,6 +36,7 @@
         style="max-width: 80px"
         type="number"
         variant="underlined"
+        @blur="emitUpdate()"
         @keyup.enter="emitUpdate()"
       />
     </template>
@@ -60,6 +62,7 @@ const modelRef = reactive<{
 });
 
 const emitUpdate = () => {
+  if (props.modelValue[0] === modelRef.lower && props.modelValue[1] === modelRef.upper) return;
   emit("update:modelValue", [modelRef.lower, modelRef.upper]);
 };
 

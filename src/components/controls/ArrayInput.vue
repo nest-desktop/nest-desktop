@@ -7,6 +7,7 @@
     color="grey"
     density="compact"
     hide-details
+    @blur="emitUpdate()"
     @keydown.enter="emitUpdate"
   />
 </template>
@@ -23,8 +24,9 @@ const props = defineProps({
 
 const value = ref(props.modelValue);
 
-const emitUpdate = (k: KeyboardEvent) => {
-  k.preventDefault();
+const emitUpdate = (k?: KeyboardEvent) => {
+  if (props.modelValue === value.value) return;
+  k?.preventDefault();
 
   let valueEmit: number[] = [];
 
