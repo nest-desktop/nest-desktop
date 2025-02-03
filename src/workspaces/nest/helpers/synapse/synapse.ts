@@ -195,7 +195,7 @@ export class NESTSynapse extends BaseSynapse {
   modelChanges(): void {
     this.initParameters();
     this.connection.network.clean();
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   /**

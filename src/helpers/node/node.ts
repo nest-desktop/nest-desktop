@@ -270,6 +270,7 @@ export class BaseNode extends BaseObj {
 
   set recordables(value: NodeRecord[]) {
     this._recordables = value;
+    this.changes({ preventSimulation: true });
   }
 
   get records(): NodeRecord[] {
@@ -384,7 +385,7 @@ export class BaseNode extends BaseObj {
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  changes(props: { preventSimulation?: boolean } = {}): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.update();
@@ -562,7 +563,7 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.nodes.network.changes({ resetPanels: recorderModelChanged });
+    this.nodes.network.changes({ preventSimulation: true, resetPanels: recorderModelChanged });
   }
 
   /**

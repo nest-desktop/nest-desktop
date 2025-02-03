@@ -111,7 +111,7 @@ export class BaseNetwork extends BaseObj {
    * It commits the network in the network history.
    * It emits project changes.
    */
-  changes(props: { resetPanels?: boolean; preventSimulation?: boolean } = {}): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.updateStyle();

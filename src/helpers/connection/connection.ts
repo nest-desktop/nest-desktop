@@ -116,7 +116,7 @@ export class BaseConnection extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   get parent(): TConnections {
@@ -236,11 +236,13 @@ export class BaseConnection extends BaseObj {
    * Observer for connection changes.
    * @remarks It emits network changes.
    */
-  changes(): void {
-    this.updateHash();
+  changes(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
     this.logger.trace("changes");
+    this.updateHash();
 
-    this.connections.network.changes();
+    if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
+
+    this.connections.network.changes(props);
   }
 
   /**

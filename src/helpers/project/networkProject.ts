@@ -101,7 +101,7 @@ export class NetworkProject extends BaseProject {
    * It generates codes in the code editor.
    * It commits the network in the network history.
    */
-  override changes(props: { resetPanels?: boolean; preventSimulation?: boolean } = {}): void {
+  override changes(props: { preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
     this.updateHash();
 
     this.state.checkChanges();
