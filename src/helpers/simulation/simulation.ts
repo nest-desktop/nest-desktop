@@ -74,11 +74,11 @@ export class BaseSimulation extends BaseObj {
   /**
    * Triggers on simulation changes.
    */
-  changes(): void {
+  changes(props = {}): void {
     this.updateHash();
     this.logger.trace("changes");
 
-    this.project.changes();
+    this.project.changes(props);
   }
 
   /**

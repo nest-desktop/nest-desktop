@@ -1,6 +1,6 @@
 // node.ts
 
-import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/types";
+import { TConnection, TModel, TNetwork, TNode, TNodes, TProject, TSimulation } from "@/types";
 
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
@@ -253,10 +253,15 @@ export class BaseNode extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
+    this.changes({ preventSimulation: true });
   }
 
   get parentNodes(): TNodes {
     return this._nodes;
+  }
+
+  get project(): TProject {
+    return this._nodes.network.project as TProject;
   }
 
   get recordables(): NodeRecord[] {
@@ -265,6 +270,7 @@ export class BaseNode extends BaseObj {
 
   set recordables(value: NodeRecord[]) {
     this._recordables = value;
+    this.changes({ preventSimulation: true });
   }
 
   get records(): NodeRecord[] {
@@ -285,10 +291,6 @@ export class BaseNode extends BaseObj {
 
   get show(): boolean {
     return this._nodes.showNode(this);
-  }
-
-  get simulation(): TSimulation {
-    return this.nodes.network.project.simulation;
   }
 
   get size(): number {
@@ -383,11 +385,11 @@ export class BaseNode extends BaseObj {
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  changes(): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.update();
-    this.nodes.network.changes();
+    this.nodes.network.changes(props);
   }
 
   /**
@@ -561,7 +563,7 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.nodes.network.changes(recorderModelChanged);
+    this.nodes.network.changes({ preventSimulation: true, resetPanels: recorderModelChanged });
   }
 
   /**

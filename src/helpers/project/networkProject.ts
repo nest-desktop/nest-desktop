@@ -101,7 +101,7 @@ export class NetworkProject extends BaseProject {
    * It generates codes in the code editor.
    * It commits the network in the network history.
    */
-  override changes(props = { resetPanels: false }): void {
+  override changes(props: { preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
     this.updateHash();
 
     this.state.checkChanges();
@@ -117,7 +117,7 @@ export class NetworkProject extends BaseProject {
     // It resets panels of activity chart graph.
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
 
-    this.startSimulationOnChange();
+    if (!props.preventSimulation) this.startSimulationOnChange();
   }
 
   /**

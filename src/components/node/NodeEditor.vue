@@ -42,7 +42,7 @@
               <v-card>
                 <v-card-text>
                   <v-checkbox
-                    v-model="node.view.state.showSize"
+                    v-model="node.view.showSize"
                     :disabled="node.model.isRecorder"
                     :color="node.view.color"
                     density="compact"

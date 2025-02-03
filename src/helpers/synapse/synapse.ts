@@ -76,7 +76,7 @@ export class BaseSynapse extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   get weight(): number {
@@ -86,6 +86,7 @@ export class BaseSynapse extends BaseObj {
 
   set weight(value: number) {
     this.params.weight.state.value = value;
+    this.changes({ checkSynWeights: true });
   }
 
   get weightColor(): string {
@@ -120,11 +121,11 @@ export class BaseSynapse extends BaseObj {
    * @remarks
    * It emits connection changes.
    */
-  changes(): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.updateHash();
-    this.connection.changes();
+    this.connection.changes({ ...props, checkSynWeights: true });
   }
 
   /**
