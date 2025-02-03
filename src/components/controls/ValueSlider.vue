@@ -68,6 +68,8 @@ const onUpdate = (val: string) => {
 
 <style lang="scss">
 .value-slider {
+  margin-right: 0 !important;
+
   .mdi-minus,
   .mdi-plus {
     opacity: 0 !important;
@@ -90,12 +92,23 @@ const onUpdate = (val: string) => {
     pointer-events: none;
     position: absolute;
     top: -6px;
+    z-index: 0;
   }
 
   .v-input {
     &:hover .v-text-field__suffix {
       display: none;
     }
+  }
+
+  .v-field__outline .v-label {
+    background-color: rgb(var(--v-theme-surface)) !important;
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+    display: inline;
+    opacity: 1;
+    padding-left: 8px;
+    width: 100%;
+    z-index: 1000;
   }
 
   &:hover {
