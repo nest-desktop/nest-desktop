@@ -138,18 +138,12 @@ nest.Simulate({{ simulation.time }})
 {{ ^code.doRunSimulationInsite }}
 {{ #network.nodes.hasSomeSpatialNodes }}
 # Get positions
-def getPositions(nodes):
-    positions = {}
-    for node in nodes:
-        position = nest.GetPosition(node)
-        for idx in range(len(node)):
-            positions[node[idx].global_id] = position[idx]
-    return positions
+def pos(n): return dict(zip(n.global_id, nest.GetPosition(n)))
 
 {{ /network.nodes.hasSomeSpatialNodes }}
 response = {
   "events": [{{ #network.nodes.recorders }}{{ view.label }}.events, {{ /network.nodes.recorders }}]{{ #network.nodes.hasSomeSpatialNodes }},
-  "positions": getPositions([{{ #network.nodes.spatialNodes }}{{ view.label }},{{ /network.nodes.spatialNodes }}]){{ /network.nodes.hasSomeSpatialNodes }}
+  "positions": { {{ #network.nodes.spatialNodes }}**pos({{ view.label }}),{{ /network.nodes.spatialNodes }} }{{ /network.nodes.hasSomeSpatialNodes }}
 }
 {{ /code.doRunSimulationInsite }}
 {{ /code.doRunSimulation }}
