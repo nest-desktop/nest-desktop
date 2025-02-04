@@ -22,7 +22,7 @@
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="max-width: 80px"
+        style="width: 80px"
         type="number"
         variant="underlined"
         @blur="emitUpdate()"

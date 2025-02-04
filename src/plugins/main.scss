@@ -3,6 +3,16 @@
   $color-pack: false
 );
 
+// Fix number input field in Firefox
+input[type="number"] {
+  -moz-appearance: textfield;
+
+  &:hover {
+    -moz-appearance: auto;
+  }
+}
+
+// Vuetify expansion panel
 .expansion-panel-title {
   height: 48px !important;
 

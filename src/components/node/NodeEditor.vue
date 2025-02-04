@@ -47,7 +47,7 @@
                     :color="node.view.color"
                     density="compact"
                     hide-details
-                    label="Population size"
+                    label="population size"
                   >
                     <template #append> n: {{ node.size }} </template>
                   </v-checkbox>
@@ -72,8 +72,8 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn text="all" @click.stop="() => node.showAllParams()" />
-                  <v-btn text="none" @click.stop="() => node.hideAllParams()" />
+                  <v-btn text="show all" title="show all parameters" @click.stop="() => node.showAllParams()" />
+                  <v-btn text="hide all" title="show no parameters" @click.stop="() => node.hideAllParams()" />
                   <v-spacer />
                   <v-btn text="close" @click.stop="state.menu = false" />
                 </v-card-actions>
