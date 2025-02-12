@@ -82,6 +82,14 @@ export class Activity extends BaseObj {
     this._idx = value;
   }
 
+  get isAnalogSignalActivity(): boolean {
+    return this.constructor.name.includes("AnalogSignalActivity");
+  }
+
+  get isSpikeActivity(): boolean {
+    return this.constructor.name.includes("SpikeActivity");
+  }
+
   get lastTime(): number {
     return this._events.times && this._events.times.length > 0 ? this.events.times[this.events.times.length - 1] : 0;
   }

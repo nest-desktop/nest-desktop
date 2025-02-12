@@ -563,7 +563,7 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.nodes.network.changes({ preventSimulation: true, resetPanels: recorderModelChanged });
+    this.nodes.network.changes({ preventSimulation: true, cleanPanels: recorderModelChanged });
   }
 
   /**

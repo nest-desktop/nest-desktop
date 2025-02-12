@@ -53,8 +53,8 @@ export class Activities extends BaseObj {
    * Get a list of analog signal activities.
    */
   get analogSignals(): (AnalogSignalActivity | NodeAnalogSignalActivity)[] {
-    const activities: AnalogSignalActivity[] = this._activities.filter((activity: Activity) =>
-      activity.constructor.name.includes("AnalogSignal"),
+    const activities: AnalogSignalActivity[] = this._activities.filter(
+      (activity: Activity) => activity.isAnalogSignalActivity,
     ) as AnalogSignalActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
@@ -68,8 +68,8 @@ export class Activities extends BaseObj {
    * Get a list of spike activities.
    */
   get spikes(): (SpikeActivity | NodeSpikeActivity)[] {
-    const activities: SpikeActivity[] = this._activities.filter((activity: Activity) =>
-      activity.constructor.name.includes("SpikeActivity"),
+    const activities: SpikeActivity[] = this._activities.filter(
+      (activity: Activity) => activity.isSpikeActivity,
     ) as SpikeActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
