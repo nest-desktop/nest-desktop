@@ -258,19 +258,11 @@ export class ActivityChartGraph extends BaseObj {
   /**
    * Add panels.
    */
-  addPanels(panelsProps?: IActivityChartPanelProps[]): void {
+  addPanels(panelsProps: IActivityChartPanelProps[]): void {
     this.logger.trace("add panels");
 
-    if (panelsProps && panelsProps.length > 0) {
+    if (panelsProps.length > 0) {
       panelsProps.forEach((panelProps: IActivityChartPanelProps) => this.addPanel(panelProps));
-    } else {
-      if (this._project.activities.state.hasSomeAnalogRecorders) {
-        this.addPanel({ model: { id: "analogSignalPlot" } });
-      }
-      if (this._project.activities.state.hasSomeSpikeRecorders) {
-        this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
-        this.addPanel({ model: { id: "spikeTimesHistogram" } });
-      }
     }
   }
 
@@ -282,6 +274,38 @@ export class ActivityChartGraph extends BaseObj {
    */
   changes(): void {
     this.update();
+  }
+
+  /**
+   * Clean panels.
+   * @remarks It removes panels if the activity is not existed.
+   */
+  cleanPanels(): void {
+    const panels = [...this.panels];
+    panels.forEach((panel: ActivityChartPanel) => {
+      if (
+        (panel.model.activityType === "spike" && this.project.activities.spikes.length === 0) ||
+        (panel.model.activityType === "analog" && this.project.activities.analogSignals.length === 0)
+      )
+        this.removePanel(panel);
+    });
+
+    const activityPanelModels = this.panels.map((panel) => panel.model.id);
+    if (this._project.activities.state.hasSomeAnalogRecorders) {
+      if (!activityPanelModels.includes("analogSignalPlot")) this.addPanel({ model: { id: "analogSignalPlot" } });
+    }
+    if (this._project.activities.state.hasSomeSpikeRecorders) {
+      if (!activityPanelModels.includes("spikeTimesRasterPlot"))
+        this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
+      if (!activityPanelModels.includes("spikeTimesHistogram")) this.addPanel({ model: { id: "spikeTimesHistogram" } });
+    }
+  }
+
+  /**
+   * Clear panels.
+   */
+  clearPanels(): void {
+    this._panels = [];
   }
 
   /**
@@ -340,8 +364,9 @@ export class ActivityChartGraph extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.panels = [];
-    this.addPanels(this.props?.panels);
+    this.clearPanels();
+    if (this.props?.panels) this.addPanels(this.props?.panels);
+    this.cleanPanels();
 
     this.updateVisiblePanelsLayout();
 
@@ -428,7 +453,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   resetPanels(): void {
     this.panels = [];
-    this.addPanels();
+    this.cleanPanels();
     this.update();
   }
 

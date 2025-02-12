@@ -10,6 +10,7 @@ import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
+import { IActivityChartPanelProps } from "../activityGraph/activityChartGraph/activityChartPanel";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -172,16 +173,8 @@ export class BaseNetwork extends BaseObj {
     }
 
     if (connection.view.connectRecorder()) {
-      const recorder = connection.recorder;
-
-      // Update recorder.
-      recorder.updateRecorder();
-
-      // Add panels of activity graph.
-      const panelsProps = recorder.model.isSpikeRecorder
-        ? [{ model: { id: "spikeTimesRasterPlot" } }, { model: { id: "spikeTimesHistogram" } }]
-        : [{ model: { id: "analogSignalPlot" } }];
-      this._project.activityGraph.activityChartGraph.addPanels(panelsProps);
+      connection.recorder.updateRecorder();
+      this._project.activityGraph.activityChartGraph.cleanPanels();
     }
 
     // Trigger network change.
@@ -224,7 +217,7 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes();
+    this.changes({ cleanPanels: connection.view.connectRecorder() });
   }
 
   /**
@@ -245,7 +238,7 @@ export class BaseNetwork extends BaseObj {
     this.nodes.remove(node);
 
     // Trigger network change.
-    this.changes();
+    this.changes({ cleanPanels: node.model.isRecorder });
   }
 
   /**
