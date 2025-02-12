@@ -152,7 +152,11 @@ export class Activity extends BaseObj {
    * Clone activity.
    */
   clone(): Activity {
-    return new Activity(this._project, this.toJSON());
+    this.logger.trace("clone");
+
+    const activity = new Activity(this._project, this.toJSON());
+    activity.init();
+    return activity;
   }
 
   /**

@@ -9,7 +9,7 @@
         <NESTNodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as NESTNode)" />
         <NodeGroupMenuList
           v-if="graph.state.contextMenu.nodeGroup"
-          :node-group="(graph.state.contextMenu.nodeGroup as NodeGroup)"
+          :node-group="(graph.state.contextMenu.nodeGroup as TNodeGroup)"
         />
       </template>
     </NetworkEditorToolbar>
@@ -39,7 +39,7 @@ import ConnectionMenuList from "@/components/connection/ConnectionMenuList.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NodeGroupMenuList from "@/components/node/NodeGroupMenuList.vue";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNodeGroup } from "@/types";
 
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import { NESTConnection } from "../helpers/connection/connection";

@@ -1,8 +1,8 @@
 // network.ts
 
 import { BaseNetwork } from "@/helpers/network/network";
-import { INodeGroupProps, NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNetworkProps, TNode } from "@/types";
+import { INodeGroupProps } from "@/helpers/node/nodeGroup";
+import { TNetworkProps, TNode, TNodeGroup } from "@/types";
 
 import { INESTConnectionProps, NESTConnection } from "../connection/connection";
 import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
@@ -190,7 +190,7 @@ export class NESTNetwork extends BaseNetwork {
   override updateHash(): void {
     this._updateHash({
       models: this.modelsCopied.all.map((model: NESTCopyModel) => model.hash),
-      nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
+      nodes: this.nodes.all.map((node: TNodeGroup | TNode) => node.hash),
       connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
     });
   }

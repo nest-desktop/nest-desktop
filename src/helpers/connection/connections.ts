@@ -2,16 +2,15 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { TConnection, TNetwork, TNode } from "@/types";
+import { TConnection, TNetwork, TNode, TNodeGroup } from "@/types";
 
 import { BaseConnection, IConnectionProps } from "./connection";
 import { BaseObj } from "../common/base";
-import { NodeGroup } from "../node/nodeGroup";
 
 interface IConnectionsState {
   focusedConnection: TConnection | null;
   selectedConnection: TConnection | null;
-  selectedNode: NodeGroup | TNode | null;
+  selectedNode: TNodeGroup | TNode | null;
 }
 
 export class BaseConnections extends BaseObj {
@@ -136,7 +135,7 @@ export class BaseConnections extends BaseObj {
    * Remove connections by the node.
    * @param node node object
    */
-  removeByNode(node: NodeGroup | TNode): void {
+  removeByNode(node: TNodeGroup | TNode): void {
     this.resetState();
 
     this._connections = this.connections.filter(

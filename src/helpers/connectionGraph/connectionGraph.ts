@@ -2,12 +2,11 @@
 
 import { drag, select, transition } from "d3";
 
-import { TConnection, TDragBehavior, TNetworkGraph, TNode, TSelection } from "@/types";
+import { TConnection, TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
 
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
 import { BaseObj } from "../common/base";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
-import { NodeGroup } from "../node/nodeGroup";
 import { drawPathNode } from "./connectionGraphPath";
 
 export class ConnectionGraph extends BaseObj {
@@ -65,7 +64,7 @@ export class ConnectionGraph extends BaseObj {
       });
     }
 
-    connection.nodeGroups.forEach((nodeGroup: NodeGroup) => nodeGroup.view.updateCentroid());
+    connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
 
     this._networkGraph.render();
   }
@@ -170,9 +169,6 @@ export class ConnectionGraph extends BaseObj {
       .transition(t)
       .style("opacity", 1);
 
-    // @ts-expect-error Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
-    // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
-    // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
     connections.each((connection: TConnection, idx: number, elements: any[]) => {
       const elem: TSelection = select(elements[idx]);
 

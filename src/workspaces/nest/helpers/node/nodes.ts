@@ -1,7 +1,7 @@
 // nodes.ts
 
-import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { BaseNodes } from "@/helpers/node/nodes";
+import { TNodeGroup } from "@/types";
 
 import { INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
@@ -17,7 +17,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get all() {
-    return this._nodes as (NodeGroup | NESTNode)[];
+    return this._nodes as (TNodeGroup | NESTNode)[];
   }
 
   /**
@@ -54,12 +54,12 @@ export class NESTNodes extends BaseNodes {
     return this.nodeItems.filter((node: NESTNode) => node.model.isNeuron) as NESTNode[];
   }
 
-  override get nodes(): (NodeGroup | NESTNode)[] {
-    return this._nodes as (NodeGroup | NESTNode)[];
+  override get nodes(): (TNodeGroup | NESTNode)[] {
+    return this._nodes as (TNodeGroup | NESTNode)[];
   }
 
   override get nodeItems(): NESTNode[] {
-    return this.nodes.filter((node: NodeGroup | NESTNode) => node.isNode) as NESTNode[];
+    return this.nodes.filter((node: TNodeGroup | NESTNode) => node.isNode) as NESTNode[];
   }
 
   override get recorders(): NESTNode[] {

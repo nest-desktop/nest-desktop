@@ -16,7 +16,11 @@ export class NodeSpikeActivity extends NodeActivity {
    * Clone spike activity.
    */
   override clone(): NodeSpikeActivity {
-    return new NodeSpikeActivity(this.recorder, this.toJSON());
+    this.logger.trace("clone");
+
+    const activity = new NodeSpikeActivity(this.recorder, this.toJSON());
+    activity.init();
+    return activity;
   }
 
   /**

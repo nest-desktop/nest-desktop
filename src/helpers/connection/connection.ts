@@ -1,6 +1,6 @@
 // connection.ts
 
-import { TConnection, TConnections, TNetwork, TNode, TSynapse } from "@/types";
+import { TConnection, TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
@@ -10,7 +10,6 @@ import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
 import { IConfigProps } from "../common/config";
 import { IParamProps } from "../common/parameter";
-import { NodeGroup } from "../node/nodeGroup";
 
 export interface IConnectionProps {
   params?: IParamProps[];
@@ -87,8 +86,8 @@ export class BaseConnection extends BaseObj {
     return this._name;
   }
 
-  get nodeGroups(): NodeGroup[] {
-    return this.network.nodes.nodeGroups.filter((nodeGroup: NodeGroup) => {
+  get nodeGroups(): TNodeGroup[] {
+    return this.network.nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => {
       const nodes = nodeGroup.nodeItemsDeep;
       return (
         [this.sourceNodeGroup, this.targetNodeGroup].includes(nodeGroup) ||
@@ -131,7 +130,7 @@ export class BaseConnection extends BaseObj {
     return this._rule;
   }
 
-  get source(): NodeGroup | TNode {
+  get source(): TNodeGroup | TNode {
     return this.connections.network.nodes.all[this._sourceIdx];
   }
 
@@ -155,8 +154,8 @@ export class BaseConnection extends BaseObj {
     this._sourceIdx = node.idx;
   }
 
-  get sourceNodeGroup(): NodeGroup {
-    return this.connections.network.nodes.all[this._sourceIdx] as NodeGroup;
+  get sourceNodeGroup(): TNodeGroup {
+    return this.connections.network.nodes.all[this._sourceIdx] as TNodeGroup;
   }
 
   get state(): ConnectionState {
@@ -167,7 +166,7 @@ export class BaseConnection extends BaseObj {
     return this._synapse;
   }
 
-  get target(): NodeGroup | TNode {
+  get target(): TNodeGroup | TNode {
     return this.network.nodes.all[this._targetIdx];
   }
 
@@ -191,8 +190,8 @@ export class BaseConnection extends BaseObj {
     this._targetIdx = node.idx;
   }
 
-  get targetNodeGroup(): NodeGroup {
-    return this.connections.network.nodes.all[this._targetIdx] as NodeGroup;
+  get targetNodeGroup(): TNodeGroup {
+    return this.connections.network.nodes.all[this._targetIdx] as TNodeGroup;
   }
 
   get view(): ConnectionView {

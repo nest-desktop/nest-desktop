@@ -2,8 +2,7 @@
 
 import { BaseNodes } from "@/helpers/node/nodes";
 import { INodeProps } from "@/helpers/node/node";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNode } from "@/types";
+import { TNode, TNodeGroup } from "@/types";
 
 import { NorseNetwork } from "../network/network";
 import { NorseNode } from "./node";
@@ -18,6 +17,6 @@ export class NorseNodes extends BaseNodes {
   }
 
   override get nodeItems(): NorseNode[] {
-    return this._nodes.filter((node: NodeGroup | TNode) => node.isNode) as NorseNode[];
+    return this._nodes.filter((node: TNodeGroup | TNode) => node.isNode) as NorseNode[];
   }
 }

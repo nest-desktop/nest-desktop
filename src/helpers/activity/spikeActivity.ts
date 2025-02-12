@@ -15,7 +15,11 @@ export class SpikeActivity extends Activity {
    * Clone spike activity.
    */
   override clone(): SpikeActivity {
-    return new SpikeActivity(this.project, this.toJSON());
+    this.logger.trace("clone");
+
+    const activity = new SpikeActivity(this.project, this.toJSON());
+    activity.init();
+    return activity;
   }
 
   /**

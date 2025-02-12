@@ -67,6 +67,10 @@ export class NodeActivity extends Activity {
    * Clone activity.
    */
   override clone(): NodeActivity {
-    return new NodeActivity(this.recorder, this.toJSON());
+    this.logger.trace("clone");
+
+    const activity = new NodeActivity(this.recorder, this.toJSON());
+    activity.init();
+    return activity;
   }
 }
