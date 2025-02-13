@@ -1,9 +1,9 @@
 #!/bin/bash
 
 jq -n \
-  --arg simulator_visible "${SIMULATOR_VISIBLE}" \
+  --arg currentWorkspace "${CURRENT_WORKSPACE}" \
   '{
-    simulatorVisible: $simulator_visible
+    currentWorkspace: $currentWorkspace
   }' > /usr/share/nginx/html/assets/app.json
 
 bash /usr/local/bin/workspaces/nest.sh
