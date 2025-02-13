@@ -747,7 +747,7 @@ export class BaseNode extends BaseObj {
     if (!this.model.isRecorder) return;
 
     // Create activity.
-    this.createActivity();
+    this.createActivity(this.props.activity);
 
     // Update analog recorder.
     if (this.model.isAnalogRecorder) this.updateAnalogRecorder();

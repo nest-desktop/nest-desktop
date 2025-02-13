@@ -181,6 +181,8 @@ export class NESTNetwork extends BaseNetwork {
     this.nodes.update(networkProps.nodes);
     this.connections.update(networkProps.connections);
 
+    this.init();
+
     this.nodes.updateRecords();
   }
 

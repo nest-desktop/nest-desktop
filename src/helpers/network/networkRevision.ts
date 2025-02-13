@@ -62,7 +62,7 @@ export class NetworkRevision extends BaseObj {
     if (!("network" in this._project)) return;
 
     const codeHash = this._project.code.hash;
-    if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
+    // if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
 
     // Remove networks after the current.
     this._revisions = this._revisions.slice(0, this._revisionIdx + 1);

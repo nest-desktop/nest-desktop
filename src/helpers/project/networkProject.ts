@@ -126,8 +126,8 @@ export class NetworkProject extends BaseProject {
   checkoutNetwork(): void {
     this.logger.trace("checkout network");
 
-    const network = this._networkRevision.load();
-    this.network.update(network);
+    const networkProps = this._networkRevision.load();
+    this.network.update(networkProps);
     this.network.clean();
 
     // Generate simulation code.
@@ -139,9 +139,6 @@ export class NetworkProject extends BaseProject {
       // Run simulation.
       nextTick(() => this.startSimulation());
     } else {
-      // Update activities.
-      this.activities.update(this.activities.all.map((activity: Activity) => activity.toJSON()));
-
       // Update activities in activity graph.
       this._activityGraph.activityChartGraph.updateActivities();
 
