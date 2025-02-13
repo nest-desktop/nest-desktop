@@ -97,6 +97,19 @@ export class BaseNetworkGraph extends BaseObj {
   }
 
   /**
+   * Close context menu.
+   */
+  closeContextMenu(): void {
+    this._state.contextMenu = {
+      modelValue: false,
+      connection: null,
+      node: null,
+      nodeGroup: null,
+      target: [0, 0],
+    };
+  }
+
+  /**
    * Call on drag start.
    * @param event mouse event
    */

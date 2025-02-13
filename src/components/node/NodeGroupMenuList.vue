@@ -21,6 +21,9 @@ import NodeColorDialog from "../dialog/NodeColorDialog.vue";
 import { TNodeGroup } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+
 const props = defineProps<{ nodeGroup: TNodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);
 
@@ -55,6 +58,7 @@ const items: {
     onClick: () => {
       nodeGroup.value.clone();
       nodeGroup.value.changes();
+      networkGraphStore.state.graph.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",
     title: "Clone node group",
