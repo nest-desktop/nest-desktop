@@ -12,4 +12,4 @@ jq -n \
         port: $pynn_simulator_port,
         url: $pynn_simulator_url
       }
-  }' > /usr/share/nginx/html/assets/simulators/pynn/config/backends.json
+  }' > /usr/share/nginx/html/assets/workspaces/pynn/config/backends.json

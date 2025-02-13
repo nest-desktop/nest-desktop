@@ -32,4 +32,4 @@ jq -n \
         port: $nestml_server_port,
         url: $nestml_server_url
       }
-  }' > /usr/share/nginx/html/assets/simulators/nest/config/backends.json
+  }' > /usr/share/nginx/html/assets/workspaces/nest/config/backends.json

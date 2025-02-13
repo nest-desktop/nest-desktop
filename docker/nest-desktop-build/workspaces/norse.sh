@@ -12,4 +12,4 @@ jq -n \
         port: $norse_simulator_port,
         url: $norse_simulator_url
       }
-  }' > /usr/share/nginx/html/assets/simulators/norse/config/backends.json
+  }' > /usr/share/nginx/html/assets/workspaces/norse/config/backends.json

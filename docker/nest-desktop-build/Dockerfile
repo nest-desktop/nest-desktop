@@ -19,9 +19,8 @@ RUN chmod -R 777 /usr/share/nginx/html/assets && \
     touch /var/run/nginx.pid && \
     chmod -R 777 /var/run/nginx.pid
 
-# Copy entrypoint.sh and make it executable
-COPY ./docker/nest-desktop-build/simulators /usr/local/bin/simulators
-RUN chmod +x -R /usr/local/bin/simulators
+COPY ./docker/nest-desktop-build/workspaces /usr/local/bin/workspaces
+RUN chmod +x -R /usr/local/bin/workspaces
 
 # Copy entrypoint.sh and make it executable
 COPY ./docker/nest-desktop-build/entrypoint.sh /usr/local/bin/entrypoint.sh
