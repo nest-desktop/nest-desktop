@@ -1,12 +1,12 @@
 // network.ts
 
-import { TConnection, TConnections, TModel, TNetwork, TNode, TNodes, TProject } from "@/types";
+import { TConnection, TConnections, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
 import { BaseConnections } from "../connection/connections";
 import { BaseNodes } from "../node/nodes";
 import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
-import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
+import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
@@ -145,7 +145,11 @@ export class BaseNetwork extends BaseObj {
    * Clone base network component.
    */
   clone(): TNetwork {
-    return new BaseNetwork(this.project, { ...this.toJSON() });
+    this.logger.trace("clone");
+
+    const network = new BaseNetwork(this.project, { ...this.toJSON() });
+    network.init();
+    return network;
   }
 
   /**
@@ -225,17 +229,19 @@ export class BaseNetwork extends BaseObj {
    * @param node node or node group object
    * @remarks It emits network changes.
    */
-  deleteNode(node: NodeGroup | TNode): void {
+  deleteNode(node: TNodeGroup | TNode): void {
     this.logger.trace("delete node");
 
     // Remove connection from the list.
     this.connections.removeByNode(node);
 
     // Remove node in node groups
-    this.nodes.removeInNodeGroups(node);
+    this.nodes.removeNodeInNodeGroups(node);
 
     // Remove node from the list.
     this.nodes.remove(node);
+
+    this.nodes.cleanNodeGroups();
 
     // Trigger network change.
     this.changes({ cleanPanels: node.model.isRecorder });
@@ -303,7 +309,7 @@ export class BaseNetwork extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
+      nodes: this.nodes.all.map((node: TNodeGroup | TNode) => node.hash),
       connections: this.connections.all.map((connection: TConnection) => connection.hash),
     });
   }
@@ -314,6 +320,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
+    this._nodes.all.forEach((node: TNodeGroup | TNode) => node.view.updateStyle());
   }
 }

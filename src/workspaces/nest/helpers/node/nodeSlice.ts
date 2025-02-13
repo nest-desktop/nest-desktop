@@ -2,18 +2,18 @@
 
 import { BaseObj } from "@/helpers/common/base";
 import { IParamProps } from "@/helpers/common/parameter";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
+import { TNodeGroup } from "@/types";
 
 import { NESTNode } from "./node";
 
 export class NESTNodeSlice extends BaseObj {
   private readonly _name = "NESTNodeSlice";
-  private _node: NESTNode | NodeGroup;
+  private _node: NESTNode | TNodeGroup;
   private _params: Record<string, NodeParameter> = {};
   private _visible: boolean = false;
 
-  constructor(node: NESTNode | NodeGroup, paramsProps: IParamProps[] = []) {
+  constructor(node: NESTNode | TNodeGroup, paramsProps: IParamProps[] = []) {
     super({
       config: { name: "NESTNodeSlice", simulator: "nest" },
       logger: { settings: { minLevel: 3 } },
@@ -49,12 +49,12 @@ export class NESTNodeSlice extends BaseObj {
     return `[${indices.join(":")}]`;
   }
 
-  get node(): NESTNode | NodeGroup {
+  get node(): NESTNode | TNodeGroup {
     return this._node;
   }
 
-  get nodeGroup(): NodeGroup {
-    return this._node as NodeGroup;
+  get nodeGroup(): TNodeGroup {
+    return this._node as TNodeGroup;
   }
 
   get nodeItem(): NESTNode {

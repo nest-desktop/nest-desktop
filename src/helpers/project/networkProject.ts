@@ -159,7 +159,9 @@ export class NetworkProject extends BaseProject {
   override clone(): TProject {
     this.logger.trace("clone");
 
-    return new NetworkProject({ ...this.toJSON(), id: "", updatedAt: "" });
+    const project = new NetworkProject({ ...this.toJSON(), id: "", updatedAt: "" });
+    project.init();
+    return project;
   }
 
   /**

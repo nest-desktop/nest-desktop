@@ -14,14 +14,14 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import Card from "../common/Card.vue";
 import NodeColorDialog from "../dialog/NodeColorDialog.vue";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNodeGroup } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
-import { createDialog } from "vuetify3-dialog";
 
-const props = defineProps<{ nodeGroup: NodeGroup }>();
+const props = defineProps<{ nodeGroup: TNodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);
 
 const items: {

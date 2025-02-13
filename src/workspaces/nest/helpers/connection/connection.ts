@@ -3,7 +3,7 @@
 import { BaseConnection, IConnectionProps } from "@/helpers/connection/connection";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 import { IParamProps } from "@/helpers/common/parameter";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNodeGroup } from "@/types";
 
 import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
 import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
@@ -66,8 +66,8 @@ export class NESTConnection extends BaseConnection {
     return this.connections.network;
   }
 
-  override get source(): NESTNode | NodeGroup {
-    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode | NodeGroup;
+  override get source(): NESTNode | TNodeGroup {
+    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode | TNodeGroup;
   }
 
   override get sourceNode(): NESTNode {
@@ -82,8 +82,8 @@ export class NESTConnection extends BaseConnection {
     return this._synapse as NESTSynapse;
   }
 
-  override get target(): NESTNode | NodeGroup {
-    return this.connections.network.nodes.all[this.targetIdx] as NESTNode | NodeGroup;
+  override get target(): NESTNode | TNodeGroup {
+    return this.connections.network.nodes.all[this.targetIdx] as NESTNode | TNodeGroup;
   }
 
   override get targetNode(): NESTNode {

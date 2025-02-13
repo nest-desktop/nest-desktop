@@ -1,6 +1,6 @@
 // node.ts
 
-import { TConnection, TModel, TNetwork, TNode, TNodes, TProject, TSimulation } from "@/types";
+import { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
@@ -12,7 +12,6 @@ import { IParamProps } from "../common/parameter";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeActivity } from "../nodeActivity/nodeActivity";
 import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
-import { NodeGroup } from "./nodeGroup";
 import { NodeParameter } from "./nodeParameter";
 import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
 import { notifyInfo } from "../common/notification";
@@ -225,8 +224,8 @@ export class BaseNode extends BaseObj {
     return this._nodes;
   }
 
-  get nodeGroups(): NodeGroup[] {
-    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
+  get nodeGroups(): TNodeGroup[] {
+    return this._nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
   }
 
   get nodeIdx(): number {
@@ -415,7 +414,9 @@ export class BaseNode extends BaseObj {
       nodeProps.view.color = undefined;
     }
 
-    return this.nodes.addNode({ ...nodeProps });
+    const node = this.nodes.addNode({ ...nodeProps });
+    node.init();
+    return node;
   }
 
   /**

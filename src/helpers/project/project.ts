@@ -195,7 +195,9 @@ export class BaseProject extends BaseObj {
   clone(): TProject {
     this.logger.trace("clone");
 
-    return new BaseProject({ ...this.toJSON(), id: "", updatedAt: "" });
+    const project = new BaseProject({ ...this.toJSON(), id: "", updatedAt: "" });
+    project.init();
+    return project;
   }
 
   /**

@@ -56,18 +56,14 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import Menu from "../common/Menu.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeGroupMenuList from "./NodeGroupMenuList.vue";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TConnection, TNode } from "@/types";
+import { TConnection, TNode, TNodeGroup } from "@/types";
 
-const props = defineProps<{ nodeGroup: NodeGroup }>();
-const nodeGroup = computed(() => props.nodeGroup);
+defineProps<{ nodeGroup: TNodeGroup }>();
 </script>
 
 <style lang="scss">

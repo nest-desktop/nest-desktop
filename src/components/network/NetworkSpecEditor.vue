@@ -31,8 +31,7 @@
       <div :key="network.nodes.length">
         <div v-for="(node, index) in network.nodes.all" :key="index">
           <NodeEditor v-if="node.isNode" :node="(node as TNode)" />
-
-          <NodeGroup v-else-if="node.isGroup" :node-group="(node as TNodeGroup)" />
+          <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" />
         </div>
       </div>
     </slot>
@@ -44,9 +43,8 @@ import { computed } from "vue";
 
 import IconBtn from "../common/IconBtn.vue";
 import NodeEditor from "../node/NodeEditor.vue";
-import NodeGroup from "../node/NodeGroup.vue";
-import { NodeGroup as TNodeGroup } from "@/helpers/node/nodeGroup";
-import { TNetwork, TNode } from "@/types";
+import NodeGroupEditor from "../node/NodeGroupEditor.vue";
+import { TNetwork, TNode, TNodeGroup } from "@/types";
 import { range } from "@/utils/array";
 
 const props = defineProps<{ network: TNetwork }>();

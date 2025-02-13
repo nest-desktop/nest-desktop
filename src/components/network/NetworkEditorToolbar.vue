@@ -19,7 +19,7 @@
             <NodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as TNode)" />
             <NodeGroupMenuList
               v-if="graph.state.contextMenu.nodeGroup"
-              :node-group="(graph.state.contextMenu.nodeGroup as NodeGroup)"
+              :node-group="(graph.state.contextMenu.nodeGroup as TNodeGroup)"
             />
           </slot>
         </ContextMenu>
@@ -148,8 +148,7 @@ import ContextMenu from "../common/ContextMenu.vue";
 import NodeAvatar from "../node/avatar/NodeAvatar.vue";
 import NodeGroupMenuList from "../node/NodeGroupMenuList.vue";
 import NodeMenuList from "../node/NodeMenuList.vue";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TConnection, TNode } from "@/types";
+import { TConnection, TNode, TNodeGroup } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 // import { downloadSVGImage } from "@/utils/download";
 

@@ -216,7 +216,10 @@ export class BaseModel extends BaseObj {
    * Clone this model object.
    */
   clone(): BaseModel {
-    return new BaseModel({ ...this.toJSON() });
+    this.logger.trace("clone");
+
+    const model = new BaseModel({ ...this.toJSON() });
+    return model;
   }
 
   /**

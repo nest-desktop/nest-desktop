@@ -21,14 +21,13 @@ import { computed, reactive, nextTick } from "vue";
 
 import ColorPicker from "../common/ColorPicker.vue";
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNode } from "@/types";
+import { TNode, TNodeGroup } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
-const props = defineProps<{ node?: NodeGroup | TNode }>();
+const props = defineProps<{ node?: TNodeGroup | TNode }>();
 const node = computed(() => props.node as TNode);
 
 const state = reactive<{

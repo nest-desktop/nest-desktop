@@ -2,7 +2,7 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-import { TActivityGraph, TNetwork, TNode } from "@/types";
+import { TActivityGraph, TNetwork, TNode, TNodeGroup } from "@/types";
 
 import { BaseNode, INodeProps } from "./node";
 import { BaseObj } from "../common/base";
@@ -11,13 +11,13 @@ import { INodeGroupProps, NodeGroup } from "./nodeGroup";
 interface INodesState {
   annotations: Record<string, string>[];
   contextMenu: boolean;
-  focusedNode: NodeGroup | TNode | null;
-  selectedNodes: (NodeGroup | TNode)[];
+  focusedNode: TNodeGroup | TNode | null;
+  selectedNodes: (TNodeGroup | TNode)[];
 }
 
 export class BaseNodes extends BaseObj {
   private _state: UnwrapRef<INodesState>; //reactive state
-  public _nodes: (NodeGroup | TNode)[] = [];
+  public _nodes: (TNodeGroup | TNode)[] = [];
   public _network: TNetwork; // parent
 
   constructor(network: TNetwork, nodesProps?: (INodeProps | INodeGroupProps)[]) {
@@ -29,7 +29,7 @@ export class BaseNodes extends BaseObj {
       annotations: [],
       contextMenu: false,
       focusedNode: null,
-      selectedNodes: [] as (NodeGroup | TNode)[],
+      selectedNodes: [] as (TNodeGroup | TNode)[],
     });
 
     this.update(nodesProps);
@@ -39,7 +39,7 @@ export class BaseNodes extends BaseObj {
     return BaseNode;
   }
 
-  get all(): (NodeGroup | BaseNode)[] {
+  get all(): (TNodeGroup | BaseNode)[] {
     return this._nodes;
   }
 
@@ -86,15 +86,15 @@ export class BaseNodes extends BaseObj {
     return this.nodeItems.filter((node: TNode) => node.model.isNeuron);
   }
 
-  get nodeGroups(): NodeGroup[] {
-    return this._nodes.filter((node: NodeGroup | TNode) => node.isGroup) as NodeGroup[];
+  get nodeGroups(): TNodeGroup[] {
+    return this._nodes.filter((node: TNodeGroup | TNode) => node.isGroup) as TNodeGroup[];
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter((node: NodeGroup | TNode) => node.isNode) as TNode[];
+    return this._nodes.filter((node: TNodeGroup | TNode) => node.isNode) as TNode[];
   }
 
-  get nodes(): (NodeGroup | TNode)[] {
+  get nodes(): (TNodeGroup | TNode)[] {
     return this._nodes;
   }
 
@@ -122,22 +122,18 @@ export class BaseNodes extends BaseObj {
   /**
    * Get selected node groups.
    */
-  get selectedNodeGroups(): NodeGroup[] {
-    const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
-    return selectedNodes.filter((node: NodeGroup | TNode) => node.isGroup) as NodeGroup[];
+  get selectedNodeGroups(): TNodeGroup[] {
+    const selectedNodes = this._state.selectedNodes as (TNodeGroup | TNode)[];
+    return selectedNodes.filter((node: TNodeGroup | TNode) => node.isGroup) as TNodeGroup[];
   }
 
   /**
    * Get selected nodes.
    */
   get selectedNodeItems(): TNode[] {
-    const selectedNodes = this._state.selectedNodes as (NodeGroup | TNode)[];
-    return selectedNodes.filter((node: NodeGroup | TNode) => node.isNode) as TNode[];
+    const selectedNodes = this._state.selectedNodes as (TNodeGroup | TNode)[];
+    return selectedNodes.filter((node: TNodeGroup | TNode) => node.isNode) as TNode[];
   }
-
-  // set selectedNode(node: TNode | null) {
-  //   this._state.selectedNode = this._state.selectedNode !== node ? node : null;
-  // }
 
   get state(): UnwrapRef<INodesState> {
     return this._state;
@@ -195,7 +191,7 @@ export class BaseNodes extends BaseObj {
    * Add node group component.
    * @param nodeGroupProps node group props
    */
-  addNodeGroup(nodeGroupProps: INodeGroupProps): NodeGroup {
+  addNodeGroup(nodeGroupProps: INodeGroupProps): TNodeGroup {
     this.logger.trace("add node group");
 
     const nodeGroup = new NodeGroup(this, nodeGroupProps);
@@ -209,7 +205,20 @@ export class BaseNodes extends BaseObj {
    * Clean nodes and connection components.
    */
   clean(): void {
-    this.nodes.forEach((node: NodeGroup | TNode) => node.clean());
+    this.nodes.forEach((node: TNodeGroup | TNode) => node.clean());
+  }
+
+  /**
+   * Remove node groups containing less than two items.
+   */
+  cleanNodeGroups(): void {
+    this.nodeGroups.forEach((nodeGroup: TNodeGroup) => {
+      if (nodeGroup.nodes.length < 2) {
+        nodeGroup.remove();
+      } else {
+        nodeGroup.update();
+      }
+    });
   }
 
   /**
@@ -234,11 +243,9 @@ export class BaseNodes extends BaseObj {
    */
   groupSelected(): void {
     const nodes = this._state.selectedNodes.map((node) => node.idx);
-    const nodeGroup = new NodeGroup(this, { nodes });
-    this._nodes.push(nodeGroup);
-    this.unselectNodes();
-    this.toggleNodeSelection(nodeGroup);
-    this._network.changes();
+    const nodeGroup = this.addNodeGroup({ nodes });
+    this.selectNode(nodeGroup);
+    this._network.changes({ preventSimulation: true });
   }
 
   /**
@@ -256,7 +263,7 @@ export class BaseNodes extends BaseObj {
    * Remove node component from the network.
    * @param node node object
    */
-  remove(node: NodeGroup | TNode): void {
+  remove(node: TNodeGroup | TNode): void {
     this.logger.trace("remove node");
 
     this._network.state.unselectAll();
@@ -269,10 +276,10 @@ export class BaseNodes extends BaseObj {
    * Remove node in the node groups.
    * @param node node object
    */
-  removeInNodeGroups(node: NodeGroup | TNode): void {
+  removeNodeInNodeGroups(node: TNodeGroup | TNode): void {
     this.resetState();
 
-    this.nodeGroups.forEach((nodeGroup: NodeGroup) => nodeGroup.removeNode(node));
+    this.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.removeNode(node));
   }
 
   /*
@@ -284,7 +291,7 @@ export class BaseNodes extends BaseObj {
    * Select node.
    * @param node node or node group object
    */
-  selectNode(node: NodeGroup | TNode) {
+  selectNode(node: TNodeGroup | TNode) {
     this._state.selectedNodes.push(node);
     this._state.selectedNodes.sort();
   }
@@ -292,13 +299,13 @@ export class BaseNodes extends BaseObj {
   /**
    * Show node in list.
    */
-  showNode(node: NodeGroup | TNode): boolean {
+  showNode(node: TNodeGroup | TNode): boolean {
     const elementTypeIdx = this._network.state.elementTypeIdx;
 
     if (this._state.selectedNodes.length > 0) {
       // selected node
       return (
-        this.selectedNodeGroups.some((nodeGrp: NodeGroup) => nodeGrp.nodes.includes(node)) ||
+        this.selectedNodeGroups.some((nodeGrp: TNodeGroup) => nodeGrp.nodes.includes(node)) ||
         this._state.selectedNodes.includes(node)
       );
     } else if (elementTypeIdx > 0) {
@@ -318,14 +325,14 @@ export class BaseNodes extends BaseObj {
    * @return list of node props
    */
   toJSON(): (INodeGroupProps | INodeProps)[] {
-    return this.nodes.map((node: NodeGroup | TNode) => node.toJSON());
+    return this.nodes.map((node: TNodeGroup | TNode) => node.toJSON());
   }
 
   /**
    * Toggle node selection
    * @param node node or node group object
    */
-  toggleNodeSelection(node: NodeGroup | TNode) {
+  toggleNodeSelection(node: TNodeGroup | TNode) {
     this._network.state.state.elementTypeIdx = 0;
 
     if (this._state.selectedNodes.includes(node)) {
@@ -346,7 +353,7 @@ export class BaseNodes extends BaseObj {
    * Unselect node.
    * @param node node or node group object
    */
-  unselectNode(node: NodeGroup | TNode) {
+  unselectNode(node: TNodeGroup | TNode) {
     const index = this._state.selectedNodes.indexOf(node);
     this._state.selectedNodes.splice(index, 1);
   }
@@ -366,7 +373,7 @@ export class BaseNodes extends BaseObj {
   update(nodesProps?: (INodeProps | INodeGroupProps)[]): void {
     this.logger.trace("update");
 
-    if (nodesProps) {
+    if (nodesProps)
       nodesProps.forEach((nodeProps: INodeProps | INodeGroupProps) => {
         if ("nodes" in nodeProps) {
           this.addNodeGroup(nodeProps as INodeGroupProps);
@@ -374,7 +381,6 @@ export class BaseNodes extends BaseObj {
           this.addNode(nodeProps as INodeProps);
         }
       });
-    }
 
     this.clean();
     this.updateHash();

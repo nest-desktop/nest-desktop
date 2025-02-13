@@ -5,9 +5,7 @@
 
 import { drag, polygonHull } from "d3";
 
-import { TDragBehavior, TNetwork, TNetworkGraph, TNode } from "@/types";
-
-import { NodeGroup } from "../node/nodeGroup";
+import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup } from "@/types";
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [node.view.position.x, node.view.position.y]);
@@ -55,7 +53,7 @@ export class NodeGroupGraph {
    * @param event mouse event
    * @param nodeGroup node group object
    */
-  drag(event: MouseEvent, nodeGroup: NodeGroup): void {
+  drag(event: MouseEvent, nodeGroup: TNodeGroup): void {
     // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
@@ -84,7 +82,7 @@ export class NodeGroupGraph {
       .selectAll("path")
       .attr(
         "d",
-        (nodeGroup: NodeGroup | any) =>
+        (nodeGroup: TNodeGroup | any) =>
           "M" +
           nodeGroup.view.state.polygon
             .map((point: [number, number]) => [
@@ -97,7 +95,7 @@ export class NodeGroupGraph {
 
     nodeGroups.attr(
       "transform",
-      (n: NodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`,
+      (n: TNodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`,
     );
   }
 
@@ -108,20 +106,18 @@ export class NodeGroupGraph {
     const elem = this._networkGraph.selector
       .select("#nodeGroups")
       .selectAll(".nodeGroupArea")
-      .data(this.network.nodes.nodeGroups.toReversed(), (n: NodeGroup | unknown) =>
-        n instanceof NodeGroup ? n.uuid : "",
-      );
+      .data(this.network.nodes.nodeGroups.toReversed(), (n: TNodeGroup) => (n.isGroup ? n.uuid : ""));
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: NodeGroup | unknown) => this.drag(e, n as NodeGroup))
+      .on("drag", (e: MouseEvent, n: TNodeGroup | unknown) => this.drag(e, n as TNodeGroup))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     const g = elem.enter().append("g").style("cursor-events", "none").attr("class", "nodeGroupArea");
 
     g.append("path")
-      .style("fill", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
-      .style("stroke", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
+      .style("fill", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
+      .style("stroke", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
       .style("stroke-linejoin", "round")
       .attr("stroke-width", 64)
       .style("opacity", 0.12);
@@ -137,10 +133,10 @@ export class NodeGroupGraph {
     //   .style("pointer-events", "none")
     //   .style("text-anchor", "middle")
     //   .style("text-transform", "uppercase", "important")
-    //   .style("fill", (n: NodeGroup) => "var(--colorNode" + n.idx + ")")
-    //   .text((n: NodeGroup) => n.view.label);
+    //   .style("fill", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
+    //   .text((n: TNodeGroup) => n.view.label);
 
-    elem.on("mouseover", (_: MouseEvent, n: NodeGroup) => {
+    elem.on("mouseover", (_: MouseEvent, n: TNodeGroup) => {
       n.view.focus();
 
       // Draw line between selected node and focused node.
@@ -155,7 +151,7 @@ export class NodeGroupGraph {
       this.network.nodes.unfocusNode();
     });
 
-    elem.on("click", (e: MouseEvent, nodeGroup: NodeGroup) => {
+    elem.on("click", (e: MouseEvent, nodeGroup: TNodeGroup) => {
       const nodes = this._networkGraph.network.nodes;
       const connections = this._networkGraph.network.connections;
 
@@ -188,7 +184,7 @@ export class NodeGroupGraph {
     /**
      * Trigger node menu on right mouse click.
      */
-    elem.on("contextmenu", (event: MouseEvent, nodeGroup: NodeGroup) => {
+    elem.on("contextmenu", (event: MouseEvent, nodeGroup: TNodeGroup) => {
       event.preventDefault();
       this._networkGraph.workspace.reset();
 

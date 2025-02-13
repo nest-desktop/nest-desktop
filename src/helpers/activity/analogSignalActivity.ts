@@ -14,7 +14,11 @@ export class AnalogSignalActivity extends Activity {
    * It creates a new component with JSON data.
    */
   override clone(): AnalogSignalActivity {
-    return new AnalogSignalActivity(this.project, this.toJSON());
+    this.logger.trace("clone");
+
+    const activity = new AnalogSignalActivity(this.project, this.toJSON());
+    activity.init();
+    return activity;
   }
 
   /**
