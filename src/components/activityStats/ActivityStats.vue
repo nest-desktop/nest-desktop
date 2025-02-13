@@ -23,30 +23,32 @@
 
     <v-layout v-resize="onResize" class="activityStats ml-1" full-height>
       <v-expansion-panels v-model="activities.state.activityStatsPanelId" mandatory variant="accordion">
-        <v-expansion-panel v-for="(activity, index) in activities.all" :key="index">
-          <v-expansion-panel-title class="py-0">
-            <v-row class="text-button">
-              <NodeAvatar :node="(activity.recorder as TNode)" />
-              <v-spacer />
-              {{ activity.recorder.model.state.label }}
-              <v-spacer />
-            </v-row>
-          </v-expansion-panel-title>
+        <template v-for="(activity, index) in activities.all" :key="index">
+          <v-expansion-panel v-if="activity">
+            <v-expansion-panel-title class="py-0">
+              <v-row class="text-button">
+                <NodeAvatar :node="(activity.recorder as TNode)" />
+                <v-spacer />
+                {{ activity.recorder.model.state.label }}
+                <v-spacer />
+              </v-row>
+            </v-expansion-panel-title>
 
-          <v-expansion-panel-text :key="activities.hash" class="ma-0 pa-0">
-            <ActivityStatsSpike
-              v-if="activity.recorder.model.isSpikeRecorder"
-              :activity="activity as NodeSpikeActivity"
-              :height="state.height"
-            />
+            <v-expansion-panel-text :key="activities.hash" class="ma-0 pa-0">
+              <ActivityStatsSpike
+                v-if="activity.recorder.model.isSpikeRecorder"
+                :activity="activity as NodeSpikeActivity"
+                :height="state.height"
+              />
 
-            <ActivityStatsAnalog
-              v-if="activity.recorder.model.isAnalogRecorder"
-              :activity="activity as NodeAnalogSignalActivity"
-              :height="state.height - (activity.recorder.model.isMultimeter ? 40 : 0)"
-            />
-          </v-expansion-panel-text>
-        </v-expansion-panel>
+              <ActivityStatsAnalog
+                v-if="activity.recorder.model.isAnalogRecorder"
+                :activity="activity as NodeAnalogSignalActivity"
+                :height="state.height - (activity.recorder.model.isMultimeter ? 40 : 0)"
+              />
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </template>
       </v-expansion-panels>
     </v-layout>
   </div>
