@@ -47,6 +47,8 @@ const emitUpdate = (k?: KeyboardEvent) => {
 
 <style lang="scss">
 .array-input {
+  padding-top: 6px;
+
   .v-field-label {
     font-size: 15px;
     color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));

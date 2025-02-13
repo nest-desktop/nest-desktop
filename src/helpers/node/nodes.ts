@@ -209,6 +209,19 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
+   * Remove node groups containing less than two items.
+   */
+  cleanNodeGroups(): void {
+    this.nodeGroups.forEach((nodeGroup: TNodeGroup) => {
+      if (nodeGroup.nodes.length < 2) {
+        nodeGroup.remove();
+      } else {
+        nodeGroup.update();
+      }
+    });
+  }
+
+  /**
    * Clear node list.
    */
   clear(): void {
@@ -263,7 +276,7 @@ export class BaseNodes extends BaseObj {
    * Remove node in the node groups.
    * @param node node object
    */
-  removeInNodeGroups(node: TNodeGroup | TNode): void {
+  removeNodeInNodeGroups(node: TNodeGroup | TNode): void {
     this.resetState();
 
     this.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.removeNode(node));

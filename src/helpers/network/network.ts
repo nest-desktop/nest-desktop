@@ -236,10 +236,12 @@ export class BaseNetwork extends BaseObj {
     this.connections.removeByNode(node);
 
     // Remove node in node groups
-    this.nodes.removeInNodeGroups(node);
+    this.nodes.removeNodeInNodeGroups(node);
 
     // Remove node from the list.
     this.nodes.remove(node);
+
+    this.nodes.cleanNodeGroups();
 
     // Trigger network change.
     this.changes({ cleanPanels: node.model.isRecorder });
