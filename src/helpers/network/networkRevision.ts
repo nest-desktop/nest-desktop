@@ -57,7 +57,7 @@ export class NetworkRevision extends BaseObj {
   /**
    * Add network to the history list.
    */
-  commit(): void {
+  commit(withActivity: boolean = false): void {
     this.logger.trace("commit network");
     if (!("network" in this._project)) return;
 
@@ -84,7 +84,7 @@ export class NetworkRevision extends BaseObj {
     // Copy code hash to current network.
     currentNetwork.codeHash = codeHash;
 
-    if (currentNetwork.nodes != null || currentNetwork.nodes != undefined) {
+    if (withActivity && (currentNetwork.nodes != null || currentNetwork.nodes != undefined)) {
       // Add activity to recorder nodes only if hashes is matched.
       this._project.network.nodes.recorders.forEach((node: TNode) => {
         const nodes = currentNetwork.nodes as INodeProps[];

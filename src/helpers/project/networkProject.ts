@@ -219,8 +219,8 @@ export class NetworkProject extends BaseProject {
         this.activities.update(response.data.data);
         this.state.state.stopwatch.visualization = Date.now() - vistoc;
 
-        // Commit network for the history.
-        this.networkRevision.commit();
+        // Commit network for the history (with activity).
+        this.networkRevision.commit(true);
       })
       .finally(() => {
         closeLoading();

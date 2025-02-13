@@ -298,12 +298,12 @@ export class BaseNetwork extends BaseObj {
   update(networkProps: INetworkProps): void {
     this.logger.trace("update");
 
+    this.clear();
+
     this.nodes.update(networkProps.nodes);
     this.connections.update(networkProps.connections);
 
     this.init();
-
-    this.updateHash();
   }
 
   /**
