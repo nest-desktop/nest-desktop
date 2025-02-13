@@ -301,6 +301,8 @@ export class BaseNetwork extends BaseObj {
     this.nodes.update(networkProps.nodes);
     this.connections.update(networkProps.connections);
 
+    this.init();
+
     this.updateHash();
   }
 
