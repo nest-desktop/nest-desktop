@@ -8,31 +8,9 @@ import { TNetworkProject } from "@/types";
 import { BaseCode, ICodeProps } from "../code/code";
 import { notifyError, notifySuccess } from "../common/notification";
 
-const simulationCodeBlocks: string[] = ["importModules", "createNodes", "connectNodes", "runSimulation"];
-
 export class SimulationCode extends BaseCode {
   constructor(project: TNetworkProject, codeProps?: ICodeProps) {
-    super(project, { blocks: simulationCodeBlocks, templateFilename: "simulation-code", ...codeProps });
-  }
-
-  get doCreateNodes(): boolean {
-    return this.state.blocks.includes("createNodes");
-  }
-
-  get doConnectNodes(): boolean {
-    return this.state.blocks.includes("connectNodes");
-  }
-
-  get doResetKernel(): boolean {
-    return this.state.blocks.includes("resetKernel");
-  }
-
-  get doRunSimulation(): boolean {
-    return this.state.blocks.includes("runSimulation");
-  }
-
-  get doSetKernelStatus(): boolean {
-    return this.state.blocks.includes("setKernel");
+    super(project, { templateFilename: "simulation-code", ...codeProps });
   }
 
   get project(): TNetworkProject {

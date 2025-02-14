@@ -1,14 +1,10 @@
-{{ #code.doImportModules }}
 import nest
 import numpy as np
-{{ /code.doImportModules }}
-{{ #code.doResetKernel }}
 
 nest.ResetKernel()
-{{ /code.doResetKernel }}{{ #simulation.modules }}
+{{ #simulation.modules }}
 nest.Install("{{.}}")
 {{ /simulation.modules }}
-{{ #code.doSetKernelStatus }}
 
 # Set simulation kernel
 nest.SetKernelStatus({
@@ -16,8 +12,6 @@ nest.SetKernelStatus({
   "resolution": {{ simulation.kernel.resolution }},
   "rng_seed": {{ simulation.kernel.rngSeed }}
 })
-{{ /code.doSetKernelStatus }}
-{{ #code.doCreateNodes }}
 {{ #network.modelsCopied.hasNodeModels }}
 
 # Copy node models
@@ -84,8 +78,6 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /hasReceptors }}
 {{ /network.nodes.all }}
 {{ /network.hasSomeNodeReceptors }}
-{{ /code.doCreateNodes }}
-{{ #code.doConnectNodes }}
 {{ #network.modelsCopied.hasSynapseModels }}
 
 # Copy synapse models
@@ -117,33 +109,16 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
 {{ /synapse.hasReceptorIndices }}
 }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
 {{ /network.connections.all }}
-{{ /code.doConnectNodes }}
-{{ #code.doTagAnnotations }}
 
-# Tag annotations
-nest.userdict.clear()
-{{ #network.state.nodeAnnotations }}
-nest.userdict["{{ key }}"] = {{ &value }}
-{{ /network.state.nodeAnnotations }}
-{{ /code.doTagAnnotations }}
-
-{{ #code.doPrepareSimulation }}
-# Prepare simulation
-nest.Prepare()
-{{ /code.doPrepareSimulation }}
-{{ #code.doRunSimulation }}
 # Run simulation
 nest.Simulate({{ simulation.time }})
 
-{{ ^code.doRunSimulationInsite }}
 {{ #network.nodes.hasSomeSpatialNodes }}
 # Get positions
-def pos(n): return dict(zip(n.global_id, nest.GetPosition(n)))
+pos = lambda x: dict(zip(n.global_id, nest.GetPosition(n)))
 
 {{ /network.nodes.hasSomeSpatialNodes }}
 response = {
   "events": [{{ #network.nodes.recorders }}{{ view.label }}.events, {{ /network.nodes.recorders }}]{{ #network.nodes.hasSomeSpatialNodes }},
   "positions": { {{ #network.nodes.spatialNodes }}**pos({{ view.label }}),{{ /network.nodes.spatialNodes }} }{{ /network.nodes.hasSomeSpatialNodes }}
 }
-{{ /code.doRunSimulationInsite }}
-{{ /code.doRunSimulation }}

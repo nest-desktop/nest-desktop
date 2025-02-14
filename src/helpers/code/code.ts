@@ -21,13 +21,10 @@ export interface IResponseProps {
 }
 
 export interface ICodeProps {
-  blocks?: string[];
   templateFilename?: string;
 }
 
 interface ICodeState {
-  blocks: string[];
-  customBlocks: boolean;
   error: IAxiosErrorData;
   script: string;
   template?: string;
@@ -45,8 +42,6 @@ export class BaseCode extends BaseObj {
 
     this._project = project;
     this._state = reactive<ICodeState>({
-      blocks: codeProps?.blocks || codeBlocks,
-      customBlocks: false,
       error: {
         lineNumber: -1,
         message: "",
@@ -58,10 +53,6 @@ export class BaseCode extends BaseObj {
 
     if (this._state.templateFilename) this.loadTemplate();
     this.clean();
-  }
-
-  get doImportModules(): boolean {
-    return this.state.blocks.includes("importModules");
   }
 
   get project(): TProject {
@@ -207,7 +198,7 @@ export class BaseCode extends BaseObj {
    * @return code props
    */
   toJSON(): ICodeProps {
-    return { blocks: this.state.blocks };
+    return {};
   }
 
   /**
