@@ -42,7 +42,7 @@ const items: {
     icon: { icon: "mdi:mdi-reload", class: "mdi-flip-h" },
     id: "paramsReset",
     onClick: () => {
-      node.value?.resetParams();
+      node.value.resetParams();
       networkGraphStore.state.graph.closeContextMenu();
     },
     title: "Reset all parameters",
@@ -68,8 +68,8 @@ const items: {
   {
     id: "nodeClone",
     onClick: () => {
-      node.value.clone();
-      node.value.changes();
+      const clonedNode = node.value.clone();
+      clonedNode.changes();
       networkGraphStore.state.graph.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",

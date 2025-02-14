@@ -148,20 +148,6 @@ export class NetworkProject extends BaseProject {
   }
 
   /**
-   * Clone a new project of this current project.
-   *
-   * @remarks
-   * It generates new project id and empties updatedAt variable;
-   */
-  override clone(): TProject {
-    this.logger.trace("clone");
-
-    const project = new NetworkProject({ ...this.toJSON(), id: "", updatedAt: "" });
-    project.init();
-    return project;
-  }
-
-  /**
    * Initialize project.
    */
   override init(): void {

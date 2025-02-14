@@ -232,11 +232,15 @@ export class NodeGroup extends BaseObj {
         const connectionProps = connection.toJSON();
         connectionProps.source = nodeIndices[connectionProps.source];
         connectionProps.target = nodeIndices[connectionProps.target];
-        this.network.connections.addConnection(connectionProps);
+        const clonedConnection = this.network.connections.addConnection(connectionProps);
+
+        clonedConnection.init();
       });
     }
 
+    // Initialize node.
     nodeGroup.init();
+
     return nodeGroup;
   }
 

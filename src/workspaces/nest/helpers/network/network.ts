@@ -104,13 +104,6 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
-   * Clone network component.
-   */
-  override clone(): NESTNetwork {
-    return new NESTNetwork(this.project, { ...this.toJSON() });
-  }
-
-  /**
    * Delete model component from the network.
    * @param model NEST copy model
    *

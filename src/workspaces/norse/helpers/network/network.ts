@@ -44,11 +44,4 @@ export class NorseNetwork extends BaseNetwork {
   override get project(): NorseProject {
     return this._project as NorseProject;
   }
-
-  /**
-   * Clone norse network component.
-   */
-  override clone(): NorseNetwork {
-    return new NorseNetwork(this.project, { ...this.toJSON() });
-  }
 }

@@ -414,8 +414,12 @@ export class BaseNode extends BaseObj {
       nodeProps.view.color = undefined;
     }
 
+    // Add node.
     const node = this.nodes.addNode({ ...nodeProps });
+
+    // Initialize node.
     node.init();
+
     return node;
   }
 

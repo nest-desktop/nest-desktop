@@ -105,13 +105,6 @@ export class NESTModel extends BaseModel {
   }
 
   /**
-   * Clone NEST model object.
-   */
-  override clone(): NESTModel {
-    return new NESTModel({ ...this.toJSON() });
-  }
-
-  /**
    * Get parameter defaults of a model from NEST Simulator.
    */
   // async fetchDefaults(): Promise<AxiosResponse<any,any>> {

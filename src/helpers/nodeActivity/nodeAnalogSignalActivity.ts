@@ -12,18 +12,6 @@ export class NodeAnalogSignalActivity extends NodeActivity {
   }
 
   /**
-   * Clone analog signal activity.
-   * It creates a new component with JSON data.
-   */
-  override clone(): NodeAnalogSignalActivity {
-    this.logger.trace("clone");
-
-    const activity = new NodeAnalogSignalActivity(this.recorder, this.toJSON());
-    activity.init();
-    return activity;
-  }
-
-  /**
    * Get node record.
    * @param groupId string
    * @returns node record object

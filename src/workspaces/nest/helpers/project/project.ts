@@ -60,20 +60,6 @@ export class NESTProject extends NetworkProject {
   }
 
   /**
-   * Clone a new project of this current project.
-   * @remarks It generates new project id and empties updatedAt variable;
-   */
-  override clone(): NESTProject {
-    this.logger.trace("clone");
-
-    return new NESTProject({
-      ...this.toJSON(),
-      id: undefined,
-      updatedAt: "",
-    });
-  }
-
-  /**
    * Initialize model store for NEST.
    */
   override initModelStore(): void {

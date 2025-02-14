@@ -62,15 +62,4 @@ export class NodeActivity extends Activity {
   get simulationTimeInfo(): number {
     return this.project.simulation.state.timeInfo.value;
   }
-
-  /**
-   * Clone activity.
-   */
-  override clone(): NodeActivity {
-    this.logger.trace("clone");
-
-    const activity = new NodeActivity(this.recorder, this.toJSON());
-    activity.init();
-    return activity;
-  }
 }

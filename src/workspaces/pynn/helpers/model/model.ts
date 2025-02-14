@@ -27,13 +27,6 @@ export class PyNNModel extends BaseModel {
   }
 
   /**
-   * Clone this model object.
-   */
-  override clone(): PyNNModel {
-    return new PyNNModel({ ...this.toJSON() });
-  }
-
-  /**
    * Serialize to JSON.
    * @returns pynn model props
    */

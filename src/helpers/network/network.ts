@@ -142,17 +142,6 @@ export class BaseNetwork extends BaseObj {
   }
 
   /**
-   * Clone base network component.
-   */
-  clone(): TNetwork {
-    this.logger.trace("clone");
-
-    const network = new BaseNetwork(this.project, { ...this.toJSON() });
-    network.init();
-    return network;
-  }
-
-  /**
    * Connect node components by user interaction.
    * @param sourceIdx node index
    * @param targetIdx node index
@@ -169,6 +158,8 @@ export class BaseNetwork extends BaseObj {
 
     // Initialize connection.
     connection.init();
+
+    // Correct connections with recorder.
     if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
     // Update synaptic weight label.
@@ -176,6 +167,7 @@ export class BaseNetwork extends BaseObj {
       connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
     }
 
+    // Update recorder and clean activity panels.
     if (connection.view.connectRecorder()) {
       connection.recorder.updateRecorder();
       this._project.activityGraph.activityChartGraph.cleanPanels();

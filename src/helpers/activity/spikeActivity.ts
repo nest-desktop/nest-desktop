@@ -12,17 +12,6 @@ export class SpikeActivity extends Activity {
   }
 
   /**
-   * Clone spike activity.
-   */
-  override clone(): SpikeActivity {
-    this.logger.trace("clone");
-
-    const activity = new SpikeActivity(this.project, this.toJSON());
-    activity.init();
-    return activity;
-  }
-
-  /**
    * Get ISI of a node.
    */
   getISI(times: number[]): number[] {

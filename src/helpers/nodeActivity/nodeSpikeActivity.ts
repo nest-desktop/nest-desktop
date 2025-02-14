@@ -13,17 +13,6 @@ export class NodeSpikeActivity extends NodeActivity {
   }
 
   /**
-   * Clone spike activity.
-   */
-  override clone(): NodeSpikeActivity {
-    this.logger.trace("clone");
-
-    const activity = new NodeSpikeActivity(this.recorder, this.toJSON());
-    activity.init();
-    return activity;
-  }
-
-  /**
    * Get ISI of a node.
    */
   getISI(times: number[]): number[] {

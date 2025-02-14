@@ -19,22 +19,6 @@ export class PyNNProject extends NetworkProject {
   }
 
   /**
-   * Clone a new project of this current project.
-   *
-   * @remarks
-   * It generates new project id and empties updatedAt variable;
-   */
-  override clone(): PyNNProject {
-    this.logger.trace("clone");
-
-    return new PyNNProject({
-      ...this.toJSON(),
-      id: undefined,
-      updatedAt: "",
-    });
-  }
-
-  /**
    * Initialize model store for PyNN.
    */
   override initModelStore(): void {

@@ -187,20 +187,6 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Clone a new project of this current project.
-   *
-   * @remarks
-   * It generates new project id and empties updatedAt variable;
-   */
-  clone(): TProject {
-    this.logger.trace("clone");
-
-    const project = new BaseProject({ ...this.toJSON(), id: "", updatedAt: "" });
-    project.init();
-    return project;
-  }
-
-  /**
    * Generate code.
    */
   generateCode(): void {

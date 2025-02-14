@@ -27,14 +27,6 @@ export class NorseModel extends BaseModel {
   }
 
   /**
-   * Clone this model object.
-   * @returns norse model object
-   */
-  override clone(): NorseModel {
-    return new NorseModel({ ...this.toJSON() });
-  }
-
-  /**
    * Serialize to JSON.
    * @returns norse model props
    */

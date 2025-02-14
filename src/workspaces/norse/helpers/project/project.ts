@@ -52,22 +52,6 @@ export class NorseProject extends NetworkProject {
   }
 
   /**
-   * Clone a new project of this current project.
-   *
-   * @remarks
-   * It generates new project id and empties updatedAt variable;
-   */
-  override clone(): NorseProject {
-    this.logger.trace("clone");
-
-    return new NorseProject({
-      ...this.toJSON(),
-      id: undefined,
-      updatedAt: "",
-    });
-  }
-
-  /**
    * Initialize model store for Norse.
    */
   override initModelStore(): void {

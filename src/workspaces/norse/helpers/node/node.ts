@@ -79,14 +79,6 @@ export class NorseNode extends BaseNode {
   }
 
   /**
-   * Clone this node component.
-   * @return norse node object
-   */
-  override clone(): NorseNode {
-    return new NorseNode(this.nodes, { ...this.toJSON() });
-  }
-
-  /**
    * Observer for node changes.
    * @remarks It emits network changes.
    */
