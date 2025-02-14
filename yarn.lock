@@ -6897,10 +6897,10 @@ plist@^3.0.4, plist@^3.0.5, plist@^3.1.0:
     base64-js "^1.5.1"
     xmlbuilder "^15.1.1"
 
-plotly.js-basic-dist-min@~2.35:
-  version "2.35.3"
-  resolved "https://registry.yarnpkg.com/plotly.js-basic-dist-min/-/plotly.js-basic-dist-min-2.35.3.tgz#76d5397a449cd1ff7bbba6a4c0ba6d72477bb272"
-  integrity sha512-ZipAmyME0S5qWec6GDy2dxP+E6Qhi0X6eNwH6gy7m5YMKYSgrDYrc+/3PTPWpJsxcIMF0kqoOruX+SgH2VwOWg==
+plotly.js-cartesian-dist-min@~3.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/plotly.js-cartesian-dist-min/-/plotly.js-cartesian-dist-min-3.0.0.tgz#11475104743474d44ae22fb1023d6db7621cf21a"
+  integrity sha512-5MdDeiJMs14jNxms90cKiwA8yOTrW4iYSRIQp18CtNAiWEV3jrUNgVOKtdOKMfnfGhe5bBnZu3qcKbWccNO5Pw==
 
 possible-typed-array-names@^1.0.0:
   version "1.1.0"

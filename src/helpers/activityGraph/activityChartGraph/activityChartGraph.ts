@@ -1,6 +1,7 @@
 // activityChartGraph.ts
 
-import * as PlotlyBasic from "plotly.js-basic-dist-min";
+// @ts-expect-error Could not find a declaration file for module 'plotly.js-cartesian-dist-min'.
+import * as PlotlyBasic from "plotly.js-cartesian-dist-min";
 import moment from "moment";
 import { UnwrapRef, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
