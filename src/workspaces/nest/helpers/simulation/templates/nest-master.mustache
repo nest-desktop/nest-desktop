@@ -115,7 +115,7 @@ nest.Simulate({{ simulation.time }})
 
 {{ #network.nodes.hasSomeSpatialNodes }}
 # Get positions
-pos = lambda x: dict(zip(n.global_id, nest.GetPosition(n)))
+pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))
 
 {{ /network.nodes.hasSomeSpatialNodes }}
 response = {
