@@ -27,7 +27,7 @@ import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
 const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
 
-const props = defineProps<{ node?: TNodeGroup | TNode }>();
+const props = defineProps<{ node?: TNode | TNodeGroup }>();
 const node = computed(() => props.node as TNode);
 
 const state = reactive<{

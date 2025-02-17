@@ -17,6 +17,6 @@ export class NorseNodes extends BaseNodes {
   }
 
   override get nodeItems(): NorseNode[] {
-    return this._nodes.filter((node: TNodeGroup | TNode) => node.isNode) as NorseNode[];
+    return this._nodes.filter((node: TNode | TNodeGroup) => node.isNode) as NorseNode[];
   }
 }

@@ -1,6 +1,7 @@
 // nodeGraph.ts
 
 import { drag, select, transition } from "d3";
+import { nextTick } from "vue";
 
 import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
 
@@ -30,7 +31,7 @@ export class NodeGraph extends BaseObj {
    * @param event mouse event
    * @param node node object
    */
-  drag(event: MouseEvent, node: TNodeGroup | TNode): void {
+  drag(event: MouseEvent, node: TNode | TNodeGroup): void {
     this.logger.silly("drag");
 
     if (this._networkGraph.workspace.state.dragLine) return;
@@ -54,7 +55,7 @@ export class NodeGraph extends BaseObj {
       node.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
     }
 
-    this._networkGraph.render();
+    nextTick(() => this._networkGraph.render());
   }
 
   /**
@@ -63,7 +64,7 @@ export class NodeGraph extends BaseObj {
    * @param idx index of the elements
    * @param elements SVG elements
    */
-  initNode(node: TNodeGroup | TNode, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
+  initNode(node: TNode | TNodeGroup, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
     this.logger.trace("init node");
 
     const elem: TSelection = select(elements[idx]);
@@ -72,7 +73,7 @@ export class NodeGraph extends BaseObj {
     this._nodeGraphConnector.init(elem);
     this._nodeGraphShape.init(elem, node);
 
-    elem.on("mouseover", (_, n: TNodeGroup | TNode) => {
+    elem.on("mouseover", (_, n: TNode | TNodeGroup) => {
       n.view.focus();
 
       // Draw line between selected node and focused node.
@@ -90,7 +91,7 @@ export class NodeGraph extends BaseObj {
     /**
      * Trigger node menu on right mouse click.
      */
-    elem.on("contextmenu", (event: MouseEvent, n: TNodeGroup | TNode) => {
+    elem.on("contextmenu", (event: MouseEvent, n: TNode | TNodeGroup) => {
       event.preventDefault();
       this._networkGraph.workspace.reset();
 
@@ -122,14 +123,14 @@ export class NodeGraph extends BaseObj {
     nodes
       .transition(t)
       .style("opacity", 1)
-      .style("color", (n: TNodeGroup | TNode | any) => "var(--colorNode" + n.idx + ")")
+      .style("color", (n: TNode | TNodeGroup | any) => "var(--colorNode" + n.idx + ")")
       .style("background-color", "rgb(var(--v-theme-background))")
-      .attr("transform", (n: TNodeGroup | TNode | any) => `translate(${n.view.position.x},${n.view.position.y})`);
+      .attr("transform", (n: TNode | TNodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y})`);
 
     nodes
       .selectAll(".core")
       .transition(t)
-      .attr("transform", (n: TNodeGroup | TNode | any) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
+      .attr("transform", (n: TNode | TNodeGroup | any) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
   }
 
   /**
@@ -144,32 +145,32 @@ export class NodeGraph extends BaseObj {
     const nodes: TSelection = this._networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
-      .data(this.network.nodes.all, (n: TNodeGroup | TNode | any) => n.uuid);
+      .data(this.network.nodes.all, (n: TNode | TNodeGroup | any) => n.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: TNodeGroup | TNode | unknown) => this.drag(e, n as TNode))
+      .on("drag", (e: MouseEvent, n: TNode | TNodeGroup | unknown) => this.drag(e, n as TNode))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     nodes
       .enter()
       .append("g")
       .attr("class", "node")
-      .classed("nodeGroup", (n: TNodeGroup | TNode) => n.isGroup)
-      .style("color", (n: TNodeGroup | TNode) => "var(--colorNode" + n.idx + ")")
-      .attr("idx", (n: TNodeGroup | TNode) => n.idx)
-      .attr("weight", (n: TNodeGroup | TNode) => n.view.synWeights as string)
+      .classed("nodeGroup", (n: TNode | TNodeGroup) => n.isGroup)
+      .style("color", (n: TNode | TNodeGroup) => "var(--colorNode" + n.idx + ")")
+      .attr("idx", (n: TNode | TNodeGroup) => n.idx)
+      .attr("weight", (n: TNode | TNodeGroup) => n.view.synWeights as string)
       .attr(
         "transform",
-        (n: TNodeGroup | TNode) =>
+        (n: TNode | TNodeGroup) =>
           `translate(${n.view.position.x},${n.view.position.y}) scale( ${n.view.isFocused ? 1.2 : 1})`,
       )
       .style("opacity", 0)
       .call(dragging, null)
-      .each((n: TNodeGroup | TNode, i: number, e) => this.initNode(n, i, e));
+      .each((n: TNode | TNodeGroup, i: number, e) => this.initNode(n, i, e));
 
     nodes.exit().remove();
 
-    this.render();
+    nextTick(() => this.render());
   }
 }

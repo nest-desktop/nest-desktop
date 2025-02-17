@@ -23,7 +23,7 @@ import RecorderAvatar from "./RecorderAvatar.vue";
 import StimulatorAvatar from "./StimulatorAvatar.vue";
 
 const props = defineProps<{
-  node: TNodeGroup | TNode;
+  node: TNode | TNodeGroup;
 }>();
 
 const node = computed(() => props.node as TNode);

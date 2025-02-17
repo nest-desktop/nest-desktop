@@ -12,7 +12,7 @@
               v-for="(connection, index) of graph?.network.connections.all"
               :key="'defs' + index"
               :style="{
-                color: 'var(--colorNode' + connection.source.idx + ')',
+                color: 'var(--colorNode' + connection.sourceIdx + ')',
               }"
             >
               <marker

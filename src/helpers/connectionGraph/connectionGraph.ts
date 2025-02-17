@@ -1,6 +1,7 @@
 // connectionGraph.ts
 
 import { drag, select, transition } from "d3";
+import { nextTick } from "vue";
 
 import { TConnection, TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
 
@@ -66,7 +67,7 @@ export class ConnectionGraph extends BaseObj {
 
     connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
 
-    this._networkGraph.render();
+    nextTick(() => this._networkGraph.render());
   }
 
   /**
@@ -165,11 +166,15 @@ export class ConnectionGraph extends BaseObj {
     const t = transition().duration(duration);
 
     connections
-      .style("color", (c: TConnection | any) => "var(--colorNode" + c.source.idx + ")")
+      .style("color", (c: TConnection | any) => {
+        if (!c.source) return;
+        return "var(--colorNode" + c.sourceIdx + ")";
+      })
       .transition(t)
       .style("opacity", 1);
 
     connections.each((connection: TConnection, idx: number, elements: any[]) => {
+      if (!connection.source) return;
       const elem: TSelection = select(elements[idx]);
 
       elem
@@ -243,6 +248,6 @@ export class ConnectionGraph extends BaseObj {
 
     connections.exit().remove();
 
-    this.render();
+    nextTick(() => this.render());
   }
 }

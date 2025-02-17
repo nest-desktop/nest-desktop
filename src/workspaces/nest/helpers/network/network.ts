@@ -183,7 +183,7 @@ export class NESTNetwork extends BaseNetwork {
   override updateHash(): void {
     this._updateHash({
       models: this.modelsCopied.all.map((model: NESTCopyModel) => model.hash),
-      nodes: this.nodes.all.map((node: TNodeGroup | TNode) => node.hash),
+      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
       connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
     });
   }

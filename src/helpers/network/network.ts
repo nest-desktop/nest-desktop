@@ -10,7 +10,6 @@ import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
-import { IActivityChartPanelProps } from "../activityGraph/activityChartGraph/activityChartPanel";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -174,7 +173,7 @@ export class BaseNetwork extends BaseObj {
     }
 
     // Trigger network change.
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   /**
@@ -195,7 +194,7 @@ export class BaseNetwork extends BaseObj {
     node.init();
 
     // Trigger network change.
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   /**
@@ -213,7 +212,7 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes({ cleanPanels: connection.view.connectRecorder() });
+    this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
   }
 
   /**
@@ -221,8 +220,10 @@ export class BaseNetwork extends BaseObj {
    * @param node node or node group object
    * @remarks It emits network changes.
    */
-  deleteNode(node: TNodeGroup | TNode): void {
+  deleteNode(node: TNode | TNodeGroup): void {
     this.logger.trace("delete node");
+    console.log(this.nodes.all.map((n) => n.uuidShort));
+    console.log(this.connections.all.map((c) => [c.uuidShort, c.source.uuidShort, c.target.uuidShort]));
 
     // Remove connection from the list.
     this.connections.removeByNode(node);
@@ -233,10 +234,11 @@ export class BaseNetwork extends BaseObj {
     // Remove node from the list.
     this.nodes.remove(node);
 
+    // Clean node groups.
     this.nodes.cleanNodeGroups();
 
     // Trigger network change.
-    this.changes({ cleanPanels: node.model.isRecorder });
+    this.changes({ cleanPanels: node.model.isRecorder, preventSimulation: true });
   }
 
   /**
@@ -303,7 +305,7 @@ export class BaseNetwork extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      nodes: this.nodes.all.map((node: TNodeGroup | TNode) => node.hash),
+      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
       connections: this.connections.all.map((connection: TConnection) => connection.hash),
     });
   }
@@ -314,6 +316,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: TNodeGroup | TNode) => node.view.updateStyle());
+    this._nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
   }
 }

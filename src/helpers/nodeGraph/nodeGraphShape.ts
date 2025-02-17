@@ -94,7 +94,7 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  drawShape(selector: TSelection, node: TNodeGroup | TNode): void {
+  drawShape(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.trace("draw shape");
 
     selector.attr("elementType", node.elementType);
@@ -137,7 +137,7 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  init(selector: TSelection, node: TNodeGroup | TNode): void {
+  init(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.silly("init");
 
     const elem: TSelection = selector.append("g").attr("class", "core");

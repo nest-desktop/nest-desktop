@@ -4,6 +4,7 @@
 // https://stackoverflow.com/questions/30655950/d3-js-convex-hull-with-2-data-points
 
 import { drag, polygonHull } from "d3";
+import { nextTick } from "vue";
 
 import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup } from "@/types";
 
@@ -64,7 +65,7 @@ export class NodeGroupGraph {
     });
     nodeGroup.view.updateCentroid();
 
-    this._networkGraph.render();
+    nextTick(() => this._networkGraph.render());
   }
 
   /**
@@ -197,6 +198,6 @@ export class NodeGroupGraph {
 
     elem.exit().remove();
 
-    this.render();
+    nextTick(() => this.render());
   }
 }

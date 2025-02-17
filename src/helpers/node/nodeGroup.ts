@@ -99,14 +99,14 @@ export class NodeGroup extends BaseObj {
   }
 
   get nodeGroups(): TNodeGroup[] {
-    return this._nodes.filter((node: TNodeGroup | TNode) => node.isGroup) as TNodeGroup[];
+    return this._nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
   }
 
   get nodeIndicesDeep(): number[] {
     return [
       ...new Set(
         this.nodes
-          .map((node: TNodeGroup | TNode) => {
+          .map((node: TNode | TNodeGroup) => {
             if (node.isGroup) {
               const nodeGroup = node as TNodeGroup;
               return [nodeGroup.idx, nodeGroup.nodeIndicesDeep];
@@ -120,14 +120,14 @@ export class NodeGroup extends BaseObj {
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter((node: TNodeGroup | TNode) => node.isNode) as TNode[];
+    return this._nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
   }
 
   get nodeItemsDeep(): TNode[] {
     return [
       ...new Set(
         this.nodes
-          .map((node: TNodeGroup | TNode) => {
+          .map((node: TNode | TNodeGroup) => {
             if (node.isGroup) {
               const nodeGroup = node as TNodeGroup;
               return nodeGroup.nodeItemsDeep as TNode[];
@@ -139,16 +139,16 @@ export class NodeGroup extends BaseObj {
     ];
   }
 
-  get nodes(): (TNodeGroup | TNode)[] {
+  get nodes(): (TNode | TNodeGroup)[] {
     return this._nodes;
   }
 
-  get nodesDeep(): (TNodeGroup | TNode)[] {
+  get nodesDeep(): (TNode | TNodeGroup)[] {
     const nodeIndices = this.nodeIndicesDeep;
-    return this.parent.nodes.filter((node: TNodeGroup | TNode) => nodeIndices.includes(node.idx));
+    return this.parent.nodes.filter((node: TNode | TNodeGroup) => nodeIndices.includes(node.idx));
   }
 
-  get parent(): TNodeGroup | TNodes {
+  get parent(): TNode | TNodeGroups {
     return this._parent;
   }
 
@@ -169,7 +169,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get toCode(): string {
-    return this.nodes.map((node: TNodeGroup | TNode) => node.view.label).join(" + ");
+    return this.nodes.map((node: TNode | TNodeGroup) => node.view.label).join(" + ");
   }
 
   get view(): NodeGroupView {
@@ -210,7 +210,7 @@ export class NodeGroup extends BaseObj {
   clone(withConnections: boolean = true): TNodeGroup {
     this.logger.trace("clone");
 
-    const nodeEntries: [number, number][] = this.nodes.map((node: TNodeGroup | TNode) => [
+    const nodeEntries: [number, number][] = this.nodes.map((node: TNode | TNodeGroup) => [
       node.idx,
       node.clone(false).idx,
     ]);
@@ -267,8 +267,8 @@ export class NodeGroup extends BaseObj {
    * Remove node item or group
    * @param node node object
    */
-  removeNode(node: TNodeGroup | TNode): void {
-    this._nodes = this._nodes.filter((n: TNodeGroup | TNode) => n !== node);
+  removeNode(node: TNode | TNodeGroup): void {
+    this._nodes = this._nodes.filter((n: TNode | TNodeGroup) => n !== node);
   }
 
   /**
@@ -291,7 +291,7 @@ export class NodeGroup extends BaseObj {
    */
   toJSON(): INodeGroupProps {
     return {
-      nodes: this.nodes.map((node: TNodeGroup | TNode) => node.idx),
+      nodes: this.nodes.map((node: TNode | TNodeGroup) => node.idx),
     };
   }
 

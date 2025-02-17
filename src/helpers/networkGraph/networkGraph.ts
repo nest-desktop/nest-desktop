@@ -154,7 +154,7 @@ export class BaseNetworkGraph extends BaseObj {
         this.network.connections.state.selectedNode,
         this.hash,
       ],
-      () => this.render(),
+      () => nextTick(() => this.render()),
     );
 
     watch(

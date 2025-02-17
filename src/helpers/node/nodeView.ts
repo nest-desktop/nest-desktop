@@ -1,6 +1,6 @@
 // nodeView.ts
 
-import { UnwrapRef, computed, reactive } from "vue";
+import { UnwrapRef, computed, nextTick, reactive } from "vue";
 
 import { TConnection, TNode } from "@/types";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
@@ -186,7 +186,7 @@ export class NodeView extends BaseObj {
 
     const networkGraphStore = useNetworkGraphStore();
     const graph = computed(() => networkGraphStore.state.graph);
-    graph.value?.render();
+    nextTick(() => graph.value?.render());
   }
 
   /**

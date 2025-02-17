@@ -10,7 +10,7 @@ import { BaseObj } from "../common/base";
 interface IConnectionsState {
   focusedConnection: TConnection | null;
   selectedConnection: TConnection | null;
-  selectedNode: TNodeGroup | TNode | null;
+  selectedNode: TNode | TNodeGroup | null;
 }
 
 export class BaseConnections extends BaseObj {
@@ -86,6 +86,9 @@ export class BaseConnections extends BaseObj {
 
     const connection: TConnection = new this.Connection(this, connectionProps);
     this._connections.push(connection);
+
+    this.clean();
+
     return connection;
   }
 
@@ -129,13 +132,15 @@ export class BaseConnections extends BaseObj {
 
     // Remove connection from the connection list.
     this._connections.splice(connection.idx, 1);
+
+    this.clean();
   }
 
   /**
    * Remove connections by the node.
    * @param node node object
    */
-  removeByNode(node: TNodeGroup | TNode): void {
+  removeByNode(node: TNode | TNodeGroup): void {
     this.resetState();
 
     this._connections = this.connections.filter(
@@ -147,6 +152,8 @@ export class BaseConnections extends BaseObj {
       if (connection.sourceIdx > node.idx) connection.sourceIdx -= 1;
       if (connection.targetIdx > node.idx) connection.targetIdx -= 1;
     });
+
+    this.clean();
   }
 
   /*

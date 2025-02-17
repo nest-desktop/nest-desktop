@@ -58,6 +58,10 @@ export class BaseObj {
     return this._uuid;
   }
 
+  get uuidShort(): string {
+    return truncate(this._uuid);
+  }
+
   /**
    * Update hash.
    */
