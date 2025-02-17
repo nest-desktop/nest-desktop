@@ -44,7 +44,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * Update layout label for FI curve.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = "Neuron ID";
-    this.panel.layout.yaxis.title = "Spike count";
+    this.panel.layout.xaxis.title.text = "Neuron ID";
+    this.panel.layout.yaxis.title.text = "Spike count";
   }
 }

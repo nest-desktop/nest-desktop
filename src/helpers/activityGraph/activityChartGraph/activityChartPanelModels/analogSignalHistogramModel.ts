@@ -92,7 +92,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
    * Update layout label for analog signal histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = this.axisTitle;
-    this.panel.layout.yaxis.title = "Count";
+    this.panel.layout.xaxis.title.text = this.axisTitle;
+    this.panel.layout.yaxis.title.text = "Count";
   }
 }

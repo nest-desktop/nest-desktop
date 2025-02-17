@@ -32,12 +32,12 @@ interface IActivityChartPanelLayoutProps {
     y1: number;
     yref?: string;
   }[];
-  xaxis: { anchor?: string; showgrid: boolean; title: string; type?: string };
+  xaxis: { anchor?: string; showgrid: boolean; title: { text: string }; type?: string };
   yaxis: {
     domain?: number[];
     height: number;
     showgrid: boolean;
-    title: string;
+    title: { text: string };
   };
 }
 
@@ -53,12 +53,16 @@ export class ActivityChartPanel extends BaseObj {
     shapes: [],
     xaxis: {
       showgrid: true,
-      title: "x label",
+      title: {
+        text: "x label",
+      },
     },
     yaxis: {
       height: 10,
       showgrid: true,
-      title: "y label",
+      title: {
+        text: "y label",
+      },
     },
   };
   private _model: ActivityChartPanelModel;
@@ -66,7 +70,7 @@ export class ActivityChartPanel extends BaseObj {
   private _xAxis = 1;
 
   constructor(graph: ActivityChartGraph, panelProps: IActivityChartPanelProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
 
     this._graph = graph;
     this._model = new SpikeTimesRasterPlotModel(this);

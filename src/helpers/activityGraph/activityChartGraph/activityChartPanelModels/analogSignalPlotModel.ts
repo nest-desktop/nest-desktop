@@ -243,6 +243,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    */
   override update(): void {
     this.logger.trace("update");
+
     this.empty();
 
     if (this.recordsVisible.length === 0) return;
@@ -311,8 +312,8 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
    * Update layout label for analog signals.
    */
   override updateLayoutLabel(): void {
-    // Label y-axis if only one record existed.
-    this.panel.layout.xaxis.title = "Time [ms]";
-    this.panel.layout.yaxis.title = this.axisTitle;
+    this.logger.trace("Update layout label");
+    this.panel.layout.xaxis.title.text = "Time [ms]";
+    this.panel.layout.yaxis.title.text = this.axisTitle;
   }
 }

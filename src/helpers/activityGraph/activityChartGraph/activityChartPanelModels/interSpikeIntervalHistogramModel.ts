@@ -68,7 +68,7 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.type = this.state.xaxisType;
-    this.panel.layout.xaxis.title = "Inter-spike interval [ms]";
-    this.panel.layout.yaxis.title = "Count";
+    this.panel.layout.xaxis.title.text = "Inter-spike interval [ms]";
+    this.panel.layout.yaxis.title.text = "Count";
   }
 }

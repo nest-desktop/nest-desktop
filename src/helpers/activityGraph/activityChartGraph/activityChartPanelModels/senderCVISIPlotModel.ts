@@ -89,7 +89,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
    */
   override updateLayoutLabel(): void {
     this.panel.layout.xaxis.type = this.state.xaxisType;
-    this.panel.layout.xaxis.title = "Senders";
-    this.panel.layout.yaxis.title = "CV of ISI";
+    this.panel.layout.xaxis.title.text = "Senders";
+    this.panel.layout.yaxis.title.text = "CV of ISI";
   }
 }

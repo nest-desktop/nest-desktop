@@ -1,6 +1,5 @@
 // activityChartGraph.ts
 
-// @ts-expect-error Could not find a declaration file for module 'plotly.js-cartesian-dist-min'.
 import * as PlotlyBasic from "plotly.js-cartesian-dist-min";
 import moment from "moment";
 import { UnwrapRef, nextTick, reactive } from "vue";
@@ -126,7 +125,7 @@ export class ActivityChartGraph extends BaseObj {
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
     this._props = activityGraphProps;
 
     this._project = project;

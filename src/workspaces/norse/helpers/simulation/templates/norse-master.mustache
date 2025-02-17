@@ -1,8 +1,6 @@
-{{ #code.doImportModules }}
 import norse
 import torch
 import numpy as np
-{{ /code.doImportModules }}
 
 torch.manual_seed({{ simulation.seed}})
 
@@ -21,7 +19,6 @@ def simulateAnalogs(neuron, layer, input, offset=0):
     return {"times": ts.ravel(), "senders": ids.ravel() + offset, "v": v.ravel()}
 {{ /network.nodes.hasSomeAnalogRecorder }}
 
-{{ #code.doCreateNodes }}
 # Create inputs
 {{ #network.nodes.stimulators }}
 {{ view.label }} = {{ &code }}
@@ -40,10 +37,8 @@ l{{ idx }}.weight.data.fill_({{ synapse.weight }}) # all to all connectivity
 {{ /hasSomeVisibleParams }}{{ #network.nodes.hasSomeAnalogRecorder }}
 {{ #hasSomeVisibleParams }}  , {{ /hasSomeVisibleParams }}record_states=True{{ /network.nodes.hasSomeAnalogRecorder }})
 {{ /network.nodes.neurons }}
-{{ /code.doCreateNodes }}
 
 events = []
-{{ #code.doRunSimulation }}
 # Run simulation
 {{ #network.nodes.recorders }}
 {{ #model.isSpikeRecorder }}
@@ -61,7 +56,6 @@ events.append(simulateAnalogs({{ target.view.label }}, l{{ idx }}, {{ source.vie
 {{ /connectionsNeuronTargets }}
 {{ /model.isAnalogRecorder }}
 {{ /network.nodes.recorders }}
-{{ /code.doRunSimulation }}
 
 # Get spike times
 response = {

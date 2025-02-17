@@ -61,7 +61,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
    * Update layout label for CV_ISI histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = "CV of ISI";
-    this.panel.layout.yaxis.title = "Count";
+    this.panel.layout.xaxis.title.text = "CV of ISI";
+    this.panel.layout.yaxis.title.text = "Count";
   }
 }

@@ -184,9 +184,9 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
    * Update layout label for spike time histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = "Time [ms]";
+    this.panel.layout.xaxis.title.text = "Time [ms]";
     const ytitle = this.params.normalization.value as string;
-    this.panel.layout.yaxis.title =
+    this.panel.layout.yaxis.title.text =
       ytitle == "off" ? "Spike count" : ytitle.slice(0, 1).toUpperCase() + ytitle.slice(1);
   }
 }

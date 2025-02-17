@@ -96,7 +96,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super({ logger: { settings: { minLevel: 1 } } });
     this._props = modelProps;
 
     this._id = "activityChart";
@@ -368,6 +368,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @remarks It requires activity data.
    */
   update(): void {
+    this.logger.trace("update");
+
     this.empty();
 
     // Update time.
@@ -391,7 +393,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @param _record node record object
    */
   updateActiveMarker(record?: NodeRecord): void {
-    this.logger.trace("Update activity marker:", record);
+    this.logger.trace("update activity marker:", record);
   }
 
   /**
@@ -495,11 +497,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update layout label.
-   * @param _records list of node records
    * @remarks It is a replacement for abstract component.
    */
-  updateLayoutLabel(record?: NodeRecord[]): void {
-    this.logger.trace("Update layout label:", record);
+  updateLayoutLabel(): void {
+    this.logger.trace("Update layout label");
   }
 
   /**

@@ -64,7 +64,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
    * Update layout label for raster plot.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = "Time [ms]";
-    this.panel.layout.yaxis.title = "Neuron ID";
+    this.panel.layout.xaxis.title.text = "Time [ms]";
+    this.panel.layout.yaxis.title.text = "Neuron ID";
   }
 }

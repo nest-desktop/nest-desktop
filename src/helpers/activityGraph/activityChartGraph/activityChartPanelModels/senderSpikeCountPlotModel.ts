@@ -102,7 +102,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   override updateLayoutLabel(): void {
     const spikeRate = this.params.spikeRate.value as boolean;
 
-    this.panel.layout.xaxis.title = "Neuron ID";
-    this.panel.layout.yaxis.title = spikeRate ? "Spikes/s" : "Spike count";
+    this.panel.layout.xaxis.title.text = "Neuron ID";
+    this.panel.layout.yaxis.title.text = spikeRate ? "Spikes/s" : "Spike count";
   }
 }

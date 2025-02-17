@@ -61,7 +61,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
    * Update layout label for spike time histogram.
    */
   override updateLayoutLabel(): void {
-    this.panel.layout.xaxis.title = "Time [ms]";
-    this.panel.layout.yaxis.title = "Spike count";
+    this.panel.layout.xaxis.title.text = "Time [ms]";
+    this.panel.layout.yaxis.title.text = "Spike count";
   }
 }
