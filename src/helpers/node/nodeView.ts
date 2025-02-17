@@ -174,7 +174,7 @@ export class NodeView extends BaseObj {
    * Check synapse weights.
    */
   checkSynWeights(): void {
-    console.log("check syn weights");
+    this.logger.trace("check syn weights");
     const weights: number[] = this.node.connections.map(
       (connection: TConnection) => connection.synapse.params.weight.value as number,
     );

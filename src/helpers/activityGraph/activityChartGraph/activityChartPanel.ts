@@ -70,7 +70,7 @@ export class ActivityChartPanel extends BaseObj {
   private _xAxis = 1;
 
   constructor(graph: ActivityChartGraph, panelProps: IActivityChartPanelProps = {}) {
-    super({ logger: { settings: { minLevel: 1 } } });
+    super({ logger: { settings: { minLevel: 3 } } });
 
     this._graph = graph;
     this._model = new SpikeTimesRasterPlotModel(this);
