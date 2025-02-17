@@ -181,7 +181,7 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
        * Start simulation of the current project.
        */
       const startSimulation = (): void => {
-        logger.trace("start simulation:", truncate(state.project?.id));
+        logger.trace("start simulation:", state.project?.shortId);
 
         router
           .push({

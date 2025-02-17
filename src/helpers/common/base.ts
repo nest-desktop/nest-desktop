@@ -58,7 +58,7 @@ export class BaseObj {
     return this._uuid;
   }
 
-  get uuidShort(): string {
+  get shortUuid(): string {
     return truncate(this._uuid);
   }
 

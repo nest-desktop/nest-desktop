@@ -222,8 +222,8 @@ export class BaseNetwork extends BaseObj {
    */
   deleteNode(node: TNode | TNodeGroup): void {
     this.logger.trace("delete node");
-    console.log(this.nodes.all.map((n) => n.uuidShort));
-    console.log(this.connections.all.map((c) => [c.uuidShort, c.source.uuidShort, c.target.uuidShort]));
+    console.log(this.nodes.all.map((n) => n.shortUuid));
+    console.log(this.connections.all.map((c) => [c.shortUuid, c.source.shortUuid, c.target.shortUuid]));
 
     // Remove connection from the list.
     this.connections.removeByNode(node);

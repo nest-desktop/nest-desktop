@@ -132,7 +132,7 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
      * @param project project object
      */
     const reloadProject = (project: TProject): void => {
-      logger.trace("reload project:", truncate(project.id));
+      logger.trace("reload project:", project.shortId);
 
       projectDBStore.unloadProject(project.id);
       state.project = projectDBStore.getProject(project.id);

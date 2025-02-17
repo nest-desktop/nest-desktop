@@ -72,7 +72,7 @@ export class BaseProjectDB extends DatabaseService {
    * Import the project in the database.
    */
   async importProject(project: TProject): Promise<void> {
-    this.logger.trace("import project:", truncate(project.id));
+    this.logger.trace("import project:", project.shortId);
 
     return project.docId ? this.updateProject(project) : this.createProject(project);
   }

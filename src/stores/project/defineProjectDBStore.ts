@@ -121,7 +121,7 @@ export function defineProjectDBStore<
      * It pushes new project to the first line of the list.
      */
     const duplicateProject = (project: TProject): TProject => {
-      logger.trace("duplicate project", truncate(project.id));
+      logger.trace("duplicate project", project.shortId);
 
       const projectDoc = (project.doc ? project.toJSON() : project) as TProjectProps;
       projectDoc.id = undefined;
@@ -156,7 +156,6 @@ export function defineProjectDBStore<
     const findProject = (projectId: string): TProject | TProjectProps | undefined => {
       logger.trace("find project:", truncate(projectId));
 
-      // @ts-expect-error No overload matches this call.
       return state.projects.find((project: TProject | TProjectProps) => project.id === projectId) as
         | TProject
         | TProjectProps
@@ -171,7 +170,6 @@ export function defineProjectDBStore<
       if (state.searchTerm === "" || state.searchTerm == null) {
         return state.projects as (TProject | TProjectProps)[];
       } else {
-        // @ts-expect-error No overload matches this call.
         return state.projects.filter((project: TProject | TProjectProps) => {
           if (project.name) return project.name.toLowerCase().indexOf(state.searchTerm.toLowerCase()) !== -1;
         }) as (TProject | TProjectProps)[];
@@ -200,7 +198,6 @@ export function defineProjectDBStore<
     };
 
     const getProjectIds = (): string[] =>
-      // @ts-expect-error No overload matches this call.
       state.projects.map((project: TProject | TProjectProps) => project.id) as string[];
 
     const getProjectIdx = (project: TProject | TProjectProps): number => state.projects.indexOf(project);
@@ -329,7 +326,7 @@ export function defineProjectDBStore<
      * @param project project object
      */
     const saveProject = (project: TProject): void => {
-      logger.trace("save project:", truncate(project.id));
+      logger.trace("save project:", project.shortId);
 
       db.importProject(project).then(() => {
         project.doc.hash = project.hash;
