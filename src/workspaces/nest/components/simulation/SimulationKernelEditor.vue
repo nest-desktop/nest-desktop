@@ -14,6 +14,7 @@
           hide-selected
           label="Install modules"
           multiple
+          @update:model-value="simulation.changes({ preventSimulation: true })"
         />
       </v-card-text>
     </Card>
