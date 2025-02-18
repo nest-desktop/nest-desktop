@@ -10,6 +10,8 @@ import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
+import { AnalogSignalPanelModel } from "../activityGraph/activityChartGraph/activityChartPanelModels/analogSignalPanelModel";
+import { ActivityChartPanel } from "../activityGraph/activityChartGraph/activityChartPanel";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -162,18 +164,14 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
     // Update synaptic weight label.
-    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights) {
+    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
       connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
-    }
 
     // Update recorder and clean activity panels.
-    if (connection.view.connectRecorder()) {
-      connection.recorder.updateRecorder();
-      this._project.activityGraph.activityChartGraph.cleanPanels();
-    }
+    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes({ preventSimulation: true });
+    this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
   }
 
   /**
@@ -205,6 +203,8 @@ export class BaseNetwork extends BaseObj {
   deleteConnection(connection: TConnection): void {
     this.logger.trace("delete connection");
 
+    const cleanPanels = connection.view.connectRecorder();
+
     // Remove connection from the list.
     this.connections.remove(connection);
 
@@ -212,7 +212,7 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
+    this.changes({ cleanPanels, preventSimulation: true });
   }
 
   /**
@@ -222,6 +222,13 @@ export class BaseNetwork extends BaseObj {
    */
   deleteNode(node: TNode | TNodeGroup): void {
     this.logger.trace("delete node");
+
+    let cleanPanels = node.isRecorded;
+    if (node.isNode) {
+      const nodeItem = node as TNode;
+      cleanPanels = nodeItem.model.isRecorder || node.isRecorded;
+    }
+    const recorders = node.connectedRecorders;
 
     // Remove connection from the list.
     this.connections.removeByNode(node);
@@ -235,8 +242,11 @@ export class BaseNetwork extends BaseObj {
     // Clean node groups.
     this.nodes.cleanNodeGroups();
 
+    // Update recorder.
+    if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
+
     // Trigger network change.
-    this.changes({ cleanPanels: node.model.isRecorder, preventSimulation: true });
+    this.changes({ cleanPanels, preventSimulation: true });
   }
 
   /**

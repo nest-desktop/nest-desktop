@@ -1,6 +1,7 @@
 // freePositions.ts
 
-import mustache from "mustache";
+// @ts-expect-error Mustache has no default export.
+import Mustache from "mustache";
 
 import { round } from "@/utils/converter";
 import { randomUniformFloat } from "@/utils/random";
@@ -21,7 +22,7 @@ export class FreePositions extends BasePositions {
    * Generate the Python code for free (i.e. non-grid) positions.
    */
   override get code(): string {
-    return mustache.render(this._codeTemplate, this);
+    return Mustache.render(this._codeTemplate, this);
   }
 
   get min(): number {

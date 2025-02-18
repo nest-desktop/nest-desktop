@@ -287,34 +287,6 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   abstract init(): void;
 
   /**
-   * Initialize records from analog activities.
-   */
-  initAnalogRecords(): void {
-    this.logger.trace("init analog records");
-
-    this._state.records = [] as NodeRecord[];
-
-    this.activities
-      .filter((activity: NodeActivity) => "recorder" in activity && activity.recorder.model.isAnalogRecorder)
-      .forEach((activity: NodeAnalogSignalActivity) => {
-        if (activity.recorder.records)
-          activity.recorder.records.forEach((record: NodeRecord) => this.records.push(record));
-      });
-
-    if (this._state.recordsVisible.length === 0) this.selectAllNodeRecords();
-  }
-
-  /**
-   * Initialize visible records from analog activities.
-   */
-  initAnalogRecordsVisible(): void {
-    const recordsProps: string[] = this.props.records || [];
-    this.logger.trace("init visible analog records:", recordsProps);
-
-    if (recordsProps && recordsProps.length > 0) this._state.recordsVisible = recordsProps;
-  }
-
-  /**
    * Initialize params for controller.
    * @param paramsProps parameter props
    */
@@ -323,21 +295,6 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       this.addParameter(paramProps);
       if (paramProps.visible != false) this.params[paramProps.id].visible = true;
     });
-  }
-
-  /**
-   * Remove record from the state.
-   * @param record node record objects
-   */
-  removeRecord(record: NodeRecord): void {
-    this.recordsVisible.splice(this.recordsVisible.indexOf(record), 1);
-  }
-
-  /**
-   * Select all node records.
-   */
-  selectAllNodeRecords(): void {
-    this._state.recordsVisible = this.records.map((record: NodeRecord) => record.groupId);
   }
 
   /**

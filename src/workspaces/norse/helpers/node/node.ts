@@ -1,5 +1,6 @@
 // node.ts
 
+// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 
 import { BaseNode, INodeProps } from "@/helpers/node/node";

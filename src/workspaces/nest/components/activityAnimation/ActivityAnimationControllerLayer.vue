@@ -42,7 +42,7 @@
             density="compact"
             hide-details
             item-value="groupId"
-            label="recorded events"
+            label="Recorded events"
             persistent-hint
             return-object
             @update:model-value="update"

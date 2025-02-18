@@ -166,7 +166,8 @@ const addPanel = (modelId: string) => {
  * Select all node records.
  */
 const selectAllNodeRecords = (panel: ActivityChartPanel) => {
-  panel.model.selectAllNodeRecords();
+  // @ts-expect-error Property 'selectAllNodeRecords' does not exist on type 'ActivityChartPanelModel'.
+  if (typeof panel.model["selectAllNodeRecords"] === "function") panel.model.selectAllNodeRecords();
   graph.value.update();
 };
 

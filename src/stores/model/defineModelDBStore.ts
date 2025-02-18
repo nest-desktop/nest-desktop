@@ -144,7 +144,6 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * @returns boolean
      */
     const hasModel = (modelId: string): boolean => {
-      // @ts-expect-error Type instantiation is excessively deep and possibly infinite.
       return state.models.some((model: UnwrapRef<TModel | BaseModel>) => model.id === modelId);
     };
 

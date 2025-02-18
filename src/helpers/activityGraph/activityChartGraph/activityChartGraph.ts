@@ -221,6 +221,12 @@ export class ActivityChartGraph extends BaseObj {
     return this._panels.filter((panel: ActivityChartPanel) => panel.state.visible);
   }
 
+  get panelsAnalogVisible(): ActivityChartPanel[] {
+    return this._panels.filter(
+      (panel: ActivityChartPanel) => panel.state.visible && panel.model.activityType === "analog",
+    );
+  }
+
   get plotData(): PlotlyBasic.Data[] {
     return this._plotData;
   }
@@ -299,6 +305,11 @@ export class ActivityChartGraph extends BaseObj {
         this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
       if (!activityPanelModels.includes("spikeTimesHistogram")) this.addPanel({ model: { id: "spikeTimesHistogram" } });
     }
+
+    this._project.activityGraph.activityChartGraph.initPanelModels();
+    this._project.activityGraph.activityChartGraph.panelsAnalogVisible.forEach((panel: ActivityChartPanel) => {
+      panel.model.selectAllNodeRecords();
+    });
   }
 
   /**

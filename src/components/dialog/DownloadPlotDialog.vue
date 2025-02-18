@@ -38,7 +38,6 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
-// @ts-expect-error Could not find a declaration file for module 'plotly.js-cartesian-dist-min'.
 import { DownloadImgopts } from "plotly.js-cartesian-dist-min";
 
 const props = defineProps<{ filename: string }>();

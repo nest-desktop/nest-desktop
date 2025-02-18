@@ -11,7 +11,7 @@ export interface INodeGroupProps {
 
 export class NodeGroup extends BaseObj {
   private _parent: TNodes;
-  private _nodes: (NodeGroup | TNode)[] = [];
+  private _nodes: (TNode | TNodeGroup)[] = [];
   private _view: NodeGroupView;
 
   constructor(parent: TNodes, nodeGroupProps: INodeGroupProps) {
@@ -26,6 +26,14 @@ export class NodeGroup extends BaseObj {
 
   get all(): (NodeGroup | TNode)[] {
     return this._nodes;
+  }
+
+  get connectedNodes(): TNode[] {
+    return [...this.sourceNodes, ...this.targetNodes];
+  }
+
+  get connectedRecorders(): TNode[] {
+    return this.connectedNodes.filter((node: TNode) => node.model.isRecorder);
   }
 
   get connections(): TConnection[] {
@@ -70,6 +78,10 @@ export class NodeGroup extends BaseObj {
 
   get isNode(): boolean {
     return false;
+  }
+
+  get isRecorded(): boolean {
+    return this.connectedNodes.some((node: TNode) => node.model.isRecorder);
   }
 
   /**
@@ -148,7 +160,7 @@ export class NodeGroup extends BaseObj {
     return this.parent.nodes.filter((node: TNode | TNodeGroup) => nodeIndices.includes(node.idx));
   }
 
-  get parent(): TNode | TNodeGroups {
+  get parent(): TNodes | TNodeGroup {
     return this._parent;
   }
 
@@ -164,8 +176,20 @@ export class NodeGroup extends BaseObj {
     return 0;
   }
 
+  get sourceNodes(): TNode[] {
+    return this.network.connections.all
+      .filter((connection: TConnection) => connection.targetIdx === this.idx)
+      .map((connection: TConnection) => connection.sourceNode);
+  }
+
   get spatial(): undefined {
     return;
+  }
+
+  get targetNodes(): TNode[] {
+    return this.network.connections.all
+      .filter((connection: TConnection) => connection.sourceIdx === this.idx)
+      .map((connection: TConnection) => connection.targetNode);
   }
 
   get toCode(): string {

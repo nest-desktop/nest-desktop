@@ -3,6 +3,8 @@
 import { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModel, IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { NodeRecord } from "../../../node/nodeRecord";
+import { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
+import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
@@ -22,9 +24,40 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
     this.logger.trace("init");
 
     this.updateActivities();
-    this.initAnalogRecords();
 
+    this.initAnalogRecords();
     this.initAnalogRecordsVisible();
+  }
+
+  /**
+   * Initialize records from analog activities.
+   */
+  initAnalogRecords(): void {
+    this.logger.trace("init analog records");
+
+    this.state.records = [] as NodeRecord[];
+
+    this.activities
+      .filter((activity: NodeActivity) => "recorder" in activity && activity.recorder.model.isAnalogRecorder)
+      .forEach((activity: NodeAnalogSignalActivity) => {
+        if (activity.recorder.records)
+          activity.recorder.records.forEach((record: NodeRecord) => this.records.push(record));
+      });
+
+    if (this.state.recordsVisible.length === 0) this.selectAllNodeRecords();
+  }
+
+  /**
+   * Initialize visible records from analog activities.
+   */
+  initAnalogRecordsVisible(): void {
+    const recordsProps: string[] = this.props.records || [];
+    this.logger.trace("init visible analog records");
+
+    if (recordsProps && recordsProps.length > 0) this.state.recordsVisible = recordsProps;
+    // else {
+    //   this.state.recordsVisible = this.state.records.map((record: NodeRecord) => record.groupId);
+    // }
   }
 
   get axisTitle(): string {
@@ -47,6 +80,21 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
       title = "Multiple records";
     }
     return title;
+  }
+
+  /**
+   * Remove record from the state.
+   * @param record node record objects
+   */
+  removeRecord(record: NodeRecord): void {
+    this.recordsVisible.splice(this.recordsVisible.indexOf(record), 1);
+  }
+
+  /**
+   * Select all node records.
+   */
+  selectAllNodeRecords(): void {
+    this.state.recordsVisible = this.records.map((record: NodeRecord) => record.groupId);
   }
 
   /**

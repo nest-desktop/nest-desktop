@@ -67,13 +67,13 @@ export class BaseNode extends BaseObj {
   }
 
   get connectedNodes(): TNode[] {
-    if (this.model.isSpikeRecorder) {
-      return this.sourceNodes;
-    }
-    if (this.model.isAnalogRecorder) {
-      return this.targetNodes;
-    }
-    return [];
+    if (this.model.isSpikeRecorder) return this.sourceNodes;
+    if (this.model.isAnalogRecorder) return this.targetNodes;
+    return [...this.sourceNodes, ...this.targetNodes];
+  }
+
+  get connectedRecorders(): TNode[] {
+    return this.connectedNodes.filter((node: TNode) => node.model.isRecorder);
   }
 
   get connections(): TConnection[] {
@@ -135,6 +135,10 @@ export class BaseNode extends BaseObj {
    */
   get isExcitatoryNeuron(): boolean {
     return this.model?.isNeuron && this._view.synWeights === "excitatory";
+  }
+
+  get isRecorded(): boolean {
+    return this.connectedNodes.some((node: TNode) => node.model.isRecorder);
   }
 
   get isGroup(): boolean {
