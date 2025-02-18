@@ -295,13 +295,21 @@ export class BaseConnection extends BaseObj {
   reverse(): void {
     this.logger.trace("reverse");
 
-    [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
+    const targetIdx = this.targetIdx;
+    const sourceIdx = this.sourceIdx;
 
-    // Trigger connection change.
-    this.changes();
+    this.sourceIdx = targetIdx;
+    this.targetIdx = sourceIdx;
+
+    // Check syn weights.
+    this.sourceNode.view.checkSynWeights();
+    this.targetNode.view.checkSynWeights();
 
     // Initialize activity graph.
     if (this._view.connectRecorder()) this.recorder.createActivity();
+
+    // Trigger connection change.
+    this.changes({ preventSimulation: true });
   }
 
   /**

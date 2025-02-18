@@ -125,7 +125,7 @@ export class BaseSynapse extends BaseObj {
     this.logger.trace("changes");
 
     this.updateHash();
-    this.connection.changes({ ...props, checkSynWeights: true });
+    this.connection.changes({ checkSynWeights: true, ...props });
   }
 
   /**
@@ -165,7 +165,7 @@ export class BaseSynapse extends BaseObj {
     if (typeof weight.value === "number") {
       weight.visible = true;
       weight.state.value = -1 * weight.value;
-      this.connection.changes();
+      this.changes({ preventSimulation: true });
     }
   }
 

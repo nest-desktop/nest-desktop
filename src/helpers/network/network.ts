@@ -1,6 +1,6 @@
 // network.ts
 
-import { TConnection, TConnections, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import { TConnection, TConnections, TModel, TNetworkGraph, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
 import { BaseConnections } from "../connection/connections";
 import { BaseNodes } from "../node/nodes";
@@ -10,8 +10,7 @@ import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
-import { AnalogSignalPanelModel } from "../activityGraph/activityChartGraph/activityChartPanelModels/analogSignalPanelModel";
-import { ActivityChartPanel } from "../activityGraph/activityChartGraph/activityChartPanel";
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -32,7 +31,6 @@ export class BaseNetwork extends BaseObj {
   public _connections: TConnections;
   public _nodes: TNodes;
   public _project: TProject; // parent
-  // private _graph: NetworkGraph;
 
   private _defaultModels: Record<string, string> = {
     neuron: "iaf_psc_alpha",
@@ -45,8 +43,6 @@ export class BaseNetwork extends BaseObj {
       config: { name: "Network" },
       logger: { settings: { minLevel: 3 } },
     });
-
-    // this._graph = new NetworkGraph(this);
 
     this._project = project;
     this._state = new NetworkState(this);
@@ -85,9 +81,10 @@ export class BaseNetwork extends BaseObj {
     return _elementTypes;
   }
 
-  // get graph(): NetworkGraph {
-  //   return this._graph;
-  // }
+  get graph(): TNetworkGraph {
+    const networkGraphStore = useNetworkGraphStore();
+    return networkGraphStore.state.graph as TNetworkGraph;
+  }
 
   get isEmpty(): boolean {
     return this.nodes.all.length === 0 && this.connections.all.length === 0;

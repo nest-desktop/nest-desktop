@@ -40,10 +40,6 @@ import { TNode } from "@/types";
 
 import { NESTNode } from "../../helpers/node/node";
 
-import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
-const networkGraphStore = useNetworkGraphStore();
-const graph = computed(() => networkGraphStore.state.graph);
-
 defineProps<{ node?: TNode }>();
 
 /**
@@ -55,8 +51,7 @@ const updateSynWeights = (node: NESTNode, value: string | null) => {
   if (value == null) return;
 
   node.view.synWeights = value;
-
-  node.changes();
-  graph.value?.render();
+  node.changes({ preventSimulation: true });
+  node.network.graph.render();
 };
 </script>

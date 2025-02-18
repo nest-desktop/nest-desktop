@@ -1,9 +1,8 @@
 // nodeView.ts
 
-import { UnwrapRef, computed, nextTick, reactive } from "vue";
+import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TConnection, TNode } from "@/types";
-import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
 import { BaseObj } from "../common/base";
 import { NodeRecord } from "./nodeRecord";
@@ -175,18 +174,19 @@ export class NodeView extends BaseObj {
    */
   checkSynWeights(): void {
     this.logger.trace("check syn weights");
-    const weights: number[] = this.node.connections.map(
+    const weights: number[] = this.node.connectionsNeuronTargets.map(
       (connection: TConnection) => connection.synapse.params.weight.value as number,
     );
 
     let synWeights = "mixed";
-    if (weights.every((weight: number) => weight > 0)) synWeights = "excitatory";
-    if (weights.every((weight: number) => weight < 0)) synWeights = "inhibitory";
+    if (weights.length === 0) synWeights = "excitatory";
+    else {
+      if (weights.every((weight: number) => weight > 0)) synWeights = "excitatory";
+      if (weights.every((weight: number) => weight < 0)) synWeights = "inhibitory";
+    }
     this._state.synWeights = synWeights;
 
-    const networkGraphStore = useNetworkGraphStore();
-    const graph = computed(() => networkGraphStore.state.graph);
-    nextTick(() => graph.value?.render());
+    nextTick(() => this.node.network.graph.render());
   }
 
   /**

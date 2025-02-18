@@ -207,7 +207,7 @@ export class ConnectionGraph extends BaseObj {
         .attr("dx", connection.view.toRight ? 8 : -8)
         .attr("dy", connection.view.toRight ? 3.5 : -4.5)
         .classed("toLeft", !connection.view.toRight)
-        .text(connection.synapse ? connection.synapse.weight : "");
+        .text(connection.synapse.paramsVisible.includes("weight") ? connection.synapse.weight : "");
 
       // .style("font-family", "Roboto")
       // .style("font-size", "0.7em", "important")

@@ -138,6 +138,7 @@ const items = [
   },
   {
     onClick: () => {
+      param.value.reset();
       param.value.hide();
       param.value.changes();
     },
