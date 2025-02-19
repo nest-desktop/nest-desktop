@@ -6893,9 +6893,9 @@ plist@^3.0.4, plist@^3.0.5, plist@^3.1.0:
     xmlbuilder "^15.1.1"
 
 plotly.js-cartesian-dist-min@~3.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/plotly.js-cartesian-dist-min/-/plotly.js-cartesian-dist-min-3.0.0.tgz#11475104743474d44ae22fb1023d6db7621cf21a"
-  integrity sha512-5MdDeiJMs14jNxms90cKiwA8yOTrW4iYSRIQp18CtNAiWEV3jrUNgVOKtdOKMfnfGhe5bBnZu3qcKbWccNO5Pw==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/plotly.js-cartesian-dist-min/-/plotly.js-cartesian-dist-min-3.0.1.tgz#7aace57418a3271b04ecbc573112844584a6b830"
+  integrity sha512-vklGu3dYAbch4Qy1ZLEXz7NzbKKuFSWMaNhX0YmScoxaihbxOCqVPb5PGQwHzwNjk0VwJvff4p1hPs8ZSqZD8A==
 
 possible-typed-array-names@^1.0.0:
   version "1.1.0"
