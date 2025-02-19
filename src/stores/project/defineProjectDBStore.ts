@@ -216,6 +216,11 @@ export function defineProjectDBStore<
     const importProjects = (projectsProps: TProjectProps[]): void => {
       logger.trace("import projects");
 
+      projectsProps.forEach((projectProps: TProjectProps) => {
+        delete projectProps._id;
+        delete projectProps._rev;
+      });
+
       db.createProjects(projectsProps).then(() => updateList());
     };
 

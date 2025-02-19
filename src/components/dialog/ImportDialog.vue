@@ -483,7 +483,6 @@ const importSelectedModels = () => {
   const modelsProps: TModelProps[] = state.selected
     .filter((data: IImportProps) => data.group === "model")
     .map((data: IImportProps) => data.props) as TModelProps[];
-
   modelDBStore.value.importModels(modelsProps);
 };
 

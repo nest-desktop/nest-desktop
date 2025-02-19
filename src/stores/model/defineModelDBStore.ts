@@ -154,6 +154,11 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     const importModels = (modelsProps: TModelProps[]): void => {
       logger.trace("import models");
 
+      modelsProps.forEach((modelProps: TModelProps) => {
+        delete modelProps._id;
+        delete modelProps._rev;
+      });
+
       db.createModels(modelsProps).then(() => updateList());
     };
 
