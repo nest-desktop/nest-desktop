@@ -4,8 +4,8 @@ import { UnwrapRef, reactive } from "vue";
 
 import { TConnection } from "@/types";
 
-import { randomUniformInt } from "../../utils/random";
 import { calcPathNode } from "../connectionGraph/connectionGraphPath";
+import { randomUniformInt } from "../../utils/random";
 
 interface IConnectionViewState {
   xAxisRotation: number;

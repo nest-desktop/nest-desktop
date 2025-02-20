@@ -151,7 +151,7 @@
 
     <v-card-actions>
       <v-btn
-        v-if="currentSimulator === 'nest'"
+        v-if="currentWorkspace === 'nest'"
         icon="mdi:mdi-database-arrow-up-outline"
         size="small"
         title="fetch from old database"
@@ -184,11 +184,11 @@ import axios, { AxiosResponse } from "axios";
 
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { INESTCopyModelProps } from "@/simulators/nest/helpers/model/copyModel";
+import { INESTCopyModelProps } from "@/workspaces/nest/helpers/model/copyModel";
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { INodeProps } from "@/helpers/node/node";
 import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
-import { isNESTNetworkProps } from "@/simulators/nest/helpers/network/network";
+import { isNESTNetworkProps } from "@/workspaces/nest/helpers/network/network";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -212,10 +212,9 @@ interface IGithubTree {
 const emit = defineEmits(["closeDialog"]);
 const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
-const currentSimulator = computed(() => appStore.state.simulator);
-
-const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
-const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
+const currentWorkspace = computed(() => appStore.state.currentWorkspace);
+const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
+const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 
 const state = reactive<{
   githubFiles: IGithubTree[];
@@ -484,7 +483,6 @@ const importSelectedModels = () => {
   const modelsProps: TModelProps[] = state.selected
     .filter((data: IImportProps) => data.group === "model")
     .map((data: IImportProps) => data.props) as TModelProps[];
-
   modelDBStore.value.importModels(modelsProps);
 };
 

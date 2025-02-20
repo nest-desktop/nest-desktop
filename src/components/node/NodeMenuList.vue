@@ -24,6 +24,9 @@ import NodeColorDialog from "../dialog/NodeColorDialog.vue";
 import { TNode } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+
 const props = defineProps<{ node: TNode }>();
 const node = computed(() => props.node as TNode);
 
@@ -39,7 +42,8 @@ const items: {
     icon: { icon: "mdi:mdi-reload", class: "mdi-flip-h" },
     id: "paramsReset",
     onClick: () => {
-      node.value?.resetParams();
+      node.value.resetParams();
+      networkGraphStore.state.graph.closeContextMenu();
     },
     title: "Reset all parameters",
   },
@@ -64,8 +68,9 @@ const items: {
   {
     id: "nodeClone",
     onClick: () => {
-      node.value.clone();
-      node.value.changes();
+      const clonedNode = node.value.clone();
+      clonedNode.changes();
+      networkGraphStore.state.graph.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",
     title: "Clone node",

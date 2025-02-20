@@ -1,6 +1,7 @@
 import { Config } from "@/helpers/common/config";
 
 const _configNames = [
+  "Activity",
   "ActivityAxisLabels",
   "ActivityScatterAnimationGraph",
   "App",

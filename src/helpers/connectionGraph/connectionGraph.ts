@@ -1,13 +1,13 @@
 // connectionGraph.ts
 
 import { drag, select, transition } from "d3";
+import { nextTick } from "vue";
 
-import { TConnection, TDragBehavior, TNetworkGraph, TNode, TSelection } from "@/types";
+import { TConnection, TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
 
-import { BaseObj } from "../common/base";
 import { BaseNetworkGraph } from "../networkGraph/networkGraph";
+import { BaseObj } from "../common/base";
 import { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
-import { NodeGroup } from "../node/nodeGroup";
 import { drawPathNode } from "./connectionGraphPath";
 
 export class ConnectionGraph extends BaseObj {
@@ -65,9 +65,9 @@ export class ConnectionGraph extends BaseObj {
       });
     }
 
-    connection.nodeGroups.forEach((nodeGroup: NodeGroup) => nodeGroup.view.updateCentroid());
+    connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
 
-    this._networkGraph.render();
+    nextTick(() => this._networkGraph.render());
   }
 
   /**
@@ -166,14 +166,15 @@ export class ConnectionGraph extends BaseObj {
     const t = transition().duration(duration);
 
     connections
-      .style("color", (c: TConnection | any) => "var(--colorNode" + c.source.idx + ")")
+      .style("color", (c: TConnection | any) => {
+        if (!c.source) return;
+        return "var(--colorNode" + c.sourceIdx + ")";
+      })
       .transition(t)
       .style("opacity", 1);
 
-    // @ts-expect-error Argument of type '(connection: TConnection, idx: number, elements: any[]) => void' is not
-    // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'. Types of parameters 'connection' and
-    // 'datum' are incompatible. Type 'unknown' is not assignable to type 'TConnection'.
     connections.each((connection: TConnection, idx: number, elements: any[]) => {
+      if (!connection.source) return;
       const elem: TSelection = select(elements[idx]);
 
       elem
@@ -206,7 +207,7 @@ export class ConnectionGraph extends BaseObj {
         .attr("dx", connection.view.toRight ? 8 : -8)
         .attr("dy", connection.view.toRight ? 3.5 : -4.5)
         .classed("toLeft", !connection.view.toRight)
-        .text(connection.synapse ? connection.synapse.weight : "");
+        .text(connection.synapse.paramsVisible.includes("weight") ? connection.synapse.weight : "");
 
       // .style("font-family", "Roboto")
       // .style("font-size", "0.7em", "important")
@@ -247,6 +248,6 @@ export class ConnectionGraph extends BaseObj {
 
     connections.exit().remove();
 
-    this.render();
+    nextTick(() => this.render());
   }
 }

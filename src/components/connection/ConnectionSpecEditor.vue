@@ -80,6 +80,7 @@ const items = [
     id: "connectionReset",
     onClick: () => {
       connection.value.reset();
+      connection.value.changes({ checkSynWeights: true, preventSimulation: true });
     },
     prependIcon: "mdi:mdi-restart",
     title: "Reset connection",

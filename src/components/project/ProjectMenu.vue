@@ -21,7 +21,7 @@ const props = defineProps<{
 }>();
 
 const project = computed(() => props.project);
-const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
+const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 
 const items = [
   {
@@ -63,7 +63,7 @@ const items = [
       const newProject = projectDBStore.value.duplicateProject(project.value);
       if (!route.path.endsWith(newProject.id)) {
         router.push({
-          name: appStore.state.simulator + "NetworkEditor",
+          name: appStore.state.currentWorkspace + "NetworkEditor",
           params: { projectId: newProject.id },
         });
       }

@@ -10,27 +10,31 @@
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    @click:append="increment"
-    @click:prepend="decrement"
+    @click:append="increment()"
+    @click:prepend="decrement()"
+    @update:model-value="emitUpdate()"
   >
     <template #append>
       <v-text-field
-        v-model="value"
+        :model-value="value"
         :label="props.id"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
         hide-details
-        style="max-width: 80px"
+        style="width: 80px"
         type="number"
         variant="underlined"
+        @blur="emitUpdate()"
+        @keyup.enter="emitUpdate()"
+        @update:model-value="onUpdate"
       />
     </template>
   </v-slider>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
@@ -40,31 +44,32 @@ const props = defineProps({
   unit: { default: "", type: String },
 });
 
+const value = ref(props.modelValue);
+
 const decrement = () => {
   value.value -= props.step;
+  emitUpdate();
+};
+
+const emitUpdate = () => {
+  if (props.modelValue === value.value) return;
+  emit("update:modelValue", value.value);
 };
 
 const increment = () => {
   value.value += props.step;
+  emitUpdate();
 };
 
-const numDecimals = () => {
-  const stepStr = props.step.toString();
-  return stepStr.includes(".") ? stepStr.split(".")[1].length : 0;
+const onUpdate = (val: string) => {
+  value.value = parseFloat(val);
 };
-
-const value = computed({
-  get: () => props.modelValue,
-  set: (value) => {
-    const val = typeof value === "string" ? parseFloat(value) : value;
-    const valueFixed = parseFloat(val.toFixed(numDecimals()));
-    emit("update:modelValue", valueFixed);
-  },
-});
 </script>
 
 <style lang="scss">
 .value-slider {
+  margin-right: 0 !important;
+
   .mdi-minus,
   .mdi-plus {
     opacity: 0 !important;
@@ -87,12 +92,23 @@ const value = computed({
     pointer-events: none;
     position: absolute;
     top: -6px;
+    z-index: 0;
   }
 
   .v-input {
     &:hover .v-text-field__suffix {
       display: none;
     }
+  }
+
+  .v-field__outline .v-label {
+    background-color: rgb(var(--v-theme-surface)) !important;
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
+    display: inline;
+    opacity: 1;
+    padding-left: 8px;
+    width: 100%;
+    z-index: 1000;
   }
 
   &:hover {

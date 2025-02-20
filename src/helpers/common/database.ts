@@ -1,8 +1,8 @@
 // database.ts
 
 import PouchDB from "pouchdb";
-import { major, minor } from "semver";
 import { ILogObj, ISettingsParam } from "tslog";
+import { major, minor } from "semver";
 import { v4 as uuidv4 } from "uuid";
 
 import { sortString } from "@/utils/array";
@@ -38,7 +38,6 @@ interface IErr {
 }
 
 export class DatabaseService extends BaseObj {
-  // @ts-expect-error Cannot use namespace 'PouchDB' as a type.
   private _db: PouchDB;
   private _options: PouchDB.Configuration.DatabaseConfiguration;
   private _state: { ready: boolean; valid: boolean; version: string } = {
@@ -66,7 +65,6 @@ export class DatabaseService extends BaseObj {
     this._state.ready = true;
   }
 
-  // @ts-expect-error Cannot use namespace 'PouchDB' as a type.
   get db(): PouchDB {
     return this._db;
   }

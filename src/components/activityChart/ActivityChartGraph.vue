@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);

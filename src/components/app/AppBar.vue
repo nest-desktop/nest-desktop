@@ -6,19 +6,19 @@
       <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="x-small" v-bind="props" variant="text">
         <template #prepend>
           <v-icon
-            :color="appStore.currentSimulator.id"
-            :icon="appStore.currentSimulator.id + ':logo'"
+            :color="appStore.currentWorkspace.id"
+            :icon="appStore.currentWorkspace.id + ':logo'"
             size="large"
             style="background-color: white; border-radius: 4px; opacity: 1"
           />
         </template>
-        {{ appStore.currentSimulator.title }}
+        {{ appStore.currentWorkspace.title }}
       </v-btn>
     </template>
 
     <v-list density="compact">
       <v-list-item
-        v-for="(item, index) in appStore.simulatorItems"
+        v-for="(item, index) in appStore.workspaceItems"
         :key="index"
         :prepend-icon="item.id + ':logo'"
         :title="item.title"
@@ -65,7 +65,7 @@
   <v-divider class="mx-1" vertical />
 
   <v-btn
-    v-for="(backend, index) in appStore.currentSimulator.backends"
+    v-for="(backend, index) in appStore.currentWorkspace.backends"
     :key="index"
     :disabled="!backend.state.enabled"
     :title="backend.state.url"

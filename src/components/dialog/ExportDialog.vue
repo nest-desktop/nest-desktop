@@ -44,7 +44,7 @@
 import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
-import { IProjectProps } from "@/helpers/project/project";
+import { INetworkProjectProps } from "@/helpers/project/networkProject";
 import { TModel, TProject } from "@/types";
 import { download } from "@/utils/download";
 
@@ -54,7 +54,7 @@ const appStore = useAppStore();
 interface IExportProps {
   group?: string;
   name: string;
-  props: IModelProps | IProjectProps;
+  props: IModelProps | INetworkProjectProps;
 }
 
 const props = defineProps({
@@ -70,8 +70,8 @@ const props = defineProps({
   },
 });
 
-const modelDBStore = computed(() => appStore.currentSimulator.stores.modelDBStore);
-const projectDBStore = computed(() => appStore.currentSimulator.stores.projectDBStore);
+const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
+const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 
 const state = reactive<{ items: IExportProps[]; selected: IExportProps[] }>({
   items: [],
@@ -117,7 +117,7 @@ const update = (): void => {
   }
 
   if (props.project) {
-    projectDBStore.value.state.projects.forEach((project: TProject | IProjectProps) => {
+    projectDBStore.value.state.projects.forEach((project: TProject | INetworkProjectProps) => {
       const item: IExportProps = {
         name: project.name as string,
         props: project.doc ? project.toJSON() : project,

@@ -16,19 +16,18 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { NodeGroup } from "@/helpers/node/nodeGroup";
-import { TNode } from "@/types";
+import { TNode, TNodeGroup } from "@/types";
 
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";
 import StimulatorAvatar from "./StimulatorAvatar.vue";
 
 const props = defineProps<{
-  node: NodeGroup | TNode;
+  node: TNode | TNodeGroup;
 }>();
 
 const node = computed(() => props.node as TNode);
-const nodeGroup = computed(() => props.node as NodeGroup);
+const nodeGroup = computed(() => props.node as TNodeGroup);
 </script>
 
 <style lang="scss">

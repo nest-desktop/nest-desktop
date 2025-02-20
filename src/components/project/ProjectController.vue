@@ -94,8 +94,8 @@
       </template>
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
-        <slot name="simulationCodeEditor">
-          <SimulationCodeEditor :simulation="(project.simulation as BaseSimulation)" />
+        <slot name="codeEditor">
+          <CodeEditor :code="project.code" />
         </slot>
       </template>
 
@@ -121,8 +121,8 @@
   >
     <div class="resize-handle bottom" @mousedown="projectViewStore.resizeBottomNav()" />
 
-    <slot name="simulationCodeMirror">
-      <SimulationCodeMirror :simulation="(project.simulation as BaseSimulation)" />
+    <slot name="bottomCodeMirror">
+      <CodeMirror :code="project.code" />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -134,12 +134,12 @@ import { computed, ref } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
+import CodeEditor from "../code/CodeEditor.vue";
+import CodeMirror from "../code/CodeMirror.vue";
 import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
-import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
-import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 import { BaseNetwork } from "@/helpers/network/network";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
@@ -151,9 +151,9 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
+const projectStore = computed(() => appStore.currentWorkspace.stores.projectStore);
 const project = computed(() => projectStore.value.state.project);
-const projectViewStore = computed(() => appStore.currentSimulator.views.project);
+const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
 
 const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
 

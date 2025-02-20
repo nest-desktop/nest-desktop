@@ -1,16 +1,15 @@
 // connection.ts
 
-import { TConnection, TConnections, TNetwork, TNode, TSynapse } from "@/types";
+import { TConnection, TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { IConfigProps } from "../common/config";
-import { IParamProps } from "../common/parameter";
-import { NodeGroup } from "../node/nodeGroup";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
 import { ConnectionParameter } from "./connectionParameter";
 import { ConnectionRule, IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
+import { IConfigProps } from "../common/config";
+import { IParamProps } from "../common/parameter";
 
 export interface IConnectionProps {
   params?: IParamProps[];
@@ -27,8 +26,10 @@ export class BaseConnection extends BaseObj {
   private _params: Record<string, ConnectionParameter> = {};
   private _paramsVisible: string[] = [];
   private _rule: ConnectionRule;
+  private _source: TNode | TNodeGroup;
   private _sourceIdx: number; // Node index
   private _state: ConnectionState;
+  private _target: TNode | TNodeGroup;
   private _targetIdx: number; // Node index
   private _view: ConnectionView;
 
@@ -47,8 +48,8 @@ export class BaseConnection extends BaseObj {
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
 
-    this._sourceIdx = connectionProps.source;
-    this._targetIdx = connectionProps.target;
+    this.sourceIdx = connectionProps.source;
+    this.targetIdx = connectionProps.target;
 
     this._rule = new ConnectionRule(this, connectionProps.rule);
     this.addParameters(connectionProps.params);
@@ -80,15 +81,15 @@ export class BaseConnection extends BaseObj {
   }
 
   get idx(): number {
-    return this._idx;
+    return this.connections.all.indexOf(this);
   }
 
   get name(): string {
     return this._name;
   }
 
-  get nodeGroups(): NodeGroup[] {
-    return this.network.nodes.nodeGroups.filter((nodeGroup: NodeGroup) => {
+  get nodeGroups(): TNodeGroup[] {
+    return this.network.nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => {
       const nodes = nodeGroup.nodeItemsDeep;
       return (
         [this.sourceNodeGroup, this.targetNodeGroup].includes(nodeGroup) ||
@@ -116,7 +117,7 @@ export class BaseConnection extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   get parent(): TConnections {
@@ -131,12 +132,13 @@ export class BaseConnection extends BaseObj {
     return this._rule;
   }
 
-  get source(): NodeGroup | TNode {
-    return this.connections.network.nodes.all[this._sourceIdx];
+  get source(): TNode | TNodeGroup {
+    return this._source;
   }
 
-  set source(node: TNode) {
-    this._sourceIdx = node.idx;
+  set source(value: TNode | TNodeGroup) {
+    this._source = value;
+    this._sourceIdx = value.idx;
   }
 
   get sourceIdx(): number {
@@ -144,19 +146,22 @@ export class BaseConnection extends BaseObj {
   }
 
   set sourceIdx(value: number) {
+    if (value === -1) return;
     this._sourceIdx = value;
+    this._source = this.connections.network.nodes.all[this._sourceIdx];
   }
 
   get sourceNode(): TNode {
-    return this.connections.network.nodes.all[this._sourceIdx] as TNode;
+    return this.source as TNode;
   }
 
-  set sourceNode(node: TNode) {
-    this._sourceIdx = node.idx;
-  }
+  // set sourceNode(node: TNode) {
+  //   this._source = node;
+  //   this._sourceIdx = node.idx;
+  // }
 
-  get sourceNodeGroup(): NodeGroup {
-    return this.connections.network.nodes.all[this._sourceIdx] as NodeGroup;
+  get sourceNodeGroup(): TNodeGroup {
+    return this.source as TNodeGroup;
   }
 
   get state(): ConnectionState {
@@ -167,12 +172,13 @@ export class BaseConnection extends BaseObj {
     return this._synapse;
   }
 
-  get target(): NodeGroup | TNode {
-    return this.network.nodes.all[this._targetIdx];
+  get target(): TNode | TNodeGroup {
+    return this._target;
   }
 
-  set target(node: TNode) {
-    this._targetIdx = node.idx;
+  set target(value: TNode) {
+    this._target = value;
+    this._targetIdx = value.idx;
   }
 
   get targetIdx(): number {
@@ -180,19 +186,21 @@ export class BaseConnection extends BaseObj {
   }
 
   set targetIdx(value: number) {
+    if (value === -1) return;
     this._targetIdx = value;
+    this._target = this.network.nodes.all[this._targetIdx];
   }
 
   get targetNode(): TNode {
-    return this.network.nodes.all[this._targetIdx] as TNode;
+    return this.target as TNode;
   }
 
-  set targetNode(node: TNode) {
-    this._targetIdx = node.idx;
-  }
+  // set targetNode(node: TNode) {
+  //   this._targetIdx = node.idx;
+  // }
 
-  get targetNodeGroup(): NodeGroup {
-    return this.connections.network.nodes.all[this._targetIdx] as NodeGroup;
+  get targetNodeGroup(): TNodeGroup {
+    return this.target as TNodeGroup;
   }
 
   get view(): ConnectionView {
@@ -236,11 +244,13 @@ export class BaseConnection extends BaseObj {
    * Observer for connection changes.
    * @remarks It emits network changes.
    */
-  changes(): void {
-    this.updateHash();
+  changes(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
     this.logger.trace("changes");
+    this.updateHash();
 
-    this.connections.network.changes();
+    if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
+
+    this.connections.network.changes(props);
   }
 
   /**
@@ -285,13 +295,21 @@ export class BaseConnection extends BaseObj {
   reverse(): void {
     this.logger.trace("reverse");
 
-    [this._sourceIdx, this._targetIdx] = [this._targetIdx, this._sourceIdx];
+    const targetIdx = this.targetIdx;
+    const sourceIdx = this.sourceIdx;
 
-    // Trigger connection change.
-    this.changes();
+    this.sourceIdx = targetIdx;
+    this.targetIdx = sourceIdx;
+
+    // Check syn weights.
+    this.sourceNode.view.checkSynWeights();
+    this.targetNode.view.checkSynWeights();
 
     // Initialize activity graph.
     if (this._view.connectRecorder()) this.recorder.createActivity();
+
+    // Trigger connection change.
+    this.changes({ preventSimulation: true });
   }
 
   /**

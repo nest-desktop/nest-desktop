@@ -22,20 +22,20 @@
       <div style="height: 60px" />
 
       <div>
-        <h5>Select a simulation tool</h5>
+        <h5>Select a workspace</h5>
         <v-row>
           <v-col>
             <v-btn
-              v-for="(simulator, index) in appStore.simulatorItems"
+              v-for="(workspace, index) in appStore.workspaceItems"
               :key="index"
-              :to="{ name: simulator.id + 'Home' }"
+              :to="{ name: workspace.id + 'Home' }"
               class="ma-2"
               size="x-large"
             >
               <template #prepend>
-                <v-icon :icon="simulator.id + ':logo'" />
+                <v-icon :icon="workspace.id + ':logo'" />
               </template>
-              {{ simulator.title }}
+              {{ workspace.title }}
             </v-btn>
           </v-col>
         </v-row>

@@ -2,10 +2,9 @@
 
 import { select } from "d3";
 
-import { TNetworkGraph, TNode, TSelection } from "@/types";
+import { TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { NodeGroup } from "../node/nodeGroup";
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;
@@ -95,7 +94,7 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  drawShape(selector: TSelection, node: NodeGroup | TNode): void {
+  drawShape(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.trace("draw shape");
 
     selector.attr("elementType", node.elementType);
@@ -138,7 +137,7 @@ export class NodeGraphShape extends BaseObj {
    * @param selector
    * @param node node object
    */
-  init(selector: TSelection, node: NodeGroup | TNode): void {
+  init(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.silly("init");
 
     const elem: TSelection = selector.append("g").attr("class", "core");

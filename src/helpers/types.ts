@@ -1,7 +1,7 @@
 // types
 
 import { Activity } from "./activity/activity";
-import { BaseActivityGraph } from "./activity/activityGraph";
+import { BaseActivityGraph } from "./activityGraph/activityGraph";
 import { BaseConnection } from "./connection/connection";
 import { BaseConnections } from "./connection/connections";
 import { BaseModel } from "./model/model";
@@ -14,7 +14,7 @@ import { NodeGraph } from "./nodeGraph/nodeGraph";
 import { BaseProject } from "./project/project";
 import { BaseProjectDB } from "./project/projectDB";
 import { BaseSimulation } from "./simulation/simulation";
-import { BaseSimulationCode } from "./simulation/simulationCode";
+import { BaseSimulationCode } from "./code/code";
 import { BaseSynapse } from "./synapse/synapse";
 
 export default {

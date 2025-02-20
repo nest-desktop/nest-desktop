@@ -1,8 +1,7 @@
 <template>
   <v-btn-group v-if="simulation" class="mx-2" density="compact" divided theme="dark">
     <v-btn :disabled :loading class="border-white" prepend-icon="mdi:mdi-play" title="Simulate" @click="simulate()">
-      <span v-if="simulation.code.runSimulation">Simulate</span>
-      <span v-else>Prepare</span>
+      Simulate
     </v-btn>
 
     <v-btn :disabled class="border-white pa-2" style="min-width: 0">
@@ -36,7 +35,7 @@ import { TSimulation } from "@/types";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const projectViewStore = appStore.currentSimulator.views.project;
+const projectViewStore = appStore.currentWorkspace.views.project;
 
 const props = defineProps<{
   simulation: TSimulation;

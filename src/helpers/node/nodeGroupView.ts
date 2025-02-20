@@ -4,8 +4,8 @@ import { polygonCentroid } from "d3";
 import { UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "../common/base";
+import { TNodeGroup } from "@/types";
 import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
-import { NodeGroup } from "./nodeGroup";
 
 export interface INodeGroupViewProps {
   color?: string;
@@ -23,11 +23,11 @@ interface INodeGroupViewState {
 }
 
 export class NodeGroupView extends BaseObj {
-  public _nodeGroup: NodeGroup; // parent
+  public _nodeGroup: TNodeGroup; // parent
   private _state: UnwrapRef<INodeGroupViewState>;
 
   constructor(
-    nodeGroup: NodeGroup,
+    nodeGroup: TNodeGroup,
     viewProps: INodeGroupViewProps = {
       visible: true,
     },
@@ -88,7 +88,7 @@ export class NodeGroupView extends BaseObj {
     return label;
   }
 
-  get nodeGroup(): NodeGroup {
+  get nodeGroup(): TNodeGroup {
     return this._nodeGroup;
   }
 

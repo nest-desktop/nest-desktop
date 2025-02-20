@@ -3,23 +3,22 @@
 import { select } from "d3";
 import { Ref, UnwrapRef, nextTick, reactive, watch } from "vue";
 
-import { TConnection, TNetwork, TNode, TSelection } from "@/types";
+import { TConnection, TNetwork, TNode, TNodeGroup, TSelection } from "@/types";
 import { debounce } from "@/utils/events";
 
+import { BaseNode } from "../node/node";
 import { BaseObj } from "../common/base";
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
-import { BaseNode } from "../node/node";
-import { NodeGroup } from "../node/nodeGroup";
+import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
-import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 interface IBaseNetworkGraphState {
   contextMenu: {
     connection: TConnection | null;
     modelValue: boolean;
     node: TNode | null;
-    nodeGroup: NodeGroup | null;
+    nodeGroup: TNodeGroup | null;
     target: [x: number, y: number];
   };
   hash: string;
@@ -98,6 +97,19 @@ export class BaseNetworkGraph extends BaseObj {
   }
 
   /**
+   * Close context menu.
+   */
+  closeContextMenu(): void {
+    this._state.contextMenu = {
+      modelValue: false,
+      connection: null,
+      node: null,
+      nodeGroup: null,
+      target: [0, 0],
+    };
+  }
+
+  /**
    * Call on drag start.
    * @param event mouse event
    */
@@ -142,7 +154,7 @@ export class BaseNetworkGraph extends BaseObj {
         this.network.connections.state.selectedNode,
         this.hash,
       ],
-      () => this.render(),
+      () => nextTick(() => this.render()),
     );
 
     watch(
@@ -158,7 +170,7 @@ export class BaseNetworkGraph extends BaseObj {
    */
   openContextMenu(
     target: [number, number],
-    props: { connection?: TConnection; node?: TNode; nodeGroup?: NodeGroup },
+    props: { connection?: TConnection; node?: TNode; nodeGroup?: TNodeGroup },
   ): void {
     this.logger.trace("open context menu");
 
@@ -170,7 +182,7 @@ export class BaseNetworkGraph extends BaseObj {
 
     this._state.contextMenu.connection = (props.connection as TConnection) || null;
     this._state.contextMenu.node = (props.node as TNode) || null;
-    this._state.contextMenu.nodeGroup = (props.nodeGroup as NodeGroup) || null;
+    this._state.contextMenu.nodeGroup = (props.nodeGroup as TNodeGroup) || null;
 
     this._state.contextMenu.target = target;
     this._state.contextMenu.modelValue = true;

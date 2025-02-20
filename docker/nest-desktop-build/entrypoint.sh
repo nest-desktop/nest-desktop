@@ -1,13 +1,13 @@
 #!/bin/bash
 
 jq -n \
-  --arg simulator_visible "${SIMULATOR_VISIBLE}" \
+  --arg currentWorkspace "${CURRENT_WORKSPACE}" \
   '{
-    simulatorVisible: $simulator_visible
+    currentWorkspace: $currentWorkspace
   }' > /usr/share/nginx/html/assets/app.json
 
-bash /usr/local/bin/simulators/nest.sh
-bash /usr/local/bin/simulators/norse.sh
-bash /usr/local/bin/simulators/pynn.sh
+bash /usr/local/bin/workspaces/nest.sh
+bash /usr/local/bin/workspaces/norse.sh
+bash /usr/local/bin/workspaces/pynn.sh
 
 exec "$@"

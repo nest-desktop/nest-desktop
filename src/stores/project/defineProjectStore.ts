@@ -3,40 +3,40 @@
 import { defineStore } from "pinia";
 import { reactive, watch } from "vue";
 
-import { BaseProject } from "@/helpers/project/project";
 import router from "@/router";
-import { Class, TProject, TStore } from "@/types";
+import { BaseProject } from "@/helpers/project/project";
+import { Class, TRoute, TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "../appStore";
 import { useProjectDBStore } from "./projectDBStore";
 
-interface IProjectStoreState {
+interface IProjectStoreState<TProject extends BaseProject = BaseProject> {
   code: string;
   project: TProject | null;
   projectId: string;
 }
 
-export function defineProjectStore(
+export function defineProjectStore<TProject extends BaseProject = BaseProject>(
   props: {
-    Project: Class<TProject>;
+    Project: Class<TProject | BaseProject>;
     loggerMinLevel?: number;
-    simulator: string;
+    workspace: string;
     useProjectDBStore: TStore;
   } = {
     Project: BaseProject,
-    simulator: "base",
+    workspace: "base",
     useProjectDBStore,
   },
 ) {
   const logger = mainLogger.getSubLogger({
     minLevel: props.loggerMinLevel || 3,
-    name: props.simulator + " project store",
+    name: props.workspace + " project store",
   });
 
-  return defineStore(props.simulator + "-project", () => {
-    const state = reactive<IProjectStoreState>({
+  return defineStore(props.workspace + "-project", () => {
+    const state = reactive<IProjectStoreState<TProject | BaseProject>>({
       code: "print('hello world!')",
       project: null,
       projectId: "",
@@ -108,7 +108,7 @@ export function defineProjectStore(
       // const projectViewStore = useProjectViewStore();
 
       const appStore = useAppStore();
-      const projectViewStore = appStore.currentSimulator.views.project;
+      const projectViewStore = appStore.currentWorkspace.views.project;
       if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
         startSimulation();
       }
@@ -120,9 +120,11 @@ export function defineProjectStore(
     const newProject = (): void => {
       logger.trace("new project");
 
-      state.project = new props.Project();
-      state.projectId = state.project.id;
-      state.project.state.state.editMode = true;
+      state.project = new props.Project() as TProject;
+      if (state.project) {
+        state.projectId = state.project.id;
+        state.project.state.state.editMode = true;
+      }
     };
 
     /**
@@ -130,7 +132,7 @@ export function defineProjectStore(
      * @param project project object
      */
     const reloadProject = (project: TProject): void => {
-      logger.trace("reload project:", truncate(project.id));
+      logger.trace("reload project:", project.shortId);
 
       projectDBStore.unloadProject(project.id);
       state.project = projectDBStore.getProject(project.id);
@@ -140,12 +142,12 @@ export function defineProjectStore(
      * Get route path of current model.
      * @returns
      */
-    const routeTo = (): { path: string } => {
+    const routeTo = (): TRoute => {
       const appStore = useAppStore();
-      const projectViewStore = appStore.currentSimulator.views.project;
+      const projectViewStore = appStore.currentWorkspace.views.project;
 
       return {
-        path: "/" + props.simulator + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
+        path: "/" + props.workspace + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
       };
     };
 
@@ -166,7 +168,7 @@ export function defineProjectStore(
 
       router
         .push({
-          name: props.simulator + "ActivityExplorer",
+          name: props.workspace + "ActivityExplorer",
           params: { projectId: state.projectId },
         })
         .then(() => {

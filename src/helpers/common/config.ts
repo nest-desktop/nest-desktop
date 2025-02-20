@@ -1,21 +1,20 @@
 // config.ts
 
+import { TValue } from "@/types";
 import { loadJSON } from "@/utils/fetch";
-
-type TValue = any;
 
 export interface IConfigProps {
   name: string;
-  simulator?: string;
+  workspace?: string;
 }
 
 export class Config {
   private _name?: string;
-  private _simulator?: string;
+  private _workspace?: string;
 
   constructor(configProps: IConfigProps) {
     this._name = configProps.name;
-    this._simulator = configProps.simulator;
+    this._workspace = configProps.workspace;
 
     if (this._name != undefined && !this.isValid) this.upgrade();
   }
@@ -57,8 +56,8 @@ export class Config {
   }
 
   async import(): Promise<Record<string, TValue>> {
-    const path = this._simulator
-      ? `assets/simulators/${this._simulator}/config/${this._name}`
+    const path = this._workspace
+      ? `assets/workspaces/${this._workspace}/config/${this._name}`
       : `assets/config/${this._name}`;
     return loadJSON(path + ".json");
   }

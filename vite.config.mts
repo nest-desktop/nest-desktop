@@ -5,12 +5,14 @@ import { URL, fileURLToPath } from "node:url";
 // Utilities
 import { defineConfig } from "vite";
 // Vite plugins
+import ViteFonts from "unplugin-fonts/vite";
+import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import electron from "vite-plugin-electron";
 import { VitePWA } from "vite-plugin-pwa";
-import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+// import vueDevTools from "vite-plugin-vue-devtools";
 
 // Plugins
-import vue from "@vitejs/plugin-vue";
+import Vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig((configEnv: { mode: string }) => ({
@@ -63,12 +65,22 @@ export default defineConfig((configEnv: { mode: string }) => ({
     },
   },
   plugins: [
-    vue({
+    Vue({
       template: { transformAssetUrls },
     }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-    vuetify({
+    Vuetify({
       autoImport: true,
+    }),
+    ViteFonts({
+      google: {
+        families: [
+          {
+            name: "Roboto",
+            styles: "wght@100;300;400;500;700;900",
+          },
+        ],
+      },
     }),
     VitePWA({
       devOptions: {
@@ -123,6 +135,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
         navigateFallback: null,
       },
     }),
+    // vueDevTools(),
     electron([
       {
         entry: "electron/main.ts",

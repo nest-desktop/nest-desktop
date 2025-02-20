@@ -21,7 +21,6 @@ export function debounce(callback: any, interval: number = 100) {
 
   return function (...props: any) {
     clearTimeout(debounceTimeoutId);
-    // @ts-expect-error Property 'this' implicitly has type 'any' because it does not have a type annotation.
     debounceTimeoutId = setTimeout(() => callback.apply(this, props), interval);
   };
 }

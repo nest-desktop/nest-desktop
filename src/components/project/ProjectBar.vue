@@ -7,7 +7,7 @@
             <v-tab
               :key="index"
               :to="{
-                name: appStore.state.simulator + tabItem.to.name,
+                name: appStore.state.currentWorkspace + tabItem.to.name,
                 params: { projectId: projectStore.state.projectId },
               }"
               :title="tabItem.title"
@@ -66,7 +66,7 @@ import { truncate } from "@/utils/truncate";
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-const projectStore = computed(() => appStore.currentSimulator.stores.projectStore);
+const projectStore = computed(() => appStore.currentWorkspace.stores.projectStore);
 
 const tabItems = [
   {

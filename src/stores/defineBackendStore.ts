@@ -10,11 +10,6 @@ import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 
-export interface IAxiosRequestData {
-  source: string;
-  return?: string;
-}
-
 export interface IAxiosResponseData {
   data: IResponseData;
   status: number;
@@ -35,7 +30,7 @@ export interface IResponseData {
   activities?: IActivityProps[];
 }
 
-export function defineBackendStore(simulator: string, name: string, url: string, options?: Record<string, string>) {
+export function defineBackendStore(workspace: string, name: string, url: string, options?: Record<string, string>) {
   const logger = mainLogger.getSubLogger({
     minLevel: 3,
     name: name + " backend store",
@@ -102,7 +97,7 @@ export function defineBackendStore(simulator: string, name: string, url: string,
       const loadFromAssets = async (): Promise<void> => {
         logger.trace("load config");
 
-        return loadJSON(`assets/simulators/${simulator}/config/backends.json`)
+        return loadJSON(`assets/workspaces/${workspace}/config/backends.json`)
           .then((data) => {
             const config = data[name];
             const baseURL =

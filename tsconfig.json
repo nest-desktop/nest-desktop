@@ -1,33 +1,44 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true,
+  // "compilerOptions": {
+  //   "baseUrl": ".",
+  //   "target": "ESNext",
+  //   "useDefineForClassFields": true,
+  //   "module": "ESNext",
+  //   "esModuleInterop": true,
+  //   "lib": ["ESNext", "DOM"],
+  //   "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
+  // // Allow property without initialization.
+  // "strictPropertyInitialization": false,
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+  //   /* Bundler mode */
+  //   "moduleResolution": "bundler",
+  //   "allowImportingTsExtensions": true,
+  //   "resolveJsonModule": true,
+  //   "isolatedModules": true,
+  //   "noEmit": true,
+  //   "jsx": "preserve",
 
-    "paths": {
-      "@/*": ["src/*"]
+  //   /* Linting */
+  //   "strict": true,
+  //   "noUnusedLocals": true,
+  //   "noUnusedParameters": true,
+  //   "noFallthroughCasesInSwitch": true,
+
+  //   "paths": {
+  //     "@/*": ["src/*"]
+  //   },
+  //   "types": ["vite-plugin-pwa/client"]
+  // },
+  // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "electron"],
+  // "exclude": ["node_modules", "src/**/_*.*"],
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
     },
-    "types": ["vite-plugin-pwa/client"]
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "electron"],
-  "references": [{ "path": "./tsconfig.node.json" }],
-  "exclude": ["node_modules", "src/**/_*.*"]
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
 }

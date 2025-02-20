@@ -2,12 +2,11 @@
 
 import { UnwrapRef, reactive } from "vue";
 
-// import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { TNode, TProject } from "@/types";
+import { TProject } from "@/types";
 
-import { download } from "../../utils/download";
-import { ActivityChartGraph } from "../activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "../activityGraph/activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";
+import { download } from "../../utils/download";
 
 export interface IActivityProps {
   events?: IEventProps;
@@ -19,7 +18,6 @@ export interface IActivityProps {
 interface IActivityState {
   activeNodeId: number | undefined;
   fromTime: number;
-  // records: NodeRecord[];
   selected: number[];
 }
 
@@ -32,14 +30,17 @@ export class Activity extends BaseObj {
   private _idx: number = 0; // generative
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
-  private _recorder: TNode; // parent
+  private _project: TProject;
   private _recorderUnitId: number = -1;
   private _state: UnwrapRef<IActivityState>;
 
-  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+  constructor(project: TProject, activityProps: IActivityProps = {}) {
+    super({
+      config: { name: "Activity" },
+      logger: { settings: { minLevel: 3 } },
+    });
 
-    this._recorder = recorder;
+    this._project = project;
     this._state = reactive<IActivityState>({
       activeNodeId: undefined,
       fromTime: 0,
@@ -54,17 +55,8 @@ export class Activity extends BaseObj {
     return this.project.activityGraph.activityChartGraph;
   }
 
-  get currentTime(): number {
-    const simulationState = this.recorder.network.project.simulation.state;
-    return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
-  }
-
-  get elementTypes(): string[] {
-    return this.recorder.nodes.nodeItems.map((node: TNode) => node.model.elementType);
-  }
-
-  get endTime(): number {
-    return this.recorder.network.project.simulation.state.biologicalTime;
+  get colors(): string[] {
+    return this.config?.localStorage.color.cycle;
   }
 
   get events(): IEventProps {
@@ -82,26 +74,20 @@ export class Activity extends BaseObj {
     return this.nEvents > 0;
   }
 
-  /**
-   * Check if activity contains analog signal data from input devices.
-   */
-  get hasInputAnalogData(): boolean {
-    return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("stimulator");
-  }
-
-  /**
-   * Check if activity contains analog signal data from neurons.
-   */
-  get hasNeuronAnalogData(): boolean {
-    return this.recorder.model?.isAnalogRecorder && this.elementTypes.includes("neuron");
-  }
-
   get idx(): number {
     return this._idx;
   }
 
   set idx(value: number) {
     this._idx = value;
+  }
+
+  get isAnalogSignalActivity(): boolean {
+    return this.constructor.name.includes("AnalogSignalActivity");
+  }
+
+  get isSpikeActivity(): boolean {
+    return this.constructor.name.includes("SpikeActivity");
   }
 
   get lastTime(): number {
@@ -128,12 +114,12 @@ export class Activity extends BaseObj {
     this._nodePositions = value;
   }
 
-  get project(): TProject {
-    return this.recorder.network.project;
+  get nodeSize(): number {
+    return this.nodeIds.length;
   }
 
-  get recorder(): TNode {
-    return this._recorder;
+  get project(): TProject {
+    return this._project;
   }
 
   get recorderUnitId(): number {
@@ -148,21 +134,18 @@ export class Activity extends BaseObj {
     return this._state;
   }
 
-  get simulationTimeInfo(): number {
-    return this.recorder.network.project.simulation.state.timeInfo.value;
+  get traceColor(): string {
+    return this.colors[this._idx];
+  }
+
+  get traceLabel(): string {
+    return "tr";
   }
 
   changes(): void {
     this.logger.trace("changes");
 
     this.project.changes();
-  }
-
-  /**
-   * Clone activity.
-   */
-  clone(): Activity {
-    return new Activity(this.recorder, this.toJSON());
   }
 
   /**

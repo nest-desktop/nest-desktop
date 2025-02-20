@@ -35,7 +35,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph as ActivityChartGraph);

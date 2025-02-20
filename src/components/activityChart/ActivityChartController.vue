@@ -144,9 +144,9 @@ import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import Card from "../common/Card.vue";
 import NodeRecordChip from "../node/NodeRecordChip.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { ActivityChartPanel } from "@/helpers/activityChartGraph/activityChartPanel";
-import { ActivityChartPanelModelParameter } from "@/helpers/activityChartGraph/activityChartPanelModelParameter";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
+import { ActivityChartPanel } from "@/helpers/activityGraph/activityChartGraph/activityChartPanel";
+import { ActivityChartPanelModelParameter } from "@/helpers/activityGraph/activityChartGraph/activityChartPanelModelParameter";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
@@ -166,7 +166,8 @@ const addPanel = (modelId: string) => {
  * Select all node records.
  */
 const selectAllNodeRecords = (panel: ActivityChartPanel) => {
-  panel.model.selectAllNodeRecords();
+  // @ts-expect-error Property 'selectAllNodeRecords' does not exist on type 'ActivityChartPanelModel'.
+  if (typeof panel.model["selectAllNodeRecords"] === "function") panel.model.selectAllNodeRecords();
   graph.value.update();
 };
 

@@ -1,15 +1,16 @@
 // network.ts
 
-import { TConnection, TConnections, TModel, TNetwork, TNode, TNodes, TProject } from "@/types";
+import { TConnection, TConnections, TModel, TNetworkGraph, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
+import { BaseConnections } from "../connection/connections";
+import { BaseNodes } from "../node/nodes";
 import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
-import { BaseConnections } from "../connection/connections";
+import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
-import { INodeGroupProps, NodeGroup } from "../node/nodeGroup";
 import { INodeViewProps } from "../node/nodeView";
-import { BaseNodes } from "../node/nodes";
 import { NetworkState } from "./networkState";
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -30,7 +31,6 @@ export class BaseNetwork extends BaseObj {
   public _connections: TConnections;
   public _nodes: TNodes;
   public _project: TProject; // parent
-  // private _graph: NetworkGraph;
 
   private _defaultModels: Record<string, string> = {
     neuron: "iaf_psc_alpha",
@@ -43,8 +43,6 @@ export class BaseNetwork extends BaseObj {
       config: { name: "Network" },
       logger: { settings: { minLevel: 3 } },
     });
-
-    // this._graph = new NetworkGraph(this);
 
     this._project = project;
     this._state = new NetworkState(this);
@@ -83,9 +81,10 @@ export class BaseNetwork extends BaseObj {
     return _elementTypes;
   }
 
-  // get graph(): NetworkGraph {
-  //   return this._graph;
-  // }
+  get graph(): TNetworkGraph {
+    const networkGraphStore = useNetworkGraphStore();
+    return networkGraphStore.state.graph as TNetworkGraph;
+  }
 
   get isEmpty(): boolean {
     return this.nodes.all.length === 0 && this.connections.all.length === 0;
@@ -111,13 +110,13 @@ export class BaseNetwork extends BaseObj {
    * It commits the network in the network history.
    * It emits project changes.
    */
-  changes(modelChanged: boolean = false): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.updateStyle();
     this.updateHash();
 
-    this.project.changes({ resetPanels: modelChanged });
+    this.project.changes(props);
   }
 
   /**
@@ -141,13 +140,6 @@ export class BaseNetwork extends BaseObj {
   }
 
   /**
-   * Clone base network component.
-   */
-  clone(): TNetwork {
-    return new BaseNetwork(this.project, { ...this.toJSON() });
-  }
-
-  /**
    * Connect node components by user interaction.
    * @param sourceIdx node index
    * @param targetIdx node index
@@ -164,28 +156,19 @@ export class BaseNetwork extends BaseObj {
 
     // Initialize connection.
     connection.init();
+
+    // Correct connections with recorder.
     if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
     // Update synaptic weight label.
-    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights) {
+    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
       connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
-    }
 
-    if (connection.view.connectRecorder()) {
-      const recorder = connection.recorder;
-
-      // Update recorder.
-      recorder.updateRecorder();
-
-      // Add panels of activity graph.
-      const panelsProps = recorder.model.isSpikeRecorder
-        ? [{ model: { id: "spikeTimesRasterPlot" } }, { model: { id: "spikeTimesHistogram" } }]
-        : [{ model: { id: "analogSignalPlot" } }];
-      this._project.activityGraph.activityChartGraph.addPanels(panelsProps);
-    }
+    // Update recorder and clean activity panels.
+    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes();
+    this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
   }
 
   /**
@@ -206,7 +189,7 @@ export class BaseNetwork extends BaseObj {
     node.init();
 
     // Trigger network change.
-    this.changes();
+    this.changes({ preventSimulation: true });
   }
 
   /**
@@ -217,6 +200,8 @@ export class BaseNetwork extends BaseObj {
   deleteConnection(connection: TConnection): void {
     this.logger.trace("delete connection");
 
+    const cleanPanels = connection.view.connectRecorder();
+
     // Remove connection from the list.
     this.connections.remove(connection);
 
@@ -224,7 +209,7 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes();
+    this.changes({ cleanPanels, preventSimulation: true });
   }
 
   /**
@@ -232,20 +217,33 @@ export class BaseNetwork extends BaseObj {
    * @param node node or node group object
    * @remarks It emits network changes.
    */
-  deleteNode(node: NodeGroup | TNode): void {
+  deleteNode(node: TNode | TNodeGroup): void {
     this.logger.trace("delete node");
+
+    let cleanPanels = node.isRecorded;
+    if (node.isNode) {
+      const nodeItem = node as TNode;
+      cleanPanels = nodeItem.model.isRecorder || node.isRecorded;
+    }
+    const recorders = node.connectedRecorders;
 
     // Remove connection from the list.
     this.connections.removeByNode(node);
 
     // Remove node in node groups
-    this.nodes.removeInNodeGroups(node);
+    this.nodes.removeNodeInNodeGroups(node);
 
     // Remove node from the list.
     this.nodes.remove(node);
 
+    // Clean node groups.
+    this.nodes.cleanNodeGroups();
+
+    // Update recorder.
+    if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
+
     // Trigger network change.
-    this.changes();
+    this.changes({ cleanPanels, preventSimulation: true });
   }
 
   /**
@@ -299,10 +297,12 @@ export class BaseNetwork extends BaseObj {
   update(networkProps: INetworkProps): void {
     this.logger.trace("update");
 
+    this.clear();
+
     this.nodes.update(networkProps.nodes);
     this.connections.update(networkProps.connections);
 
-    this.updateHash();
+    this.init();
   }
 
   /**
@@ -310,7 +310,7 @@ export class BaseNetwork extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      nodes: this.nodes.all.map((node: NodeGroup | TNode) => node.hash),
+      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
       connections: this.connections.all.map((connection: TConnection) => connection.hash),
     });
   }
@@ -321,6 +321,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
+    this._nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
   }
 }

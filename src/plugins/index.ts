@@ -8,7 +8,7 @@ import type { App } from "vue";
 import { Vuetify3Dialog } from "vuetify3-dialog";
 
 import router from "@/router";
-import { registerSimulators } from "@/simulators";
+import { registerWorkspaces } from "@/workspaces";
 import pinia from "@/stores";
 
 // Plugins
@@ -27,8 +27,8 @@ export function registerPlugins(app: App) {
   // Use pinia store
   app.use(pinia);
 
-  // Register simulators
-  registerSimulators(app);
+  // Register workspaces
+  registerWorkspaces(app);
 
   // Use router
   app.use(router);

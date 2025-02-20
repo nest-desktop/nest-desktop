@@ -1,66 +1,53 @@
 // types.ts
 
-import { Arc, DragBehavior, Selection, Transition, ZoomBehavior } from "d3";
-import { Store } from "pinia";
+import type { Arc, DragBehavior, Selection, Transition, ZoomBehavior } from "d3";
+import type { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
+import type { Store } from "pinia";
 
-import { BaseActivityGraph } from "./helpers/activity/activityGraph";
-import { ActivityChartPanelModelParameter } from "./helpers/activityChartGraph/activityChartPanelModelParameter";
-import { BaseParameter } from "./helpers/common/parameter";
-import { BaseConnection, IConnectionProps } from "./helpers/connection/connection";
-import { ConnectionParameter } from "./helpers/connection/connectionParameter";
-import { BaseConnections } from "./helpers/connection/connections";
-import { BaseModel, IModelProps } from "./helpers/model/model";
-import { BaseModelDB } from "./helpers/model/modelDB";
-import { ModelParameter } from "./helpers/model/modelParameter";
-import { BaseNetwork, INetworkProps } from "./helpers/network/network";
-import { BaseNetworkGraph } from "./helpers/networkGraph/networkGraph";
-import { BaseNode, INodeProps } from "./helpers/node/node";
-import { NodeGroup } from "./helpers/node/nodeGroup";
-import { NodeParameter } from "./helpers/node/nodeParameter";
-import { BaseNodes } from "./helpers/node/nodes";
-import { BaseProject, IProjectProps } from "./helpers/project/project";
-import { BaseProjectDB } from "./helpers/project/projectDB";
-import { BaseSimulation, ISimulationProps } from "./helpers/simulation/simulation";
-import { BaseSimulationCode } from "./helpers/simulation/simulationCode";
-import { BaseSynapse, ISynapseProps } from "./helpers/synapse/synapse";
-import { BaseSynapseParameter } from "./helpers/synapse/synapseParameter";
-import { NESTSynapseParameter } from "./simulators/nest/helpers/synapse/synapseParameter";
-//
-// Simulators
-//
-import * as nest from "./simulators/nest/types";
-import * as norse from "./simulators/norse/types";
-import * as pynn from "./simulators/pynn/types";
-import { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
+import type { ActivityChartPanelModelParameter } from "./helpers/activityGraph/activityChartGraph/activityChartPanelModelParameter";
+import type { BaseActivityGraph } from "./helpers/activityGraph/activityGraph";
+import type { BaseCode } from "@/helpers/code/code";
+import type { BaseConnection, IConnectionProps } from "./helpers/connection/connection";
+import type { BaseConnections } from "./helpers/connection/connections";
+import type { BaseModel, IModelProps } from "./helpers/model/model";
+import type { BaseModelDB } from "./helpers/model/modelDB";
+import type { BaseNetwork, INetworkProps } from "./helpers/network/network";
+import type { BaseNetworkGraph } from "./helpers/networkGraph/networkGraph";
+import type { BaseNode, INodeProps } from "./helpers/node/node";
+import type { BaseNodes } from "./helpers/node/nodes";
+import type { BaseParameter } from "./helpers/common/parameter";
+import type { BaseProject, IBaseProjectProps } from "./helpers/project/project";
+import type { BaseProjectDB } from "./helpers/project/projectDB";
+import type { BaseSimulation, ISimulationProps } from "./helpers/simulation/simulation";
+import type { BaseSynapse, ISynapseProps } from "./helpers/synapse/synapse";
+import type { BaseSynapseParameter } from "./helpers/synapse/synapseParameter";
+import type { ConnectionParameter } from "./helpers/connection/connectionParameter";
+import type { ModelParameter } from "./helpers/model/modelParameter";
+import type { NodeGroup } from "./helpers/node/nodeGroup";
+import type { NodeParameter } from "./helpers/node/nodeParameter";
 
-export type TActivityGraph = BaseActivityGraph | nest.NESTActivityGraph;
-export type TConnection = BaseConnection | nest.NESTConnection | norse.NorseConnection;
-export type TConnectionProps = IConnectionProps | nest.INESTConnectionProps | norse.INorseConnectionProps;
-export type TConnections = BaseConnections | nest.NESTConnections | norse.NorseConnections;
-export type TModel = BaseModel | nest.NESTModel | norse.NorseModel | pynn.PyNNModel;
-export type TModelParameter = ModelParameter | nest.NESTCopyModelParameter;
-export type TModelDB = BaseModelDB | nest.NESTModelDB | norse.NorseModelDB | pynn.PyNNModelDB;
-export type TModelProps = IModelProps | nest.INESTModelProps | norse.INorseModelProps | pynn.IPyNNModelProps;
-export type TNetwork = BaseNetwork | nest.NESTNetwork | norse.NorseNetwork;
-export type TNetworkProps = INetworkProps | nest.INESTNetworkProps | norse.INorseNetworkProps;
-export type TNetworkGraph = BaseNetworkGraph | nest.NESTNetworkGraph;
-export type TNode = BaseNode | nest.NESTNode | norse.NorseNode;
+import type * as workspaces from "./workspaces/types";
+import type { INetworkProjectProps, NetworkProject } from "./helpers/project/networkProject";
+
+export type TActivityGraph = BaseActivityGraph | workspaces.TActivityGraph;
+export type TCode = BaseCode | TSimulationCode;
+export type TConnection = BaseConnection | workspaces.TConnection;
+export type TConnectionProps = IConnectionProps | workspaces.TConnectionProps;
+export type TConnections = BaseConnections | workspaces.TConnections;
+export type TModel = BaseModel | workspaces.TModel;
+export type TModelParameter = ModelParameter | workspaces.TModelParameter;
+export type TModelDB = BaseModelDB | workspaces.TModelDB;
+export type TModelProps = IModelProps | workspaces.TModelProps;
+export type TNetwork = BaseNetwork | workspaces.TNetwork;
+export type TNetworkGraph = BaseNetworkGraph | workspaces.TNetworkGraph;
+export type TNetworkProject = NetworkProject | workspaces.TNetworkProject;
+export type TNetworkProps = INetworkProps | workspaces.TNetworkProps;
+export type TNode = BaseNode | workspaces.TNode;
 export type TNodeGroup = NodeGroup;
-export type TNodeParameterParent =
-  | BaseNode
-  | nest.NESTNode
-  | nest.NESTCopyModel
-  | nest.NESTNodeCompartment
-  | nest.NESTNodeReceptor
-  | norse.NorseNode;
-export type TNodeParameterComponentProps =
-  | INodeProps
-  | nest.INESTNodeProps
-  | nest.INESTCopyModelProps
-  | nest.INESTNodeCompartmentProps
-  | nest.INESTNodeReceptorProps;
-export type TNodeProps = INodeProps | nest.INESTNodeProps;
-export type TNodes = BaseNodes | nest.NESTNodes | norse.NorseNodes;
+export type TNodeParameterParent = BaseNode | workspaces.TNodeParameterParent;
+export type TNodeParameterComponentProps = INodeProps | workspaces.TNodeParameterComponentProps;
+export type TNodeProps = INodeProps | workspaces.TNodeProps;
+export type TNodes = BaseNodes | workspaces.TNodes;
 export type TParameter =
   | ActivityChartPanelModelParameter
   | ConnectionParameter
@@ -68,19 +55,15 @@ export type TParameter =
   | BaseParameter
   | TModelParameter
   | TSynapseParameter;
-export type TProject = BaseProject | nest.NESTProject | norse.NorseProject | pynn.PyNNProject;
-export type TProjectDB = BaseProjectDB | nest.NESTProjectDB | norse.NorseProjectDB | pynn.PyNNProjectDB;
-export type TProjectProps = IProjectProps | nest.INESTProjectProps | norse.INorseProjectProps | pynn.IPyNNProjectProps;
-export type TSimulation = BaseSimulation | nest.NESTSimulation | norse.NorseSimulation | pynn.PyNNSimulation;
-export type TSimulationCode =
-  | BaseSimulationCode
-  | nest.NESTSimulationCode
-  | norse.NorseSimulationCode
-  | pynn.PyNNSimulationCode;
-export type TSimulationProps = ISimulationProps | nest.INESTSimulationProps | norse.INorseSimulationProps;
-export type TSynapse = BaseSynapse | nest.NESTSynapse;
-export type TSynapseParameter = BaseSynapseParameter | NESTSynapseParameter;
-export type TSynapseProps = ISynapseProps | nest.INESTSynapseProps;
+export type TProject = BaseProject | TNetworkProject;
+export type TProjectDB = BaseProjectDB | workspaces.TProjectDB;
+export type TProjectProps = IBaseProjectProps | INetworkProjectProps | workspaces.TProjectProps;
+export type TSimulation = BaseSimulation | workspaces.TSimulation;
+export type TSimulationCode = workspaces.TSimulationCode;
+export type TSimulationProps = ISimulationProps | workspaces.TSimulationProps;
+export type TSynapse = BaseSynapse | workspaces.TSynapse;
+export type TSynapseParameter = BaseSynapseParameter | workspaces.TSynapseParameter;
+export type TSynapseProps = ISynapseProps | workspaces.TSynapseProps;
 
 // Pinia
 export type Class<T> = new (...props: any) => T;
@@ -94,3 +77,9 @@ export type TTransition = Transition<any, any, null, undefined>;
 export type TZoomBehavior = ZoomBehavior<any, any>;
 
 export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
+
+export type TValue = any;
+
+export type TRoute = { path: string };
+export type TProjectRoute = { params: { projectId: string }; path: string };
+export type TModelRoute = { params: { modelId: string }; path: string };

@@ -14,14 +14,17 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
+import { createDialog } from "vuetify3-dialog";
 
 import Card from "../common/Card.vue";
 import NodeColorDialog from "../dialog/NodeColorDialog.vue";
-import { NodeGroup } from "@/helpers/node/nodeGroup";
+import { TNodeGroup } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
-import { createDialog } from "vuetify3-dialog";
 
-const props = defineProps<{ nodeGroup: NodeGroup }>();
+import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+const networkGraphStore = useNetworkGraphStore();
+
+const props = defineProps<{ nodeGroup: TNodeGroup }>();
 const nodeGroup = computed(() => props.nodeGroup);
 
 const items: {
@@ -53,8 +56,9 @@ const items: {
   {
     id: "nodeGroupClone",
     onClick: () => {
-      nodeGroup.value.clone();
-      nodeGroup.value.changes();
+      const clonedNodeGroup = nodeGroup.value.clone();
+      clonedNodeGroup.changes();
+      networkGraphStore.state.graph.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",
     title: "Clone node group",

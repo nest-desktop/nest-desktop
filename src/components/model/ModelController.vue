@@ -122,11 +122,8 @@
     </template>
 
     <template v-if="modelViewStore.state.views.controller === 'code'">
-      <slot name="simulationCodeEditor">
-        <SimulationCodeEditor
-          v-if="modelStore.state.project"
-          :simulation="(modelStore.state.project.simulation as BaseSimulation)"
-        />
+      <slot name="codeEditor">
+        <CodeEditor v-if="modelStore.state.project" :code="modelStore.state.project.code" />
       </slot>
     </template>
 
@@ -149,11 +146,8 @@
   >
     <div class="resize-handle bottom" @mousedown="modelViewStore.resizeBottomNav()" />
 
-    <slot name="simulationCodeMirror">
-      <SimulationCodeMirror
-        v-if="modelStore.state.project"
-        :simulation="(modelStore.state.project.simulation as BaseSimulation)"
-      />
+    <slot name="bottomCodeMirror">
+      <CodeMirror v-if="modelStore.state.project" :code="modelStore.state.project.code" />
     </slot>
   </v-bottom-navigation>
 </template>
@@ -164,13 +158,12 @@ import { Extension } from "@codemirror/state";
 import { computed } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
+import CodeEditor from "../code/CodeEditor.vue";
+import CodeMirror from "../code/CodeMirror.vue";
 import Menu from "../common/Menu.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
-import SimulationCodeEditor from "../simulation/SimulationCodeEditor.vue";
-import SimulationCodeMirror from "../simulation/SimulationCodeMirror.vue";
-import { ActivityChartGraph } from "@/helpers/activityChartGraph/activityChartGraph";
-import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 import { TModelParameter, TNode } from "@/types";
 import { TParamValue } from "@/helpers/common/parameter";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
@@ -182,8 +175,8 @@ const appStore = useAppStore();
 import { useNavStore } from "@/stores/navStore";
 const navStore = useNavStore();
 
-const modelStore = computed(() => appStore.currentSimulator.stores.modelStore);
-const modelViewStore = computed(() => appStore.currentSimulator.views.model);
+const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
+const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
 
 const modelParams = computed(() => modelStore.value.model.paramsAll);
 

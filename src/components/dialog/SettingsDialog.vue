@@ -43,15 +43,15 @@
       </v-card-text>
     </v-card>
 
-    <v-card flat subtitle="Simulators">
+    <v-card flat subtitle="Workspaces">
       <v-card-text>
         <v-select
-          v-model="appStore.state.simulatorVisible"
-          :items="simulatorItems"
+          v-model="appStore.state.workspacesEnabled"
+          :items="workspaceItems"
           chips
           hide-details
           item-value="id"
-          label="Visible simulators"
+          label="Enabled workspaces"
           multiple
         >
           <template #chip="{ item }">
@@ -70,7 +70,7 @@
 <script lang="ts" setup>
 import { capitalize, computed, nextTick } from "vue";
 
-import { simulators } from "@/simulators";
+import { workspaces } from "@/workspaces";
 // import AppFooter from "../app/AppFooter.vue";
 
 import { useAppStore } from "@/stores/appStore";
@@ -78,7 +78,7 @@ const appStore = useAppStore();
 
 const appVersion = process.env.APP_VERSION;
 
-const simulatorItems = computed(() => Object.values(simulators));
+const workspaceItems = computed(() => Object.values(workspaces));
 
 const themes = [
   { icon: "mdi:mdi-white-balance-sunny", title: "light", value: "light" },

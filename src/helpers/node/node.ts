@@ -1,19 +1,19 @@
 // node.ts
 
-import { TConnection, TModel, TNetwork, TNode, TNodes, TSimulation } from "@/types";
+import { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
-import { Activity, IActivityProps } from "../activity/activity";
-import { AnalogSignalActivity } from "../activity/analogSignalActivity";
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
 import { BaseObj } from "../common/base";
+import { IActivityProps } from "../activity/activity";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
 import { INodeViewProps, NodeView } from "./nodeView";
 import { IParamProps } from "../common/parameter";
 import { ModelParameter } from "../model/modelParameter";
-import { NodeGroup } from "./nodeGroup";
+import { NodeActivity } from "../nodeActivity/nodeActivity";
+import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
 import { NodeParameter } from "./nodeParameter";
-import { SpikeActivity } from "../activity/spikeActivity";
+import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
 import { notifyInfo } from "../common/notification";
 import { onlyUnique, sortString } from "../../utils/array";
 
@@ -28,7 +28,7 @@ export interface INodeProps {
 }
 // export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
 export class BaseNode extends BaseObj {
-  private _activity?: SpikeActivity | AnalogSignalActivity | Activity = undefined;
+  private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;
   private _annotations: string[] = [];
   private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
@@ -54,11 +54,11 @@ export class BaseNode extends BaseObj {
     this._view = new NodeView(this, nodeProps.view);
   }
 
-  get activity(): SpikeActivity | AnalogSignalActivity | Activity | undefined {
+  get activity(): NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined {
     return this._activity;
   }
 
-  set activity(value: SpikeActivity | AnalogSignalActivity | Activity) {
+  set activity(value: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity) {
     this._activity = value;
   }
 
@@ -67,13 +67,13 @@ export class BaseNode extends BaseObj {
   }
 
   get connectedNodes(): TNode[] {
-    if (this.model.isSpikeRecorder) {
-      return this.sourceNodes;
-    }
-    if (this.model.isAnalogRecorder) {
-      return this.targetNodes;
-    }
-    return [];
+    if (this.model.isSpikeRecorder) return this.sourceNodes;
+    if (this.model.isAnalogRecorder) return this.targetNodes;
+    return [...this.sourceNodes, ...this.targetNodes];
+  }
+
+  get connectedRecorders(): TNode[] {
+    return this.connectedNodes.filter((node: TNode) => node.model.isRecorder);
   }
 
   get connections(): TConnection[] {
@@ -135,6 +135,10 @@ export class BaseNode extends BaseObj {
    */
   get isExcitatoryNeuron(): boolean {
     return this.model?.isNeuron && this._view.synWeights === "excitatory";
+  }
+
+  get isRecorded(): boolean {
+    return this.connectedNodes.some((node: TNode) => node.model.isRecorder);
   }
 
   get isGroup(): boolean {
@@ -224,8 +228,8 @@ export class BaseNode extends BaseObj {
     return this._nodes;
   }
 
-  get nodeGroups(): NodeGroup[] {
-    return this._nodes.nodeGroups.filter((nodeGroup: NodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
+  get nodeGroups(): TNodeGroup[] {
+    return this._nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
   }
 
   get nodeIdx(): number {
@@ -252,10 +256,15 @@ export class BaseNode extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
+    this.changes({ preventSimulation: true });
   }
 
   get parentNodes(): TNodes {
     return this._nodes;
+  }
+
+  get project(): TProject {
+    return this._nodes.network.project as TProject;
   }
 
   get recordables(): NodeRecord[] {
@@ -264,6 +273,7 @@ export class BaseNode extends BaseObj {
 
   set recordables(value: NodeRecord[]) {
     this._recordables = value;
+    this.changes({ preventSimulation: true });
   }
 
   get records(): NodeRecord[] {
@@ -284,10 +294,6 @@ export class BaseNode extends BaseObj {
 
   get show(): boolean {
     return this._nodes.showNode(this);
-  }
-
-  get simulation(): TSimulation {
-    return this.nodes.network.project.simulation;
   }
 
   get size(): number {
@@ -382,11 +388,11 @@ export class BaseNode extends BaseObj {
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  changes(): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.update();
-    this.nodes.network.changes();
+    this.nodes.network.changes(props);
   }
 
   /**
@@ -412,7 +418,13 @@ export class BaseNode extends BaseObj {
       nodeProps.view.color = undefined;
     }
 
-    return this.nodes.addNode({ ...nodeProps });
+    // Add node.
+    const node = this.nodes.addNode({ ...nodeProps });
+
+    // Initialize node.
+    node.init();
+
+    return node;
   }
 
   /**
@@ -450,9 +462,9 @@ export class BaseNode extends BaseObj {
     if (!this.model.isRecorder) return;
 
     if (this.model.isSpikeRecorder) {
-      this._activity = new SpikeActivity(this, activityProps);
+      this._activity = new NodeSpikeActivity(this, activityProps);
     } else if (this.model.isAnalogRecorder) {
-      this._activity = new AnalogSignalActivity(this, activityProps);
+      this._activity = new NodeAnalogSignalActivity(this, activityProps);
     }
   }
 
@@ -560,7 +572,7 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.nodes.network.changes(recorderModelChanged);
+    this.nodes.network.changes({ preventSimulation: true, cleanPanels: recorderModelChanged });
   }
 
   /**
@@ -743,7 +755,7 @@ export class BaseNode extends BaseObj {
     if (!this.model.isRecorder) return;
 
     // Create activity.
-    this.createActivity();
+    this.createActivity(this.props.activity);
 
     // Update analog recorder.
     if (this.model.isAnalogRecorder) this.updateAnalogRecorder();

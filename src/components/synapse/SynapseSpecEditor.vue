@@ -48,6 +48,7 @@ const items = [
     id: "paramsReset",
     onClick: () => {
       synapse.value.reset();
+      synapse.value.changes({ preventSimulation: true });
     },
     prependIcon: "mdi:mdi-restart",
     title: "Reset synaptic weight",

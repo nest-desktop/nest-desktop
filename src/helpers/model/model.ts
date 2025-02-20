@@ -1,7 +1,7 @@
 // model.ts
 
-import { v4 as uuidv4 } from "uuid";
 import { UnwrapRef, reactive } from "vue";
+import { v4 as uuidv4 } from "uuid";
 
 import { TProject } from "@/types";
 
@@ -73,6 +73,10 @@ export class BaseModel extends BaseObj {
 
   get custom(): boolean {
     return false;
+  }
+
+  set custom(value: boolean) {
+    value;
   }
 
   get doc(): IModelProps {
@@ -206,13 +210,6 @@ export class BaseModel extends BaseObj {
    */
   clean(): void {
     // this._idx = this._modelDBStore.state.models.indexOf(this);
-  }
-
-  /**
-   * Clone this model object.
-   */
-  clone(): BaseModel {
-    return new BaseModel({ ...this.toJSON() });
   }
 
   /**

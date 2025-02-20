@@ -7,14 +7,14 @@ import { logger as mainLogger } from "@/utils/logger";
 
 import { useNavStore } from "./navStore";
 
-export const defineViewStore = (props: { name: string; simulator: string; views: Record<string, string> }) => {
+export const defineViewStore = (props: { name: string; workspace: string; views: Record<string, string> }) => {
   const logger = mainLogger.getSubLogger({
     minLevel: 3,
-    name: props.simulator + " " + props.name + " view store",
+    name: props.workspace + " " + props.name + " view store",
   });
 
   return defineStore(
-    props.simulator + "-" + props.name + "-view",
+    props.workspace + "-" + props.name + "-view",
     () => {
       const state = reactive<{
         bottomNav: {

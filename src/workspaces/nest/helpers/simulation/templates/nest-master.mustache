@@ -1,0 +1,124 @@
+import nest
+import numpy as np
+
+nest.ResetKernel()
+{{ #simulation.modules }}
+nest.Install("{{.}}")
+{{ /simulation.modules }}
+
+# Set simulation kernel
+nest.SetKernelStatus({
+  "local_num_threads": {{ simulation.kernel.localNumThreads }},
+  "resolution": {{ simulation.kernel.resolution }},
+  "rng_seed": {{ simulation.kernel.rngSeed }}
+})
+{{ #network.modelsCopied.hasNodeModels }}
+
+# Copy node models
+{{ #network.modelsCopied.nodeModels }}
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.modelsCopied.nodeModels }}
+{{ /network.modelsCopied.hasNodeModels }}
+
+# Create nodes
+{{ #network.nodes.all }}
+{{ #isGroup }}
+{{ view.label }} = {{ toCode }}
+{{ /isGroup }}
+{{ #isNode }}
+{{ view.label }} = nest.Create("{{ modelId }}"{{ #sizeVisible }}, {{ n }}{{ /sizeVisible }}{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+{{ #model.isRecorder }}
+{{ #model.isMultimeter }}
+  "record_from": {{ &recordsFixed }},
+{{ /model.isMultimeter }}
+{{ #code.doRunSimulationInsite }}
+  "record_to": "insite",
+{{ /code.doRunSimulationInsite }}
+{{ /model.isRecorder }}
+}{{ /hasSomeVisibleParams }}{{ #spatial.positions }},
+  positions={{ &spatial.code }}{{ /spatial.positions }})
+{{ /isNode }}
+{{ /network.nodes.all }}
+{{ #network.hasSomeNodeCompartments }}
+
+# Create node compartments
+{{ #network.nodes.all }}
+{{ #hasCompartments }}
+{{ view.label }}.compartments = [
+{{ #compartments }}
+  {"parent_idx": {{ parentIdx }}{{ #hasSomeParams }}, "params": {
+    {{ #filteredParams }}"{{ id }}": {{ code }},
+    {{ /filteredParams }}}
+  {{ /hasSomeParams }}},
+{{ /compartments }}
+]
+{{ /hasCompartments }}
+{{ /network.nodes.all }}
+{{ /network.hasSomeNodeCompartments }}
+{{ #network.hasSomeNodeReceptors }}
+
+# Create node receptors
+{{ #network.nodes.all }}
+{{ #hasReceptors }}
+{{ view.label }}.receptors = [
+{{ #receptors }}
+  {"comp_idx": {{ compartment.idx }}, "receptor_type": "{{ id }}"{{ #hasSomeParams }}, "params": {
+    {{ #filteredParams }}"{{ id }}": {{ code }},
+    {{ /filteredParams }}}
+  {{ /hasSomeParams }}},
+{{ /receptors }}
+]
+{{ /hasReceptors }}
+{{ /network.nodes.all }}
+{{ /network.hasSomeNodeReceptors }}
+{{ #network.modelsCopied.hasSynapseModels }}
+
+# Copy synapse models
+{{ #network.modelsCopied.synapseModels }}
+nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}{{ #params.weight_recorder }}
+  "weight_recorder": {{ params.weight_recorder.code }},
+{{ /params.weight_recorder  }}
+}{{ /hasSomeVisibleParams }})
+{{ /network.modelsCopied.synapseModels }}
+{{ /network.modelsCopied.hasSynapseModels }}
+
+# Connect nodes
+{{ #network.connections.all }}
+nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule.value }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
+  "rule": "{{ rule.value }}",
+{{ #filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /filteredParams }}
+}{{ /hasSomeVisibleParams }}{{ /hasConnSpec }}{{ #synapse.hasSynSpec }}, syn_spec={{ ^synapse.hasSomeVisibleParams }}"{{ synapse.modelId }}"{{ /synapse.hasSomeVisibleParams }}{{ #synapse.hasSomeVisibleParams }}{ {{ ^synapse.isStatic }}
+  "synapse_model": "{{ synapse.modelId }}",{{ /synapse.isStatic }}
+{{ #synapse.filteredParams }}
+  "{{ id }}": {{ code }},
+{{ /synapse.filteredParams }}
+{{ #synapse.hasReceptorIndices }}
+  "receptor_type": {{ synapse.receptorIdx }},
+{{ /synapse.hasReceptorIndices }}
+}{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
+{{ /network.connections.all }}
+
+# Run simulation
+nest.Simulate({{ simulation.time }})
+
+{{ #network.nodes.hasSomeSpatialNodes }}
+# Get positions
+pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))
+
+{{ /network.nodes.hasSomeSpatialNodes }}
+response = {
+  "events": [{{ #network.nodes.recorders }}{{ view.label }}.events, {{ /network.nodes.recorders }}]{{ #network.nodes.hasSomeSpatialNodes }},
+  "positions": { {{ #network.nodes.spatialNodes }}**pos({{ view.label }}),{{ /network.nodes.spatialNodes }} }{{ /network.nodes.hasSomeSpatialNodes }}
+}

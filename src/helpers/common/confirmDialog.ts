@@ -1,3 +1,5 @@
+// confirmDialog.ts
+
 import { createDialog } from "vuetify3-dialog";
 
 export const confirmDialog = (props: { text: string; title: string }): Promise<boolean> =>

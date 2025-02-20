@@ -42,15 +42,16 @@
 import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";
-import { IProjectProps } from "@/helpers/project/project";
+import { INetworkProjectProps } from "@/helpers/project/networkProject";
 import { TModel, TProject, TStore } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
 interface IDeleteProps {
+  group: string;
   name: string;
-  props: IModelProps | IProjectProps;
+  props: IModelProps | INetworkProjectProps;
 }
 
 const props = defineProps<{ store: TStore }>();
@@ -73,6 +74,16 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
  * Delete selected.
  */
 const deleteSelected = () => {
+  if (store.value.state.projects) {
+    const projectProps = state.selected.filter((item) => item.group === "project").map((project) => project.props);
+    store.value.deleteProjects(projectProps);
+  }
+
+  if (store.value.state.models) {
+    const modelProps = state.selected.filter((item) => item.group === "model").map((model) => model.props);
+    store.value.deleteModels(modelProps);
+  }
+
   state.selected = [];
 };
 
@@ -84,8 +95,9 @@ const update = (): void => {
   state.items = [];
 
   if (store.value.state.projects) {
-    store.value.state.projects.forEach((project: TProject | IProjectProps) => {
+    store.value.state.projects.forEach((project: TProject | INetworkProjectProps) => {
       state.items.push({
+        group: "project",
         name: project.name as string,
         props: project.doc ? project.toJSON() : project,
       });
@@ -95,6 +107,7 @@ const update = (): void => {
   if (store.value.state.models) {
     store.value.state.models.forEach((model: TModel) => {
       state.items.push({
+        group: "model",
         name: model.state.label as string,
         props: model.toJSON(),
       });

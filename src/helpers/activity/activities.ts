@@ -3,12 +3,14 @@
 import { UnwrapRef, reactive } from "vue";
 
 import { IResponseData } from "@/stores/defineBackendStore";
-import { TNode, TProject } from "@/types";
+import { TProject } from "@/types";
 
-import { SpikeActivity } from "../activity/spikeActivity";
-import { BaseObj } from "../common/base";
 import { Activity, IActivityProps, IEventProps } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
+import { BaseObj } from "../common/base";
+import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
+import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
+import { SpikeActivity } from "../activity/spikeActivity";
 
 interface IActivitiesState {
   activityStatsPanelId: number;
@@ -19,6 +21,7 @@ interface IActivitiesState {
 }
 
 export class Activities extends BaseObj {
+  private _activities: Activity[];
   private _state: UnwrapRef<IActivitiesState>;
   public _project: TProject;
 
@@ -33,51 +36,28 @@ export class Activities extends BaseObj {
       hasSomeSpatialActivities: false,
       hasSomeSpikeRecorders: false,
     });
+  }
 
-    this.checkRecorders();
+  get activities(): Activity[] {
+    return this._activities;
   }
 
   /**
    * Get all activities.
    */
   get all(): Activity[] {
-    let activities = [] as Activity[];
-
-    if (this.project.network)
-      activities = this.project.network.nodes.recorders.map((recorder: TNode) => recorder.activity as Activity);
-
-    // Update activity idx.
-    if (activities.length > 0)
-      activities
-        .filter((activity: Activity) => activity)
-        .forEach((activity: Activity, idx: number) => (activity.idx = idx));
-
-    return activities;
+    return this._activities;
   }
 
   /**
    * Get a list of analog signal activities.
    */
-  get analogSignals(): AnalogSignalActivity[] {
-    const activities: AnalogSignalActivity[] = this._project.network
-      ? this.project.network.nodes.recordersAnalog.map((recorder: TNode) => recorder.activity as AnalogSignalActivity)
-      : [];
+  get analogSignals(): (AnalogSignalActivity | NodeAnalogSignalActivity)[] {
+    const activities: AnalogSignalActivity[] = this._activities.filter(
+      (activity: Activity) => activity.isAnalogSignalActivity,
+    ) as AnalogSignalActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
-  }
-
-  /**
-   * Get a list of neuronal analog signal activities.
-   */
-  get neuronAnalogSignals(): AnalogSignalActivity[] {
-    return this.analogSignals.filter((activity: AnalogSignalActivity) => activity.hasNeuronAnalogData);
-  }
-
-  /**
-   * Get a list of input analog signal activities.
-   */
-  get inputAnalogSignals(): AnalogSignalActivity[] {
-    return this.analogSignals.filter((activity: AnalogSignalActivity) => activity.hasInputAnalogData);
   }
 
   get project(): TProject {
@@ -87,10 +67,10 @@ export class Activities extends BaseObj {
   /**
    * Get a list of spike activities.
    */
-  get spikes(): SpikeActivity[] {
-    const activities: SpikeActivity[] = this._project.network
-      ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as SpikeActivity)
-      : [];
+  get spikes(): (SpikeActivity | NodeSpikeActivity)[] {
+    const activities: SpikeActivity[] = this._activities.filter(
+      (activity: Activity) => activity.isSpikeActivity,
+    ) as SpikeActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
   }
@@ -141,6 +121,7 @@ export class Activities extends BaseObj {
    * Check whether the project has some recorders of each type.
    */
   checkRecorders(): void {
+    if (!("network" in this.project)) return;
     this.logger.trace("check recorders");
 
     // Check if the project contains some analog signal recorder.
@@ -152,7 +133,7 @@ export class Activities extends BaseObj {
 
   // Initialize activities.
   init(): void {
-    this.checkRecorders();
+    this.logger.trace("init");
   }
 
   /**
@@ -173,7 +154,7 @@ export class Activities extends BaseObj {
   }
 
   /**
-   * Update activities in recorder nodes after simulation.
+   * Update activities in recorder nodes after executing code.
    */
   update(data: IActivityProps[] | IResponseData): void {
     this.logger.trace("update");

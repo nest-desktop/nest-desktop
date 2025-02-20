@@ -26,7 +26,6 @@
     </v-menu>
 
     {{ nodeRecord.groupId }}
-    {{ nodeRecord.uuid.slice(0, 6) }}
   </v-chip>
 </template>
 

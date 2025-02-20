@@ -1,21 +1,14 @@
 // spikeActivity.ts
 
-import { TNode } from "@/types";
+import { TProject } from "@/types";
 
 import { Activity, IActivityProps, IEventProps } from "./activity";
 
 export class SpikeActivity extends Activity {
   private _times: number[][] = [];
 
-  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
-    super(recorder, activityProps);
-  }
-
-  /**
-   * Clone spike activity.
-   */
-  override clone(): SpikeActivity {
-    return new SpikeActivity(this.recorder, this.toJSON());
+  constructor(project: TProject, activityProps: IActivityProps = {}) {
+    super(project, activityProps);
   }
 
   /**

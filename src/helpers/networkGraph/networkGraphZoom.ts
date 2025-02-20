@@ -1,5 +1,6 @@
 // networkGraphZoom.ts
 
+import { nextTick } from "vue";
 import { zoom } from "d3";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
@@ -58,7 +59,7 @@ export class NetworkGraphZoom {
       })
       .on("end", () => {
         this._workspace.handler.style("cursor", "default");
-        this._workspace.networkGraph.nodeGraph.render();
+        nextTick(() => this._workspace.networkGraph.nodeGraph.render());
       });
   }
 }

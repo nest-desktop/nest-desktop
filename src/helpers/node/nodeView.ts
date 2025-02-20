@@ -1,6 +1,6 @@
 // nodeView.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { TConnection, TNode } from "@/types";
 
@@ -144,6 +144,15 @@ export class NodeView extends BaseObj {
     return this._state;
   }
 
+  get showSize(): boolean {
+    return this._state.showSize;
+  }
+
+  set showSize(value: boolean) {
+    this._state.showSize = value;
+    this._node.changes({ preventSimulation: true });
+  }
+
   /**
    * Get term based on synapse weight.
    */
@@ -158,6 +167,26 @@ export class NodeView extends BaseObj {
         (this._state.synWeights === "inhibitory" ? -1 : 1) * Math.abs(connection.synapse.params.weight.value as number);
       connection.synapse.params.weight.visible = true;
     });
+  }
+
+  /**
+   * Check synapse weights.
+   */
+  checkSynWeights(): void {
+    this.logger.trace("check syn weights");
+    const weights: number[] = this.node.connectionsNeuronTargets.map(
+      (connection: TConnection) => connection.synapse.params.weight.value as number,
+    );
+
+    let synWeights = "mixed";
+    if (weights.length === 0) synWeights = "excitatory";
+    else {
+      if (weights.every((weight: number) => weight > 0)) synWeights = "excitatory";
+      if (weights.every((weight: number) => weight < 0)) synWeights = "inhibitory";
+    }
+    this._state.synWeights = synWeights;
+
+    nextTick(() => this.node.network.graph.render());
   }
 
   /**
