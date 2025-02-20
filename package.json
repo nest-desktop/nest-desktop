@@ -1,7 +1,7 @@
 {
   "name": "nest-desktop",
   "desktopName": "io.github.nest_desktop.nest-desktop",
-  "version": "4.0.5-rc2",
+  "version": "4.0.5",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for the simulation of spiking neuronal networks.",
   "author": {
@@ -49,7 +49,7 @@
     "roboto-fontface": "*",
     "stats.js": "~0.17",
     "three": "~0.173",
-    "uuid": "~11.0",
+    "uuid": "~11.1",
     "vue": "~3.5",
     "vue-codemirror": "~6.1",
     "vue-router": "~4.5",
