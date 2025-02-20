@@ -228,7 +228,7 @@ export class BaseProject extends BaseObj {
    */
   toJSON(): IBaseProjectProps {
     const projectProps: IBaseProjectProps = {
-      activityGraph: this._activityGraph.toJSON(),
+      activityGraph: this.activityGraph.toJSON(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,
@@ -236,8 +236,6 @@ export class BaseProject extends BaseObj {
       updatedAt: this._updatedAt,
       version: process.env.APP_VERSION as string,
     };
-
-    if (this.code.state.customBlocks) projectProps.code = this.code.toJSON();
 
     return projectProps;
   }

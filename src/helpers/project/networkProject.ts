@@ -228,13 +228,13 @@ export class NetworkProject extends BaseProject {
    */
   override toJSON(): INetworkProjectProps {
     const projectProps: INetworkProjectProps = {
-      activityGraph: this._activityGraph.toJSON(),
+      activityGraph: this.activityGraph.toJSON(),
       createdAt: this.createdAt,
       description: this.description,
       id: this.id,
       name: this.name,
-      network: this._network.toJSON(),
-      simulation: this._simulation.toJSON(),
+      network: this.network.toJSON(),
+      simulation: this.simulation.toJSON(),
       updatedAt: this.updatedAt,
       version: process.env.APP_VERSION as string,
     };
