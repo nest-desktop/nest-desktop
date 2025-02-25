@@ -4,10 +4,9 @@ import { nextTick } from "vue";
 import { AxiosResponse } from "axios";
 
 import { IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TNetwork, TProject, TSimulation, TSimulationCode } from "@/types";
+import { TNetwork, TSimulation, TSimulationCode } from "@/types";
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 
-import { Activity } from "../activity/activity";
 import { BaseProject, IBaseProjectProps } from "./project";
 import { INetworkProps, BaseNetwork } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";

@@ -1,6 +1,6 @@
 // project.ts
 
-import { TActivityGraph, TStore, TProject, TCode } from "@/types";
+import { TActivityGraph, TStore, TCode } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 
