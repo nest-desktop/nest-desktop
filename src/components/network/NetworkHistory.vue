@@ -11,7 +11,7 @@
       <v-badge
         :content="countBefore"
         :offset-y="countBefore > 0 ? -2 : -18"
-        color="blue"
+        color="transparent"
         location="bottom right"
         offset-x="-8"
       >
@@ -23,7 +23,7 @@
       <v-badge
         :content="countAfter"
         :offset-y="countAfter > 0 ? -2 : -18"
-        color="blue"
+        color="transparent"
         location="bottom right"
         offset-x="-8"
       >
