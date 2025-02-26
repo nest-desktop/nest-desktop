@@ -939,9 +939,9 @@
     crelt "^1.0.5"
 
 "@codemirror/search@^6.0.0":
-  version "6.5.9"
-  resolved "https://registry.yarnpkg.com/@codemirror/search/-/search-6.5.9.tgz#08829cf1db9d093dd4822bb22ece93da3ebffefc"
-  integrity sha512-7DdQ9aaZMMxuWB1u6IIFWWuK9NocVZwvo4nG8QjJTS6oZGvteoLSiXw3EbVZVlO08Ri2ltO89JVInMpfcJxhtg==
+  version "6.5.10"
+  resolved "https://registry.yarnpkg.com/@codemirror/search/-/search-6.5.10.tgz#7367bfc88094d078b91c752bc74140fb565b55ee"
+  integrity sha512-RMdPdmsrUf53pb2VwflKGHEe1XVM07hI7vV2ntgw1dmqhimpatSJKva4VA9h4TLUDOD4EIF02201oZurpnEFsg==
   dependencies:
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
@@ -2561,9 +2561,9 @@
     tinyrainbow "^2.0.0"
 
 "@vitest/eslint-plugin@~1.1":
-  version "1.1.31"
-  resolved "https://registry.yarnpkg.com/@vitest/eslint-plugin/-/eslint-plugin-1.1.31.tgz#a5336f2093d2806fb5b9f04ac8e57672691fcc1f"
-  integrity sha512-xlsLr+e+AXZ/00eVZCtNmMeCJoJaRCoLDiAgLcxgQjSS1EertieB2MUHf8xIqPKs9lECc/UpL+y1xDcpvi02hw==
+  version "1.1.33"
+  resolved "https://registry.yarnpkg.com/@vitest/eslint-plugin/-/eslint-plugin-1.1.33.tgz#c87cde023c76578c5fd2a0b3e40b7617456662a5"
+  integrity sha512-n0OfClfRceOFN1PX4FW5kpmaokApg6lPBWTAI2r8BxCJqEY6xG3VvNWnIn6sbUAGWVjIlUGMVtsF3ihga/Up2g==
 
 "@vitest/expect@3.0.7":
   version "3.0.7"
@@ -3146,10 +3146,10 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@~1.7:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.9.tgz#d7d071380c132a24accda1b2cfc1535b79ec650a"
-  integrity sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==
+axios@~1.8:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.0.tgz#f68607ed4caf0f741ef084949ebb6f3d973c6837"
+  integrity sha512-AS3x1klSQ4VeoeAaOyITVjomjITxIRgpKVgAXhE8QFJiNiYliuU+cW0p7XpqvlwNKmiwE57aNEyhPtsfAxERqg==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -3455,9 +3455,9 @@ callsites@^3.0.0:
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
 caniuse-lite@^1.0.30001688:
-  version "1.0.30001700"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001700.tgz#26cd429cf09b4fd4e745daf4916039c794d720f6"
-  integrity sha512-2S6XIXwaE7K7erT8dY+kLQcpa5ms63XlRkMkReXjle+kf6c5g38vyMl+Z5y8dSxOFDhcFe+nxnn261PLxBSQsQ==
+  version "1.0.30001701"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001701.tgz#ad9c90301f7153cf6b3314d16cc30757285bf9e7"
+  integrity sha512-faRs/AW3jA9nTwmJBSO1PQ6L/EOgsB5HMQQq4iCu5zhPgVVgO/pZRHlmatwijZKetFw8/Pr4q6dEN8sJuq8qTw==
 
 catering@^2.0.0, catering@^2.1.0:
   version "2.1.1"
@@ -4313,9 +4313,9 @@ electron-publish@25.1.7:
     mime "^2.5.2"
 
 electron-to-chromium@^1.5.73:
-  version "1.5.104"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.104.tgz#e92a1ec54f279d8fc60eb7e8cf6add9631631f38"
-  integrity sha512-Us9M2L4cO/zMBqVkJtnj353nQhMju9slHm62NprKTmdF3HH8wYOtNvDFq/JB2+ZRoGLzdvYDiATlMHs98XBM1g==
+  version "1.5.105"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.105.tgz#0b2396e7e1a467434cd3132950bbe53c04f74a5e"
+  integrity sha512-ccp7LocdXx3yBhwiG0qTQ7XFrK48Ua2pxIxBdJO8cbddp/MvbBtPFzvnTchtyHQTsgqqczO8cdmAIbpMa0u2+g==
 
 electron@~34.2:
   version "34.2.0"
@@ -6659,9 +6659,9 @@ ohash@^1.1.4:
   integrity sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==
 
 ohash@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/ohash/-/ohash-2.0.4.tgz#ca6be3cc32fac3bfa0147f3c4fefa36a4a067825"
-  integrity sha512-ac+SFwzhdHb0hp48/dbR7Jta39qfbuj7t3hApd9uyHS8bisHTfVzSEvjOVgV0L3zG7VR2/7JjkSGimP75D+hOQ==
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/ohash/-/ohash-2.0.5.tgz#656fb31771124bcb903d7b675dd35cd711ea1bac"
+  integrity sha512-3k3APZwRRPYyohdIDmPTpe5i0AY5lm7gvu/Oip7tZrTaEGfSlKX+7kXUoWLd9sHX0GDRVwVvlW18yEcD7qS1zw==
 
 once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
@@ -7285,9 +7285,9 @@ retry@^0.12.0:
   integrity sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==
 
 reusify@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
-  integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.1.0.tgz#0fe13b9522e1473f51b558ee796e08f11f9b489f"
+  integrity sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==
 
 rfdc@^1.4.1:
   version "1.4.1"
@@ -8738,9 +8738,9 @@ vuetify3-dialog@~1.5:
   integrity sha512-85IbPTugS+Y2A68mNgIzYhi6/Hqnew89fe4fkAzJvVajskvk2btLQSfWyAh4D9TKCF+uELPqVJGJ51XN5BhyUA==
 
 vuetify@~3.7:
-  version "3.7.13"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.7.13.tgz#c7aad28d2e3eae2dd30f0df0acf6dbe79e23dfdc"
-  integrity sha512-4+RuQU+zLtXhlN2eZUpKXums9ftzUzhMeiNEJvvJY4XdOzVwUCth2dTnEZkSF6EKdLHk3WhtRk0cIWXZxpBvcw==
+  version "3.7.14"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.7.14.tgz#7d082cc90eef79cc17725a6983e3762b9041d0cd"
+  integrity sha512-L5oD0x3Wrp49Khp+16dRykAFUZq6WXqX7OHLTwXnyEliJ48ERC9WfEtN0YOuEIhor/b2IOZXl+11fs/m452/Lw==
 
 vuvuzela@1.0.3:
   version "1.0.3"
