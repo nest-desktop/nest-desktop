@@ -4,9 +4,8 @@ import { ICodeProps } from "@/helpers/code/code";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
-import { AxiosError, AxiosResponse } from "axios";
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { notifyError } from "@/helpers/common/notification";
+import { AxiosResponse } from "axios";
+import { IAxiosResponseData } from "@/stores/defineBackendStore";
 import { SimulationCode } from "@/helpers/simulation/simulationCode";
 
 export class NESTSimulationCode extends SimulationCode {
