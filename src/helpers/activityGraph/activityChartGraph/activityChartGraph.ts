@@ -547,7 +547,7 @@ export class ActivityChartGraph extends BaseObj {
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       panel.model.updateActivities();
-      panel.model.initAnalogRecords();
+      if (panel.model.activityType == "analog") panel.model.initAnalogRecords();
     });
   }
 
