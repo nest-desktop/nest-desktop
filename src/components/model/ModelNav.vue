@@ -108,7 +108,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 

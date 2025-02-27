@@ -46,7 +46,7 @@
   </v-data-table-virtual>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, onMounted, reactive, watch } from "vue";
 
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";

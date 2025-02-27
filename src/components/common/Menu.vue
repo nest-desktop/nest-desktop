@@ -22,7 +22,7 @@
   </v-btn>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 interface IItem {
   icon?: { class?: string; icon: string };
   onClick: () => void;

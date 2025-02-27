@@ -55,7 +55,7 @@
   </Card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import Menu from "../common/Menu.vue";

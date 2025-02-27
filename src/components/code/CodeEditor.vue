@@ -25,11 +25,10 @@
   <CodeMirror v-if="code" :disabled="state.disabled" :code="code" />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive } from "vue";
 
 import CodeMirror from "./CodeMirror.vue";
-import IconBtn from "../common/IconBtn.vue";
 import { TCode } from "@/types";
 
 defineProps<{ code: TCode }>();

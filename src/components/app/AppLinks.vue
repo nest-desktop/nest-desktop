@@ -12,7 +12,7 @@
   </v-list>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 const linkItems = [
   {
     href: "https://nest-desktop.github.io",

@@ -73,7 +73,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 

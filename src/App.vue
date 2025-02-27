@@ -2,7 +2,7 @@
   <router-view />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { nextTick, onMounted, reactive } from "vue";
 
 import { confirmDialog } from "./helpers/common/confirmDialog";

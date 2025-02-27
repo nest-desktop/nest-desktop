@@ -66,7 +66,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";

@@ -16,7 +16,7 @@
   </v-btn>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 defineProps<{
   projects: { id: string; name: string; icon: string }[];
   modelValue: string;

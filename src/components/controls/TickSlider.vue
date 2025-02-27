@@ -31,7 +31,7 @@
   </v-slider>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, reactive, onMounted, watch } from "vue";
 
 interface IProps {

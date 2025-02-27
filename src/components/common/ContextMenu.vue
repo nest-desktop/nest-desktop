@@ -30,7 +30,7 @@
   </v-menu>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive } from "vue";
 
 interface IItem {

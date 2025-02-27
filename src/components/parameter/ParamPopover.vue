@@ -17,7 +17,7 @@
   </v-btn>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ParameterSpecEditor from "./ParamSpecEditor.vue";
 import { TParameter } from "@/types";
 

@@ -178,7 +178,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 

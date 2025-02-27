@@ -10,7 +10,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";

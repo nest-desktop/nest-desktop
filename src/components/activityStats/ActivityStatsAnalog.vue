@@ -118,7 +118,7 @@
   </v-data-table-virtual>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
 import ColorPicker from "../common/ColorPicker.vue";

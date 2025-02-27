@@ -95,7 +95,7 @@
   </v-list-item>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick } from "vue";
 
 import ArrayInput from "../controls/ArrayInput.vue";
