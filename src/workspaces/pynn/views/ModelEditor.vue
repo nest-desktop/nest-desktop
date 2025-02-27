@@ -11,7 +11,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Codemirror } from "vue-codemirror";
 
 import { currentModel, usePyNNModelStore } from "../stores/model/modelStore";

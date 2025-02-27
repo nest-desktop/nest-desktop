@@ -177,7 +177,7 @@
   </template>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";

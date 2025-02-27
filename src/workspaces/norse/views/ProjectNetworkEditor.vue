@@ -5,7 +5,7 @@
   </v-layout>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 

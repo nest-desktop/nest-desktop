@@ -29,7 +29,7 @@
   </v-select>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useNESTModuleStore } from "../../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 </script>

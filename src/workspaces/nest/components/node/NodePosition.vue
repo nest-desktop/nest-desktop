@@ -30,7 +30,7 @@
   </v-label>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { NESTNodeSpatial } from "../../helpers/node/nodeSpatial/nodeSpatial";
 import NodePositionMenu from "./NodePositionMenu.vue";
 

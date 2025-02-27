@@ -32,7 +32,7 @@
   </Card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import Card from "../common/Card.vue";
 import ConnectionViewer from "../connection/ConnectionViewer.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";

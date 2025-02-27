@@ -35,7 +35,7 @@
   </v-container>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NodeViewer from "@/components/node/NodeViewer.vue";
 import { BaseNode } from "@/helpers/node/node";

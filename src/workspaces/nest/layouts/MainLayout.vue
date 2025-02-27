@@ -6,7 +6,7 @@
   </v-main>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";

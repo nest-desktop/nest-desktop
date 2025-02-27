@@ -7,7 +7,7 @@
   </v-avatar>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 defineProps({
   color: { type: String, default: "primary" },
 });

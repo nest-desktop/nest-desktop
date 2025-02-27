@@ -149,7 +149,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 

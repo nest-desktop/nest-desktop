@@ -75,7 +75,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import axios, { AxiosResponse } from "axios";
 import { nextTick, onMounted, reactive } from "vue";
 

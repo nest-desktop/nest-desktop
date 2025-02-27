@@ -47,7 +47,7 @@
   </v-select>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick, onMounted, reactive } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";

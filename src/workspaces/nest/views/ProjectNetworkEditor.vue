@@ -34,7 +34,7 @@
   </v-layout>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ConnectionMenuList from "@/components/connection/ConnectionMenuList.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 import NetworkGraph from "@/components/network/NetworkGraph.vue";

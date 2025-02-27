@@ -15,7 +15,7 @@
   </v-select>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick, onMounted } from "vue";
 import { createDialog } from "vuetify3-dialog";
 

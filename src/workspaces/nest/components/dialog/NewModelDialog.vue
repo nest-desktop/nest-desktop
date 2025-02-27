@@ -39,7 +39,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { nextTick, onMounted, ref } from "vue";
 import NESTMLModelSelect from "../model/NESTMLModelSelect.vue";
 import { NESTModel } from "../../helpers/model/model";
