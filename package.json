@@ -43,7 +43,7 @@
     "object-hash": "~3.0",
     "pinia": "~3.0",
     "pinia-plugin-persistedstate": "~4.2",
-    "plotly.js-cartesian-dist-min": "~2.35",
+    "plotly.js-cartesian-dist-min": "~3.0",
     "pouchdb": "~9.0",
     "pouchdb-upsert": "~2.2",
     "roboto-fontface": "*",
