@@ -1,2 +1,6 @@
 # https://www.python.org/dev/peps/pep-0440
-__version__ = "4.0.5"
+
+from importlib import metadata as _metadata  # noqa
+
+__version__ = _metadata.version("nest-desktop")
+del _metadata

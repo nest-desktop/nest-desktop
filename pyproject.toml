@@ -37,7 +37,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = []
-dynamic = ["version"]
+version = "4.0.5"
 
 [project.urls]
 repository = "https://github.com/nest-desktop/nest-desktop"
@@ -46,6 +46,3 @@ documentation = "https://nest-desktop.readthedocs.io"
 [tool.setuptools]
 package-dir = {"nest_desktop" = "nest_desktop"}
 script-files = ["scripts/nest-desktop"]
-
-[tool.setuptools.dynamic]
-version = {attr = "nest_desktop.__version__"}
