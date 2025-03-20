@@ -93,7 +93,7 @@
     "sharp": "~0.33",
     "tslog": "~4.9",
     "typescript": "~5.8",
-    "typescript-eslint": "~8.26",
+    "typescript-eslint": "~8.27",
     "unplugin-fonts": "~1.3",
     "vite": "~6.2",
     "vite-plugin-electron": "~0.29",
