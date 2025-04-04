@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   nest-desktop:
     image: nest/nest-desktop:4.0
