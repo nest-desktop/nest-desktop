@@ -53,13 +53,13 @@ const updateView = (event: EditorView) => {
 watch(
   () => code.value.script,
   () => {
-    if (!state.focused && state.cursor.from > 0) {
-      nextTick(() => {
-        view.value.dispatch({
-          selection: state.cursor,
-        });
+    // if (!state.focused && state.cursor.from > 0) {
+    nextTick(() => {
+      view.value.dispatch({
+        selection: state.cursor,
       });
-    }
+    });
+    // }
   },
 );
 
