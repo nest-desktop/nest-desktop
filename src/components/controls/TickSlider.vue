@@ -40,10 +40,10 @@ interface IProps {
   unit?: string;
 }
 
-const props = withDefaults(defineProps<IProps>(), {
-  modelValue: 0,
-  tickLabels: () => [""],
-  unit: "",
+const props = defineProps({
+  modelValue: { default: 0, type: Array<number> },
+  tickLabels: { default: [""], type: Array<string> },
+  unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);
 
