@@ -34,15 +34,9 @@
 <script setup lang="ts">
 import { computed, reactive, onMounted, watch } from "vue";
 
-interface IProps {
-  modelValue: number | string;
-  tickLabels?: (number | string)[];
-  unit?: string;
-}
-
 const props = defineProps({
-  modelValue: { default: 0, type: Array<number> },
-  tickLabels: { default: [""], type: Array<string> },
+  modelValue: { default: 0, type: Number || String },
+  tickLabels: { default: [""], type: Array<Number | String> },
   unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);

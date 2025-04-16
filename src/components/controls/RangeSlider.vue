@@ -47,8 +47,8 @@
 import { computed, reactive, watch } from "vue";
 
 const props = defineProps({
-  inputLabel: { default: ["lower", "upper"], type: Array<string> },
-  modelValue: { default: [0, 100], type: Array<number> },
+  inputLabel: { default: ["lower", "upper"], type: Array<String> },
+  modelValue: { default: [0, 100], type: Array<Number> },
   step: { default: 1, type: Number },
   unit: { default: "", type: String },
 });
