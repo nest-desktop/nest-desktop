@@ -19,7 +19,6 @@ export class NESTNodeSpatial extends BaseObj {
   constructor(node: NESTNode, nodeSpatialProps?: INESTNodeSpatialProps) {
     super({
       config: { name: "NESTNodeSpatial", simulator: "nest" },
-      logger: { settings: { minLevel: 3 } },
     });
     this._node = node;
 

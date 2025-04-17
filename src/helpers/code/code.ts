@@ -38,7 +38,7 @@ export class BaseCode extends BaseObj {
   public _project: TProject; // parent
 
   constructor(project: TProject, codeProps?: ICodeProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._project = project;
     this._state = reactive<ICodeState>({

@@ -11,10 +11,7 @@ import { truncate } from "@/utils/truncate";
 
 import { confirmDialog } from "./common/confirmDialog";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "route",
-});
+const logger = mainLogger.getSubLogger({ name: "route" });
 
 /**
  * Before enter home path.

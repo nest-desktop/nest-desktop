@@ -1,5 +1,6 @@
 // projectRoutes.ts
 
+import { TProjectRoute, TRoute } from "@/types";
 import { projectBeforeEnter, projectNew, projectRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
 import { logger as mainLogger } from "@/utils/logger";
@@ -7,12 +8,8 @@ import { truncate } from "@/utils/truncate";
 
 // import { useProjectViewStore } from "@/stores/project/projectViewStore";
 import { currentProject, useNESTProjectStore } from "../stores/project/projectStore";
-import { TProjectRoute, TRoute } from "@/types";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "nest project route",
-});
+const logger = mainLogger.getSubLogger({ name: "nest project route" });
 
 const nestProjectBeforeEnter = (to: TProjectRoute): void => {
   logger.trace("before enter nest project route:", to.path);

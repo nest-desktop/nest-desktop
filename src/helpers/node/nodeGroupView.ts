@@ -32,7 +32,7 @@ export class NodeGroupView extends BaseObj {
       visible: true,
     },
   ) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._nodeGroup = nodeGroup;
     this._state = reactive<INodeGroupViewState>({

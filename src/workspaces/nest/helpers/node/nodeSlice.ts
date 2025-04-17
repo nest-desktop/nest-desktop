@@ -8,7 +8,7 @@ import { TNodeGroup } from "@/types";
 import { NESTNode } from "./node";
 
 export class NESTNodeSlice extends BaseObj {
-  private readonly _name = "NESTNodeSlice";
+  // private readonly _name = "NESTNodeSlice";
   private _node: NESTNode | TNodeGroup;
   private _params: Record<string, NodeParameter> = {};
   private _visible: boolean = false;
@@ -16,7 +16,6 @@ export class NESTNodeSlice extends BaseObj {
   constructor(node: NESTNode | TNodeGroup, paramsProps: IParamProps[] = []) {
     super({
       config: { name: "NESTNodeSlice", simulator: "nest" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._node = node;
@@ -65,9 +64,9 @@ export class NESTNodeSlice extends BaseObj {
     return this._visible;
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   get params(): Record<string, NodeParameter> {
     return this._params;

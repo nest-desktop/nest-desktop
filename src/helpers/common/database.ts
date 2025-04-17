@@ -1,7 +1,6 @@
 // database.ts
 
 import PouchDB from "pouchdb";
-import { ILogObj, ISettingsParam } from "tslog";
 import { major, minor } from "semver";
 import { v4 as uuidv4 } from "uuid";
 
@@ -47,12 +46,8 @@ export class DatabaseService extends BaseObj {
   };
   private _url: string;
 
-  constructor(
-    url: string,
-    options?: PouchDB.Configuration.DatabaseConfiguration,
-    loggerSettings?: ISettingsParam<ILogObj>,
-  ) {
-    super({ logger: { settings: { minLevel: 3, ...loggerSettings } } });
+  constructor(url: string, options?: PouchDB.Configuration.DatabaseConfiguration) {
+    super();
 
     this._url = url;
     this._options = options || {};

@@ -27,7 +27,6 @@ export class BaseSimulation extends BaseObj {
   constructor(project: TNetworkProject, simulationProps: ISimulationProps = {}) {
     super({
       config: { name: "Simulation" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._project = project;

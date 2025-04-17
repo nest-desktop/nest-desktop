@@ -96,7 +96,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
     this._props = modelProps;
 
     this._id = "activityChart";

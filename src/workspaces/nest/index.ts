@@ -20,10 +20,7 @@ import { useNESTModelStore } from "./stores/model/modelStore";
 import { useNESTProjectDBStore } from "./stores/project/projectDBStore";
 import { useNESTProjectStore } from "./stores/project/projectStore";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "nest index",
-});
+const logger = mainLogger.getSubLogger({ name: "nest index" });
 
 export const nest: IWorkspaceProps = {
   backends: {},

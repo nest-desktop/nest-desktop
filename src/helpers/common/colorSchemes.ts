@@ -6,7 +6,6 @@ export class ColorSchemes extends BaseObj {
   constructor() {
     super({
       config: { name: "ColorSchemes" },
-      logger: { settings: { minLevel: 3 } },
     });
   }
 
