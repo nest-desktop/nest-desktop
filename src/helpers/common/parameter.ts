@@ -1,6 +1,5 @@
 // parameter.ts
 
-import { ILogObj, ISettingsParam } from "tslog";
 import { UnwrapRef, reactive } from "vue";
 
 import { TParameter } from "@/types";
@@ -28,7 +27,7 @@ export interface IParamProps {
   format?: string;
   handleOnUpdate?: (param: TParameter) => void;
   id: string;
-  input?: string; // backward compatible
+  input?: string; // backward compatible, now component
   inputLabel?: string;
   items?: string[] | Record<string, string>[];
   label?: string;
@@ -84,10 +83,9 @@ export class BaseParameter extends BaseObj {
   private _unit: string = "";
   private _component: string = "";
 
-  constructor(paramProps: IParamProps, loggerProps?: ISettingsParam<ILogObj>, configProps?: IConfigProps) {
+  constructor(paramProps: IParamProps, configProps?: IConfigProps) {
     super({
       config: { name: "Parameter", ...configProps },
-      logger: { settings: { minLevel: 3, ...loggerProps } },
     });
 
     this._props = paramProps;

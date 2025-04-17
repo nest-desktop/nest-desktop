@@ -9,7 +9,7 @@ export class NodeParameter extends BaseParameter {
   public _node: TNodeParameterParent;
 
   constructor(node: TNodeParameterParent, paramProps: IParamProps) {
-    super(paramProps, { minLevel: 3 });
+    super(paramProps);
     this._node = node;
   }
 

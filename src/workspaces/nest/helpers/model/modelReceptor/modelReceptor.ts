@@ -22,7 +22,7 @@ interface INESTModelReceptorState {
 }
 
 export class NESTModelReceptor extends BaseObj {
-  private readonly _name = "ModelReceptor";
+  // private readonly _name = "ModelReceptor";
 
   private _id: string;
   private _label: string;
@@ -32,7 +32,7 @@ export class NESTModelReceptor extends BaseObj {
   private _recordables: INodeRecordProps[] = []; // recordables for multimeter
 
   constructor(model: NESTModel, modelReceptorProps: INESTModelReceptorProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._model = model;
 
@@ -59,9 +59,9 @@ export class NESTModelReceptor extends BaseObj {
     return this._label;
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   get model(): NESTModel {
     return this._model;

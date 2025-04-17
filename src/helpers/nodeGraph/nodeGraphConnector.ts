@@ -13,7 +13,7 @@ export class NodeGraphConnector extends BaseObj {
   private _networkGraph: TNetworkGraph;
 
   constructor(networkGraph: TNetworkGraph) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._networkGraph = networkGraph;
   }

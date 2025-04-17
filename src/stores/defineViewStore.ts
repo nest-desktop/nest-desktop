@@ -8,10 +8,7 @@ import { logger as mainLogger } from "@/utils/logger";
 import { useNavStore } from "./navStore";
 
 export const defineViewStore = (props: { name: string; workspace: string; views: Record<string, string> }) => {
-  const logger = mainLogger.getSubLogger({
-    minLevel: 3,
-    name: props.workspace + " " + props.name + " view store",
-  });
+  const logger = mainLogger.getSubLogger({ name: props.workspace + " " + props.name + " view store" });
 
   return defineStore(
     props.workspace + "-" + props.name + "-view",

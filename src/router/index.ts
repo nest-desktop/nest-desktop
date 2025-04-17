@@ -11,10 +11,7 @@ import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
 import { logger as mainLogger } from "@/utils/logger";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "app route",
-});
+const logger = mainLogger.getSubLogger({ name: "app route" });
 
 const closeNav = () => {
   const navStore = useNavStore();

@@ -8,7 +8,7 @@ import { BaseProject } from "./project";
 
 export class BaseProjectDB extends DatabaseService {
   constructor(name: string = "PROJECT_STORE") {
-    super(name, undefined, { minLevel: 3 });
+    super(name, undefined);
   }
 
   /**

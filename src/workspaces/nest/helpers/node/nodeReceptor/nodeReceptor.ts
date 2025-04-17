@@ -18,7 +18,7 @@ export interface INESTNodeReceptorProps {
 }
 
 export class NESTNodeReceptor {
-  private readonly _name = "NodeReceptor";
+  // private readonly _name = "NodeReceptor";
 
   private _compartment?: NESTNodeCompartment;
   private _hash: string = "";
@@ -75,9 +75,9 @@ export class NESTNodeReceptor {
     return this.node.model.receptors[this.id];
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   get node(): NESTNode {
     return this._node;

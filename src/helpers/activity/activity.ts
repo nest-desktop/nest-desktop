@@ -37,7 +37,6 @@ export class Activity extends BaseObj {
   constructor(project: TProject, activityProps: IActivityProps = {}) {
     super({
       config: { name: "Activity" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._project = project;

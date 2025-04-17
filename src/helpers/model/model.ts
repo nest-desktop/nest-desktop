@@ -49,7 +49,6 @@ export class BaseModel extends BaseObj {
   constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
     super({
       config: { name: "Model", ...configProps },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._doc = modelProps;

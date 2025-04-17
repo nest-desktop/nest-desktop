@@ -17,7 +17,7 @@ export class ParameterRandom extends BaseObj {
   };
 
   constructor(randomProps: IParameterRandomProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._defaults = {
       exponential: { beta: 1 },

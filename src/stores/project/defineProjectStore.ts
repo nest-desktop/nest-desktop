@@ -21,19 +21,15 @@ interface IProjectStoreState<TProject extends BaseProject = BaseProject> {
 export function defineProjectStore<TProject extends BaseProject = BaseProject>(
   props: {
     Project: Class<TProject | BaseProject>;
-    loggerMinLevel?: number;
-    workspace: string;
     useProjectDBStore: TStore;
+    workspace: string;
   } = {
     Project: BaseProject,
-    workspace: "base",
     useProjectDBStore,
+    workspace: "base",
   },
 ) {
-  const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 3,
-    name: props.workspace + " project store",
-  });
+  const logger = mainLogger.getSubLogger({ name: props.workspace + " project store" });
 
   return defineStore(props.workspace + "-project", () => {
     const state = reactive<IProjectStoreState<TProject | BaseProject>>({

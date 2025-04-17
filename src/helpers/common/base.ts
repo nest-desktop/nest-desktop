@@ -1,19 +1,11 @@
 // base.ts
 // https://tslog.js.org/#/
 
-// Log levels:
-// 0 - silly
-// 1 - trace
-// 2 - debug
-// 3 - info [should be by default]
-// 4 - warn
-// 5 - error
-// 6 - fatal
-
 import { ILogObj, ISettingsParam, Logger } from "tslog";
 import { sha1 } from "object-hash";
 import { v4 as uuidv4 } from "uuid";
 
+import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { Config } from "./config";
@@ -29,9 +21,8 @@ export class BaseObj {
     logger?: { settings?: ISettingsParam<ILogObj> };
   }) {
     this._uuid = uuidv4();
-    this._logger = new Logger({
+    this._logger = mainLogger.getSubLogger({
       name: `[${truncate(this._uuid)}] ${this.constructor.name}`,
-      minLevel: 3,
       ...props?.logger?.settings,
     });
 
