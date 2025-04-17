@@ -5,9 +5,12 @@ import { IParamProps, TParamValue } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
-// import { NESTCopyModel } from "../model/copyModel";
+import { NESTCopyModel } from "../model/copyModel";
+import { NESTCopyModelParameter } from "../model/copyModelParameter";
 import { NESTModel } from "../model/model";
+import { NESTNetwork } from "../network/network";
 import { NESTSynapseParameter } from "./synapseParameter";
+import { TElementType } from "@/helpers/model/model";
 
 export interface INESTSynapseProps extends ISynapseProps {
   receptorIdx?: number;
@@ -16,7 +19,7 @@ export interface INESTSynapseProps extends ISynapseProps {
 }
 
 export class NESTSynapse extends BaseSynapse {
-  private _modelId: string;
+  private _copyModel: NESTCopyModel | undefined;
   private _receptorIdx: number = 0;
   public _model: NESTModel;
 
@@ -24,11 +27,7 @@ export class NESTSynapse extends BaseSynapse {
     super(connection, synapseProps);
 
     this._modelId = synapseProps?.model || "static_synapse";
-
-    this._model = this.getModel(this._modelId);
     this._receptorIdx = synapseProps?.receptorIdx || 0;
-
-    this.initParameters(synapseProps?.params);
   }
 
   get connection(): NESTConnection {
@@ -42,6 +41,10 @@ export class NESTSynapse extends BaseSynapse {
 
   set delay(value: TParamValue) {
     this.params.delay.state.value = value;
+  }
+
+  get elementType(): TElementType {
+    return this.model?.elementType;
   }
 
   /**
@@ -75,55 +78,74 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   get model(): NESTModel {
-    if (this._model?.id !== this.modelId) {
-      this._model = this.getModel(this.modelId);
+    if (this._copyModel) {
+      if (!this._model || this._model.id !== this._copyModel.existingModelId)
+        this._model = this.getModel(this._copyModel.existingModelId);
+    } else {
+      if (!this._model || this._model.id !== this._modelId) this._model = this.getModel(this._modelId);
     }
+
     return this._model as NESTModel;
   }
 
-  /**
-   * Set model.
-   * @param model synapse model
-   * @remarks It initializes parameters and activity components. It triggers node changes.
-   */
-  set model(model: NESTModel) {
-    this._modelId = model.id;
-    this._model = model;
-    this.modelChanges();
+  // get model(): NESTModel | NESTCopyModel {
+  //   if (this._model?.id !== this.modelId) {
+  //     this._model = this.getModel(this.modelId);
+  //   }
+
+  //   const network = this._connection.network as NESTNetwork;
+  //   if (network.copyModels?.synapseModels.some((model: NESTCopyModel) => model.id === this.modelId)) {
+  //     this._model = network.copyModels.getModel(this._modelId);
+  //   } else if (this._model?.id !== this.modelId) {
+  //     this._model = this.getModel(this._modelId);
+  //   }
+
+  //   return this._model;
+  // }
+
+  get copyModel(): NESTCopyModel | undefined {
+    return this._copyModel;
   }
 
   get modelDBStore() {
     return this.connection.connections.network.project.modelDBStore;
   }
 
+  /**
+   * Get model ID.
+   */
   override get modelId(): string {
     return this._modelId;
   }
 
   /**
    * Set model ID.
-   * @remarks It initializes parameters.
-   * @param value - ID of the model
    */
   set modelId(value: string) {
     this._modelId = value;
+
+    this.loadModel();
+    this.modelChanges();
   }
 
-  get modelParams(): Record<string, ModelParameter> {
+  get modelParams(): Record<string, ModelParameter | NESTCopyModelParameter> {
     return this.model.params;
   }
 
+  // Get models of the same element type.
   get models(): NESTModel[] {
-    const elementType: string = this.model.elementType;
+    const elementType: string = this.model?.elementType;
     const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
-
-    // const modelsCopied: NESTCopyModel[] =
-    //   this.connection.network.modelsCopied.filterByElementType(elementType);
-
-    // const filteredModels = [...models, ...modelsCopied];
-    // filteredModels.sort();
-
     return models;
+  }
+
+  // Get all copied synapse models.
+  get copyModels(): NESTCopyModel[] {
+    return this.network.copyModels.synapseModels as NESTCopyModel[];
+  }
+
+  get network(): NESTNetwork {
+    return this.connection.connections.network as NESTNetwork;
   }
 
   get receptorIdx(): number {
@@ -136,6 +158,14 @@ export class NESTSynapse extends BaseSynapse {
 
   get receptorIndices(): number[] {
     return this.connection.targetNode.receptors?.map((_, idx: number) => idx);
+  }
+
+  /**
+   * Return whether it contains weight recorder.
+   */
+  get recordedByWeightRecorder(): boolean {
+    if (!this.copyModel) return false;
+    return this.copyModel.hasWeightRecorderParam;
   }
 
   override get paramsAll(): NESTSynapseParameter[] {
@@ -154,15 +184,32 @@ export class NESTSynapse extends BaseSynapse {
    * Add parameter component.
    * @param paramProps parameter props
    */
-  addParameter(paramProps: IParamProps): void {
+  addParameter(paramProps: IParamProps, visible?: boolean): void {
     // this._logger.trace("add parameter:", param)
     this.params[paramProps.id] = new NESTSynapseParameter(this, paramProps);
+    if (visible) this._paramsVisible.push(paramProps.id);
   }
 
+  /**
+   * Get synapse model.
+   * @param modelId string
+   * @returns NEST model object
+   */
   getModel(modelId: string): NESTModel {
     this.logger.trace("get model:", modelId);
 
     return this.modelDBStore.findModel(modelId) as NESTModel;
+  }
+
+  /**
+   * Initialize synapse.
+   * @remarks Do not call it in the constructor.
+   */
+  init(): void {
+    this.logger.trace("init");
+
+    this.loadModel(this.props?.params);
+    this.update();
   }
 
   /**
@@ -171,21 +218,49 @@ export class NESTSynapse extends BaseSynapse {
   override initParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("init parameters");
 
-    this._paramsVisible = [];
-    this._params = {};
-    if (this.model && paramsProps) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) => {
-        const param = paramsProps?.find((param: IParamProps) => param.id === modelParam.id);
-        this.addParameter(param || modelParam);
-        if (param && param.visible !== false) {
-          this._paramsVisible.push(modelParam.id);
+    this.emptyParams();
+
+    if (this._model) {
+      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
+        if (paramsProps && paramsProps.length > 0) {
+          const synapseParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
+          if (synapseParamProps) {
+            this.addParameter(
+              {
+                ...synapseParamProps,
+                ...modelParam,
+              },
+              true,
+            );
+          } else {
+            this.addParameter(modelParam);
+          }
+        } else {
+          this.addParameter(modelParam);
         }
       });
-    } else if (this.model) {
-      Object.values(this.model.params).forEach((modelParam: ModelParameter) => this.addParameter(modelParam));
     } else if (paramsProps) {
-      paramsProps.forEach((param: IParamProps) => this.addParameter(param));
+      paramsProps.forEach((param: IParamProps) => this.addParameter(param, true));
     }
+  }
+
+  /**
+   * Load model.
+   * @param paramsProps list of param props
+   * @remarks It adds parameters.
+   */
+  loadModel(paramsProps?: IParamProps[]): void {
+    this.logger.trace("load model:", this._modelId);
+
+    if (this.network.copyModels && this.network.copyModels.findByModelId(this._modelId)) {
+      this._copyModel = this.network.copyModels.getModel(this._modelId);
+      this._model = this.getModel(this._copyModel.existingModelId);
+    } else {
+      this._copyModel = undefined;
+      this._model = this.getModel(this._modelId);
+    }
+
+    this.initParameters(paramsProps);
   }
 
   /**

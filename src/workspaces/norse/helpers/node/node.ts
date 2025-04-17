@@ -108,7 +108,7 @@ export class NorseNode extends BaseNode {
     this.logger.trace("load model:", this._modelId, paramsProps);
 
     this._model = this.getModel(this._modelId);
-    this.addParameters(paramsProps);
+    this.initParameters(paramsProps);
 
     this.renderNodeCode();
   }

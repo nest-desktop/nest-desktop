@@ -102,9 +102,9 @@
 
         <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
           <CopyModelEditor
-            v-for="(modelCopied, modelIdx) of project.network.modelsCopied.all"
+            v-for="(copyModel, modelIdx) of project.network.copyModels.all"
             :key="modelIdx"
-            :model="modelCopied"
+            :model="copyModel"
           />
         </span>
       </template>

@@ -90,7 +90,7 @@ export class NESTNodeView extends NodeView {
     const cleanWeightRecorder = false;
 
     if (this.node.model.isWeightRecorder && cleanWeightRecorder) {
-      const copiedSynapseModels = this.node.nodes.network.modelsCopied.synapseModels.filter((model: NESTCopyModel) =>
+      const copiedSynapseModels = this.node.nodes.network.copyModels.synapseModels.filter((model: NESTCopyModel) =>
         model.isAssignedToWeightRecorder(this.node),
       );
 

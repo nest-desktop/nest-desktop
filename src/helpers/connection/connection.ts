@@ -20,7 +20,7 @@ export interface IConnectionProps {
 }
 
 export class BaseConnection extends BaseObj {
-  private readonly _name = "Connection";
+  // private readonly _name = "Connection";
 
   private _idx: number; // generative
   private _params: Record<string, ConnectionParameter> = {};
@@ -39,7 +39,6 @@ export class BaseConnection extends BaseObj {
   constructor(connections: TConnections, connectionProps: IConnectionProps, configProps?: IConfigProps) {
     super({
       config: { name: "Connection", ...configProps },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._connections = connections;
@@ -52,7 +51,7 @@ export class BaseConnection extends BaseObj {
     this.targetIdx = connectionProps.target;
 
     this._rule = new ConnectionRule(this, connectionProps.rule);
-    this.addParameters(connectionProps.params);
+    this.initParameters(connectionProps.params);
 
     this._synapse = new this.Synapse(this, connectionProps.synapse);
   }
@@ -84,9 +83,9 @@ export class BaseConnection extends BaseObj {
     return this.connections.all.indexOf(this);
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   get nodeGroups(): TNodeGroup[] {
     return this.network.nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => {
@@ -216,31 +215,6 @@ export class BaseConnection extends BaseObj {
   }
 
   /**
-   * Add connection parameters.
-   * @param paramsProps list of parameter props
-   */
-  addParameters(paramsProps: IParamProps[] = []): void {
-    this.logger.trace("init parameter");
-
-    this._paramsVisible = [];
-    this._params = {};
-    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
-    ruleConfig.params.forEach((param: IParamProps) => {
-      if (paramsProps != null) {
-        const paramProps: IParamProps | undefined = paramsProps.find(
-          (paramProps: IParamProps) => paramProps.id === param.id,
-        );
-        if (paramProps != null) {
-          param.value = paramProps.value;
-          if (paramProps.type != null) param.type = paramProps.type;
-        }
-        if (param && param.visible !== false) this._paramsVisible.push(param.id);
-      }
-      this.addParameter(param);
-    });
-  }
-
-  /**
    * Observer for connection changes.
    * @remarks It emits network changes.
    */
@@ -261,6 +235,14 @@ export class BaseConnection extends BaseObj {
     this._idx = connections.indexOf(this);
   }
 
+  /**
+   * Empty parameters
+   */
+  emptyParams(): void {
+    this._params = {};
+    this._paramsVisible = [];
+  }
+
   // /**
   //  * Sets all params to invisible.
   //  */
@@ -279,6 +261,30 @@ export class BaseConnection extends BaseObj {
 
     this.synapse.init();
     this.update();
+  }
+
+  /**
+   * Init parameter components.
+   * @param paramsProps list of parameter props
+   */
+  initParameters(paramsProps: IParamProps[] = []): void {
+    this.logger.trace("init parameters");
+
+    this.emptyParams();
+    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
+    ruleConfig.params.forEach((param: IParamProps) => {
+      if (paramsProps != null) {
+        const paramProps: IParamProps | undefined = paramsProps.find(
+          (paramProps: IParamProps) => paramProps.id === param.id,
+        );
+        if (paramProps != null) {
+          param.value = paramProps.value;
+          if (paramProps.type != null) param.type = paramProps.type;
+        }
+        if (param && param.visible !== false) this._paramsVisible.push(param.id);
+      }
+      this.addParameter(param);
+    });
   }
 
   /**

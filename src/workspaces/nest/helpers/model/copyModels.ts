@@ -1,6 +1,7 @@
 // copyModels.ts
 
 import { BaseObj } from "@/helpers/common/base";
+import { IParamProps } from "@/helpers/common/parameter";
 
 import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 import { NESTNetwork } from "../network/network";
@@ -10,7 +11,7 @@ export class NESTCopyModels extends BaseObj {
   private _network: NESTNetwork; // parent
 
   constructor(network: NESTNetwork, copyModelsProps: INESTCopyModelProps[] = []) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._network = network;
     this.update(copyModelsProps);
@@ -74,12 +75,13 @@ export class NESTCopyModels extends BaseObj {
    * Copy and add a model component to the network based on a given model ID.
    * @param modelId ID of the model which should be copied adn added
    */
-  copy(modelId: string): NESTCopyModel {
+  copy(modelId: string, paramProps?: IParamProps[]): NESTCopyModel {
     this.logger.trace("Copy model");
 
     const modelProps: INESTCopyModelProps = {
       existing: modelId,
       new: modelId + "_copied" + (this._models.length + 1),
+      params: paramProps,
     };
     return this.add(modelProps);
   }
@@ -125,14 +127,7 @@ export class NESTCopyModels extends BaseObj {
    * @param modelId ID of the model
    */
   getModel(modelId: string): NESTCopyModel {
-    return (
-      this._models.find((model: NESTCopyModel) => model.id === modelId) ||
-      new NESTCopyModel(this, {
-        existing: modelId,
-        new: modelId + "_copied" + (this._models.length + 1),
-        params: [],
-      })
-    );
+    return this.findByModelId(modelId) || this.copy(modelId);
   }
 
   /**

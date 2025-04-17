@@ -124,7 +124,7 @@ onMounted(init);
     left: 0;
     pointer-events: none;
     position: absolute;
-    top: -6px;
+    top: -4px;
   }
 
   &:hover {

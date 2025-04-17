@@ -101,7 +101,7 @@ export class NESTConnection extends BaseConnection {
     this.logger.trace("reset");
 
     this.rule.reset();
-    this.addParameters();
+    this.initParameters();
     this.synapse.modelId = "static_synapse";
     this._mask.unmask();
   }

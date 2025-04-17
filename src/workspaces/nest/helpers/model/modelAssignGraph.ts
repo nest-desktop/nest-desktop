@@ -2,19 +2,20 @@
 
 import { Selection, select } from "d3";
 
-import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
+import { BaseObj } from "@/helpers/common/base";
 import { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
+import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 
-import { BaseConnection } from "@/helpers/connection/connection";
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "./copyModel";
 import { NESTNetworkGraph } from "../network/networkGraph";
 import { NESTNode } from "../node/node";
 
-export class NESTModelAssignGraph {
+export class NESTModelAssignGraph extends BaseObj {
   private _networkGraph: NESTNetworkGraph;
 
   constructor(networkGraph: NESTNetworkGraph) {
+    super();
     this._networkGraph = networkGraph;
   }
 
@@ -27,9 +28,40 @@ export class NESTModelAssignGraph {
   }
 
   /**
-   * Initialize a connection graph.
+   * Update connections in network graph.
+   * @remarks This function should be called when connections in the network are changed.
    */
-  init(connection: NESTConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
+  update(): void {
+    this.logger.trace("update");
+
+    if (!this._networkGraph.selector) return;
+
+    const models: Selection<any, any, any, any> = this._networkGraph.selector
+      .select("g#modelAssigned")
+      .selectAll("g.modelAssigned")
+      .data(this._networkGraph.network.connections.filterWithWeightRecorder, (c: NESTConnection | unknown) =>
+        c instanceof NESTConnection ? c.hash : "",
+      );
+
+    models
+      .enter()
+      .append("g")
+      .attr("class", "modelAssigned")
+      .attr("idx", (c: NESTConnection) => c.idx)
+      .attr("hash", (c: NESTConnection) => c.hash)
+      .each((c: NESTConnection, i: number, e) => this.updateConnection(c, i, e));
+
+    models.exit().remove();
+
+    this.render();
+  }
+
+  /**
+   * Update a connection graph.
+   */
+  updateConnection(connection: NESTConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
+    this.logger.trace("update connection");
+
     const elem: Selection<any, any, any, any> = select(elements[idx]);
 
     elem.selectAll("*").remove();
@@ -39,8 +71,9 @@ export class NESTModelAssignGraph {
     elem
       .append("path")
       .attr("class", "color")
-      .attr("marker-end", `url(#assigned${connection.idx})`)
+      .attr("marker-end", `url(#assigned-${connection.synapse.copyModel.weightRecorder.idx})`)
       .style("fill", "none")
+      .style("stroke", "currentColor")
       .style("pointer-events", "none")
       .style("stroke-width", this.strokeWidth);
 
@@ -56,36 +89,11 @@ export class NESTModelAssignGraph {
   }
 
   /**
-   * Update connections in network graph.
-   * @remarks This function should be called when connections in the network are changed.
-   */
-  update(): void {
-    if (!this._networkGraph.selector) return;
-
-    const models: Selection<any, any, any, any> = this._networkGraph.selector
-      .select("g#modelAssigned")
-      .selectAll("g.modelAssigned")
-      .data(this._networkGraph.network.connections.recordedByWeightRecorder, (c: NESTConnection | unknown) =>
-        c instanceof BaseConnection ? c.hash : "",
-      );
-
-    models
-      .enter()
-      .append("g")
-      .attr("class", "modelAssigned")
-      .attr("idx", (c: NESTConnection) => c.idx)
-      .attr("hash", (c: NESTConnection) => c.hash)
-      .each((c: NESTConnection, i: number, e) => this.init(c, i, e));
-
-    models.exit().remove();
-
-    this.render();
-  }
-
-  /**
    * Render connection graphs.
    */
   render(): void {
+    this.logger.silly("render");
+
     const selector = select("g#modelAssigned").selectAll("g.modelAssigned");
     selector.style("pointer-events", "none");
 
@@ -93,15 +101,16 @@ export class NESTModelAssignGraph {
     // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'.
     selector.each((connection: Connection, idx: number, elements: any[]) => {
       const elem = select(elements[idx]);
-      const synapseModel = connection.synapse.model as NESTCopyModel;
+      const synapseModel = connection.synapse.copyModel as NESTCopyModel;
       const weightRecorder = synapseModel.weightRecorder as NESTNode;
 
       if (weightRecorder) {
+        elem.attr("color", connection.synapse.copyModel.weightRecorder.view.color);
+
         elem
           .selectAll("path")
           .attr("d", drawPathMouse(weightRecorder.view.position, connection.view.markerEndPosition))
-          .style("stroke-dasharray", 3);
-        elem.select("path.color").style("stroke", weightRecorder.view.color);
+          .style("stroke-dasharray", 8);
       }
     });
   }

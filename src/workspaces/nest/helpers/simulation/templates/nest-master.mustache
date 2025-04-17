@@ -12,17 +12,17 @@ nest.SetKernelStatus({
   "resolution": {{ simulation.kernel.resolution }},
   "rng_seed": {{ simulation.kernel.rngSeed }}
 })
-{{ #network.modelsCopied.hasNodeModels }}
+{{ #network.copyModels.hasNodeModels }}
 
 # Copy node models
-{{ #network.modelsCopied.nodeModels }}
+{{ #network.copyModels.nodeModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
-{{ /network.modelsCopied.nodeModels }}
-{{ /network.modelsCopied.hasNodeModels }}
+{{ /network.copyModels.nodeModels }}
+{{ /network.copyModels.hasNodeModels }}
 
 # Create nodes
 {{ #network.nodes.all }}
@@ -78,10 +78,10 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /hasReceptors }}
 {{ /network.nodes.all }}
 {{ /network.hasSomeNodeReceptors }}
-{{ #network.modelsCopied.hasSynapseModels }}
+{{ #network.copyModels.hasSynapseModels }}
 
 # Copy synapse models
-{{ #network.modelsCopied.synapseModels }}
+{{ #network.copyModels.synapseModels }}
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
@@ -89,8 +89,8 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
   "weight_recorder": {{ params.weight_recorder.code }},
 {{ /params.weight_recorder  }}
 }{{ /hasSomeVisibleParams }})
-{{ /network.modelsCopied.synapseModels }}
-{{ /network.modelsCopied.hasSynapseModels }}
+{{ /network.copyModels.synapseModels }}
+{{ /network.copyModels.hasSynapseModels }}
 
 # Connect nodes
 {{ #network.connections.all }}

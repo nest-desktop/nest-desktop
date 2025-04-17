@@ -1,5 +1,5 @@
 <template>
-  <v-list-item v-if="param" :key="param.value" class="param pa-1" style="line-height: 32px">
+  <v-list-item v-if="param" :key="param.value" class="param my-1 pa-1" style="line-height: 32px">
     <template v-if="param.state.random">
       <v-label class="px-1" style="width: 100%">
         {{ param.label || param.options.label || param.id }}

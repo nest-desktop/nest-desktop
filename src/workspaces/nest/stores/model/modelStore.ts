@@ -12,15 +12,11 @@ import { useNESTModelDBStore } from "./modelDBStore";
 
 export const useNESTModelStore = defineModelStore<NESTProject>({
   Project: NESTProject,
-  defaultView: "doc",
   useModelDBStore: useNESTModelDBStore,
   workspace: "nest",
 });
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "nest model store",
-});
+const logger = mainLogger.getSubLogger({ name: "nest model store" });
 
 export const currentModel = computed(() => {
   const modelStore = useNESTModelStore();
@@ -65,7 +61,11 @@ export const updateProject = () => {
           project.network.nodes.updateRecords();
         }
 
-        project.simulation.init();
+        if ("simulation" in project) {
+          const simulation = project.simulation as NESTSimulation;
+          simulation.init();
+        }
+
         project.activities.init();
         project.activityGraph.init();
       });
@@ -77,9 +77,11 @@ export const updateProject = () => {
 
 export const updateSimulationModules = (emitChanges: boolean = true): void => {
   const modelStore = useNESTModelStore();
-  const moduleStore = useNESTModuleStore();
+  if (!(modelStore.state.project && "simulation" in modelStore.state.project)) return;
 
-  const simulation = modelStore.state.project?.simulation as NESTSimulation;
+  const simulation = modelStore.state.project.simulation as NESTSimulation;
+
+  const moduleStore = useNESTModuleStore();
   simulation.modules = moduleStore.state.modules
     .filter((module: IModule) => module.models.includes(modelStore.state.modelId))
     .map((module: IModule) => module.name);
