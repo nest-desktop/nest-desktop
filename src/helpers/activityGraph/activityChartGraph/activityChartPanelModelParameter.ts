@@ -7,7 +7,7 @@ export class ActivityChartPanelModelParameter extends BaseParameter {
   public _activityChartPanelModel: ActivityChartPanelModel;
 
   constructor(activityChartPanelModel: ActivityChartPanelModel, paramProps: IParamProps) {
-    super(paramProps, { minLevel: 3 });
+    super(paramProps);
 
     this._activityChartPanelModel = activityChartPanelModel;
   }

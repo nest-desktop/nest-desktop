@@ -12,13 +12,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
   private _layer: ActivityAnimationLayer;
 
   constructor(layer: ActivityAnimationLayer) {
-    super({
-      logger: {
-        settings: {
-          minLevel: 3,
-        },
-      },
-    });
+    super();
 
     this._layer = layer;
     this._graphGroup = new Group();

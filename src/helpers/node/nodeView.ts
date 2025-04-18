@@ -37,7 +37,7 @@ export class NodeView extends BaseObj {
       visible: true,
     },
   ) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._node = node;
     this._state = reactive<INodeViewState>({

@@ -5,13 +5,11 @@ import { AxiosResponse } from "axios";
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
 import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import { logger as mainLogger } from "@/utils/logger";
 import { notifySuccess } from "@/helpers/common/notification";
 
 import insiteAccess from "../../stores/backends/insiteAccessStore";
 import { NESTProject } from "../project/project";
-
-const logger = mainLogger.getSubLogger({ minLevel: 3, name: "insite" });
+import { BaseObj } from "@/helpers/common/base";
 
 interface IInsiteActivityProps extends IActivityProps {
   times: number[];
@@ -46,11 +44,12 @@ type TInsiteState = {
   top: number;
 };
 
-export class Insite {
+export class Insite extends BaseObj {
   private _project: NESTProject;
   private _state: TInsiteState;
 
   constructor(project: NESTProject) {
+    super();
     this._project = project;
 
     this._state = {
@@ -108,7 +107,7 @@ export class Insite {
    * It calls `setInterval()` function.
    */
   continuouslyUpdateSimulationTimeInfo(milliseconds: number = 250): void {
-    logger.trace("Update simulation time info continuously");
+    this.logger.trace("Update simulation time info continuously");
 
     this.simulationTimeIntervalId = window.setInterval(() => {
       insiteAccess.getSimulationTimeInfo().then(
@@ -189,7 +188,7 @@ export class Insite {
    */
   getAnalogSignalActivities(positions: Record<number, number[]> | undefined): void {
     if (!this._state.on) return;
-    logger.trace("Get analog signal activities from Insite");
+    this.logger.trace("Get analog signal activities from Insite");
 
     insiteAccess.getMultimeters().then((response: AxiosResponse<IInsiteMultimeterResponseData[]>) => {
       if (response == null) return;
@@ -345,7 +344,7 @@ export class Insite {
    * It gets node positions from Insite.
    */
   async getNodePositions(): Promise<Record<number, number[]> | undefined> {
-    logger.trace("Get node IDs from Insite");
+    this.logger.trace("Get node IDs from Insite");
 
     return insiteAccess.getNodes().then((response: AxiosResponse<TNodeData[]>) => {
       if (response == null) return;
@@ -371,7 +370,7 @@ export class Insite {
    */
   getSpikeActivities(positions?: { [key: number]: number[] }): void {
     if (!this._state.on) return;
-    logger.trace("Get spike activities from Insite");
+    this.logger.trace("Get spike activities from Insite");
 
     insiteAccess.getSpikeRecorders().then((response: AxiosResponse<IInsiteSpikeRecorderResponseData[]>) => {
       if (response == null) return;

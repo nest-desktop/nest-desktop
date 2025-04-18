@@ -18,7 +18,7 @@ export class NetworkRevision extends BaseObj {
   private _revisionIdx = -1;
 
   constructor(project: TProject) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._project = project;
     this.clear();

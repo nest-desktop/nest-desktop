@@ -34,7 +34,7 @@ export class BaseProject extends BaseObj {
   public _code: TCode;
 
   constructor(projectProps: IBaseProjectProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     // Database instance.
     this._doc = projectProps || {};

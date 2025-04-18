@@ -26,8 +26,8 @@ export class NESTConnectionMask extends BaseObj {
   constructor(connection: NESTConnection, maskProps?: INESTConnectionMaskProps) {
     super({
       config: { name: "NESTConnectionMask", simulator: "nest" },
-      logger: { settings: { minLevel: 3 } },
     });
+
     this._connection = connection;
     this._graph = {
       data: [],

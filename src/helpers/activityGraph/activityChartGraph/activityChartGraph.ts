@@ -125,7 +125,7 @@ export class ActivityChartGraph extends BaseObj {
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
     this._props = activityGraphProps;
 
     this._project = project;

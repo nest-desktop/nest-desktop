@@ -38,7 +38,6 @@ export class NodeRecord extends BaseObj {
   constructor(node: TNode, nodeRecordProps: INodeRecordProps) {
     super({
       config: { name: "NodeRecord" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._node = node;

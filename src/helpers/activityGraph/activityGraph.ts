@@ -17,7 +17,7 @@ export class BaseActivityGraph extends BaseObj {
   private _activityChartGraph: ActivityChartGraph;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._project = project;
     this._activityChartGraph = new ActivityChartGraph(project, activityGraphProps);
