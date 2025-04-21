@@ -200,7 +200,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
       logger.trace("new model");
 
       const model = addModel(modelProps);
-      model.custom = true;
+      model.state.custom = true;
       return model as TModel;
     };
 

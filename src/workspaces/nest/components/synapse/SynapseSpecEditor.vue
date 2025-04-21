@@ -64,7 +64,7 @@
 import { computed, reactive } from "vue";
 
 import ParamListItem from "@/components/parameter/ParamListItem.vue";
-import { TModel, TSynapse } from "@/types";
+import { TModel } from "@/types";
 
 import SynapseModelSelect from "./SynapseModelSelect.vue";
 import { NESTSynapse } from "../../helpers/synapse/synapse";

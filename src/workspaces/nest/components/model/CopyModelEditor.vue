@@ -125,6 +125,7 @@
 
           <v-list v-if="model.isSynapse && model.params.weight_recorder" class="py-0">
             <v-select
+              v-model="model.params.weight_recorder.value"
               :items="model.network.nodes.weightRecorders"
               item-title="view.label"
               item-id="view.label"
@@ -132,7 +133,6 @@
               density="compact"
               hide-details
               label="Weight recorder"
-              v-model="model.params.weight_recorder.value"
             />
           </v-list>
         </v-expansion-panel-text>

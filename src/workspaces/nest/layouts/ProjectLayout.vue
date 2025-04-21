@@ -95,7 +95,7 @@
             prepend-icon="mdi:mdi-plus"
           >
             <template #append>
-              <v-btn :disabled="model.length === 0" text="copy" @click="copyModel(model)" />
+              <v-btn :disabled="model.length === 0" text="copy" @click="doCopyModel(model)" />
             </template>
           </v-select>
         </span>
@@ -212,7 +212,7 @@ const route = useRoute();
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
+import { doCopyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.state.project as NESTProject);

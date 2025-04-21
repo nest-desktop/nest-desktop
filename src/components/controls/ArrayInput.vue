@@ -17,7 +17,7 @@ import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
-  modelValue: { default: [], type: Array<Number> },
+  modelValue: { default: [], type: Array<number> },
   unit: { default: "", type: String },
 });
 

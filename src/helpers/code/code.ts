@@ -31,8 +31,6 @@ interface ICodeState {
   templateFilename: string;
 }
 
-const codeBlocks: string[] = ["importModules"];
-
 export class BaseCode extends BaseObj {
   private _state: UnwrapRef<ICodeState>;
   public _project: TProject; // parent
