@@ -95,16 +95,16 @@
             prepend-icon="mdi:mdi-plus"
           >
             <template #append>
-              <v-btn :disabled="model.length === 0" text="copy" @click="copyModel(model)" />
+              <v-btn :disabled="model.length === 0" text="copy" @click="doCopyModel(model)" />
             </template>
           </v-select>
         </span>
 
         <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
           <CopyModelEditor
-            v-for="(modelCopied, modelIdx) of project.network.modelsCopied.all"
+            v-for="(copyModel, modelIdx) of project.network.copyModels.all"
             :key="modelIdx"
-            :model="modelCopied"
+            :model="copyModel"
           />
         </span>
       </template>
@@ -212,7 +212,7 @@ const route = useRoute();
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { copyModel, useNESTProjectStore } from "../stores/project/projectStore";
+import { doCopyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.state.project as NESTProject);

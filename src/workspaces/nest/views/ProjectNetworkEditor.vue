@@ -13,34 +13,18 @@
         />
       </template>
     </NetworkEditorToolbar>
-    <NetworkGraph :key="currentProject.id" :network="currentProject.network">
-      <template #marker="{ connection }">
-        <circle
-          v-if="connection.view.markerEndLabel === 'assigned'"
-          fill="transparent"
-          r="4"
-          stroke="currentcolor"
-          transform="translate(5,5)"
-        />
-      </template>
 
-      <template #components>
-        <g id="nodeGroups" />
-        <g id="modelAssigned" />
-        <g id="connections" />
-        <g id="nodes" />
-      </template>
-    </NetworkGraph>
+    <NESTNetworkGraph :key="currentProject.id" :network="currentProject.network" />
   </v-layout>
 </template>
 
 <script setup lang="ts">
 import ConnectionMenuList from "@/components/connection/ConnectionMenuList.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
-import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NodeGroupMenuList from "@/components/node/NodeGroupMenuList.vue";
 import { TNodeGroup } from "@/types";
 
+import NESTNetworkGraph from "../components/network/NetworkGraph.vue";
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import { NESTConnection } from "../helpers/connection/connection";
 import { NESTNode } from "../helpers/node/node";

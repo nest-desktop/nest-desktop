@@ -30,7 +30,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   private _workspace: NetworkGraphWorkspace;
 
   constructor(networkGraphWorkspace: NetworkGraphWorkspace) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._workspace = networkGraphWorkspace;
     this._selector = this._workspace.selector.select("g#nodeAddPanel");

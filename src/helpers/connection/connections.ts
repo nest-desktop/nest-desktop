@@ -19,7 +19,7 @@ export class BaseConnections extends BaseObj {
   public _network: TNetwork; // parent
 
   constructor(network: TNetwork, connectionsProps: IConnectionProps[] = []) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._network = network;
 

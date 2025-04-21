@@ -50,7 +50,6 @@ export class NetworkGraphWorkspace extends BaseObj {
   constructor(networkGraph: TNetworkGraph) {
     super({
       config: { name: "NetworkGraphWorkspace" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._selector = select("g#networkWorkspace");

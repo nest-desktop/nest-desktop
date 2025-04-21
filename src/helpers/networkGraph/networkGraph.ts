@@ -25,19 +25,18 @@ interface IBaseNetworkGraphState {
 }
 
 export class BaseNetworkGraph extends BaseObj {
-  private _connectionGraph: ConnectionGraph;
-  private _nodeGraph: NodeGraph;
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: TSelection;
   private _state: UnwrapRef<IBaseNetworkGraphState>;
   private _workspace: NetworkGraphWorkspace;
+  public _connectionGraph: ConnectionGraph;
+  public _nodeGraph: NodeGraph;
   public _network: TNetwork;
 
   constructor(ref: Ref<HTMLElement | null>, network: TNetwork) {
     super({
       config: { name: "NetworkGraph" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._selector = select(ref.value);
@@ -211,7 +210,7 @@ export class BaseNetworkGraph extends BaseObj {
    * @remarks This function should be called when the network is changed.
    */
   update(): void {
-    this.logger.silly("update");
+    this.logger.trace("update");
 
     this._workspace.update();
 

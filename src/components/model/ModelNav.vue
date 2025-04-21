@@ -146,7 +146,7 @@ const models = computed(() => {
     models = modelDBStore.value.state.models;
 
     if (state.source === "custom") {
-      models = models.filter((model: TModel) => model.custom);
+      models = models.filter((model: TModel) => model.state.custom);
     }
   }
 

@@ -36,7 +36,7 @@ import { computed, reactive, onMounted, watch } from "vue";
 
 const props = defineProps({
   modelValue: { default: 0, type: Number || String },
-  tickLabels: { default: [""], type: Array<Number | String> },
+  tickLabels: { default: [""], type: Array<number | string> },
   unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);
@@ -124,7 +124,7 @@ onMounted(init);
     left: 0;
     pointer-events: none;
     position: absolute;
-    top: -6px;
+    top: -4px;
   }
 
   &:hover {

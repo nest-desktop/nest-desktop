@@ -7,21 +7,26 @@ import { BaseSynapseParameter } from "./synapseParameter";
 import { IParamProps } from "../common/parameter";
 
 export interface ISynapseProps {
+  model?: string;
   params?: IParamProps[];
 }
 
 export class BaseSynapse extends BaseObj {
-  private readonly _name = "Synapse";
+  // private readonly _name = "Synapse";
+  public _modelId: string = "static";
   public _params: Record<string, TSynapseParameter> = {};
   public _paramsVisible: string[] = [];
+  private _props: ISynapseProps; // raw data of props
 
   public _connection: TConnection; // parent
 
   constructor(connection: TConnection, synapseProps?: ISynapseProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._connection = connection;
-    this.initParameters(synapseProps?.params);
+    this._props = synapseProps;
+
+    this._modelId = synapseProps?.model || "static";
   }
 
   get connection(): TConnection {
@@ -55,12 +60,12 @@ export class BaseSynapse extends BaseObj {
   }
 
   get modelId(): string {
-    return "static";
+    return this._modelId;
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   get paramsAll(): TSynapseParameter[] {
     return Object.values(this._params);
@@ -77,6 +82,10 @@ export class BaseSynapse extends BaseObj {
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
     this.changes({ preventSimulation: true });
+  }
+
+  get props(): ISynapseProps {
+    return this._props;
   }
 
   get weight(): number {
@@ -129,6 +138,14 @@ export class BaseSynapse extends BaseObj {
   }
 
   /**
+   * Empty parameters
+   */
+  emptyParams(): void {
+    this._params = {};
+    this._paramsVisible = [];
+  }
+
+  /**
    * Sets all params to invisible.
    */
   hideAllParams(): void {
@@ -141,7 +158,7 @@ export class BaseSynapse extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.updateHash();
+    this.update();
   }
 
   /**
@@ -150,8 +167,7 @@ export class BaseSynapse extends BaseObj {
   initParameters(paramsProps?: IParamProps[]): void {
     this.logger.trace("init parameters");
 
-    this._paramsVisible = [];
-    this._params = {};
+    this.emptyParams();
     if (paramsProps) paramsProps.forEach((param: IParamProps) => this.addParameter(param));
   }
 
@@ -194,6 +210,13 @@ export class BaseSynapse extends BaseObj {
       synapseProps.params = this.filteredParams.map((param: TSynapseParameter) => param.toJSON());
 
     return synapseProps;
+  }
+
+  /**
+   * Update synapse.
+   */
+  update(): void {
+    this.updateHash();
   }
 
   updateHash(): void {

@@ -120,6 +120,7 @@
               v-for="(paramId, index) in model.paramsVisible"
               :key="index"
               :param="model.params[paramId]"
+              :show-menu="paramId !== 'weight_recorder'"
             />
           </v-list>
         </v-expansion-panel-text>

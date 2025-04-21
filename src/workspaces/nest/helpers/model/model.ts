@@ -54,10 +54,6 @@ export class NESTModel extends BaseModel {
     return this.id;
   }
 
-  get hasWeightRecorderParam(): boolean {
-    return false;
-  }
-
   /**
    * Check if the model is a synapse.
    */

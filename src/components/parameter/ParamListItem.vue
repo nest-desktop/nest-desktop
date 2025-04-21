@@ -1,5 +1,5 @@
 <template>
-  <v-list-item v-if="param" :key="param.value" class="param pa-1" style="line-height: 32px">
+  <v-list-item v-if="param" :key="param.value" class="param my-1 pa-1" style="line-height: 32px">
     <template v-if="param.state.random">
       <v-label class="px-1" style="width: 100%">
         {{ param.label || param.options.label || param.id }}
@@ -84,12 +84,12 @@
     </template>
 
     <template #append>
-      <slot name="append">
+      <slot :param name="append">
         <template v-if="param.state.random">
           <ParamPopover :param size="x-small" />
         </template>
 
-        <Menu :items size="x-small" />
+        <Menu v-show="showMenu" :items size="x-small" />
       </slot>
     </template>
   </v-list-item>
@@ -107,11 +107,12 @@ import Menu from "../common/Menu.vue";
 import { TParameter } from "@/types";
 
 const emit = defineEmits(["update:paramValue"]);
-const props = defineProps<{
-  color?: string;
-  param: TParameter;
-}>();
-const param = computed(() => props.param);
+const props = defineProps({
+  color: { type: String, default: "" },
+  param: { required: true },
+  showMenu: { type: Boolean, default: true },
+});
+const param = computed(() => props.param as TParameter);
 
 const update = () => {
   nextTick(() => {
