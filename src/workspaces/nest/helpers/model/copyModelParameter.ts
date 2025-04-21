@@ -1,6 +1,6 @@
 // copyModelParameter.ts
 
-import { BaseParameter, IParamProps } from "@/helpers/common/parameter";
+import { BaseParameter, IParamOptions, IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 import { TModel } from "@/types";
 
@@ -22,6 +22,39 @@ export class NESTCopyModelParameter extends BaseParameter {
     return this.id === "weight_recorder";
   }
 
+  override get options(): IParamOptions {
+    if (this.isWeightRecorder) {
+      return {
+        component: "select",
+        defaultValue: "",
+        id: "weight_recorder",
+        label: "weight recorder",
+        unit: "",
+      };
+    }
+
+    const param = this.modelParam;
+    const options: IParamOptions = {
+      component: param.component || "",
+      defaultValue: param.value,
+      id: param.id,
+      label: param.label,
+      unit: param.unit,
+    };
+
+    if (["rangeSlider", "valueSlider"].includes(param.component)) {
+      options.max = param.max;
+      options.min = param.min;
+      options.step = param.step;
+    }
+
+    if (param.component === "tickSlider") {
+      options.tickLabels = param.ticks;
+    }
+
+    return options;
+  }
+
   get model(): TModel {
     return this._copyModel.model as TModel;
   }
@@ -38,7 +71,6 @@ export class NESTCopyModelParameter extends BaseParameter {
   }
 
   override set visible(value: boolean) {
-    if (this.id === "weight_recorder") return;
     const isVisible = this.parent.paramsVisible.includes(this.id);
     if (value && !isVisible) {
       this.parent.paramsVisible.push(this.id);
@@ -54,23 +86,23 @@ export class NESTCopyModelParameter extends BaseParameter {
   override toJSON(): IParamProps {
     const paramProps: IParamProps = {
       id: this.id,
-      component: this.component,
-      label: this.label,
-      unit: this.unit,
+      // component: this.component,
+      // label: this.label,
+      // unit: this.unit,
       value: this.value,
       // visible: this.visible as boolean,
     };
 
-    if (this.component === "valueSlider") {
-      paramProps.min = this.min;
-      paramProps.max = this.max;
-      paramProps.step = this.step;
-    } else if (this.component === "tickSlider") {
-      paramProps.ticks = this.ticks;
-    }
+    // if (this.component === "valueSlider") {
+    //   paramProps.min = this.min;
+    //   paramProps.max = this.max;
+    //   paramProps.step = this.step;
+    // } else if (this.component === "tickSlider") {
+    //   paramProps.ticks = this.ticks;
+    // }
 
-    // Add rules for validation if existed.
-    if (this.rules.length > 0) paramProps.rules = this.rules;
+    // // Add rules for validation if existed.
+    // if (this.rules.length > 0) paramProps.rules = this.rules;
 
     return paramProps;
   }

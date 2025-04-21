@@ -8,7 +8,7 @@ import { truncate } from "@/utils/truncate";
 import { BaseObj } from "./base";
 import { IConfigProps } from "./config";
 
-interface IParamOptions {
+export interface IParamOptions {
   component?: TParamComponent;
   defaultValue: TParamValue;
   id: string;

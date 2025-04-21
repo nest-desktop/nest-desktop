@@ -302,11 +302,13 @@ export class NESTCopyModel extends BaseObj {
   }
 
   clean(): void {
+    console.log(this);
     const weightRecorderParam: NESTCopyModelParameter = this._params.weight_recorder;
 
     // Update weight recorder list to select.
     if (weightRecorderParam) {
       weightRecorderParam.items = this.network.nodes.weightRecorders.map((recorder: NESTNode) => recorder.view.label);
+      weightRecorderParam.visible = true;
     }
   }
 
@@ -322,7 +324,9 @@ export class NESTCopyModel extends BaseObj {
    * Sets all params to invisible.
    */
   hideAllParams(): void {
-    this.paramsAll.forEach((param: NESTCopyModelParameter) => (param.visible = false));
+    this.paramsAll
+      .filter((param: NESTCopyModelParameter) => param.id !== "weight_recorder")
+      .forEach((param: NESTCopyModelParameter) => (param.visible = false));
   }
 
   /**

@@ -85,9 +85,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
-{{ /filteredParams }}{{ #params.weight_recorder }}
-  "weight_recorder": {{ params.weight_recorder.code }},
-{{ /params.weight_recorder  }}
+{{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
 {{ /network.copyModels.synapseModels }}
 {{ /network.copyModels.hasSynapseModels }}

@@ -120,19 +120,7 @@
               v-for="(paramId, index) in model.paramsVisible"
               :key="index"
               :param="model.params[paramId]"
-            />
-          </v-list>
-
-          <v-list v-if="model.isSynapse && model.params.weight_recorder" class="py-0">
-            <v-select
-              v-model="model.params.weight_recorder.value"
-              :items="model.network.nodes.weightRecorders"
-              item-title="view.label"
-              item-id="view.label"
-              class="py-1 mx-1"
-              density="compact"
-              hide-details
-              label="Weight recorder"
+              :showMenu="paramId !== 'weight_recorder'"
             />
           </v-list>
         </v-expansion-panel-text>
