@@ -108,7 +108,7 @@ import { TParameter } from "@/types";
 
 const emit = defineEmits(["update:paramValue"]);
 const props = defineProps({
-  color: { type: String },
+  color: { type: String, default: "" },
   param: { required: true },
   showMenu: { type: Boolean, default: true },
 });
