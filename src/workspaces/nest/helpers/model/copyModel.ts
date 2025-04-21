@@ -301,6 +301,9 @@ export class NESTCopyModel extends BaseObj {
     if (visible) this._paramsVisible.push(paramProps.id);
   }
 
+  /**
+   * Clean copy model.
+   */
   clean(): void {
     const weightRecorderParam: NESTCopyModelParameter = this._params.weight_recorder;
 
