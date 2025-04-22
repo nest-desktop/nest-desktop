@@ -31,6 +31,7 @@ import { Editor } from "baklavajs";
 
 // import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+// import { provideTemporaryConnection } from "@/helpers/codeGraph/temporaryConnection";
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 // import { useContextMenu } from "@/helpers/codeGraph/contextMenu";
 
@@ -48,4 +49,6 @@ const viewModel = useBaklava(codeGraphStore.editor as Editor);
 // window.graph = props.graph;
 
 const onUpdate = (node: AbstractCodeNode) => node.events.update.emit(null);
+
+// const temporaryConnection = provideTemporaryConnection();
 </script>

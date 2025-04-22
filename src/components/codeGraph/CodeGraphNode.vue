@@ -11,6 +11,8 @@
     <div v-if="viewModel.settings.nodes.resizable" class="__resize-handle" @mousedown="startResize" />
 
     <div :title="node.type" class="__title" @pointerdown.self.stop="startDrag" @contextmenu.prevent="openContextMenu">
+      <CodeNodeInterface v-if="node.inputs.prev" :node :intf="node.inputs.prev" class="--input" style="flex-grow: 0" />
+
       <template v-if="!renaming">
         <div class="__title-label" style="flex-grow: 1">
           <span v-if="node.idx > -1">{{ node.idx + 1 }} - </span>{{ node.title }}
@@ -51,6 +53,8 @@
         @blur="doneRenaming"
         @keydown.enter="doneRenaming"
       />
+
+      <CodeNodeInterface v-if="node.outputs.next" :node :intf="node.outputs.next" class="--output" />
     </div>
 
     <div class="__content" :class="classesContent" @keydown.delete.stop @contextmenu.prevent>
@@ -69,7 +73,7 @@
             </div>
           </div>
 
-          <slot name="nodeInterface" type="output" :node :intf="output" v-else>
+          <slot v-else name="nodeInterface" type="output" :node :intf="output">
             <NodeInterface :node :intf="output" :data-interface-type="output.type ?? ''" />
           </slot>
         </template>
@@ -90,7 +94,7 @@
             </div>
           </div>
 
-          <slot name="nodeInterface" type="input" :node :intf="input" v-else>
+          <slot v-else name="nodeInterface" type="input" :node :intf="input">
             <NodeInterface :node :intf="input" :data-interface-type="input.type ?? ''" />
           </slot>
         </template>
@@ -103,7 +107,9 @@
 import { ref, computed, nextTick, onUpdated, onMounted, onBeforeUnmount } from "vue";
 import { AbstractNode, GRAPH_NODE_TYPE_PREFIX, IGraphNode } from "@baklavajs/core";
 import { Components, useGraph, useViewModel } from "@baklavajs/renderer-vue";
+
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import CodeNodeInterface from "./CodeNodeInterface.vue";
 
 const ContextMenu = Components.ContextMenu;
 const NodeInterface = Components.NodeInterface;

@@ -2,12 +2,22 @@
 // Adapted from https://github.com/newcat/baklavajs/blob/987018200389bd86c48544ac4afa7a393fe1e9bc/packages/core/src/node.ts
 
 import Mustache from "mustache";
-import { AbstractNode, INodeState, NodeInterface, NodeInterfaceDefinition } from "baklavajs";
+import { AbstractNode, Connection, INodeState, NodeInterface, NodeInterfaceDefinition } from "baklavajs";
+
 import { nextTick, reactive, UnwrapRef } from "vue";
 
 import { BaseCode } from "../code/code";
 import { TConnection, TSimulation } from "@/types";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
+
+// export function mapValues<I, O>(obj: Record<string, I>, fn: (value: I) => O): Record<string, O> {
+//   return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v)]));
+// }
+
+// export interface ICodeNodeState<I, O> extends INodeState<I, O> {
+//   next: INodeInterfaceState<any>;
+//   prev: INodeInterfaceState<any>;
+// }
 
 interface IAbstractCodeNodeState {
   codeTemplate: string;
@@ -135,14 +145,19 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
-        .filter((c) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id)
-        .map((c) => c.from);
+        .filter(
+          (c: Connection) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
+        )
+        .map((c: Connection) => c.from);
       if (sources) nodeInterfaces = nodeInterfaces.concat(sources);
     }
     if (nodeInterface in this.outputs) {
       const targets = this.graph?.connections
-        .filter((c) => c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id)
-        .map((c) => c.to);
+        .filter(
+          (c: Connection) =>
+            c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
+        )
+        .map((c: Connection) => c.to);
       if (targets) nodeInterfaces = nodeInterfaces.concat(targets);
     }
 
@@ -155,17 +170,24 @@ export abstract class AbstractCodeNode extends AbstractNode {
   getConnectedNodes(mode?: string): AbstractCodeNode[] {
     let nodeIds: string[] = [];
 
-    if (mode != "inputs") {
-      const targets = this.graph?.connections.filter((c) => c.from.nodeId === this.id).map((c) => c.to.nodeId);
+    if (mode !== "inputs") {
+      const targets = this.graph?.connections
+        .filter((c: Connection) => c.from.constructor.name === "NodeOutputInterface")
+        .filter((c: Connection) => c.from.nodeId === this.id)
+        .map((c: Connection) => c.to.nodeId);
       if (targets) nodeIds = nodeIds.concat(targets);
     }
-    if (mode != "outputs") {
-      const sources = this.graph?.connections.filter((c) => c.to.nodeId === this.id).map((c) => c.from.nodeId);
+
+    if (mode !== "outputs") {
+      const sources = this.graph?.connections
+        .filter((c: Connection) => c.to.nodeId === this.id)
+        .map((c: Connection) => c.from.nodeId);
+
       if (sources) nodeIds = nodeIds.concat(sources);
     }
 
     if (!nodeIds || nodeIds.length == 0) return [];
-    return nodeIds.map((nodeId) => this.graph?.findNodeById(nodeId)) as AbstractCodeNode[];
+    return nodeIds.map((nodeId: string) => this.graph?.findNodeById(nodeId)) as AbstractCodeNode[];
   }
 
   /**
@@ -178,14 +200,19 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
-        .filter((c) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id)
-        .map((c) => c.from.nodeId);
+        .filter(
+          (c: Connection) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
+        )
+        .map((c: Connection) => c.from.nodeId);
       if (sources) nodeIds = nodeIds.concat(sources);
     }
     if (nodeInterface in this.outputs) {
       const targets = this.graph?.connections
-        .filter((c) => c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id)
-        .map((c) => c.to.nodeId);
+        .filter(
+          (c: Connection) =>
+            c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
+        )
+        .map((c: Connection) => c.to.nodeId);
       if (targets) nodeIds = nodeIds.concat(targets);
     }
 
@@ -203,8 +230,11 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
-        .filter((c) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id)
-        .map((c) => c.from) as NodeOutputInterface[];
+        .filter((c: Connection) => c.from.constructor.name === "NodeOutputInterface")
+        .filter(
+          (c: Connection) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
+        )
+        .map((c: Connection) => c.from) as NodeOutputInterface[];
       if (sources) nodeInterfaces = nodeInterfaces.concat(sources);
     }
 
@@ -239,6 +269,26 @@ export abstract class AbstractCodeNode extends AbstractNode {
       this._state.script = `\n# ${this._state.comments}\n${this._state.script}`;
     }
   }
+
+  // override save(): ICodeNodeState<any, any> {
+  //   const inputStates = mapValues(this.inputs, (intf: NodeInterface) =>
+  //     intf.save(),
+  //   ) as NodeInterfaceDefinitionStates<any>;
+  //   const outputStates = mapValues(this.outputs, (intf: NodeInterface) =>
+  //     intf.save(),
+  //   ) as NodeInterfaceDefinitionStates<any>;
+
+  //   const state: ICodeNodeState<any, any> = {
+  //     type: this.type,
+  //     id: this.id,
+  //     title: this.title,
+  //     inputs: inputStates,
+  //     outputs: outputStates,
+  //     next: this.next.save(),
+  //     prev: this.prev.save(),
+  //   };
+  //   return this.hooks.afterSave.execute(state) as ICodeNodeState<any, any>;
+  // }
 
   // subscribe(): void {
   //   if (this.state.token) this.unsubscribe();

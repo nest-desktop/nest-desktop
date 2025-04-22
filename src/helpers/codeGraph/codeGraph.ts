@@ -2,6 +2,7 @@
 
 import { Connection, Editor, Graph, IGraphState, NodeInterface } from "baklavajs";
 import { reactive, UnwrapRef } from "vue";
+import toposort from "toposort";
 
 import { AbstractCodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
@@ -19,9 +20,7 @@ export class CodeGraph extends BaseObj {
   private _state: UnwrapRef<ICodeGraphState>;
 
   constructor(code: BaseCode, graphProps?: IGraphState) {
-    super({
-      logger: { settings: { minLevel: 2 } },
-    });
+    super();
     this._code = code;
 
     this._state = reactive({
@@ -136,12 +135,15 @@ export class CodeGraph extends BaseObj {
   formatInterfaceLabels(outputInterfaces: NodeOutputInterface[], sorted: boolean = true): string[] {
     const labels: string[] = [];
 
-    outputInterfaces.forEach((outputInterface: NodeOutputInterface) => {
-      const node = outputInterface.node as AbstractCodeNode;
-      labels.push(node.state.integrated ? node.codeTemplate : outputInterface.label);
-    });
+    if (outputInterfaces.length > 0) {
+      outputInterfaces.forEach((outputInterface: NodeOutputInterface) => {
+        const node = outputInterface.node as AbstractCodeNode;
+        labels.push(node.state.integrated ? node.codeTemplate : outputInterface.label);
+      });
 
-    if (sorted) labels.sort();
+      if (sorted) labels.sort();
+    }
+
     return labels;
   }
 
@@ -206,11 +208,16 @@ export class CodeGraph extends BaseObj {
   }
 
   onUpdate = () => {
+    try {
+      this.sort();
+    } catch {}
     this.code.generate();
     this.save();
   };
 
   renderCodes(): void {
+    this.logger.trace("render codes");
+
     if (this.nodes.length === 0) return;
     this.nodes.forEach((node: AbstractCodeNode) => (node.renderCode ? node.renderCode() : null));
   }
@@ -236,6 +243,28 @@ export class CodeGraph extends BaseObj {
         node.outputs[outputKey].hidden = this.graph.nodes[nodeIdx].outputs[outputKey].hidden;
       });
     });
+  }
+
+  sort(): void {
+    this.logger.trace("sort");
+
+    // Get a list of edges
+    const edges = this.connections
+      // .filter(
+      //   (connection: Connection) =>
+      //     this.graph.findNodeById(connection.from.nodeId).outputs.next.id === connection.from.id &&
+      //     this.graph.findNodeById(connection.to.nodeId).inputs.prev.id === connection.to.id,
+      // )
+      .map((connection: Connection) => [connection.from.nodeId, connection.to.nodeId]);
+
+    // Get a list of node
+    const nodes = this.nodes.map((node: AbstractCodeNode) => node.id);
+
+    // Get sorted node ids
+    const nodeIds = toposort.array(nodes, edges);
+
+    // Update sorted nodes
+    this.nodes = nodeIds.map((nodeId: string) => this.graph.findNodeById(nodeId));
   }
 
   subscribe(): void {

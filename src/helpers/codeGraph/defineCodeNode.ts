@@ -34,6 +34,9 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
       this._title = definition.title ?? definition.type;
       if (definition.modules) this.modules = definition.modules;
       if (definition.variableName) this.variableName = definition.variableName;
+
+      this.addInput("prev", new NodeInterface("", "").setHidden(true));
+      this.addOutput("next", new NodeInterface("", "").setHidden(true));
       this.executeFactory("input", definition.inputs);
       this.executeFactory("output", definition.outputs);
       definition.onCreate?.call(this);

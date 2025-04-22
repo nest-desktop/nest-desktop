@@ -1,18 +1,27 @@
 // nestSetKernelStatus.ts
 
-import { displayInSidebar, IntegerInterface, NumberInterface } from "baklavajs";
+import { displayInSidebar, IntegerInterface, NumberInterface, setType } from "baklavajs";
 
 import { NESTCode } from "../../code/code";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 export default defineCodeNode({
   type: "nest.SetKernelStatus",
   title: "set kernel status",
   inputs: {
     local_num_threads: () =>
-      new IntegerInterface("Local number of threads", 1, 1).use(displayInSidebar, true).setHidden(true),
-    resolution: () => new NumberInterface("Resolution", 0.1, 0.001, 10).use(displayInSidebar, true).setHidden(true),
-    rng_seed: () => new IntegerInterface("RNG Seed", 1, 1).use(displayInSidebar, true).setHidden(true),
+      new IntegerInterface("Local number of threads", 1, 1)
+        .use(setType, numberType)
+        .use(displayInSidebar, true)
+        .setHidden(true),
+    resolution: () =>
+      new NumberInterface("Resolution", 0.1, 0.001, 10)
+        .use(setType, numberType)
+        .use(displayInSidebar, true)
+        .setHidden(true),
+    rng_seed: () =>
+      new IntegerInterface("RNG Seed", 1, 1).use(setType, numberType).use(displayInSidebar, true).setHidden(true),
   },
   codeTemplate() {
     if (!this.node) return this.type;
