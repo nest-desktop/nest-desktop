@@ -51,6 +51,7 @@
     "roboto-fontface": "*",
     "stats.js": "~0.17",
     "three": "~0.175",
+    "toposort": "^2.0.2",
     "uuid": "~11.1",
     "vue": "~3.5",
     "vue-codemirror": "~6.1",
