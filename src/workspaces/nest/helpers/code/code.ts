@@ -22,7 +22,6 @@ import { copyNodeModels, createNodes } from "../codeGraph/nodes";
 export class NESTCode extends BaseCode {
   constructor(project: NESTProject, codeProps: ICodeProps) {
     super(project, codeProps);
-    this.logger.settings.minLevel = 1;
   }
 
   override get project(): NESTProject {
