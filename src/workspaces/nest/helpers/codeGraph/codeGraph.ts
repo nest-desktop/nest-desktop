@@ -90,17 +90,23 @@ export class NESTCodeGraph extends BaseObj {
     }
   }
 
+  /**
+   * Add code node for reset kernel.
+   */
   addResetKernelCodeNode(): void {
     // nest.ResetKernel
     this.addNodeAtColumn(nestResetKernel, 0, 100);
   }
 
-  addResponeCodeNode(): void {
+  /**
+   * Add code node for response.
+   */
+  addResponseCodeNode(): void {
     const responseNode = this.addNodeAtColumn(nestDataResponse, 3, 600);
     const codeNodes = this.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create");
 
     codeNodes.forEach((codeNode: AbstractCodeNode) => {
-      if (!["recorder", "meter"].includes(codeNode.inputs.model.value)) return;
+      if (!codeNode.inputs.model.value.includes("recorder") && !codeNode.inputs.model.value.includes("meter")) return;
       this.addConnection(codeNode.outputs.events, responseNode.inputs.events);
     });
   }
@@ -145,7 +151,7 @@ export class NESTCodeGraph extends BaseObj {
     // nest.Simulate
     if (projectProps.simulation) this.addSimulationCodeNode(projectProps.simulation);
 
-    this.addResponeCodeNode();
+    this.addResponseCodeNode();
   }
 
   save(): IGraphState {

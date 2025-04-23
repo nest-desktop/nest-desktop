@@ -16,12 +16,13 @@ import nestSimulate from "../codeNodeTypes/nest/nestSimulate";
 import { INESTNetworkProps } from "../network/network";
 import { INESTSimulationProps } from "../simulation/simulation";
 import { INESTProjectProps, NESTProject } from "../project/project";
-import { copyNodeModels, createNodes } from "../codeGraph/nodes";
 import { connectNodes, copySynapseModels } from "../codeGraph/connections";
+import { copyNodeModels, createNodes } from "../codeGraph/nodes";
 
 export class NESTCode extends BaseCode {
   constructor(project: NESTProject, codeProps: ICodeProps) {
     super(project, codeProps);
+    this.logger.settings.minLevel = 1;
   }
 
   override get project(): NESTProject {
@@ -90,19 +91,20 @@ export class NESTCode extends BaseCode {
   }
 
   load(projectProps?: INESTProjectProps): void {
+    this.logger.trace("load");
     if (!projectProps) return;
 
     this.addBaseCodeNodes();
     if (projectProps.network) this.loadFromNetwork(projectProps.network as INESTNetworkProps);
     if (projectProps.simulation) this.loadFromSimulation(projectProps.simulation as INESTSimulationProps);
-    this.sortNodes();
+    this.graph.onUpdate();
   }
 
   /**
    * Load code nodes from network props.
    */
   loadFromNetwork(networkProps: INESTNetworkProps): void {
-    this.logger.trace("add network code nodes");
+    this.logger.trace("load from network");
     if (!networkProps) return;
 
     copyNodeModels(this.graph, networkProps.models);
@@ -110,148 +112,6 @@ export class NESTCode extends BaseCode {
 
     copySynapseModels(this.graph, networkProps.models, nodes.weightRecorders);
     connectNodes(this.graph, networkProps.connections, nodes.all);
-
-    // let codeNode: AbstractCodeNode;
-    // const nodes: AbstractCodeNode[] = [];
-    // const spatialNodes: AbstractCodeNode[] = [];
-    // const weightRecorders: AbstractCodeNode[] = [];
-
-    // this.graph.unsubscribe();
-
-    // // Copy node model
-    // if (networkProps.models && networkProps.models.length > 0) {
-    //   networkProps.models
-    //     .filter((model) => !model.existing.includes("synapse"))
-    //     .forEach((model: INESTCopyModelProps) => {
-    //       // nest.CopyModel
-    //       codeNode = this.graph.addNodeAtColumn(nestCopyModel, 1, 100);
-    //       codeNode.state.role = "network";
-    //       codeNode.inputs.existing.value = model.existing;
-    //       codeNode.inputs.new.value = model.new;
-    //       model.params?.forEach((param) => {
-    //         const inputInterface = new NumberInterface(param.id, param.value as number);
-    //         codeNode.addInput(param.id, inputInterface);
-    //       });
-    //     });
-    // }
-
-    // if (networkProps.nodes && networkProps.nodes.length > 0) {
-    //   const nodesProps = networkProps.nodes as INESTNodeProps[];
-    //   nodesProps.forEach((nodeProps: INESTNodeProps, idx: number) => {
-    //     let paramsNode: AbstractCodeNode;
-
-    //     // params
-    //     if (nodeProps.params) {
-    //       paramsNode = this.graph.addNodeAtColumn(nestParameters, 1, 100 + 260 * idx);
-    //       paramsNode.state.role = "network";
-    //       paramsNode.state.integrated = true;
-
-    //       nodeProps.params?.forEach((param) => {
-    //         let inputInterface;
-    //         if (typeof param.value == "number") {
-    //           inputInterface = new IntegerInterface(param.id, param.value as number);
-    //         } else {
-    //           inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
-    //         }
-    //         paramsNode.addInput(param.id, inputInterface);
-    //       });
-    //     }
-
-    //     // positions
-    //     let posNode: AbstractCodeNode;
-    //     if (nodeProps.spatial) {
-    //       const randNode = this.graph.addNodeAtColumn(nestRandomUniform, 0, 900);
-    //       randNode.state.role = "network";
-    //       randNode.state.integrated = true;
-    //       randNode.inputs.min.value = -0.5;
-    //       randNode.inputs.max.value = 0.5;
-    //       posNode = this.graph.addNodeAtColumn(nestSpatialFree, 1, 900);
-    //       posNode.state.role = "network";
-    //       posNode.state.integrated = true;
-    //       this.graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
-    //     }
-
-    // // nest.Create
-    // codeNode = this.graph.addNodeAtColumn(nestCreate, 2, 100 + 290 * idx);
-    // codeNode.state.role = "network";
-    // if (idx === 0) codeNode.state.comments = "Create nodes";
-    // // codeNode.variableName = nodeProps.model as string;
-    // codeNode.inputs.model.value = nodeProps.model;
-    // codeNode.inputs.size.value = nodeProps.size ?? 1;
-    // codeNode.inputs.size.hidden = nodeProps.size ? nodeProps.size === 1 : true;
-    // if (nodeProps.model === "weight_recorder") {
-    //   codeNode.variableName = "wr";
-    //   weightRecorders.push(codeNode);
-    // }
-
-    //     if (paramsNode) this.graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
-
-    //     if (posNode) {
-    //       this.graph.addConnection(posNode.outputs.out, codeNode.inputs.positions);
-    //       codeNode.events.update.emit({
-    //         type: "input",
-    //         intf: codeNode.inputs.positions,
-    //         name: "positions",
-    //       });
-    //       spatialNodes.push(codeNode);
-    //     }
-
-    //     nodes.push(codeNode);
-    //   });
-    // }
-    // // Copy synapse model
-    // if (networkProps.models && networkProps.models.length > 0) {
-    //   networkProps.models
-    //     .filter((model) => model.existing.includes("synapse"))
-    //     .forEach((model: INESTCopyModelProps, idx: number) => {
-    //       // nest.CopyModel
-    //       codeNode = this.graph.addNodeAtColumn(nestCopyModel, 3, 1500 + idx * 600);
-    //       codeNode.state.role = "network";
-    //       codeNode.inputs.existing.value = model.existing;
-    //       codeNode.inputs.new.value = model.new;
-    //       model.params?.forEach((param) => {
-    //         let nodeInterface: NodeInterface;
-    //         switch (typeof param.value) {
-    //           case "number":
-    //             nodeInterface = new NumberInterface(param.id, param.value as number);
-    //             break;
-    //           default:
-    //             nodeInterface = new TextInputInterface(param.id, param.value as string);
-    //             break;
-    //         }
-    //         codeNode.addInput(param.id, nodeInterface);
-    //       });
-
-    //       const weightRecorderParam = model.params?.find((param) => param.id === "weight_recorder");
-    //       if (weightRecorderParam) {
-    //         const weightRecorderCode = weightRecorders.find(
-    //           (codeNode, idx) => codeNode.variableName + (idx + 1) === weightRecorderParam.value,
-    //         );
-    //         if (weightRecorderCode)
-    //           this.graph.addConnection(weightRecorderCode.outputs.out, codeNode.inputs.weight_recorder);
-    //       }
-    //     });
-    // }
-
-    // if (networkProps?.connections && networkProps.connections.length > 0) {
-    //   networkProps.connections.forEach((connection: INESTConnectionProps, idx: number) => {
-    //     // nest.Connect
-    //     codeNode = this.graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx);
-    //     codeNode.state.role = "network";
-    //     if (idx === 0) codeNode.state.comments = "Connect nodes";
-    //     if (connection.synapse) {
-    //       if (connection.synapse.model) codeNode.inputs.model.value = connection.synapse.model;
-    //       connection.synapse.params?.forEach((param: IParamProps) => {
-    //         if (param.id in codeNode.inputs) {
-    //           codeNode.inputs[param.id].hidden = false;
-    //           codeNode.inputs[param.id].value = param.value;
-    //         }
-    //       });
-    //     }
-    //     this.graph.addConnection(codeNode.inputs.pre, nodes[connection.source].outputs.out);
-    //     this.graph.addConnection(nodes[connection.target].outputs.out, codeNode.inputs.post);
-    //   });
-    // }
 
     // define function getPos
     if (nodes.spatial.length > 0) {
@@ -263,6 +123,7 @@ export class NESTCode extends BaseCode {
 
     // update response
     const responseNode = this.graph.findNodeByType("nest/response");
+    console.log(responseNode);
     if (responseNode) {
       if (nodes.all.length > 0) {
         nodes.all
@@ -287,7 +148,7 @@ export class NESTCode extends BaseCode {
    * Load code nodes from simulation props.
    */
   loadFromSimulation(simulationProps: INESTSimulationProps): void {
-    this.logger.trace("add simulation code nodes");
+    this.logger.trace("load from simulation");
     let codeNode: AbstractCodeNode;
 
     this.graph.unsubscribe();
