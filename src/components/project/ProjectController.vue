@@ -158,7 +158,6 @@ import ActivityChartController from "../activityChart/ActivityChartController.vu
 import ActivityStats from "../activityStats/ActivityStats.vue";
 import CodeEditor from "../code/CodeEditor.vue";
 import CodeMirror from "../code/CodeMirror.vue";
-import CodeTreeview from "@/components/codeGraph/CodeTreeview.vue";
 import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
