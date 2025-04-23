@@ -208,9 +208,12 @@ export class CodeGraph extends BaseObj {
   }
 
   onUpdate = () => {
-    try {
-      this.sort();
-    } catch {}
+    const codeGraphStore = useCodeGraphStore();
+    if (codeGraphStore.state.autosort) {
+      try {
+        this.sort();
+      } catch {}
+    }
     this.code.generate();
     this.save();
   };

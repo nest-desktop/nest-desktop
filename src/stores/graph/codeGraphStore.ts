@@ -6,7 +6,13 @@ import { defineStore } from "pinia";
 import { reactive } from "vue";
 
 export const useCodeGraphStore = defineStore("code-graph", () => {
-  const state = reactive<{ editor: IEditorState; modules: Record<string, string>; token: symbol | null }>({
+  const state = reactive<{
+    autosort: Boolean;
+    editor: IEditorState;
+    modules: Record<string, string>;
+    token: symbol | null;
+  }>({
+    autosort: true,
     editor: new Editor().save(),
     token: null,
     modules: {},

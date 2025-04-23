@@ -320,21 +320,12 @@ export class NESTCode extends BaseCode {
     this.graph.subscribe();
   }
 
-  // sortNodes(): void {
-  //   this.graph.unsubscribe();
-  //   const nodes: Record<string, AbstractCodeNode[]> = { first: [], before: [], network: [], after: [], last: [] };
-  //   this.graph.nodes.forEach((node) => nodes[node.state.role].push(node));
-  //   this.graph.nodes = [...nodes.first, ...nodes.before, ...nodes.network, ...nodes.after, ...nodes.last];
-  //   this.graph.subscribe();
-  // }
-
   updateNetworkCodeNodes(): void {
     this.logger.trace("update network code nodes");
     const projectProps = this.project.doc;
 
     this.clearNetworkCodeNodes();
     this.loadFromNetwork(projectProps.network as INESTNetworkProps);
-    this.sortNodes();
 
     this.graph.onUpdate();
   }

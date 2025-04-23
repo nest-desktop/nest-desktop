@@ -37,11 +37,15 @@ import draggable from "vuedraggable";
 
 import { BaseCode } from "@/helpers/code/code";
 
+import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
+const codeGraphStore = useCodeGraphStore();
+
 const props = defineProps<{ code: BaseCode }>();
 const code = computed(() => props.code as BaseCode);
 const drag = ref(false);
 
 const dragEnd = () => {
+  codeGraphStore.state.autosort = false;
   drag.value = false;
   code.value.generate();
 };
