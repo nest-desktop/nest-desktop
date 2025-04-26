@@ -10,6 +10,9 @@ import { BaseCode } from "../code/code";
 import { TConnection, TSimulation } from "@/types";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 
+import { logger as mainLogger } from "@/utils/logger";
+import { truncate } from "@/utils/truncate";
+
 // export function mapValues<I, O>(obj: Record<string, I>, fn: (value: I) => O): Record<string, O> {
 //   return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v)]));
 // }
@@ -48,6 +51,9 @@ export abstract class AbstractCodeNode extends AbstractNode {
     token: null,
   });
 
+  public logger = mainLogger.getSubLogger({
+    name: `[${truncate(this.id)}] ${this.constructor.name}`,
+  });
   public modules: string[] = [];
   public variableName: string = "x";
 
@@ -242,7 +248,8 @@ export abstract class AbstractCodeNode extends AbstractNode {
   }
 
   onChange(): void {
-    console.log("on change");
+    this.logger.trace("on change");
+
     this.renderCode();
 
     nextTick(() => {
@@ -255,6 +262,8 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * Render code of this node.
    */
   renderCode(): void {
+    this.logger.trace("render code");
+
     this._state.script = Mustache.render(this.codeTemplate, this.toJSON());
     if (this.getConnectedNodes("outputs").length > 0) {
       this._state.script = `${this.label} = ${this._state.script}`;

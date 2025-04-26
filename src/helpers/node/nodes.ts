@@ -22,6 +22,7 @@ export class BaseNodes extends BaseObj {
 
   constructor(network: TNetwork, nodesProps?: (INodeProps | INodeGroupProps)[]) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     this._network = network;
 

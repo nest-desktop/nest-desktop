@@ -40,6 +40,7 @@ export class BaseProject extends BaseObj {
 
   constructor(projectProps: IBaseProjectProps = {}) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     // Database instance.
     this._doc = projectProps || {};
@@ -212,11 +213,13 @@ export class BaseProject extends BaseObj {
     // Initialize activities.
     this.activities.init();
 
-    // Initialize activity graph.
-    this.activityGraph.init();
-
     this.updateHash();
     this.doc.hash = this.hash;
+
+    nextTick(() => {
+      // Initialize activity graph.
+      this.activityGraph.init();
+    });
 
     // this.clean();
   }

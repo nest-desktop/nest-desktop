@@ -5,6 +5,7 @@ import { Node, NodeInterface, NodeInterfaceDefinition, INodeDefinition } from "b
 
 import { AbstractCodeNode, CodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
+import { truncate } from "@/utils/truncate";
 
 export type NodeConstructor<I, O> = new () => Node<I, O>;
 export type NodeInstanceOf<T> = T extends new () => Node<infer A, infer B> ? Node<A, B> : never;
@@ -31,6 +32,9 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
 
     constructor() {
       super();
+      this.logger.settings.name = `[${truncate(this.id)}] ${definition.type}`;
+      // this.logger.settings.minLevel = 1;
+
       this._title = definition.title ?? definition.type;
       if (definition.modules) this.modules = definition.modules;
       if (definition.variableName) this.variableName = definition.variableName;
@@ -58,10 +62,12 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
     }
 
     public onPlaced() {
+      this.logger.trace("on placed");
       definition.onPlaced?.call(this);
     }
 
     public onDestroy() {
+      this.logger.trace("on destroy");
       definition.onDestroy?.call(this);
     }
 

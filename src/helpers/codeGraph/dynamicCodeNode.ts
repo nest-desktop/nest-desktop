@@ -14,6 +14,7 @@ import {
 import { AbstractCodeNode, CodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
+import { truncate } from "@/utils/truncate";
 
 type Dynamic<T> = T & Record<string, any>;
 
@@ -69,6 +70,9 @@ export function defineDynamicCodeNode<I, O>(
 
     constructor() {
       super();
+      this.logger.settings.name = `[${truncate(this.id)}] ${definition.type}`;
+      // this.logger.settings.minLevel = 1;
+
       this._title = definition.title ?? definition.type;
 
       if (definition.modules) this.modules = definition.modules;
@@ -100,6 +104,8 @@ export function defineDynamicCodeNode<I, O>(
     }
 
     public onPlaced() {
+      this.logger.trace("on placed");
+
       this.events.update.subscribe(this, (data) => {
         if (!data) return;
 
@@ -116,6 +122,7 @@ export function defineDynamicCodeNode<I, O>(
     }
 
     public onDestroy() {
+      this.logger.trace("on destroy");
       definition.onDestroy?.call(this);
     }
 
@@ -186,6 +193,7 @@ export function defineDynamicCodeNode<I, O>(
     }
 
     private onUpdate() {
+      this.logger.trace("on update");
       if (this.preventUpdate) return;
 
       if (this.graph) this.graph.activeTransactions++;

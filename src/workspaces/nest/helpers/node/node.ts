@@ -35,6 +35,7 @@ export class NESTNode extends BaseNode {
 
   constructor(nodes: NESTNodes, nodeProps: INESTNodeProps = {}) {
     super(nodes, nodeProps);
+    // this.logger.settings.minLevel = 1;
 
     this._spatial = new NESTNodeSpatial(this, nodeProps.spatial);
 

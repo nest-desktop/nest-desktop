@@ -25,6 +25,7 @@ export class NESTCodeGraph extends BaseObj {
 
   constructor(networkProps: INESTNetworkProps) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     this._viewModel = useBaklava();
     setViewSettings(this._viewModel.settings);

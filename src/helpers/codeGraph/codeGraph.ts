@@ -9,6 +9,7 @@ import { BaseCode } from "../code/code";
 import { BaseObj } from "../common/base";
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
+import { truncate } from "@/utils/truncate";
 
 interface ICodeGraphState {
   graph: IGraphState;
@@ -21,6 +22,9 @@ export class CodeGraph extends BaseObj {
 
   constructor(code: BaseCode, graphProps?: IGraphState) {
     super();
+    this.logger.settings.name = `[${this.shortUuid}] code graph`;
+    // this.logger.settings.minLevel = 1;
+
     this._code = code;
 
     this._state = reactive({
@@ -181,7 +185,7 @@ export class CodeGraph extends BaseObj {
   }
 
   load(): void {
-    this.logger.trace("load", this.state.graph.id);
+    this.logger.trace("load", truncate(this.state.graph.id));
 
     if (this.graph.id === this.state.graph.id) return;
     this.unsubscribe();
