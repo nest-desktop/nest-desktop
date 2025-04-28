@@ -10,7 +10,7 @@ const currentVersion = process.env.APP_VERSION as string;
 /**
  * Upgrades project to be compatible with the latest release.
  * It also checks if projects are valid and corrects some problems.
- * @param projectProps project props which should be transformed
+ * @param projectProps project props which should be migrated
  * @returns project props
  */
 
@@ -21,6 +21,9 @@ export function upgradeProject(projectProps: any): TProjectProps {
   const oldVersion = projectProps.version;
 
   for (const upgrade of Object.values(projectUpgrades)) {
+    // As long as files aren't already migrated:
+    if (projectProps.network) projectProps.version = "4.1.0";
+
     if (projectProps.version.startsWith(upgrade.currentVersion)) {
       projectProps = upgrade.upgradeProject(projectProps);
       projectProps.version = upgrade.newVersion;

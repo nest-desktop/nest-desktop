@@ -7,7 +7,7 @@ import { reactive } from "vue";
 
 export const useCodeGraphStore = defineStore("code-graph", () => {
   const state = reactive<{
-    autosort: Boolean;
+    autosort: boolean;
     editor: IEditorState;
     modules: Record<string, string>;
     token: symbol | null;

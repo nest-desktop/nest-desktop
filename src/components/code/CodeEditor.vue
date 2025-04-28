@@ -10,7 +10,7 @@
         density="compact"
         hide-details
         label="autosort"
-        @update:modelValue="() => code.graph.onUpdate()"
+        @update:model-value="() => code.graph.onUpdate()"
       />
     </div>
     <v-spacer />
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 
 import CodeTreeview from "../codeGraph/CodeTreeview.vue";
 import CodeMirror from "./CodeMirror.vue";

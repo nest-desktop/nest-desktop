@@ -210,18 +210,18 @@ export class BaseProject extends BaseObj {
     // Generate code.
     this.code.init();
 
-    // Initialize activities.
-    this.activities.init();
-
-    this.updateHash();
-    this.doc.hash = this.hash;
-
     nextTick(() => {
+      // Initialize activities.
+      this.activities.init();
+
       // Initialize activity graph.
       this.activityGraph.init();
-    });
 
-    // this.clean();
+      this.updateHash();
+      this.doc.hash = this.hash;
+
+      // this.clean();
+    });
   }
 
   /**

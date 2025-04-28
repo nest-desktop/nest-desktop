@@ -11,11 +11,11 @@
 </template>
 
 <script setup lang="ts">
+import { NodeInterface } from "@baklavajs/core";
 import { computed, onMounted, onUpdated, Ref, ref } from "vue";
-import { AbstractCodeNode, NodeInterface } from "@baklavajs/core";
-import { Components, useGraph, useViewModel } from "@baklavajs/renderer-vue";
+import { useTemporaryConnection, useViewModel } from "@baklavajs/renderer-vue";
 
-import { useTemporaryConnection } from "@baklavajs/renderer-vue"; // "../../helpers/codeGraph/temporaryConnection";
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 
 const props = defineProps<{
   node: AbstractCodeNode;

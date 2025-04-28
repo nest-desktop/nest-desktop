@@ -8,8 +8,8 @@ import { IBaklavaViewModel } from "baklavajs";
 export const stringType = new NodeInterfaceType<string>("string");
 export const numberType = new NodeInterfaceType<number>("number");
 export const booleanType = new NodeInterfaceType<boolean>("boolean");
-export const dictType = new NodeInterfaceType<Object>("dict");
-export const listType = new NodeInterfaceType<Object>("list");
+export const dictType = new NodeInterfaceType<object>("dict");
+export const listType = new NodeInterfaceType<object>("list");
 
 export const addBaseTypes = (baklavaView: IBaklavaViewModel) => {
   const nodeInterfaceTypes = new BaklavaInterfaceTypes(baklavaView.editor, { viewPlugin: baklavaView });

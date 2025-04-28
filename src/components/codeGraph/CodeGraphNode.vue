@@ -1,10 +1,10 @@
 <template>
   <div
+    :id="node.id"
+    ref="el"
     :class="classes"
     :data-node-type="node.type"
-    :id="node.id"
     :style="styles"
-    ref="el"
     class="baklava-node"
     @pointerdown="select"
   >
@@ -44,10 +44,10 @@
       </template>
       <input
         v-else
+        ref="renameInputEl"
         v-model="tempName"
         class="baklava-input"
         placeholder="Node Name"
-        ref="renameInputEl"
         style="flex-grow: 1"
         type="text"
         @blur="doneRenaming"
@@ -63,11 +63,11 @@
         <template v-for="output in displayedOutputs" :key="output.id">
           <div v-if="node.state.hidden">
             <div
+              v-if="output.port"
               :id="output.id"
               :data-interface-type="output.type ?? ''"
               :title="output.name"
               class="baklava-node-interface --output --connected"
-              v-if="output.port"
             >
               <div class="__port" />
             </div>
@@ -84,11 +84,11 @@
         <template v-for="input in displayedInputs" :key="input.id">
           <div v-if="node.state.hidden">
             <div
+              v-if="input.port"
               :id="input.id"
               :data-interface-type="input.type ?? ''"
               :title="input.name"
               class="baklava-node-interface --input --connected"
-              v-if="input.port"
             >
               <div class="__port" />
             </div>

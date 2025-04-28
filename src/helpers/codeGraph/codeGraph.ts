@@ -78,11 +78,11 @@ export class CodeGraph extends BaseObj {
   }
 
   set nodes(values: AbstractCodeNode[]) {
-    this.graph._nodes = values;
+    this.graph._nodes = values as AbstractCodeNode[];
   }
 
   get nodesSegregated(): AbstractCodeNode[] {
-    return this.graph.nodes.filter((node: AbstractCodeNode) => !node.state.integrated) as AbstractCodeNode[];
+    return this.nodes.filter((node: AbstractCodeNode) => !node.state.integrated) as AbstractCodeNode[];
   }
 
   get state(): UnwrapRef<ICodeGraphState> {
@@ -90,7 +90,7 @@ export class CodeGraph extends BaseObj {
   }
 
   get visibleNodes(): AbstractCodeNode[] {
-    return this.graph.nodes.filter((node: AbstractCodeNode) => !node.state.hidden) as AbstractCodeNode[];
+    return this.nodes.filter((node: AbstractCodeNode) => !node.state.hidden) as AbstractCodeNode[];
   }
 
   addConnection(from: NodeInterface, to: NodeInterface): void {
@@ -239,14 +239,14 @@ export class CodeGraph extends BaseObj {
 
   saveStates(graph: IGraphState): void {
     graph.nodes.forEach((node, nodeIdx) => {
-      const integrated = this.graph.nodes[nodeIdx].state.integrated;
+      const integrated = this.nodes[nodeIdx].state.integrated;
       if (integrated) node.integrated = integrated;
 
-      Object.entries(node.inputs).forEach(([inputKey, _]) => {
+      Object.entries(node.inputs).forEach(([inputKey]) => {
         node.inputs[inputKey].hidden = this.graph.nodes[nodeIdx].inputs[inputKey].hidden;
       });
 
-      Object.entries(node.outputs).forEach(([outputKey, _]) => {
+      Object.entries(node.outputs).forEach(([outputKey]) => {
         node.outputs[outputKey].hidden = this.graph.nodes[nodeIdx].outputs[outputKey].hidden;
       });
     });

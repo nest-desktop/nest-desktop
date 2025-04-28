@@ -27,7 +27,7 @@ export class NetworkProject extends BaseProject {
 
   constructor(projectProps: INetworkProjectProps = {}) {
     super(projectProps);
-    // this.logger.settings.minLevel = 1;
+    this.logger.settings.minLevel = 1;
 
     // Initialize model database.
     this.initModelStore();
@@ -152,26 +152,26 @@ export class NetworkProject extends BaseProject {
     // Initialize code.
     this.code.init();
 
-    // Initialize network.
-    this.network.init();
-
-    // Initialize network history.
-    this.networkRevision.init();
-
-    // Initialize simulation.
-    this.simulation.init();
-
-    // Initialize activities.
-    this.activities.init();
-
-    this.updateHash();
-    this.doc.hash = this.hash;
-
-    this.clean();
-
     nextTick(() => {
+      // Initialize network.
+      this.network.init();
+
+      // Initialize network history.
+      this.networkRevision.init();
+
+      // Initialize simulation.
+      this.simulation.init();
+
+      // Initialize activities.
+      this.activities.init();
+
       // Initialize activity graph.
       this.activityGraph.init();
+
+      this.updateHash();
+      this.doc.hash = this.hash;
+
+      this.clean();
     });
   }
 

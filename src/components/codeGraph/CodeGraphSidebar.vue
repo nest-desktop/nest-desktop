@@ -19,7 +19,7 @@
           false-icon="mdi:mdi-checkbox-marked-outline"
           hide-details
           true-icon="mdi:mdi-checkbox-blank-outline"
-          @update:modelValue="() => node.onChange()"
+          @update:model-value="() => node.onChange()"
         />
         <component
           :is="intf.component"
@@ -33,7 +33,7 @@
 
     <v-spacer />
     <v-toolbar density="compact">
-      <v-btn @click="node.codeTemplate = ''" icon="mdi:mdi-backup-restore" size="x-small" title="reset" />
+      <v-btn icon="mdi:mdi-backup-restore" size="x-small" title="reset" @click="node.codeTemplate = ''" />
     </v-toolbar>
 
     <codemirror v-if="node" v-model="node.codeTemplate" />

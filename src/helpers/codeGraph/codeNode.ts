@@ -53,6 +53,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
   public logger = mainLogger.getSubLogger({
     name: `[${truncate(this.id)}] ${this.constructor.name}`,
+    minLevel: 1,
   });
   public modules: string[] = [];
   public variableName: string = "x";
