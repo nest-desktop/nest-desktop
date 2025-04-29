@@ -2,9 +2,11 @@
 
 import { displayInSidebar, IntegerInterface, NumberInterface, setType } from "baklavajs";
 
-import { NESTCode } from "../../code/code";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import { NESTCode } from "../../code/code";
+import { NESTSimulationKernel } from "../../simulation/simulationKernel";
 
 export default defineCodeNode({
   type: "nest.SetKernelStatus",
@@ -44,10 +46,28 @@ export default defineCodeNode({
 
     return args.length > 0 ? `nest.SetKernelStatus({\n\t${args.join(",\n\t")}\n})` : "";
   },
+  onGraphUpdate() {
+    if (!this.simulationItem) return;
+    const kernel: NESTSimulationKernel = this.simulationItem;
+
+    if (kernel.resolution !== this.inputs?.resolution.value) kernel.resolution = this.inputs?.resolution.value;
+    if (kernel.localNumThreads !== this.inputs?.local_num_threads.value)
+      kernel.localNumThreads = this.inputs?.local_num_threads.value;
+    if (kernel.rngSeed !== this.inputs?.rng_seed.value) kernel.rngSeed = this.inputs?.rng_seed.value;
+  },
   onPlaced() {
     if (!this.code) return;
     const code = this.code as NESTCode;
     this.simulationItem = code.project.simulation.kernel;
     this.simulationItem.codeNodes.node = this;
+  },
+  onProjectUpdate() {
+    if (!this.simulationItem) return;
+    const kernel: NESTSimulationKernel = this.simulationItem;
+
+    if (this.inputs.resolution.value !== kernel.resolution) this.inputs.resolution.value = kernel.resolution;
+    if (this.inputs.local_num_threads.value !== kernel.localNumThreads)
+      this.inputs.local_num_threads.value = kernel.localNumThreads;
+    if (this.inputs.rng_seed.value !== kernel.rngSeed) this.inputs.rng_seed.value = kernel.rngSeed;
   },
 });

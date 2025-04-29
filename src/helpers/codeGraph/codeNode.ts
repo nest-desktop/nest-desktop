@@ -53,7 +53,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
   public logger = mainLogger.getSubLogger({
     name: `[${truncate(this.id)}] ${this.constructor.name}`,
-    minLevel: 1,
+    // minLevel: 1,
   });
   public modules: string[] = [];
   public variableName: string = "x";
@@ -258,6 +258,10 @@ export abstract class AbstractCodeNode extends AbstractNode {
       this.code?.updateHash();
     });
   }
+
+  abstract onGraphUpdate(): void;
+
+  abstract onProjectUpdate(): void;
 
   /**
    * Render code of this node.

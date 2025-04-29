@@ -2,9 +2,11 @@
 
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
-import { NESTCode } from "../../code/code";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import { NESTCode } from "../../code/code";
+import { NESTSimulation } from "../../simulation/simulation";
 
 export default defineCodeNode({
   type: "nest.Simulate",
@@ -22,10 +24,22 @@ export default defineCodeNode({
 
     return `nest.Simulate(${args.join(",")})`;
   },
+  onGraphUpdate() {
+    if (!this.simulationItem) return;
+    const simulation: NESTSimulation = this.simulationItem;
+
+    if (simulation.time !== this.inputs.time.value) simulation.time = this.inputs.time.value;
+  },
   onPlaced() {
     if (!this.node.code) return;
     const code = this.node.code as NESTCode;
     this.simulationItem = code.project.simulation;
     this.simulationItem.codeNodes.node = this;
+  },
+  onProjectUpdate() {
+    if (!this.simulationItem) return;
+    const simulation: NESTSimulation = this.simulationItem;
+
+    if (this.inputs.time.value !== simulation.time) this.inputs.time.value = simulation.time;
   },
 });

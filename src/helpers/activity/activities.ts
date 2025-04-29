@@ -27,6 +27,7 @@ export class Activities extends BaseObj {
 
   constructor(project: TProject) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     this._project = project;
     this._state = reactive<IActivitiesState>({

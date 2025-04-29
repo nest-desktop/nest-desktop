@@ -83,6 +83,10 @@ export class NESTNode extends BaseNode {
     );
   }
 
+  get copyModel(): NESTCopyModel | undefined {
+    return this._copyModel;
+  }
+
   override get elementType(): TElementType {
     return this.model?.elementType;
   }
@@ -118,9 +122,19 @@ export class NESTNode extends BaseNode {
     return this._model as NESTModel;
   }
 
-  get copyModel(): NESTCopyModel | undefined {
-    return this._copyModel;
-  }
+  // override get modelId(): string {
+  //   return this._modelId;
+  // }
+
+  // override set modelId(value: string) {
+  //   this._modelId = value;
+
+  //   this.loadModel();
+  //   this.modelChanges();
+
+  //   if (this.codeNodes.node && this.codeNodes.node.inputs.model.value !== value)
+  //     this.codeNodes.node.inputs.model.value = value;
+  // }
 
   // override get modelId(): string {
   //   return this._modelId;

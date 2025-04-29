@@ -8,10 +8,12 @@ import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTCode } from "../code/code";
 import { NESTNetwork } from "../network/network";
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import { createNode } from "../codeGraph/nodes";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
     super(network, nodesProps);
+    this.logger.settings.minLevel = 1;
   }
 
   override get Node() {
@@ -90,26 +92,15 @@ export class NESTNodes extends BaseNodes {
    * Add code nodes.
    * @param node node component.
    */
-  override addCodeNodes(node: TNode | TNodeGroup, codeNodes: Record<string, AbstractCodeNode> = {}): void {
+  override addCodeNodes(node: TNode | TNodeGroup): void {
+    this.logger.trace("add code nodes");
+
     if (node.isGroup) return;
     const code = this.network.project.code as NESTCode;
     node = node as NESTNode;
-    node.codeNodes = codeNodes;
 
-    node.codeNodes.node = node.codeNodes.node ?? code.addCreateNode(node as NESTNode);
-
-    if (node.hasSomeVisibleParams)
-      node.codeNodes.params = node.codeNodes.params ?? code.addNodeParams(node as NESTNode);
-
-    if (node.codeNodes.params)
-      code.graph.addConnection(node.codeNodes.params.outputs.out, node.codeNodes.node.inputs.params);
-
-    node.updateCodeNodes();
-
-    if (node.model.isRecorder) {
-      const responseNode = code.graph.nodes.find((node) => node.state.role === "nestDataResponse");
-      if (responseNode) code.graph.addConnection(node.codeNodes.node.outputs.events, responseNode.inputs.events);
-    }
+    const idx = code.graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
+    node.codeNodes.node = node.codeNodes.node ?? createNode(code.graph, node.toJSON(), idx);
   }
 
   /**

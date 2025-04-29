@@ -18,8 +18,10 @@ export type InterfaceFactory<T> = {
 export interface ICodeNodeDefinition<I, O> extends INodeDefinition<I, O> {
   code?: BaseCode;
   codeTemplate?: (node?: AbstractCodeNode) => string;
-  modules?: string[];
   node?: AbstractCodeNode;
+  modules?: string[];
+  onGraphUpdate?: (node?: AbstractCodeNode) => void;
+  onProjectUpdate?: (node?: AbstractCodeNode) => void;
   toJSON?: (node?: AbstractCodeNode) => Record<string, unknown>;
   variableName?: string;
 }
@@ -69,6 +71,16 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
     public onDestroy() {
       this.logger.trace("on destroy");
       definition.onDestroy?.call(this);
+    }
+
+    public onGraphUpdate() {
+      this.logger.trace("on graph update");
+      definition.onGraphUpdate?.call(this);
+    }
+
+    public onProjectUpdate() {
+      this.logger.trace("on network update");
+      definition.onProjectUpdate?.call(this);
     }
 
     override toJSON(): Record<string, unknown> {

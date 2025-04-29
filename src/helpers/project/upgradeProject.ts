@@ -17,13 +17,11 @@ const currentVersion = process.env.APP_VERSION as string;
 export function upgradeProject(projectProps: any): TProjectProps {
   if (Object.keys(projectProps).length === 0) return {};
   if (!("version" in projectProps)) return projectProps;
+  if (!projectProps.code?.graph && projectProps.version.startsWith("5.")) projectProps.version = "4.1";
 
   const oldVersion = projectProps.version;
 
   for (const upgrade of Object.values(projectUpgrades)) {
-    // As long as files aren't already migrated:
-    if (projectProps.network) projectProps.version = "4.1.0";
-
     if (projectProps.version.startsWith(upgrade.currentVersion)) {
       projectProps = upgrade.upgradeProject(projectProps);
       projectProps.version = upgrade.newVersion;

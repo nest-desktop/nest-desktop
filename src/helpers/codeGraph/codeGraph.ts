@@ -1,7 +1,7 @@
 // codeGraph.ts
 
 import { Connection, Editor, Graph, IGraphState, NodeInterface } from "baklavajs";
-import { reactive, UnwrapRef } from "vue";
+import { nextTick, reactive, UnwrapRef } from "vue";
 import toposort from "toposort";
 
 import { AbstractCodeNode } from "./codeNode";
@@ -93,17 +93,30 @@ export class CodeGraph extends BaseObj {
     return this.nodes.filter((node: AbstractCodeNode) => !node.state.hidden) as AbstractCodeNode[];
   }
 
+  /**
+   * Add connection of code nodes
+   * @param from code node interface
+   * @param to code node interface
+   */
   addConnection(from: NodeInterface, to: NodeInterface): void {
     from.hidden = false;
     to.hidden = false;
     this.graph.addConnection(from, to);
   }
 
+  /**
+   * Add code node to graph.
+   * @param node code node
+   */
   addNode(node: AbstractCodeNode): void {
     node.code = this.code;
     this.graph.addNode(node);
   }
 
+  /**
+   * Add code node at specific column.
+   * @param node code node
+   */
   addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100) {
     const left = 300;
     const width = 350;
@@ -119,16 +132,9 @@ export class CodeGraph extends BaseObj {
     return node;
   }
 
-  addNodeWithCoordinates(nodeType: new () => AbstractCodeNode, x: number, y: number) {
-    const node = new nodeType();
-    this.addNode(node);
-    if (node.position) {
-      node.position.x = x;
-      node.position.y = y;
-    }
-    return node;
-  }
-
+  /**
+   * Clear code graph.
+   */
   clear(): void {
     this.unsubscribe();
     this.nodes = [];
@@ -172,6 +178,9 @@ export class CodeGraph extends BaseObj {
     return this.nodes.filter((node: AbstractCodeNode) => node.variableName === variableName) as AbstractCodeNode[];
   }
 
+  /**
+   * Initialize code graph.
+   */
   init(): void {
     this.logger.trace("init");
 
@@ -184,6 +193,9 @@ export class CodeGraph extends BaseObj {
     // this.nodes.forEach((node) => (node.code = this.code));
   }
 
+  /**
+   * Load code graph.
+   */
   load(): void {
     this.logger.trace("load", truncate(this.state.graph.id));
 
@@ -191,9 +203,13 @@ export class CodeGraph extends BaseObj {
     this.unsubscribe();
     this.graph.load(this.state.graph);
     this.loadStates();
+    this.onUpdate();
     this.subscribe();
   }
 
+  /**
+   * Load states of code nodes.
+   */
   loadStates(): void {
     this.state.graph.nodes.forEach((nodeProps, nodeIdx) => {
       const node: AbstractCodeNode = this.nodes[nodeIdx];
@@ -211,17 +227,43 @@ export class CodeGraph extends BaseObj {
     });
   }
 
-  onUpdate = () => {
-    const codeGraphStore = useCodeGraphStore();
-    if (codeGraphStore.state.autosort) {
-      try {
-        this.sort();
-      } catch {}
+  /**
+   * Triggers on project update.
+   */
+  onProjectUpdate = () => {
+    this.logger.trace("on project update");
+
+    if (this.nodes.length > 0) {
+      this.sortNodes();
+      this.nodes.forEach((node) => node.onProjectUpdate());
     }
-    this.code.generate();
-    this.save();
+
+    nextTick(() => {
+      this.code.generate();
+      this.save();
+    });
   };
 
+  /**
+   * Triggers on code graph update.
+   */
+  onUpdate = () => {
+    this.logger.trace("on update");
+
+    if (this.nodes.length > 0) {
+      this.sortNodes();
+      this.nodes.forEach((node) => node.onGraphUpdate());
+    }
+
+    nextTick(() => {
+      this.code.generate();
+      this.save();
+    });
+  };
+
+  /**
+   * Render node codes.
+   */
   renderCodes(): void {
     this.logger.trace("render codes");
 
@@ -229,6 +271,10 @@ export class CodeGraph extends BaseObj {
     this.nodes.forEach((node: AbstractCodeNode) => (node.renderCode ? node.renderCode() : null));
   }
 
+  /**
+   * Save code graph.
+   * @returns graph state
+   */
   save(): IGraphState {
     this.logger.trace("save");
     const graph = this.graph.save();
@@ -237,6 +283,10 @@ export class CodeGraph extends BaseObj {
     return graph;
   }
 
+  /**
+   * Save states of code graph.
+   * @param graph graph state.
+   */
   saveStates(graph: IGraphState): void {
     graph.nodes.forEach((node, nodeIdx) => {
       const integrated = this.nodes[nodeIdx].state.integrated;
@@ -252,26 +302,36 @@ export class CodeGraph extends BaseObj {
     });
   }
 
-  sort(): void {
-    this.logger.trace("sort");
+  /**
+   * Sort code nodes.
+   */
+  sortNodes(): void {
+    this.logger.trace("sort nodes");
 
-    // Get a list of edges
-    const edges = this.connections
-      // .filter(
-      //   (connection: Connection) =>
-      //     this.graph.findNodeById(connection.from.nodeId).outputs.next.id === connection.from.id &&
-      //     this.graph.findNodeById(connection.to.nodeId).inputs.prev.id === connection.to.id,
-      // )
-      .map((connection: Connection) => [connection.from.nodeId, connection.to.nodeId]);
+    const codeGraphStore = useCodeGraphStore();
+    if (codeGraphStore.state.autosort) {
+      try {
+        // Get a list of edges
+        const edges = this.connections
+          // .filter(
+          //   (connection: Connection) =>
+          //     this.graph.findNodeById(connection.from.nodeId).outputs.next.id === connection.from.id &&
+          //     this.graph.findNodeById(connection.to.nodeId).inputs.prev.id === connection.to.id,
+          // )
+          .map((connection: Connection) => [connection.from.nodeId, connection.to.nodeId]);
 
-    // Get a list of node
-    const nodes = this.nodes.map((node: AbstractCodeNode) => node.id);
+        // Get a list of node
+        const nodes = this.nodes.map((node: AbstractCodeNode) => node.id);
 
-    // Get sorted node ids
-    const nodeIds = toposort.array(nodes, edges);
+        // Get sorted node ids
+        const nodeIds = toposort.array(nodes, edges);
 
-    // Update sorted nodes
-    this.nodes = nodeIds.map((nodeId: string) => this.graph.findNodeById(nodeId));
+        // Update sorted nodes
+        this.nodes = nodeIds.map((nodeId: string) => this.graph.findNodeById(nodeId));
+      } catch {
+        this.logger.warn("Sorting nodes failed.");
+      }
+    }
   }
 
   subscribe(): void {

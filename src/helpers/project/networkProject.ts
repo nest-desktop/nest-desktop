@@ -27,7 +27,7 @@ export class NetworkProject extends BaseProject {
 
   constructor(projectProps: INetworkProjectProps = {}) {
     super(projectProps);
-    this.logger.settings.minLevel = 1;
+    // this.logger.settings.minLevel = 1;
 
     // Initialize model database.
     this.initModelStore();
@@ -106,9 +106,9 @@ export class NetworkProject extends BaseProject {
 
     this.activities.checkRecorders();
 
-    // this.initCode();
-
     this.networkRevision.commit();
+
+    this.code.graph.onProjectUpdate();
 
     if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();

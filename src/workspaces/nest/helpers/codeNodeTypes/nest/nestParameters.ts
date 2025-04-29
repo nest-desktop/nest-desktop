@@ -6,6 +6,7 @@ import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInt
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
 import { INESTNodeCollection } from "./interfaceTypes";
+import { NESTNode } from "../../node/node";
 
 export default defineDynamicCodeNode({
   type: "nest/Parameters",
@@ -29,11 +30,35 @@ export default defineDynamicCodeNode({
     if (params.length > 0) return `{\n\t${params.join(",\n\t")}\n}`;
     else return "";
   },
-  onPlaced() {
-    if (!this.code) return;
-    this.networkItem = this.code.project.network.nodes.nodeItems[this.indexOfNodeType];
-    if (!this.networkItem) return;
-    this.networkItem.codeNode = this;
+  onGraphUpdate() {
+    if (!this.node) return;
+    if (!this.networkItem) {
+      const nodes = this.node.getConnectedNodes("outputs");
+      if (nodes.length === 0 || !nodes[0].networkItem) return;
+      this.networkItem = nodes[0].networkItem;
+    }
+    const node: NESTNode = this.networkItem;
+
+    console.log(this.node.inputs);
+
+    Object.keys(this.node.inputs).forEach((inputKey: string) => {
+      if (!node.params[inputKey] || node.params[inputKey].value === this.node.inputs[inputKey].value) return;
+      node.params[inputKey].value = this.node.inputs[inputKey].value;
+    });
+  },
+  onProjectUpdate() {
+    if (!this.node) return;
+    if (!this.networkItem) {
+      const nodes = this.node.getConnectedNodes("outputs");
+      if (nodes.length === 0 || !nodes[0].networkItem) return;
+      this.networkItem = nodes[0].networkItem;
+    }
+    const node: NESTNode = this.networkItem;
+
+    Object.keys(this.node.inputs).forEach((inputKey: string) => {
+      if (!node.params[inputKey] || this.node.inputs[inputKey].value === node.params[inputKey].value) return;
+      this.node.inputs[inputKey].value = node.params[inputKey].value;
+    });
   },
   onUpdate() {
     if (!this.node) return {};

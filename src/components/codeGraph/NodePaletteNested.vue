@@ -1,31 +1,35 @@
 <template>
   <div class="baklava-node-palette pa-0">
-    <!-- <v-text-field
-      v-model="searchQuery"
-      hide-details
-      density="compact"
-      placeholder="Enter python module"
-      variant="outlined"
-    /> -->
+    <v-list class="pa-0" density="compact" theme="dark">
+      <v-list-group v-for="c1 in nestedCategories" :key="c1.name">
+        <template #activator="{ props }">
+          <v-list-item v-bind="props" :title="c1.name" />
+        </template>
 
-    <v-combobox
-      v-model="searchQuery"
-      :items="categoryNames"
-      class="mt-2"
-      clearable
-      density="compact"
-      hide-details
-      label="Python module"
-      variant="outlined"
-    />
+        <v-list v-if="c1.categories" class="pa-0" density="compact">
+          <v-list-group v-for="c2 in c1.categories" :key="c2.name">
+            <template #activator="{ props }">
+              <v-list-item v-bind="props" :title="'.' + c2.name" style="border-left: 2px solid currentColor" />
+            </template>
 
-    <v-list v-if="categories" class="pa-0" density="compact" theme="dark">
-      <template v-for="c in filteredCategories" :key="c.name">
-        <v-list-subheader :title="c.name" />
-        <v-list-item v-for="(ni, nt) in c.nodeTypes" :key="nt" class="pa-0 ma-0" style="margin: 2px 0 !important">
-          <PaletteEntry :type="nt" :title="ni.title" class="pa-0 ma-0" @pointerdown="onDragStart(nt, ni)" />
+            <v-list-item
+              v-for="(ni, nt) in c2.nodeTypes"
+              :key="nt"
+              style="padding: 1px !important; border-left: 2px solid currentColor"
+            >
+              <PaletteEntry :title="ni.title" :type="nt" class="pa-0 ma-0" @pointerdown="onDragStart(nt, ni)" />
+            </v-list-item>
+          </v-list-group>
+        </v-list>
+
+        <v-list-item
+          v-for="(ni, nt) in c1.nodeTypes"
+          :key="nt"
+          style="padding: 1px !important; border-left: 2px solid currentColor"
+        >
+          <PaletteEntry :title="ni.title" :type="nt" class="pa-0 ma-0" @pointerdown="onDragStart(nt, ni)" />
         </v-list-item>
-      </template>
+      </v-list-group>
     </v-list>
   </div>
 
@@ -55,20 +59,26 @@ const { x: mouseX, y: mouseY } = usePointer();
 const { transform } = useTransform();
 const categories = useNodeCategories(viewModel);
 
+const nestedCategories = computed(() => {
+  const c1 = categories.value.filter((c) => !c.name.includes("."));
+  const c2 = categories.value.filter((c) => c.name.includes("."));
+  c2.forEach((c2Item) => {
+    const c1Name = c2Item.name.split(".")[0];
+    const c2Name = c2Item.name.split(".")[1];
+    const c1Item = c1.find((c) => c.name === c1Name) || { name: c1Name, nodeTypes: [] };
+    if (!c1.includes(c1Item)) {
+      c1.push(c1Item);
+      c1.sort((a, b) => (a.name > b.name ? 1 : -1));
+    }
+    if (!c1Item.categories) c1Item["categories"] = [];
+    c1Item.categories.push({ ...c2Item, name: c2Name });
+  });
+  return c1;
+});
+
 const editorEl = inject<Ref<HTMLElement | null>>("editorEl");
 
-const searchQuery = ref<string | null>("");
 const draggedNode = ref<IDraggedNode | null>(null);
-
-const categoryNames = categories.value.map((c) => c.name);
-
-const filteredCategories = computed(() =>
-  searchQuery.value == null || searchQuery.value === ""
-    ? categories.value
-    : categories.value.filter(
-        (c) => searchQuery.value != null && c.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
-      ),
-);
 
 const draggedNodeStyles = computed<CSSProperties>(() => {
   if (!draggedNode.value || !editorEl?.value) {

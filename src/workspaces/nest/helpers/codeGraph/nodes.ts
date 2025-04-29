@@ -35,12 +35,75 @@ export const copyNodeModels = (graph: CodeGraph | NESTCodeGraph, modelsProps?: I
     });
 };
 
+export const createNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  nodeProps: INESTNodeProps,
+  idx: number = 0,
+): AbstractCodeNode => {
+  // params
+  let paramsNode: AbstractCodeNode;
+  if (nodeProps.params && nodeProps.params.length > 0) {
+    paramsNode = graph.addNodeAtColumn(nestParameters, 1, 100 + 260 * idx);
+    paramsNode.state.role = "network";
+    paramsNode.state.integrated = true;
+
+    nodeProps.params.forEach((param) => {
+      let inputInterface;
+      if (typeof param.value == "number") {
+        inputInterface = new IntegerInterface(param.id, param.value as number);
+      } else {
+        inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
+      }
+      paramsNode.addInput(param.id, inputInterface);
+    });
+  }
+
+  // positions
+  let posNode: AbstractCodeNode;
+  if (nodeProps.spatial) {
+    const randNode = graph.addNodeAtColumn(nestRandomUniform, 0, 900);
+    randNode.state.role = "network";
+    randNode.state.integrated = true;
+    randNode.inputs.min.value = -0.5;
+    randNode.inputs.max.value = 0.5;
+    posNode = graph.addNodeAtColumn(nestSpatialFree, 1, 900);
+    posNode.state.role = "network";
+    posNode.state.integrated = true;
+    graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
+  }
+
+  // nest.Create
+  const codeNode = graph.addNodeAtColumn(nestCreate, 2, 100 + 290 * idx);
+  codeNode.state.role = "network";
+  if (idx === 0) codeNode.state.comments = "Create nodes";
+  // codeNode.variableName = nodeProps.model as string;
+  codeNode.inputs.model.value = nodeProps.model;
+  codeNode.inputs.size.value = nodeProps.size ?? 1;
+  codeNode.inputs.size.hidden = nodeProps.size ? nodeProps.size === 1 : true;
+  if (nodeProps.model === "weight_recorder") {
+    codeNode.variableName = "wr";
+    // weightRecorders.push(codeNode);
+  }
+
+  if (paramsNode) graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
+
+  if (posNode) {
+    graph.addConnection(posNode.outputs.out, codeNode.inputs.positions);
+    codeNode.events.update.emit({
+      type: "input",
+      intf: codeNode.inputs.positions,
+      name: "positions",
+    });
+    // spatialNodes.push(codeNode);
+  }
+
+  return codeNode;
+};
+
 export const createNodes = (
   graph: CodeGraph | NESTCodeGraph,
   nodesProps?: (INESTNodeProps | INodeGroupProps)[],
 ): Record<string, AbstractCodeNode[]> => {
-  let codeNode: AbstractCodeNode;
-
   const nodes: AbstractCodeNode[] = [];
   const spatialNodes: AbstractCodeNode[] = [];
   const weightRecorders: AbstractCodeNode[] = [];
@@ -48,64 +111,65 @@ export const createNodes = (
   if (!nodesProps || nodesProps.length === 0) return {};
 
   nodesProps.forEach((nodeProps: INESTNodeProps | INodeGroupProps, idx: number) => {
-    let paramsNode: AbstractCodeNode;
-    nodeProps = nodeProps as INESTNodeProps;
+    const codeNode: AbstractCodeNode = createNode(graph, nodeProps as INESTNodeProps, idx);
 
-    // params
-    if (nodeProps.params && nodeProps.params.length > 0) {
-      paramsNode = graph.addNodeAtColumn(nestParameters, 1, 100 + 260 * idx);
-      paramsNode.state.role = "network";
-      paramsNode.state.integrated = true;
+    // nodeProps = nodeProps as INESTNodeProps;
 
-      nodeProps.params.forEach((param) => {
-        let inputInterface;
-        if (typeof param.value == "number") {
-          inputInterface = new IntegerInterface(param.id, param.value as number);
-        } else {
-          inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
-        }
-        paramsNode.addInput(param.id, inputInterface);
-      });
-    }
+    // // params
+    // if (nodeProps.params && nodeProps.params.length > 0) {
+    //   paramsNode = graph.addNodeAtColumn(nestParameters, 1, 100 + 260 * idx);
+    //   paramsNode.state.role = "network";
+    //   paramsNode.state.integrated = true;
 
-    // positions
-    let posNode: AbstractCodeNode;
-    if (nodeProps.spatial) {
-      const randNode = graph.addNodeAtColumn(nestRandomUniform, 0, 900);
-      randNode.state.role = "network";
-      randNode.state.integrated = true;
-      randNode.inputs.min.value = -0.5;
-      randNode.inputs.max.value = 0.5;
-      posNode = graph.addNodeAtColumn(nestSpatialFree, 1, 900);
-      posNode.state.role = "network";
-      posNode.state.integrated = true;
-      graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
-    }
+    //   nodeProps.params.forEach((param) => {
+    //     let inputInterface;
+    //     if (typeof param.value == "number") {
+    //       inputInterface = new IntegerInterface(param.id, param.value as number);
+    //     } else {
+    //       inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
+    //     }
+    //     paramsNode.addInput(param.id, inputInterface);
+    //   });
+    // }
 
-    // nest.Create
-    codeNode = graph.addNodeAtColumn(nestCreate, 2, 100 + 290 * idx);
-    codeNode.state.role = "network";
-    if (idx === 0) codeNode.state.comments = "Create nodes";
-    // codeNode.variableName = nodeProps.model as string;
-    codeNode.inputs.model.value = nodeProps.model;
-    codeNode.inputs.size.value = nodeProps.size ?? 1;
-    codeNode.inputs.size.hidden = nodeProps.size ? nodeProps.size === 1 : true;
-    if (nodeProps.model === "weight_recorder") {
-      codeNode.variableName = "wr";
-      weightRecorders.push(codeNode);
-    }
+    // // positions
+    // let posNode: AbstractCodeNode;
+    // if (nodeProps.spatial) {
+    //   const randNode = graph.addNodeAtColumn(nestRandomUniform, 0, 900);
+    //   randNode.state.role = "network";
+    //   randNode.state.integrated = true;
+    //   randNode.inputs.min.value = -0.5;
+    //   randNode.inputs.max.value = 0.5;
+    //   posNode = graph.addNodeAtColumn(nestSpatialFree, 1, 900);
+    //   posNode.state.role = "network";
+    //   posNode.state.integrated = true;
+    //   graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
+    // }
 
-    if (paramsNode) graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
+    // // nest.Create
+    // codeNode = graph.addNodeAtColumn(nestCreate, 2, 100 + 290 * idx);
+    // codeNode.state.role = "network";
+    // if (idx === 0) codeNode.state.comments = "Create nodes";
+    // // codeNode.variableName = nodeProps.model as string;
+    // codeNode.inputs.model.value = nodeProps.model;
+    // codeNode.inputs.size.value = nodeProps.size ?? 1;
+    // codeNode.inputs.size.hidden = nodeProps.size ? nodeProps.size === 1 : true;
+    // if (nodeProps.model === "weight_recorder") {
+    //   codeNode.variableName = "wr";
+    //   weightRecorders.push(codeNode);
+    // }
 
-    if (posNode) {
-      graph.addConnection(posNode.outputs.out, codeNode.inputs.positions);
-      codeNode.events.update.emit({
-        type: "input",
-        intf: codeNode.inputs.positions,
-        name: "positions",
-      });
-      spatialNodes.push(codeNode);
-    }
+    // if (paramsNode) graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
+
+    // if (posNode) {
+    //   graph.addConnection(posNode.outputs.out, codeNode.inputs.positions);
+    //   codeNode.events.update.emit({
+    //     type: "input",
+    //     intf: codeNode.inputs.positions,
+    //     name: "positions",
+    //   });
+    //   spatialNodes.push(codeNode);
+    // }
 
     nodes.push(codeNode);
   });

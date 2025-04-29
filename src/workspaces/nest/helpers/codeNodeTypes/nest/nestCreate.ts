@@ -8,14 +8,17 @@ import {
   displayInSidebar,
   setType,
 } from "baklavajs";
+import { nextTick } from "vue";
 
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { numberType, stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+import { useAppStore } from "@/stores/appStore";
 
 import { INESTNodeCollection, nestNodeCollectionType } from "./interfaceTypes";
-import { nextTick } from "vue";
+import { NESTNode } from "../../node/node";
+import { NESTModel } from "../../model/model";
 
 export default defineDynamicCodeNode({
   type: "nest.Create",
@@ -64,11 +67,25 @@ export default defineDynamicCodeNode({
 
     return `nest.Create(${args.join(", ")})`;
   },
+  onGraphUpdate() {
+    if (!this.networkItem) return;
+
+    const appStore = useAppStore();
+    const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
+    const modelIds = modelDBStore.state.models.map((model: NESTModel) => model.id);
+
+    const node: NESTNode = this.networkItem;
+    if (node.modelId !== this.inputs.model.value && modelIds.includes(this.inputs.model.value))
+      node.modelId = this.inputs.model.value;
+    if (node.size !== this.inputs.size.value) node.size = this.inputs.size.value;
+  },
   onPlaced() {
-    if (!this.node.code || !this.node.code.project.network) return;
+    if (!this.node?.code?.project?.network) return;
+
     const nodeItems = this.code.project.network.nodes.nodeItems;
     this.networkItem = nodeItems[this.indexOfNodeType];
     if (this.networkItem) return;
+
     nextTick(() => {
       if (!this.node) return;
 
@@ -86,16 +103,27 @@ export default defineDynamicCodeNode({
       const idx = this.node.indexOfNodeType;
       nodeProps.view = { position: { x: 150 * idx, y: 0 + 50 * (idx % 2) } };
 
-      this.networkItem = this.node.code.project.network.nodes.addNode(nodeProps);
-      this.networkItem.init();
+      const node: NESTNode = this.node.code.project.network.nodes.addNode(nodeProps);
+      node.init();
+
+      this.networkItem = node;
       this.networkItem.codeNodes.node = this;
       if (paramNode) {
         this.networkItem.codeNodes.param = paramNode;
         paramNode.networkItem = this.networkItem;
       }
-      this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
       this.networkItem.changes({ prevenSimulation: true });
+
+      this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
     });
+  },
+  onProjectUpdate() {
+    if (!this.networkItem) return;
+    const node: NESTNode = this.networkItem;
+
+    this.variableName = node.model.isNeuron ? "n" : node.model.abbreviation;
+    if (this.inputs.model.value !== node.modelId) this.inputs.model.value = node.modelId;
+    if (this.inputs.size.value !== node.size) this.inputs.size.value = node.size;
   },
   onUpdate({ model }) {
     const inputs: Record<string, () => NodeInterface> = {};

@@ -57,6 +57,21 @@ export default defineDynamicCodeNode({
 
     return `nest.Connect(${args.join(", ")})`;
   },
+  onGraphUpdate() {
+    if (!this.node && !this.networkItem) return;
+
+    let node;
+    const sourceNodes = this.node.getConnectedNodesByInterface("pre");
+    if (sourceNodes) node = sourceNodes[0];
+
+    const targetNodes = this.node.getConnectedNodesByInterface("post");
+    if (targetNodes) node = targetNodes[0];
+
+    if (node?.networkItem?.model?.isRecorder) {
+      this.networkItem.network.project.activities.init();
+      this.networkItem.network.project.activityGraph.init();
+    }
+  },
   onPlaced() {
     if (!this.node.code || !this.node.code.project.network) return;
     const nodeItems = this.code.project.network.nodes.nodeItems;

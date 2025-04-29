@@ -51,6 +51,8 @@ export interface IDynamicCodeNodeDefinition<I, O> extends IDynamicNodeDefinition
   codeTemplate?: (node?: AbstractCodeNode) => string;
   node?: AbstractCodeNode;
   modules?: string[];
+  onGraphUpdate?: (node?: AbstractCodeNode) => void;
+  onProjectUpdate?: (node?: AbstractCodeNode) => void;
   toJSON?: (node?: AbstractCodeNode) => Record<string, unknown>;
   variableName?: string;
 }
@@ -124,6 +126,16 @@ export function defineDynamicCodeNode<I, O>(
     public onDestroy() {
       this.logger.trace("on destroy");
       definition.onDestroy?.call(this);
+    }
+
+    public onGraphUpdate() {
+      this.logger.trace("on graph update");
+      definition.onGraphUpdate?.call(this);
+    }
+
+    public onProjectUpdate() {
+      this.logger.trace("on network update");
+      definition.onProjectUpdate?.call(this);
     }
 
     public load(state: INodeState<Dynamic<I>, Dynamic<O>>): void {

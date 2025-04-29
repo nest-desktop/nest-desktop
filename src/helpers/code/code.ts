@@ -41,6 +41,7 @@ export class BaseCode extends BaseObj {
 
   constructor(project: TProject, codeProps?: ICodeProps) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     this._project = project;
     this._state = reactive<ICodeState>({
@@ -96,8 +97,6 @@ export class BaseCode extends BaseObj {
    */
   changes(): void {
     this.generate();
-    this.updateHash();
-    // this.clean();
   }
 
   /**
@@ -173,11 +172,8 @@ export class BaseCode extends BaseObj {
     // Render code of nodes
     this.graph.renderCodes();
 
-    nextTick(() => {
-      // Render script of the code component.
-      this.renderCode();
-      this.updateHash();
-    });
+    // Render script of the code component.
+    nextTick(() => this.renderCode());
   }
 
   /**
@@ -197,18 +193,18 @@ export class BaseCode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.initGraph();
-    this.changes();
-  }
-
-  /**
-   * Initialize code node graph.
-   */
-  initGraph(): void {
-    this.logger.trace("init graph");
-
     this.graph.init();
+    this.generate();
   }
+
+  // /**
+  //  * Initialize code node graph.
+  //  */
+  // initGraph(): void {
+  //   this.logger.trace("init graph");
+
+  //   this.graph.init();
+  // }
 
   /**
    * Load template.
@@ -241,7 +237,7 @@ export class BaseCode extends BaseObj {
   /**
    * Sort code nodes.
    */
-  sortNodes(): void {}
+  // sortNodes(): void {}
 
   /**
    * Serialize for JSON.

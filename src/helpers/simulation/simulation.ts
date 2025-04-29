@@ -25,9 +25,7 @@ export class BaseSimulation extends BaseObj {
   public _project: TNetworkProject; // parent
 
   constructor(project: TNetworkProject, simulationProps: ISimulationProps = {}) {
-    super({
-      config: { name: "Simulation" },
-    });
+    super({ config: { name: "Simulation" } });
 
     this._project = project;
 
@@ -56,15 +54,12 @@ export class BaseSimulation extends BaseObj {
   }
 
   get time(): number {
-    return this._codeNodes.node ? this._codeNodes.node.inputs.time.value : this._time;
+    return this._time;
   }
 
   set time(value: number) {
-    if (this._codeNodes.node) this._codeNodes.node.inputs.time.value = value;
-    else {
-      this._time = value;
-      this.changes();
-    }
+    this._time = value;
+    this.changes();
   }
 
   get timeFixed(): string {
