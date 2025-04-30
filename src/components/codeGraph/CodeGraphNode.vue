@@ -94,8 +94,8 @@
             </div>
           </div>
 
-          <slot v-else name="nodeInterface" type="input" :node :intf="input">
-            <NodeInterface :node :intf="input" :data-interface-type="input.type ?? ''" />
+          <slot v-else :node :intf="input" name="nodeInterface" type="input">
+            <NodeInterface :node :intf="input" :data-interface-type="input.type ?? ''" :title="input.name" />
           </slot>
         </template>
       </div>
