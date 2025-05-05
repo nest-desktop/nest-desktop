@@ -90,7 +90,6 @@ export const modelRedirect = (to: TModelRoute): TModelRoute => {
   const modelStore = appStore.currentWorkspace.stores.modelStore;
 
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
-  console.log(to);
 
   return modelStore.routeTo();
 };
