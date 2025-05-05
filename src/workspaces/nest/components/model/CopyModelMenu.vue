@@ -51,9 +51,10 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue";
 
+import { confirmDialog } from "@/helpers/common/confirmDialog";
+
 import ModelDocumentation from "../../views/ModelDoc.vue";
 import { NESTCopyModel } from "../../helpers/model/copyModel";
-import { confirmDialog } from "@/helpers/common/confirmDialog";
 
 const props = defineProps<{ model: NESTCopyModel }>();
 const model = computed(() => props.model);

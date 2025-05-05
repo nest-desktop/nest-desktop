@@ -34,16 +34,17 @@ const fetchModels = (): void => {
 };
 
 const getElementType = (modelId: string): string => {
-  if (modelId.endsWith("generator") || modelId.endsWith("dilutor")) {
+  if (modelId.includes("_generator") || modelId.includes("_dilutor")) {
     return "stimulator";
-  } else if (modelId.endsWith("meter") || modelId.endsWith("detector") || modelId.endsWith("recorder")) {
+  } else if (modelId.endsWith("meter") || modelId.includes("_detector") || modelId.includes("_recorder")) {
     return "recorder";
   } else if (
-    modelId.includes("synapse") ||
-    modelId.includes("connection") ||
-    modelId.startsWith("rate") ||
-    modelId == "volume_transmitter" ||
-    modelId == "gap_junction"
+    (modelId.includes("_synapse") ||
+      modelId.includes("_connection") ||
+      modelId.includes("rate_") ||
+      modelId == "volume_transmitter" ||
+      modelId == "gap_junction") &&
+    !modelId.includes("_neuron")
   ) {
     return "synapse";
   }

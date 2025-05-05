@@ -40,7 +40,15 @@ export const useNESTModuleStore = defineStore(
       }
     };
 
+    const clean = (moduleName: string) => {
+      const modelDBStore = useNESTModelDBStore();
+      const module = findModule(moduleName);
+      module.models = module.models.filter((modelId: string) => modelDBStore.hasModel(modelId));
+    };
+
     const fetchInstalledModels = (moduleName: string = "nestmlmodule") => {
+      clean(moduleName);
+
       state.installedModels = [];
       fetchNESTMLModels(moduleName)
         .then((response: AxiosResponse) => {
@@ -100,16 +108,16 @@ export const openNESTModuleDialog = (): void => {
       const module = answer as IModule;
       const modelDBStore = useNESTModelDBStore();
 
-      const models = module.models
-        .filter((modelId: string) => modelDBStore.hasModel(modelId))
-        .map((modelId: string) => {
-          const model = modelDBStore.findModel(modelId) as NESTModel;
-          return {
-            element_type: model.elementType,
-            name: model.id,
-            script: model.nestmlScript,
-          };
-        });
+      module.models = module.models.filter((modelId: string) => modelDBStore.hasModel(modelId));
+
+      const models = module.models.map((modelId: string) => {
+        const model = modelDBStore.findModel(modelId) as NESTModel;
+        return {
+          element_type: model.elementType,
+          name: model.id,
+          script: model.nestmlScript,
+        };
+      });
 
       generateModels({ models, name: module.name }).finally(() => {
         const moduleStore = useNESTModuleStore();
