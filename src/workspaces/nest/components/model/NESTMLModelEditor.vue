@@ -60,9 +60,7 @@ const state = reactive<{
 
 const extensions: Extension[] = [basicSetup];
 
-if (darkMode()) {
-  extensions.push(oneDark);
-}
+if (darkMode()) extensions.push(oneDark);
 
 const update = () => {
   state.selectedModules = moduleStore.state.modules.filter((module: IModule) => module.models.includes(model.value.id));

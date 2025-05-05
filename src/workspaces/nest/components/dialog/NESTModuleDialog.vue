@@ -4,22 +4,34 @@
       <NESTModuleSelect v-model="state.selectedModule" return-object @update:model-value="fetchInstalledModels()" />
 
       <v-list>
-        <v-list-subheader text="Models" />
+        <v-list-subheader class="px-0">Models</v-list-subheader>
 
-        <v-list-item
-          v-for="(modelId, index) in state.selectedModule.models"
-          :key="index"
-          :to="{
-            name: 'nestModel',
-            params: { modelId },
-          }"
-          @click="closeDialog()"
-        >
-          {{ modelId }}
+        <v-list-item v-for="(modelId, index) in state.selectedModule.models" :key="index" class="px-0">
+          <div
+            :to="{
+              name: 'nestModel',
+              params: { modelId },
+            }"
+            @click="closeDialog()"
+          >
+            {{ modelId }}
+          </div>
 
           <template #append>
             <v-icon v-if="moduleStore.state.installedModels.includes(modelId)" color="green" icon="mdi:mdi-check" />
             <v-icon v-else color="red" icon="mdi:mdi-cancel" />
+
+            <v-btn class="mx-1" icon size="small" variant="text">
+              <v-icon icon="mdi:mdi-dots-vertical" />
+
+              <v-menu activator="parent">
+                <v-list>
+                  <v-list-item v-for="(item, index) in items" :key="index" @click="() => item.onClick(index)">
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-btn>
           </template>
         </v-list-item>
       </v-list>
@@ -68,4 +80,6 @@ const fetchInstalledModels = () => {
     moduleStore.fetchInstalledModels(state.selectedModule.name);
   });
 };
+
+const items = [{ title: "Remove from the module", onClick: (idx) => state.selectedModule.models.splice(idx, 1) }];
 </script>

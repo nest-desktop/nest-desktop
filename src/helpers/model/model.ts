@@ -60,7 +60,7 @@ export class BaseModel extends BaseObj {
     this._favorite = modelProps.favorite || false;
 
     this._state = reactive<IBaseModelState>({
-      custom: false,
+      custom: modelProps.custom ?? false,
       label: modelProps.label || "",
       paramsVisible: [],
     });
