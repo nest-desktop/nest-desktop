@@ -88,17 +88,19 @@
         <template #default="{ item }">
           <v-hover v-slot="{ isHovering, props }">
             <v-list-item
-              :subtitle="(item as TModel).elementType"
-              :title="(item as TModel).state.label || (item as TModel).id"
+              :subtitle="item.elementType"
+              :title="item.state ? item.state.label : item.id"
               :to="{
-                name: appStore.state.currentWorkspace+ 'Model',
-                params: { modelId: (item as TModel).id },
+                name: appStore.state.currentWorkspace + 'Model',
+                params: { modelId: item.id },
               }"
               v-bind="props"
             >
               <template #append>
-                <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
-                <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
+                <template v-if="item.state">
+                  <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
+                  <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
+                </template>
               </template>
             </v-list-item>
           </v-hover>

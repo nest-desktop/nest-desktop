@@ -33,10 +33,7 @@
           </template>
 
           <v-list>
-            <v-list-subheader>
-              Select a
-              {{ graph.workspace.nodeAddPanel.state.elementType }} model
-            </v-list-subheader>
+            <v-list-subheader>Select a {{ graph.workspace.nodeAddPanel.state.elementType }} model</v-list-subheader>
             <v-list-item
               v-for="(item, index) in graph.workspace.nodeAddPanel.state.menuItems"
               :key="index"

@@ -15,7 +15,7 @@ export interface INetworkGraphAddPanelState {
   elementType: TElementType | null;
   menuItems: { onClick: () => void; title: string; value: string }[];
   modelValue: boolean;
-  target: string;
+  target: [number, number];
 }
 
 export class NetworkGraphNodeAddPanel extends BaseObj {
@@ -25,7 +25,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     elementType: null,
     menuItems: [],
     modelValue: false,
-    target: "",
+    target: [0, 0],
   });
   private _workspace: NetworkGraphWorkspace;
 
@@ -83,7 +83,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    */
   closeModelsMenu(): void {
     this._state.modelValue = false;
-    this._state.target = "";
+    this._state.target = [0, 0];
     setTimeout(() => {
       this._state.elementType = null;
       this._state.menuItems = [];
@@ -277,7 +277,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     }));
 
     this._state.menuItems = items;
-    this._state.target = ".elementType." + elementType + " .menuItem";
+    this._state.target = [event.clientX, event.clientY];
     this._state.modelValue = true;
   }
 
@@ -316,7 +316,6 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this.logger.trace("update color");
 
     this._selector.selectAll(".color").attr("fill", this.network ? this.color : "grey");
-
     this._selector.selectAll(".bgcolor").attr("fill", this.bgColor);
     this._selector.selectAll(".textcolor").attr("fill", this.textColor);
   }
