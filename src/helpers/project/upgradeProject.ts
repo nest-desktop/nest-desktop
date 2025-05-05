@@ -1,9 +1,9 @@
 // upgradeProject.ts
 
-import { truncate } from "@/utils/truncate";
 import { TProjectProps } from "@/types";
 
 import projectUpgrades from "../upgrades";
+import { notifyInfo } from "../common/notification";
 
 const currentVersion = process.env.APP_VERSION as string;
 
@@ -30,7 +30,7 @@ export function upgradeProject(projectProps: any): TProjectProps {
   }
 
   if (oldVersion != projectProps.version && projectProps.id)
-    console.log(`Upgrade project (${truncate(projectProps.id)}): ${oldVersion} -> ${projectProps.version}`);
+    notifyInfo(`Project ${projectProps.name} upgraded: ${oldVersion} &#10142; ${projectProps.version}`);
 
   return projectProps;
 }
