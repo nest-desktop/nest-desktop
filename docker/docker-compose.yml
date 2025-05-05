@@ -4,24 +4,9 @@ services:
     ports:
       - "54286:54286"
 
-  nest-server:
+  nest-simulator:
     image: nest/nest-simulator:3.8
     environment:
       NEST_CONTAINER_MODE: "nest-server"
-      NESTML_MODULES_PATH: /tmp/nestmlmodules
     ports:
       - "52425:52425"
-    volumes:
-      - nestmlmodules:/tmp/nestmlmodules
-
-  nestml-server:
-    image: nest/nest-simulator:3.8
-    environment:
-      NEST_CONTAINER_MODE: "nestml-server"
-    ports:
-      - "52426:52426"
-    volumes:
-      - nestmlmodules:/tmp/nestmlmodules
-
-volumes:
-  nestmlmodules:
