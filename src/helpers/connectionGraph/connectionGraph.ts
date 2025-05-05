@@ -205,7 +205,8 @@ export class ConnectionGraph extends BaseObj {
         ?.selectAll(`#syn-${connection.idx}`)
         .select("text")
         .attr("dx", connection.view.toRight ? 8 : -8)
-        .attr("dy", connection.view.toRight ? 3.5 : -4.5)
+        .attr("dy", connection.view.toRight ? 3 : -5)
+        .attr("fill", "currentColor")
         .classed("toLeft", !connection.view.toRight)
         .text(connection.synapse.paramsVisible.includes("weight") ? connection.synapse.weight : "");
 
