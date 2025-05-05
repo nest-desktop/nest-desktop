@@ -84,7 +84,7 @@
         </v-btn-toggle>
       </v-list-subheader>
 
-      <v-virtual-scroll :items="models">
+      <v-virtual-scroll :items="models" :key="models.length">
         <template #default="{ item }">
           <v-hover v-slot="{ isHovering, props }">
             <v-list-item
