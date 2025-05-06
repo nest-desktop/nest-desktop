@@ -1,12 +1,16 @@
 [project]
 name = "nest-desktop"
+version = "4.0.5"
 description = "A web-based GUI application for spiking neuronal networks"
+readme = "README.md"
+requires-python = ">=3.9"
 license = { file = "LICENSE" }
 authors = [
   {name = "Sebastian Spreizer", email = "spreizer@web.de"},
 ]
-readme = "README.md"
-requires-python = ">=3.9"
+maintainers = [
+  {name = "Sebastian Spreizer", email = "spreizer@web.de"},
+]
 keywords = ["spiking neuronal networks", "simulation", "NEST", "NESTML", "Norse"]
 classifiers = [
   # How mature is this project? Common values are
@@ -37,9 +41,9 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 dependencies = []
-version = "4.0.5"
 
 [project.urls]
+homepage = "https://nest-desktop.github.io"
 repository = "https://github.com/nest-desktop/nest-desktop"
 documentation = "https://nest-desktop.readthedocs.io"
 
