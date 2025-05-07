@@ -1,6 +1,6 @@
 services:
   nest-desktop:
-    image: nest/nest-desktop:4.0
+    image: docker-registry.ebrains.eu/nest/nest-desktop:4.1-b1
     ports:
       - "54286:54286"
 
