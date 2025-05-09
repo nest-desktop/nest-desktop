@@ -25,7 +25,7 @@
   </v-app>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import AppBar from "@/components/app/AppBar.vue";
 import AppRequestLogs from "@/components/app/AppRequestLogs.vue";
 

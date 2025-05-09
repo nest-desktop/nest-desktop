@@ -6,7 +6,7 @@ import { computed, nextTick, reactive } from "vue";
 import router from "@/router";
 import { BaseProject, IBaseProjectProps } from "@/helpers/project/project";
 import { TElementType } from "@/helpers/model/model";
-import { Class, TNetwork, TRoute, TStore } from "@/types";
+import { Class, TNetwork, TRoute, TSimulation, TStore } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -35,20 +35,15 @@ interface IModelStoreState<TProject extends BaseProject = BaseProject> {
 export function defineModelStore<TProject extends BaseProject = BaseProject>(
   props: {
     Project: Class<TProject | BaseProject>;
-    defaultView?: string;
-    loggerMinLevel?: number;
-    useModelDBStore: TStore;
     workspace: string;
+    useModelDBStore: TStore;
   } = {
     Project: BaseProject,
     useModelDBStore,
     workspace: "base",
   },
 ) {
-  const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 3,
-    name: props.workspace + " model store",
-  });
+  const logger = mainLogger.getSubLogger({ name: props.workspace + " model store" });
 
   return defineStore(
     props.workspace + "-model",
@@ -190,7 +185,7 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
           })
           .then(() => {
             // TODO: nextTick doesn't work.
-            setTimeout(() => state.project?.startSimulation(), 100);
+            if ("startSimulation" in state.project) setTimeout(() => state.project?.startSimulation(), 100);
           });
       };
 
@@ -222,7 +217,11 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
                 network.nodes.updateRecords();
               }
 
-              project.simulation.init();
+              if ("simulation" in project) {
+                const simulation = project.simulation as TSimulation;
+                simulation.init();
+              }
+
               project.activities.init();
               project.activityGraph.init();
             });

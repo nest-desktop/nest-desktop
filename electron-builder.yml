@@ -20,7 +20,8 @@ files:
 icon: icons/icon-256x256.png
 linux:
   category: Education;Science
-  desktop: nest-desktop
+  desktop:
+    entry: nest-desktop
   synopsis: NEST Desktop
   target:
     - dir

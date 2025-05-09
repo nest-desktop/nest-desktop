@@ -11,10 +11,7 @@ import { truncate } from "@/utils/truncate";
 
 import { confirmDialog } from "./common/confirmDialog";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "route",
-});
+const logger = mainLogger.getSubLogger({ name: "route" });
 
 /**
  * Before enter home path.
@@ -93,7 +90,6 @@ export const modelRedirect = (to: TModelRoute): TModelRoute => {
   const modelStore = appStore.currentWorkspace.stores.modelStore;
 
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
-  console.log(to);
 
   return modelStore.routeTo();
 };
@@ -118,7 +114,7 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
       errorDialog({
         text: `Model "${props.route.params.modelId}" not found.`,
       });
-  }, 250);
+  }, 500);
 };
 
 /**
@@ -145,7 +141,7 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
         if (answer) newProjectRoute(props.router);
       });
     }
-  }, 250);
+  }, 500);
 };
 
 /**

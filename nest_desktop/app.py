@@ -1,12 +1,12 @@
-import http.server
-import socketserver
-import os
-import sys
+import http.server  # noqa
+import socketserver  # noqa
+import os  # noqa
+import sys  # noqa
 
-__all__ = ['run']
+__all__ = ["run"]
 
-NEST_DESKTOP_HOST = os.environ.get('NEST_DESKTOP_HOST', '127.0.0.1')
-NEST_DESKTOP_PORT = os.environ.get('NEST_DESKTOP_PORT', 54286)
+NEST_DESKTOP_HOST = os.environ.get("NEST_DESKTOP_HOST", "127.0.0.1")
+NEST_DESKTOP_PORT = os.environ.get("NEST_DESKTOP_PORT", 54286)
 
 
 def run(host=NEST_DESKTOP_HOST, port=NEST_DESKTOP_PORT):
@@ -17,6 +17,7 @@ def run(host=NEST_DESKTOP_HOST, port=NEST_DESKTOP_PORT):
     Handler = http.server.SimpleHTTPRequestHandler
     with socketserver.TCPServer((host, port), Handler) as httpd:
         httpd.serve_forever()
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

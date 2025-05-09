@@ -10,16 +10,20 @@ import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
 
 export class NodeGraph extends BaseObj {
-  private _networkGraph: TNetworkGraph;
   private _nodeGraphConnector: NodeGraphConnector;
   private _nodeGraphShape: NodeGraphShape;
+  public _networkGraph: TNetworkGraph;
 
   constructor(networkGraph: TNetworkGraph) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._networkGraph = networkGraph;
     this._nodeGraphConnector = new NodeGraphConnector(networkGraph);
     this._nodeGraphShape = new NodeGraphShape(networkGraph);
+  }
+
+  get networkGraph(): TNetworkGraph {
+    return this._networkGraph;
   }
 
   get network(): TNetwork {
@@ -112,6 +116,8 @@ export class NodeGraph extends BaseObj {
   render(): void {
     this.logger.silly("render");
 
+    this.updateStyle();
+
     this._nodeGraphConnector.render();
     this._nodeGraphShape.render();
 
@@ -138,7 +144,7 @@ export class NodeGraph extends BaseObj {
    * @remarks This function should be called when nodes are changed.
    */
   update(): void {
-    this.logger.silly("update");
+    this.logger.trace("update");
 
     if (!this._networkGraph.selector) return;
 
@@ -173,4 +179,9 @@ export class NodeGraph extends BaseObj {
 
     nextTick(() => this.render());
   }
+
+  /**
+   * Update style of the nodes.
+   */
+  updateStyle(): void {}
 }

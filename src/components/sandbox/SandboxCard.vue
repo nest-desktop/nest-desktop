@@ -15,7 +15,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import Card from "@/components/common/Card.vue";
 
 const items = [{ title: "Item 1" }, { title: "Item 2" }, { title: "Item 3" }, { title: "Item 4" }];

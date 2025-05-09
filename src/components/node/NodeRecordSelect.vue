@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick } from "vue";
 
 import NodeRecordChip from "./NodeRecordChip.vue";

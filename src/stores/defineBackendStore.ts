@@ -31,10 +31,7 @@ export interface IResponseData {
 }
 
 export function defineBackendStore(workspace: string, name: string, url: string, options?: Record<string, string>) {
-  const logger = mainLogger.getSubLogger({
-    minLevel: 3,
-    name: name + " backend store",
-  });
+  const logger = mainLogger.getSubLogger({ name: name + " backend store" });
 
   return defineStore(
     name + "-backend-store",

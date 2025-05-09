@@ -9,7 +9,7 @@ export class ConnectionParameter extends BaseParameter {
   public _connection: TConnection;
 
   constructor(connection: TConnection, paramProps: IParamProps) {
-    super(paramProps, { minLevel: 3 });
+    super(paramProps);
     this._connection = connection;
   }
 

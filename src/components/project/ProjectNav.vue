@@ -79,10 +79,9 @@
         />
       </template>
 
-      <template v-for="(project, index) in projects.slice().reverse()">
+      <template v-for="(project, index) in projects.slice().reverse()" :key="index">
         <v-hover v-slot="{ isHovering, props: itemProps }">
           <v-list-item
-            :key="index"
             :to="{
               name: appStore.state.currentWorkspace + 'Project',
               params: { projectId: project.id },
@@ -149,7 +148,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 

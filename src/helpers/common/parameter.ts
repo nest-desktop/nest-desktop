@@ -1,6 +1,5 @@
 // parameter.ts
 
-import { ILogObj, ISettingsParam } from "tslog";
 import { UnwrapRef, reactive } from "vue";
 
 import { TParameter } from "@/types";
@@ -9,8 +8,8 @@ import { truncate } from "@/utils/truncate";
 import { BaseObj } from "./base";
 import { IConfigProps } from "./config";
 
-interface IParamOptions {
-  component?: string;
+export interface IParamOptions {
+  component?: TParamComponent;
   defaultValue: TParamValue;
   id: string;
   label: string;
@@ -22,13 +21,13 @@ interface IParamOptions {
 }
 
 export interface IParamProps {
-  component?: string;
+  component?: TParamComponent;
   disabled?: boolean;
   factors?: string[];
   format?: string;
   handleOnUpdate?: (param: TParameter) => void;
   id: string;
-  input?: string; // backward compatible
+  input?: TParamComponent; // backward compatible, now component
   inputLabel?: string;
   items?: string[] | Record<string, string>[];
   label?: string;
@@ -49,6 +48,7 @@ interface IParamState {
   random: boolean;
   value: TParamValue;
 }
+
 export interface IParamType {
   icon?: string;
   id: string;
@@ -63,6 +63,8 @@ export interface IParamTypeSpec {
   label?: string;
   value: TParamValue;
 }
+
+export type TParamComponent = "arrayInput" | "checkbox" | "rangeSlider" | "select" | "tickSlider" | "valueSlider" | "";
 
 export type TParamValue = boolean | number | string | (number | string)[];
 
@@ -82,12 +84,11 @@ export class BaseParameter extends BaseObj {
   private _ticks: (number | string)[] = [];
   private _type: IParamType = { id: "constant" };
   private _unit: string = "";
-  private _component: string = "";
+  private _component: TParamComponent = "";
 
-  constructor(paramProps: IParamProps, loggerProps?: ISettingsParam<ILogObj>, configProps?: IConfigProps) {
+  constructor(paramProps: IParamProps, configProps?: IConfigProps) {
     super({
       config: { name: "Parameter", ...configProps },
-      logger: { settings: { minLevel: 3, ...loggerProps } },
     });
 
     this._props = paramProps;
@@ -104,11 +105,11 @@ export class BaseParameter extends BaseObj {
     return this.toPythonCode();
   }
 
-  get component(): string {
+  get component(): TParamComponent {
     return this._component;
   }
 
-  set component(value: string) {
+  set component(value: TParamComponent) {
     this._component = value;
   }
 
@@ -196,17 +197,7 @@ export class BaseParameter extends BaseObj {
   get options(): IParamOptions {
     const param = this.modelParam;
 
-    const options: {
-      component?: string;
-      defaultValue: TParamValue;
-      id: string;
-      label: string;
-      max?: number;
-      min?: number;
-      step?: number;
-      tickLabels?: (number | string)[];
-      unit: string;
-    } = {
+    const options: IParamOptions = {
       component: param.component || "",
       defaultValue: param.value,
       id: param.id,

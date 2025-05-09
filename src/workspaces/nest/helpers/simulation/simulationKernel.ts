@@ -19,7 +19,6 @@ export class NESTSimulationKernel extends BaseObj {
   constructor(simulation: NESTSimulation, kernelProps: INESTSimulationKernelProps = {}) {
     super({
       config: { name: "NESTSimulationKernel", simulator: "nest" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._simulation = simulation;

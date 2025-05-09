@@ -84,21 +84,23 @@
         </v-btn-toggle>
       </v-list-subheader>
 
-      <v-virtual-scroll :items="models">
+      <v-virtual-scroll :items="models" :key="models.length">
         <template #default="{ item }">
           <v-hover v-slot="{ isHovering, props }">
             <v-list-item
-              :subtitle="(item as TModel).elementType"
-              :title="(item as TModel).state.label || (item as TModel).id"
+              :subtitle="item.elementType"
+              :title="item.state ? item.state.label : item.id"
               :to="{
-                name: appStore.state.currentWorkspace+ 'Model',
-                params: { modelId: (item as TModel).id },
+                name: appStore.state.currentWorkspace + 'Model',
+                params: { modelId: item.id },
               }"
               v-bind="props"
             >
               <template #append>
-                <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
-                <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
+                <template v-if="item.state">
+                  <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
+                  <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
+                </template>
               </template>
             </v-list-item>
           </v-hover>
@@ -108,7 +110,7 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
@@ -146,7 +148,7 @@ const models = computed(() => {
     models = modelDBStore.value.state.models;
 
     if (state.source === "custom") {
-      models = models.filter((model: TModel) => model.custom);
+      models = models.filter((model: TModel) => model.state.custom);
     }
   }
 

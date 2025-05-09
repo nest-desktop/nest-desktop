@@ -20,10 +20,7 @@ import { nest } from "./nest";
 import { norse } from "./norse";
 // import { pynn } from "./pynn";
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "workspace index",
-});
+const logger = mainLogger.getSubLogger({ name: "workspace index" });
 
 export interface IWorkspaceProps {
   backends: Record<string, TStore>;

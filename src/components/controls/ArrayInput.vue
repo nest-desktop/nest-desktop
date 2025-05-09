@@ -12,13 +12,12 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
-  id: { default: "", type: String },
-  modelValue: { default: "", required: true, type: Array<number> },
+  modelValue: { default: [], type: Array<number> },
   unit: { default: "", type: String },
 });
 

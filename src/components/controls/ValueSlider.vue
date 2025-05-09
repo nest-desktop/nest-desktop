@@ -33,7 +33,7 @@
   </v-slider>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
 const emit = defineEmits(["update:modelValue"]);
@@ -91,7 +91,7 @@ const onUpdate = (val: string) => {
     left: 0;
     pointer-events: none;
     position: absolute;
-    top: -6px;
+    top: -4px;
     z-index: 0;
   }
 

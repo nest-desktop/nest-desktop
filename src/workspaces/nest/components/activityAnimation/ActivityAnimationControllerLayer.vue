@@ -204,7 +204,7 @@
   </v-expansion-panel>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick } from "vue";
 
 import NodeAvatar from "@/components/node/avatar/NodeAvatar.vue";

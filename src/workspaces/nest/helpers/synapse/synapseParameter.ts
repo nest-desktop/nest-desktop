@@ -4,6 +4,7 @@ import { BaseSynapseParameter } from "@/helpers/synapse/synapseParameter";
 import { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
+import { NESTCopyModelParameter } from "../model/copyModelParameter";
 import { NESTSynapse } from "./synapse";
 
 export class NESTSynapseParameter extends BaseSynapseParameter {
@@ -14,7 +15,7 @@ export class NESTSynapseParameter extends BaseSynapseParameter {
   /**
    * Get model parameter.
    */
-  override get modelParam(): ModelParameter {
+  override get modelParam(): ModelParameter | NESTCopyModelParameter {
     return this.synapse.model.params[this.id];
   }
 

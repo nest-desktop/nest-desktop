@@ -31,14 +31,12 @@ interface ICodeState {
   templateFilename: string;
 }
 
-const codeBlocks: string[] = ["importModules"];
-
 export class BaseCode extends BaseObj {
   private _state: UnwrapRef<ICodeState>;
   public _project: TProject; // parent
 
   constructor(project: TProject, codeProps?: ICodeProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._project = project;
     this._state = reactive<ICodeState>({

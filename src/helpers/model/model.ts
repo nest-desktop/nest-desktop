@@ -29,6 +29,7 @@ export interface IModelStateProps {
 }
 
 interface IBaseModelState {
+  custom: boolean;
   label: string;
   paramsVisible: string[];
 }
@@ -49,7 +50,6 @@ export class BaseModel extends BaseObj {
   constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
     super({
       config: { name: "Model", ...configProps },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._doc = modelProps;
@@ -60,6 +60,7 @@ export class BaseModel extends BaseObj {
     this._favorite = modelProps.favorite || false;
 
     this._state = reactive<IBaseModelState>({
+      custom: modelProps.custom ?? false,
       label: modelProps.label || "",
       paramsVisible: [],
     });
@@ -69,14 +70,6 @@ export class BaseModel extends BaseObj {
 
   get abbreviation(): string {
     return this._abbreviation;
-  }
-
-  get custom(): boolean {
-    return false;
-  }
-
-  set custom(value: boolean) {
-    value;
   }
 
   get doc(): IModelProps {

@@ -41,7 +41,6 @@ export class BaseNetwork extends BaseObj {
   constructor(project: TProject, networkProps: INetworkProps = {}) {
     super({
       config: { name: "Network" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._project = project;

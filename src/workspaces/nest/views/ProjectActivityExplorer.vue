@@ -14,7 +14,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 
 import ActivityAnimationGraph from "../components/activityAnimation/ActivityAnimationGraph.vue";

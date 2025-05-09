@@ -10,7 +10,7 @@
   </template>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";

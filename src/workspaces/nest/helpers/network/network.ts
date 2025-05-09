@@ -34,12 +34,12 @@ export function isNESTNetworkProps(networkProps: TNetworkProps): networkProps is
 }
 
 export class NESTNetwork extends BaseNetwork {
-  private _modelsCopied: NESTCopyModels; // for nest.CopyModel
+  private _copyModels: NESTCopyModels; // for nest.CopyModel
 
   constructor(project: NESTProject, networkProps: INESTNetworkProps = {}) {
     super(project, networkProps);
 
-    this._modelsCopied = new NESTCopyModels(this, networkProps.models);
+    this._copyModels = new NESTCopyModels(this, networkProps.models);
   }
 
   override get Connections() {
@@ -59,18 +59,18 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   override get isEmpty(): boolean {
-    return this.modelsCopied.all.length === 0 && this.nodes.all.length === 0 && this.connections.all.length === 0;
+    return this.copyModels.all.length === 0 && this.nodes.all.length === 0 && this.connections.all.length === 0;
   }
 
   /**
    * Get copied models
    */
   get models(): NESTCopyModels {
-    return this._modelsCopied;
+    return this._copyModels;
   }
 
-  get modelsCopied(): NESTCopyModels {
-    return this._modelsCopied;
+  get copyModels(): NESTCopyModels {
+    return this._copyModels;
   }
 
   override get project(): NESTProject {
@@ -82,6 +82,16 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
+   * Get synapse models.
+   * @returns a list of synapse models
+   */
+  get synapseModels(): (NESTModel | NESTCopyModel)[] {
+    this.logger.debug("get synapse models by element type");
+
+    return this.project.modelDBStore.getModelsByElementType("synapse");
+  }
+
+  /**
    * Clean nodes and connection components.
    */
   override clean(): void {
@@ -89,7 +99,7 @@ export class NESTNetwork extends BaseNetwork {
 
     this.connections.clean();
     this.nodes.clean();
-    this.modelsCopied.clean();
+    this.copyModels.clean();
   }
 
   /**
@@ -100,7 +110,7 @@ export class NESTNetwork extends BaseNetwork {
 
     this.connections.clear();
     this.nodes.clear();
-    this.modelsCopied.clear();
+    this.copyModels.clear();
   }
 
   /**
@@ -114,7 +124,7 @@ export class NESTNetwork extends BaseNetwork {
     this.logger.trace("delete copy model");
 
     // Remove model from the list.
-    this.modelsCopied.remove(model);
+    this.copyModels.remove(model);
 
     // Trigger network change.
     this.changes();
@@ -124,13 +134,14 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
-   * Get models of the element type.
+   * Get node models of the element type.
    * @param elementType string
    * @returns a list of models
    */
-  override getModelsByElementType(elementType: string): (NESTModel | NESTCopyModel)[] {
+  getNodeModelsByElementType(elementType: string): (NESTModel | NESTCopyModel)[] {
+    this.logger.debug("get node models by element type", elementType);
     return elementType === "copied"
-      ? this.modelsCopied.filterByGeneralElementType("node")
+      ? this.copyModels.filterByGeneralElementType("node")
       : this.project.modelDBStore.getModelsByElementType(elementType);
   }
 
@@ -143,7 +154,7 @@ export class NESTNetwork extends BaseNetwork {
 
     this.nodes.init();
     this.connections.init();
-    this.modelsCopied.init();
+    this.copyModels.init();
 
     this.updateStyle();
     this.updateHash();
@@ -156,7 +167,7 @@ export class NESTNetwork extends BaseNetwork {
   override toJSON(): INESTNetworkProps {
     return {
       connections: this.connections.toJSON(),
-      models: this.modelsCopied.toJSON(),
+      models: this.copyModels.toJSON(),
       nodes: this.nodes.toJSON(),
     };
   }
@@ -170,7 +181,7 @@ export class NESTNetwork extends BaseNetwork {
 
     this.clear();
 
-    this.modelsCopied.update(networkProps.models);
+    this.copyModels.update(networkProps.models);
     this.nodes.update(networkProps.nodes);
     this.connections.update(networkProps.connections);
 
@@ -182,7 +193,7 @@ export class NESTNetwork extends BaseNetwork {
    */
   override updateHash(): void {
     this._updateHash({
-      models: this.modelsCopied.all.map((model: NESTCopyModel) => model.hash),
+      models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
       nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
       connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
     });

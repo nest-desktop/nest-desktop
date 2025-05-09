@@ -10,7 +10,7 @@ import { BasePositions, IBasePositionsProps } from "./basePositions";
 import { NESTNodeSpatial } from "./nodeSpatial";
 
 export class FreePositions extends BasePositions {
-  private readonly _name: string = "free";
+  // private readonly _name: string = "free";
   private _codeTemplate: string =
     "{{ #posExisted }}{{ posAsString }}{{ /posExisted }}{{ ^posExisted }}nest.spatial.free(\n\t\tnest.random.uniform({{ min }}, {{ max }}),\n\t\tnum_dimensions={{ numDimensions }}\n\t)\n{{ /posExisted }}";
 
@@ -33,9 +33,9 @@ export class FreePositions extends BasePositions {
     return 0.5;
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   /**
    * Generate positions.

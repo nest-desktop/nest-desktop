@@ -12,7 +12,7 @@ export class NetworkGraphDragline extends BaseObj {
   private _workspace: NetworkGraphWorkspace;
 
   constructor(networkGraphWorkspace: NetworkGraphWorkspace) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     this._workspace = networkGraphWorkspace;
   }

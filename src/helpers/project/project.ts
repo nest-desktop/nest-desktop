@@ -1,6 +1,6 @@
 // project.ts
 
-import { TActivityGraph, TStore, TProject, TCode } from "@/types";
+import { TActivityGraph, TStore, TCode } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 
@@ -34,7 +34,7 @@ export class BaseProject extends BaseObj {
   public _code: TCode;
 
   constructor(projectProps: IBaseProjectProps = {}) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
 
     // Database instance.
     this._doc = projectProps || {};

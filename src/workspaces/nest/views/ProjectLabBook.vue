@@ -1,24 +1,7 @@
 <template>
   <v-container>
     <v-layout id="networkGraphLayout" class="networkGraphLayout" style="height: 300px">
-      <NetworkGraph :key="currentProject.id" :network="currentProject.network">
-        <template #marker="{ connection }">
-          <circle
-            v-if="connection.view.markerEndLabel === 'assigned'"
-            fill="transparent"
-            r="4"
-            stroke="currentcolor"
-            transform="translate(5,5)"
-          />
-        </template>
-
-        <template #components>
-          <g id="nodeGroups" />
-          <g id="modelAssigned" />
-          <g id="connections" />
-          <g id="nodes" />
-        </template>
-      </NetworkGraph>
+      <NESTNetworkGraph :key="currentProject.id" :network="currentProject.network" />
     </v-layout>
 
     <v-row no-gutters>
@@ -52,10 +35,10 @@
   </v-container>
 </template>
 
-<script lang="ts" setup>
-import NetworkGraph from "@/components/network/NetworkGraph.vue";
+<script setup lang="ts">
 import NodeViewer from "@/components/node/NodeViewer.vue";
 
+import NESTNetworkGraph from "../components/network/NetworkGraph.vue";
 import { NESTNode } from "../helpers/node/node";
 
 import { currentProject } from "../stores/project/projectStore";

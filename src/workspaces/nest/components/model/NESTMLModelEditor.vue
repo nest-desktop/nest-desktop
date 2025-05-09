@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="model.custom" class="my-2" flat>
+  <v-card v-if="model && model.state.custom" class="my-2" flat>
     <v-toolbar color="transparent" density="compact">
       <NESTMLModelSelect :model :model-value="model.templateName" class="pt-1" @update:model-value="updateOnSelect" />
 
@@ -23,7 +23,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Extension } from "@codemirror/state";
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
@@ -60,9 +60,7 @@ const state = reactive<{
 
 const extensions: Extension[] = [basicSetup];
 
-if (darkMode()) {
-  extensions.push(oneDark);
-}
+if (darkMode()) extensions.push(oneDark);
 
 const update = () => {
   state.selectedModules = moduleStore.state.modules.filter((module: IModule) => module.models.includes(model.value.id));

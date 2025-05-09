@@ -88,7 +88,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { createDialog } from "vuetify3-dialog";
 
 import AboutDialog from "../dialog/AboutDialog.vue";

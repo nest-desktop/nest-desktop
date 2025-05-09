@@ -17,7 +17,7 @@ export interface INESTNodeCompartmentProps {
 }
 
 export class NESTNodeCompartment {
-  private readonly _name = "NodeCompartment";
+  // private readonly _name = "NodeCompartment";
 
   private _idx: number = 0; // generative
   private _hash: string = "";
@@ -90,9 +90,9 @@ export class NESTNodeCompartment {
     return this.node.model as NESTModel;
   }
 
-  get name(): string {
-    return this._name;
-  }
+  // get name(): string {
+  //   return this._name;
+  // }
 
   get node(): NESTNode {
     return this._node;

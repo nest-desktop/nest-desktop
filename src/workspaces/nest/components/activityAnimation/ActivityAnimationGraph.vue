@@ -2,7 +2,7 @@
   <div ref="activityAnimationGraph" class="activityAnimationGraph" />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
 import { ActivityAnimationGraph } from "../../helpers/activityGraph/activityAnimationGraph/activityAnimationGraph";

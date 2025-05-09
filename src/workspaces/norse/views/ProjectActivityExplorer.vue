@@ -7,7 +7,7 @@
   <ActivityChartGraph :graph="currentProject.activityGraph.activityChartGraph" />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 
 import { currentProject } from "../stores/project/projectStore";

@@ -10,7 +10,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { computed, nextTick, reactive, shallowRef, watch } from "vue";
@@ -53,13 +53,13 @@ const updateView = (event: EditorView) => {
 watch(
   () => code.value.script,
   () => {
-    if (!state.focused && state.cursor.from > 0) {
-      nextTick(() => {
-        view.value.dispatch({
-          selection: state.cursor,
-        });
+    // if (!state.focused && state.cursor.from > 0) {
+    nextTick(() => {
+      view.value.dispatch({
+        selection: state.cursor,
       });
-    }
+    });
+    // }
   },
 );
 

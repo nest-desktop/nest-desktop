@@ -120,6 +120,7 @@
               v-for="(paramId, index) in model.paramsVisible"
               :key="index"
               :param="model.params[paramId]"
+              :show-menu="paramId !== 'weight_recorder'"
             />
           </v-list>
         </v-expansion-panel-text>
@@ -128,7 +129,7 @@
   </Card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
 import Card from "@/components/common/Card.vue";

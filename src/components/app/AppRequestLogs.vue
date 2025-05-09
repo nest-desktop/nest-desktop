@@ -4,19 +4,13 @@
       <template #append>
         <v-btn-toggle v-model="appStore.state.filterTag" class="mx-2" density="compact">
           <v-btn
-            color="error"
-            icon="mdi:mdi-alert-circle-outline"
+            v-for="[name, icon] in logs"
+            :key="name"
+            :color="name"
+            :icon
+            :title="`Show only ${name} logs`"
+            :value="name"
             size="small"
-            title="Show only error logs"
-            value="error"
-            width="40"
-          />
-          <v-btn
-            color="success"
-            icon="mdi:mdi-check-circle-outline"
-            size="small"
-            title="Show only success logs"
-            value="success"
             width="40"
           />
         </v-btn-toggle>
@@ -63,9 +57,7 @@
           </template>
         </v-toolbar>
 
-        <div class="px-4">
-          {{ log.htmlContent }}
-        </div>
+        <div class="px-2" v-html="log.htmlContent" />
 
         <v-divider class="my-1" />
       </v-list-item>
@@ -73,12 +65,18 @@
   </v-navigation-drawer>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+import { computed } from "vue";
+
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const icons: Record<string, string> = {
-  error: "mdi:mdi-alert-circle-outline",
   success: "mdi:mdi-check-circle-outline",
+  info: "mdi:mdi-information-outline",
+  warning: "mdi:mdi-alert-circle-outline",
+  error: "mdi:mdi-close-circle-outline",
 };
+
+const logs = computed(() => Object.entries(icons));
 </script>

@@ -50,7 +50,6 @@ export class NetworkGraphWorkspace extends BaseObj {
   constructor(networkGraph: TNetworkGraph) {
     super({
       config: { name: "NetworkGraphWorkspace" },
-      logger: { settings: { minLevel: 3 } },
     });
 
     this._selector = select("g#networkWorkspace");
@@ -170,15 +169,15 @@ export class NetworkGraphWorkspace extends BaseObj {
         this.updateCursorPosition({ x: position[0], y: position[1] });
         if (this._state.dragLine) this._dragline.update(event);
       })
-      .on("click", () => {
-        this.reset();
-        this.network?.state.unselectAll();
-        this.update();
-      })
       .on("contextmenu", (event: MouseEvent) => {
         event.preventDefault();
         this.reset();
         this.network?.state.unselectAll();
+        this.update();
+      })
+      .on("click", (event: MouseEvent) => {
+        // this.reset();
+        // this.network?.state.unselectAll();
 
         const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });

@@ -30,7 +30,6 @@ export function defineProjectDBStore<
   props: {
     Project: Class<TProject | BaseProject>;
     ProjectDB: Class<TProjectDB>;
-    loggerMinLevel?: number;
     projectAssets?: string[];
     workspace: string;
   } = {
@@ -39,10 +38,7 @@ export function defineProjectDBStore<
     workspace: "base",
   },
 ) {
-  const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 3,
-    name: props.workspace + " project DB store",
-  });
+  const logger = mainLogger.getSubLogger({ name: props.workspace + " project DB store" });
 
   const db = new props.ProjectDB();
 

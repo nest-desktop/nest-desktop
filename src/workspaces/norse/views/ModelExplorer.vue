@@ -9,7 +9,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
 
 import { currentModel, currentProject, useNorseModelStore } from "../stores/model/modelStore";

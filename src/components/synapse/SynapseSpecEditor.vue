@@ -17,12 +17,11 @@
   </v-row>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from "vue";
 
 import Menu from "../common/Menu.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { TSynapse } from "@/types";
 
 const props = defineProps<{ synapse: TSynapse }>();
 const synapse = computed(() => props.synapse);

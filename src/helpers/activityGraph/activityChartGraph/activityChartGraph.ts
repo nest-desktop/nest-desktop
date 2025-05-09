@@ -125,7 +125,7 @@ export class ActivityChartGraph extends BaseObj {
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super({ logger: { settings: { minLevel: 3 } } });
+    super();
     this._props = activityGraphProps;
 
     this._project = project;
@@ -547,7 +547,7 @@ export class ActivityChartGraph extends BaseObj {
 
     this.panelsVisible.forEach((panel: ActivityChartPanel) => {
       panel.model.updateActivities();
-      panel.model.initAnalogRecords();
+      if (panel.model.activityType == "analog") panel.model.initAnalogRecords();
     });
   }
 

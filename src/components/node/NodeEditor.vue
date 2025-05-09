@@ -138,7 +138,7 @@
   </Card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
 import { TConnection, TModel, TNode } from "@/types";

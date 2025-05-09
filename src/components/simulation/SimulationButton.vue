@@ -27,7 +27,7 @@
   </v-btn-group>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from "vue";
 
 import { TSimulation } from "@/types";

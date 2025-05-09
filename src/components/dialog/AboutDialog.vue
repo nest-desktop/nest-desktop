@@ -51,7 +51,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
 import AppDetails from "@/components/app/AppDetails.vue";

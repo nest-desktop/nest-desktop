@@ -1,28 +1,40 @@
 <template>
   <div class="networkEditor">
-    <v-toolbar color="transparent" density="compact">
-      <v-btn-toggle v-model="network.state.state.elementTypeIdx" class="ma-2" mandatory variant="text">
-        <IconBtn
-          v-for="(item, index) in network.elementTypes"
-          :key="index"
-          :icon="item.icon"
-          :title="item.title"
-          size="x-small"
-          @click="network.nodes.unselectNodes()"
+    <v-toolbar class="networkToolbar" color="transparent" density="compact" extended extension-height="12">
+      <!-- <template #extension>
+        <v-fab
+          class="ms-4"
+          color="primary"
+          icon="mdi:mdi-plus"
+          location="bottom left"
+          size="40"
+          absolute
+          title="Create a new node"
         />
-      </v-btn-toggle>
+      </template> -->
 
-      <v-spacer />
+      <template #append>
+        <v-btn-toggle v-model="network.state.state.elementTypeIdx" class="ma-2" mandatory variant="text">
+          <IconBtn
+            v-for="(item, index) in network.elementTypes"
+            :key="index"
+            :icon="item.icon"
+            :title="item.title"
+            size="x-small"
+            @click="network.nodes.unselectNodes()"
+          />
+        </v-btn-toggle>
 
-      <v-menu>
-        <template #activator="{ props: btnProps }">
-          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
-        </template>
+        <v-menu>
+          <template #activator="{ props: btnProps }">
+            <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
+          </template>
 
-        <v-list density="compact">
-          <v-list-item v-for="(item, index) in items" :key="index" v-bind="item" />
-        </v-list>
-      </v-menu>
+          <v-list density="compact">
+            <v-list-item v-for="(item, index) in items" :key="index" v-bind="item" />
+          </v-list>
+        </v-menu>
+      </template>
     </v-toolbar>
 
     <slot name="model" />
@@ -38,7 +50,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from "vue";
 
 import IconBtn from "../common/IconBtn.vue";
@@ -71,3 +83,16 @@ const items = [
   },
 ];
 </script>
+
+<!-- <style lang="scss" scoped>
+.networkToolbar {
+  position: sticky;
+  position: -webkit-sticky; /* for Safari */
+  top: 0em;
+  z-index: 2;
+
+  .v-toolbar__content {
+    overflow: auto !important;
+  }
+}
+</style> -->

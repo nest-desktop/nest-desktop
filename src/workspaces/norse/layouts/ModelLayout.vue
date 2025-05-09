@@ -36,7 +36,7 @@
   </template>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { nextTick, onMounted, watch } from "vue";
 
 import ModelBar from "@/components/model/ModelBar.vue";

@@ -2,7 +2,7 @@
   <v-color-picker :swatches="state.swatches" elevation="0" show-swatches />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { onMounted, reactive, watch } from "vue";
 
 const props = defineProps<{ colorScheme: string }>();

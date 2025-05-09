@@ -11,7 +11,7 @@
   </v-row>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 defineProps<{ modelId: string }>();
 
 const parseKebabCase = (text: string) => text.replaceAll("_", "-");

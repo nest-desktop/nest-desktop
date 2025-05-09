@@ -16,7 +16,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, reactive, nextTick } from "vue";
 
 import ColorPicker from "../common/ColorPicker.vue";

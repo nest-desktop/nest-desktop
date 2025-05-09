@@ -12,7 +12,7 @@
   <ValueSlider v-else v-bind="props.options" v-model="(modelValue as number)" />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from "vue";
 
 import { TValue } from "@/types";

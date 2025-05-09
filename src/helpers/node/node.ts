@@ -42,14 +42,15 @@ export class BaseNode extends BaseObj {
   public _nodes: BaseNodes; // parent
 
   constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
-    super({ config: { name: "Node" }, logger: { settings: { minLevel: 3 } } });
+    super({ config: { name: "Node" } });
 
     this._nodes = nodes;
+    this._props = nodeProps;
+
     this._modelId = nodeProps.model || "";
 
     this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
-    this._props = nodeProps;
 
     this._view = new NodeView(this, nodeProps.view);
   }
@@ -104,10 +105,6 @@ export class BaseNode extends BaseObj {
     return this.network.connections.all.filter(
       (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isStimulator,
     );
-  }
-
-  get props(): INodeProps {
-    return this._props;
   }
 
   get elementType(): TElementType {
@@ -267,6 +264,10 @@ export class BaseNode extends BaseObj {
     return this._nodes.network.project as TProject;
   }
 
+  get props(): INodeProps {
+    return this._props;
+  }
+
   get recordables(): NodeRecord[] {
     return this._recordables;
   }
@@ -350,38 +351,6 @@ export class BaseNode extends BaseObj {
 
     this._params[paramProps.id] = new NodeParameter(this, paramProps);
     if (visible) this._paramsVisible.push(paramProps.id);
-  }
-
-  /**
-   * Add parameters to the node.
-   * @param paramsProps list of parameter props
-   */
-  addParameters(paramsProps?: IParamProps[]): void {
-    this.logger.trace("add parameters");
-
-    this.emptyParams();
-    if (this._model) {
-      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
-        if (paramsProps && paramsProps.length > 0) {
-          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
-          if (nodeParamProps) {
-            this.addParameter(
-              {
-                ...nodeParamProps,
-                ...modelParam,
-              },
-              true,
-            );
-          } else {
-            this.addParameter(modelParam);
-          }
-        } else {
-          this.addParameter(modelParam);
-        }
-      });
-    } else if (paramsProps) {
-      paramsProps.forEach((param: IParamProps) => this.addParameter(param, true));
-    }
   }
 
   /**
@@ -535,9 +504,41 @@ export class BaseNode extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.loadModel(this._props.params);
+    this.loadModel(this.props.params);
     if (this.model.isRecorder) this.updateRecorder();
     this.update();
+  }
+
+  /**
+   * Init parameter components.
+   * @param paramsProps list of parameter props
+   */
+  initParameters(paramsProps?: IParamProps[]): void {
+    this.logger.trace("init parameters");
+
+    this.emptyParams();
+    if (this._model) {
+      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
+        if (paramsProps && paramsProps.length > 0) {
+          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
+          if (nodeParamProps) {
+            this.addParameter(
+              {
+                ...nodeParamProps,
+                ...modelParam,
+              },
+              true,
+            );
+          } else {
+            this.addParameter(modelParam);
+          }
+        } else {
+          this.addParameter(modelParam);
+        }
+      });
+    } else if (paramsProps) {
+      paramsProps.forEach((param: IParamProps) => this.addParameter(param, true));
+    }
   }
 
   /**
@@ -547,7 +548,7 @@ export class BaseNode extends BaseObj {
     this.logger.trace("load model:", this._modelId);
 
     this._model = this.getModel(this._modelId);
-    this.addParameters(paramsProps);
+    this.initParameters(paramsProps);
   }
 
   /**

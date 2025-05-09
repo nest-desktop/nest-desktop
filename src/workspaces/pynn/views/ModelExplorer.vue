@@ -8,6 +8,6 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { currentModel } from "../stores/model/modelStore";
 </script>

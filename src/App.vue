@@ -2,7 +2,7 @@
   <router-view />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { nextTick, onMounted, reactive } from "vue";
 
 import { confirmDialog } from "./helpers/common/confirmDialog";
@@ -11,10 +11,7 @@ import { logger as mainLogger } from "./utils/logger";
 import { useAppStore } from "./stores/appStore";
 const appStore = useAppStore();
 
-const logger = mainLogger.getSubLogger({
-  minLevel: 3,
-  name: "app component",
-});
+const logger = mainLogger.getSubLogger({ name: "app component" });
 
 // more information on Service Worker updates:
 // https://medium.com/@dougallrich/give-users-control-over-app-updates-in-vue-cli-3-pwas-20453aedc1f2 (2019)

@@ -22,7 +22,6 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
   props: {
     Model: Class<TModel | BaseModel>;
     ModelDB: Class<TModelDB>;
-    loggerMinLevel?: number;
     modelAssets?: string[];
     workspace: string;
   } = {
@@ -31,10 +30,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     workspace: "base",
   },
 ) {
-  const logger = mainLogger.getSubLogger({
-    minLevel: props.loggerMinLevel || 3,
-    name: props.workspace + " model DB store",
-  });
+  const logger = mainLogger.getSubLogger({ name: props.workspace + " model DB store" });
 
   const db = new props.ModelDB();
 
@@ -204,7 +200,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
       logger.trace("new model");
 
       const model = addModel(modelProps);
-      model.custom = true;
+      model.state.custom = true;
       return model as TModel;
     };
 
@@ -234,7 +230,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * Update model list from the database.
      */
     const updateList = (): void => {
-      logger.debug("update list");
+      logger.trace("update list");
 
       state.models = [];
       db.list("id", true).then((modelsProps: TModelProps[]) => {

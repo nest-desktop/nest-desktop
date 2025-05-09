@@ -22,18 +22,15 @@ export class NESTConnections extends BaseConnections {
     return this._connections as NESTConnection[];
   }
 
-  override get network(): NESTNetwork {
-    return this._network as NESTNetwork;
+  /**
+   * filter connection list containing weight recorder.
+   */
+  get filterWithWeightRecorder(): NESTConnection[] {
+    return this.all.filter((connection: NESTConnection) => connection.synapse.recordedByWeightRecorder);
   }
 
-  /**
-   * filter connection list by weight recorder.
-   */
-  get recordedByWeightRecorder(): NESTConnection[] {
-    return this.all.filter((connection: NESTConnection) => {
-      const synapseModel = connection.synapse.model;
-      return synapseModel.hasWeightRecorderParam;
-    });
+  override get network(): NESTNetwork {
+    return this._network as NESTNetwork;
   }
 
   /**
@@ -64,6 +61,11 @@ export class NESTConnections extends BaseConnections {
     });
   }
 
+  /**
+   * Find connection by synapse model id.
+   * @param modelId string
+   * @returns connection object
+   */
   getBySynapseModelId(modelId: string): NESTConnection | undefined {
     return this.all.find((connection: NESTConnection) => connection.synapse.modelId === modelId);
   }

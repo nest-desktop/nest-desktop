@@ -19,7 +19,7 @@ const _createNotification = (props: { htmlContent: string; level: Level }) => {
     date: now(),
     ...props,
   });
-  createNotification(props);
+  createNotification({ ...props, location: "top right" });
 };
 
 export const notifyError = (htmlContent: string) => _createNotification({ htmlContent, level: "error" });

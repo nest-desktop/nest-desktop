@@ -43,7 +43,7 @@
   </v-range-slider>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, reactive, watch } from "vue";
 
 const props = defineProps({
@@ -110,7 +110,7 @@ watch(
     left: 92px;
     pointer-events: none;
     position: absolute;
-    top: -6px;
+    top: -4px;
   }
 }
 </style>

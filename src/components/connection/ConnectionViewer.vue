@@ -31,7 +31,7 @@
   </v-expansion-panel>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import ConnectionAvatar from "./ConnectionAvatar.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
 import { TConnection } from "@/types";

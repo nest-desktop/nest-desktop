@@ -27,7 +27,7 @@ export interface INESTNodeProps extends INodeProps {
 // export class NESTNode extends BaseNode<NESTModel> {
 export class NESTNode extends BaseNode {
   private _compartments: NESTNodeCompartment[] = [];
-  private _modelCopied: NESTCopyModel | undefined;
+  private _copyModel: NESTCopyModel | undefined;
   private _positions: number[][] = [];
   private _receptors: NESTNodeReceptor[] = [];
   private _spatial: NESTNodeSpatial;
@@ -53,7 +53,7 @@ export class NESTNode extends BaseNode {
       return [];
     }
 
-    return this.network.modelsCopied.filter((model: NESTCopyModel) =>
+    return this.network.copyModels.filter((model: NESTCopyModel) =>
       Object.values(model.params).some((param: BaseParameter) => param.value === this.view.label),
     );
   }
@@ -106,20 +106,18 @@ export class NESTNode extends BaseNode {
   }
 
   override get model(): NESTModel {
-    if (!this._model) {
-      this._model = this.getModel(this._modelId);
-    } else if (this._modelCopied) {
-      // TODO: find better condition.
-      this._model = this.getModel(this._modelCopied.existingModelId);
-    } else if (this._model.id !== this._modelId) {
-      this._model = this.getModel(this._modelId);
+    if (this._copyModel) {
+      if (!this._model || this._model.id !== this._copyModel.existingModelId)
+        this._model = this.getModel(this._copyModel.existingModelId);
+    } else {
+      if (!this._model || this._model.id !== this._modelId) this._model = this.getModel(this._modelId);
     }
 
     return this._model as NESTModel;
   }
 
-  get modelCopied(): NESTCopyModel | undefined {
-    return this._modelCopied;
+  get copyModel(): NESTCopyModel | undefined {
+    return this._copyModel;
   }
 
   // override get modelId(): string {
@@ -142,16 +140,16 @@ export class NESTNode extends BaseNode {
     return this.model.params;
   }
 
+  // Get models of the same element type.
   override get models(): NESTModel[] {
-    // Get models of the same element type.
     const elementType: string = this.model?.elementType;
     const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
     return models;
   }
 
-  get modelsCopied(): NESTCopyModel[] {
-    // Get copied models.
-    return this.network.modelsCopied.all as NESTCopyModel[];
+  // Get all copied node models.
+  get copyModels(): NESTCopyModel[] {
+    return this.network.copyModels.nodeModels as NESTCopyModel[];
   }
 
   override get network(): NESTNetwork {
@@ -260,17 +258,17 @@ export class NESTNode extends BaseNode {
    * @remarks It adds parameters.
    */
   override loadModel(paramsProps?: IParamProps[]): void {
-    this.logger.trace("load model:", this._modelId);
+    this.logger.trace("load model:", this.modelId);
 
-    if (this.network.modelsCopied && this.network.modelsCopied.findByModelId(this._modelId)) {
-      this._modelCopied = this.network.modelsCopied.getModel(this._modelId);
-      this._model = this.getModel(this._modelCopied.existingModelId);
+    if (this.network.copyModels && this.network.copyModels.findByModelId(this._modelId)) {
+      this._copyModel = this.network.copyModels.getModel(this._modelId);
+      this._model = this.getModel(this._copyModel.existingModelId);
     } else {
-      this._modelCopied = undefined;
+      this._copyModel = undefined;
       this._model = this.getModel(this._modelId);
     }
 
-    this.addParameters(paramsProps);
+    this.initParameters(paramsProps);
   }
 
   /**

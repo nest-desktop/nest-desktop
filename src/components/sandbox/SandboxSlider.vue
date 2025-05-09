@@ -35,7 +35,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { reactive } from "vue";
 
 import Slider from "../controls/Slider.vue";

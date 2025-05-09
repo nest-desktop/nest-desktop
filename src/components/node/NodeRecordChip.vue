@@ -29,7 +29,7 @@
   </v-chip>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick, ref } from "vue";
 
 import { NodeRecord } from "@/helpers/node/nodeRecord";

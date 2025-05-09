@@ -40,7 +40,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
 import { IModelProps } from "@/helpers/model/model";

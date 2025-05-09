@@ -31,19 +31,13 @@
   </v-slider>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, reactive, onMounted, watch } from "vue";
 
-interface IProps {
-  modelValue: number | string;
-  tickLabels?: (number | string)[];
-  unit?: string;
-}
-
-const props = withDefaults(defineProps<IProps>(), {
-  modelValue: 0,
-  tickLabels: () => [""],
-  unit: "",
+const props = defineProps({
+  modelValue: { default: 0, type: Number || String },
+  tickLabels: { default: [""], type: Array<number | string> },
+  unit: { default: "", type: String },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -130,7 +124,7 @@ onMounted(init);
     left: 0;
     pointer-events: none;
     position: absolute;
-    top: -6px;
+    top: -4px;
   }
 
   &:hover {

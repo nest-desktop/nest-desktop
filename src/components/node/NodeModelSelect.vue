@@ -47,7 +47,7 @@
   </v-select>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed, nextTick, onMounted, reactive } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
@@ -83,16 +83,16 @@ const state = reactive<{
 
 const openMenu = () => emit("openMenu", true);
 
-const select = (props: Record<string, unknown>, open?: boolean) => {
+const select = (selectProps: Record<string, unknown>, open?: boolean) => {
   node.value.view.expandNodePanel();
 
   const elementTypesValues = elementTypes.value.map((elementType) => elementType.value);
 
-  if (elementTypesValues.includes(props.value as string)) {
-    state.elementType = props.value as string;
-    state.items = node.value.network.getModelsByElementType(state.elementType);
+  if (elementTypesValues.includes(selectProps.value as string)) {
+    state.elementType = selectProps.value as string;
+    state.items = node.value.network.getNodeModelsByElementType(state.elementType);
   } else {
-    node.value.modelId = props.value as string;
+    node.value.modelId = selectProps.value as string;
   }
 
   nextTick(() => graph.value?.render());

@@ -1,0 +1,29 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "applicationCategory": "Education, Science",
+  "author": [
+    {
+      "affiliation": {
+        "name": "University of Trier, Trier, Germany",
+        "type": "Organization"
+      },
+      "id": "https://orcid.org/0000-0002-7720-9211",
+      "email": "spreizer@uni-trier.de",
+      "familyName": "Spreizer",
+      "givenName": "Sebastian",
+      "type": "Person"
+    }
+  ],
+  "codeRepository": "git+https://github.com/nest-desktop/nest-desktop",
+  "dateModified": "2025-05-09",
+  "description": "NEST Desktop is a web-based GUI for the simulation of spiking neuronal networks.",
+  "downloadUrl": "https://files.pythonhosted.org/packages/42/c2/b20022cd38b01dd9c6e58c85edd32fe94fd44b0d2ee9459e78b7fadc66e0/nest_desktop-4.1.0.tar.gz",
+  "issueTracker": "https://github.com/nest-desktop/nest-desktop/issues",
+  "keywords": ["NEST", "neuronal simulation", "computational neuroscience", "spiking neuronal networks"],
+  "license": "https://spdx.org/licenses/MIT",
+  "name": "NEST Desktop",
+  "operatingSystem": "Web Browser (all platforms)",
+  "programmingLanguage": "Typescript",
+  "type": "SoftwareSourceCode",
+  "version": "4.1.0"
+}

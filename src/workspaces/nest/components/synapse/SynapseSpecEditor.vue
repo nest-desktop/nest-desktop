@@ -1,18 +1,8 @@
 <template>
   <v-btn-group v-if="!synapse.connection.view.connectRecorder()" class="pt-2 mt-1" style="width: 100%" variant="text">
-    <v-select
-      v-model="synapse.modelId"
-      :disabled="synapse.models.length < 2"
-      :items="synapse.models"
-      class="mx-1"
-      density="compact"
-      hide-details
-      item-title="label"
-      item-value="id"
-      label="Synapse model"
-    />
+    <SynapseModelSelect :synapse @open-menu="() => (state.menu = true)" />
 
-    <v-menu :close-on-content-click="false">
+    <v-menu v-model="state.menu" :close-on-content-click="false">
       <template #activator="{ props: btnProps }">
         <v-btn
           class="rounded-circle"
@@ -70,16 +60,28 @@
   </v-list>
 </template>
 
-<script lang="ts" setup>
-import { computed } from "vue";
+<script setup lang="ts">
+import { computed, reactive } from "vue";
 
 import ParamListItem from "@/components/parameter/ParamListItem.vue";
+import { TModel } from "@/types";
 
+import SynapseModelSelect from "./SynapseModelSelect.vue";
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 import { NESTSynapseParameter } from "../../helpers/synapse/synapseParameter";
 
 const props = defineProps<{ synapse: NESTSynapse }>();
 const synapse = computed(() => props.synapse);
+
+const state = reactive<{
+  elementType: string;
+  items: TModel[];
+  menu: boolean;
+}>({
+  elementType: "",
+  items: [],
+  menu: false,
+});
 
 const items = [
   {

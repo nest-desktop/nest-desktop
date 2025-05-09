@@ -7,7 +7,7 @@
   />
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 interface IHeader {
   title: string;
   align: "start" | "end" | "center" | undefined;

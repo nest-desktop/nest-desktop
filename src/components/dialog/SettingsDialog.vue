@@ -67,7 +67,7 @@
   </v-card>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { capitalize, computed, nextTick } from "vue";
 
 import { workspaces } from "@/workspaces";

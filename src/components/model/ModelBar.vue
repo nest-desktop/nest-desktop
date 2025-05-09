@@ -49,7 +49,7 @@
   </v-app-bar>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from "vue";
 
 import SimulationButton from "../simulation/SimulationButton.vue";

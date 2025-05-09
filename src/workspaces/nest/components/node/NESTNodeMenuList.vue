@@ -31,8 +31,7 @@
   </NodeMenuList>
 </template>
 
-<script lang="ts" setup>
-import { computed } from "vue";
+<script setup lang="ts">
 // import { createDialog } from "vuetify3-dialog";
 
 import NodeMenuList from "@/components/node/NodeMenuList.vue";
