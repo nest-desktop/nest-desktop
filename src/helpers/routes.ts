@@ -114,7 +114,7 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
       errorDialog({
         text: `Model "${props.route.params.modelId}" not found.`,
       });
-  }, 250);
+  }, 500);
 };
 
 /**
