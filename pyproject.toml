@@ -1,10 +1,14 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "nest-desktop"
-version = "4.0.5"
+version = "4.1.0"
 description = "A web-based GUI application for spiking neuronal networks"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { file = "LICENSE" }
+license-files = ["LICENSE"]
 authors = [
   {name = "Sebastian Spreizer", email = "spreizer@web.de"},
 ]
@@ -28,9 +32,6 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Mathematics",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
-
-  # Pick your license as you wish (see also "license" above)
-  "License :: OSI Approved :: MIT License",
 
   "Operating System :: OS Independent",
 
