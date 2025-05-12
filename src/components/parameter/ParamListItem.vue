@@ -98,18 +98,20 @@
 <script setup lang="ts">
 import { computed, nextTick } from "vue";
 
+import { TParameter } from "@/types";
+
 import ArrayInput from "../controls/ArrayInput.vue";
+import Menu from "../common/Menu.vue";
 import ParamPopover from "../parameter/ParamPopover.vue";
 import RangeSlider from "../controls/RangeSlider.vue";
 import TickSlider from "../controls/TickSlider.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import Menu from "../common/Menu.vue";
-import { TParameter } from "@/types";
+import { BaseParameter } from "@/helpers/common/parameter";
 
 const emit = defineEmits(["update:paramValue"]);
 const props = defineProps({
   color: { type: String, default: "" },
-  param: { required: true },
+  param: { type: BaseParameter, required: true },
   showMenu: { type: Boolean, default: true },
 });
 const param = computed(() => props.param as TParameter);
