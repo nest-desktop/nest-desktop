@@ -6,7 +6,7 @@
       <v-list v-model:selected="state.selectedModule.models" select-strategy="leaf">
         <v-list-subheader>Models</v-list-subheader>
         <v-list-item v-for="model in customModels" :key="model.id" :title="model.id" :value="model.id">
-          <template v-slot:prepend="{ isSelected, select }">
+          <template #prepend="{ isSelected, select }">
             <v-list-item-action start>
               <v-checkbox-btn :model-value="isSelected" @update:model-value="select" />
             </v-list-item-action>
@@ -81,5 +81,5 @@ const fetchInstalledModels = () => {
   });
 };
 
-const items = [{ title: "Remove from the module", onClick: (idx) => state.selectedModule.models.splice(idx, 1) }];
+// const items = [{ title: "Remove from the module", onClick: (idx) => state.selectedModule.models.splice(idx, 1) }];
 </script>
