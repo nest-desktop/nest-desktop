@@ -9,12 +9,15 @@ import {
   IntegerInterface,
   TextInputInterface,
   displayInSidebar,
+  setType,
 } from "baklavajs";
+
+import { truncate } from "@/utils/truncate";
 
 import { AbstractCodeNode, CodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
-import { truncate } from "@/utils/truncate";
+import { nodeType } from "../codeNodeTypes/base/interfaceTypes";
 
 type Dynamic<T> = T & Record<string, any>;
 
@@ -80,10 +83,10 @@ export function defineDynamicCodeNode<I, O>(
       if (definition.modules) this.modules = definition.modules;
       if (definition.variableName) this.variableName = definition.variableName;
 
-      this.staticInputKeys.push("prev");
-      this.staticOutputKeys.push("next");
-      this.addInput("prev", new NodeInterface("", "").setHidden(true));
-      this.addOutput("next", new NodeInterface("", "").setHidden(true));
+      this.addInput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.addOutput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.staticInputKeys.push("node");
+      this.staticOutputKeys.push("node");
 
       this.executeFactory("input", definition.inputs);
       this.executeFactory("output", definition.outputs);
@@ -201,7 +204,7 @@ export function defineDynamicCodeNode<I, O>(
       }
 
       this.preventUpdate = false;
-      this.events.loaded.emit(this as any);
+      this.events.loaded.emit(this);
     }
 
     private onUpdate() {

@@ -315,8 +315,8 @@ export class CodeGraph extends BaseObj {
         const edges = this.connections
           // .filter(
           //   (connection: Connection) =>
-          //     this.graph.findNodeById(connection.from.nodeId).outputs.next.id === connection.from.id &&
-          //     this.graph.findNodeById(connection.to.nodeId).inputs.prev.id === connection.to.id,
+          //     this.graph.findNodeById(connection.from.nodeId).outputs.node.id === connection.from.id &&
+          //     this.graph.findNodeById(connection.to.nodeId).inputs.node.id === connection.to.id,
           // )
           .map((connection: Connection) => [connection.from.nodeId, connection.to.nodeId]);
 

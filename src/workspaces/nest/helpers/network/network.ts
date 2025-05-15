@@ -86,7 +86,7 @@ export class NESTNetwork extends BaseNetwork {
    * @returns a list of synapse models
    */
   get synapseModels(): (NESTModel | NESTCopyModel)[] {
-    this.logger.debug("get synapse models by element type");
+    this.logger.trace("get synapse models by element type");
 
     return this.project.modelDBStore.getModelsByElementType("synapse");
   }
@@ -139,7 +139,8 @@ export class NESTNetwork extends BaseNetwork {
    * @returns a list of models
    */
   getNodeModelsByElementType(elementType: string): (NESTModel | NESTCopyModel)[] {
-    this.logger.debug("get node models by element type", elementType);
+    this.logger.trace("get node models by element type", elementType);
+
     return elementType === "copied"
       ? this.copyModels.filterByGeneralElementType("node")
       : this.project.modelDBStore.getModelsByElementType(elementType);

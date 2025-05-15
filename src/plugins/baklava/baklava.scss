@@ -1,13 +1,5 @@
-.baklava-node-interface[data-interface-type="topoSort"] {
-  --baklava-node-interface-port-color: yellow;
-}
-
-.baklava-node-interface[data-interface-type="string"] {
-  --baklava-node-interface-port-color: #a11;
-}
-
-.baklava-node-interface[data-interface-type="number"] {
-  --baklava-node-interface-port-color: #164;
+.baklava-node-interface[data-interface-type="array"] {
+  --baklava-node-interface-port-color: #4d77cf;
 }
 
 .baklava-node-interface[data-interface-type="boolean"] {
@@ -15,12 +7,24 @@
   --baklava-node-interface-port-color: purple;
 }
 
-.baklava-node-interface[data-interface-type="array"] {
-  --baklava-node-interface-port-color: #4d77cf;
-}
-
 .baklava-node-interface[data-interface-type="dataframe"] {
   --baklava-node-interface-port-color: #0a7d91;
+}
+
+.baklava-node-interface[data-interface-type="node"] {
+  --baklava-node-interface-port-color: #ccc;
+}
+
+.baklava-node-interface[data-interface-type="number"] {
+  --baklava-node-interface-port-color: #164;
+}
+
+.baklava-node-interface[data-interface-type="string"] {
+  --baklava-node-interface-port-color: #a11;
+}
+
+.baklava-node-interface[data-interface-type="topoSort"] {
+  --baklava-node-interface-port-color: yellow;
 }
 
 .baklava-node-interface[data-interface-type="nestNodeCollection"] {

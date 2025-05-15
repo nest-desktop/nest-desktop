@@ -1,11 +1,13 @@
 // defineCodeNode.ts
 // Adapted from https://github.com/newcat/baklavajs/blob/987018200389bd86c48544ac4afa7a393fe1e9bc/packages/core/src/defineNode.ts
 
-import { Node, NodeInterface, NodeInterfaceDefinition, INodeDefinition } from "baklavajs";
+import { Node, NodeInterface, NodeInterfaceDefinition, INodeDefinition, setType } from "baklavajs";
+
+import { truncate } from "@/utils/truncate";
 
 import { AbstractCodeNode, CodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
-import { truncate } from "@/utils/truncate";
+import { nodeType } from "../codeNodeTypes/base/interfaceTypes";
 
 export type NodeConstructor<I, O> = new () => Node<I, O>;
 export type NodeInstanceOf<T> = T extends new () => Node<infer A, infer B> ? Node<A, B> : never;
@@ -41,8 +43,8 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
       if (definition.modules) this.modules = definition.modules;
       if (definition.variableName) this.variableName = definition.variableName;
 
-      this.addInput("prev", new NodeInterface("", "").setHidden(true));
-      this.addOutput("next", new NodeInterface("", "").setHidden(true));
+      this.addInput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.addOutput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
       this.executeFactory("input", definition.inputs);
       this.executeFactory("output", definition.outputs);
       definition.onCreate?.call(this);

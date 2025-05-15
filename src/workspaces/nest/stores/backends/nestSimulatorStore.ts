@@ -3,10 +3,13 @@
 import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
 
 import { defineBackendStore, IAxiosResponseData } from "@/stores/defineBackendStore";
+import { logger as mainLogger } from "@/utils/logger";
 import { notifyError } from "@/helpers/common/notification";
 import { sortString } from "@/utils/array";
 
 import { useNESTModelStore } from "../model/modelStore";
+
+const logger = mainLogger.getSubLogger({ name: "nest simulator store" });
 
 export const useNESTSimulatorStore = defineBackendStore("nest", "nest", "http://localhost:52425", {
   axiosHeaderTokenValue: "NESTServerAuth",
@@ -86,6 +89,8 @@ const installModule = (moduleName?: string): void => {
 };
 
 export const nestSimulatorInit = () => {
+  logger.trace("init");
+
   // Initialize backend NEST Simulator.
   const nestSimulatorStore = useNESTSimulatorStore();
   nestSimulatorStore.init();
@@ -98,6 +103,8 @@ const resetKernel = (): void => {
 };
 
 const exec = (source: string, responseKeys: string | string[] = "response"): AxiosPromise<IAxiosResponseData> => {
+  logger.trace("exec");
+
   const nestSimulatorStore = useNESTSimulatorStore();
   return nestSimulatorStore
     .axiosInstance()

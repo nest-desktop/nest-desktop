@@ -13,15 +13,6 @@ import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
-// export function mapValues<I, O>(obj: Record<string, I>, fn: (value: I) => O): Record<string, O> {
-//   return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v)]));
-// }
-
-// export interface ICodeNodeState<I, O> extends INodeState<I, O> {
-//   next: INodeInterfaceState<any>;
-//   prev: INodeInterfaceState<any>;
-// }
-
 interface IAbstractCodeNodeState {
   codeTemplate: string;
   commented: boolean;

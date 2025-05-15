@@ -119,7 +119,7 @@ export default defineDynamicCodeNode({
       this.networkItem = this.node.code.project.network.connections.addConnection(connectionProps);
       this.networkItem.init();
       this.networkItem.codeNodes.connection = this;
-      this.networkItem.changes({ prevenSimulation: true });
+      this.networkItem.changes({ preventSimulation: true });
     });
   },
   onUpdate({ conn_spec }) {

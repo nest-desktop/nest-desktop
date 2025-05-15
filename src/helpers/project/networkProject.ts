@@ -112,8 +112,9 @@ export class NetworkProject extends BaseProject {
 
     if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
+    if (props.preventSimulation) return;
 
-    if (!props.preventSimulation) this.startSimulationOnChange();
+    this.startSimulationOnChange();
   }
 
   /**
@@ -222,6 +223,8 @@ export class NetworkProject extends BaseProject {
    * Simulate when the configuration is set.
    */
   startSimulationOnChange(): void {
+    this.logger.trace("start simulation on change");
+
     const appStore = useAppStore();
     const projectViewStore = appStore.currentWorkspace.views.project;
     if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());

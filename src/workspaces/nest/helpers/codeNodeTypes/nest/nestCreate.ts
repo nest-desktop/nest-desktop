@@ -112,7 +112,7 @@ export default defineDynamicCodeNode({
         this.networkItem.codeNodes.param = paramNode;
         paramNode.networkItem = this.networkItem;
       }
-      this.networkItem.changes({ prevenSimulation: true });
+      this.networkItem.changes({ preventSimulation: true });
 
       this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
     });

@@ -13,7 +13,7 @@ import { createNode } from "../codeGraph/nodes";
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
     super(network, nodesProps);
-    this.logger.settings.minLevel = 1;
+    // this.logger.settings.minLevel = 1;
   }
 
   override get Node() {

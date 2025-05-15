@@ -11,7 +11,14 @@
     <div v-if="viewModel.settings.nodes.resizable" class="__resize-handle" @mousedown="startResize" />
 
     <div :title="node.type" class="__title" @pointerdown.self.stop="startDrag" @contextmenu.prevent="openContextMenu">
-      <CodeNodeInterface v-if="node.inputs.prev" :node :intf="node.inputs.prev" class="--input" style="flex-grow: 0" />
+      <CodeNodeInterface
+        v-if="node.inputs.node"
+        :node
+        :intf="node.inputs.node"
+        class="--input"
+        data-interface-type="node"
+        style="flex-grow: 0"
+      />
 
       <template v-if="!renaming">
         <div class="__title-label" style="flex-grow: 1">
@@ -54,7 +61,13 @@
         @keydown.enter="doneRenaming"
       />
 
-      <CodeNodeInterface v-if="node.outputs.next" :node :intf="node.outputs.next" class="--output" />
+      <CodeNodeInterface
+        v-if="node.outputs.node"
+        :node
+        :intf="node.outputs.node"
+        class="--output"
+        data-interface-type="node"
+      />
     </div>
 
     <div class="__content" :class="classesContent" @keydown.delete.stop @contextmenu.prevent>
