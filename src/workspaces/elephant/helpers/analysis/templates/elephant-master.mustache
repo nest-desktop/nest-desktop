@@ -1,0 +1,70 @@
+import numpy as np
+import quantities as pq
+# import pandas as pd
+
+import elephant
+homogeneous_poisson_process = elephant.spike_train_generation.homogeneous_poisson_process
+statistics = elephant.statistics
+
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.subplots as sp
+
+# Params
+seed = 0
+rate = 30 # Hz
+popsize = 100
+simtime = 1. # s
+binsize = 0.05 # s
+xbins = {"start":0, "end": simtime, "size": binsize}
+
+marker_style = {
+  "line": {
+    "width": 2,
+  },
+  "size": 5,
+  "symbol": "line-ns",
+}
+
+np.random.seed(seed)  # to make the results reproducible
+
+# Figure with subplots
+fig = sp.make_subplots(rows=3, cols=2, specs=[[{"colspan": 2}, None], [{"colspan": 2}, None], [{}, {}]])
+
+# Generate spike trains for analysis
+spiketrains = [
+  homogeneous_poisson_process(rate=rate*pq.Hz, t_stop=simtime*pq.s) for n in range(popsize)
+]
+times = np.concatenate([st.times for st in spiketrains])
+senders = np.concatenate([np.full(ts.size,idx+1) for idx,ts in enumerate(spiketrains)])
+
+# Plot spikes as raster plot
+spikes = go.Scattergl(x=times, y=senders, mode="markers", marker=marker_style)
+fig.add_trace(spikes, 1, 1)
+
+# Binned time histogram
+ts_hist = statistics.time_histogram(spiketrains, binsize*pq.s, t_start=0*pq.s, t_stop=simtime*pq.s)
+bar = go.Bar(x=ts_hist.times, y=np.ravel(ts_hist.data))
+fig.add_trace(bar, 2, 1)
+
+hist = go.Histogram(x=times, xbins=xbins)
+fig.add_trace(hist, 2, 1)
+
+# Matrix of binned time histogram
+hist_mat = [statistics.time_histogram(st, binsize*pq.s) for st in spiketrains]
+hist_mat = np.array(hist_mat).reshape(-1, int(1 / binsize))
+fig.add_trace(go.Heatmap(z=hist_mat), 3, 1)
+
+# Cross correlation
+cc = np.corrcoef(hist_mat)
+fig.add_trace(go.Heatmap(z=cc), 3, 2)
+
+fig.update_xaxes(title_text="Time [ms]", row=1, col=1)
+fig.update_yaxes(title_text="Neuron", row=1, col=1)
+fig.update_xaxes(title_text="Time [ms]", row=2, col=1)
+fig.update_yaxes(title_text="Count [spikes]", row=2, col=1)
+
+fig.update_layout(showlegend=False)
+fig.update_traces(showlegend=False)
+fig.update(layout_showlegend=False)
+response = { "plotly": fig.to_plotly_json() }

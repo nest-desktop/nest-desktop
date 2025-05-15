@@ -3,7 +3,7 @@
     <span class="label">
       <slot />
     </span>
-    <v-icon :color class="position-absolute icon-size" icon="network:stimulator" />
+    <v-icon :color class="position-absolute icon-size" icon="graph:stimulator" />
   </v-avatar>
 </template>
 

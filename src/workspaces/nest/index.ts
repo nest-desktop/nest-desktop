@@ -2,7 +2,10 @@
 
 import { defineViewStore } from "@/stores/defineViewStore";
 import { logger as mainLogger } from "@/utils/logger";
+import { registerCodeNodeTypes } from "@/helpers/codeNodeTypes";
 
+import nestIconSet from "./components/iconSet";
+import route from "./routes";
 import { IWorkspaceProps } from "../";
 import {
   nestCompletions,
@@ -10,8 +13,6 @@ import {
   nestSpatialCompletions,
   nestSpatialDistributionsCompletions,
 } from "./codemirror";
-import nestIconSet from "./components/iconSet";
-import route from "./routes";
 // import { insiteAccessInit } from "./stores/backends/insiteAccessStore";
 import { nestSimulatorInit } from "./stores/backends/nestSimulatorStore";
 import { nestmlServerInit } from "./stores/backends/nestmlServerStore";
@@ -75,6 +76,7 @@ export const nest: IWorkspaceProps = {
         views: {
           activity: "abstract",
           controller: "",
+          graph: "network",
           main: "edit",
         },
       })(),
@@ -87,6 +89,8 @@ export const nest: IWorkspaceProps = {
         },
       })(),
     };
+
+    registerCodeNodeTypes(["nest", "humam"]);
   },
   route,
   stores: {},

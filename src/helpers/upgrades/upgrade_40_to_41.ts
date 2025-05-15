@@ -2,9 +2,14 @@
 
 const validateVersion = (version: string) => /^4\.0(\.\d+)?(\w+)?$/.test(version);
 
-export function upgradeProject_40_to_41(projectProps: any): any {
+function upgradeProject(projectProps: any): any {
   if (!validateVersion(projectProps.version)) return projectProps;
 
-  projectProps.version = "4.1";
   return projectProps;
 }
+
+export default {
+  currentVersion: "4.0",
+  newVersion: "4.1",
+  upgradeProject,
+};

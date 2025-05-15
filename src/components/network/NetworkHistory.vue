@@ -1,5 +1,5 @@
 <template>
-  <v-btn-group density="compact" theme="dark" variant="tonal">
+  <v-btn-group v-if="'network' in project" density="compact" theme="dark" variant="tonal">
     <!-- <v-btn
       :disabled="countBefore <= 0"
       @click="project.networkRevision.oldest()"

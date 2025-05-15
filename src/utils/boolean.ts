@@ -10,3 +10,7 @@ export function getBoolean(value: string | number | boolean): boolean {
       return value;
   }
 }
+
+export function parseBoolean(value: boolean): string {
+  return value ? "True" : "False";
+}

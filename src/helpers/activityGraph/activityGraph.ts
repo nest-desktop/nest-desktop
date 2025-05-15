@@ -18,6 +18,7 @@ export class BaseActivityGraph extends BaseObj {
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     this._project = project;
     this._activityChartGraph = new ActivityChartGraph(project, activityGraphProps);
@@ -35,9 +36,9 @@ export class BaseActivityGraph extends BaseObj {
    * Initialize activity graph.
    */
   init(): void {
-    this.updateHash();
     this.logger.trace("init");
 
+    this.updateHash();
     this._activityChartGraph.init();
 
     if (this._project.activities.state.hasSomeEvents) this.update();
@@ -58,13 +59,13 @@ export class BaseActivityGraph extends BaseObj {
    * Update activity graph.
    */
   update(): void {
+    this.logger.trace("update");
     // if (this.project.activities.hash === this.dataHash) return;
 
     openLoading("Activity visualizing...");
     this._activityChartGraph.update();
 
     this.updateHash();
-    this.logger.trace("update");
   }
 
   /**

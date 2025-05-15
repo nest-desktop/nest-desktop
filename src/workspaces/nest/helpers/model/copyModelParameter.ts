@@ -90,7 +90,6 @@ export class NESTCopyModelParameter extends BaseParameter {
       // label: this.label,
       // unit: this.unit,
       value: this.value,
-      // visible: this.visible as boolean,
     };
 
     // if (this.component === "valueSlider") {

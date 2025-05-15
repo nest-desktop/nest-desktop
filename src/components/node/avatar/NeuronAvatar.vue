@@ -3,7 +3,7 @@
     <span :class="{ 'mt-2': weight === 'excitatory' }" class="label">
       <slot />
     </span>
-    <v-icon :color :icon="`network:neuron${weight ? `-${$props.weight}` : ''}`" class="icon-size position-absolute" />
+    <v-icon :color :icon="`graph:neuron${weight ? `-${$props.weight}` : ''}`" class="icon-size position-absolute" />
   </v-avatar>
 </template>
 

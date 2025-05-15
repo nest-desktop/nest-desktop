@@ -1,15 +1,19 @@
 // nodes.ts
 
 import { BaseNodes } from "@/helpers/node/nodes";
-import { TNodeGroup } from "@/types";
+import { TNode, TNodeGroup } from "@/types";
 
 import { INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
+import { NESTCode } from "../code/code";
 import { NESTNetwork } from "../network/network";
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import { createNode } from "../codeGraph/nodes";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
     super(network, nodesProps);
+    this.logger.settings.minLevel = 1;
   }
 
   override get Node() {
@@ -82,6 +86,21 @@ export class NESTNodes extends BaseNodes {
    */
   get weightRecorders(): NESTNode[] {
     return this.nodeItems.filter((node: NESTNode) => node.model.isWeightRecorder);
+  }
+
+  /**
+   * Add code nodes.
+   * @param node node component.
+   */
+  override addCodeNodes(node: TNode | TNodeGroup): void {
+    this.logger.trace("add code nodes");
+
+    if (node.isGroup) return;
+    const code = this.network.project.code as NESTCode;
+    node = node as NESTNode;
+
+    const idx = code.graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
+    node.codeNodes.node = node.codeNodes.node ?? createNode(code.graph, node.toJSON(), idx);
   }
 
   /**

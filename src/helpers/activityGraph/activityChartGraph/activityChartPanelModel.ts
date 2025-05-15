@@ -416,10 +416,10 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateRecordsColor(): void {
     this._data.forEach((data: IActivityChartPanelModelData) => {
-      if (data.class === "background") return;
+      if (!data && data.class === "background") return;
       const activity = this.activities[data.activityIdx];
 
-      let color: string;
+      let color: string = "";
       if (activity && "recorder" in activity) {
         const recorder = activity.recorder as TNode;
         if (recorder.model.isSpikeRecorder) color = recorder.view.color;
@@ -438,8 +438,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
         }
       }
 
-      if (data.type.includes("scatter")) {
-        if (data.marker && data.marker.line && data.mode.includes("markers")) {
+      if ("type" in data && data.type.includes("scatter")) {
+        if ("mode" in data && data.marker && data.marker.line && data.mode.includes("markers")) {
           data.marker.color = color;
           data.marker.line.color = color;
         }

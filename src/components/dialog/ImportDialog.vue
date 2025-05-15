@@ -258,7 +258,7 @@ const state = reactive<{
 
 const groups = [
   {
-    icon: "network:network",
+    icon: "graph:network",
     title: "project repo",
     value: "projects",
   },

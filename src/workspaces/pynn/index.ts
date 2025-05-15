@@ -1,10 +1,11 @@
 // pynn/index.ts
 
 import { defineViewStore } from "@/stores/defineViewStore";
+import { registerCodeNodeTypes } from "@/helpers/codeNodeTypes";
 
-import { IWorkspaceProps } from "../";
 import iconSet from "./components/iconSet";
 import route from "./routes";
+import { IWorkspaceProps } from "../";
 import { pynnSimulatorInit } from "./stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "./stores/model/modelDBStore";
 import { usePyNNModelStore } from "./stores/model/modelStore";
@@ -55,12 +56,14 @@ export const pynn: IWorkspaceProps = {
         },
       })(),
     };
+
+    registerCodeNodeTypes(["pynn"]);
   },
   route,
   stores: {},
   theme: {
     "pynn-accent": "#e6007e",
-    "pynn-logo": "#000080",
+    "pynn-logo": "#0F9959",
     pynn: "#0F9959",
   },
   title: "PyNN",

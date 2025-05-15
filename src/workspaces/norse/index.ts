@@ -1,12 +1,13 @@
 // norse/index.ts
 
 import { defineViewStore } from "@/stores/defineViewStore";
+import { registerCodeNodeTypes } from "@/helpers/codeNodeTypes";
 
-import { IWorkspaceProps } from "../";
-import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 import iconSet from "./components/iconSet";
 import route from "./routes";
+import { IWorkspaceProps } from "../";
 import { norseSimulatorInit } from "./stores/backends/norseSimulatorStore";
+import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 import { useNorseModelDBStore } from "./stores/model/modelDBStore";
 import { useNorseModelStore } from "./stores/model/modelStore";
 import { useNorseProjectDBStore } from "./stores/project/projectDBStore";
@@ -57,6 +58,8 @@ export const norse: IWorkspaceProps = {
         },
       })(),
     };
+
+    registerCodeNodeTypes(["norse", "torch"]);
   },
   route,
   stores: {},

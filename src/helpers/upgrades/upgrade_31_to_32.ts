@@ -2,7 +2,7 @@
 
 const validateVersion = (version: string) => /^3\.1(\.\d+)?(\w+)?$/.test(version);
 
-export function upgradeProject_31_to_32(projectProps: any): any {
+function upgradeProject(projectProps: any): any {
   if (!validateVersion(projectProps.version)) return projectProps;
 
   if (projectProps.activityGraph && projectProps.activityGraph.panels) {
@@ -13,6 +13,11 @@ export function upgradeProject_31_to_32(projectProps: any): any {
     };
   }
 
-  projectProps.version = "3.2";
   return projectProps;
 }
+
+export default {
+  currentVersion: "3.1",
+  newVersion: "3.2",
+  upgradeProject,
+};

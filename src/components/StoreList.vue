@@ -52,7 +52,11 @@
           <v-list-item
             v-for="(project, index) in stores.projectDBStore.state.projects.slice().reverse()"
             :key="index"
-            :subtitle="`${project.network.nodes.length} nodes, ${project.network.connections.length} connections`"
+            :subtitle="
+              project.network
+                ? `${project.network.nodes.length} nodes, ${project.network.connections.length} connections`
+                : ''
+            "
             :title="project.name || 'undefined project ' + stores.projectDBStore.getProjectIdx(project)"
             :to="{
               name: appStore.state.currentWorkspace + 'Project',

@@ -1,6 +1,6 @@
 // connection.ts
 
-import { TConnection, TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
+import { TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseSynapse, ISynapseProps } from "../synapse/synapse";
@@ -42,7 +42,7 @@ export class BaseConnection extends BaseObj {
     });
 
     this._connections = connections;
-    this._idx = this.connections.all.length;
+    // this._idx = this.connections.all.length;
 
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
@@ -231,8 +231,8 @@ export class BaseConnection extends BaseObj {
    * Clean this component.
    */
   clean(): void {
-    const connections = this.connections.all as TConnection[];
-    this._idx = connections.indexOf(this);
+    // const connections = this.connections.all as TConnection[];
+    // this._idx = connections.indexOf(this);
   }
 
   /**
@@ -344,6 +344,16 @@ export class BaseConnection extends BaseObj {
     this.network.deleteConnection(this);
   }
 
+  /**
+   * Remove code nodes.
+   */
+  removeCodeNodes(): void {
+    Object.keys(this.codeNodes).forEach((key: string) => {
+      this.codeNodes[key].remove();
+      delete this.codeNodes[key];
+    });
+  }
+
   // /**
   //  * Sets all params to visible.
   //  */
@@ -359,13 +369,13 @@ export class BaseConnection extends BaseObj {
    */
   toJSON(): IConnectionProps {
     const connectionProps: IConnectionProps = {
-      source: this._sourceIdx,
-      target: this._targetIdx,
+      source: this.sourceIdx,
+      target: this.targetIdx,
     };
 
-    if (this._rule.value !== "all_to_all") connectionProps.rule = this._rule.value;
+    if (this.rule.value !== "all_to_all") connectionProps.rule = this.rule.value;
 
-    if (this._paramsVisible.length > 0)
+    if (this.paramsVisible.length > 0)
       connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
 
     return connectionProps;
@@ -376,7 +386,24 @@ export class BaseConnection extends BaseObj {
    */
   update(): void {
     this.clean();
+    // this.updateCodeNodes();
     this.updateHash();
+  }
+
+  /**
+   * Update code node.
+   */
+  updateCodeNodes(): void {
+    if (!this.codeNodes.node) return;
+
+    this.codeNodes.node.inputs.source.value = this.sourceIdx;
+    this.codeNodes.node.inputs.target.value = this.targetIdx;
+
+    this.paramsVisible.forEach((paramKey: string) => {
+      if (this.codeNodes.node.inputs[paramKey]) {
+        this.codeNodes.node.inputs[paramKey].value = this.params[paramKey].value;
+      }
+    });
   }
 
   /**

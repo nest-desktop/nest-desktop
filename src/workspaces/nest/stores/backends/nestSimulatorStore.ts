@@ -15,6 +15,7 @@ export const useNESTSimulatorStore = defineBackendStore("nest", "nest", "http://
 const fetchModels = (): void => {
   const modelStore = useNESTModelStore();
   const nestSimulatorStore = useNESTSimulatorStore();
+  if (!nestSimulatorStore.state.enabled) return;
 
   nestSimulatorStore
     .axiosInstance()

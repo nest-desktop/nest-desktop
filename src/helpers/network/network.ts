@@ -20,13 +20,14 @@ export interface INetworkProps {
 const _elementTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
   { icon: "mdi:mdi-select-group", id: "group", title: "group" },
-  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "network:recorder", id: "recorder", title: "recorder" },
+  { icon: "graph:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "graph:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "graph:recorder", id: "recorder", title: "recorder" },
 ];
 
 export class BaseNetwork extends BaseObj {
   private _state: NetworkState; // network state
+  private _props: INetworkProps;
 
   public _connections: TConnections;
   public _nodes: TNodes;
@@ -44,6 +45,7 @@ export class BaseNetwork extends BaseObj {
     });
 
     this._project = project;
+    this._props = networkProps;
     this._state = new NetworkState(this);
 
     this._nodes = new this.Nodes(this, networkProps.nodes || []);
@@ -95,6 +97,10 @@ export class BaseNetwork extends BaseObj {
 
   get project(): TProject {
     return this._project;
+  }
+
+  get props(): INetworkProps {
+    return this._props;
   }
 
   get state(): NetworkState {
@@ -250,7 +256,7 @@ export class BaseNetwork extends BaseObj {
    * @param elementType string
    * @returns a list of models
    */
-  getModelsByElementType(elementType: string): TModel[] {
+  getModelsByElementType(elementType: string): (TModel | unknown)[] {
     return this.project.modelDBStore.getModelsByElementType(elementType);
   }
 

@@ -1,0 +1,103 @@
+.baklava-node-interface[data-interface-type="topoSort"] {
+  --baklava-node-interface-port-color: yellow;
+}
+
+.baklava-node-interface[data-interface-type="string"] {
+  --baklava-node-interface-port-color: #a11;
+}
+
+.baklava-node-interface[data-interface-type="number"] {
+  --baklava-node-interface-port-color: #164;
+}
+
+.baklava-node-interface[data-interface-type="boolean"] {
+  // --baklava-node-interface-port-color: #219;
+  --baklava-node-interface-port-color: purple;
+}
+
+.baklava-node-interface[data-interface-type="array"] {
+  --baklava-node-interface-port-color: #4d77cf;
+}
+
+.baklava-node-interface[data-interface-type="dataframe"] {
+  --baklava-node-interface-port-color: #0a7d91;
+}
+
+.baklava-node-interface[data-interface-type="nestNodeCollection"] {
+  --baklava-node-interface-port-color: #f63;
+}
+
+.baklava-node-interface[data-interface-type="torchTensor"] {
+  --baklava-node-interface-port-color: #ee4c2c;
+}
+
+// .baklava-category,
+.baklava-node .__title {
+  background-color: #4584b6 !important;
+}
+
+// .baklava-category[node-category="brainscales2"],
+.baklava-node[data-node-type^="brainscales2"] .__title {
+  background-color: #990000 !important;
+}
+
+// .baklava-category[node-category="elephant"],
+.baklava-node[data-node-type^="elephant"] .__title {
+  background-color: #f18619 !important;
+}
+
+// .baklava-category[node-category="neo"],
+.baklava-node[data-node-type^="neo"] .__title {
+  background-color: #008000 !important;
+}
+
+// .baklava-category[node-category="nest"],
+.baklava-node[data-node-type^="nest"] .__title {
+  background-color: #ff6633 !important;
+}
+
+// .baklava-category[node-category="norse"],
+.baklava-node[data-node-type^="norse"] .__title {
+  background-color: #e6007e !important;
+}
+
+// .baklava-category[node-category="numpy"],
+.baklava-node[data-node-type^="numpy"] .__title {
+  background-color: #4d77cf !important;
+}
+
+// .baklava-category[node-category="pandas"],
+.baklava-node[data-node-type^="pandas"] .__title {
+  background-color: #0a7d91 !important;
+}
+
+// .baklava-category[node-category="plotly"],
+.baklava-node[data-node-type^="plotly"] .__title {
+  background-color: #6d5fe4 !important;
+}
+
+// .baklava-category[node-category="pynn"],
+.baklava-node[data-node-type^="pynn"] .__title {
+  background-color: #0f9959 !important;
+}
+
+// .baklava-category[node-category="torch"],
+.baklava-node[data-node-type^="torch"] .__title {
+  background-color: #ee4c2c !important;
+}
+
+// .baklava-node.--hidden {
+//   opacity: 0.5;
+
+//   .__title {
+//     background-color: var(--baklava-node-color-background) !important;
+//   }
+// }
+
+.baklava-node.--two-column .__content {
+  grid-template-columns: 1fr 0fr;
+
+  .__outputs .baklava-node-interface {
+    margin-left: 12px;
+  }
+}

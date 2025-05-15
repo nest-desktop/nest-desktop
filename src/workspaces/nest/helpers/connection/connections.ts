@@ -33,19 +33,20 @@ export class NESTConnections extends BaseConnections {
     return this._network as NESTNetwork;
   }
 
-  /**
-   * Add connection component to the network.
-   * @param connectionProps connection props
-   * @returns connection object
-   */
-  override addConnection(connectionProps: INESTConnectionProps): NESTConnection {
-    this.logger.trace("add");
+  // /**
+  //  * Add connection component to the network.
+  //  * @param connectionProps connection props
+  //  * @returns connection object
+  //  */
+  // override addConnection(connectionProps: INESTConnectionProps): NESTConnection {
+  //   this.logger.trace("add");
 
-    const connection: NESTConnection = new this.Connection(this, connectionProps);
-    connection.updateHash();
-    this.connections.push(connection);
-    return connection;
-  }
+  //   const connection: NESTConnection = new this.Connection(this, connectionProps);
+  //   this.connections.push(connection);
+
+  //   this.clean();
+  //   return connection;
+  // }
 
   /**
    * Clean nodes and connection components.

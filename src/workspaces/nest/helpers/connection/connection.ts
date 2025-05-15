@@ -141,4 +141,21 @@ export class NESTConnection extends BaseConnection {
 
     return connectionProps;
   }
+
+  /**
+   * Update code node.
+   */
+  override updateCodeNode(): void {
+    if (!this.codeNode) return;
+
+    this.codeNode.inputs.pre.value = this.sourceIdx;
+    this.codeNode.inputs.post.value = this.targetIdx;
+    this.codeNode.inputs.conn_spec.value = this.rule.value;
+
+    this.paramsVisible.forEach((paramKey: string) => {
+      if (this.codeNode.inputs[paramKey]) {
+        this.codeNode.inputs[paramKey].value = this.params[paramKey].value;
+      }
+    });
+  }
 }

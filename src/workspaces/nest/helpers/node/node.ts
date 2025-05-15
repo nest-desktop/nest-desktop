@@ -16,6 +16,7 @@ import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNodes } from "./nodes";
+import { IntegerInterface, TextInputInterface } from "baklavajs";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -34,6 +35,7 @@ export class NESTNode extends BaseNode {
 
   constructor(nodes: NESTNodes, nodeProps: INESTNodeProps = {}) {
     super(nodes, nodeProps);
+    // this.logger.settings.minLevel = 1;
 
     this._spatial = new NESTNodeSpatial(this, nodeProps.spatial);
 
@@ -81,6 +83,10 @@ export class NESTNode extends BaseNode {
     );
   }
 
+  get copyModel(): NESTCopyModel | undefined {
+    return this._copyModel;
+  }
+
   override get elementType(): TElementType {
     return this.model?.elementType;
   }
@@ -116,9 +122,19 @@ export class NESTNode extends BaseNode {
     return this._model as NESTModel;
   }
 
-  get copyModel(): NESTCopyModel | undefined {
-    return this._copyModel;
-  }
+  // override get modelId(): string {
+  //   return this._modelId;
+  // }
+
+  // override set modelId(value: string) {
+  //   this._modelId = value;
+
+  //   this.loadModel();
+  //   this.modelChanges();
+
+  //   if (this.codeNodes.node && this.codeNodes.node.inputs.model.value !== value)
+  //     this.codeNodes.node.inputs.model.value = value;
+  // }
 
   // override get modelId(): string {
   //   return this._modelId;
@@ -375,6 +391,36 @@ export class NESTNode extends BaseNode {
       nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
 
     return nodeProps;
+  }
+
+  /**
+   * Update code nodes.
+   */
+  override updateCodeNodes(): void {
+    if (!this.codeNodes.node) this.nodes.addCodeNodes(this);
+    const codeNode = this.codeNodes.node;
+
+    codeNode.inputs.model.value = this.modelId;
+    codeNode.inputs.size.value = this.size;
+
+    if (!this.codeNodes.params) return;
+    const paramsNode = this.codeNodes.params;
+
+    this.paramsAll.forEach((param: NodeParameter) => {
+      if (!this.paramsVisible.includes(param.id) && param.id in paramsNode.inputs) {
+        paramsNode.removeInput(param.id);
+      } else if (this.paramsVisible.includes(param.id) && !(param.id in paramsNode.inputs)) {
+        let inputInterface;
+        if (typeof param.value == "number") {
+          inputInterface = new IntegerInterface(param.id, param.value as number);
+        } else {
+          inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
+        }
+        paramsNode.addInput(param.id, inputInterface);
+      } else if (this.paramsVisible.includes(param.id)) {
+        paramsNode.inputs[param.id].value = param.value;
+      }
+    });
   }
 
   /**

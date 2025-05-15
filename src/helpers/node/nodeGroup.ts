@@ -288,6 +288,11 @@ export class NodeGroup extends BaseObj {
   }
 
   /**
+   * Remove code nodes.
+   */
+  removeCodeNodes(): void {}
+
+  /**
    * Remove node item or group
    * @param node node object
    */

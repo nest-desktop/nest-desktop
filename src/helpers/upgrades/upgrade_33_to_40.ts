@@ -27,7 +27,7 @@ function upgradeParams(props: any): void {
   });
 }
 
-export function upgradeProject_33_to_40(projectProps: any): any {
+function upgradeProject(projectProps: any): any {
   if (!validateVersion(projectProps.version)) return projectProps;
 
   if (projectProps.activityGraph) {
@@ -51,10 +51,13 @@ export function upgradeProject_33_to_40(projectProps: any): any {
     if (connectionProps.synapse) upgradeParams(connectionProps.synapse);
   });
 
-  if (projectProps.network.models) {
-    projectProps.network.models.forEach((modelProps: any) => upgradeParams(modelProps));
-  }
+  if (projectProps.network.models) projectProps.network.models.forEach((modelProps: any) => upgradeParams(modelProps));
 
-  projectProps.version = "4.0";
   return projectProps;
 }
+
+export default {
+  currentVersion: "3.3",
+  newVersion: "4.0",
+  upgradeProject,
+};

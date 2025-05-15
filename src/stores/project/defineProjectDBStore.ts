@@ -12,6 +12,7 @@ import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
+import { upgradeProject } from "@/helpers/project/upgradeProject";
 
 interface IProjectDBStoreState<
   TProject extends BaseProject = BaseProject,
@@ -72,22 +73,23 @@ export function defineProjectDBStore<
     const addProject = (projectProps?: TProjectProps): TProject => {
       logger.trace("add project:", truncate(projectProps?.id));
 
-      const project = new props.Project(projectProps) as TProject;
+      const project = createProject(projectProps);
       addToList(project);
       return project;
     };
 
-    // /**
-    //  * Create new project
-    //  * @returns param object
-    //  */
-    // const createNewProject = (): Project => {
-    //   logger.trace("new project:");
+    /**
+     * Create project
+     * @param projectProps project props
+     * @returns project object
+     */
+    const createProject = (projectProps?: TProjectProps): TProject => {
+      logger.trace("new project:");
 
-    //   const project = Project();
-    //   addToList(project);
-    //   return project;
-    // };
+      if (projectProps) projectProps = upgradeProject(projectProps);
+
+      return new props.Project(projectProps) as TProject;
+    };
 
     /**
      * Delete project in database and then update the list.
@@ -275,7 +277,7 @@ export function defineProjectDBStore<
 
       if (projectIdx === -1) return;
 
-      project = new props.Project(project) as TProject;
+      project = createProject(project);
       state.projects[projectIdx] = project;
 
       return project;
@@ -346,6 +348,8 @@ export function defineProjectDBStore<
       logger.trace("unload project:", truncate(project.id));
 
       if (project && isProjectLoaded(project)) {
+        project.code.graph.unsubscribe();
+
         const projectIdx: number = getProjectIds().indexOf(project.id as string);
         state.projects[projectIdx] = project.doc;
       }

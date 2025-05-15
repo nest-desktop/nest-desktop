@@ -22,6 +22,7 @@ export class BaseNodes extends BaseObj {
 
   constructor(network: TNetwork, nodesProps?: (INodeProps | INodeGroupProps)[]) {
     super();
+    // this.logger.settings.minLevel = 1;
 
     this._network = network;
 
@@ -174,6 +175,15 @@ export class BaseNodes extends BaseObj {
   // }
 
   /**
+   * Add code nodes.
+   * @param node node component.
+   *
+   */
+  addCodeNodes(node: TNode | TNodeGroup): void {
+    node;
+  }
+
+  /**
    * Add node component.
    * @param nodeProps node props
    */
@@ -267,6 +277,8 @@ export class BaseNodes extends BaseObj {
     this.logger.trace("remove node");
 
     this._network.state.unselectAll();
+
+    if (node.isNode) node.removeCodeNodes();
 
     // Remove node from the node list.
     this._nodes.splice(node.idx, 1);
@@ -456,5 +468,14 @@ export class BaseNodes extends BaseObj {
   updateStates(): void {
     this.updateAnnotations();
     this.updateHash();
+  }
+
+  /**
+   * Update node style, e.g. node color.
+   */
+  updateStyle(): void {
+    this.logger.trace("update node style");
+
+    this.all.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
   }
 }

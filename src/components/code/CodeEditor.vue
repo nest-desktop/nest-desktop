@@ -1,41 +1,46 @@
 <template>
-  <!-- <v-toolbar color="transparent" density="compact">
+  <v-toolbar class="px-2" color="transparent" density="compact">
+    <v-btn-group variant="text">
+      <v-btn icon="mdi:mdi-refresh" size="small" @click="() => code.graph.onUpdate()" />
+      <v-btn icon="mdi:mdi-sort" size="small" @click="() => (state.showTree = !state.showTree)" />
+    </v-btn-group>
+    <div style="height: 100%; display: flex; justify-content: flex-end">
+      <v-checkbox
+        v-model="codeGraphStore.state.autosort"
+        density="compact"
+        hide-details
+        label="autosort"
+        @update:model-value="() => code.graph.onUpdate()"
+      />
+    </div>
     <v-spacer />
-    <v-btn icon="mdi:mdi-download" size="small" />
-    <v-btn icon="mdi:mdi-dots-vertical" size="small" />
-  </v-toolbar> -->
+    <v-btn-group variant="text">
+      <v-btn icon="mdi:mdi-download" size="small" />
+      <v-btn icon="mdi:mdi-dots-vertical" size="small" />
+    </v-btn-group>
+  </v-toolbar>
 
-  <!-- <v-btn
-    :icon="state.disabled ? 'mdi:mdi-pencil-off' : 'mdi:mdi-pencil'"
-    @click="state.disabled = !state.disabled"
-    class="ma-2"
-    size="small"
-    style="position: absolute; right: 10px; z-index: 10"
-    title="Edit mode"
-  /> -->
-
-  <!-- <v-btn
-    icon="mdi:mdi-content-copy"
-    position="absolute"
-    size="small"
-    style="right: 12px; top: 4px; z-index: 1000"
-    variant="text"
-  /> -->
-
+  <CodeTreeview v-if="state.showTree" :code />
   <CodeMirror v-if="code" :disabled="state.disabled" :code="code" />
 </template>
 
 <script setup lang="ts">
 import { reactive } from "vue";
 
+import CodeTreeview from "../codeGraph/CodeTreeview.vue";
 import CodeMirror from "./CodeMirror.vue";
 import { TCode } from "@/types";
+
+import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
+const codeGraphStore = useCodeGraphStore();
 
 defineProps<{ code: TCode }>();
 
 const state = reactive<{
   disabled: boolean;
+  showTree: boolean;
 }>({
   disabled: false,
+  showTree: false,
 });
 </script>

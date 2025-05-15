@@ -305,6 +305,7 @@ export class NESTCopyModel extends BaseObj {
    * Clean copy model.
    */
   clean(): void {
+    console.log(this);
     const weightRecorderParam: NESTCopyModelParameter = this._params.weight_recorder;
 
     // Update weight recorder list to select.
@@ -441,10 +442,16 @@ export class NESTCopyModel extends BaseObj {
    * @return model props
    */
   toJSON(): INESTCopyModelProps {
+    const params = this.filteredParams.map((param: NESTCopyModelParameter) => param.toJSON());
+
+    if (this.params.weight_recorder) {
+      params.push({ id: "weight_recorder", value: this.params.weight_recorder.value });
+    }
+
     return {
       existing: this._existingModelId,
       new: this._newModelId,
-      params: this.filteredParams.map((param: NESTCopyModelParameter) => param.toJSON()),
+      params,
     };
   }
 }

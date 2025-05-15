@@ -4,6 +4,7 @@ import { BaseNodes } from "@/helpers/node/nodes";
 import { INodeProps } from "@/helpers/node/node";
 import { TNode, TNodeGroup } from "@/types";
 
+import { NorseCode } from "../code/code";
 import { NorseNetwork } from "../network/network";
 import { NorseNode } from "./node";
 
@@ -18,5 +19,19 @@ export class NorseNodes extends BaseNodes {
 
   override get nodeItems(): NorseNode[] {
     return this._nodes.filter((node: TNode | TNodeGroup) => node.isNode) as NorseNode[];
+  }
+
+  /**
+   * Add code nodes.
+   * @param node node component.
+   */
+  override addCodeNodes(node: TNode | TNodeGroup): void {
+    console.log("Add code nodes");
+
+    if (node.isGroup) return;
+    const code = this.network.project.code as NorseCode;
+    node = node as NorseNode;
+
+    // TODO: Add code node of norse code type
   }
 }

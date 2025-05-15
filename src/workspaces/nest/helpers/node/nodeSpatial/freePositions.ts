@@ -1,6 +1,5 @@
 // freePositions.ts
 
-// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 
 import { round } from "@/utils/converter";

@@ -13,6 +13,15 @@
     },
 
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": []
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+    "esModuleInterop": true,
+    "types": [],
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   }
 }

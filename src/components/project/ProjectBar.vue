@@ -34,25 +34,33 @@
     /> -->
     <v-spacer />
 
-    <v-card v-if="appStore.state.devMode && !appStore.state.loading" class="mx-1" variant="outlined">
-      <v-list class="py-1" density="compact" style="font-size: 10px; line-height: 1em">
-        <v-list-item class="auto-min-height">
-          Simulation: {{ projectStore.state.project.state.state.stopwatch.simulation / 1000 }}s
-        </v-list-item>
-        <v-list-item class="auto-min-height">
-          Visualization: {{ projectStore.state.project.state.state.stopwatch.visualization / 1000 }}s
-        </v-list-item>
-      </v-list>
-    </v-card>
+    <slot name="stopwatch">
+      <v-card
+        v-if="projectStore.state.project && appStore.state.devMode && !appStore.state.loading"
+        class="mx-1"
+        variant="outlined"
+      >
+        <v-list class="py-1" density="compact" style="font-size: 10px; line-height: 1em">
+          <v-list-item class="auto-min-height">
+            Simulation: {{ projectStore.state.project.state.state.stopwatch.simulation / 1000 }}s
+          </v-list-item>
+          <v-list-item class="auto-min-height">
+            Visualization: {{ projectStore.state.project.state.state.stopwatch.visualization / 1000 }}s
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </slot>
 
-    <NetworkHistory />
+    <NetworkHistory v-if="projectStore.state.project" />
 
     <slot name="prependBtn" />
 
-    <SimulationButton
-      :simulation="projectStore.state.project.simulation"
-      @click:simulate="projectStore.startSimulation()"
-    />
+    <slot name="execBtn">
+      <SimulationButton
+        :simulation="projectStore.state.project.simulation"
+        @click:simulate="projectStore.startSimulation()"
+      />
+    </slot>
   </v-app-bar>
 </template>
 
@@ -71,13 +79,13 @@ const projectStore = computed(() => appStore.currentWorkspace.stores.projectStor
 const tabItems = [
   {
     icon: {
-      icon: "network:network",
+      icon: "graph:flowchart",
     },
-    id: "networkEditor",
+    id: "graphEditor",
     label: "Editor",
-    title: "Network editor",
+    title: "Graph editor",
     to: {
-      name: "NetworkEditor",
+      name: "GraphEditor",
     },
   },
   {

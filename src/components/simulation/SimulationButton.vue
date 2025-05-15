@@ -38,8 +38,8 @@ const appStore = useAppStore();
 const projectViewStore = appStore.currentWorkspace.views.project;
 
 const props = defineProps<{
-  simulation: TSimulation;
   disabled?: boolean;
+  simulation: TSimulation;
 }>();
 
 const emit = defineEmits(["click:simulate"]);

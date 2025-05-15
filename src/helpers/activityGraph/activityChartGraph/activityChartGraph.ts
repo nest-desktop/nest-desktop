@@ -192,10 +192,6 @@ export class ActivityChartGraph extends BaseObj {
     return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
   }
 
-  get endTime(): number {
-    return this._project.simulation.state.biologicalTime;
-  }
-
   get models(): IActivityChartPanelModelProps[] {
     return this._models;
   }
@@ -430,12 +426,12 @@ export class ActivityChartGraph extends BaseObj {
   /**
    * React plots to new updates.
    */
-  react(): void {
+  react(data?: PlotlyBasic.Data[], layout?: PlotlyBasic.Partial<PlotlyBasic.Layout>): void {
     if (!this._state.ref) return;
     this.logger.trace("react");
 
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.react(this._state.ref, this._plotData, this._plotLayout);
+    Plotly.react(this._state.ref, data || this._plotData, layout || this._plotLayout);
   }
 
   /**

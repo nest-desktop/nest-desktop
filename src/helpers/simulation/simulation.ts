@@ -25,9 +25,7 @@ export class BaseSimulation extends BaseObj {
   public _project: TNetworkProject; // parent
 
   constructor(project: TNetworkProject, simulationProps: ISimulationProps = {}) {
-    super({
-      config: { name: "Simulation" },
-    });
+    super({ config: { name: "Simulation" } });
 
     this._project = project;
 
@@ -56,12 +54,15 @@ export class BaseSimulation extends BaseObj {
   }
 
   get time(): number {
-    return this._time;
+    return this._codeNodes.node ? this._codeNodes.node.inputs.time.value : this._time;
   }
 
   set time(value: number) {
-    this._time = value;
-    this.changes();
+    if (this._codeNodes.node) this._codeNodes.node.inputs.time.value = value;
+    else {
+      this._time = value;
+      this.changes();
+    }
   }
 
   get timeFixed(): string {
@@ -132,7 +133,7 @@ export class BaseSimulation extends BaseObj {
 
     this._state.running = true;
     return this.project.code
-      .runSimulation()
+      .exec()
       .then((response: AxiosResponse<IAxiosResponseData>) => {
         let data: IResponseData;
 
@@ -157,10 +158,27 @@ export class BaseSimulation extends BaseObj {
    */
   toJSON(): ISimulationProps {
     const simulationProps: ISimulationProps = {
-      time: this._time,
+      time: this.time,
     };
 
     return simulationProps;
+  }
+
+  /**
+   * Update simulation.
+   */
+  update(): void {
+    // this.updateCodeNodes();
+    this.updateHash();
+  }
+
+  /**
+   * Update code node.
+   */
+  updateCodeNodes(): void {
+    if (!this.codeNodes.node) return;
+
+    this.codeNodes.node.inputs.time.value = this._time;
   }
 
   /**

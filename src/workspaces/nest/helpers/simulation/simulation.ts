@@ -70,6 +70,15 @@ export class NESTSimulation extends BaseSimulation {
   }
 
   /**
+   * Update simulation.
+   */
+  override update(): void {
+    this.updateCodeNodes();
+    this._kernel.updateCodeNodes();
+    this.updateHash();
+  }
+
+  /**
    * Update hash.
    */
   override updateHash(): void {
