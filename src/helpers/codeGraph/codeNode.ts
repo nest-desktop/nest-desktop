@@ -24,9 +24,18 @@ interface IAbstractCodeNodeState {
   token: symbol | null;
 }
 
+export interface CodeNodeInterface extends NodeInterface<any> {
+  type?: string;
+}
+
+interface CodeNodeConnection extends Connection {
+  from: CodeNodeInterface;
+  to: CodeNodeInterface;
+}
+
 export abstract class AbstractCodeNode extends AbstractNode {
-  abstract inputs: Record<string, NodeInterface<any>>;
-  abstract outputs: Record<string, NodeInterface<any>>;
+  abstract inputs: Record<string, CodeNodeInterface>;
+  abstract outputs: Record<string, CodeNodeInterface>;
 
   private _code: BaseCode | undefined;
   private _networkItem: unknown | undefined;
@@ -144,18 +153,19 @@ export abstract class AbstractCodeNode extends AbstractNode {
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
         .filter(
-          (c: Connection) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
+          (c: CodeNodeConnection) =>
+            c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
         )
-        .map((c: Connection) => c.from);
+        .map((c: CodeNodeConnection) => c.from);
       if (sources) nodeInterfaces = nodeInterfaces.concat(sources);
     }
     if (nodeInterface in this.outputs) {
       const targets = this.graph?.connections
         .filter(
-          (c: Connection) =>
+          (c: CodeNodeConnection) =>
             c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
         )
-        .map((c: Connection) => c.to);
+        .map((c: CodeNodeConnection) => c.to);
       if (targets) nodeInterfaces = nodeInterfaces.concat(targets);
     }
 
@@ -170,16 +180,16 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (mode !== "inputs") {
       const targets = this.graph?.connections
-        .filter((c: Connection) => c.from.constructor.name === "NodeOutputInterface")
-        .filter((c: Connection) => c.from.nodeId === this.id)
-        .map((c: Connection) => c.to.nodeId);
+        .filter((c: CodeNodeConnection) => c.from.type !== "node")
+        .filter((c: CodeNodeConnection) => c.from.nodeId === this.id)
+        .map((c: CodeNodeConnection) => c.to.nodeId);
       if (targets) nodeIds = nodeIds.concat(targets);
     }
 
     if (mode !== "outputs") {
       const sources = this.graph?.connections
-        .filter((c: Connection) => c.to.nodeId === this.id)
-        .map((c: Connection) => c.from.nodeId);
+        .filter((c: CodeNodeConnection) => c.to.nodeId === this.id)
+        .map((c: CodeNodeConnection) => c.from.nodeId);
 
       if (sources) nodeIds = nodeIds.concat(sources);
     }
@@ -199,18 +209,19 @@ export abstract class AbstractCodeNode extends AbstractNode {
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
         .filter(
-          (c: Connection) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
+          (c: CodeNodeConnection) =>
+            c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
         )
-        .map((c: Connection) => c.from.nodeId);
+        .map((c: CodeNodeConnection) => c.from.nodeId);
       if (sources) nodeIds = nodeIds.concat(sources);
     }
     if (nodeInterface in this.outputs) {
       const targets = this.graph?.connections
         .filter(
-          (c: Connection) =>
+          (c: CodeNodeConnection) =>
             c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
         )
-        .map((c: Connection) => c.to.nodeId);
+        .map((c: CodeNodeConnection) => c.to.nodeId);
       if (targets) nodeIds = nodeIds.concat(targets);
     }
 
@@ -228,11 +239,13 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
-        .filter((c: Connection) => c.from.constructor.name === "NodeOutputInterface")
+        .filter((c: CodeNodeConnection) => c.from.type !== "node")
         .filter(
-          (c: Connection) => c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
+          (c: CodeNodeConnection) =>
+            c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
         )
-        .map((c: Connection) => c.from) as NodeOutputInterface[];
+        .map((c: CodeNodeConnection) => c.from) as NodeOutputInterface[];
+
       if (sources) nodeInterfaces = nodeInterfaces.concat(sources);
     }
 
