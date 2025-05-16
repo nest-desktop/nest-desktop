@@ -1726,13 +1726,13 @@
   integrity sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw==
 
 "@modelcontextprotocol/sdk@^1.8.0":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.11.2.tgz#d81784c140d1a9cc937f61af9f071d8b78befe30"
-  integrity sha512-H9vwztj5OAqHg9GockCQC06k1natgcxWQSRpQcPJf6i5+MWBzfKkRtxGbjQf0X2ihii0ffLZCRGbYV2f2bjNCQ==
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.11.3.tgz#0bcc7b2d74ac1f749d1a7632ec2d674fd7066543"
+  integrity sha512-rmOWVRUbUJD7iSvJugjUbFZshTAuJ48MXoZ80Osx1GM0K/H1w7rSEvmw8m6vdWxNASgtaHIhAgre4H/E9GJiYQ==
   dependencies:
     content-type "^1.0.5"
     cors "^2.8.5"
-    cross-spawn "^7.0.3"
+    cross-spawn "^7.0.5"
     eventsource "^3.0.2"
     express "^5.0.1"
     express-rate-limit "^7.5.0"
@@ -2858,24 +2858,24 @@
     loupe "^3.1.3"
     tinyrainbow "^2.0.0"
 
-"@volar/language-core@2.4.13", "@volar/language-core@~2.4.11":
-  version "2.4.13"
-  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.4.13.tgz#3e03c1d46e6de82364e47cfd9a5eafd9d68706a6"
-  integrity sha512-MnQJ7eKchJx5Oz+YdbqyFUk8BN6jasdJv31n/7r6/WwlOOv7qzvot6B66887l2ST3bUW4Mewml54euzpJWA6bg==
+"@volar/language-core@2.4.14", "@volar/language-core@~2.4.11":
+  version "2.4.14"
+  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.4.14.tgz#dac7573014d4f3bafb186cb16888ffea5698be71"
+  integrity sha512-X6beusV0DvuVseaOEy7GoagS4rYHgDHnTrdOj5jeUb49fW5ceQyP9Ej5rBhqgz2wJggl+2fDbbojq1XKaxDi6w==
   dependencies:
-    "@volar/source-map" "2.4.13"
+    "@volar/source-map" "2.4.14"
 
-"@volar/source-map@2.4.13":
-  version "2.4.13"
-  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.4.13.tgz#7227bd39f6be48485a52bff24e9cf2c5db66e86d"
-  integrity sha512-l/EBcc2FkvHgz2ZxV+OZK3kMSroMr7nN3sZLF2/f6kWW66q8+tEL4giiYyFjt0BcubqJhBt6soYIrAPhg/Yr+Q==
+"@volar/source-map@2.4.14":
+  version "2.4.14"
+  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.4.14.tgz#cdcecd533c2e767449b2414cc22327d2bda7ef95"
+  integrity sha512-5TeKKMh7Sfxo8021cJfmBzcjfY1SsXsPMMjMvjY7ivesdnybqqS+GxGAoXHAOUawQTwtdUxgP65Im+dEmvWtYQ==
 
 "@volar/typescript@~2.4.11":
-  version "2.4.13"
-  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.4.13.tgz#1f5b6f1aa1e68a800298ba217c297cbc5318f8ae"
-  integrity sha512-Ukz4xv84swJPupZeoFsQoeJEOm7U9pqsEnaGGgt5ni3SCTa22m8oJP5Nng3Wed7Uw5RBELdLxxORX8YhJPyOgQ==
+  version "2.4.14"
+  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.4.14.tgz#b99a1025dd6a8b751e96627ebcb0739ceed0e5f1"
+  integrity sha512-p8Z6f/bZM3/HyCdRNFZOEEzts51uV8WHeN8Tnfnm2EBv6FDB2TQLzfVx7aJvnl8ofKAOnS64B2O8bImBFaauRw==
   dependencies:
-    "@volar/language-core" "2.4.13"
+    "@volar/language-core" "2.4.14"
     path-browserify "^1.0.1"
     vscode-uri "^3.0.8"
 
@@ -3180,7 +3180,7 @@ acorn-jsx@^5.3.2:
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
   integrity sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==
 
-acorn@^8.14.0, acorn@^8.14.1, acorn@^8.8.2:
+acorn@^8.14.0, acorn@^8.14.1:
   version "8.14.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.14.1.tgz#721d5dc10f7d5b5609a891773d47731796935dfb"
   integrity sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==
@@ -3970,7 +3970,7 @@ crelt@^1.0.5:
   resolved "https://registry.yarnpkg.com/crelt/-/crelt-1.0.6.tgz#7cc898ea74e190fb6ef9dae57f8f81cf7302df72"
   integrity sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==
 
-cross-spawn@^7.0.1, cross-spawn@^7.0.3, cross-spawn@^7.0.6:
+cross-spawn@^7.0.1, cross-spawn@^7.0.3, cross-spawn@^7.0.5, cross-spawn@^7.0.6:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.6.tgz#8a58fe78f00dcd70c370451759dfbfaf03e8ee9f"
   integrity sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==
@@ -4551,14 +4551,14 @@ electron-publish@26.0.11:
     mime "^2.5.2"
 
 electron-to-chromium@^1.5.149:
-  version "1.5.154"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.154.tgz#82430d66848efef703a3b643fb2a682bd08ae26b"
-  integrity sha512-G4VCFAyKbp1QJ+sWdXYIRYsPGvlV5sDACfCmoMFog3rjm1syLhI41WXm/swZypwCIWIm4IFLWzHY14joWMQ5Fw==
+  version "1.5.155"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.155.tgz#809dd0ae9ae1db87c358e0c0c17c09a2ffc432d1"
+  integrity sha512-ps5KcGGmwL8VaeJlvlDlu4fORQpv3+GIcF5I3f9tUKUlJ/wsysh6HU8P5L1XWRYeXfA0oJd4PyM8ds8zTFf6Ng==
 
 electron@~36.2:
-  version "36.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-36.2.0.tgz#05bb179eb4c5de0412fc6d49628abc949fd679c1"
-  integrity sha512-5yldoRjBKxPQfI0QMX+qq750o3Nl8N1SZnJqOPMq0gZ6rIJ+7y4ZLp808GrFwjfTm05TYgq3GSD8FGuKQZqwEw==
+  version "36.2.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-36.2.1.tgz#7c9d7c6c7076a3ddb7b1c326a851cb92c775b0b1"
+  integrity sha512-mm1Y+Ms46xcOTA69h8hpqfX392HfV4lga9aEkYkd/Syx1JBStvcACOIouCgGrnZpxNZPVS1jM8NTcMkNjuK6BQ==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^22.7.7"
@@ -7719,10 +7719,10 @@ sanitize-filename@^1.6.3:
   dependencies:
     truncate-utf8-bytes "^1.0.0"
 
-sass@~1.88:
-  version "1.88.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.88.0.tgz#cd1495749bebd9e4aca86e93ee60b3904a107789"
-  integrity sha512-sF6TWQqjFvr4JILXzG4ucGOLELkESHL+I5QJhh7CNaE+Yge0SI+ehCatsXhJ7ymU1hAFcIS3/PBpjdIbXoyVbg==
+sass@~1.89:
+  version "1.89.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.89.0.tgz#6df72360c5c3ec2a9833c49adafe57b28206752d"
+  integrity sha512-ld+kQU8YTdGNjOLfRWBzewJpU5cwEv/h5yyqlSeJcj6Yh8U4TDA9UA5FPicqDz/xgRPWRSYIQNiFks21TbA9KQ==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
@@ -8347,12 +8347,12 @@ tempy@^0.6.0:
     unique-string "^2.0.0"
 
 terser@^5.17.4:
-  version "5.39.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.39.1.tgz#1c80e6bde2b362c6f9f3e79e295c228a3882d983"
-  integrity sha512-Mm6+uad0ZuDtcV8/4uOZQDQ8RuiC5Pu+iZRedJtF7yA/27sPL7d++In/AJKpWZlU3SYMPPkVfwetn6sgZ66pUA==
+  version "5.39.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.39.2.tgz#5a1626030724a672e2e5b5c9cd9070308c20e8f9"
+  integrity sha512-yEPUmWve+VA78bI71BW70Dh0TuV4HHd+I5SHOAfS1+QBOmvmCiiffgjR8ryyEd3KIfvPGFqoADt8LdQ6XpXIvg==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
-    acorn "^8.8.2"
+    acorn "^8.14.0"
     commander "^2.20.0"
     source-map-support "~0.5.20"
 
