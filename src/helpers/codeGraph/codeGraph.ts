@@ -142,23 +142,36 @@ export class CodeGraph extends BaseObj {
     this.subscribe();
   }
 
+  /**
+   * Format labels for output interfaces.
+   * @param outputInterfaces output interface of the node
+   * @param sorted boolean
+   * @returns string array
+   */
   formatInterfaceLabels(outputInterfaces: NodeOutputInterface[], sorted: boolean = true): string[] {
     const labels: string[] = [];
 
-    if (outputInterfaces.length > 0) {
-      outputInterfaces.forEach((outputInterface: NodeOutputInterface) => {
-        const node = outputInterface.node as AbstractCodeNode;
-        labels.push(node.state.integrated ? node.codeTemplate : outputInterface.label);
-      });
+    if (outputInterfaces.length === 0) return labels;
 
-      if (sorted) labels.sort();
-    }
+    outputInterfaces.forEach((outputInterface: NodeOutputInterface) => {
+      const node = outputInterface.node as AbstractCodeNode;
+      labels.push(node.state.integrated ? node.codeTemplate : outputInterface.label);
+    });
 
+    if (sorted) labels.sort();
     return labels;
   }
 
+  /**
+   * Format labels of nodes.
+   * @param nodes code nodes
+   * @param sorted boolean
+   * @returns string array
+   */
   formatLabels(nodes: AbstractCodeNode[], sorted: boolean = true): string[] {
     const labels: string[] = [];
+
+    if (nodes.length === 0) return labels;
 
     nodes.forEach((node: AbstractCodeNode) => labels.push(node.state.integrated ? node.codeTemplate : node.label));
 
