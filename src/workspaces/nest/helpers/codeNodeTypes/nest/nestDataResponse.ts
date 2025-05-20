@@ -21,10 +21,9 @@ export default defineCodeNode({
       responseData.push(`"events": [${this.code?.graph.formatInterfaceLabels(events).join(", ")}]`);
 
     const positions = this.node.getConnectedNodesByInterface("positions");
-    const getPositions = positions.map((pos) => `getPos(${pos.label})`);
-    if (getPositions.length === 1) responseData.push(`"positions": ${getPositions.join(", ")}`);
-    else if (getPositions.length > 1)
-      responseData.push(`"positions": [${getPositions.map((p) => "..." + p).join(", ")}]`);
+    const getPositions = positions.map((pos) => `pos(${pos.label})`);
+    // if (getPositions.length === 1) responseData.push(`"positions": ${getPositions.join(", ")}`);
+    if (getPositions.length > 0) responseData.push(`"positions": {${getPositions.map((p) => "**" + p).join(", ")}}`);
 
     if (responseData.length === 0) return "response = {}";
     return `response = {\n\t${responseData.join(",\n\t")}\n}`;

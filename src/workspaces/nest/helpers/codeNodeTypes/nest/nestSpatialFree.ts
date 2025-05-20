@@ -1,6 +1,6 @@
 // nestSpatialFree.ts
 
-import { CheckboxInterface, displayInSidebar, IntegerInterface, TextInputInterface } from "baklavajs";
+import { CheckboxInterface, displayInSidebar, IntegerInterface, NumberInterface } from "baklavajs";
 
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
@@ -12,7 +12,7 @@ export default defineCodeNode({
   variableName: "pos",
   inputs: {
     pos: () => new NodeInputInterface("pos"),
-    extent: () => new TextInputInterface("extent", "[-0.5, 0.5]").use(displayInSidebar, true).setHidden(true),
+    extent: () => new NumberInterface("extent", 0.5).use(displayInSidebar, true).setHidden(true),
     edge_wrap: () => new CheckboxInterface("edge_wrap", false).use(displayInSidebar, true).setHidden(true),
     num_dimensions: () => new IntegerInterface("num dimensions", 2, 2, 3).use(displayInSidebar, true),
   },

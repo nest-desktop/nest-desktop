@@ -110,6 +110,12 @@ export class NESTCodeGraph extends BaseObj {
       if (!codeNode.inputs.model.value.includes("recorder") && !codeNode.inputs.model.value.includes("meter")) return;
       this.addConnection(codeNode.outputs.events, responseNode.inputs.events);
     });
+
+    const spatialNodes = codeNodes.filter((node: AbstractCodeNode) => !node.inputs.positions.hidden);
+    if (spatialNodes.length > 0 && responseNode.inputs.positions)
+      spatialNodes.forEach((spatialNode: AbstractCodeNode) =>
+        this.addConnection(spatialNode.outputs.positions, responseNode.inputs.positions),
+      );
   }
 
   /**

@@ -26,7 +26,7 @@ export const copySynapseModels = (
     .forEach((modelProps: INESTCopyModelProps, idx: number) => {
       // nest.CopyModel
       codeNode = graph.addNodeAtColumn(nestCopyModel, 3, 1500 + idx * 600);
-      codeNode.state.role = "network";
+      // codeNode.state.role = "network";
       codeNode.inputs.existing.value = modelProps.existing;
       codeNode.inputs.new.value = modelProps.new;
       modelProps.params?.forEach((param) => {
@@ -65,7 +65,7 @@ export const connectNodes = (
   connectionsProps.forEach((connectionProps: INESTConnectionProps, idx: number) => {
     // nest.Connect
     codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx);
-    codeNode.state.role = "network";
+    // codeNode.state.role = "network";
     if (idx === 0) codeNode.state.comments = "Connect nodes";
     if (connectionProps.synapse) {
       if (connectionProps.synapse.model) codeNode.inputs.model.value = connectionProps.synapse.model;
