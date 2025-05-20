@@ -14,7 +14,7 @@ export default defineCodeNode({
     pos: () => new NodeInputInterface("pos"),
     extent: () => new TextInputInterface("extent", "[-0.5, 0.5]").use(displayInSidebar, true).setHidden(true),
     edge_wrap: () => new CheckboxInterface("edge_wrap", false).use(displayInSidebar, true).setHidden(true),
-    num_dimensions: () => new IntegerInterface("num dimensions", 2, 2, 3).use(displayInSidebar, true).setHidden(true),
+    num_dimensions: () => new IntegerInterface("num dimensions", 2, 2, 3).use(displayInSidebar, true),
   },
   outputs: {
     out: () => new NodeOutputInterface(),
