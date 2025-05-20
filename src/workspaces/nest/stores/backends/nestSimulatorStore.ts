@@ -8,6 +8,7 @@ import { notifyError } from "@/helpers/common/notification";
 import { sortString } from "@/utils/array";
 
 import { useNESTModelStore } from "../model/modelStore";
+import { TStore } from "@/types";
 
 const logger = mainLogger.getSubLogger({ name: "nest simulator store" });
 
@@ -88,7 +89,7 @@ const installModule = (moduleName?: string): void => {
     });
 };
 
-export const nestSimulatorInit = () => {
+export const nestSimulatorInit = (): TStore => {
   logger.trace("init");
 
   // Initialize backend NEST Simulator.
