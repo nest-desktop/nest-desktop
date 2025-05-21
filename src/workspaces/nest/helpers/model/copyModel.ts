@@ -305,7 +305,6 @@ export class NESTCopyModel extends BaseObj {
    * Clean copy model.
    */
   clean(): void {
-    console.log(this);
     const weightRecorderParam: NESTCopyModelParameter = this._params.weight_recorder;
 
     // Update weight recorder list to select.

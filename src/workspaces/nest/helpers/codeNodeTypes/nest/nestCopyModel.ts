@@ -20,26 +20,14 @@ export default defineDynamicCodeNode({
     if (!this.node) return this.type;
     const args = [`"${this.node.inputs.existing.value}"`, `"${this.node.inputs.new.value}"`];
 
-    if (this.node.networkItem) {
-      const params: string[] = [];
-      this.node.networkItem.filteredParams.forEach((param) => {
-        params.push(`"${param.id}": ${JSON.stringify(param.value)}`);
-      });
-
-      const weightRecorders = this.node.getConnectedOutputInterfaceByInterface("weight_recorder");
-      if (weightRecorders.length > 0)
-        params.push(`"weight_recorder": ${this.code?.graph.formatInterfaceLabels(weightRecorders).join(", ")}`);
-
-      if (params.length > 0) args.push(`params={\n\t${params.join(",\n\t")}\n}`);
-    }
+    const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    if (params.length > 0) args.push(`params=${this.code?.graph.formatInterfaceLabels(params).join(",\n\t")}`);
 
     return `nest.CopyModel(${args.join(", ")})`;
   },
   onPlaced() {
     if (!this.code) return;
     this.networkItem = this.code.project.network.copyModels.all[this.indexOfNodeType];
-    if (!this.networkItem) return;
-    this.networkItem.codeNode = this;
   },
   onUpdate() {
     const inputs: Record<string, () => NodeInterface> = {};

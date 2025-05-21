@@ -55,7 +55,7 @@ export class NESTCodeGraph extends BaseObj {
     this.graph.addNode(node);
   }
 
-  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100) {
+  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100): Ab {
     const left = 300;
     const width = 350;
     const space = 70;
@@ -71,13 +71,31 @@ export class NESTCodeGraph extends BaseObj {
   }
 
   /**
+   * Add code node at coordinates.
+   * @param nodeType
+   * @param x number
+   * @param y number
+   * @returns
+   */
+  addNodeAtCoordinates(nodeType: new () => AbstractCodeNode, x: number = 0, y: number = 0): AbstractCodeNode {
+    const node = new nodeType();
+    this.addNode(node);
+    if (node.position) {
+      node.position.x = x;
+      node.position.y = y;
+    }
+
+    return node;
+  }
+
+  /**
    * Add code nodes from network props.
    */
   addNetworkCodeNodes(networkProps: INESTNetworkProps): void {
     this.logger.trace("add network code nodes");
     if (!networkProps) return;
 
-    copyNodeModels(this, networkProps.models);
+    if (networkProps.models) copyNodeModels(this, networkProps.models);
     const nodes = createNodes(this, networkProps.nodes);
 
     copySynapseModels(this, networkProps.models, nodes.weightRecorders);
@@ -103,7 +121,7 @@ export class NESTCodeGraph extends BaseObj {
    * Add code node for response.
    */
   addResponseCodeNode(): void {
-    const responseNode = this.addNodeAtColumn(nestDataResponse, 3, 600);
+    const responseNode = this.addNodeAtColumn(nestDataResponse, 5, 600);
     const codeNodes = this.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create");
 
     codeNodes.forEach((codeNode: AbstractCodeNode) => {

@@ -1,13 +1,12 @@
 // code.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 import { BaseCode, ICodeProps } from "@/helpers/code/code";
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
+import { IAxiosResponseData } from "@/stores/defineBackendStore";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
-import { notifyError } from "@/helpers/common/notification";
 
 export class NESTCode extends BaseCode {
   constructor(project: NESTProject, codeProps: ICodeProps) {
@@ -26,11 +25,8 @@ export class NESTCode extends BaseCode {
   override async exec(): Promise<AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("exec code");
 
-    return nest.exec(this.script).catch((error: AxiosError<IAxiosErrorData | string>) => {
-      this.project.insite.cancelAllIntervals();
-      if ("response" in error && error.response?.data != undefined) notifyError(error.response.data as string);
-    });
     // return this.doRunSimulationInsite ? this.execWithInsite() : nest.exec(this.script);
+    return nest.exec(this.script);
   }
 
   // /**

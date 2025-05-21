@@ -117,7 +117,7 @@ export class CodeGraph extends BaseObj {
    * Add code node at specific column.
    * @param node code node
    */
-  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100) {
+  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100): AbstractCodeNode {
     const left = 300;
     const width = 350;
     const space = 70;
@@ -127,6 +127,24 @@ export class CodeGraph extends BaseObj {
     if (node.position) {
       node.position.x = left + col * (width + space);
       node.position.y = offset;
+    }
+
+    return node;
+  }
+
+  /**
+   * Add code node at coordinates.
+   * @param nodeType
+   * @param x number
+   * @param y number
+   * @returns
+   */
+  addNodeAtCoordinates(nodeType: new () => AbstractCodeNode, x: number = 0, y: number = 0): AbstractCodeNode {
+    const node = new nodeType();
+    this.addNode(node);
+    if (node.position) {
+      node.position.x = x;
+      node.position.y = y;
     }
 
     return node;

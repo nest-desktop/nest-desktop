@@ -1,16 +1,15 @@
 // connections.ts
 
-import { NodeInterface, NumberInterface, TextInputInterface } from "baklavajs";
-
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { IParamProps } from "@/helpers/common/parameter";
 
 import nestConnect from "../codeNodeTypes/nest/nestConnect";
-import nestCopyModel from "../codeNodeTypes/nest/nestCopyModel";
 import { INESTConnectionProps } from "../connection/connection";
 import { INESTCopyModelProps } from "../model/copyModel";
 import { NESTCodeGraph } from "./codeGraph";
+import { copyModel } from "./model";
+import { addParameterNode } from "./parameters";
 
 export const copySynapseModels = (
   graph: CodeGraph | NESTCodeGraph,
@@ -24,23 +23,7 @@ export const copySynapseModels = (
   modelsProps
     .filter((modelProps: INESTCopyModelProps) => modelProps.existing.includes("synapse"))
     .forEach((modelProps: INESTCopyModelProps, idx: number) => {
-      // nest.CopyModel
-      codeNode = graph.addNodeAtColumn(nestCopyModel, 3, 1500 + idx * 600);
-      // codeNode.state.role = "network";
-      codeNode.inputs.existing.value = modelProps.existing;
-      codeNode.inputs.new.value = modelProps.new;
-      modelProps.params?.forEach((param) => {
-        let nodeInterface: NodeInterface;
-        switch (typeof param.value) {
-          case "number":
-            nodeInterface = new NumberInterface(param.id, param.value as number);
-            break;
-          default:
-            nodeInterface = new TextInputInterface(param.id, param.value as string);
-            break;
-        }
-        codeNode.addInput(param.id, nodeInterface);
-      });
+      codeNode = copyModel(graph, modelProps, idx);
 
       if (weightRecorders) {
         const weightRecorderParam = modelProps.params?.find((param) => param.id === "weight_recorder");
@@ -64,17 +47,45 @@ export const connectNodes = (
 
   connectionsProps.forEach((connectionProps: INESTConnectionProps, idx: number) => {
     // nest.Connect
-    codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx);
+    codeNode = graph.addNodeAtColumn(nestConnect, 5, 100 + 200 * idx);
     // codeNode.state.role = "network";
     if (idx === 0) codeNode.state.comments = "Connect nodes";
+
+    if (connectionProps.params) {
+      const params = connectionProps.params.filter((param: IParamProps) => ("visible" in param ? param.visible : true));
+
+      if (params && params.length > 0) {
+        const position = { ...codeNode.position };
+        position.x -= 400;
+        const paramsNode = addParameterNode(graph, params, position);
+        graph.addConnection(paramsNode.outputs.out, codeNode.inputs.conn_spec);
+      }
+    }
+
     if (connectionProps.synapse) {
-      if (connectionProps.synapse.model) codeNode.inputs.model.value = connectionProps.synapse.model;
-      connectionProps.synapse.params?.forEach((param: IParamProps) => {
-        if (param.id in codeNode.inputs) {
-          codeNode.inputs[param.id].hidden = false;
-          codeNode.inputs[param.id].value = param.value;
-        }
-      });
+      const syn_spec: IParamProps[] = [];
+      if (connectionProps.synapse.model && connectionProps.synapse.model !== "static_synapse")
+        syn_spec.push({
+          id: "synapse_model",
+          value: connectionProps.synapse.model,
+        });
+
+      // params
+      const synParams = connectionProps.synapse.params?.filter((param: IParamProps) =>
+        "visible" in param ? param.visible : true,
+      );
+
+      if (synParams)
+        synParams.forEach((param: IParamProps) => {
+          syn_spec.push(param);
+        });
+
+      if (syn_spec.length > 0) {
+        const position = { ...codeNode.position };
+        position.x -= 400;
+        const paramsNode = addParameterNode(graph, syn_spec, position);
+        graph.addConnection(paramsNode.outputs.out, codeNode.inputs.syn_spec);
+      }
     }
 
     if (nodes) {

@@ -65,19 +65,13 @@ export default defineDynamicCodeNode({
     if (connSpec.length === 0 && connSpecs.length > 0) connSpec = `{\n\t${connSpecs.join(",\n\t")}\n}`;
     if (connSpec.length > 0) args.push(`${connSpec}`);
 
-    const synSpecs = [];
     let synSpec = "";
 
-    if (this.node.inputs.weight && !this.node.inputs.weight.hidden)
-      synSpecs.push(`"weight": ${this.node.inputs.weight.value}`);
-    if (this.node.inputs.delay && !this.node.inputs.delay.hidden)
-      synSpecs.push(`"delay": ${this.node.inputs.delay.value}`);
-
-    if (!this.node.inputs.syn_spec.hidden)
-      if (synSpecs.length === 0) synSpec = `"${this.node.inputs.syn_spec.value}"`;
-      else synSpecs.unshift(`"synapse_model": "${this.node.inputs.syn_spec.value}"`);
-
-    if (synSpec.length === 0 && synSpecs.length > 0) synSpec = `{\n\t${synSpecs.join(",\n\t")}\n}`;
+    if (!this.node.inputs.syn_spec.hidden) {
+      const synSpecNode = this.node.getConnectedOutputInterfaceByInterface("syn_spec");
+      if (synSpecNode.length > 0) synSpec = `${this.code?.graph.formatInterfaceLabels(synSpecNode).join(", ")}`;
+      else synSpec = `"${this.node.inputs.syn_spec.value}"`;
+    }
 
     if (args.length === 2) keyword = "syn_spec=";
     if (synSpec.length > 0) args.push(`${keyword}${synSpec}`);
@@ -138,8 +132,8 @@ export default defineDynamicCodeNode({
         break;
     }
 
-    inputs.weight = () => new NumberInterface("weight", 1).use(displayInSidebar, true).setHidden(true);
-    inputs.delay = () => new NumberInterface("delay", 0.1, 0.01, 0.1).use(displayInSidebar, true).setHidden(true);
+    // inputs.weight = () => new NumberInterface("weight", 1).use(displayInSidebar, true).setHidden(true);
+    // inputs.delay = () => new NumberInterface("delay", 0.1, 0.01, 0.1).use(displayInSidebar, true).setHidden(true);
 
     return { inputs, outputs };
   },

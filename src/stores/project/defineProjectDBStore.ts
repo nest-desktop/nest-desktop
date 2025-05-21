@@ -219,6 +219,9 @@ export function defineProjectDBStore<
         delete projectProps._rev;
       });
 
+      // Upgrade project props.
+      projectsProps = upgradeProject(projectsProps);
+
       db.createProjects(projectsProps).then(() => updateList());
     };
 
