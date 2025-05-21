@@ -28,21 +28,21 @@ export class NESTNodes extends BaseNodes {
    * Check if the network has some nodes with compartments
    */
   get hasSomeNodeCompartments(): boolean {
-    return this.nodeItems.some((node: NESTNode) => node.compartments.length > 0);
+    return this.nodeItems.some((node: NESTNode) => node.compartments?.length > 0);
   }
 
   /**
    * Check if the network has some nodes with receptors
    */
   get hasSomeNodeReceptors(): boolean {
-    return this.nodeItems.some((node: NESTNode) => node.receptors.length > 0);
+    return this.nodeItems.some((node: NESTNode) => node.receptors?.length > 0);
   }
 
   /**
    * Check if the network has some spatial nodes
    */
   get hasSomeSpatialNodes(): boolean {
-    return this.nodeItems.some((node: NESTNode) => node.spatial.hasPositions);
+    return this.nodeItems.some((node: NESTNode) => node.spatial?.hasPositions);
   }
 
   get isWeightRecorderSelected(): boolean {
@@ -55,7 +55,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get neurons(): NESTNode[] {
-    return this.nodeItems.filter((node: NESTNode) => node.model.isNeuron) as NESTNode[];
+    return this.nodeItems.filter((node: NESTNode) => node.model?.isNeuron) as NESTNode[];
   }
 
   override get nodes(): (TNodeGroup | NESTNode)[] {
@@ -67,25 +67,25 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get recorders(): NESTNode[] {
-    return this.nodeItems.filter((node: NESTNode) => node.model.isRecorder) as NESTNode[];
+    return this.nodeItems.filter((node: NESTNode) => node.model?.isRecorder) as NESTNode[];
   }
 
   /**
    * Get spatial nodes
    */
   get spatialNodes(): NESTNode[] {
-    return this.nodeItems.filter((node: NESTNode) => node.spatial.hasPositions);
+    return this.nodeItems.filter((node: NESTNode) => node.spatial?.hasPositions);
   }
 
   override get stimulators(): NESTNode[] {
-    return this.nodeItems.filter((node: NESTNode) => node.model.isStimulator) as NESTNode[];
+    return this.nodeItems.filter((node: NESTNode) => node.model?.isStimulator) as NESTNode[];
   }
 
   /**
    * Get nodes with weight recorders.
    */
   get weightRecorders(): NESTNode[] {
-    return this.nodeItems.filter((node: NESTNode) => node.model.isWeightRecorder);
+    return this.nodeItems.filter((node: NESTNode) => node.model?.isWeightRecorder);
   }
 
   /**

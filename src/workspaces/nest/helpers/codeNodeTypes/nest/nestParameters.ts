@@ -42,8 +42,16 @@ export default defineDynamicCodeNode({
     console.log(this.node.inputs);
 
     Object.keys(this.node.inputs).forEach((inputKey: string) => {
-      if (!node.params[inputKey] || node.params[inputKey].value === this.node.inputs[inputKey].value) return;
-      node.params[inputKey].value = this.node.inputs[inputKey].value;
+      if (
+        !node.params[inputKey] ||
+        !node.params[inputKey].value ||
+        !this.node ||
+        !this.node.inputs ||
+        !this.node.inputs[inputKey] ||
+        !this.node.inputs[inputKey].value ||
+        node.params[inputKey].value === this.node.inputs[inputKey].value
+      )
+        return;
     });
   },
   onProjectUpdate() {
@@ -56,8 +64,16 @@ export default defineDynamicCodeNode({
     const node: NESTNode = this.networkItem;
 
     Object.keys(this.node.inputs).forEach((inputKey: string) => {
-      if (!node.params[inputKey] || this.node.inputs[inputKey].value === node.params[inputKey].value) return;
-      this.node.inputs[inputKey].value = node.params[inputKey].value;
+      if (
+        !node.params[inputKey] ||
+        !node.params[inputKey].value ||
+        !this.node ||
+        !this.node.inputs ||
+        !this.node.inputs[inputKey] ||
+        !this.node.inputs[inputKey].value ||
+        this.node.inputs[inputKey].value === node.params[inputKey].value
+      )
+        return;
     });
   },
   onUpdate() {

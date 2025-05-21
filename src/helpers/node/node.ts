@@ -205,7 +205,7 @@ export class BaseNode extends BaseObj {
   }
 
   get modelStates(): IModelStateProps[] {
-    return this.model.states;
+    return this.model ? this.model.states : [];
   }
 
   get models(): TModel[] {
@@ -512,7 +512,8 @@ export class BaseNode extends BaseObj {
     this.logger.trace("init");
 
     this.loadModel(this.props.params);
-    if (this.model.isRecorder) this.updateRecorder();
+    if (this.model?.isRecorder) this.updateRecorder();
+
     this.update();
   }
 

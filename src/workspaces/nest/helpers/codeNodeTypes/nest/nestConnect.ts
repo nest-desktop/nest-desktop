@@ -88,7 +88,7 @@ export default defineDynamicCodeNode({
     const targetNodes = this.node.getConnectedNodesByInterface("post");
     if (targetNodes) node = targetNodes[0];
 
-    if (node?.networkItem?.model?.isRecorder) {
+    if (node?.networkItem?.model?.isRecorder && this.networkItem) {
       this.networkItem.network.project.activities.init();
       this.networkItem.network.project.activityGraph.init();
     }

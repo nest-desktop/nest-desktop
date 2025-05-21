@@ -379,7 +379,7 @@ export class NESTNode extends BaseNode {
     if (this.annotations.length > 0) nodeProps.annotations = this.annotations;
 
     // Add records if this model is multimeter.
-    if (this.model.isMultimeter) nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
+    if (this.model?.isMultimeter) nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
 
     // Add positions if this node is spatial.
     if (this._spatial.hasPositions) nodeProps.spatial = this._spatial.toJSON();

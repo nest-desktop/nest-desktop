@@ -114,14 +114,15 @@ export default defineDynamicCodeNode({
       }
       this.networkItem.changes({ preventSimulation: true });
 
-      this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
+      if (this.networkItem.model)
+        this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
     });
   },
   onProjectUpdate() {
     if (!this.networkItem) return;
     const node: NESTNode = this.networkItem;
 
-    this.variableName = node.model.isNeuron ? "n" : node.model.abbreviation;
+    if (node.model) this.variableName = node.model.isNeuron ? "n" : node.model.abbreviation;
     if (this.inputs.model.value !== node.modelId) this.inputs.model.value = node.modelId;
     if (this.inputs.size.value !== node.size) this.inputs.size.value = node.size;
   },
