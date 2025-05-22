@@ -35,6 +35,7 @@ export default defineDynamicCodeNode({
   },
   codeTemplate() {
     if (!this.node) return this.type;
+
     const props = this.node.toJSON();
     const args: string[] = [];
     let keyword: string = "";
@@ -68,27 +69,25 @@ export default defineDynamicCodeNode({
     return `nest.Create(${args.join(", ")})`;
   },
   onGraphUpdate() {
-    if (!this.networkItem) return;
+    if (!this.node || !this.node.networkItem) return;
 
     const appStore = useAppStore();
     const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
     const modelIds = modelDBStore.state.models.map((model: NESTModel) => model.id);
 
-    const node: NESTNode = this.networkItem;
-    if (node.modelId !== this.inputs.model.value && modelIds.includes(this.inputs.model.value))
-      node.modelId = this.inputs.model.value;
-    if (node.size !== this.inputs.size.value) node.size = this.inputs.size.value;
+    const node: NESTNode = this.node.networkItem as NESTNode;
+    if (node.modelId !== this.node.inputs.model.value && modelIds.includes(this.node.inputs.model.value))
+      node.modelId = this.node.inputs.model.value;
+    if (node.size !== this.node.inputs.size.value) node.size = this.node.inputs.size.value;
   },
   onPlaced() {
-    if (!this.node?.code?.project?.network) return;
+    if (!this.node || !this.node?.code?.project?.network) return;
 
     const nodeItems = this.code.project.network.nodes.nodeItems;
-    this.networkItem = nodeItems[this.indexOfNodeType];
-    if (this.networkItem) return;
+    this.node.networkItem = nodeItems[this.indexOfNodeType];
+    if (this.node.networkItem) return;
 
     nextTick(() => {
-      if (!this.node) return;
-
       const nodeProps: Record<string, unknown> = { model: this.node.inputs.model.value };
       if (!this.node.inputs.size.hidden) nodeProps.size = this.node.inputs.size.value;
 
@@ -106,8 +105,8 @@ export default defineDynamicCodeNode({
       const node: NESTNode = this.node.code.project.network.nodes.addNode(nodeProps);
       node.init();
 
-      this.networkItem = node;
-      this.networkItem.codeNodes.node = this;
+      this.node.networkItem = node;
+      this.node.networkItem.codeNodes.node = this;
       if (paramNode) {
         this.networkItem.codeNodes.param = paramNode;
         paramNode.networkItem = this.networkItem;
@@ -119,14 +118,16 @@ export default defineDynamicCodeNode({
     });
   },
   onProjectUpdate() {
-    if (!this.networkItem) return;
-    const node: NESTNode = this.networkItem;
+    if (!this.node || !this.node.networkItem) return;
+    const node: NESTNode = this.node.networkItem as NESTNode;
 
     if (node.model) this.variableName = node.model.isNeuron ? "n" : node.model.abbreviation;
-    if (this.inputs.model.value !== node.modelId) this.inputs.model.value = node.modelId;
-    if (this.inputs.size.value !== node.size) this.inputs.size.value = node.size;
+    if (this.node.inputs.model.value !== node.modelId) this.node.inputs.model.value = node.modelId;
+    if (this.node.inputs.size.value !== node.size) this.node.inputs.size.value = node.size;
   },
   onUpdate({ model }) {
+    if (!this.node) return {};
+
     const inputs: Record<string, () => NodeInterface> = {};
     const outputs: Record<string, () => NodeInterface> = {};
 
@@ -140,13 +141,15 @@ export default defineDynamicCodeNode({
         new NodeOutputInterface("senders", ".events['senders']").use(displayInSidebar, true).setHidden(true);
     }
 
-    const positions = this.node?.getConnectedNodesByInterface("positions") || [];
+    const positions = this.node.getConnectedNodesByInterface("positions") || [];
     if (positions.length > 0)
       outputs.positions = () => new NodeOutputInterface("positions").use(displayInSidebar, true).setHidden(true);
 
     return { inputs, outputs };
   },
   toJSON() {
+    if (!this.node) return {};
+
     const props: Record<string, unknown> = {};
 
     const model = this.node.getConnectedOutputInterfaceByInterface("model");

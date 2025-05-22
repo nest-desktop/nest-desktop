@@ -25,21 +25,21 @@ export default defineCodeNode({
     return `nest.Simulate(${args.join(",")})`;
   },
   onGraphUpdate() {
-    if (!this.simulationItem) return;
-    const simulation: NESTSimulation = this.simulationItem;
+    if (!this.node || !this.node.simulationItem) return;
+    const simulation: NESTSimulation = this.node.simulationItem as NESTSimulation;
 
-    if (simulation.time !== this.inputs.time.value) simulation.time = this.inputs.time.value;
+    if (simulation.time !== this.node.inputs.time.value) simulation.time = this.node.inputs.time.value;
   },
   onPlaced() {
-    if (!this.node.code) return;
+    if (!this.node || !this.node.code) return;
     const code = this.node.code as NESTCode;
-    this.simulationItem = code.project.simulation;
-    this.simulationItem.codeNodes.node = this;
+    this.node.simulationItem = code.project.simulation;
+    this.node.simulationItem.codeNodes.node = this;
   },
   onProjectUpdate() {
-    if (!this.simulationItem) return;
-    const simulation: NESTSimulation = this.simulationItem;
+    if (!this.node || !this.node.simulationItem) return;
+    const simulation: NESTSimulation = this.node.simulationItem as NESTSimulation;
 
-    if (this.inputs.time.value !== simulation.time) this.inputs.time.value = simulation.time;
+    if (this.node.inputs.time.value !== simulation.time) this.node.inputs.time.value = simulation.time;
   },
 });

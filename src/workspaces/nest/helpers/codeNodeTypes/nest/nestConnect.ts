@@ -8,7 +8,9 @@ import {
   setType,
   TextInputInterface,
 } from "baklavajs";
+import { nextTick } from "vue";
 
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
@@ -18,7 +20,7 @@ import {
   nestNodeCollectionType,
   // nestSynapseCollectionType,
 } from "./interfaceTypes";
-import { nextTick } from "vue";
+import { NESTNode } from "../../node/node";
 
 export default defineDynamicCodeNode({
   type: "nest.Connect",
@@ -79,25 +81,28 @@ export default defineDynamicCodeNode({
     return `nest.Connect(${args.join(", ")})`;
   },
   onGraphUpdate() {
-    if (!this.node && !this.networkItem) return;
+    if (!this.node || !this.node.networkItem) return;
 
-    let node;
+    let node: AbstractCodeNode | null = null;
     const sourceNodes = this.node.getConnectedNodesByInterface("pre");
     if (sourceNodes) node = sourceNodes[0];
 
     const targetNodes = this.node.getConnectedNodesByInterface("post");
     if (targetNodes) node = targetNodes[0];
 
-    if (node?.networkItem?.model?.isRecorder && this.networkItem) {
-      this.networkItem.network.project.activities.init();
-      this.networkItem.network.project.activityGraph.init();
+    if (!node) return;
+
+    const nestNode = node.networkItem as NESTNode;
+    if (nestNode.model?.isRecorder && this.node.networkItem) {
+      nestNode.network.project.activities.init();
+      nestNode.network.project.activityGraph.init();
     }
   },
   onPlaced() {
-    if (!this.node.code || !this.node.code.project.network) return;
+    if (!this.node || !this.node.code || !this.node.code.project.network) return;
     const nodeItems = this.code.project.network.nodes.nodeItems;
-    this.networkItem = nodeItems[this.indexOfNodeType];
-    if (this.networkItem) return;
+    this.node.networkItem = nodeItems[this.indexOfNodeType];
+    if (this.node.networkItem) return;
 
     nextTick(() => {
       if (!this.node) return;

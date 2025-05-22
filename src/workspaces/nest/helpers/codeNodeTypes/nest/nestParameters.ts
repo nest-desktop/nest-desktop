@@ -27,19 +27,17 @@ export default defineDynamicCodeNode({
         else if (!input[1].hidden) params.push(`"${input[0]}": ${input[1].value}`);
       });
 
-    if (params.length > 0) return `{\n\t${params.join(",\n\t")}\n}`;
-    else return "";
+    if (params.length === 0) return "{}";
+    return `{\n\t${params.join(",\n\t")}\n}`;
   },
   onGraphUpdate() {
     if (!this.node) return;
-    if (!this.networkItem) {
+    if (!this.node.networkItem) {
       const nodes = this.node.getConnectedNodes("outputs");
       if (nodes.length === 0 || !nodes[0].networkItem) return;
-      this.networkItem = nodes[0].networkItem;
+      this.node.networkItem = nodes[0].networkItem;
     }
-    const node: NESTNode = this.networkItem;
-
-    console.log(this.node.inputs);
+    const node: NESTNode = this.node.networkItem as NESTNode;
 
     Object.keys(this.node.inputs).forEach((inputKey: string) => {
       if (
@@ -52,16 +50,17 @@ export default defineDynamicCodeNode({
         node.params[inputKey].value === this.node.inputs[inputKey].value
       )
         return;
+      node.params[inputKey].value = this.node.inputs[inputKey].value;
     });
   },
   onProjectUpdate() {
     if (!this.node) return;
-    if (!this.networkItem) {
+    if (!this.node.networkItem) {
       const nodes = this.node.getConnectedNodes("outputs");
       if (nodes.length === 0 || !nodes[0].networkItem) return;
-      this.networkItem = nodes[0].networkItem;
+      this.node.networkItem = nodes[0].networkItem;
     }
-    const node: NESTNode = this.networkItem;
+    const node: NESTNode = this.node.networkItem as NESTNode;
 
     Object.keys(this.node.inputs).forEach((inputKey: string) => {
       if (
@@ -74,6 +73,7 @@ export default defineDynamicCodeNode({
         this.node.inputs[inputKey].value === node.params[inputKey].value
       )
         return;
+      this.node.inputs[inputKey].value = node.params[inputKey].value;
     });
   },
   onUpdate() {

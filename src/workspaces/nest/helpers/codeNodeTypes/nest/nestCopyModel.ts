@@ -4,6 +4,7 @@ import { displayInSidebar, NodeInterface, setType, TextInputInterface } from "ba
 
 import { DictInputInterface } from "@/helpers/codeGraph/interface/dictInputInterface";
 import { IParamProps } from "@/helpers/common/parameter";
+import { NESTCopyModel } from "../../model/copyModel";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
@@ -26,15 +27,19 @@ export default defineDynamicCodeNode({
     return `nest.CopyModel(${args.join(", ")})`;
   },
   onPlaced() {
-    if (!this.code) return;
-    this.networkItem = this.code.project.network.copyModels.all[this.indexOfNodeType];
+    if (!this.node || !this.code) return;
+    this.node.networkItem = this.code.project.network.copyModels.all[this.indexOfNodeType];
   },
   onUpdate() {
+    if (!this.node) return {};
+
     const inputs: Record<string, () => NodeInterface> = {};
     const outputs: Record<string, () => NodeInterface> = {};
 
-    if (this.node?.networkItem && this.node?.networkItem.paramsVisible.length > 0) {
-      this.node?.networkItem.filteredParams.forEach((param: IParamProps) => {
+    const node = this.node.networkItem as NESTCopyModel;
+
+    if (node && node.paramsVisible.length > 0) {
+      node.filteredParams.forEach((param: IParamProps) => {
         if (param.id === "weight_recorder") return;
 
         inputs[param.id] = () =>
@@ -42,7 +47,7 @@ export default defineDynamicCodeNode({
       });
     }
 
-    if (this.node?.inputs.existing.value.includes("synapse")) {
+    if (this.node.inputs.existing.value.includes("synapse")) {
       inputs["weight_recorder"] = () => new NodeInputInterface("weight_recorder");
     }
 

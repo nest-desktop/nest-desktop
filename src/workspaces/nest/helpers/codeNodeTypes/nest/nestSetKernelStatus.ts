@@ -47,27 +47,28 @@ export default defineCodeNode({
     return args.length > 0 ? `nest.SetKernelStatus({\n\t${args.join(",\n\t")}\n})` : "";
   },
   onGraphUpdate() {
-    if (!this.simulationItem) return;
-    const kernel: NESTSimulationKernel = this.simulationItem;
+    if (!this.node || !this.node.simulationItem) return;
+    const kernel: NESTSimulationKernel = this.node.simulationItem as NESTSimulationKernel;
 
-    if (kernel.resolution !== this.inputs?.resolution.value) kernel.resolution = this.inputs?.resolution.value;
-    if (kernel.localNumThreads !== this.inputs?.local_num_threads.value)
-      kernel.localNumThreads = this.inputs?.local_num_threads.value;
-    if (kernel.rngSeed !== this.inputs?.rng_seed.value) kernel.rngSeed = this.inputs?.rng_seed.value;
+    if (kernel.resolution !== this.node.inputs?.resolution.value)
+      kernel.resolution = this.node.inputs?.resolution.value;
+    if (kernel.localNumThreads !== this.node.inputs?.local_num_threads.value)
+      kernel.localNumThreads = this.node.inputs?.local_num_threads.value;
+    if (kernel.rngSeed !== this.node.inputs?.rng_seed.value) kernel.rngSeed = this.node.inputs?.rng_seed.value;
   },
   onPlaced() {
-    if (!this.code) return;
+    if (!this.node || !this.code) return;
     const code = this.code as NESTCode;
-    this.simulationItem = code.project.simulation.kernel;
-    this.simulationItem.codeNodes.node = this;
+    this.node.simulationItem = code.project.simulation.kernel;
+    this.node.simulationItem.codeNodes.node = this;
   },
   onProjectUpdate() {
-    if (!this.simulationItem) return;
-    const kernel: NESTSimulationKernel = this.simulationItem;
+    if (!this.node || !this.node.simulationItem) return;
+    const kernel: NESTSimulationKernel = this.node.simulationItem as NESTSimulationKernel;
 
-    if (this.inputs.resolution.value !== kernel.resolution) this.inputs.resolution.value = kernel.resolution;
-    if (this.inputs.local_num_threads.value !== kernel.localNumThreads)
-      this.inputs.local_num_threads.value = kernel.localNumThreads;
-    if (this.inputs.rng_seed.value !== kernel.rngSeed) this.inputs.rng_seed.value = kernel.rngSeed;
+    if (this.node.inputs.resolution.value !== kernel.resolution) this.node.inputs.resolution.value = kernel.resolution;
+    if (this.node.inputs.local_num_threads.value !== kernel.localNumThreads)
+      this.node.inputs.local_num_threads.value = kernel.localNumThreads;
+    if (this.node.inputs.rng_seed.value !== kernel.rngSeed) this.node.inputs.rng_seed.value = kernel.rngSeed;
   },
 });

@@ -117,7 +117,6 @@
 
       <template v-if="projectViewStore.state.views.controller === 'code'">
         <slot name="codeEditor">
-          <CodeTreeview :code="project.code" />
           <CodeEditor :code="project.code" />
         </slot>
       </template>
