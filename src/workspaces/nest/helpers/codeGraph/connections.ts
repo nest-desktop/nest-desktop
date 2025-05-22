@@ -20,10 +20,14 @@ export const copySynapseModels = (
   if (!modelsProps || modelsProps.length === 0) return;
   let codeNode: AbstractCodeNode;
 
+  const copiedNodeModels = modelsProps.filter(
+    (modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"),
+  );
+
   modelsProps
     .filter((modelProps: INESTCopyModelProps) => modelProps.existing.includes("synapse"))
     .forEach((modelProps: INESTCopyModelProps, idx: number) => {
-      codeNode = copyModel(graph, modelProps, idx);
+      codeNode = copyModel(graph, modelProps, copiedNodeModels.length + idx);
 
       if (weightRecorders) {
         const weightRecorderParam = modelProps.params?.find((param) => param.id === "weight_recorder");
@@ -47,7 +51,7 @@ export const connectNodes = (
 
   connectionsProps.forEach((connectionProps: INESTConnectionProps, idx: number) => {
     // nest.Connect
-    codeNode = graph.addNodeAtColumn(nestConnect, 5, 100 + 200 * idx);
+    codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx);
     // codeNode.state.role = "network";
     if (idx === 0) codeNode.state.comments = "Connect nodes";
 
@@ -57,6 +61,7 @@ export const connectNodes = (
       if (params && params.length > 0) {
         const position = { ...codeNode.position };
         position.x -= 400;
+        position.y += 75;
         const paramsNode = addParameterNode(graph, params, position);
         graph.addConnection(paramsNode.outputs.out, codeNode.inputs.conn_spec);
       }
@@ -83,6 +88,7 @@ export const connectNodes = (
       if (syn_spec.length > 0) {
         const position = { ...codeNode.position };
         position.x -= 400;
+        position.y += 75;
         const paramsNode = addParameterNode(graph, syn_spec, position);
         graph.addConnection(paramsNode.outputs.out, codeNode.inputs.syn_spec);
       }

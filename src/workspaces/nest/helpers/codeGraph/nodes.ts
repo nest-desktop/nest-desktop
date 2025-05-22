@@ -10,7 +10,6 @@ import nestSpatialFree from "../codeNodeTypes/nest/nestSpatialFree";
 import { INESTCopyModelProps } from "../model/copyModel";
 import { INESTNodeProps } from "../node/node";
 import { NESTCodeGraph } from "./codeGraph";
-import _function from "@/helpers/codeNodeTypes/base/function";
 import { copyModel } from "./model";
 import { addParameterNode } from "./parameters";
 import { IParamProps } from "@/helpers/common/parameter";
@@ -21,7 +20,7 @@ export const createNode = (
   idx: number = 0,
 ): AbstractCodeNode => {
   // nest.Create
-  const codeNode = graph.addNodeAtColumn(nestCreate, 3, 100 + 290 * idx);
+  const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx);
   if (idx === 0) codeNode.state.comments = "Create nodes";
   // codeNode.variableName = nodeProps.model as string;
   codeNode.inputs.model.value = nodeProps.model;
@@ -37,25 +36,20 @@ export const createNode = (
   if (params && params.length > 0) {
     const position = { ...codeNode.position };
     position.x -= 400;
+    position.y += 50;
     const paramsNode = addParameterNode(graph, params, position);
     graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
   }
 
   // positions
   if (nodeProps.spatial) {
-    const randNode = graph.addNodeAtColumn(nestRandomUniform, 1, 900);
+    const randNode = graph.addNodeAtColumn(nestRandomUniform, -2, 900);
     randNode.state.integrated = true;
     randNode.inputs.min.value = -0.5;
     randNode.inputs.max.value = 0.5;
-    const posNode = graph.addNodeAtColumn(nestSpatialFree, 2, 900);
+    const posNode = graph.addNodeAtColumn(nestSpatialFree, -1, 900);
     posNode.state.integrated = true;
     graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
-
-    if (!graph.nodes.find((node: AbstractCodeNode) => node.type === "function")) {
-      const funcNode = graph.addNodeAtColumn(_function, 5, 900);
-      funcNode.inputs.code.hidden = false;
-      funcNode.inputs.code.value = "pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
-    }
 
     graph.addConnection(posNode.outputs.out, codeNode.inputs.positions);
     codeNode.events.update.emit({

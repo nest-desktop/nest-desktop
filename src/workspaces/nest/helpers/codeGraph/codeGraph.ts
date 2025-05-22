@@ -2,7 +2,6 @@
 
 import { Graph, IBaklavaViewModel, IGraphState, NodeInterface, useBaklava } from "baklavajs";
 
-import functionNode from "@/helpers/codeNodeTypes/base/function";
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
 
@@ -19,6 +18,7 @@ import { copyNodeModels, createNodes } from "./nodes";
 import { connectNodes, copySynapseModels } from "./connections";
 import { setViewSettings } from "@/plugins/baklava";
 import { INESTSimulationKernelProps } from "../simulation/simulationKernel";
+import _function from "@/helpers/codeNodeTypes/base/function";
 
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;
@@ -55,7 +55,7 @@ export class NESTCodeGraph extends BaseObj {
     this.graph.addNode(node);
   }
 
-  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100): Ab {
+  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100): AbstractCodeNode {
     const left = 300;
     const width = 350;
     const space = 70;
@@ -100,13 +100,6 @@ export class NESTCodeGraph extends BaseObj {
 
     copySynapseModels(this, networkProps.models, nodes.weightRecorders);
     connectNodes(this, networkProps.connections, nodes.all);
-
-    // define function getPos
-    if (nodes.spatial.length > 0) {
-      const posNode = this.addNodeAtColumn(functionNode, 3, 800);
-      // posNode.inputs.code.value = "def getPos(n): return dict(zip(n.global_id, nest.GetPosition(n)))";
-      posNode.inputs.code.value = "getPos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
-    }
   }
 
   /**
@@ -114,22 +107,30 @@ export class NESTCodeGraph extends BaseObj {
    */
   addResetKernelCodeNode(): void {
     // nest.ResetKernel
-    this.addNodeAtColumn(nestResetKernel, 0, 100);
+    this.addNodeAtColumn(nestResetKernel, -2, 100);
   }
 
   /**
    * Add code node for response.
    */
   addResponseCodeNode(): void {
-    const responseNode = this.addNodeAtColumn(nestDataResponse, 5, 600);
     const codeNodes = this.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create");
+    const spatialNodes = codeNodes.filter((node: AbstractCodeNode) => !node.inputs.positions.hidden);
+    if (spatialNodes.length > 0) {
+      if (!this.nodes.find((node: AbstractCodeNode) => node.type === "function")) {
+        const funcNode = this.addNodeAtColumn(_function, 4, 900);
+        funcNode.inputs.code.hidden = false;
+        funcNode.inputs.code.value = "pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
+      }
+    }
+
+    const responseNode = this.addNodeAtColumn(nestDataResponse, 4, 600);
 
     codeNodes.forEach((codeNode: AbstractCodeNode) => {
       if (!codeNode.inputs.model.value.includes("recorder") && !codeNode.inputs.model.value.includes("meter")) return;
       this.addConnection(codeNode.outputs.events, responseNode.inputs.events);
     });
 
-    const spatialNodes = codeNodes.filter((node: AbstractCodeNode) => !node.inputs.positions.hidden);
     if (spatialNodes.length > 0 && responseNode.inputs.positions)
       spatialNodes.forEach((spatialNode: AbstractCodeNode) =>
         this.addConnection(spatialNode.outputs.positions, responseNode.inputs.positions),
@@ -142,14 +143,14 @@ export class NESTCodeGraph extends BaseObj {
   addSimulationCodeNode(simulationProps: INESTSimulationProps): void {
     this.logger.trace("add simulation code nodes");
     // nest.Simulate
-    const codeNode = this.addNodeAtColumn(nestSimulate, 0, 450);
+    const codeNode = this.addNodeAtColumn(nestSimulate, 4, 100);
     codeNode.state.comments = "Run simulation";
     codeNode.inputs.time.value = simulationProps?.time ?? 1000;
   }
 
   addSimulationKernelCodeNode(kernelProps?: INESTSimulationKernelProps): void {
     // nest.SetKernelStatus
-    const codeNode = this.addNodeAtColumn(nestSetKernelStatus, 0, 200);
+    const codeNode = this.addNodeAtColumn(nestSetKernelStatus, -2, 200);
     codeNode.state.comments = "Set simulation kernel";
     if (kernelProps) {
       codeNode.inputs.local_num_threads.value = kernelProps.localNumThreads;
@@ -165,7 +166,7 @@ export class NESTCodeGraph extends BaseObj {
     this.addResetKernelCodeNode();
 
     // nest.Install
-    if (projectProps.simulation?.modules) this.addNodeAtColumn(nestInstall, 0, 200);
+    if (projectProps.simulation?.modules) this.addNodeAtColumn(nestInstall, -2, 200);
 
     // nest.SetKernelStatus
     if (projectProps.simulation?.kernel) this.addSimulationKernelCodeNode(projectProps.simulation.kernel);

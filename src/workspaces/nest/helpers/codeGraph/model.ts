@@ -14,7 +14,7 @@ export const copyModel = (
   modelProps: INESTCopyModelProps,
   idx: number = 0,
 ): AbstractCodeNode => {
-  const codeNode = graph.addNodeAtColumn(nestCopyModel, 2, 100 + 250 * idx);
+  const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx);
   codeNode.inputs.existing.value = modelProps.existing;
   codeNode.inputs.new.value = modelProps.new;
 
@@ -23,6 +23,7 @@ export const copyModel = (
   if (params && params.length > 0) {
     const position = { ...codeNode.position };
     position.x -= 400;
+    position.y += 100;
     const paramsNode = addParameterNode(graph, params, position);
     graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
   }

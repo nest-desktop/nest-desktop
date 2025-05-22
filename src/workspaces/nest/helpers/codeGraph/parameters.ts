@@ -1,20 +1,25 @@
 // parameters.ts
 
-import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { displayInSidebar, IntegerInterface, setType, TextInputInterface } from "baklavajs";
+
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
-import { IntegerInterface, TextInputInterface } from "baklavajs";
-import { NESTCodeGraph } from "./codeGraph";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { IParamProps } from "@/helpers/common/parameter";
+import { numberType, stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import { NESTCodeGraph } from "./codeGraph";
 import nestParameters from "../codeNodeTypes/nest/nestParameters";
 
-export const addParameterInterface = (paramsNode: AbstractCodeNode, param: IParamProps) => {
-  let inputInterface;
+export const createParameterInterface = (param: IParamProps) => {
+  let paramInterface;
   if (typeof param.value == "number") {
-    inputInterface = new IntegerInterface(param.id, param.value as number);
+    paramInterface = new IntegerInterface(param.id, param.value as number).use(setType, numberType);
   } else {
-    inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
+    paramInterface = new TextInputInterface(param.id, JSON.stringify(param.value)).use(setType, stringType);
   }
-  paramsNode.addInput(param.id, inputInterface);
+  paramInterface.use(displayInSidebar, true);
+  paramInterface.setHidden(param.visible ? !param.visible : false);
+  return paramInterface;
 };
 
 export const addParameterNode = (
@@ -24,8 +29,11 @@ export const addParameterNode = (
 ): AbstractCodeNode => {
   const paramsNode = graph.addNodeAtCoordinates(nestParameters, position.x, position.y);
   paramsNode.state.integrated = true;
-  params
-    .filter((param: IParamProps) => ("visible" in param ? param.visible : true))
-    .forEach((param: IParamProps) => addParameterInterface(paramsNode, param));
+
+  params.forEach((param: IParamProps) => {
+    const paramInterface = createParameterInterface(param);
+    paramsNode.addInput(param.id, paramInterface);
+  });
+
   return paramsNode;
 };

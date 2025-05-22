@@ -39,18 +39,18 @@ export default defineDynamicCodeNode({
     }
     const node: NESTNode = this.node.networkItem as NESTNode;
 
-    Object.keys(this.node.inputs).forEach((inputKey: string) => {
+    Object.keys(this.node.inputs).forEach((key: string) => {
       if (
-        !node.params[inputKey] ||
-        !node.params[inputKey].value ||
+        !node.params[key] ||
+        !node.params[key].value ||
         !this.node ||
         !this.node.inputs ||
-        !this.node.inputs[inputKey] ||
-        !this.node.inputs[inputKey].value ||
-        node.params[inputKey].value === this.node.inputs[inputKey].value
+        !this.node.inputs[key] ||
+        !this.node.inputs[key].value ||
+        node.params[key].value === this.node.inputs[key].value
       )
         return;
-      node.params[inputKey].value = this.node.inputs[inputKey].value;
+      node.params[key].value = this.node.inputs[key].value;
     });
   },
   onProjectUpdate() {
@@ -62,39 +62,22 @@ export default defineDynamicCodeNode({
     }
     const node: NESTNode = this.node.networkItem as NESTNode;
 
-    Object.keys(this.node.inputs).forEach((inputKey: string) => {
+    Object.keys(this.node.inputs).forEach((key: string) => {
       if (
-        !node.params[inputKey] ||
-        !node.params[inputKey].value ||
+        !node.params[key] ||
+        !node.params[key].value ||
         !this.node ||
         !this.node.inputs ||
-        !this.node.inputs[inputKey] ||
-        !this.node.inputs[inputKey].value ||
-        this.node.inputs[inputKey].value === node.params[inputKey].value
+        !this.node.inputs[key] ||
+        !this.node.inputs[key].value ||
+        this.node.inputs[key].value === node.params[key].value
       )
         return;
-      this.node.inputs[inputKey].value = node.params[inputKey].value;
+      this.node.inputs[key].value = node.params[key].value;
     });
   },
   onUpdate() {
-    if (!this.node) return {};
-
-    const inputs: Record<string, () => NodeInterface> = {};
-    const outputs: Record<string, () => NodeInterface> = {};
-
-    // const params = this.node.toJSON;
-
-    // const node = this.node.getConnectedNodesByInterface("out");
-
-    // if (node) {
-    //   if (params)
-    //     Object.values(params).forEach((param: IParamProps) => {
-    //       inputs[param.id] = () =>
-    //         new TextInputInterface(param.id, param.value as string).use(displayInSidebar, true).setHidden(false);
-    //     });
-    // }
-
-    return { inputs, outputs };
+    return {};
   },
   toJSON() {
     if (!this.node) return {};

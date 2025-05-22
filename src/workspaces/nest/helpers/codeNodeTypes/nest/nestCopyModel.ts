@@ -4,10 +4,11 @@ import { displayInSidebar, NodeInterface, setType, TextInputInterface } from "ba
 
 import { DictInputInterface } from "@/helpers/codeGraph/interface/dictInputInterface";
 import { IParamProps } from "@/helpers/common/parameter";
-import { NESTCopyModel } from "../../model/copyModel";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import { NESTCopyModel } from "../../model/copyModel";
 
 export default defineDynamicCodeNode({
   type: "nest.CopyModel",
@@ -15,7 +16,7 @@ export default defineDynamicCodeNode({
   inputs: {
     existing: () => new TextInputInterface("existing", "iaf_psc_alpha").use(setType, stringType),
     new: () => new TextInputInterface("new", "new").use(setType, stringType),
-    params: () => new DictInputInterface("params", {}),
+    params: () => new DictInputInterface("params", {}).use(displayInSidebar, true).setHidden(true),
   },
   codeTemplate() {
     if (!this.node) return this.type;
@@ -48,7 +49,7 @@ export default defineDynamicCodeNode({
     }
 
     if (this.node.inputs.existing.value.includes("synapse")) {
-      inputs["weight_recorder"] = () => new NodeInputInterface("weight_recorder");
+      inputs["weight_recorder"] = () => new NodeInputInterface("weight_recorder").setHidden(true);
     }
 
     return { inputs, outputs };
