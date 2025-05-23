@@ -14,6 +14,14 @@ import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { IParamProps } from "@/helpers/common/parameter";
+
+import nestConnect from "./nestConnect";
+import { INESTConnectionProps } from "../../connection/connection";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+import { addParameterNode } from "./nestParameters";
+
 import {
   INESTNodeCollection,
   // INESTSynapseCollection,
@@ -143,3 +151,63 @@ export default defineDynamicCodeNode({
     return { inputs, outputs };
   },
 });
+
+export const connectNodes = (
+  graph: CodeGraph | NESTCodeGraph,
+  connectionsProps?: INESTConnectionProps[],
+  nodes: AbstractCodeNode[] = [],
+): void => {
+  if (!connectionsProps || connectionsProps.length === 0) return;
+  let codeNode: AbstractCodeNode;
+
+  connectionsProps.forEach((connectionProps: INESTConnectionProps, idx: number) => {
+    // nest.Connect
+    codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx);
+    // codeNode.state.role = "network";
+    if (idx === 0) codeNode.state.comments = "Connect nodes";
+
+    if (connectionProps.params) {
+      const params = connectionProps.params.filter((param: IParamProps) => ("visible" in param ? param.visible : true));
+
+      if (params && params.length > 0) {
+        const position = { ...codeNode.position };
+        position.x -= 400;
+        position.y += 75;
+        const paramsNode = addParameterNode(graph, params, position);
+        graph.addConnection(paramsNode.outputs.out, codeNode.inputs.conn_spec);
+      }
+    }
+
+    if (connectionProps.synapse) {
+      const syn_spec: IParamProps[] = [];
+      if (connectionProps.synapse.model && connectionProps.synapse.model !== "static_synapse")
+        syn_spec.push({
+          id: "synapse_model",
+          value: connectionProps.synapse.model,
+        });
+
+      // params
+      const synParams = connectionProps.synapse.params?.filter((param: IParamProps) =>
+        "visible" in param ? param.visible : true,
+      );
+
+      if (synParams)
+        synParams.forEach((param: IParamProps) => {
+          syn_spec.push(param);
+        });
+
+      if (syn_spec.length > 0) {
+        const position = { ...codeNode.position };
+        position.x -= 400;
+        position.y += 75;
+        const paramsNode = addParameterNode(graph, syn_spec, position);
+        graph.addConnection(paramsNode.outputs.out, codeNode.inputs.syn_spec);
+      }
+    }
+
+    if (nodes) {
+      graph.addConnection(codeNode.inputs.pre, nodes[connectionProps.source].outputs.out);
+      graph.addConnection(nodes[connectionProps.target].outputs.out, codeNode.inputs.post);
+    }
+  });
+};

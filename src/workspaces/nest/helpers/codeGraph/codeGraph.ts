@@ -1,9 +1,11 @@
 // codeGraph.ts
 
 import { Graph, IBaklavaViewModel, IGraphState, NodeInterface, useBaklava } from "baklavajs";
+import { setViewSettings } from "@/plugins/baklava";
 
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
+import _function from "@/helpers/codeNodeTypes/base/function";
 
 // import { BaseCode } from "../code/code";
 import nestDataResponse from "../codeNodeTypes/nest/nestDataResponse";
@@ -13,12 +15,11 @@ import nestSetKernelStatus from "../codeNodeTypes/nest/nestSetKernelStatus";
 import nestSimulate from "../codeNodeTypes/nest/nestSimulate";
 import { INESTNetworkProps } from "../network/network";
 import { INESTProjectProps } from "../project/project";
-import { INESTSimulationProps } from "../simulation/simulation";
-import { copyNodeModels, createNodes } from "./nodes";
-import { connectNodes, copySynapseModels } from "./connections";
-import { setViewSettings } from "@/plugins/baklava";
 import { INESTSimulationKernelProps } from "../simulation/simulationKernel";
-import _function from "@/helpers/codeNodeTypes/base/function";
+import { INESTSimulationProps } from "../simulation/simulation";
+import { connectNodes } from "../codeNodeTypes/nest/nestConnect";
+import { copyNodeModels, copySynapseModels } from "../codeNodeTypes/nest/nestCopyModel";
+import { createNodes } from "../codeNodeTypes/nest/nestCreate";
 
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;

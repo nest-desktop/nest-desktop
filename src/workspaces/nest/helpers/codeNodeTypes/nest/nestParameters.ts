@@ -1,12 +1,17 @@
 // nestParameters.ts
 
-import { NodeInterface } from "baklavajs";
+import { displayInSidebar, IntegerInterface, NodeInterface, setType, TextInputInterface } from "baklavajs";
 
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { IParamProps } from "@/helpers/common/parameter";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
+import { numberType, stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
+import nestParameters from "./nestParameters";
 import { INESTNodeCollection } from "./interfaceTypes";
-import { NESTNode } from "../../node/node";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 
 export default defineDynamicCodeNode({
   type: "nest/Parameters",
@@ -32,52 +37,50 @@ export default defineDynamicCodeNode({
   },
   onGraphUpdate() {
     if (!this.node) return;
+
     if (!this.node.networkItem) {
       const nodes = this.node.getConnectedNodes("outputs");
-      if (nodes.length === 0 || !nodes[0].networkItem) return;
+      if (nodes.length < 1 || !nodes[0].networkItem) return;
       this.node.networkItem = nodes[0].networkItem;
     }
-    const node: NESTNode = this.node.networkItem as NESTNode;
 
-    Object.keys(this.node.inputs).forEach((key: string) => {
-      if (
-        !node.params[key] ||
-        !node.params[key].value ||
-        !this.node ||
-        !this.node.inputs ||
-        !this.node.inputs[key] ||
-        !this.node.inputs[key].value ||
-        node.params[key].value === this.node.inputs[key].value
-      )
-        return;
-      node.params[key].value = this.node.inputs[key].value;
-    });
+    const params = this.node.networkItem?.params;
+    if (params)
+      Object.keys(this.node.inputs).forEach((key: string) => {
+        if (!params[key] || !params[key].value || !this.node || params[key].value === this.node.inputs[key].value)
+          return;
+        params[key].value = this.node.inputs[key].value;
+      });
   },
   onProjectUpdate() {
     if (!this.node) return;
+
     if (!this.node.networkItem) {
       const nodes = this.node.getConnectedNodes("outputs");
-      if (nodes.length === 0 || !nodes[0].networkItem) return;
+      if (nodes.length < 1 || !nodes[0].networkItem) return;
       this.node.networkItem = nodes[0].networkItem;
     }
-    const node: NESTNode = this.node.networkItem as NESTNode;
 
-    Object.keys(this.node.inputs).forEach((key: string) => {
-      if (
-        !node.params[key] ||
-        !node.params[key].value ||
-        !this.node ||
-        !this.node.inputs ||
-        !this.node.inputs[key] ||
-        !this.node.inputs[key].value ||
-        this.node.inputs[key].value === node.params[key].value
-      )
-        return;
-      this.node.inputs[key].value = node.params[key].value;
-    });
+    const params = this.node.networkItem?.params;
+    if (params)
+      Object.keys(this.node.inputs).forEach((key: string) => {
+        if (!this.node || !params[key] || !params[key].value || this.node.inputs[key].value === params[key].value)
+          return;
+        this.node.inputs[key].value = params[key].value;
+      });
   },
   onUpdate() {
-    return {};
+    if (!this.node?.networkItem) return {};
+    const inputs: Record<string, () => NodeInterface> = {};
+
+    const params = this.node.networkItem?.params;
+    if (params)
+      Object.values(params).forEach((param) => {
+        const inputKeys = Object.keys(this.node.inputs);
+        if (!inputKeys.includes(param.id)) inputs[param.id] = () => createParameterInterface(param.toJSON());
+      });
+
+    return { inputs };
   },
   toJSON() {
     if (!this.node) return {};
@@ -93,3 +96,31 @@ export default defineDynamicCodeNode({
     return props;
   },
 });
+
+export const addParameterNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  params: IParamProps[],
+  position: { x: number; y: number } = { x: 0, y: 0 },
+): AbstractCodeNode => {
+  const paramsNode = graph.addNodeAtCoordinates(nestParameters, position.x, position.y);
+  paramsNode.state.integrated = true;
+
+  params.forEach((param: IParamProps) => {
+    const paramInterface = createParameterInterface(param);
+    paramsNode.addInput(param.id, paramInterface);
+  });
+
+  return paramsNode;
+};
+
+export const createParameterInterface = (param: IParamProps): NodeInterface => {
+  let paramInterface;
+  if (typeof param.value == "number") {
+    paramInterface = new IntegerInterface(param.id, param.value as number).use(setType, numberType);
+  } else {
+    paramInterface = new TextInputInterface(param.id, JSON.stringify(param.value)).use(setType, stringType);
+  }
+  paramInterface.use(displayInSidebar, true);
+  paramInterface.setHidden(param.visible ? !param.visible : false);
+  return paramInterface;
+};

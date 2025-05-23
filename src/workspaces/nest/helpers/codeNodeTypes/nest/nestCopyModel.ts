@@ -2,13 +2,18 @@
 
 import { displayInSidebar, NodeInterface, setType, TextInputInterface } from "baklavajs";
 
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { DictInputInterface } from "@/helpers/codeGraph/interface/dictInputInterface";
 import { IParamProps } from "@/helpers/common/parameter";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
-import { NESTCopyModel } from "../../model/copyModel";
+import nestCopyModel from "./nestCopyModel";
+import { INESTCopyModelProps, NESTCopyModel } from "../../model/copyModel";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+import { addParameterNode } from "./nestParameters";
 
 export default defineDynamicCodeNode({
   type: "nest.CopyModel",
@@ -55,3 +60,74 @@ export default defineDynamicCodeNode({
     return { inputs, outputs };
   },
 });
+
+const copyModel = (
+  graph: CodeGraph | NESTCodeGraph,
+  modelProps: INESTCopyModelProps,
+  idx: number = 0,
+): AbstractCodeNode => {
+  const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx);
+  codeNode.inputs.existing.value = modelProps.existing;
+  codeNode.inputs.new.value = modelProps.new;
+
+  // params
+  const params = modelProps.params?.filter((param: IParamProps) => ("visible" in param ? param.visible : true));
+  if (params && params.length > 0) {
+    const position = { ...codeNode.position };
+    position.x -= 400;
+    position.y += 100;
+    const paramsNode = addParameterNode(graph, params, position);
+    graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
+  }
+
+  return codeNode;
+};
+
+export const copyNodeModels = (
+  graph: CodeGraph | NESTCodeGraph,
+  modelsProps: INESTCopyModelProps[],
+): AbstractCodeNode[] => {
+  if (!modelsProps || modelsProps.length === 0) return [];
+
+  const nodes: AbstractCodeNode[] = [];
+
+  // Copy node model
+  modelsProps
+    .filter((modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"))
+    .forEach((modelProps: INESTCopyModelProps, idx: number) => {
+      const codeNode: AbstractCodeNode = copyModel(graph, modelProps as INESTCopyModelProps, idx);
+      nodes.push(codeNode);
+    });
+
+  return nodes;
+};
+
+export const copySynapseModels = (
+  graph: CodeGraph | NESTCodeGraph,
+  modelsProps?: INESTCopyModelProps[],
+  weightRecorders: AbstractCodeNode[] = [],
+): void => {
+  // Copy synapse model
+  if (!modelsProps || modelsProps.length === 0) return;
+  let codeNode: AbstractCodeNode;
+
+  const copiedNodeModels = modelsProps.filter(
+    (modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"),
+  );
+
+  modelsProps
+    .filter((modelProps: INESTCopyModelProps) => modelProps.existing.includes("synapse"))
+    .forEach((modelProps: INESTCopyModelProps, idx: number) => {
+      codeNode = copyModel(graph, modelProps, copiedNodeModels.length + idx);
+
+      if (weightRecorders) {
+        const weightRecorderParam = modelProps.params?.find((param) => param.id === "weight_recorder");
+        if (weightRecorderParam) {
+          const weightRecorderCode = weightRecorders.find(
+            (codeNode, idx) => codeNode.variableName + (idx + 1) === weightRecorderParam.value,
+          );
+          if (weightRecorderCode) graph.addConnection(weightRecorderCode.outputs.out, codeNode.inputs.weight_recorder);
+        }
+      }
+    });
+};

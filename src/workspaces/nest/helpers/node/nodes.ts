@@ -1,5 +1,6 @@
 // nodes.ts
 
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseNodes } from "@/helpers/node/nodes";
 import { TNode, TNodeGroup } from "@/types";
 
@@ -7,8 +8,7 @@ import { INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTCode } from "../code/code";
 import { NESTNetwork } from "../network/network";
-import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
-import { createNode } from "../codeGraph/nodes";
+import { createNode } from "../codeNodeTypes/nest/nestCreate";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {

@@ -137,7 +137,7 @@ export function defineDynamicCodeNode<I, O>(
     }
 
     public onProjectUpdate() {
-      this.logger.trace("on network update");
+      this.logger.trace("on project update");
       definition.onProjectUpdate?.call(this);
     }
 
