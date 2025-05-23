@@ -5,7 +5,7 @@ import { setViewSettings } from "@/plugins/baklava";
 
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
-import _function from "@/helpers/codeNodeTypes/base/function";
+import functionNode from "@/helpers/codeNodeTypes/base/function";
 
 // import { BaseCode } from "../code/code";
 import nestDataResponse from "../codeNodeTypes/nest/nestDataResponse";
@@ -119,7 +119,7 @@ export class NESTCodeGraph extends BaseObj {
     const spatialNodes = codeNodes.filter((node: AbstractCodeNode) => !node.inputs.positions.hidden);
     if (spatialNodes.length > 0) {
       if (!this.nodes.find((node: AbstractCodeNode) => node.type === "function")) {
-        const funcNode = this.addNodeAtColumn(_function, 4, 900);
+        const funcNode = this.addNodeAtColumn(functionNode, 4, 900);
         funcNode.inputs.code.hidden = false;
         funcNode.inputs.code.value = "pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
       }
