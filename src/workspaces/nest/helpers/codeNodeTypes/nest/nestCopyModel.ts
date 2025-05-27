@@ -27,7 +27,7 @@ export default defineDynamicCodeNode({
     if (!this.node) return this.type;
     const args = [`"${this.node.inputs.existing.value}"`, `"${this.node.inputs.new.value}"`];
 
-    const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    const params = this.node.getConnectedOutputInterfacesByInterface("params");
     if (params.length > 0) args.push(`params=${this.code?.graph.formatInterfaceLabels(params).join(",\n\t")}`);
 
     return `nest.CopyModel(${args.join(", ")})`;
@@ -66,7 +66,7 @@ const copyModel = (
   modelProps: INESTCopyModelProps,
   idx: number = 0,
 ): AbstractCodeNode => {
-  const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx);
+  const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx, modelProps);
   codeNode.inputs.existing.value = modelProps.existing;
   codeNode.inputs.new.value = modelProps.new;
 

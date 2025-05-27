@@ -50,8 +50,8 @@ export default defineDynamicCodeNode({
   },
   codeTemplate() {
     if (!this.node) return this.type;
-    const pre = this.node.getConnectedOutputInterfaceByInterface("pre");
-    const post = this.node.getConnectedOutputInterfaceByInterface("post");
+    const pre = this.node.getConnectedOutputInterfacesByInterface("pre");
+    const post = this.node.getConnectedOutputInterfacesByInterface("post");
     if (pre.length === 0 || post.length === 0) return this.type;
     const args = [
       this.code?.graph.formatInterfaceLabels(pre).join("+"),
@@ -78,7 +78,7 @@ export default defineDynamicCodeNode({
     let synSpec = "";
 
     if (!this.node.inputs.syn_spec.hidden) {
-      const synSpecNode = this.node.getConnectedOutputInterfaceByInterface("syn_spec");
+      const synSpecNode = this.node.getConnectedOutputInterfacesByInterface("syn_spec");
       if (synSpecNode.length > 0) synSpec = `${this.code?.graph.formatInterfaceLabels(synSpecNode).join(", ")}`;
       else synSpec = `"${this.node.inputs.syn_spec.value}"`;
     }
@@ -117,15 +117,27 @@ export default defineDynamicCodeNode({
 
       const connectionProps: Record<string, unknown> = {};
 
-      const sourceNodes = this.node.getConnectedNodesByInterface("pre");
-      if (sourceNodes) connectionProps.source = sourceNodes[0].indexOfNodeType;
+      const sourceNode = this.node.getConnectedNodeByInterface("pre");
+      if (sourceNode) connectionProps.source = sourceNode.indexOfNodeType;
 
-      const targetNodes = this.node.getConnectedNodesByInterface("post");
-      if (targetNodes) connectionProps.target = targetNodes[0].indexOfNodeType;
+      const targetNode = this.node.getConnectedNodeByInterface("post");
+      if (targetNode) connectionProps.target = targetNode.indexOfNodeType;
+
+      const synParamNode = this.node.getConnectedNodeByInterface("syn_spec");
+      if (synParamNode) {
+        const paramProps = Object.entries(synParamNode.inputs).map(([k, v]) => ({ id: k, value: v.value }));
+        if (paramProps.length > 0) connectionProps.synapse = { params: paramProps };
+      }
 
       this.networkItem = this.node.code.project.network.connections.addConnection(connectionProps);
       this.networkItem.init();
       this.networkItem.codeNodes.connection = this;
+
+      if (synParamNode) {
+        this.networkItem.codeNodes.param = synParamNode;
+        synParamNode.networkItem = this.networkItem.synapse;
+      }
+
       this.networkItem.changes({ preventSimulation: true });
     });
   },
@@ -156,14 +168,16 @@ export const connectNodes = (
   graph: CodeGraph | NESTCodeGraph,
   connectionsProps?: INESTConnectionProps[],
   nodes: AbstractCodeNode[] = [],
-): void => {
-  if (!connectionsProps || connectionsProps.length === 0) return;
+): AbstractCodeNode[] => {
+  if (!connectionsProps || connectionsProps.length === 0) return [];
   let codeNode: AbstractCodeNode;
+  const codeNodes: AbstractCodeNode[] = [];
 
   connectionsProps.forEach((connectionProps: INESTConnectionProps, idx: number) => {
     // nest.Connect
-    codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx);
-    // codeNode.state.role = "network";
+    codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, connectionProps);
+    codeNode.state.props = connectionProps;
+
     if (idx === 0) codeNode.state.comments = "Connect nodes";
 
     if (connectionProps.params) {
@@ -180,18 +194,18 @@ export const connectNodes = (
 
     if (connectionProps.synapse) {
       const syn_spec: IParamProps[] = [];
-      if (connectionProps.synapse.model && connectionProps.synapse.model !== "static_synapse")
+      if (connectionProps.synapse.model && connectionProps.synapse.model !== "static_synapse") {
         syn_spec.push({
           id: "synapse_model",
           value: connectionProps.synapse.model,
         });
+      }
 
       // params
       const synParams = connectionProps.synapse.params?.filter((param: IParamProps) =>
         "visible" in param ? param.visible : true,
       );
-
-      if (synParams)
+      if (synParams && synParams.length > 0)
         synParams.forEach((param: IParamProps) => {
           syn_spec.push(param);
         });
@@ -209,5 +223,9 @@ export const connectNodes = (
       graph.addConnection(codeNode.inputs.pre, nodes[connectionProps.source].outputs.out);
       graph.addConnection(nodes[connectionProps.target].outputs.out, codeNode.inputs.post);
     }
+
+    codeNodes.push(codeNode);
   });
+
+  return codeNodes;
 };

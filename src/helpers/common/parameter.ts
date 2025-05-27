@@ -132,6 +132,10 @@ export class BaseParameter extends BaseObj {
     return this._type.id === "constant";
   }
 
+  get isVisible(): boolean {
+    return this.parent.paramsVisible.includes(this.id);
+  }
+
   get items(): string[] | Record<string, string>[] {
     return this._items;
   }

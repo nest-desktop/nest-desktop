@@ -19,6 +19,7 @@ interface IAbstractCodeNodeState {
   comments: string;
   hidden: boolean;
   integrated: boolean;
+  props: unknown;
   role: string;
   script: string;
   token: symbol | null;
@@ -46,6 +47,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
     comments: "",
     hidden: false,
     integrated: false,
+    props: null,
     role: "",
     script: "",
     token: null,
@@ -124,6 +126,10 @@ export abstract class AbstractCodeNode extends AbstractNode {
     return this;
   }
 
+  get shortId(): string {
+    return truncate(this.id);
+  }
+
   get script(): string {
     return this._state.script;
   }
@@ -143,11 +149,21 @@ export abstract class AbstractCodeNode extends AbstractNode {
   // calculate?: CalculateFunction<any, any> | undefined;
 
   /**
+   * Get connected node to the node interface.
+   * @param nodeInterface string
+   * @returns code node instance or null
+   */
+  getConnectedInterfaceByInterface(nodeInterface: string): NodeInterface | null {
+    const interfaces = this.getConnectedInterfacesByInterface(nodeInterface);
+    return interfaces.length > 0 ? interfaces[0] : null;
+  }
+
+  /**
    * Get connected node interface to the node interface.
    * @param nodeInterface string
-   * @returns interface instance
+   * @returns interface instances
    */
-  getConnectedInterfaceByInterface(nodeInterface: string): NodeInterface[] {
+  getConnectedInterfacesByInterface(nodeInterface: string): NodeInterface[] {
     let nodeInterfaces: NodeInterface[] = [];
 
     if (nodeInterface in this.inputs) {
@@ -173,12 +189,24 @@ export abstract class AbstractCodeNode extends AbstractNode {
   }
 
   /**
-   * Get connected nodes to the node.
+   * Get connected node to the node interface.
+   * @param nodeInterface string
+   * @returns node interface instance or null
    */
-  getConnectedNodes(mode?: string): AbstractCodeNode[] {
+  getConnectedNodeByInterface(nodeInterface: string): AbstractCodeNode | null {
+    const nodes = this.getConnectedNodesByInterface(nodeInterface);
+    return nodes.length > 0 ? nodes[0] : null;
+  }
+
+  /**
+   * Get connected nodes to the node.
+   * @param type inputs or outputs
+   * @returns code node instances
+   */
+  getConnectedNodes(type?: "inputs" | "outputs"): AbstractCodeNode[] {
     let nodeIds: string[] = [];
 
-    if (mode !== "inputs") {
+    if (type !== "inputs") {
       const targets = this.graph?.connections
         .filter((c: CodeNodeConnection) => c.from.type !== "node")
         .filter((c: CodeNodeConnection) => c.from.nodeId === this.id)
@@ -186,7 +214,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
       if (targets) nodeIds = nodeIds.concat(targets);
     }
 
-    if (mode !== "outputs") {
+    if (type !== "outputs") {
       const sources = this.graph?.connections
         .filter((c: CodeNodeConnection) => c.to.nodeId === this.id)
         .map((c: CodeNodeConnection) => c.from.nodeId);
@@ -199,9 +227,9 @@ export abstract class AbstractCodeNode extends AbstractNode {
   }
 
   /**
-   * Get connected node to the node interface.
+   * Get connected nodes to the node interface.
    * @param nodeInterface string
-   * @returns code node instance
+   * @returns code node instances
    */
   getConnectedNodesByInterface(nodeInterface: string): AbstractCodeNode[] {
     let nodeIds: string[] = [];
@@ -234,7 +262,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node output interface instance
    */
-  getConnectedOutputInterfaceByInterface(nodeInterface: string): NodeOutputInterface[] {
+  getConnectedOutputInterfacesByInterface(nodeInterface: string): NodeOutputInterface[] {
     let nodeInterfaces: NodeOutputInterface[] = [];
 
     if (nodeInterface in this.inputs) {

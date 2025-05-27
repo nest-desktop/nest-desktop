@@ -24,11 +24,11 @@ export default defineCodeNode({
     const args: string[] = [];
     let keyword: string = "";
 
-    const pos = this.node.getConnectedOutputInterfaceByInterface("pos");
+    const pos = this.node.getConnectedOutputInterfacesByInterface("pos");
     if (pos.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(pos).join(", ")}`);
 
     keyword = "extent=";
-    const extent = this.node.getConnectedOutputInterfaceByInterface("extent");
+    const extent = this.node.getConnectedOutputInterfacesByInterface("extent");
     if (extent.length > 1) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(extent).join(", ")}`);
     else if (extent.length > 0) {
       const x = `${this.code?.graph.formatInterfaceLabels(extent).join(", ")}`;
@@ -36,12 +36,12 @@ export default defineCodeNode({
     } else if (!this.node.inputs.extent.hidden) args.push(`${keyword}${this.node.inputs.extent.value}`);
 
     keyword = "edge_wrap=";
-    const edgeWrap = this.node.getConnectedOutputInterfaceByInterface("edge_wrap");
+    const edgeWrap = this.node.getConnectedOutputInterfacesByInterface("edge_wrap");
     if (edgeWrap.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(edgeWrap).join(", ")}`);
     else if (!this.node.inputs.edge_wrap.hidden) args.push(`${keyword}${this.node.inputs.edge_wrap.value}`);
 
     keyword = "num_dimensions=";
-    const numDimensions = this.node.getConnectedOutputInterfaceByInterface("num_dimensions");
+    const numDimensions = this.node.getConnectedOutputInterfacesByInterface("num_dimensions");
     if (numDimensions.length > 0)
       args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(numDimensions).join(", ")}`);
     else if (!this.node.inputs.num_dimensions.hidden) args.push(`${keyword}${this.node.inputs.num_dimensions.value}`);

@@ -23,7 +23,7 @@ export default defineCodeNode({
     const args: string[] = [];
     let keyword: string = "";
 
-    const shape = this.node.getConnectedOutputInterfaceByInterface("shape");
+    const shape = this.node.getConnectedOutputInterfacesByInterface("shape");
     if (shape.length > 1) args.push(`${this.code?.graph.formatInterfaceLabels(shape).join(", ")}`);
     else if (shape.length > 0) {
       const x = `${this.code?.graph.formatInterfaceLabels(shape).join(", ")}`;
@@ -31,7 +31,7 @@ export default defineCodeNode({
     } else args.push(`${this.node.inputs.shape.value}`);
 
     keyword = "center=";
-    const center = this.node.getConnectedOutputInterfaceByInterface("center");
+    const center = this.node.getConnectedOutputInterfacesByInterface("center");
     if (center.length > 1) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(center).join(", ")}`);
     else if (center.length > 0) {
       const x = `${this.code?.graph.formatInterfaceLabels(center).join(", ")}`;
@@ -39,7 +39,7 @@ export default defineCodeNode({
     } else if (!this.node.inputs.center.hidden) args.push(`${keyword}${this.node.inputs.center.value}`);
 
     keyword = "extent=";
-    const extent = this.node.getConnectedOutputInterfaceByInterface("extent");
+    const extent = this.node.getConnectedOutputInterfacesByInterface("extent");
     if (extent.length > 1) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(extent).join(", ")}`);
     else if (extent.length > 0) {
       const x = `${this.code?.graph.formatInterfaceLabels(extent).join(", ")}`;
@@ -47,7 +47,7 @@ export default defineCodeNode({
     } else if (!this.node.inputs.extent.hidden) args.push(`${keyword}${this.node.inputs.extent.value}`);
 
     keyword = "edge_wrap=";
-    const edgeWrap = this.node.getConnectedOutputInterfaceByInterface("edge_wrap");
+    const edgeWrap = this.node.getConnectedOutputInterfacesByInterface("edge_wrap");
     if (edgeWrap.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(edgeWrap).join(", ")}`);
     else if (!this.node.inputs.edge_wrap.hidden) args.push(`${keyword}${this.node.inputs.edge_wrap.value}`);
 

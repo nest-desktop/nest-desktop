@@ -19,7 +19,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const max = this.node.getConnectedOutputInterfaceByInterface("max");
+    const max = this.node.getConnectedOutputInterfacesByInterface("max");
     if (max.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(max).join(", ")}`);
     else args.push(`${this.node.inputs.max.value}`);
 

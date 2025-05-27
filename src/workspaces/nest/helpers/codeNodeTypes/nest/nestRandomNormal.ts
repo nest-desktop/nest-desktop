@@ -21,12 +21,12 @@ export default defineCodeNode({
     const args: string[] = [];
     let keyword: string = "";
 
-    const mean = this.node.getConnectedOutputInterfaceByInterface("mean");
+    const mean = this.node.getConnectedOutputInterfacesByInterface("mean");
     if (mean.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(mean).join(", ")}`);
     else if (!this.node.inputs.mean.hidden) args.push(`${this.node.inputs.mean.value}`);
 
     keyword = args.length < 1 ? "std=" : "";
-    const std = this.node.getConnectedOutputInterfaceByInterface("std");
+    const std = this.node.getConnectedOutputInterfacesByInterface("std");
     if (std.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(std).join(", ")}`);
     else if (!this.node.inputs.std.hidden) args.push(`${keyword}${this.node.inputs.std.value}`);
 

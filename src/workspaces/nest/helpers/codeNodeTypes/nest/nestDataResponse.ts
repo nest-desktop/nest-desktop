@@ -16,7 +16,7 @@ export default defineCodeNode({
     if (!this.node) return "";
     const responseData = [];
 
-    const events = this.node.getConnectedOutputInterfaceByInterface("events");
+    const events = this.node.getConnectedOutputInterfacesByInterface("events");
     if (events.length > 0)
       responseData.push(`"events": [${this.code?.graph.formatInterfaceLabels(events).join(", ")}]`);
 

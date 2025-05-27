@@ -115,14 +115,25 @@ export class CodeGraph extends BaseObj {
 
   /**
    * Add code node at specific column.
-   * @param node code node
+   * @param nodeType
+   * @param col column
+   * @param offset number
+   * @param props optional
+   * @returns Abstract code node
    */
-  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100): AbstractCodeNode {
+  addNodeAtColumn(
+    nodeType: new () => AbstractCodeNode,
+    col: number = 0,
+    offset: number = 100,
+    props?: unknown,
+  ): AbstractCodeNode {
     const left = 300;
     const width = 350;
     const space = 70;
 
     const node = new nodeType();
+    if (props) node.props = props;
+
     this.addNode(node);
     if (node.position) {
       node.position.x = left + col * (width + space);
@@ -135,17 +146,20 @@ export class CodeGraph extends BaseObj {
   /**
    * Add code node at coordinates.
    * @param nodeType
-   * @param x number
-   * @param y number
-   * @returns
+   * @param position
+   * @param props optional
+   * @returns Abstract code node
    */
-  addNodeAtCoordinates(nodeType: new () => AbstractCodeNode, x: number = 0, y: number = 0): AbstractCodeNode {
+  addNodeAtCoordinates(
+    nodeType: new () => AbstractCodeNode,
+    position: { x: number; y: number } = { x: 0, y: 0 },
+    props?: unknown,
+  ): AbstractCodeNode {
     const node = new nodeType();
+    if (props) node.props = props;
+
     this.addNode(node);
-    if (node.position) {
-      node.position.x = x;
-      node.position.y = y;
-    }
+    if (node.position) node.position = position;
 
     return node;
   }

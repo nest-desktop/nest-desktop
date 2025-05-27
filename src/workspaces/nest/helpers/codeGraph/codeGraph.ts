@@ -20,6 +20,7 @@ import { INESTSimulationProps } from "../simulation/simulation";
 import { connectNodes } from "../codeNodeTypes/nest/nestConnect";
 import { copyNodeModels, copySynapseModels } from "../codeNodeTypes/nest/nestCopyModel";
 import { createNodes } from "../codeNodeTypes/nest/nestCreate";
+import { createParameterInterface } from "../codeNodeTypes/nest/nestParameters";
 
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;
@@ -56,12 +57,27 @@ export class NESTCodeGraph extends BaseObj {
     this.graph.addNode(node);
   }
 
-  addNodeAtColumn(nodeType: new () => AbstractCodeNode, col: number = 0, offset: number = 100): AbstractCodeNode {
+  /**
+   * Add code node at column.
+   * @param nodeType
+   * @param col column
+   * @param offset number
+   * @param props optional
+   * @returns Abstract code node
+   */
+  addNodeAtColumn(
+    nodeType: new () => AbstractCodeNode,
+    col: number = 0,
+    offset: number = 100,
+    props?: unknown,
+  ): AbstractCodeNode {
     const left = 300;
     const width = 350;
     const space = 70;
 
     const node = new nodeType();
+    if (props) node.props = props;
+
     this.addNode(node);
     if (node.position) {
       node.position.x = left + col * (width + space);
@@ -74,17 +90,20 @@ export class NESTCodeGraph extends BaseObj {
   /**
    * Add code node at coordinates.
    * @param nodeType
-   * @param x number
-   * @param y number
-   * @returns
+   * @param position position
+   * @param props optional
+   * @returns Abstract code node
    */
-  addNodeAtCoordinates(nodeType: new () => AbstractCodeNode, x: number = 0, y: number = 0): AbstractCodeNode {
+  addNodeAtCoordinates(
+    nodeType: new () => AbstractCodeNode,
+    position: { x: number; y: number } = { x: 0, y: 0 },
+    props?: unknown,
+  ): AbstractCodeNode {
     const node = new nodeType();
+    if (props) node.props = props;
+
     this.addNode(node);
-    if (node.position) {
-      node.position.x = x;
-      node.position.y = y;
-    }
+    if (node.position) node.position = position;
 
     return node;
   }
@@ -95,12 +114,27 @@ export class NESTCodeGraph extends BaseObj {
   addNetworkCodeNodes(networkProps: INESTNetworkProps): void {
     this.logger.trace("add network code nodes");
     if (!networkProps) return;
+    let nodes;
 
     if (networkProps.models) copyNodeModels(this, networkProps.models);
-    const nodes = createNodes(this, networkProps.nodes);
+    nodes = createNodes(this, networkProps.nodes);
+
+    // add node parameters
+    nodes.all.forEach((node) => {
+      const paramsNode = node.getConnectedNodeByInterface("params");
+      if (paramsNode)
+        paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
+    });
 
     copySynapseModels(this, networkProps.models, nodes.weightRecorders);
-    connectNodes(this, networkProps.connections, nodes.all);
+    nodes = connectNodes(this, networkProps.connections, nodes.all);
+
+    // add synapse parameters
+    nodes.forEach((node) => {
+      const paramsNode = node.getConnectedNodeByInterface("syn_spec");
+      if (paramsNode)
+        paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
+    });
   }
 
   /**

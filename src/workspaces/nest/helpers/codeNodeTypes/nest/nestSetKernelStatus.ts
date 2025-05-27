@@ -29,18 +29,18 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const localNumThreads = this.node.getConnectedOutputInterfaceByInterface("local_num_threads");
+    const localNumThreads = this.node.getConnectedOutputInterfacesByInterface("local_num_threads");
     if (localNumThreads.length > 0)
       args.push(`"local_num_threads": ${this.code?.graph.formatInterfaceLabels(localNumThreads).join(", ")}`);
     else if (!this.node.inputs.local_num_threads.hidden)
       args.push(`"local_num_threads": ${this.node.inputs.local_num_threads.value}`);
 
-    const resolution = this.node.getConnectedOutputInterfaceByInterface("resolution");
+    const resolution = this.node.getConnectedOutputInterfacesByInterface("resolution");
     if (resolution.length > 0)
       args.push(`"resolution": ${this.code?.graph.formatInterfaceLabels(resolution).join(", ")}`);
     else if (!this.node.inputs.resolution.hidden) args.push(`"resolution": ${this.node.inputs.resolution.value}`);
 
-    const rngSeed = this.node.getConnectedOutputInterfaceByInterface("rng_seed");
+    const rngSeed = this.node.getConnectedOutputInterfacesByInterface("rng_seed");
     if (rngSeed.length > 0) args.push(`"rng_seed": ${this.code?.graph.formatInterfaceLabels(rngSeed).join(", ")}`);
     else if (!this.node.inputs.rng_seed.hidden) args.push(`"rng_seed": ${this.node.inputs.rng_seed.value}`);
 

@@ -21,12 +21,12 @@ export default defineCodeNode({
     const args: string[] = [];
     let keyword: string = "";
 
-    const min = this.node.getConnectedOutputInterfaceByInterface("min");
+    const min = this.node.getConnectedOutputInterfacesByInterface("min");
     if (min.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(min).join(", ")}`);
     else if (!this.node.inputs.min.hidden) args.push(`${this.node.inputs.min.value}`);
 
     keyword = args.length < 1 ? "max=" : "";
-    const max = this.node.getConnectedOutputInterfaceByInterface("max");
+    const max = this.node.getConnectedOutputInterfacesByInterface("max");
     if (max.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(max).join(", ")}`);
     else if (!this.node.inputs.max.hidden) args.push(`${keyword}${this.node.inputs.max.value}`);
 

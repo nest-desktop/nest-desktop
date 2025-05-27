@@ -19,7 +19,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const beta = this.node.getConnectedOutputInterfaceByInterface("beta");
+    const beta = this.node.getConnectedOutputInterfacesByInterface("beta");
     if (beta.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(beta).join(", ")}`);
     else if (!this.node.inputs.beta.hidden) args.push(`${this.node.inputs.beta.value}`);
 

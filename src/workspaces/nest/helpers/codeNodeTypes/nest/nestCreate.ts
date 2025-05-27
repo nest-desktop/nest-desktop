@@ -101,10 +101,8 @@ export default defineDynamicCodeNode({
       const nodeProps: Record<string, unknown> = { model: this.node.inputs.model.value };
       if (!this.node.inputs.size.hidden) nodeProps.size = this.node.inputs.size.value;
 
-      const paramNodes = this.node.getConnectedNodesByInterface("params");
-      let paramNode;
-      if (paramNodes && paramNodes.length > 0) {
-        paramNode = paramNodes[0];
+      const paramNode = this.node.getConnectedNodeByInterface("params");
+      if (paramNode) {
         const paramProps = Object.entries(paramNode.inputs).map(([k, v]) => ({ id: k, value: v.value }));
         if (paramProps.length > 0) nodeProps.params = paramProps;
       }
@@ -117,10 +115,12 @@ export default defineDynamicCodeNode({
 
       this.node.networkItem = node;
       this.node.networkItem.codeNodes.node = this;
+
       if (paramNode) {
         this.networkItem.codeNodes.param = paramNode;
         paramNode.networkItem = this.networkItem;
       }
+
       this.networkItem.changes({ preventSimulation: true });
 
       if (this.networkItem.model)
@@ -162,19 +162,19 @@ export default defineDynamicCodeNode({
 
     const props: Record<string, unknown> = {};
 
-    const model = this.node.getConnectedOutputInterfaceByInterface("model");
+    const model = this.node.getConnectedOutputInterfacesByInterface("model");
     if (model.length > 0) props["model"] = this.code?.graph.formatInterfaceLabels(model).join(", ");
     else props["model"] = `"${this.node.inputs.model.value}"`;
 
-    const size = this.node.getConnectedOutputInterfaceByInterface("size");
+    const size = this.node.getConnectedOutputInterfacesByInterface("size");
     if (size.length > 0) props["size"] = this.code?.graph.formatInterfaceLabels(size).join(", ");
     else if (!this.node.inputs.size.hidden) props["size"] = this.node.inputs.size.value;
 
-    const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    const params = this.node.getConnectedOutputInterfacesByInterface("params");
     if (params.length > 0 && !this.node.inputs.params.hidden)
       props["params"] = this.code?.graph.formatInterfaceLabels(params).join(", ");
 
-    const positions = this.node.getConnectedOutputInterfaceByInterface("positions");
+    const positions = this.node.getConnectedOutputInterfacesByInterface("positions");
     if (positions.length > 0 && !this.node.inputs.positions.hidden)
       props["positions"] = this.code?.graph.formatInterfaceLabels(positions).join(", ");
 
@@ -187,8 +187,7 @@ export const createNode = (
   nodeProps: INESTNodeProps,
   idx: number = 0,
 ): AbstractCodeNode => {
-  // nest.Create
-  const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx);
+  const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx, nodeProps);
   if (idx === 0) codeNode.state.comments = "Create nodes";
   // codeNode.variableName = nodeProps.model as string;
   codeNode.inputs.model.value = nodeProps.model;
@@ -215,11 +214,12 @@ export const createNode = (
     randNode.state.integrated = true;
     randNode.inputs.min.value = -0.5;
     randNode.inputs.max.value = 0.5;
-    const posNode = graph.addNodeAtColumn(nestSpatialFree, -1, 900);
+    const posNode = graph.addNodeAtColumn(nestSpatialFree, -1, 900, nodeProps.spatial);
     posNode.state.integrated = true;
-    graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
 
+    graph.addConnection(randNode.outputs.out, posNode.inputs.pos);
     graph.addConnection(posNode.outputs.out, codeNode.inputs.positions);
+
     codeNode.events.update.emit({
       type: "input",
       intf: codeNode.inputs.positions,

@@ -18,6 +18,7 @@ import { AbstractCodeNode, CodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 import { nodeType } from "../codeNodeTypes/base/interfaceTypes";
+import { nextTick } from "vue";
 
 type Dynamic<T> = T & Record<string, any>;
 
@@ -139,6 +140,7 @@ export function defineDynamicCodeNode<I, O>(
     public onProjectUpdate() {
       this.logger.trace("on project update");
       definition.onProjectUpdate?.call(this);
+      nextTick(() => this.onUpdate());
     }
 
     public load(state: INodeState<Dynamic<I>, Dynamic<O>>): void {
