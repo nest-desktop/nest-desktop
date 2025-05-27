@@ -13,6 +13,7 @@ import nestParameters from "./nestParameters";
 import { INESTNodeCollection } from "./interfaceTypes";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { TParameter } from "@/types";
+import { CodeNodeInterface } from "@/helpers/codeGraph/interface/codeNodeInterface";
 
 interface IParam extends IParamProps {
   hidden?: boolean;
@@ -46,10 +47,11 @@ export default defineDynamicCodeNode({
     if (this.node.networkItem?.params) {
       const params = this.node.networkItem?.params;
       Object.keys(this.node.inputs).forEach((key: string) => {
-        if (!params[key] || !params[key].value || !this.node || params[key].value === this.node.inputs[key].value)
-          return;
-        params[key].value = this.node.inputs[key].value;
-        params[key].visible = !this.node.inputs[key].hidden;
+        if (!params[key] || !this.node) return;
+        const paramInterface = this.node.inputs[key] as CodeNodeInterface;
+        const param = params[key];
+        if (param.value != paramInterface.value) param.value = paramInterface.value;
+        if (param.visible == paramInterface.hidden) param.visible = !paramInterface.hidden;
       });
     }
   },
@@ -59,10 +61,11 @@ export default defineDynamicCodeNode({
     if (this.node.networkItem?.params) {
       const params = this.node.networkItem?.params;
       Object.keys(this.node.inputs).forEach((key: string) => {
-        if (!this.node || !params[key] || !params[key].value || this.node.inputs[key].value === params[key].value)
-          return;
-        this.node.inputs[key].value = params[key].value;
-        this.node.inputs[key].setHidden(!params[key].isVisible);
+        if (!this.node || !params[key]) return;
+        const paramInterface = this.node.inputs[key];
+        const param = params[key];
+        if (paramInterface.value != param.value) paramInterface.value = param.value;
+        if (paramInterface.hidden == param.visible) paramInterface.setHidden(!param.isVisible);
       });
     }
   },
@@ -106,10 +109,10 @@ export const addParameterNode = (
   const paramsNode = graph.addNodeAtCoordinates(nestParameters, position, params);
   paramsNode.state.integrated = true;
 
-  params.forEach((param: IParamProps) => {
-    const paramInterface = createParameterInterface(param);
-    paramsNode.addInput(param.id, paramInterface);
-  });
+  // params.forEach((param: IParamProps) => {
+  //   const paramInterface = createParameterInterface(param);
+  //   paramsNode.addInput(param.id, paramInterface);
+  // });
 
   return paramsNode;
 };

@@ -19,7 +19,7 @@
           false-icon="mdi:mdi-checkbox-marked-outline"
           hide-details
           true-icon="mdi:mdi-checkbox-blank-outline"
-          @update:model-value="() => node.onChange()"
+          @update:model-value="() => node?.events.update.emit(null)"
         />
         <component
           :is="intf.component"

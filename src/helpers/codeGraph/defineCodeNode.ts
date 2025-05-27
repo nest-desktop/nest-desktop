@@ -62,7 +62,7 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
 
     override set codeTemplate(value: string) {
       this.state.codeTemplate = value;
-      this.onChange();
+      this.events.update.emit(null);
     }
 
     public onPlaced() {

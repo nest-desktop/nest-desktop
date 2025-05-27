@@ -4,7 +4,7 @@
 import Mustache from "mustache";
 import { AbstractNode, Connection, INodeState, NodeInterface, NodeInterfaceDefinition } from "baklavajs";
 
-import { nextTick, reactive, UnwrapRef } from "vue";
+import { reactive, UnwrapRef } from "vue";
 
 import { BaseCode } from "../code/code";
 import { TConnection, TSimulation } from "@/types";
@@ -280,17 +280,6 @@ export abstract class AbstractCodeNode extends AbstractNode {
     return nodeInterfaces;
   }
 
-  onChange(): void {
-    this.logger.trace("on change");
-
-    this.renderCode();
-
-    nextTick(() => {
-      this.code?.renderCode();
-      this.code?.updateHash();
-    });
-  }
-
   abstract onGraphUpdate(): void;
 
   abstract onProjectUpdate(): void;
@@ -315,40 +304,6 @@ export abstract class AbstractCodeNode extends AbstractNode {
       this._state.script = `\n# ${this._state.comments}\n${this._state.script}`;
     }
   }
-
-  // override save(): ICodeNodeState<any, any> {
-  //   const inputStates = mapValues(this.inputs, (intf: NodeInterface) =>
-  //     intf.save(),
-  //   ) as NodeInterfaceDefinitionStates<any>;
-  //   const outputStates = mapValues(this.outputs, (intf: NodeInterface) =>
-  //     intf.save(),
-  //   ) as NodeInterfaceDefinitionStates<any>;
-
-  //   const state: ICodeNodeState<any, any> = {
-  //     type: this.type,
-  //     id: this.id,
-  //     title: this.title,
-  //     inputs: inputStates,
-  //     outputs: outputStates,
-  //     next: this.next.save(),
-  //     prev: this.prev.save(),
-  //   };
-  //   return this.hooks.afterSave.execute(state) as ICodeNodeState<any, any>;
-  // }
-
-  // subscribe(): void {
-  //   if (this.state.token) this.unsubscribe();
-
-  //   this.state.token = Symbol("token");
-  //   this.code?.graph.graph.editor.nodeEvents.update.subscribe(this.state.token, () => this.onChange());
-  // }
-
-  // unsubscribe(): void {
-  //   if (!this.state.token) return;
-
-  //   this.code?.graph.graph.editor.nodeEvents.update.unsubscribe(this.state.token);
-  //   this.state.token = null;
-  // }
 
   toJSON(): Record<string, unknown> {
     return this._toJSON();

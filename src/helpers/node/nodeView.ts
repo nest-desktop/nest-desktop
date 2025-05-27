@@ -186,7 +186,7 @@ export class NodeView extends BaseObj {
     }
     this._state.synWeights = synWeights;
 
-    nextTick(() => this.node.network.graph.render());
+    nextTick(() => this.node.network.graph?.render());
   }
 
   /**

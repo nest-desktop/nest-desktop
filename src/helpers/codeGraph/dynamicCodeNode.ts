@@ -106,7 +106,7 @@ export function defineDynamicCodeNode<I, O>(
 
     override set codeTemplate(value: string) {
       this.state.codeTemplate = value;
-      this.onChange();
+      this.events.update.emit(null);
     }
 
     public onPlaced() {
