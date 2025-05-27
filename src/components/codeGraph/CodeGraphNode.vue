@@ -38,12 +38,12 @@
             size="xsmall"
             @click="toggleCommented"
           />
-          <v-icon
+          <!-- <v-icon
             :icon="node.state.hidden ? 'mdi:mdi-eye-off-outline' : 'mdi:mdi-eye'"
             class="mx-1 --clickable"
             size="xsmall"
             @click="toggleHidden"
-          />
+          /> -->
           <v-icon icon="mdi:mdi-pencil" class="mx-1 --clickable" size="xsmall" @click="openSidebar" />
           <v-icon icon="mdi:mdi-dots-vertical" class="--clickable" size="xsmall" @click="openContextMenu" />
           <ContextMenu v-model="showContextMenu" :x="0" :y="0" :items="contextMenuItems" @click="onContextMenuClick" />
@@ -159,6 +159,7 @@ let resizeStartMouseX = 0;
 const showContextMenu = ref(false);
 const contextMenuItems = computed(() => {
   const items = [
+    { value: "edit", label: "Edit" },
     { value: "rename", label: "Rename" },
     { value: "delete", label: "Delete" },
   ];
@@ -215,6 +216,9 @@ const openSidebar = () => {
 
 const onContextMenuClick = async (action: string) => {
   switch (action) {
+    case "edit":
+      openSidebar();
+      break;
     case "delete":
       graph.value.removeNode(props.node);
       break;
@@ -253,10 +257,10 @@ const toggleCommented = () => {
   emit("update");
 };
 
-const toggleHidden = () => {
-  node.value.state.hidden = !node.value.state.hidden;
-  emit("update");
-};
+// const toggleHidden = () => {
+//   node.value.state.hidden = !node.value.state.hidden;
+//   emit("update");
+// };
 
 const toggleIntegrated = () => {
   node.value.state.integrated = !node.value.state.integrated;

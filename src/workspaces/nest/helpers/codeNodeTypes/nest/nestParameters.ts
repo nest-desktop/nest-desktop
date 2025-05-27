@@ -31,11 +31,13 @@ export default defineDynamicCodeNode({
     const params: string[] = [];
 
     if (this.node.inputs)
-      Object.entries(this.node.inputs).forEach((input: [string, NodeInterface]) => {
-        const paramValues = this.node.getConnectedOutputInterfacesByInterface(input[0]);
-        if (paramValues.length > 0)
-          params.push(`"${input[0]}": ${this.code?.graph.formatInterfaceLabels(paramValues).join(", ")}`);
-        else if (!input[1].hidden) params.push(`"${input[0]}": ${input[1].value}`);
+      Object.keys(this.node.inputs).forEach((key: string) => {
+        if (!this.node) return;
+        const outputInterfaces = this.node.getConnectedOutputInterfacesByInterface(key);
+        const paramInterfaces = this.node.inputs[key];
+        if (outputInterfaces.length > 0)
+          params.push(`"${key}": ${this.code?.graph.formatInterfaceLabels(outputInterfaces).join(", ")}`);
+        else if (!paramInterfaces.hidden) params.push(`"${key}": ${paramInterfaces.value}`);
       });
 
     if (params.length === 0) return "{}";
