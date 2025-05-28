@@ -20,7 +20,6 @@ import { INESTSimulationProps } from "../simulation/simulation";
 import { connectNodes } from "../codeNodeTypes/nest/nestConnect";
 import { copyNodeModels, copySynapseModels } from "../codeNodeTypes/nest/nestCopyModel";
 import { createNodes } from "../codeNodeTypes/nest/nestCreate";
-import { createParameterInterface } from "../codeNodeTypes/nest/nestParameters";
 
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;
@@ -119,22 +118,22 @@ export class NESTCodeGraph extends BaseObj {
     if (networkProps.models) copyNodeModels(this, networkProps.models);
     nodes = createNodes(this, networkProps.nodes);
 
-    // add node parameters
-    nodes.all.forEach((node) => {
-      const paramsNode = node.getConnectedNodeByInterface("params");
-      if (paramsNode)
-        paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
-    });
+    // add node parameter interfaces
+    // nodes.all.forEach((node) => {
+    //   const paramsNode = node.getConnectedNodeByInterface("params");
+    //   if (paramsNode)
+    //     paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
+    // });
 
     copySynapseModels(this, networkProps.models, nodes.weightRecorders);
     nodes = connectNodes(this, networkProps.connections, nodes.all);
 
-    // add synapse parameters
-    nodes.forEach((node) => {
-      const paramsNode = node.getConnectedNodeByInterface("syn_spec");
-      if (paramsNode)
-        paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
-    });
+    // add synapse parameter interfaces
+    // nodes.forEach((node) => {
+    //   const paramsNode = node.getConnectedNodeByInterface("syn_spec");
+    //   if (paramsNode)
+    //     paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
+    // });
   }
 
   /**

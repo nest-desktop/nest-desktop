@@ -79,6 +79,7 @@ export default defineDynamicCodeNode({
     return `nest.Create(${args.join(", ")})`;
   },
   onGraphUpdate() {
+    console.log("on graph update");
     if (!this.node || !this.node.networkItem) return;
 
     const appStore = useAppStore();
@@ -121,7 +122,7 @@ export default defineDynamicCodeNode({
         paramNode.networkItem = this.networkItem;
       }
 
-      this.networkItem.changes({ preventSimulation: true });
+      this.networkItem.onUpdate({ preventSimulation: true });
 
       if (this.networkItem.model)
         this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
@@ -243,6 +244,16 @@ export const createNodes = (
 
   nodesProps.forEach((nodeProps: INESTNodeProps | INodeGroupProps, idx: number) => {
     const codeNode: AbstractCodeNode = createNode(graph, nodeProps as INESTNodeProps, idx);
+
+    // const paramsNode = codeNode.getConnectedNodeByInterface("params");
+    // if (paramsNode)
+    //   nodeProps.params.forEach((param) => {
+    //     if ("visible" in param ? param.visible : true) {
+    //       const paramInterface = createParameterInterface(param);
+    //       paramsNode.addInput(param.id, paramInterface);
+    //     }
+    //   });
+
     nodes.push(codeNode);
   });
 

@@ -111,10 +111,10 @@ export const addParameterNode = (
   const paramsNode = graph.addNodeAtCoordinates(nestParameters, position, params);
   paramsNode.state.integrated = true;
 
-  // params.forEach((param: IParamProps) => {
-  //   const paramInterface = createParameterInterface(param);
-  //   paramsNode.addInput(param.id, paramInterface);
-  // });
+  params.forEach((param: IParamProps) => {
+    const paramInterface = createParameterInterface(param);
+    paramsNode.addInput(param.id, paramInterface);
+  });
 
   return paramsNode;
 };
