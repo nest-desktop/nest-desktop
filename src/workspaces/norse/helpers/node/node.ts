@@ -1,6 +1,5 @@
 // node.ts
 
-// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 
 import { BaseNode, INodeProps } from "@/helpers/node/node";
@@ -11,6 +10,7 @@ import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
 import { NorseSimulation } from "../simulation/simulation";
 import { NorseNodes } from "./nodes";
+import { NorseProject } from "../project/project";
 
 // export class NorseNode extends BaseNode<NorseModel> {
 export class NorseNode extends BaseNode {
@@ -67,8 +67,12 @@ export class NorseNode extends BaseNode {
     return this.simulation.time > this.stop ? this.simulation.time - this.stop : 0;
   }
 
+  get project(): NorseProject {
+    return this.nodes.network.project as NorseProject;
+  }
+
   override get simulation(): NorseSimulation {
-    return this.nodes.network.project.simulation as NorseSimulation;
+    return this.project.simulation as NorseSimulation;
   }
 
   get start(): number {
@@ -84,7 +88,7 @@ export class NorseNode extends BaseNode {
    * @remarks It emits network changes.
    */
   override onUpdate(): void {
-    this.logger.trace("changes");
+    this.logger.trace("on update");
 
     this.update();
     this.renderNodeCode();

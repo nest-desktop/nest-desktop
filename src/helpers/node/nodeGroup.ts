@@ -208,19 +208,6 @@ export class NodeGroup extends BaseObj {
   }
 
   /**
-   * Observer for node group changes.
-   *
-   * @remarks
-   * It emits network changes.
-   */
-  onUpdate(): void {
-    this.logger.trace("changes");
-
-    this.update();
-    this.parent.network.onUpdate();
-  }
-
-  /**
    * Clean node group.
    */
   clean(): void {
@@ -275,6 +262,19 @@ export class NodeGroup extends BaseObj {
     this.logger.trace("init");
 
     this.update();
+  }
+
+  /**
+   * Observer for node group changes.
+   *
+   * @remarks
+   * It emits network changes.
+   */
+  onUpdate(): void {
+    this.logger.trace("on update");
+
+    this.update();
+    this.parent.network.onUpdate();
   }
 
   /**

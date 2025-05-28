@@ -136,17 +136,6 @@ export class NESTNodeReceptor {
   }
 
   /**
-   * Observer for node receptor changes.
-   *
-   * @remarks
-   * It emits node changes.
-   */
-  onUpdate(): void {
-    this.clean();
-    this._node.onUpdate();
-  }
-
-  /**
    * Clean the node receptor.
    */
   clean(): void {
@@ -193,6 +182,17 @@ export class NESTNodeReceptor {
     } else if (receptorProps.params) {
       receptorProps.params.forEach((paramProps: IParamProps) => this.addParameter(paramProps));
     }
+  }
+
+  /**
+   * Observer for node receptor changes.
+   *
+   * @remarks
+   * It emits node changes.
+   */
+  onUpdate(): void {
+    this.clean();
+    this._node.onUpdate();
   }
 
   /**

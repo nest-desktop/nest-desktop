@@ -141,12 +141,6 @@ export class Activity extends BaseObj {
     return "tr";
   }
 
-  onUpdate(): void {
-    this.logger.trace("changes");
-
-    this.project.onUpdate();
-  }
-
   /**
    * Export activity (node indices, positions and events).
    */
@@ -204,6 +198,15 @@ export class Activity extends BaseObj {
     this.recorderUnitId = activityProps.recorderUnitId || -1;
     this.updateHash();
     this.postInit();
+  }
+
+  /**
+   * Observer for activity changes.
+   */
+  onUpdate(): void {
+    this.logger.trace("on update");
+
+    this.project.onUpdate();
   }
 
   /**

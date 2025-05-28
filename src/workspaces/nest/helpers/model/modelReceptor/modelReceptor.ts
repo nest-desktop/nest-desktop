@@ -105,15 +105,6 @@ export class NESTModelReceptor extends BaseObj {
   }
 
   /**
-   * Observer for model receptor changes.
-   * @remarks It emits model changes.
-   */
-  onUpdate(): void {
-    this.clean();
-    this._model.onUpdate();
-  }
-
-  /**
    * Clean model receptor.
    */
   clean(): void {}
@@ -155,6 +146,15 @@ export class NESTModelReceptor extends BaseObj {
         }
       });
     }
+  }
+
+  /**
+   * Observer for model receptor changes.
+   * @remarks It emits model changes.
+   */
+  onUpdate(): void {
+    this.clean();
+    this._model.onUpdate();
   }
 
   /**

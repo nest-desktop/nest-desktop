@@ -74,6 +74,12 @@ export class NESTNodeSpatial extends BaseObj {
     }
   }
 
+  /**
+   * Observer for spatial node changes.
+   *
+   * @remarks
+   * It emits node changes.
+   */
   onUpdate(): void {
     this._node.onUpdate();
   }

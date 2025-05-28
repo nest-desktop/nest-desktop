@@ -215,19 +215,6 @@ export class BaseConnection extends BaseObj {
   }
 
   /**
-   * Observer for connection changes.
-   * @remarks It emits network changes.
-   */
-  onUpdate(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
-    this.logger.trace("changes");
-    this.updateHash();
-
-    if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
-
-    this.connections.network.onUpdate(props);
-  }
-
-  /**
    * Clean this component.
    */
   clean(): void {
@@ -292,6 +279,19 @@ export class BaseConnection extends BaseObj {
    */
   getRuleConfig(): IConnectionRuleConfig {
     return this.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this._rule.value);
+  }
+
+  /**
+   * Observer for connection changes.
+   * @remarks It emits network changes.
+   */
+  onUpdate(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
+    this.logger.trace("on update");
+    this.updateHash();
+
+    if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
+
+    this.connections.network.onUpdate(props);
   }
 
   /**

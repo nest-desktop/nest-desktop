@@ -396,11 +396,11 @@ export class NESTCopyModel extends BaseObj {
   }
 
   /**
-   * Observer for model changes.
+   * Observer for copy model changes.
    * @remarks It emits network changes.
    */
   onUpdate(): void {
-    this.logger.trace("changes");
+    this.logger.trace("on update");
 
     this.network.onUpdate();
   }

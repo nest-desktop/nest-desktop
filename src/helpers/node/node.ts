@@ -361,17 +361,6 @@ export class BaseNode extends BaseObj {
   }
 
   /**
-   * Observer for node changes.
-   * @remarks It emits network changes.
-   */
-  onUpdate(props = {}): void {
-    this.logger.trace("changes");
-
-    this.update();
-    this.nodes.network.onUpdate(props);
-  }
-
-  /**
    * Clean node component.
    */
   clean(): void {
@@ -582,6 +571,17 @@ export class BaseNode extends BaseObj {
 
     this.update();
     this.nodes.network.onUpdate({ preventSimulation: true, cleanPanels: recorderModelChanged });
+  }
+
+  /**
+   * Observer for node changes.
+   * @remarks It emits network changes.
+   */
+  onUpdate(props = {}): void {
+    this.logger.trace("on update");
+
+    this.update();
+    this.nodes.network.onUpdate(props);
   }
 
   /**

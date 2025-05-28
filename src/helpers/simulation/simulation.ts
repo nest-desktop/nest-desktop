@@ -72,16 +72,6 @@ export class BaseSimulation extends BaseObj {
   beforeSimulation(): void {}
 
   /**
-   * Triggers on simulation changes.
-   */
-  onUpdate(props = {}): void {
-    this.updateHash();
-    this.logger.trace("changes");
-
-    this.project.onUpdate(props);
-  }
-
-  /**
    * Initialize simulation.
    */
   init(): void {
@@ -105,6 +95,16 @@ export class BaseSimulation extends BaseObj {
   //     this.onUpdate();
   //   }
   // }
+
+  /**
+   * Observer for  simulation changes.
+   */
+  onUpdate(props = {}): void {
+    this.updateHash();
+    this.logger.trace("on update");
+
+    this.project.onUpdate(props);
+  }
 
   /**
    * Reset simulation states.

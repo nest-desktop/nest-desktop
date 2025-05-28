@@ -81,26 +81,6 @@ export class Activities extends BaseObj {
   }
 
   /**
-   * Observer for activities changes.
-   *
-   * @remarks
-   * It checks activities.
-   * It updates hash.
-   * It updates activity graph.
-   */
-  onUpdate(): void {
-    // Check if project has activities.
-    this.checkActivities();
-    this.updateHash();
-    this.logger.trace("changes");
-
-    // Update activity graph.
-    // const activityGraphStore = useActivityGraphStore()
-    // activityGraphStore.update();
-    this._project.activityGraph.update();
-  }
-
-  /**
    * Check whether the project has some events in activities.
    */
   checkActivities(): void {
@@ -135,6 +115,26 @@ export class Activities extends BaseObj {
   // Initialize activities.
   init(): void {
     this.logger.trace("init");
+  }
+
+  /**
+   * Observer for activities changes.
+   *
+   * @remarks
+   * It checks activities.
+   * It updates hash.
+   * It updates activity graph.
+   */
+  onUpdate(): void {
+    // Check if project has activities.
+    this.checkActivities();
+    this.updateHash();
+    this.logger.trace("on update");
+
+    // Update activity graph.
+    // const activityGraphStore = useActivityGraphStore()
+    // activityGraphStore.update();
+    this._project.activityGraph.update();
   }
 
   /**

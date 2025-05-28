@@ -269,16 +269,6 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Observer for activity chart graph changes.
-   *
-   * @remarks
-   * It emits Plotly react and restyle.
-   */
-  onUpdate(): void {
-    this.update();
-  }
-
-  /**
    * Clean panels.
    * @remarks It removes panels if the activity is not existed.
    */
@@ -421,6 +411,16 @@ export class ActivityChartGraph extends BaseObj {
 
     // @ts-expect-error Cannot find name 'Plotly'.
     Plotly.newPlot(this._state.ref, this._plotData, this._plotLayout, this._plotConfig).then(() => this.initEvents());
+  }
+
+  /**
+   * Observer for changes in activity chart graph.
+   *
+   * @remarks
+   * It emits Plotly react and restyle.
+   */
+  onUpdate(): void {
+    this.update();
   }
 
   /**

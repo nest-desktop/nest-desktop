@@ -156,31 +156,6 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It generates codes in the code editor.
-   * It commits the network in the network history.
-   */
-  onUpdate(props: { resetPanels?: boolean } = {}): void {
-    this.updateHash();
-
-    this.state.checkChanges();
-
-    this.logger.trace("changes");
-
-    this.activities.checkRecorders();
-
-    this.code.onUpdate();
-
-    this.generateCode();
-
-    // It resets panels of activity chart graph.
-    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
-  }
-
-  /**
    * Clean project.
    *
    * @remarks
@@ -238,6 +213,31 @@ export class BaseProject extends BaseObj {
    */
   generateCode(): void {
     this.code.generate();
+  }
+
+  /**
+   * Observer for project changes.
+   *
+   * @remarks
+   * It updates hash of the network.
+   * It generates codes in the code editor.
+   * It commits the network in the network history.
+   */
+  onUpdate(props: { resetPanels?: boolean } = {}): void {
+    this.updateHash();
+
+    this.state.checkChanges();
+
+    this.logger.trace("on update");
+
+    this.activities.checkRecorders();
+
+    this.code.onUpdate();
+
+    this.generateCode();
+
+    // It resets panels of activity chart graph.
+    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
   }
 
   /**

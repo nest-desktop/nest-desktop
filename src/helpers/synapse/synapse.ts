@@ -125,19 +125,6 @@ export class BaseSynapse extends BaseObj {
   }
 
   /**
-   * Observer for synapse changes.
-   *
-   * @remarks
-   * It emits connection changes.
-   */
-  onUpdate(props = {}): void {
-    this.logger.trace("changes");
-
-    this.updateHash();
-    this.connection.onUpdate({ checkSynWeights: true, ...props });
-  }
-
-  /**
    * Empty parameters
    */
   emptyParams(): void {
@@ -183,6 +170,19 @@ export class BaseSynapse extends BaseObj {
       weight.state.value = -1 * weight.value;
       this.onUpdate({ preventSimulation: true });
     }
+  }
+
+  /**
+   * Observer for synapse changes.
+   *
+   * @remarks
+   * It emits connection changes.
+   */
+  onUpdate(props = {}): void {
+    this.logger.trace("on update");
+
+    this.updateHash();
+    this.connection.onUpdate({ checkSynWeights: true, ...props });
   }
 
   /**

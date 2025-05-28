@@ -173,17 +173,6 @@ export class NESTNodeCompartment {
   }
 
   /**
-   * Observer for node compartment changes.
-   *
-   * @remarks
-   * It emits node changes.
-   */
-  onUpdate(): void {
-    this.clean();
-    this._node.onUpdate();
-  }
-
-  /**
    * Clean the node compartment.
    */
   clean(): void {
@@ -236,6 +225,17 @@ export class NESTNodeCompartment {
     } else {
       compProps?.params?.forEach((paramProps: IParamProps) => this.addParameter(paramProps));
     }
+  }
+
+  /**
+   * Observer for node compartment changes.
+   *
+   * @remarks
+   * It emits node changes.
+   */
+  onUpdate(): void {
+    this.clean();
+    this._node.onUpdate();
   }
 
   /**

@@ -79,7 +79,6 @@ export default defineDynamicCodeNode({
     return `nest.Create(${args.join(", ")})`;
   },
   onGraphUpdate() {
-    console.log("on graph update");
     if (!this.node || !this.node.networkItem) return;
 
     const appStore = useAppStore();
@@ -90,6 +89,7 @@ export default defineDynamicCodeNode({
     if (node.modelId !== this.node.inputs.model.value && modelIds.includes(this.node.inputs.model.value))
       node.modelId = this.node.inputs.model.value;
     if (node.size !== this.node.inputs.size.value) node.size = this.node.inputs.size.value;
+    if (node.view.showSize == this.node.inputs.size.hidden) node.view.showSize = !this.node.inputs.size.hidden;
   },
   onPlaced() {
     if (!this.node || !this.node?.code?.project?.network) return;
@@ -133,8 +133,9 @@ export default defineDynamicCodeNode({
     const node: NESTNode = this.node.networkItem as NESTNode;
 
     if (node.model) this.variableName = node.model.isNeuron ? "n" : node.model.abbreviation;
-    if (this.node.inputs.model.value !== node.modelId) this.node.inputs.model.value = node.modelId;
-    if (this.node.inputs.size.value !== node.size) this.node.inputs.size.value = node.size;
+    if (this.node.inputs.model.value != node.modelId) this.node.inputs.model.value = node.modelId;
+    if (this.node.inputs.size.value != node.size) this.node.inputs.size.value = node.size;
+    if (this.node.inputs.size.hidden == node.view.showSize) this.node.inputs.size.setHidden(!node.view.showSize);
   },
   onUpdate({ model }) {
     if (!this.node) return {};

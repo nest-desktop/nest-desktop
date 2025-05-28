@@ -93,7 +93,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
   /**
    * Select all node records.
    */
-  selectAllNodeRecords(): void {
+  override selectAllNodeRecords(): void {
     this.state.recordsVisible = this.records.map((record: NodeRecord) => record.groupId);
   }
 

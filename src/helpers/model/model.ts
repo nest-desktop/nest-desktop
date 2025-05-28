@@ -229,8 +229,6 @@ export class BaseModel extends BaseObj {
     return paramId in this._params;
   }
 
-  onUpdate(): void {}
-
   /**
    * Create new parameter.
    * @param paramId ID of the parameter
@@ -253,6 +251,11 @@ export class BaseModel extends BaseObj {
     this.addParameter(paramProps);
     // this._params.sort();
   }
+
+  /**
+   * Observer for model changes.
+   */
+  onUpdate(): void {}
 
   /**
    * Remove a parameter.

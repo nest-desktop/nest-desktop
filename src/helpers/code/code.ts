@@ -1,6 +1,5 @@
 // code.ts
 
-// // @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 import axios, { AxiosHeaders, AxiosResponse } from "axios";
 import { IGraphState } from "baklavajs";
@@ -90,13 +89,6 @@ export class BaseCode extends BaseObj {
 
     // this.sortNodes();
     // this.graph.onUpdate();
-  }
-
-  /**
-   * Triggers on changes.
-   */
-  onUpdate(): void {
-    this.generate();
   }
 
   /**
@@ -215,6 +207,13 @@ export class BaseCode extends BaseObj {
     return this.importTemplate().then((template: { default: string }) => {
       this._state.template = template.default;
     });
+  }
+
+  /**
+   * Observer for code changes.
+   */
+  onUpdate(): void {
+    this.generate();
   }
 
   /**

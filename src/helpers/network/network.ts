@@ -108,23 +108,6 @@ export class BaseNetwork extends BaseObj {
   }
 
   /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It commits the network in the network history.
-   * It emits project changes.
-   */
-  onUpdate(props = {}): void {
-    this.logger.trace("changes");
-
-    this.updateStyle();
-    this.updateHash();
-
-    this.project.onUpdate(props);
-  }
-
-  /**
    * Clean nodes and connection components.
    */
   clean(): void {
@@ -282,6 +265,23 @@ export class BaseNetwork extends BaseObj {
 
     this.updateStyle();
     this.updateHash();
+  }
+
+  /**
+   * Observer for network changes.
+   *
+   * @remarks
+   * It updates hash of the network.
+   * It commits the network in the network history.
+   * It emits project changes.
+   */
+  onUpdate(props = {}): void {
+    this.logger.trace("on update");
+
+    this.updateStyle();
+    this.updateHash();
+
+    this.project.onUpdate(props);
   }
 
   /**

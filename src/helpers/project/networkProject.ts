@@ -90,34 +90,6 @@ export class NetworkProject extends BaseProject {
   }
 
   /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It generates codes in the code editor.
-   * It commits the network in the network history.
-   */
-  override onUpdate(props: { cleanPanels?: boolean; preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
-    this.updateHash();
-
-    this.state.checkChanges();
-
-    this.logger.trace("changes");
-
-    this.activities.checkRecorders();
-
-    this.networkRevision.commit();
-
-    this.code.graph.onProjectUpdate();
-
-    if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
-    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
-    if (props.preventSimulation) return;
-
-    this.startSimulationOnChange();
-  }
-
-  /**
    * Checkout network.
    */
   checkoutNetwork(): void {
@@ -174,6 +146,34 @@ export class NetworkProject extends BaseProject {
 
       this.clean();
     });
+  }
+
+  /**
+   * Observer for network project changes.
+   *
+   * @remarks
+   * It updates hash of the network.
+   * It generates codes in the code editor.
+   * It commits the network in the network history.
+   */
+  override onUpdate(props: { cleanPanels?: boolean; preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
+    this.updateHash();
+
+    this.state.checkChanges();
+
+    this.logger.trace("on update");
+
+    this.activities.checkRecorders();
+
+    this.networkRevision.commit();
+
+    this.code.graph.onProjectUpdate();
+
+    if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
+    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
+    if (props.preventSimulation) return;
+
+    this.startSimulationOnChange();
   }
 
   /**

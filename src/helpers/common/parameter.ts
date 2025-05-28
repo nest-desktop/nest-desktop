@@ -222,8 +222,8 @@ export class BaseParameter extends BaseObj {
     return options;
   }
 
-  get parent(): { changes: () => void; paramsVisible: string[] } {
-    return { changes: () => {}, paramsVisible: [] };
+  get parent(): { onUpdate: () => void; paramsVisible: string[] } {
+    return { onUpdate: () => {}, paramsVisible: [] };
   }
 
   get props(): IParamProps {
@@ -343,13 +343,6 @@ export class BaseParameter extends BaseObj {
   }
 
   /**
-   * Updates when parameter is changed.
-   */
-  onUpdate(): void {
-    this.parent.onUpdate();
-  }
-
-  /**
    * Hide this parameter.
    */
   hide(): void {
@@ -385,6 +378,13 @@ export class BaseParameter extends BaseObj {
     this._ticks = paramProps.ticks || [];
     this._unit = paramProps.unit || "";
     this._component = paramProps.component || paramProps.input || "";
+  }
+
+  /**
+   * Updates when parameter is changed.
+   */
+  onUpdate(): void {
+    this.parent.onUpdate();
   }
 
   /**

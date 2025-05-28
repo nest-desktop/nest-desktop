@@ -244,15 +244,6 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   }
 
   /**
-   * Observer for activity chart panel model changes.
-   * @remarks It emits activity chart graph changes.
-   */
-  onUpdate(): void {
-    this.update();
-    this._panel.graph.onUpdate();
-  }
-
-  /**
    * Empty activity panel model.
    */
   empty(): void {
@@ -296,6 +287,20 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       if (paramProps.visible != false) this.params[paramProps.id].visible = true;
     });
   }
+
+  /**
+   * Observer for activity chart panel model changes.
+   * @remarks It emits activity chart graph changes.
+   */
+  onUpdate(): void {
+    this.update();
+    this._panel.graph.onUpdate();
+  }
+
+  /**
+   * Select all node records.
+   */
+  abstract selectAllNodeRecords(): void;
 
   /**
    * Serialize for JSON.
