@@ -95,7 +95,7 @@ export class BaseCode extends BaseObj {
   /**
    * Triggers on changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.generate();
   }
 

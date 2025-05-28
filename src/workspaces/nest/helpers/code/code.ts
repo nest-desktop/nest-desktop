@@ -58,7 +58,7 @@ export class NESTCode extends BaseCode {
 
   //   this.graph.init();
   //   // this.initGraph(this.project.doc);
-  //   this.changes();
+  //   this.onUpdate();
   // }
 
   // /**

@@ -116,7 +116,7 @@ export class BaseConnection extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes({ preventSimulation: true });
+    this.onUpdate({ preventSimulation: true });
   }
 
   get parent(): TConnections {
@@ -218,13 +218,13 @@ export class BaseConnection extends BaseObj {
    * Observer for connection changes.
    * @remarks It emits network changes.
    */
-  changes(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
+  onUpdate(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
     this.logger.trace("changes");
     this.updateHash();
 
     if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
 
-    this.connections.network.changes(props);
+    this.connections.network.onUpdate(props);
   }
 
   /**
@@ -315,7 +315,7 @@ export class BaseConnection extends BaseObj {
     if (this._view.connectRecorder()) this.recorder.createActivity();
 
     // Trigger connection change.
-    this.changes({ preventSimulation: true });
+    this.onUpdate({ preventSimulation: true });
   }
 
   /**

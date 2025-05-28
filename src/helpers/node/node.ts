@@ -197,7 +197,7 @@ export class BaseNode extends BaseObj {
     this._modelId = value;
 
     this.loadModel();
-    this.modelChanges();
+    this.modelOnUpdate();
   }
 
   get modelParams(): Record<string, ModelParameter> {
@@ -253,7 +253,7 @@ export class BaseNode extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes({ preventSimulation: true });
+    this.onUpdate({ preventSimulation: true });
   }
 
   get parentNodes(): TNodes {
@@ -274,7 +274,7 @@ export class BaseNode extends BaseObj {
 
   set recordables(value: NodeRecord[]) {
     this._recordables = value;
-    this.changes({ preventSimulation: true });
+    this.onUpdate({ preventSimulation: true });
   }
 
   get records(): NodeRecord[] {
@@ -312,7 +312,7 @@ export class BaseNode extends BaseObj {
     if (this.codeNodes.node) this.codeNodes.node.inputs.size.value = value;
     else {
       this._size = value;
-      this.changes();
+      this.onUpdate();
     }
   }
 
@@ -345,7 +345,7 @@ export class BaseNode extends BaseObj {
     if (this._annotations.indexOf(text) !== -1) return;
     this._annotations.push(text);
 
-    if (emitChanges) this.changes();
+    if (emitChanges) this.onUpdate();
   }
 
   /**
@@ -364,11 +364,11 @@ export class BaseNode extends BaseObj {
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  changes(props = {}): void {
+  onUpdate(props = {}): void {
     this.logger.trace("changes");
 
     this.update();
-    this.nodes.network.changes(props);
+    this.nodes.network.onUpdate(props);
   }
 
   /**
@@ -501,7 +501,7 @@ export class BaseNode extends BaseObj {
    */
   hideAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = [];
-    if (emitChanges) this.changes();
+    if (emitChanges) this.onUpdate();
   }
 
   /**
@@ -565,7 +565,7 @@ export class BaseNode extends BaseObj {
    * @remarks It corrects connection direction to the recorder.
    * @remarks It updates as analog recorder or other connected analog recorders.
    */
-  modelChanges(): void {
+  modelOnUpdate(): void {
     this.logger.trace("model change");
     let recorderModelChanged = false;
 
@@ -581,7 +581,7 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.nodes.network.changes({ preventSimulation: true, cleanPanels: recorderModelChanged });
+    this.nodes.network.onUpdate({ preventSimulation: true, cleanPanels: recorderModelChanged });
   }
 
   /**
@@ -599,7 +599,7 @@ export class BaseNode extends BaseObj {
   removeAnnotation(text: string, emitChanges: boolean = true): void {
     if (this._annotations.indexOf(text) === -1) return;
     this._annotations.splice(this._annotations.indexOf(text), 1);
-    if (emitChanges) this.changes();
+    if (emitChanges) this.onUpdate();
   }
 
   /**
@@ -662,7 +662,7 @@ export class BaseNode extends BaseObj {
    */
   showAllParams(emitChanges: boolean = true): void {
     this.paramsVisible = Object.keys(this._params);
-    if (emitChanges) this.changes();
+    if (emitChanges) this.onUpdate();
   }
 
   /**

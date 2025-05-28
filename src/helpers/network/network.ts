@@ -115,13 +115,13 @@ export class BaseNetwork extends BaseObj {
    * It commits the network in the network history.
    * It emits project changes.
    */
-  changes(props = {}): void {
+  onUpdate(props = {}): void {
     this.logger.trace("changes");
 
     this.updateStyle();
     this.updateHash();
 
-    this.project.changes(props);
+    this.project.onUpdate(props);
   }
 
   /**
@@ -173,7 +173,7 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
+    this.onUpdate({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
   }
 
   /**
@@ -194,7 +194,7 @@ export class BaseNetwork extends BaseObj {
     node.init();
 
     // Trigger network change.
-    this.changes({ preventSimulation: true });
+    this.onUpdate({ preventSimulation: true });
   }
 
   /**
@@ -214,7 +214,7 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
-    this.changes({ cleanPanels, preventSimulation: true });
+    this.onUpdate({ cleanPanels, preventSimulation: true });
   }
 
   /**
@@ -248,7 +248,7 @@ export class BaseNetwork extends BaseObj {
     if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
 
     // Trigger network change.
-    this.changes({ cleanPanels, preventSimulation: true });
+    this.onUpdate({ cleanPanels, preventSimulation: true });
   }
 
   /**

@@ -203,7 +203,7 @@
                     :thumb-color="node.view.color"
                     input-label="n"
                     label="population size"
-                    @update:model-value="node.changes()"
+                    @update:model-value="node.onUpdate()"
                   />
 
                   <template #append>

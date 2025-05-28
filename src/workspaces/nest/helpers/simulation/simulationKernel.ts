@@ -36,7 +36,7 @@ export class NESTSimulationKernel extends BaseObj {
     if (this.codeNodes.node) this.codeNodes.node.inputs.local_num_threads.value = value;
     else {
       this._localNumThreads = value;
-      this._simulation.changes();
+      this._simulation.onUpdate();
     }
   }
 
@@ -48,7 +48,7 @@ export class NESTSimulationKernel extends BaseObj {
     if (this.codeNodes.node) this.codeNodes.node.inputs.rng_seed.value = value;
     else {
       this._rngSeed = value;
-      this._simulation.changes();
+      this._simulation.onUpdate();
     }
   }
 
@@ -60,7 +60,7 @@ export class NESTSimulationKernel extends BaseObj {
     if (this.codeNodes.node) this.codeNodes.node.inputs.resolution.value = value;
     else {
       this._resolution = value;
-      this._simulation.changes();
+      this._simulation.onUpdate();
     }
   }
 

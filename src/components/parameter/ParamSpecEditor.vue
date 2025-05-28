@@ -8,7 +8,7 @@
       item-title="label"
       item-value="id"
       label="Select a parameter type"
-      @change="param.changes()"
+      @change="param.onUpdate()"
     >
       <!-- <template slot="selection" slot-scope="data">
             <v-icon :icon="data.item.icon" left />

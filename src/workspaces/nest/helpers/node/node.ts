@@ -130,7 +130,7 @@ export class NESTNode extends BaseNode {
   //   this._modelId = value;
 
   //   this.loadModel();
-  //   this.modelChanges();
+  //   this.modelOnUpdate();
 
   //   if (this.codeNodes.node && this.codeNodes.node.inputs.model.value !== value)
   //     this.codeNodes.node.inputs.model.value = value;
@@ -149,7 +149,7 @@ export class NESTNode extends BaseNode {
   //   this.loadModel();
 
   //   this.updateRecordables();
-  //   this.modelChanges();
+  //   this.modelOnUpdate();
   // }
 
   override get modelParams(): Record<string, ModelParameter> {
@@ -255,9 +255,9 @@ export class NESTNode extends BaseNode {
 
   /**
    * Sets all params to invisible.
-   * @param emitChanges trigger emit changes.
+   * @param emitOnUpdate emit event on update.
    */
-  override hideAllParams(emitChanges: boolean = true): void {
+  override hideAllParams(emitOnUpdate: boolean = true): void {
     this.paramsVisible = [];
 
     if (this.modelId === "cm_default") {
@@ -265,7 +265,7 @@ export class NESTNode extends BaseNode {
       this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.hideAllParams());
     }
 
-    if (emitChanges) this.changes();
+    if (emitOnUpdate) this.onUpdate();
   }
 
   /**
@@ -319,9 +319,9 @@ export class NESTNode extends BaseNode {
 
   /**
    * Reset value in parameter components.
-   * @remarks It emits node changes.
+   * @remarks It emit events on node update.
    */
-  override resetParams(emitChanges: boolean = true): void {
+  override resetParams(emitOnUpdate: boolean = true): void {
     this.logger.trace("reset parameters");
 
     this.paramsAll.forEach((param: NodeParameter) => param.reset());
@@ -331,13 +331,13 @@ export class NESTNode extends BaseNode {
       this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.resetParameters());
     }
 
-    if (emitChanges) this.changes();
+    if (emitOnUpdate) this.onUpdate();
   }
 
   /**
    * Sets all params to visible.
    */
-  override showAllParams(emitChanges: boolean = true): void {
+  override showAllParams(emitOnUpdate: boolean = true): void {
     this.paramsVisible = Object.keys(this.params);
 
     if (this.modelId === "cm_default") {
@@ -345,19 +345,19 @@ export class NESTNode extends BaseNode {
       this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.showAllParams());
     }
 
-    if (emitChanges) this.changes();
+    if (emitOnUpdate) this.onUpdate();
   }
 
   /**
    * Toggle spatial mode.
    */
-  toggleSpatial(emitChanges: boolean = true): void {
+  toggleSpatial(emitOnUpdate: boolean = true): void {
     const term: string = this.size === 1 ? "grid" : "free";
     this._spatial.init({
       positions: this.spatial.hasPositions ? undefined : term,
     });
 
-    if (emitChanges) this.changes();
+    if (emitOnUpdate) this.onUpdate();
   }
 
   /**

@@ -150,7 +150,7 @@ export class NodeView extends BaseObj {
 
   set showSize(value: boolean) {
     this._state.showSize = value;
-    this._node.changes({ preventSimulation: true });
+    this._node.onUpdate({ preventSimulation: true });
   }
 
   /**

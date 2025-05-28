@@ -23,6 +23,6 @@ export class NorseConnection extends BaseConnection {
 
   set bias(value: boolean) {
     this._bias = value;
-    this.changes();
+    this.onUpdate();
   }
 }

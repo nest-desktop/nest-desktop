@@ -126,7 +126,7 @@ const items = [
   {
     onClick: () => {
       param.value.state.random = !param.value.state.random;
-      param.value.changes();
+      param.value.onUpdate();
     },
     prependIcon: "custom:dice-multiple-outline",
     title: "Toggle view",
@@ -135,7 +135,7 @@ const items = [
     icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       param.value.reset();
-      param.value.changes();
+      param.value.onUpdate();
     },
     title: "Set default value",
   },
@@ -143,7 +143,7 @@ const items = [
     onClick: () => {
       param.value.reset();
       param.value.hide();
-      param.value.changes();
+      param.value.onUpdate();
     },
     prependIcon: "mdi:mdi-eye-off-outline",
     title: "Hide parameter",

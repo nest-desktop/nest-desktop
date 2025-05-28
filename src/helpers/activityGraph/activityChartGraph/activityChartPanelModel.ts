@@ -199,7 +199,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   set paramsVisible(value: string[]) {
     this._state.paramsVisible = value;
-    this.changes();
+    this.onUpdate();
   }
 
   get props(): IActivityChartPanelModelProps {
@@ -247,9 +247,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Observer for activity chart panel model changes.
    * @remarks It emits activity chart graph changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.update();
-    this._panel.graph.changes();
+    this._panel.graph.onUpdate();
   }
 
   /**

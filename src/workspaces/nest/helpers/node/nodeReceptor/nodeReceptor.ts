@@ -101,7 +101,7 @@ export class NESTNodeReceptor {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
+    this.onUpdate();
   }
 
   get recordables(): INodeRecordProps[] {
@@ -141,9 +141,9 @@ export class NESTNodeReceptor {
    * @remarks
    * It emits node changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.clean();
-    this._node.changes();
+    this._node.onUpdate();
   }
 
   /**
@@ -201,7 +201,7 @@ export class NESTNodeReceptor {
    */
   resetParameters(): void {
     this.paramsAll.forEach((param: NESTNodeReceptorParameter) => param.reset());
-    this.changes();
+    this.onUpdate();
   }
 
   /**
@@ -216,7 +216,7 @@ export class NESTNodeReceptor {
    */
   remove(): void {
     this._node.removeReceptor(this);
-    this.changes();
+    this.onUpdate();
   }
 
   /**

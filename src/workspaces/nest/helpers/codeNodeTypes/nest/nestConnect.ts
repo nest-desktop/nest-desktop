@@ -138,7 +138,7 @@ export default defineDynamicCodeNode({
         synParamNode.networkItem = this.networkItem.synapse;
       }
 
-      this.networkItem.changes({ preventSimulation: true });
+      this.networkItem.onUpdate({ preventSimulation: true });
     });
   },
   onUpdate({ conn_spec }) {

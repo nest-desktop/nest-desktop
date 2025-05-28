@@ -57,7 +57,7 @@ const items: {
     id: "nodeGroupClone",
     onClick: () => {
       const clonedNodeGroup = nodeGroup.value.clone();
-      clonedNodeGroup.changes();
+      clonedNodeGroup.onUpdate();
       networkGraphStore.state.graph.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",

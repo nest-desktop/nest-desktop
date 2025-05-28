@@ -59,7 +59,7 @@ const colorSchemes = [
  */
 const resetColor = () => {
   nodeRecord.value.state.color = "";
-  nodeRecord.value.node.changes();
+  nodeRecord.value.node.onUpdate();
   updateRecordsColor();
 };
 

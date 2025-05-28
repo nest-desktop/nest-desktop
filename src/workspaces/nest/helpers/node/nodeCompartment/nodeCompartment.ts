@@ -116,7 +116,7 @@ export class NESTNodeCompartment {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
+    this.onUpdate();
   }
 
   get parent(): NESTNodeCompartment {
@@ -129,7 +129,7 @@ export class NESTNodeCompartment {
 
   set parentIdx(value: number) {
     this._parentIdx = value === this._idx ? -1 : value;
-    this.changes();
+    this.onUpdate();
   }
 
   get receptors(): NESTNodeReceptor[] {
@@ -178,9 +178,9 @@ export class NESTNodeCompartment {
    * @remarks
    * It emits node changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.clean();
-    this._node.changes();
+    this._node.onUpdate();
   }
 
   /**
@@ -247,7 +247,7 @@ export class NESTNodeCompartment {
   remove(): void {
     this._node.removeCompartment(this);
     this._node.compartments.forEach((comp: NESTNodeCompartment) => comp.clean());
-    this.changes();
+    this.onUpdate();
   }
 
   /**
@@ -258,7 +258,7 @@ export class NESTNodeCompartment {
    */
   resetParameters(): void {
     this.paramsAll.forEach((param: NESTNodeCompartmentParameter) => param.reset());
-    this.changes();
+    this.onUpdate();
   }
 
   /**

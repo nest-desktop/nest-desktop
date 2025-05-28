@@ -90,7 +90,7 @@ const items = [
     title: "Reset synapse params",
     onClick: () => {
       synapse.value.reset();
-      synapse.value.changes({ preventSimulation: true });
+      synapse.value.onUpdate({ preventSimulation: true });
     },
     show: () => true,
   },

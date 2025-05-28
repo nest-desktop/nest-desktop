@@ -24,7 +24,7 @@
           @update:model-value="
             (value: boolean | null) => nextTick(() => {
               nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 })
-              nodeSpatial.changes()
+              nodeSpatial.onUpdate()
             })
           "
         />
@@ -36,7 +36,7 @@
             :thumb-color="nodeSpatial.node.view.color"
             input-label="n"
             label="population size"
-            @update:model-value="nodeSpatial.changes()"
+            @update:model-value="nodeSpatial.onUpdate()"
           />
         </span>
 
@@ -184,7 +184,7 @@ const initPositions = () => {
 const updatePositions = () => {
   state.menuOpen = false;
   // node.value.spatial.positions?.generate();
-  nodeSpatial.value.changes();
+  nodeSpatial.value.onUpdate();
 };
 
 onMounted(() => {

@@ -127,7 +127,7 @@ export class NESTNetwork extends BaseNetwork {
     this.copyModels.remove(model);
 
     // Trigger network change.
-    this.changes();
+    this.onUpdate();
 
     // Initialize activity graph.
     // this._project.initActivityGraph();

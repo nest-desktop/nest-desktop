@@ -88,7 +88,7 @@ export class Activities extends BaseObj {
    * It updates hash.
    * It updates activity graph.
    */
-  changes(): void {
+  onUpdate(): void {
     // Check if project has activities.
     this.checkActivities();
     this.updateHash();
@@ -147,7 +147,7 @@ export class Activities extends BaseObj {
     this.all.forEach((activity: Activity) => activity.reset());
 
     // Trigger activity changes.
-    // this.changes();
+    // this.onUpdate();
   }
 
   toJSON(): IActivityProps[] {
@@ -203,7 +203,7 @@ export class Activities extends BaseObj {
     }
 
     // Trigger activity changes.
-    this.changes();
+    this.onUpdate();
   }
 
   /**

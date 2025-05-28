@@ -83,13 +83,13 @@ export class NorseNode extends BaseNode {
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  override changes(): void {
+  override onUpdate(): void {
     this.logger.trace("changes");
 
     this.update();
     this.renderNodeCode();
 
-    this.nodes.network.changes();
+    this.nodes.network.onUpdate();
   }
 
   /**

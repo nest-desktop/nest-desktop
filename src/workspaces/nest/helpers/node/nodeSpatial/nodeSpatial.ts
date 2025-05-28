@@ -74,8 +74,8 @@ export class NESTNodeSpatial extends BaseObj {
     }
   }
 
-  changes(): void {
-    this._node.changes();
+  onUpdate(): void {
+    this._node.onUpdate();
   }
 
   /**

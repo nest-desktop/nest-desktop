@@ -17,7 +17,7 @@
       multiple
       persistent-hint
       return-object
-      @update:model-value="nextTick(() => node.changes())"
+      @update:model-value="nextTick(() => node.onUpdate())"
     >
       <template v-if="node.records.length > 0" #chip="{ item }">
         <NodeRecordChip

@@ -61,7 +61,7 @@ export class BaseSimulation extends BaseObj {
     if (this._codeNodes.node) this._codeNodes.node.inputs.time.value = value;
     else {
       this._time = value;
-      this.changes();
+      this.onUpdate();
     }
   }
 
@@ -74,11 +74,11 @@ export class BaseSimulation extends BaseObj {
   /**
    * Triggers on simulation changes.
    */
-  changes(props = {}): void {
+  onUpdate(props = {}): void {
     this.updateHash();
     this.logger.trace("changes");
 
-    this.project.changes(props);
+    this.project.onUpdate(props);
   }
 
   /**
@@ -102,7 +102,7 @@ export class BaseSimulation extends BaseObj {
 
   //   if (this._kernel.config.autoRNGSeed) {
   //     this._kernel.rngSeed = Math.round(Math.random() * 1000);
-  //     this.changes();
+  //     this.onUpdate();
   //   }
   // }
 

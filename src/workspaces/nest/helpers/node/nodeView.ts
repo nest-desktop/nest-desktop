@@ -80,7 +80,7 @@ export class NESTNodeView extends NodeView {
     this.node.connectionsNeuronTargets.forEach((connection: NESTConnection) => {
       connection.synapse.weightLabel = value;
     });
-    this.node.changes();
+    this.node.onUpdate();
   }
 
   /**

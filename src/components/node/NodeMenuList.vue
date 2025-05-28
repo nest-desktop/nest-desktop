@@ -69,7 +69,7 @@ const items: {
     id: "nodeClone",
     onClick: () => {
       const clonedNode = node.value.clone();
-      clonedNode.changes();
+      clonedNode.onUpdate();
       networkGraphStore.state.graph.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",

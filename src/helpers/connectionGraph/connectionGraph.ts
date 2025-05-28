@@ -132,7 +132,7 @@ export class ConnectionGraph extends BaseObj {
 
           // Hide all synapse parameters.
           // connection.synapse.hideAllParams();
-          // connection.synapse.changes();
+          // connection.synapse.onUpdate();
 
           // Update record colors of the weight recorder.
           if (network.connections.state.selectedNode.isNode) {

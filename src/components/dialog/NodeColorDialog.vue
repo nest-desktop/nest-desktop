@@ -57,7 +57,7 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
  * Update colors of network and activity.
  */
 const nodeColorChange = () => {
-  node.value?.changes();
+  node.value?.onUpdate();
   if (node.value?.isNode) nextTick(() => node.value?.nodes.updateRecordsColor());
 
   // Render network graph

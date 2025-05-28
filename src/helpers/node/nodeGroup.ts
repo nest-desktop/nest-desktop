@@ -213,11 +213,11 @@ export class NodeGroup extends BaseObj {
    * @remarks
    * It emits network changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.logger.trace("changes");
 
     this.update();
-    this.parent.network.changes();
+    this.parent.network.onUpdate();
   }
 
   /**

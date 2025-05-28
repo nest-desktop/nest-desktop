@@ -52,7 +52,7 @@ export class NESTSimulation extends BaseSimulation {
 
     if (this._kernel.config?.localStorage.autoRNGSeed) {
       this._kernel.rngSeed = Math.round(Math.random() * 1000);
-      this.changes();
+      this.onUpdate();
     }
   }
 

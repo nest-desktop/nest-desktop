@@ -43,7 +43,7 @@ export class NESTModel extends BaseModel {
 
   set compartmentParamsVisible(values: string[]) {
     this._compartmentParamsVisible = values;
-    this.changes();
+    this.onUpdate();
   }
 
   get custom(): boolean {

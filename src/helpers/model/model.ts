@@ -229,7 +229,7 @@ export class BaseModel extends BaseObj {
     return paramId in this._params;
   }
 
-  changes(): void {}
+  onUpdate(): void {}
 
   /**
    * Create new parameter.

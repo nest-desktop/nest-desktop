@@ -86,5 +86,5 @@ export const updateSimulationModules = (emitChanges: boolean = true): void => {
     .filter((module: IModule) => module.models.includes(modelStore.state.modelId))
     .map((module: IModule) => module.name);
 
-  if (emitChanges) modelStore.state.project?.simulation.changes();
+  if (emitChanges) modelStore.state.project?.simulation.onUpdate();
 };

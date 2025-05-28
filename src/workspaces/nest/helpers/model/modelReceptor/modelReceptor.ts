@@ -85,7 +85,7 @@ export class NESTModelReceptor extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._state.paramsVisible = values;
-    this.changes();
+    this.onUpdate();
   }
 
   get recordables(): INodeRecordProps[] {
@@ -108,9 +108,9 @@ export class NESTModelReceptor extends BaseObj {
    * Observer for model receptor changes.
    * @remarks It emits model changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.clean();
-    this._model.changes();
+    this._model.onUpdate();
   }
 
   /**
@@ -171,7 +171,7 @@ export class NESTModelReceptor extends BaseObj {
    */
   resetParameters(): void {
     Object.values(this._params).forEach((param: NESTModelReceptorParameter) => param.reset());
-    this.changes();
+    this.onUpdate();
   }
 
   /**

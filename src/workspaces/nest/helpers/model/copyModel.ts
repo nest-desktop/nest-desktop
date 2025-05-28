@@ -89,7 +89,7 @@ export class NESTCopyModel extends BaseObj {
     this._existingModelId = value;
 
     this.initParameters();
-    this.changes();
+    this.onUpdate();
   }
 
   get hasSomeVisibleParams(): boolean {
@@ -246,7 +246,7 @@ export class NESTCopyModel extends BaseObj {
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.changes();
+    this.onUpdate();
   }
 
   get props(): INESTCopyModelProps {
@@ -399,10 +399,10 @@ export class NESTCopyModel extends BaseObj {
    * Observer for model changes.
    * @remarks It emits network changes.
    */
-  changes(): void {
+  onUpdate(): void {
     this.logger.trace("changes");
 
-    this.network.changes();
+    this.network.onUpdate();
   }
 
   /**

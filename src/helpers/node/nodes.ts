@@ -255,7 +255,7 @@ export class BaseNodes extends BaseObj {
     const nodes = this._state.selectedNodes.map((node) => node.idx);
     const nodeGroup = this.addNodeGroup({ nodes });
     this.selectNode(nodeGroup);
-    this._network.changes({ preventSimulation: true });
+    this._network.onUpdate({ preventSimulation: true });
   }
 
   /**

@@ -301,7 +301,7 @@ export class BaseParameter extends BaseObj {
   set value(value: TParamValue) {
     this._state.value = value;
     if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
-    this.changes();
+    this.onUpdate();
   }
 
   get valueFixed(): string {
@@ -345,8 +345,8 @@ export class BaseParameter extends BaseObj {
   /**
    * Updates when parameter is changed.
    */
-  changes(): void {
-    this.parent.changes();
+  onUpdate(): void {
+    this.parent.onUpdate();
   }
 
   /**
@@ -493,7 +493,7 @@ export class BaseParameter extends BaseObj {
    */
   toggleDisabled(): void {
     this._state.disabled = !this._state.disabled;
-    this.changes();
+    this.onUpdate();
   }
 
   /**

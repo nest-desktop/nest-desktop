@@ -39,7 +39,7 @@ export class ConnectionRule {
   set value(value: string) {
     this._value = value;
     this.connection.initParameters();
-    this.connection.changes();
+    this.connection.onUpdate();
   }
 
   /**

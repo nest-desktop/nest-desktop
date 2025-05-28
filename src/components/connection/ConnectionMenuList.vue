@@ -37,7 +37,7 @@ const items: {
     onClick: () => {
       connection.value.reset();
       connection.value.synapse.reset();
-      connection.value.changes({ checkSynWeights: true, preventSimulation: true });
+      connection.value.onUpdate({ checkSynWeights: true, preventSimulation: true });
     },
     prependIcon: "mdi:mdi-restart",
     title: "Reset connection",
@@ -48,7 +48,7 @@ const items: {
   //   title: "Toggle source slicing",
   //   onClick: () => {
   //     connection.value.sourceSlice.toggleVisible();
-  //     connection.value.changes();
+  //     connection.value.onUpdate();
   //   },
   //   // show: () => state.connection.source.size > 1,
   // },
@@ -58,7 +58,7 @@ const items: {
   //   title: "Toggle target slicing",
   //   onClick: () => {
   //     connection.value.targetSlice.toggleVisible();
-  //     connection.value.changes();
+  //     connection.value.onUpdate();
   //   },
   //   // show: () => state.connection.target.size > 1,
   // },

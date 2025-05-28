@@ -157,7 +157,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
 
           // Hide all synapse parameters.
           // connection.synapse.hideAllParams();
-          // connection.synapse.changes();
+          // connection.synapse.onUpdate();
 
           // Update record colors of the weight recorder.
           if (this.network.connections.state.selectedNode.isNode) {

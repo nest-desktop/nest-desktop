@@ -50,7 +50,7 @@ const updateSynWeights = (node: NESTNode, value: string | null) => {
   if (value == null) return;
 
   node.view.synWeights = value;
-  node.changes({ preventSimulation: true });
+  node.onUpdate({ preventSimulation: true });
   node.network.graph.render();
 };
 </script>

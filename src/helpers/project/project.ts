@@ -163,7 +163,7 @@ export class BaseProject extends BaseObj {
    * It generates codes in the code editor.
    * It commits the network in the network history.
    */
-  changes(props: { resetPanels?: boolean } = {}): void {
+  onUpdate(props: { resetPanels?: boolean } = {}): void {
     this.updateHash();
 
     this.state.checkChanges();
@@ -172,7 +172,7 @@ export class BaseProject extends BaseObj {
 
     this.activities.checkRecorders();
 
-    this.code.changes();
+    this.code.onUpdate();
 
     this.generateCode();
 

@@ -23,7 +23,7 @@ export const doCopyModel = (modelId: string): void => {
   if (!projectStore.state.project) return;
   const project = projectStore.state.project as NESTProject;
   project.network.copyModels.copy(modelId);
-  project.network.changes();
+  project.network.onUpdate();
 };
 
 export const currentProject = computed(() => {

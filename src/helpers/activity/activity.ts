@@ -141,10 +141,10 @@ export class Activity extends BaseObj {
     return "tr";
   }
 
-  changes(): void {
+  onUpdate(): void {
     this.logger.trace("changes");
 
-    this.project.changes();
+    this.project.onUpdate();
   }
 
   /**

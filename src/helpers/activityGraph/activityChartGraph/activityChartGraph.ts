@@ -274,7 +274,7 @@ export class ActivityChartGraph extends BaseObj {
    * @remarks
    * It emits Plotly react and restyle.
    */
-  changes(): void {
+  onUpdate(): void {
     this.update();
   }
 

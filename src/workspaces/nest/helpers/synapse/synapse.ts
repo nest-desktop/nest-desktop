@@ -125,7 +125,7 @@ export class NESTSynapse extends BaseSynapse {
     this._modelId = value;
 
     this.loadModel();
-    this.modelChanges();
+    this.modelOnUpdate();
   }
 
   get modelParams(): Record<string, ModelParameter | NESTCopyModelParameter> {
@@ -267,10 +267,10 @@ export class NESTSynapse extends BaseSynapse {
    * Observer for model changes.
    * @remarks It emits synapse changes.
    */
-  modelChanges(): void {
+  modelOnUpdate(): void {
     this.initParameters();
     this.connection.network.clean();
-    this.changes({ preventSimulation: true });
+    this.onUpdate({ preventSimulation: true });
   }
 
   /**
