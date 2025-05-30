@@ -1,6 +1,6 @@
 // numpyRandomNormal.ts
 
-import { IntegerInterface, setType } from "baklavajs";
+import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
 import { arrayType, INumpyArray } from "./interfaceTypes";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
@@ -11,9 +11,9 @@ export default defineCodeNode({
   type: "numpy.random.normal",
   title: "random normal distribution",
   inputs: {
-    loc: () => new IntegerInterface("loc", 0).use(setType, numberType),
-    scale: () => new IntegerInterface("scale", 1).use(setType, numberType),
-    size: () => new IntegerInterface("size", 1).use(setType, numberType),
+    loc: () => new IntegerInterface("loc", 0).use(setType, numberType).use(displayInSidebar, true).setHidden(true),
+    scale: () => new IntegerInterface("scale", 1).use(setType, numberType).use(displayInSidebar, true).setHidden(true),
+    size: () => new IntegerInterface("size", 1).use(setType, numberType).use(displayInSidebar, true).setHidden(true),
   },
   outputs: {
     out: () => new NodeOutputInterface<INumpyArray>().use(setType, arrayType),
@@ -23,19 +23,14 @@ export default defineCodeNode({
     const args: string[] = [];
     let keyword = "";
 
-    const loc = this.node.getConnectedOutputInterfaceByInterface("loc");
-    if (loc.length > 0) args.push(`loc=${this.code?.graph.formatInterfaceLabels(loc).join(", ")}`);
-    else if (this.node.inputs.loc.value !== 0) args.push(`loc=${this.node.inputs.loc.value}`);
+    Object.keys(this.node.inputs).forEach((paramKey) => {
+      if (!this.node || this.node.inputs[paramKey].hidden) return;
 
-    keyword = args.length < 1 ? "scale=" : "";
-    const scale = this.node.getConnectedOutputInterfaceByInterface("scale");
-    if (scale.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(scale).join(", ")}`);
-    else if (this.node.inputs.scale.value !== 1) args.push(`${keyword}${this.node.inputs.scale.value}`);
+      keyword =
+        args.length < 1 && paramKey === "scale" ? "scale=" : args.length < 2 && paramKey === "size" ? "size=" : "";
 
-    keyword = args.length < 2 ? "size=" : "";
-    const size = this.node.getConnectedOutputInterfaceByInterface("size");
-    if (size.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(size).join(", ")}`);
-    else if (this.node.inputs.size.value !== 1) args.push(`${keyword}${this.node.inputs.size.value}`);
+      args.push(`${keyword}${this.node.getInputValue(paramKey)}`);
+    });
 
     return `np.random.normal(${args.join(", ")})`;
   },

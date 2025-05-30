@@ -16,8 +16,8 @@ export default defineCodeNode({
   },
   codeTemplate() {
     if (!this.node) return this.type;
-    const presynapticNeurons = this.node.getConnectedOutputInterfaceByInterface("presynaptic_neurons");
-    const postsynapticNeurons = this.node.getConnectedOutputInterfaceByInterface("postsynaptic_neurons");
+    const presynapticNeurons = this.node.getConnectedOutputInterfacesByInterface("presynaptic_neurons");
+    const postsynapticNeurons = this.node.getConnectedOutputInterfacesByInterface("postsynaptic_neurons");
     if (presynapticNeurons.length === 0 || postsynapticNeurons.length === 0) return this.type;
 
     const args: string[] = [

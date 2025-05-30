@@ -13,12 +13,12 @@ export default defineCodeNode({
   codeTemplate() {
     if (!this.node) return this.type;
 
-    const fig = this.node.getConnectedOutputInterfaceByInterface("fig");
+    const fig = this.node.getConnectedOutputInterfacesByInterface("fig");
     const figname = this.code?.graph.formatInterfaceLabels(fig).join(", ");
 
     const args = [];
 
-    const trace = this.node.getConnectedOutputInterfaceByInterface("trace");
+    const trace = this.node.getConnectedOutputInterfacesByInterface("trace");
     if (trace.length === 1) args.push(`trace=${this.code?.graph.formatInterfaceLabels(trace).join(", ")}`);
 
     return `${figname}.add_trace(${args.join(", ")})`;

@@ -22,7 +22,7 @@ export default defineCodeNode({
     const calls = this.node.getConnectedNodesByInterface("call");
     const call = calls.length == 0 ? this.node.inputs.call.value : calls[0].label;
 
-    const args = this.node.getConnectedOutputInterfaceByInterface("args");
+    const args = this.node.getConnectedOutputInterfacesByInterface("args");
 
     return `${call}(${this.code?.graph.formatInterfaceLabels(args).join(", ")})`;
   },

@@ -15,7 +15,7 @@ export default defineCodeNode({
     const responseData = [];
 
     const plotly = this.node
-      .getConnectedOutputInterfaceByInterface("plotly")
+      .getConnectedOutputInterfacesByInterface("plotly")
       .map((node: NodeOutputInterface) => `${node.label}`);
     if (plotly.length > 0) responseData.push(`"plotly": ${plotly.join(", ")}.to_plotly_json()`);
 

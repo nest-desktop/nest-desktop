@@ -19,10 +19,10 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const simDict = this.node.getConnectedOutputInterfaceByInterface("sim_dict");
+    const simDict = this.node.getConnectedOutputInterfacesByInterface("sim_dict");
     if (simDict.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(simDict).join(", ")}`);
 
-    const netDict = this.node.getConnectedOutputInterfaceByInterface("net_dict");
+    const netDict = this.node.getConnectedOutputInterfacesByInterface("net_dict");
     if (netDict.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(netDict).join(", ")}`);
 
     return `humam.Simulation(${args.join(", ")})`;

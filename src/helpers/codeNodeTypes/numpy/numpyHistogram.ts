@@ -22,10 +22,10 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const x = this.node.getConnectedOutputInterfaceByInterface("x");
+    const x = this.node.getConnectedOutputInterfacesByInterface("x");
     if (x.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(x).join("+")}`);
 
-    const bins = this.node.getConnectedOutputInterfaceByInterface("bins");
+    const bins = this.node.getConnectedOutputInterfacesByInterface("bins");
     if (bins.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(bins).join(", ")}`);
     else args.push(`${this.node.inputs.bins.value}`);
 

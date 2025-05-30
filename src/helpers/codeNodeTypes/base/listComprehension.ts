@@ -16,7 +16,7 @@ export default defineCodeNode({
   },
   codeTemplate() {
     if (!this.node) return "";
-    const lists = this.node.getConnectedOutputInterfaceByInterface("list");
+    const lists = this.node.getConnectedOutputInterfacesByInterface("list");
     if (lists.length == 0) return "[]";
     const expressions = this.node.getConnectedNodesByInterface("expression");
     if (expressions.length === 0) return `[i for i in ${lists[0].codeTemplate}]`;

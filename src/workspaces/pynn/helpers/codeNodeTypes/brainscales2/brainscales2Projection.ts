@@ -16,8 +16,8 @@ export default defineCodeNode({
   codeTemplate() {
     if (!this.node) return this.type;
 
-    const presynapticNeurons = this.node.getConnectedOutputInterfaceByInterface("presynaptic_neurons");
-    const postsynapticNeurons = this.node.getConnectedOutputInterfaceByInterface("postsynaptic_neurons");
+    const presynapticNeurons = this.node.getConnectedOutputInterfacesByInterface("presynaptic_neurons");
+    const postsynapticNeurons = this.node.getConnectedOutputInterfacesByInterface("postsynaptic_neurons");
     if (presynapticNeurons.length === 0 || postsynapticNeurons.length === 0) return this.type;
 
     const args: string[] = [
@@ -25,7 +25,7 @@ export default defineCodeNode({
       `${this.code?.graph.formatInterfaceLabels(postsynapticNeurons).join("+")}`,
     ];
 
-    const connector = this.node.getConnectedOutputInterfaceByInterface("connector");
+    const connector = this.node.getConnectedOutputInterfacesByInterface("connector");
     if (connector.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(connector).join(", ")}`);
     else args.push(`${this.node.inputs.connector.value}()`);
 

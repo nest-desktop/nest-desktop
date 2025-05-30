@@ -25,28 +25,28 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const surfaceArea = this.node.getConnectedOutputInterfaceByInterface("surface_area");
+    const surfaceArea = this.node.getConnectedOutputInterfacesByInterface("surface_area");
     if (surfaceArea.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(surfaceArea).join(", ")}`);
     else args.push(`${this.node.inputs.surface_area.value}`);
 
-    const source = this.node.getConnectedOutputInterfaceByInterface("source");
+    const source = this.node.getConnectedOutputInterfacesByInterface("source");
     if (source.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(source).join(", ")}`);
     else args.push(`"${this.node.inputs.source.value}"`);
 
-    const srcPath = this.node.getConnectedOutputInterfaceByInterface("src_path");
+    const srcPath = this.node.getConnectedOutputInterfacesByInterface("src_path");
     if (srcPath.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(srcPath).join(", ")}`);
     else args.push(`"${this.node.inputs.src_path.value}"`);
 
-    const EIRatioPath = this.node.getConnectedOutputInterfaceByInterface("ei_ratio_path");
+    const EIRatioPath = this.node.getConnectedOutputInterfacesByInterface("ei_ratio_path");
     if (EIRatioPath.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(EIRatioPath).join(", ")}`);
     else args.push(`"${this.node.inputs.ei_ratio_path.value}"`);
 
-    const minNeuronsPerLayer = this.node.getConnectedOutputInterfaceByInterface("min_neurons_per_layer");
+    const minNeuronsPerLayer = this.node.getConnectedOutputInterfacesByInterface("min_neurons_per_layer");
     if (minNeuronsPerLayer.length > 0)
       args.push(`${this.code?.graph.formatInterfaceLabels(minNeuronsPerLayer).join(", ")}`);
     else args.push(`${this.node.inputs.min_neurons_per_layer.value}`);
 
-    const removeSmallerLayerI = this.node.getConnectedOutputInterfaceByInterface("remove_smaller_layerI");
+    const removeSmallerLayerI = this.node.getConnectedOutputInterfacesByInterface("remove_smaller_layerI");
     if (removeSmallerLayerI.length > 0)
       args.push(`${this.code?.graph.formatInterfaceLabels(removeSmallerLayerI).join(", ")}`);
     else args.push(`${parseBoolean(this.node.inputs.remove_smaller_layerI.value)}`);

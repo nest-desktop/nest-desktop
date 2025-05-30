@@ -60,20 +60,20 @@ export default defineDynamicCodeNode({
     keyword = args.length < 3 ? "positions=" : "";
     if ("positions" in props) args.push(`${keyword}{{ &positions }}`);
 
-    // const model = this.node.getConnectedOutputInterfaceByInterface("model");
+    // const model = this.node.getConnectedOutputInterfacesByInterface("model");
     // if (model.length > 0) args.push(`"${this.code?.graph.formatInterfaceLabels(model).join(", ")}"`);
     // else args.push(`"${this.node.inputs.model.value}"`);
 
-    // const size = this.node.getConnectedOutputInterfaceByInterface("size");
+    // const size = this.node.getConnectedOutputInterfacesByInterface("size");
     // if (size.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(size).join(", ")}`);
     // else if (!this.node.inputs.size.hidden) args.push(`${this.node.inputs.size.value}`);
 
     // keyword = args.length < 2 ? "params=" : "";
-    // const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    // const params = this.node.getConnectedOutputInterfacesByInterface("params");
     // if (params.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(params).join(", ")}`);
 
     // keyword = args.length < 3 ? "positions=" : "";
-    // const positions = this.node.getConnectedOutputInterfaceByInterface("positions");
+    // const positions = this.node.getConnectedOutputInterfacesByInterface("positions");
     // if (positions.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(positions).join(", ")}`);
 
     return `nest.Create(${args.join(", ")})`;

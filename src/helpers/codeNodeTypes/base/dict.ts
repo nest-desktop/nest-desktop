@@ -27,7 +27,7 @@ export default defineDynamicCodeNode({
     const nArgs = this.inputs?.nArgs.value ?? 1;
     for (let i = 0; i < nArgs; i++) {
       const argId = "arg" + (i + 1);
-      const args = this.node.getConnectedOutputInterfaceByInterface(argId);
+      const args = this.node.getConnectedOutputInterfacesByInterface(argId);
       if (args.length > 0) {
         keyword = this.node.inputs[argId].value;
         value = this.code?.graph.formatInterfaceLabels(args).join(", ");

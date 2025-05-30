@@ -22,11 +22,11 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const inFeatures = this.node.getConnectedOutputInterfaceByInterface("in_features");
+    const inFeatures = this.node.getConnectedOutputInterfacesByInterface("in_features");
     if (inFeatures.length > 0)
       args.push(`in_features=${this.code?.graph.formatInterfaceLabels(inFeatures).join(", ")}`);
 
-    const outFeatures = this.node.getConnectedOutputInterfaceByInterface("out_features");
+    const outFeatures = this.node.getConnectedOutputInterfacesByInterface("out_features");
     if (outFeatures.length > 0)
       args.push(`out_features=${this.code?.graph.formatInterfaceLabels(outFeatures).join(", ")}`);
 

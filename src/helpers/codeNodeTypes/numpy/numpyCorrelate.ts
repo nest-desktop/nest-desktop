@@ -24,12 +24,12 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const a = this.node.getConnectedOutputInterfaceByInterface("a");
-    if (a.length > 0) args.push(`a=${this.code?.graph.formatInterfaceLabels(a).join(", ")}`);
+    if (a) args.push(`a=${this.code?.graph.formatInterfaceLabels([a]).join(", ")}`);
 
     const v = this.node.getConnectedOutputInterfaceByInterface("v");
-    if (v.length > 0) args.push(`v=${this.code?.graph.formatInterfaceLabels(v).join(", ")}`);
+    if (v) args.push(`v=${this.code?.graph.formatInterfaceLabels([v]).join(", ")}`);
 
-    const mode = this.node.getConnectedOutputInterfaceByInterface("mode");
+    const mode = this.node.getConnectedOutputInterfacesByInterface("mode");
     if (mode.length > 0) args.push(`mode=${this.code?.graph.formatInterfaceLabels(mode).join(", ")}`);
     else if (this.node.inputs.mode.value !== "valid") args.push(`mode=${this.node.inputs.mode.value}`);
 

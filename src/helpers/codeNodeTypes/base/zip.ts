@@ -18,7 +18,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const input = this.node.getConnectedOutputInterfaceByInterface("iterables");
+    const input = this.node.getConnectedOutputInterfacesByInterface("iterables");
     if (input.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(input).join(", ")}`);
 
     return `zip(${args.join(", ")})`;

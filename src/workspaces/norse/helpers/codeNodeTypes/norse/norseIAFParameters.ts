@@ -1,30 +1,42 @@
 // norseLIFParameters.ts
 
-import { NumberInterface, setType } from "baklavajs";
+import { displayInSidebar, NumberInterface, setType } from "baklavajs";
 
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
 import { iafParametersType } from "./interfaceTypes";
+
+const getParam = (node: AbstractCodeNode, name: string): string => {
+  const outputInterface = node.getConnectedOutputInterfaceByInterface(name);
+  if (outputInterface) {
+    if (outputInterface.node?.type !== "torch.tensor")
+      return `${name}=torch.tensor(${node.code?.graph.formatInterfaceLabels([outputInterface]).join(", ")})`;
+    else return `${name}=${node.code?.graph.formatInterfaceLabels([outputInterface]).join(", ")}`;
+  } else return `${name}=torch.tensor(${node.inputs[name].value})`;
+};
 
 export default defineCodeNode({
   type: "norse.torch.IAFParameters",
+  modules: ["torch"],
   title: "IAF Parameters",
   inputs: {
-    v_th: () => new NumberInterface("v_th", 1).use(setType, numberType),
-    v_reset: () => new NumberInterface("v_reset", 0).use(setType, numberType),
-    alpha: () => new NumberInterface("alpha", 100).use(setType, numberType),
+    v_th: () => new NumberInterface("v_th", 1).use(displayInSidebar, true).setHidden(true),
+    v_reset: () => new NumberInterface("v_reset", 0).use(displayInSidebar, true).setHidden(true),
+    alpha: () => new NumberInterface("alpha", 100).use(displayInSidebar, true).setHidden(true),
   },
   outputs: {
     out: () => new NodeOutputInterface().use(setType, iafParametersType),
   },
   codeTemplate() {
     if (!this.node) return this.type;
-    const args = [];
+    const args: string[] = [];
 
-    if (this.node.inputs.v_th.value !== 1) args.push(`v_th=torch.tensor(${this.node.inputs.v_th.value})`);
-    if (this.node.inputs.v_reset.value !== 0) args.push(`v_reset=torch.tensor(${this.node.inputs.v_reset.value})`);
-    if (this.node.inputs.alpha.value !== 100) args.push(`alpha=torch.tensor(${this.node.inputs.alpha.value})`);
+    Object.keys(this.node.inputs).forEach((paramKey) => {
+      if (!this.node || this.node.inputs[paramKey].hidden) return;
+      args.push(getParam(this.node, paramKey));
+    });
 
     return args.length > 0 ? `norse.torch.IAFParameters(\n\t${args.join(",\n\t")}\n)` : "norse.torch.IAFParameters()";
   },

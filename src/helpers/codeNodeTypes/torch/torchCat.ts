@@ -20,7 +20,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const tensors = this.node.getConnectedOutputInterfaceByInterface("tensors");
+    const tensors = this.node.getConnectedOutputInterfacesByInterface("tensors");
     if (tensors.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(tensors).join(", ")}`);
 
     return `torch.cat(${args.join(", ")})`;

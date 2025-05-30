@@ -1,7 +1,11 @@
 <template>
   <BaklavaEditor :view-model="viewModel">
+    <!-- <template #toolbar>
+      <CodeGraphToolbar />
+    </template> -->
+
     <template #palette>
-      <NodePalette />
+      <CodeNodePalette />
     </template>
 
     <template #node="nodeProps">
@@ -28,21 +32,23 @@
 <script setup lang="ts">
 import { BaklavaEditor, useBaklava } from "@baklavajs/renderer-vue";
 import { Editor } from "baklavajs";
+// import { toRef } from "vue";
 
 // import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 // import { provideTemporaryConnection } from "@/helpers/codeGraph/temporaryConnection";
-import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 // import { useContextMenu } from "@/helpers/codeGraph/contextMenu";
 
-import NodePalette from "./NodePalette.vue";
 import CodeGraphNode from "./CodeGraphNode.vue";
 import CodeGraphSidebar from "./CodeGraphSidebar.vue";
-// import { toRef } from "vue";
+// import CodeGraphToolbar from "./CodeGraphToolbar.vue";
+import CodeNodePalette from "./CodeNodePalette.vue";
+
+import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
+const codeGraphStore = useCodeGraphStore();
 
 // const ContextMenu = Components.ContextMenu;
 
-const codeGraphStore = useCodeGraphStore();
 const viewModel = useBaklava(codeGraphStore.editor as Editor);
 // const contextMenu = useContextMenu(toRef(viewModel));
 // window.view = viewModel;

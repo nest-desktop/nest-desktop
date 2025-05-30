@@ -25,11 +25,11 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const spiketrains = this.node.getConnectedOutputInterfaceByInterface("spiketrains");
+    const spiketrains = this.node.getConnectedOutputInterfacesByInterface("spiketrains");
     if (spiketrains.length > 1) args.push(`[${this.code?.graph.formatInterfaceLabels(spiketrains).join(", ")}]`);
     else if (spiketrains.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(spiketrains).join(", ")}`);
 
-    const binSize = this.node.getConnectedOutputInterfaceByInterface("bin_size");
+    const binSize = this.node.getConnectedOutputInterfacesByInterface("bin_size");
     if (binSize.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(binSize).join(", ")}*pq.s`);
     else if (!this.node.inputs.binSize.hidden) args.push(`${this.node.inputs.binSize.value}*pq.s`);
 

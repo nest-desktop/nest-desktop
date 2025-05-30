@@ -18,7 +18,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const spiketrain = this.node.getConnectedOutputInterfaceByInterface("spiketrain");
+    const spiketrain = this.node.getConnectedOutputInterfacesByInterface("spiketrain");
     if (spiketrain.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(spiketrain).join(", ")}`);
 
     return `elephant.statistics.mean_firing_rate(${args.join(", ")})`;

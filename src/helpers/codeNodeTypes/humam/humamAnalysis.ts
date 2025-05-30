@@ -24,20 +24,20 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const anaParams = this.node.getConnectedOutputInterfaceByInterface("ana_params");
+    const anaParams = this.node.getConnectedOutputInterfacesByInterface("ana_params");
     if (anaParams.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(anaParams).join(", ")}`);
 
-    const netDict = this.node.getConnectedOutputInterfaceByInterface("net_dict");
+    const netDict = this.node.getConnectedOutputInterfacesByInterface("net_dict");
     if (netDict.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(netDict).join(", ")}`);
 
-    const simDict = this.node.getConnectedOutputInterfaceByInterface("sim_dict");
+    const simDict = this.node.getConnectedOutputInterfacesByInterface("sim_dict");
     if (simDict.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(simDict).join(", ")}`);
 
-    const simFolder = this.node.getConnectedOutputInterfaceByInterface("sim_folder");
+    const simFolder = this.node.getConnectedOutputInterfacesByInterface("sim_folder");
     if (simFolder.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(simFolder).join(", ")}`);
     else args.push(`"${this.node.inputs.sim_folder.value}"`);
 
-    const basePath = this.node.getConnectedOutputInterfaceByInterface("base_path");
+    const basePath = this.node.getConnectedOutputInterfacesByInterface("base_path");
     if (basePath.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(basePath).join(", ")}`);
     else args.push(`"${this.node.inputs.base_path.value}"`);
 

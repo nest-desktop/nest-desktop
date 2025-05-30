@@ -32,27 +32,27 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const inChannel = this.node.getConnectedOutputInterfaceByInterface("in_channel");
+    const inChannel = this.node.getConnectedOutputInterfacesByInterface("in_channel");
     if (inChannel.length > 0) args.push(`in_channel=${this.code?.graph.formatInterfaceLabels(inChannel).join(", ")}`);
 
-    const outChannel = this.node.getConnectedOutputInterfaceByInterface("out_channel");
+    const outChannel = this.node.getConnectedOutputInterfacesByInterface("out_channel");
     if (outChannel.length > 0) args.push(`out_channel=${this.code?.graph.formatInterfaceLabels(inChannel).join(", ")}`);
 
-    const kernelSize = this.node.getConnectedOutputInterfaceByInterface("kernel_size");
+    const kernelSize = this.node.getConnectedOutputInterfacesByInterface("kernel_size");
     if (kernelSize.length > 1)
       args.push(`kernel_size=(${this.code?.graph.formatInterfaceLabels(kernelSize).join(", ")})`);
     else if (kernelSize.length > 0)
       args.push(`kernel_size=${this.code?.graph.formatInterfaceLabels(kernelSize).join(", ")}`);
 
-    const stride = this.node.getConnectedOutputInterfaceByInterface("stride");
+    const stride = this.node.getConnectedOutputInterfacesByInterface("stride");
     if (stride.length > 1) args.push(`stride=(${this.code?.graph.formatInterfaceLabels(stride).join(", ")})`);
     else if (stride.length > 0) args.push(`stride=${this.code?.graph.formatInterfaceLabels(stride).join(", ")}`);
 
-    const padding = this.node.getConnectedOutputInterfaceByInterface("padding");
+    const padding = this.node.getConnectedOutputInterfacesByInterface("padding");
     if (padding.length > 1) args.push(`padding=(${this.code?.graph.formatInterfaceLabels(padding).join(", ")})`);
     else if (padding.length > 0) args.push(`padding=${this.code?.graph.formatInterfaceLabels(padding).join(", ")}`);
 
-    const dilation = this.node.getConnectedOutputInterfaceByInterface("dilation");
+    const dilation = this.node.getConnectedOutputInterfacesByInterface("dilation");
     if (dilation.length > 1) args.push(`dilation=(${this.code?.graph.formatInterfaceLabels(dilation).join(", ")})`);
     else if (dilation.length > 0) args.push(`dilation=${this.code?.graph.formatInterfaceLabels(dilation).join(", ")}`);
 

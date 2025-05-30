@@ -27,7 +27,7 @@ export default defineCodeNode({
     const args: string[] = [];
     args.push(`${this.node.inputs.size.value}`);
 
-    const cellclass = this.node.getConnectedOutputInterfaceByInterface("cellclass");
+    const cellclass = this.node.getConnectedOutputInterfacesByInterface("cellclass");
     if (cellclass && cellclass.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(cellclass).join(", ")}`);
     else args.push(`${this.node.inputs.cellclass.value}()`);
 

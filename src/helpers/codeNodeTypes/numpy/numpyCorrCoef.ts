@@ -21,7 +21,7 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const x = this.node.getConnectedOutputInterfaceByInterface("x");
-    if (x.length > 0) args.push(`x=${this.code?.graph.formatInterfaceLabels(x).join(", ")}`);
+    if (x) args.push(`x=${this.code?.graph.formatInterfaceLabels([x]).join(", ")}`);
 
     return `np.corrcoef(${args.join(", ")})`;
   },

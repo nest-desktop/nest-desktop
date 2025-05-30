@@ -19,15 +19,15 @@ export default defineCodeNode({
   },
   codeTemplate() {
     if (!this.node) return this.type;
-    const models = this.node.getConnectedOutputInterfaceByInterface("model");
+    const models = this.node.getConnectedOutputInterfacesByInterface("model");
     if (models.length == 0) return this.type;
 
     const args: string[] = [];
 
-    const inputs = this.node.getConnectedOutputInterfaceByInterface("inputs");
+    const inputs = this.node.getConnectedOutputInterfacesByInterface("inputs");
     if (inputs && inputs.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(inputs).join(", ")}`);
 
-    const state = this.node.getConnectedOutputInterfaceByInterface("state");
+    const state = this.node.getConnectedOutputInterfacesByInterface("state");
     if (state && state.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(state).join(", ")}`);
 
     return `${models[0].label}(${args.join(", ")})`;

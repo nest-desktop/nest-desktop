@@ -1,35 +1,44 @@
 // norseLIFParameters.ts
 
-import { NumberInterface, setType } from "baklavajs";
+import { displayInSidebar, NumberInterface, setType } from "baklavajs";
 
+import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+
 import { lifParametersType } from "./interfaceTypes";
+
+const getParam = (node: AbstractCodeNode, name: string): string => {
+  const outputInterface = node.getConnectedOutputInterfaceByInterface(name);
+  if (outputInterface) {
+    if (outputInterface.node?.type !== "torch.tensor")
+      return `${name}=torch.tensor(${node.code?.graph.formatInterfaceLabels([outputInterface]).join(", ")})`;
+    else return `${name}=${node.code?.graph.formatInterfaceLabels([outputInterface]).join(", ")}`;
+  } else return `${name}=torch.tensor(${node.inputs[name].value})`;
+};
 
 export default defineCodeNode({
   type: "norse.torch.LIFParameters",
+  modules: ["torch"],
   title: "LIF Parameters",
   inputs: {
-    tau_syn_inv: () => new NumberInterface("tau_syn_inv", 200),
-    tau_mem_inv: () => new NumberInterface("tau_mem_inv", 100),
-    v_leak: () => new NumberInterface("v_leak", 0),
-    v_th: () => new NumberInterface("v_th", 1),
-    v_reset: () => new NumberInterface("v_reset", 0),
+    tau_syn_inv: () => new NumberInterface("tau_syn_inv", 200).use(displayInSidebar, true).setHidden(true),
+    tau_mem_inv: () => new NumberInterface("tau_mem_inv", 100).use(displayInSidebar, true).setHidden(true),
+    v_leak: () => new NumberInterface("v_leak", 0).use(displayInSidebar, true).setHidden(true),
+    v_th: () => new NumberInterface("v_th", 1).use(displayInSidebar, true).setHidden(true),
+    v_reset: () => new NumberInterface("v_reset", 0).use(displayInSidebar, true).setHidden(true),
   },
   outputs: {
     out: () => new NodeOutputInterface().use(setType, lifParametersType),
   },
   codeTemplate() {
     if (!this.node) return this.type;
-    const args = [];
+    const args: string[] = [];
 
-    if (this.node.inputs.tau_syn_inv.value !== 200)
-      args.push(`tau_syn_inv=torch.tensor(${this.node.inputs.tau_syn_inv.value})`);
-    if (this.node.inputs.tau_mem_inv.value !== 100)
-      args.push(`tau_mem_inv=torch.tensor(${this.node.inputs.tau_mem_inv.value})`);
-    if (this.node.inputs.v_leak.value !== 0) args.push(`v_leak=torch.tensor(${this.node.inputs.v_leak.value})`);
-    if (this.node.inputs.v_th.value !== 1) args.push(`v_th=torch.tensor(${this.node.inputs.v_th.value})`);
-    if (this.node.inputs.v_reset.value !== 0) args.push(`v_reset=torch.tensor(${this.node.inputs.v_reset.value})`);
+    Object.keys(this.node.inputs).forEach((paramKey) => {
+      if (!this.node || this.node.inputs[paramKey].hidden) return;
+      args.push(getParam(this.node, paramKey));
+    });
 
     return args.length > 0 ? `norse.torch.LIFParameters(\n\t${args.join(",\n\t")}\n)` : "norse.torch.LIFParameters()";
   },

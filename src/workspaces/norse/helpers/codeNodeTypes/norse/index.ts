@@ -16,6 +16,7 @@ import norseSequentialState from "./norseSequentialState";
 export const registerNorseNodeTypes = () => {
   const codeGraphStore = useCodeGraphStore();
   codeGraphStore.state.modules["norse"] = "import norse";
+  codeGraphStore.state.modules["norse.torch"] = "import norse";
 
   const editor = codeGraphStore.editor;
   editor.registerNodeType(norseDataResponse, { category: "norse" });

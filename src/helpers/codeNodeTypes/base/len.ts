@@ -20,7 +20,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const list = this.node.getConnectedOutputInterfaceByInterface("list");
+    const list = this.node.getConnectedOutputInterfacesByInterface("list");
     if (list.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(list).join(", ")}`);
 
     return `len(${args.join(", ")})`;

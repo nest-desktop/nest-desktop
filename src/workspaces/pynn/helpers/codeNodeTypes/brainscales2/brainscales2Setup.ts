@@ -16,7 +16,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const timestep = this.node.getConnectedOutputInterfaceByInterface("timestep");
+    const timestep = this.node.getConnectedOutputInterfacesByInterface("timestep");
     if (timestep.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(timestep).join(", ")}`);
     else if (this.node.inputs.timestep.value > 0.000034) args.push(`${this.node.inputs.timestep.value}`);
 

@@ -1,4 +1,4 @@
-// torchOnes.ts
+// torchTensor.ts
 
 import { IntegerInterface, setType } from "baklavajs";
 
@@ -7,23 +7,23 @@ import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInt
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 
 export default defineCodeNode({
-  type: "torch.ones",
-  title: "ones",
+  type: "torch.tensor",
+  title: "tensor",
   inputs: {
-    size: () => new IntegerInterface("size", 1),
+    data: () => new IntegerInterface("data", 1),
   },
   outputs: {
     out: () => new NodeOutputInterface<ITorchTensor>().use(setType, torchTensorType),
   },
-  variableName: "ones",
+  variableName: "tensor",
   codeTemplate() {
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const size = this.node.getConnectedOutputInterfaceByInterface("size");
-    if (size.length === 0) args.push(`${this.node.inputs.size.value}`);
-    else args.push(`${this.code?.graph.formatInterfaceLabels(size, false).join(", ")}`);
+    const data = this.node.getConnectedOutputInterfacesByInterface("data");
+    if (data.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(data, false).join(", ")}`);
+    else args.push(`${this.node.inputs.data.value}`);
 
-    return `torch.ones(${args.join(", ")})`;
+    return `torch.tensor(${args.join(", ")})`;
   },
 });

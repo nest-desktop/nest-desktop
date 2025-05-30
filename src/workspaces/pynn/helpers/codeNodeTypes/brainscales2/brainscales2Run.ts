@@ -16,7 +16,7 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const time = this.node.getConnectedOutputInterfaceByInterface("time");
+    const time = this.node.getConnectedOutputInterfacesByInterface("time");
     if (time.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(time).join(", ")}`);
     else args.push(`${this.node.inputs.time.value}`);
 

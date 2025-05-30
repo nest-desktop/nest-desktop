@@ -22,7 +22,7 @@
     <v-list v-if="categories" class="pa-0" density="compact" theme="dark">
       <template v-for="c in filteredCategories" :key="c.name">
         <v-list-subheader :title="c.name" />
-        <v-list-item v-for="(ni, nt) in c.nodeTypes" :key="nt" class="pa-0 ma-0" style="margin: 2px 0 !important">
+        <v-list-item v-for="(ni, nt) in c.nodeTypes" :key="nt" class="pa-0 ma-0" style="margin: 4px !important">
           <PaletteEntry :type="nt" :title="ni.title" class="pa-0 ma-0" @pointerdown="onDragStart(nt, ni)" />
         </v-list-item>
       </template>
@@ -43,7 +43,6 @@ import { usePointer } from "@vueuse/core";
 import { useViewModel, useTransform, useNodeCategories } from "@baklavajs/renderer-vue";
 
 import PaletteEntry from "./PaletteEntry.vue";
-// import { useViewModel, useTransform, useNodeCategories } from "../utility";
 
 interface IDraggedNode {
   type: string;

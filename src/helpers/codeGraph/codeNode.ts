@@ -161,7 +161,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
   /**
    * Get connected node interface to the node interface.
    * @param nodeInterface string
-   * @returns interface instances
+   * @returns node interface instances
    */
   getConnectedInterfacesByInterface(nodeInterface: string): NodeInterface[] {
     let nodeInterfaces: NodeInterface[] = [];
@@ -262,6 +262,16 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node output interface instance
    */
+  getConnectedOutputInterfaceByInterface(nodeInterface: string): NodeOutputInterface | null {
+    const nodeInterfaces = this.getConnectedOutputInterfacesByInterface(nodeInterface);
+    return nodeInterfaces.length > 0 ? nodeInterfaces[0] : null;
+  }
+
+  /**
+   * Get connected node output interfaces to the node interface.
+   * @param nodeInterface string
+   * @returns node output interface instances
+   */
   getConnectedOutputInterfacesByInterface(nodeInterface: string): NodeOutputInterface[] {
     let nodeInterfaces: NodeOutputInterface[] = [];
 
@@ -278,6 +288,12 @@ export abstract class AbstractCodeNode extends AbstractNode {
     }
 
     return nodeInterfaces;
+  }
+
+  getInputValue(name: string): string {
+    const outputInterface = this.getConnectedOutputInterfaceByInterface(name);
+    if (outputInterface) return `${this.code?.graph.formatInterfaceLabels([outputInterface]).join(", ")}`;
+    else return `${this.inputs[name].value}`;
   }
 
   abstract onGraphUpdate(): void;

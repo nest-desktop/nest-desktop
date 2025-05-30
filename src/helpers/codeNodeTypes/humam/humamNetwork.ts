@@ -21,13 +21,13 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const nn = this.node.getConnectedOutputInterfaceByInterface("NN");
+    const nn = this.node.getConnectedOutputInterfacesByInterface("NN");
     if (nn.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(nn).join(", ")}`);
 
-    const sn = this.node.getConnectedOutputInterfaceByInterface("SN");
+    const sn = this.node.getConnectedOutputInterfacesByInterface("SN");
     if (sn.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(sn).join(", ")}`);
 
-    const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    const params = this.node.getConnectedOutputInterfacesByInterface("params");
     if (params.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(params).join(", ")}`);
 
     return `humam.Network(${args.join(", ")})`;
