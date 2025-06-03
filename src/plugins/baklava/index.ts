@@ -1,7 +1,9 @@
 // baklava/index.ts
 
+import { DEFAULT_TOOLBAR_COMMANDS } from "@baklavajs/renderer-vue";
 import { Editor } from "baklavajs";
 import { IViewSettings } from "@baklavajs/renderer-vue";
+import { defineComponent, h } from "vue";
 
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 
@@ -13,8 +15,34 @@ import { registerCodeNodeTypes } from "@/helpers/codeNodeTypes";
 export const baklavajs = {
   async install() {
     const codeGraphStore = useCodeGraphStore();
-    setViewSettings(codeGraphStore.viewModel.settings);
+    const baklavaView = codeGraphStore.viewModel;
+    setViewSettings(baklavaView.settings);
     registerCodeNodeTypes(["base", "numpy", "pandas", "plotly", "brainscales2"]);
+
+    // 1. Register a custom command
+    const CLEAR_ALL_COMMAND = "CLEAR_ALL";
+    baklavaView.commandHandler.registerCommand(CLEAR_ALL_COMMAND, {
+      execute: () => {
+        // Clear all nodes from the graph
+        baklavaView.displayedGraph.nodes.forEach((node) => {
+          baklavaView.displayedGraph.removeNode(node);
+        });
+      },
+      // Optional: Define when the command can be executed
+      canExecute: () => baklavaView.displayedGraph.nodes.length > 0,
+    });
+
+    // 2. & 3. Add the command to the toolbar
+    baklavaView.settings.toolbar.commands = [
+      ...DEFAULT_TOOLBAR_COMMANDS,
+      {
+        command: CLEAR_ALL_COMMAND,
+        title: "Clear All", // Tooltip text
+        icon: defineComponent(() => {
+          return () => h("div", "Clear All");
+        }),
+      },
+    ];
   },
 };
 

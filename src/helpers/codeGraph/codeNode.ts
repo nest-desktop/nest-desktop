@@ -301,6 +301,13 @@ export abstract class AbstractCodeNode extends AbstractNode {
   abstract onProjectUpdate(): void;
 
   /**
+   * Remove this node.
+   */
+  remove(): void {
+    this.graph?.removeNode(this);
+  }
+
+  /**
    * Render code of this node.
    */
   renderCode(): void {

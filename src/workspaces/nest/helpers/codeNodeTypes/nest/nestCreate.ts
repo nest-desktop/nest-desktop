@@ -88,8 +88,8 @@ export default defineDynamicCodeNode({
     const node: NESTNode = this.node.networkItem as NESTNode;
     if (node.modelId !== this.node.inputs.model.value && modelIds.includes(this.node.inputs.model.value))
       node.modelId = this.node.inputs.model.value;
-    if (node.size !== this.node.inputs.size.value) node.size = this.node.inputs.size.value;
     if (node.view.showSize == this.node.inputs.size.hidden) node.view.showSize = !this.node.inputs.size.hidden;
+    if (node.size !== this.node.inputs.size.value) node.size = this.node.inputs.size.value;
   },
   onPlaced() {
     if (!this.node || !this.node?.code?.project?.network) return;
@@ -136,6 +136,24 @@ export default defineDynamicCodeNode({
     if (this.node.inputs.model.value != node.modelId) this.node.inputs.model.value = node.modelId;
     if (this.node.inputs.size.value != node.size) this.node.inputs.size.value = node.size;
     if (this.node.inputs.size.hidden == node.view.showSize) this.node.inputs.size.setHidden(!node.view.showSize);
+
+    let paramNode = this.node.getConnectedNodeByInterface("params");
+    if (!paramNode && node.paramsVisible.length > 0) {
+      const position = { ...this.node.position };
+      position.x -= 400;
+      position.y += 50;
+      paramNode = addParameterNode(this.code.graph, [], position);
+      this.code.graph.addConnection(paramNode.outputs.out, this.node.inputs.params);
+    } else if (paramNode && node.paramsVisible.length === 0) {
+      paramNode?.remove();
+      this.node.inputs.params.setHidden(true);
+    }
+
+    if (paramNode) {
+      paramNode.networkItem = node;
+      paramNode.onUpdate();
+      paramNode.onProjectUpdate();
+    }
   },
   onUpdate({ model }) {
     if (!this.node) return {};

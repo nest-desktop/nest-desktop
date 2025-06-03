@@ -53,8 +53,8 @@ export default defineDynamicCodeNode({
         if (!params[key] || !this.node) return;
         const paramInterface = this.node.inputs[key] as CodeNodeInterface;
         const param = params[key];
-        if (param.value != paramInterface.value) param.value = paramInterface.value;
         if (param.visible == paramInterface.hidden) param.visible = !paramInterface.hidden;
+        if (param.value != paramInterface.value) param.value = paramInterface.value;
       });
     }
   },
@@ -67,8 +67,8 @@ export default defineDynamicCodeNode({
         if (!this.node || !params[key]) return;
         const paramInterface = this.node.inputs[key];
         const param = params[key];
-        if (paramInterface.value != param.value) paramInterface.value = param.value;
         if (paramInterface.hidden == param.visible) paramInterface.setHidden(!param.isVisible);
+        if (paramInterface.value != param.value) paramInterface.value = param.value;
       });
     }
   },

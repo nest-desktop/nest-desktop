@@ -18,7 +18,7 @@ import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { IParamProps } from "@/helpers/common/parameter";
 
 import nestConnect from "./nestConnect";
-import { INESTConnectionProps } from "../../connection/connection";
+import { INESTConnectionProps, NESTConnection } from "../../connection/connection";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { addParameterNode } from "./nestParameters";
 
@@ -110,7 +110,7 @@ export default defineDynamicCodeNode({
     if (!this.node || !this.node.code || !this.node.code.project.network) return;
     const nodeItems = this.code.project.network.nodes.nodeItems;
     this.node.networkItem = nodeItems[this.indexOfNodeType];
-    if (this.node.networkItem) return;
+    // if (this.node.networkItem) return;
 
     nextTick(() => {
       if (!this.node) return;
@@ -129,17 +129,40 @@ export default defineDynamicCodeNode({
         if (paramProps.length > 0) connectionProps.synapse = { params: paramProps };
       }
 
-      this.networkItem = this.node.code.project.network.connections.addConnection(connectionProps);
-      this.networkItem.init();
-      this.networkItem.codeNodes.connection = this;
+      this.node.networkItem = this.node.code.project.network.connections.addConnection(connectionProps);
+      this.node.networkItem.init();
+      this.node.networkItem.codeNodes.connection = this;
 
       if (synParamNode) {
-        this.networkItem.codeNodes.param = synParamNode;
-        synParamNode.networkItem = this.networkItem.synapse;
+        this.node.networkItem.codeNodes.param = synParamNode;
+        synParamNode.networkItem = this.node.networkItem.synapse;
       }
 
-      this.networkItem.onUpdate({ preventSimulation: true });
+      this.node.networkItem.onUpdate({ preventSimulation: true });
     });
+  },
+
+  onProjectUpdate() {
+    if (!this.node || !this.node.networkItem) return;
+    const connection: NESTConnection = this.node.networkItem as NESTConnection;
+
+    let synSpecNode = this.node.getConnectedNodeByInterface("syn_spec");
+    if (!synSpecNode && connection.synapse.paramsVisible.length > 0) {
+      const position = { ...this.node.position };
+      position.x -= 400;
+      position.y += 75;
+      synSpecNode = addParameterNode(this.code.graph, [], position);
+      this.code.graph.addConnection(synSpecNode.outputs.out, this.node.inputs.syn_spec);
+    } else if (synSpecNode && connection.synapse.paramsVisible.length === 0) {
+      synSpecNode?.remove();
+      this.node.inputs.syn_spec.setHidden(true);
+    }
+
+    if (synSpecNode) {
+      synSpecNode.networkItem = connection.synapse;
+      synSpecNode.onUpdate();
+      synSpecNode.onProjectUpdate();
+    }
   },
   onUpdate({ conn_spec }) {
     const inputs: Record<string, () => NodeInterface> = {};
