@@ -1,9 +1,7 @@
 // baklava/index.ts
 
-import { DEFAULT_TOOLBAR_COMMANDS } from "@baklavajs/renderer-vue";
-import { Editor } from "baklavajs";
-import { IViewSettings } from "@baklavajs/renderer-vue";
-import { defineComponent, h } from "vue";
+import { AbstractNode, Editor } from "baklavajs";
+import { DEFAULT_TOOLBAR_COMMANDS, IBaklavaViewModel } from "@baklavajs/renderer-vue";
 
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 
@@ -11,54 +9,62 @@ import "@baklavajs/themes/dist/classic.css";
 // import "@baklavajs/themes/dist/syrup-dark.css";
 import "./baklava.scss";
 import { registerCodeNodeTypes } from "@/helpers/codeNodeTypes";
+import DeleteEmptyOutlineIcon from "@/components/iconsets/custom/DeleteEmptyOutlineIcon.vue";
+import MapIcon from "@/components/iconsets/custom/MapIcon.vue";
 
 export const baklavajs = {
   async install() {
     const codeGraphStore = useCodeGraphStore();
-    const baklavaView = codeGraphStore.viewModel;
-    setViewSettings(baklavaView.settings);
+    setViewSettings(codeGraphStore.viewModel as IBaklavaViewModel);
+    addClearAllCommand(codeGraphStore.viewModel as IBaklavaViewModel);
     registerCodeNodeTypes(["base", "numpy", "pandas", "plotly", "brainscales2"]);
-
-    // 1. Register a custom command
-    const CLEAR_ALL_COMMAND = "CLEAR_ALL";
-    baklavaView.commandHandler.registerCommand(CLEAR_ALL_COMMAND, {
-      execute: () => {
-        // Clear all nodes from the graph
-        baklavaView.displayedGraph.nodes.forEach((node) => {
-          baklavaView.displayedGraph.removeNode(node);
-        });
-      },
-      // Optional: Define when the command can be executed
-      canExecute: () => baklavaView.displayedGraph.nodes.length > 0,
-    });
-
-    // 2. & 3. Add the command to the toolbar
-    baklavaView.settings.toolbar.commands = [
-      ...DEFAULT_TOOLBAR_COMMANDS,
-      {
-        command: CLEAR_ALL_COMMAND,
-        title: "Clear All", // Tooltip text
-        icon: defineComponent(() => {
-          return () => h("div", "Clear All");
-        }),
-      },
-    ];
   },
 };
 
-export const setViewSettings = (settings: IViewSettings) => {
+const addClearAllCommand = (baklavaView: IBaklavaViewModel) => {
+  // Clear all nodes from the graph
+  const CLEAR_ALL_COMMAND = "CLEAR_ALL";
+  baklavaView.commandHandler.registerCommand(CLEAR_ALL_COMMAND, {
+    execute: () => {
+      baklavaView.displayedGraph.nodes.forEach((node: AbstractNode) => baklavaView.displayedGraph.removeNode(node));
+    },
+    canExecute: () => baklavaView.displayedGraph.nodes.length > 0,
+  });
+
+  // Toggle minimap
+  const TOGGLE_MINIMAP_COMMAND = "TOGGLE_MINIMAP";
+  baklavaView.commandHandler.registerCommand(TOGGLE_MINIMAP_COMMAND, {
+    execute: () => (baklavaView.settings.enableMinimap = !baklavaView.settings.enableMinimap),
+    canExecute: () => true,
+  });
+
+  baklavaView.settings.toolbar.commands = [
+    ...DEFAULT_TOOLBAR_COMMANDS.slice(0, 7),
+    {
+      command: CLEAR_ALL_COMMAND,
+      title: "Clear All", // Tooltip text
+      icon: DeleteEmptyOutlineIcon, // defineComponent(() => () => h("div", "clear all")),
+    },
+    {
+      command: TOGGLE_MINIMAP_COMMAND,
+      title: "Toggle minimap", // Tooltip text
+      icon: MapIcon, // defineComponent(() => () => h("div", "clear all")),
+    },
+  ];
+};
+
+export const setViewSettings = (baklavaView: IBaklavaViewModel) => {
   // console.log("set settings");
 
-  settings.displayValueOnHover = true;
-  settings.enableMinimap = false;
+  baklavaView.settings.displayValueOnHover = true;
+  baklavaView.settings.enableMinimap = false;
 
-  settings.nodes.defaultWidth = 350;
-  settings.nodes.resizable = true;
+  baklavaView.settings.nodes.defaultWidth = 350;
+  baklavaView.settings.nodes.resizable = true;
 
-  settings.sidebar.resizable = false;
-  // settings.palette.enabled = false;
-
-  // settings.contextMenu.additionalItems = [{ label: "edit", command: Commands.OPEN_SIDEBAR_COMMAND }];
+  baklavaView.settings.palette.enabled = true;
+  baklavaView.settings.sidebar.resizable = false;
+  baklavaView.settings.toolbar.enabled = true;
 };
 
 export const subscribe = (editor: Editor, callback: () => void) => {

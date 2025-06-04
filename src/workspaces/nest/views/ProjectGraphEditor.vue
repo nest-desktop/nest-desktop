@@ -1,24 +1,22 @@
 <template>
   <v-layout id="graphEditorLayout" class="graphEditorLayout" full-height>
-    <NetworkEditorToolbar>
-      <template #ContextMenuList="{ graph }">
-        <ConnectionMenuList
-          v-if="graph.state.contextMenu.connection"
-          :connection="(graph.state.contextMenu.connection as NESTConnection)"
-        />
-        <NESTNodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as NESTNode)" />
-        <NodeGroupMenuList
-          v-if="graph.state.contextMenu.nodeGroup"
-          :node-group="(graph.state.contextMenu.nodeGroup as TNodeGroup)"
-        />
-      </template>
-    </NetworkEditorToolbar>
+    <template v-if="projectViewStore.state.views.graph === 'network'">
+      <NetworkEditorToolbar>
+        <template #ContextMenuList="{ graph }">
+          <ConnectionMenuList
+            v-if="graph.state.contextMenu.connection"
+            :connection="(graph.state.contextMenu.connection as NESTConnection)"
+          />
+          <NESTNodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as NESTNode)" />
+          <NodeGroupMenuList
+            v-if="graph.state.contextMenu.nodeGroup"
+            :node-group="(graph.state.contextMenu.nodeGroup as TNodeGroup)"
+          />
+        </template>
+      </NetworkEditorToolbar>
 
-    <NESTNetworkGraph
-      v-if="projectViewStore.state.views.graph === 'network'"
-      :key="currentProject.id"
-      :network="currentProject.network"
-    />
+      <NESTNetworkGraph :key="currentProject.id" :network="currentProject.network" />
+    </template>
 
     <CodeGraphEditor v-if="projectViewStore.state.views.graph === 'code'" />
   </v-layout>

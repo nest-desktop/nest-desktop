@@ -350,12 +350,12 @@ export function defineProjectDBStore<
     const unloadProject = (project: TProject | TProjectProps): void => {
       logger.trace("unload project:", truncate(project.id));
 
-      if (project && isProjectLoaded(project)) {
-        project.code.graph.unsubscribe();
+      if (!project || !isProjectLoaded(project)) return;
+      project = project as TProject;
+      project.code.graph.unsubscribe();
 
-        const projectIdx: number = getProjectIds().indexOf(project.id as string);
-        state.projects[projectIdx] = project.doc;
-      }
+      const projectIdx: number = getProjectIds().indexOf(project.id as string);
+      state.projects[projectIdx] = project.doc;
     };
 
     /**

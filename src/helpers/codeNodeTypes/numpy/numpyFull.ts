@@ -21,12 +21,12 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const shape = this.node.getConnectedOutputInterfacesByInterface("shape");
-    if (shape.length > 0) args.push(`shape=${this.code?.graph.formatInterfaceLabels(shape).join(", ")}`);
+    const shape = this.node.getConnectedOutputInterfaceByInterface("shape");
+    if (shape) args.push(`shape=${this.code?.graph.formatInterfaceLabel(shape)}`);
     else args.push(`shape=${this.node.inputs.shape.value}`);
 
-    const fill_value = this.node.getConnectedOutputInterfacesByInterface("fill_value");
-    if (fill_value.length > 0) args.push(`fill_value=${this.code?.graph.formatInterfaceLabels(fill_value).join(", ")}`);
+    const fill_value = this.node.getConnectedOutputInterfaceByInterface("fill_value");
+    if (fill_value) args.push(`fill_value=${this.code?.graph.formatInterfaceLabel(fill_value)}`);
     else args.push(`fill_value=${this.node.inputs.fill_value.value}`);
 
     return `np.full(${args.join(", ")})`;

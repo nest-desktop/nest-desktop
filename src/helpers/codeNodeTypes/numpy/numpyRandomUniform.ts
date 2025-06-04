@@ -28,7 +28,6 @@ export default defineCodeNode({
 
       keyword =
         args.length < 1 && paramKey === "high" ? "high=" : args.length < 2 && paramKey === "size" ? "size=" : "";
-
       args.push(`${keyword}${this.node.getInputValue(paramKey)}`);
     });
 

@@ -1,13 +1,22 @@
 // upgrade_41_to_50.ts
 
+import { useAppStore } from "@/stores/appStore";
 import { NESTCodeGraph } from "@/workspaces/nest/helpers/codeGraph/codeGraph";
+import { CodeGraph } from "../codeGraph/codeGraph";
 
 const validateVersion = (version: string) => /^4\.1(\.\d+)?(\w+)?$/.test(version);
 
 function upgradeProject(projectProps: any): any {
   if (!validateVersion(projectProps.version)) return projectProps;
 
-  const codeGraph = new NESTCodeGraph(projectProps);
+  const appStore = useAppStore();
+
+  let codeGraph;
+  if (appStore.currentWorkspace.id == "nest") {
+    codeGraph = new NESTCodeGraph(projectProps);
+  } else {
+    codeGraph = new CodeGraph(null);
+  }
 
   const newProjectProps: Record<string, unknown> = {
     code: { graph: codeGraph.save() },

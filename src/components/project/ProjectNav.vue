@@ -62,11 +62,7 @@
     <v-list :key="projects.length" class="pt-0" density="compact" lines="two" nav>
       <v-list-subheader inset />
 
-      <template
-        v-if="
-          projectStore.state.project && !projectStore.state.project.docId && projectStore.state.project.state?.editMode
-        "
-      >
+      <template v-if="projectStore.state.project && !projectStore.state.project.docId">
         <v-text-field
           v-model="projectStore.state.project.name"
           append-inner-icon="mdi:mdi-content-save-edit-outline"
@@ -130,7 +126,12 @@
                 <span v-if="project.doc" class="mx-1">
                   {{ truncate(project.docId) }}
                 </span>
-                <span v-if="project.code && project.code.graph" class="mx-1">
+                <span
+                  v-if="
+                    project.code && project.code.graph && project.code.graph.state && project.code.graph.state.graph
+                  "
+                  class="mx-1"
+                >
                   {{ truncate(project.code.graph.state.graph.id) }}
                 </span>
               </v-list-item-subtitle>

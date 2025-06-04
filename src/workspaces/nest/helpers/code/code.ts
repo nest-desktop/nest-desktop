@@ -9,7 +9,7 @@ import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
 
 export class NESTCode extends BaseCode {
-  constructor(project: NESTProject, codeProps: ICodeProps) {
+  constructor(project: NESTProject, codeProps?: ICodeProps) {
     super(project, codeProps);
     // this.logger.settings.minLevel = 1;
   }

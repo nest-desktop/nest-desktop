@@ -20,8 +20,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const data = this.node.getConnectedOutputInterfacesByInterface("data");
-    if (data && data.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(data).join(", ")}`);
+    const data = this.node.getConnectedOutputInterfaceByInterface("data");
+    if (data) args.push(`${this.code?.graph.formatInterfaceLabel(data)}`);
 
     return `pd.DataFrame(${args.join(", ")})`;
   },

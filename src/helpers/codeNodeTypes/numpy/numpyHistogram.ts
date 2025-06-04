@@ -25,8 +25,8 @@ export default defineCodeNode({
     const x = this.node.getConnectedOutputInterfacesByInterface("x");
     if (x.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(x).join("+")}`);
 
-    const bins = this.node.getConnectedOutputInterfacesByInterface("bins");
-    if (bins.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(bins).join(", ")}`);
+    const bins = this.node.getConnectedOutputInterfaceByInterface("bins");
+    if (bins) args.push(`${this.code?.graph.formatInterfaceLabel(bins)}`);
     else args.push(`${this.node.inputs.bins.value}`);
 
     return `np.histogram(${args.join(", ")})`;

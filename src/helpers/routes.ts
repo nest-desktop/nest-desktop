@@ -10,6 +10,7 @@ import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
 import { confirmDialog } from "./common/confirmDialog";
+import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 
 const logger = mainLogger.getSubLogger({ name: "route" });
 
@@ -184,6 +185,9 @@ export const projectNew = (): TProjectRoute => {
   const appStore = useAppStore();
   const projectStore = appStore.currentWorkspace.stores.projectStore;
   projectStore.newProject();
+
+  const codeGraphStore = useCodeGraphStore();
+  codeGraphStore.newGraph();
 
   return projectStore.routeTo();
 };

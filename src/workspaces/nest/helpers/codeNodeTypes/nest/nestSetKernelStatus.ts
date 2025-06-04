@@ -59,6 +59,8 @@ export default defineCodeNode({
   onPlaced() {
     if (!this.node || !this.code) return;
     const code = this.code as NESTCode;
+
+    if (!code.project.simulation.kernel) return;
     this.node.simulationItem = code.project.simulation.kernel;
     this.node.simulationItem.codeNodes.node = this;
   },

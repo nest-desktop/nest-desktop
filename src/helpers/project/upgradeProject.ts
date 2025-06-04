@@ -29,8 +29,10 @@ export function upgradeProject(projectProps: any): TProjectProps {
     if (projectProps.version.startsWith(currentVersion)) break;
   }
 
-  if (oldVersion != projectProps.version && projectProps.id)
-    notifyInfo(`Project ${projectProps.name} upgraded: ${oldVersion} &#10142; ${projectProps.version}`);
+  try {
+    if (oldVersion != projectProps.version && projectProps.id)
+      notifyInfo(`Project ${projectProps.name} upgraded: ${oldVersion} &#10142; ${projectProps.version}`);
+  } catch {}
 
   return projectProps;
 }

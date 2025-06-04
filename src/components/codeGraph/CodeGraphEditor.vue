@@ -1,5 +1,5 @@
 <template>
-  <BaklavaEditor :view-model="viewModel">
+  <BaklavaEditor v-if="codeGraphStore" :view-model="codeGraphStore.viewModel">
     <!-- <template #toolbar>
       <CodeGraphToolbar />
     </template> -->
@@ -30,8 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { BaklavaEditor, useBaklava } from "@baklavajs/renderer-vue";
-import { Editor } from "baklavajs";
+import { BaklavaEditor } from "@baklavajs/renderer-vue";
 // import { toRef } from "vue";
 
 // import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
@@ -48,11 +47,6 @@ import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
 
 // const ContextMenu = Components.ContextMenu;
-
-const viewModel = useBaklava(codeGraphStore.editor as Editor);
-// const contextMenu = useContextMenu(toRef(viewModel));
-// window.view = viewModel;
-// window.graph = props.graph;
 
 const onUpdate = (node: AbstractCodeNode) => node.events.update.emit(null);
 

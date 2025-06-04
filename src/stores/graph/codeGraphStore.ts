@@ -1,7 +1,6 @@
 // codeGraphStore.ts
 
-import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
-import { Editor, IEditorState, useBaklava } from "baklavajs";
+import { Editor, IBaklavaViewModel, IEditorState, useBaklava } from "baklavajs";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 
@@ -18,8 +17,14 @@ export const useCodeGraphStore = defineStore("code-graph", () => {
     modules: {},
   });
 
-  const viewModel = useBaklava();
+  const viewModel = useBaklava() as IBaklavaViewModel;
   const editor: Editor = viewModel.editor;
+
+  const newGraph = () => {
+    console.log("new graph");
+    if (state.token) unsubscribe();
+    state.editor = new Editor().save();
+  };
 
   const subscribe = (call: () => void): void => {
     if (state.token) unsubscribe();
@@ -46,9 +51,9 @@ export const useCodeGraphStore = defineStore("code-graph", () => {
     state.token = null;
   };
 
-  const registerGraph = (graph: CodeGraph) => {
-    editor.registerGraph(graph);
-  };
+  // const registerGraph = (graph: CodeGraph) => {
+  //   editor.registerGraph(graph);
+  // };
 
-  return { editor, registerGraph, state, subscribe, unsubscribe, viewModel };
+  return { editor, newGraph, state, subscribe, unsubscribe, viewModel };
 });

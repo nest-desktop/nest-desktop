@@ -147,13 +147,13 @@ export default defineDynamicCodeNode({
     const connection: NESTConnection = this.node.networkItem as NESTConnection;
 
     let synSpecNode = this.node.getConnectedNodeByInterface("syn_spec");
-    if (!synSpecNode && connection.synapse.paramsVisible.length > 0) {
+    if (!synSpecNode && connection.synapse?.paramsVisible.length > 0) {
       const position = { ...this.node.position };
       position.x -= 400;
       position.y += 75;
       synSpecNode = addParameterNode(this.code.graph, [], position);
       this.code.graph.addConnection(synSpecNode.outputs.out, this.node.inputs.syn_spec);
-    } else if (synSpecNode && connection.synapse.paramsVisible.length === 0) {
+    } else if (synSpecNode && connection.synapse?.paramsVisible.length === 0) {
       synSpecNode?.remove();
       this.node.inputs.syn_spec.setHidden(true);
     }

@@ -27,7 +27,6 @@ export default defineCodeNode({
       if (!this.node || this.node.inputs[paramKey].hidden) return;
 
       keyword = args.length < 2 && paramKey === "size" ? "size=" : "";
-
       args.push(`${keyword}${this.node.getInputValue(paramKey)}`);
     });
     return `np.random.randint(${args.join(", ")})`;

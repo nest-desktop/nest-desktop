@@ -20,8 +20,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const objs = this.node.getConnectedOutputInterfacesByInterface("objs");
-    if (objs.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(objs).join(", ")}`);
+    const objs = this.node.getConnectedOutputInterfaceByInterface("objs");
+    if (objs) args.push(`${this.code?.graph.formatInterfaceLabel(objs)}`);
 
     return `pd.concat([${args.join(", ")}])`;
   },

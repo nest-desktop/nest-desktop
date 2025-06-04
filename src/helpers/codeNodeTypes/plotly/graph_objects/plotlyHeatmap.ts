@@ -18,8 +18,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args = [];
 
-    const z = this.node.getConnectedOutputInterfacesByInterface("z");
-    if (z.length > 0) args.push(`z=${this.code?.graph.formatInterfaceLabels(z).join(", ")}`);
+    const z = this.node.getConnectedOutputInterfaceByInterface("z");
+    if (z) args.push(`z=${this.code?.graph.formatInterfaceLabel(z)}`);
 
     return `go.Heatmap(${args.join(", ")})`;
   },

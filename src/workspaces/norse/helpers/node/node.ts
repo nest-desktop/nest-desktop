@@ -91,7 +91,7 @@ export class NorseNode extends BaseNode {
     this.logger.trace("on update");
 
     this.update();
-    this.renderNodeCode();
+    // this.renderNodeCode();
 
     this.nodes.network.onUpdate();
   }
@@ -114,6 +114,6 @@ export class NorseNode extends BaseNode {
     this._model = this.getModel(this._modelId);
     this.initParameters(paramsProps);
 
-    this.renderNodeCode();
+    // this.renderNodeCode();
   }
 }

@@ -1,20 +1,17 @@
 <template>
   <v-layout id="networkGraphLayout" class="networkGraphLayout" full-height>
-    <NetworkEditorToolbar />
+    <template v-if="projectViewStore.state.views.graph === 'network'">
+      <NetworkEditorToolbar />
 
-    <NetworkGraph
-      v-if="projectViewStore.state.views.graph === 'network'"
-      :key="currentProject.id"
-      :network="currentProject.network"
-    />
+      <NetworkGraph :key="currentProject.id" :network="currentProject.network" />
+    </template>
 
-    <CodeGraphEditor v-if="projectViewStore.state.views.graph === 'code'" :graph="currentProject.code.graph" />
+    <CodeGraphEditor v-if="projectViewStore.state.views.graph === 'code'" />
   </v-layout>
 </template>
 
 <script setup lang="ts">
 import CodeGraphEditor from "@/components/codeGraph/CodeGraphEditor.vue";
-
 import NetworkGraph from "@/components/network/NetworkGraph.vue";
 import NetworkEditorToolbar from "@/components/network/NetworkEditorToolbar.vue";
 

@@ -292,7 +292,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
   getInputValue(name: string): string {
     const outputInterface = this.getConnectedOutputInterfaceByInterface(name);
-    if (outputInterface) return `${this.code?.graph.formatInterfaceLabels([outputInterface]).join(", ")}`;
+    if (outputInterface) return `${this.code?.graph.formatInterfaceLabel(outputInterface)}`;
     else return `${this.inputs[name].value}`;
   }
 

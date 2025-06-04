@@ -1,10 +1,10 @@
 // codeGraph.ts
 
 import { Graph, IBaklavaViewModel, IGraphState, NodeInterface, useBaklava } from "baklavajs";
-import { setViewSettings } from "@/plugins/baklava";
 
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
+import { setViewSettings } from "@/plugins/baklava";
 import functionNode from "@/helpers/codeNodeTypes/base/function";
 
 // import { BaseCode } from "../code/code";
@@ -29,7 +29,7 @@ export class NESTCodeGraph extends BaseObj {
     // this.logger.settings.minLevel = 1;
 
     this._viewModel = useBaklava();
-    setViewSettings(this._viewModel.settings);
+    setViewSettings(this._viewModel);
 
     this.load(networkProps);
   }

@@ -16,10 +16,12 @@ export default defineCodeNode({
   },
   codeTemplate() {
     if (!this.node) return "";
-    const lists = this.node.getConnectedOutputInterfacesByInterface("list");
-    if (lists.length == 0) return "[]";
-    const expressions = this.node.getConnectedNodesByInterface("expression");
-    if (expressions.length === 0) return `[i for i in ${lists[0].codeTemplate}]`;
-    return `[${expressions[0].codeTemplate} for i in ${lists[0].codeTemplate}]`;
+    const list = this.node.getConnectedOutputInterfaceByInterface("list");
+    if (!list) return "[]";
+    const listValue = this.code?.graph.formatInterfaceLabel(list);
+    const expression = this.node.getConnectedOutputInterfaceByInterface("expression");
+    if (!expression) return `[i for i in ${listValue}]`;
+    const expressionValue = this.code?.graph.formatInterfaceLabel(expression);
+    return `[${expressionValue} for i in ${listValue}]`;
   },
 });

@@ -1,6 +1,6 @@
 // codeGraph.ts
 
-import { Connection, Editor, Graph, IGraphState, NodeInterface } from "baklavajs";
+import { Connection, Editor, Graph, IGraphState, INodeState, NodeInterface } from "baklavajs";
 import { nextTick, reactive, UnwrapRef } from "vue";
 import toposort from "toposort";
 
@@ -17,10 +17,10 @@ interface ICodeGraphState {
 }
 
 export class CodeGraph extends BaseObj {
-  public _code: BaseCode;
+  public _code: BaseCode | null;
   private _state: UnwrapRef<ICodeGraphState>;
 
-  constructor(code: BaseCode, graphProps?: IGraphState) {
+  constructor(code: BaseCode | null, graphProps?: IGraphState) {
     super();
     this.logger.settings.name = `[${this.shortUuid}] code graph`;
     // this.logger.settings.minLevel = 1;
@@ -35,7 +35,7 @@ export class CodeGraph extends BaseObj {
     this.init();
   }
 
-  get code(): BaseCode {
+  get code(): BaseCode | null {
     return this._code;
   }
 
@@ -109,7 +109,7 @@ export class CodeGraph extends BaseObj {
    * @param node code node
    */
   addNode(node: AbstractCodeNode): void {
-    node.code = this.code;
+    if (this.code) node.code = this.code;
     this.graph.addNode(node);
   }
 
@@ -132,7 +132,7 @@ export class CodeGraph extends BaseObj {
     const space = 70;
 
     const node = new nodeType();
-    if (props) node.props = props;
+    if (props) node.state.props = props;
 
     this.addNode(node);
     if (node.position) {
@@ -156,7 +156,7 @@ export class CodeGraph extends BaseObj {
     props?: unknown,
   ): AbstractCodeNode {
     const node = new nodeType();
-    if (props) node.props = props;
+    if (props) node.state.props = props;
 
     this.addNode(node);
     if (node.position) node.position = position;
@@ -175,19 +175,28 @@ export class CodeGraph extends BaseObj {
   }
 
   /**
+   * Format label for output interface.
+   * @param outputInterface output interface of the node
+   * @returns string
+   */
+  formatInterfaceLabel(outputInterface: NodeOutputInterface): string {
+    if (!outputInterface.node) return "";
+    return outputInterface.node.state.integrated ? outputInterface.node.codeTemplate : outputInterface.label;
+  }
+
+  /**
    * Format labels for output interfaces.
    * @param outputInterfaces output interface of the node
    * @param sorted boolean
    * @returns string array
    */
   formatInterfaceLabels(outputInterfaces: NodeOutputInterface[], sorted: boolean = true): string[] {
+    if (outputInterfaces.length === 0) return [];
+
     const labels: string[] = [];
-
-    if (outputInterfaces.length === 0) return labels;
-
     outputInterfaces.forEach((outputInterface: NodeOutputInterface) => {
-      const node = outputInterface.node as AbstractCodeNode;
-      labels.push(node.state.integrated ? node.codeTemplate : outputInterface.label);
+      if (!outputInterface.node) return;
+      labels.push(this.formatInterfaceLabel(outputInterface));
     });
 
     if (sorted) labels.sort();
@@ -232,10 +241,10 @@ export class CodeGraph extends BaseObj {
     if (this.state.token) this.graph.editor.graphEvents.beforeAddNode.unsubscribe(this.state.token);
     this.state.token = Symbol("token");
     this.graph.editor.graphEvents.beforeAddNode.subscribe(this.state.token, (node: AbstractCodeNode) => {
-      node.code = this.code;
+      if (this.code) node.code = this.code;
     });
 
-    // this.nodes.forEach((node) => (node.code = this.code));
+    this.subscribe();
   }
 
   /**
@@ -246,7 +255,7 @@ export class CodeGraph extends BaseObj {
 
     if (this.graph.id === this.state.graph.id) return;
     this.unsubscribe();
-    this.graph.load(this.state.graph);
+    if (this.state.graph) this.graph.load(this.state.graph);
     this.loadStates();
     this.onUpdate();
     this.subscribe();
@@ -284,7 +293,7 @@ export class CodeGraph extends BaseObj {
     }
 
     nextTick(() => {
-      this.code.generate();
+      this.code?.generate();
       this.save();
     });
   };
@@ -301,7 +310,7 @@ export class CodeGraph extends BaseObj {
     }
 
     nextTick(() => {
-      this.code.generate();
+      this.code?.generate();
       this.save();
     });
   };
@@ -322,42 +331,26 @@ export class CodeGraph extends BaseObj {
    */
   save(): IGraphState {
     this.logger.trace("save");
+
     const graph = this.graph.save();
-    this.saveStates(graph);
+    this.updateNodesStates(graph);
     this.state.graph = graph;
     return graph;
-  }
-
-  /**
-   * Save states of code graph.
-   * @param graph graph state.
-   */
-  saveStates(graph: IGraphState): void {
-    graph.nodes.forEach((node, nodeIdx) => {
-      const integrated = this.nodes[nodeIdx].state.integrated;
-      if (integrated) node.integrated = integrated;
-
-      Object.entries(node.inputs).forEach(([inputKey]) => {
-        node.inputs[inputKey].hidden = this.graph.nodes[nodeIdx].inputs[inputKey].hidden;
-      });
-
-      Object.entries(node.outputs).forEach(([outputKey]) => {
-        node.outputs[outputKey].hidden = this.graph.nodes[nodeIdx].outputs[outputKey].hidden;
-      });
-    });
   }
 
   /**
    * Sort code nodes.
    */
   sortNodes(): void {
+    if (this.nodes.length === 0 || this.connections.length === 0) return;
     this.logger.trace("sort nodes");
 
+    this.unsubscribe();
     const codeGraphStore = useCodeGraphStore();
     if (codeGraphStore.state.autosort) {
       try {
         // Get a list of edges
-        const edges = this.connections
+        const edges: [string, string | undefined][] = this.connections
           // .filter(
           //   (connection: Connection) =>
           //     this.graph.findNodeById(connection.from.nodeId).outputs.node.id === connection.from.id &&
@@ -372,20 +365,45 @@ export class CodeGraph extends BaseObj {
         const nodeIds = toposort.array(nodes, edges);
 
         // Update sorted nodes
-        this.nodes = nodeIds.map((nodeId: string) => this.graph.findNodeById(nodeId));
+        this.nodes = nodeIds.map((nodeId: string) => this.graph.findNodeById(nodeId)) as AbstractCodeNode[];
       } catch {
         this.logger.warn("Sorting nodes failed.");
       }
     }
+    this.subscribe();
   }
 
   subscribe(): void {
+    this.logger.trace("subscribe");
     const codeGraphStore = useCodeGraphStore();
     codeGraphStore.subscribe(this.onUpdate);
   }
 
   unsubscribe(): void {
+    this.logger.trace("unsubscribe");
     const codeGraphStore = useCodeGraphStore();
     codeGraphStore.unsubscribe();
+  }
+
+  /**
+   * Update states of nodes.
+   * @param graph graph state.
+   */
+  updateNodesStates(graph: IGraphState): void {
+    this.logger.trace("update nodes states");
+    if (graph.nodes.length === 0) return;
+
+    graph.nodes.forEach((node: INodeState<unknown, unknown>, nodeIdx: number) => {
+      const integrated = this.nodes[nodeIdx].state.integrated;
+      if (integrated) node.integrated = integrated;
+
+      Object.entries(node.inputs).forEach(([inputKey]) => {
+        node.inputs[inputKey].hidden = this.graph.nodes[nodeIdx].inputs[inputKey].hidden;
+      });
+
+      Object.entries(node.outputs).forEach(([outputKey]) => {
+        node.outputs[outputKey].hidden = this.graph.nodes[nodeIdx].outputs[outputKey].hidden;
+      });
+    });
   }
 }

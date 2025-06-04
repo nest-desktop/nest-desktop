@@ -77,6 +77,8 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
      * Load first project
      */
     const loadFirstProject = (): void => {
+      logger.trace("load first project");
+
       const firstProject = projectDBStore.state.projects[0];
       if (!firstProject) return;
       state.projectId = firstProject.id;
@@ -90,10 +92,10 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
     const loadProject = (projectId: string = ""): void => {
       logger.trace("load project:", truncate(projectId));
 
-      if (!projectDBStore.hasProjectId(projectId)) return;
-
-      state.project = projectDBStore.getProject(projectId);
-      state.projectId = state.project ? state.project.id : "";
+      if (projectDBStore.hasProjectId(projectId)) {
+        state.project = projectDBStore.getProject(projectId);
+        state.projectId = state.project ? state.project.id : "";
+      }
 
       // state.project.activityGraph.init();
 
@@ -102,19 +104,29 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
       // activityGraphStore.update();
       // const projectViewStore = useProjectViewStore();
 
-      if (state.project) state.project.code.graph.load();
+      if (state.project) {
+        state.project.code.graph.load();
 
-      const appStore = useAppStore();
-      const projectViewStore = appStore.currentWorkspace.views.project;
-      if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
-        startSimulation();
+        const appStore = useAppStore();
+        const projectViewStore = appStore.currentWorkspace.views.project;
+        if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
+          startSimulation();
+        }
       }
     };
 
     /**
      * Create new project.
      */
-    const newProject = (): void => {};
+    const newProject = (): void => {
+      logger.trace("new project");
+
+      state.project = new props.Project();
+      state.projectId = state.project.id;
+
+      state.project.code.graph.clear();
+      state.project.code.graph.save();
+    };
 
     /**
      * Reload the project in the list.

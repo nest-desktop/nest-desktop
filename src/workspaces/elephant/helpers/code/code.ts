@@ -9,10 +9,9 @@ import { ElephantProject } from "../project/project";
 import elephant from "../../stores/backends/elephantServerStore";
 
 export class ElephantCode extends BaseCode {
-  constructor(project: ElephantProject, codeProps: ICodeProps = {}) {
-    super(project, {
-      ...codeProps,
-    });
+  constructor(project: ElephantProject, codeProps?: ICodeProps) {
+    super(project, codeProps);
+    // this.logger.settings.minLevel = 1;
   }
 
   /**
