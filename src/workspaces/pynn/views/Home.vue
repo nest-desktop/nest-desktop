@@ -8,23 +8,23 @@
           <v-card-subtitle> An integration layer for neural simulation </v-card-subtitle>
 
           <v-card-text>
-            <p>
+            <div class="text-justify">
               PyNN (pronounced 'pine') is a simulator-independent language for building spiking neuronal network models.
               A PyNN script runs without modification on any simulator or neuromorphic hardware platform that PyNN
               supports (currently NEURON, NEST, PCSIM, MOOSE, Brian, the BrainScaleS platform and the SpiNNaker
               platform).
-            </p>
-            <p>
+            </div>
+            <div class="mt-3 text-justify">
               PyNN provides a library of standard neuron, synapse and synaptic plasticity models, which have been
               verified to work the same on the different supported simulators. PyNN also provides a set of commonly-used
               connectivity algorithms (e.g. all-to-all, random, distance-dependent, small-world) but makes it easy to
               provide your own connectivity in a simulator-independent way.
-            </p>
-            <p>
+            </div>
+            <div class="mt-3 text-justify">
               Even if you don't wish to run simulations on multiple simulators, you may benefit from writing your
               simulation code using PyNN's powerful, high-level interface. In this case, you can use any neuron or
               synapse model supported by your simulator, and are not restricted to the standard models.
-            </p>
+            </div>
           </v-card-text>
         </v-card>
 

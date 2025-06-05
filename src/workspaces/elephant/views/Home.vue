@@ -8,22 +8,17 @@
           <v-card-subtitle>The analysis of electrophysiological data</v-card-subtitle>
 
           <v-card-text>
-            <p>
+            <div class="text-justify">
               The focus of Elephant is on generic analysis functions for spike train data and time series recordings
               from electrodes, such as the local field potentials (LFP) or intracellular voltages. In addition to
               providing a common platform for analysis codes from different laboratories, the Elephant project aims to
-              provide a consistent and homogeneous analysis framework that is built on a modular foundation. Elephant is
-              the direct successor to Neurotools and maintains ties to complementary projects such as ephyviewer and
-              neurotic for raw data visualization. Elephant (pronounced 'pine') is a simulator-independent language for
-              building spiking neuronal network models. A Elephant script runs without modification on any simulator or
-              neuromorphic hardware platform that Elephant supports (currently NEURON, NEST, PCSIM, MOOSE, Brian, the
-              BrainScaleS platform and the SpiNNaker platform).
-            </p>
-            <p>
+              provide a consistent and homogeneous analysis framework that is built on a modular foundation.
+            </div>
+            <div class="mt-3 text-justify">
               The input-output data format is either Neo, Quantity or Numpy array. Quantity is a Numpy-wrapper package
               for handling physical quantities like seconds, milliseconds, Hz, volts, etc. Quantity is used in both Neo
               and Elephant.
-            </p>
+            </div>
           </v-card-text>
         </v-card>
 

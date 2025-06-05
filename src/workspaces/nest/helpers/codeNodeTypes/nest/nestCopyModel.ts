@@ -33,7 +33,7 @@ export default defineDynamicCodeNode({
     return `nest.CopyModel(${args.join(", ")})`;
   },
   onPlaced() {
-    if (!this.node || !this.code) return;
+    if (!this.node || !this.code || !this.code.project.network.copyModels) return;
     this.node.networkItem = this.code.project.network.copyModels.all[this.indexOfNodeType];
   },
   onUpdate() {
