@@ -16,5 +16,18 @@ export default defineCodeNode({
     out: () => new NodeOutputInterface(),
   },
   variableName: "fig",
-  codeTemplate: () => "plotly.subplots.make_subplots(rows={{ inputs.rows.value }}, cols={{ inputs.cols.value }})",
+  codeTemplate() {
+    if (!this.node) return "";
+    const args = [];
+
+    const rows = this.node.getConnectedOutputInterfaceByInterface("rows");
+    if (rows) args.push(`rows=${this.code?.graph.formatInterfaceLabel(rows)}`);
+    else args.push(`rows=${this.node.inputs.rows.value}`);
+
+    const cols = this.node.getConnectedOutputInterfaceByInterface("cols");
+    if (cols) args.push(`cols=${this.code?.graph.formatInterfaceLabel(cols)}`);
+    else args.push(`cols=${this.node.inputs.cols.value}`);
+
+    return `subplots.make_subplots(${args.join(", ")})`;
+  },
 });

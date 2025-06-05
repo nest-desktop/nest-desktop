@@ -5,7 +5,7 @@ import { CheckboxInterface, displayInSidebar, SelectInterface, TextInputInterfac
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { getPlotlyArgs } from "./helpers";
+import { getPlotlyExpressArgs } from "./helpers";
 
 export default defineCodeNode({
   type: "plotly.express.scatter",
@@ -35,7 +35,7 @@ export default defineCodeNode({
   },
   codeTemplate() {
     if (!this.node) return this.type;
-    const args = getPlotlyArgs(this);
+    const args = getPlotlyExpressArgs(this.node);
 
     if (this.node.inputs.color.value) args.push(`color="${this.node.inputs.color.value}"`);
     if (this.node.inputs.symbol.value) args.push(`symbol="${this.node.inputs.symbol.value}"`);
