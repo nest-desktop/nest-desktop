@@ -21,7 +21,6 @@ export const useCodeGraphStore = defineStore("code-graph", () => {
   const editor: Editor = viewModel.editor;
 
   const newGraph = () => {
-    console.log("new graph");
     if (state.token) unsubscribe();
     state.editor = new Editor().save();
   };

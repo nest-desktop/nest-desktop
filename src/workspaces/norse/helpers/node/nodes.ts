@@ -26,8 +26,6 @@ export class NorseNodes extends BaseNodes {
    * @param node node component.
    */
   override addCodeNodes(node: TNode | TNodeGroup): void {
-    console.log("Add code nodes");
-
     if (node.isGroup) return;
     const code = this.network.project.code as NorseCode;
     node = node as NorseNode;

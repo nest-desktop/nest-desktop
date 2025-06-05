@@ -54,8 +54,6 @@ const addClearAllCommand = (baklavaView: IBaklavaViewModel) => {
 };
 
 export const setViewSettings = (baklavaView: IBaklavaViewModel) => {
-  // console.log("set settings");
-
   baklavaView.settings.displayValueOnHover = true;
   baklavaView.settings.enableMinimap = false;
 

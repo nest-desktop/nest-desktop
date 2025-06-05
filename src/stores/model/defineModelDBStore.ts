@@ -165,7 +165,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
       logger.trace("import models from assets");
 
       let promises: Promise<TModelProps>[] = [];
-      if (props.modelAssets) {
+      if (props.modelAssets?.length > 0) {
         promises = props.modelAssets.map(async (file: string) => {
           return loadJSON(`assets/workspaces/${props.workspace}/models/${file}.json`).then((modelProps: TModelProps) =>
             db.create(modelProps as IDoc),
@@ -183,7 +183,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
 
       db.count().then(async (count: number) => {
         logger.debug("models in DB:", count);
-        if (count === 0 && state.tryImports > 0) {
+        if (count === 0 && props.modelAssets?.length > 0 && state.tryImports > 0) {
           state.tryImports -= 1;
           return importModelsFromAssets().then(() => init());
         } else {

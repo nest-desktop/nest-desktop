@@ -77,17 +77,13 @@ export function provideTemporaryConnection() {
       if (checkConnectionResult.connectionAllowed) {
         const ids = checkConnectionResult.connectionsInDanger.map((c) => c.id);
         graph.value.connections.forEach((c) => {
-          if (ids.includes(c.id)) {
-            c.isInDanger = true;
-          }
+          if (ids.includes(c.id)) c.isInDanger = true;
         });
       }
     } else if (!ni && temporaryConnection.value) {
       temporaryConnection.value.to = undefined;
       temporaryConnection.value.status = TemporaryConnectionState.NONE;
-      graph.value.connections.forEach((c) => {
-        c.isInDanger = false;
-      });
+      graph.value.connections.forEach((c) => (c.isInDanger = false));
     }
   };
 
@@ -100,10 +96,7 @@ export function provideTemporaryConnection() {
 }
 
 export function useTemporaryConnection() {
-  console.log(TEMPORARY_CONNECTION_HANDLER_INJECTION_SYMBOL);
   const temporaryConnection = inject<ITemporaryConnectionHandler>(TEMPORARY_CONNECTION_HANDLER_INJECTION_SYMBOL);
-  if (!temporaryConnection) {
-    throw new Error("useTemporaryConnection must be used within a BaklavaEditor");
-  }
+  if (!temporaryConnection) throw new Error("useTemporaryConnection must be used within a BaklavaEditor");
   return temporaryConnection;
 }
