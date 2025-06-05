@@ -73,6 +73,7 @@
     "@types/pouchdb-upsert": "~2.2",
     "@types/semver": "~7.7",
     "@types/three": "~0.177",
+    "@types/toposort": "^2.0.7",
     "@types/uuid": "~10.0",
     "@types/webfontloader": "~1.6",
     "@vite-pwa/assets-generator": "~1.0",
