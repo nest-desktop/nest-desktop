@@ -31,7 +31,7 @@
     "@codemirror/lang-yaml": "~6.1",
     "@codemirror/state": "~6.5",
     "@codemirror/theme-one-dark": "~6.1",
-    "@codemirror/view": "~6.37",
+    "@codemirror/view": "~6.38",
     "@mdi/font": "~7.4",
     "@vueuse/core": "~13.4",
     "axios": "~1.10",
@@ -89,7 +89,7 @@
     "electron": "~37.1",
     "electron-builder": "~26.0",
     "electron-devtools-installer": "~4.0",
-    "eslint": "~9.29",
+    "eslint": "~9.30",
     "eslint-plugin-vue": "~10.2",
     "js-yaml": "~4.1",
     "register-service-worker": "~1.7",
@@ -112,7 +112,8 @@
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: Use node LTS version (v22)",
-    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
+    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.",
+    "pinia-plugin-persistedstate: 4.4 needs node 24"
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
