@@ -27,9 +27,10 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 
+import { TCode } from "@/types";
+
 import CodeTreeview from "../codeGraph/CodeTreeview.vue";
 import CodeMirror from "./CodeMirror.vue";
-import { TCode } from "@/types";
 
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
