@@ -1,6 +1,6 @@
 <template>
   <div class="baklava-toolbar" @contextmenu.stop.prevent>
-    <button
+    <!-- <button
       v-for="c in commands"
       :key="c.command"
       :disabled="!viewModel.commandHandler.canExecuteCommand(command)"
@@ -11,18 +11,20 @@
       <template v-else>
         {{ c.title }}
       </template>
-    </button>
+    </button> -->
+
+    {{ viewModel.editor.graph.id }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { Editor } from "baklavajs";
-import { computed } from "vue";
+import { Editor, useBaklava } from "baklavajs";
+// import { computed } from "vue";
 
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
 
 const viewModel = useBaklava(codeGraphStore.editor as Editor);
 
-const commands = computed(() => viewModel.value.settings.toolbar.commands);
+// const commands = computed(() => viewModel.value.settings.toolbar.commands);
 </script>
