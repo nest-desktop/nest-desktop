@@ -11,6 +11,7 @@ import { truncate } from "@/utils/truncate";
 
 import { useAppStore } from "../appStore";
 import { useProjectDBStore } from "./projectDBStore";
+import { IEditorState } from "baklavajs";
 
 interface IProjectStoreState<TProject extends BaseProject = BaseProject> {
   project: TProject | null;
@@ -92,6 +93,8 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
     const loadProject = (projectId: string = ""): void => {
       logger.trace("load project:", truncate(projectId));
 
+      if (state.project) state.project.code.graph.unsubscribe();
+
       if (projectDBStore.hasProjectId(projectId)) {
         state.project = projectDBStore.getProject(projectId);
         state.projectId = state.project ? state.project.id : "";
@@ -105,13 +108,15 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
       // const projectViewStore = useProjectViewStore();
 
       if (state.project) {
-        state.project.code.graph.load();
+        // Load code graph editor.
+        const editorState = state.project.code.graph.state.editor;
+        state.project.code.graph.load(editorState as IEditorState);
+        state.project.code.graph.save();
 
         const appStore = useAppStore();
         const projectViewStore = appStore.currentWorkspace.views.project;
-        if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
+        if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore")
           startSimulation();
-        }
       }
     };
 
