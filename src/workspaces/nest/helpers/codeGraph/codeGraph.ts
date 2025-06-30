@@ -1,11 +1,12 @@
 // codeGraph.ts
 
-import { Graph, IBaklavaViewModel, IGraphState, NodeInterface, useBaklava } from "baklavajs";
+import toposort from "toposort";
+import { Connection, Graph, IBaklavaViewModel, IEditorState, INodeState, NodeInterface, useBaklava } from "baklavajs";
 
+import functionNode from "@/helpers/codeNodeTypes/base/function";
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
 import { setViewSettings } from "@/plugins/baklava";
-import functionNode from "@/helpers/codeNodeTypes/base/function";
 
 // import { BaseCode } from "../code/code";
 import nestDataResponse from "../codeNodeTypes/nest/nestDataResponse";
@@ -24,14 +25,18 @@ import { createNodes } from "../codeNodeTypes/nest/nestCreate";
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;
 
-  constructor(networkProps: INESTNetworkProps) {
+  constructor(projectProps: INESTProjectProps) {
     super();
     // this.logger.settings.minLevel = 1;
 
     this._viewModel = useBaklava();
     setViewSettings(this._viewModel);
 
-    this.load(networkProps);
+    this.load(projectProps);
+  }
+
+  get connections(): Connection[] {
+    return this.graph.connections as Connection[];
   }
 
   get graph(): Graph {
@@ -40,6 +45,10 @@ export class NESTCodeGraph extends BaseObj {
 
   get nodes(): AbstractCodeNode[] {
     return this.graph.nodes as AbstractCodeNode[];
+  }
+
+  set nodes(values: AbstractCodeNode[]) {
+    this.graph._nodes = values as AbstractCodeNode[];
   }
 
   get viewModel(): IBaklavaViewModel {
@@ -182,6 +191,9 @@ export class NESTCodeGraph extends BaseObj {
     codeNode.inputs.time.value = simulationProps?.time ?? 1000;
   }
 
+  /**
+   * Add code nodes from simulation kernel props.
+   */
   addSimulationKernelCodeNode(kernelProps?: INESTSimulationKernelProps): void {
     // nest.SetKernelStatus
     const codeNode = this.addNodeAtColumn(nestSetKernelStatus, -2, 200);
@@ -196,6 +208,9 @@ export class NESTCodeGraph extends BaseObj {
     }
   }
 
+  /**
+   * Load code graph.
+   */
   load(projectProps: INESTProjectProps): void {
     this.addResetKernelCodeNode();
 
@@ -214,20 +229,69 @@ export class NESTCodeGraph extends BaseObj {
     this.addResponseCodeNode();
   }
 
-  save(): IGraphState {
+  /**
+   * Save code graph.
+   * @returns graph state
+   */
+  save(): IEditorState {
     this.logger.trace("save");
-    const graph = this.graph.save();
-    this.saveStates(graph);
-    return graph;
+
+    this.sortNodes();
+
+    // const graphState = this.graph.save();
+    // this.saveNodeStates(graphState.nodes);
+
+    const editorState = this._viewModel.editor.save();
+    this.saveNodeStates(editorState.graph.nodes);
+    return editorState;
   }
 
-  saveStates(graph: IGraphState): void {
-    graph.nodes.forEach((node, nodeIdx) => {
-      const integrated = this.graph.nodes[nodeIdx].state.integrated;
-      if (integrated) node.integrated = integrated;
+  /**
+   * Save node states.
+   * @param nodeStates a list of node state.
+   */
+  saveNodeStates(nodeStates: INodeState<unknown, unknown>[]): void {
+    nodeStates.forEach((nodeState: INodeState<unknown, unknown>, nodeIdx) => {
+      const node = this.nodes[nodeIdx] as AbstractCodeNode;
+      nodeState.integrated = node.state.integrated;
 
-      Object.entries(node.inputs).forEach(([k, v]) => (v.hidden = this.graph.nodes[nodeIdx].inputs[k].hidden));
-      Object.entries(node.outputs).forEach(([k, v]) => (v.hidden = this.graph.nodes[nodeIdx].outputs[k].hidden));
+      Object.entries(nodeState.inputs).forEach(([inputKey]) => {
+        if (node.inputs[inputKey]) nodeState.inputs[inputKey].hidden = node.inputs[inputKey].hidden;
+      });
+
+      Object.entries(nodeState.outputs).forEach(([outputKey]) => {
+        if (node.inputs[outputKey]) nodeState.outputs[outputKey].hidden = node.outputs[outputKey].hidden;
+      });
     });
+  }
+
+  /**
+   * Sort code nodes.
+   */
+  sortNodes(): void {
+    if (this.nodes.length === 0 || this.connections.length === 0) return;
+    this.logger.trace("sort nodes");
+
+    try {
+      // Get a list of edges
+      const edges: [string, string | undefined][] = this.connections
+        // .filter(
+        //   (connection: Connection) =>
+        //     this.graph.findNodeById(connection.from.nodeId).outputs.node.id === connection.from.id &&
+        //     this.graph.findNodeById(connection.to.nodeId).inputs.node.id === connection.to.id,
+        // )
+        .map((connection: Connection) => [connection.from.nodeId, connection.to.nodeId]);
+
+      // Get a list of node
+      const nodes = this.nodes.map((node: AbstractCodeNode) => node.id);
+
+      // Get sorted node ids
+      const nodeIds = toposort.array(nodes, edges);
+
+      // Update sorted nodes
+      this.nodes = nodeIds.map((nodeId: string) => this.graph.findNodeById(nodeId)) as AbstractCodeNode[];
+    } catch {
+      this.logger.warn("Sorting nodes failed.");
+    }
   }
 }

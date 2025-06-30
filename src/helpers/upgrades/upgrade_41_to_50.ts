@@ -19,7 +19,7 @@ function upgradeProject(projectProps: any): any {
   }
 
   const newProjectProps: Record<string, unknown> = {
-    code: { graph: codeGraph.save() },
+    code: codeGraph.save(),
     createdAt: projectProps.createdAt,
     id: projectProps.id,
     name: projectProps.name,
