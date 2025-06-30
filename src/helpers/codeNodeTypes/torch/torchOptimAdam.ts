@@ -14,6 +14,8 @@ export default defineCodeNode({
   },
   outputs: {
     out: () => new NodeOutputInterface(),
+    step: () => new NodeOutputInterface("step", "step()"),
+    zero_grad: () => new NodeOutputInterface("zero grad", "zero_grad()"),
   },
   variableName: "optimizer",
   codeTemplate() {
