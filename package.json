@@ -44,13 +44,13 @@
     "mustache": "~4.2",
     "object-hash": "~3.0",
     "pinia": "~3.0",
-    "pinia-plugin-persistedstate": "~4.3",
+    "pinia-plugin-persistedstate": "~4.4",
     "plotly.js-cartesian-dist-min": "~3.0",
     "pouchdb": "~9.0",
     "pouchdb-upsert": "~2.2",
     "roboto-fontface": "*",
     "stats.js": "~0.17",
-    "three": "~0.177",
+    "three": "~0.178",
     "toposort": "~2.0",
     "uuid": "~11.1",
     "vue": "~3.5",
@@ -72,7 +72,7 @@
     "@types/pouchdb": "~6.4",
     "@types/pouchdb-upsert": "~2.2",
     "@types/semver": "~7.7",
-    "@types/three": "~0.177",
+    "@types/three": "~0.178",
     "@types/toposort": "^2.0.7",
     "@types/uuid": "~10.0",
     "@types/webfontloader": "~1.6",
@@ -106,14 +106,13 @@
     "vite-plugin-vue-devtools": "~7.7",
     "vite-plugin-vuetify": "~2.1",
     "vitest": "~3.2",
-    "vue-eslint-parser": "~10.1",
-    "vue-tsc": "~2.2"
+    "vue-eslint-parser": "~10.2",
+    "vue-tsc": "~3.0"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: Use node LTS version (v22)",
-    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.",
-    "pinia-plugin-persistedstate: 4.4 needs node 24"
+    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"
