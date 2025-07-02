@@ -25,26 +25,28 @@
           <span v-if="node.idx > -1">{{ node.idx + 1 }} - </span>{{ node.title }}
         </div>
         <div class="__menu">
-          <v-icon
-            :disabled="node.nOutputs === 0"
-            :icon="node.state?.integrated ? 'mdi:mdi-tray-arrow-down' : 'mdi:mdi-equal'"
-            class="mx-1 --clickable"
-            size="xsmall"
-            @click="toggleIntegrated"
-          />
-          <v-icon
-            :icon="node.state?.commented ? 'mdi:mdi-pound' : 'mdi:mdi-code-tags'"
-            class="mx-1 --clickable"
-            size="xsmall"
-            @click="toggleCommented"
-          />
-          <!-- <v-icon
+          <template v-if="!node.subgraph">
+            <v-icon
+              :disabled="node.nOutputs === 0"
+              :icon="node.state?.integrated ? 'mdi:mdi-tray-arrow-down' : 'mdi:mdi-equal'"
+              class="mx-1 --clickable"
+              size="xsmall"
+              @click="toggleIntegrated"
+            />
+            <v-icon
+              :icon="node.state?.commented ? 'mdi:mdi-pound' : 'mdi:mdi-code-tags'"
+              class="mx-1 --clickable"
+              size="xsmall"
+              @click="toggleCommented"
+            />
+            <!-- <v-icon
             :icon="node.state.hidden ? 'mdi:mdi-eye-off-outline' : 'mdi:mdi-eye'"
             class="mx-1 --clickable"
             size="xsmall"
             @click="toggleHidden"
           /> -->
-          <v-icon icon="mdi:mdi-pencil" class="mx-1 --clickable" size="xsmall" @click="openSidebar" />
+            <v-icon icon="mdi:mdi-pencil" class="mx-1 --clickable" size="xsmall" @click="openSidebar" />
+          </template>
           <v-icon icon="mdi:mdi-dots-vertical" class="--clickable" size="xsmall" @click="openContextMenu" />
           <ContextMenu v-model="showContextMenu" :x="0" :y="0" :items="contextMenuItems" @click="onContextMenuClick" />
         </div>

@@ -11,7 +11,7 @@ import {
 } from "baklavajs";
 import { nextTick } from "vue";
 
-import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { AbstractCodeNode, formatInterfaceLabel, formatLabel } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { IParamProps } from "@/helpers/common/parameter";
@@ -193,18 +193,20 @@ export default defineDynamicCodeNode({
 
     const paramsNode = this.node.getConnectedNodeByInterface("params");
     if (paramsNode != undefined)
-      if (paramsNode instanceof AbstractCodeNode) {
-        const params = this.node.getConnectedOutputInterfaceByInterface("params");
-        if (params && !this.node.inputs.params.hidden) {
-          props["params"] = formatInterfaceLabel(params);
-        }
-      } else {
+      if (paramsNode.subgraph) {
         const subgraph = paramsNode.subgraph;
         const connection = subgraph.connections.find(
           (connection: Connection) => connection.to.nodeId === subgraph.outputs[0].nodeId,
         );
-        const node = subgraph.findNodeById(connection.from.nodeId);
-        props["params"] = formatInterfaceLabel(node.outputs.out);
+        if (connection) {
+          const node = subgraph.findNodeById(connection.from.nodeId);
+          if (node) props["params"] = formatLabel(node);
+        }
+      } else {
+        const params = this.node.getConnectedOutputInterfaceByInterface("params");
+        if (params && !this.node.inputs.params.hidden) {
+          props["params"] = formatInterfaceLabel(params);
+        }
       }
 
     const positions = this.node.getConnectedOutputInterfaceByInterface("positions");

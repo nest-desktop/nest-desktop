@@ -161,6 +161,10 @@ export abstract class AbstractCodeNode extends AbstractNode {
     return this._state;
   }
 
+  get subgraph(): boolean {
+    return false;
+  }
+
   // calculate?: CalculateFunction<any, any> | undefined;
 
   /**
@@ -354,6 +358,13 @@ export abstract class AbstractCodeNode extends AbstractNode {
     else return `${this.inputs[name].value}`;
   }
 
+  override initializeIntf(type: "input" | "output", key: string, intf: NodeInterface) {
+    intf.isInput = type === "input";
+    intf.nodeId = this.id;
+    intf.graphId = this.graph?.id;
+    intf.events.setValue.subscribe(this, () => this.events.update.emit({ type, name: key, intf }));
+  }
+
   abstract onGraphUpdate(): void;
 
   abstract onProjectUpdate(): void;
@@ -455,17 +466,24 @@ export const formatInterfaceLabel = (outputInterface: NodeOutputInterface): stri
 };
 
 /**
- * Format labels of nodes.
+ * Format node label.
+ * @param node code node
+ * @returns string
+ */
+export const formatLabel = (node: AbstractCodeNode): string => {
+  return node.state.integrated ? node.codeTemplate : node.label;
+};
+
+/**
+ * Format node labels.
  * @param nodes code nodes
  * @param sorted boolean
  * @returns string array
  */
 export const formatLabels = (nodes: AbstractCodeNode[], sorted: boolean = true): string[] => {
-  const labels: string[] = [];
+  if (nodes.length === 0) return [];
 
-  if (nodes.length === 0) return labels;
-
-  nodes.forEach((node: AbstractCodeNode) => labels.push(node.state.integrated ? node.codeTemplate : node.label));
+  const labels = nodes.map((node: AbstractCodeNode) => formatLabel(node));
 
   if (sorted) labels.sort();
   return labels;
@@ -482,7 +500,7 @@ export const loadNodeState = (graph: CodeGraph | Graph | undefined, nodeState: I
   const node = graph.findNodeById(nodeState.id);
   if (!node) return;
 
-  if (node instanceof AbstractCodeNode) {
+  if (!node.subgraph) {
     if (node.state) node.state.integrated = nodeState.integrated;
 
     Object.entries(nodeState.inputs).forEach(([inputKey, inputItem]) => {
@@ -509,7 +527,7 @@ export const saveNodeState = (graph: CodeGraph | Graph | undefined, nodeState: I
   const node = graph.findNodeById(nodeState.id);
   if (!node) return;
 
-  if (node instanceof AbstractCodeNode) {
+  if (!node.subgraph) {
     if (node.state) nodeState.integrated = node.state.integrated;
 
     Object.entries(nodeState.inputs).forEach(([inputKey]) => {

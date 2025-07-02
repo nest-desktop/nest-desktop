@@ -1,7 +1,7 @@
 // codeNodeInterface.ts
 
 import { markRaw } from "vue";
-import { NodeInterface } from "baklavajs";
+import { Graph, NodeInterface } from "baklavajs";
 
 import CodeNodeInterfaceComponent from "@/components/codeGraph/CodeNodeInterfaceComponent.vue";
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
@@ -15,8 +15,15 @@ export class CodeNodeInterface<T = any> extends NodeInterface<T> {
   }
 
   get node(): AbstractCodeNode | undefined {
-    const codegraphStore = useCodeGraphStore();
-    const graph = codegraphStore.editor.graph;
+    const codeGraphStore = useCodeGraphStore();
+
+    let graph: Graph;
+    if (this.graphId) {
+      const graphs = Array.from(codeGraphStore.editor.graphs);
+      graph = graphs.find((graph: Graph) => graph.id === this.graphId) as Graph;
+    } else {
+      graph = codeGraphStore.editor.graph as Graph;
+    }
     return graph.findNodeById(this.nodeId) as AbstractCodeNode;
   }
 }

@@ -232,7 +232,9 @@ export class CodeGraph extends BaseObj {
 
     if (this.nodes.length > 0) {
       this.sortNodes();
-      this.codeNodes.forEach((node) => node.onProjectUpdate());
+      this.codeNodes.forEach((node) => {
+        if (node.onProjectUpdate) node.onProjectUpdate();
+      });
     }
 
     nextTick(() => {
@@ -255,7 +257,9 @@ export class CodeGraph extends BaseObj {
 
     if (this.nodes.length > 0) {
       this.sortNodes();
-      this.codeNodes.forEach((node) => node.onGraphUpdate());
+      this.codeNodes.forEach((node) => {
+        if (node.onGraphUpdate) node.onGraphUpdate();
+      });
     }
 
     nextTick(() => {
@@ -346,10 +350,10 @@ const getCodeNodes = (graph: CodeGraph | Graph): AbstractCodeNode[] => {
   let nodes: AbstractCodeNode[] = [];
 
   graph.nodes.forEach((node) => {
-    if (node instanceof AbstractCodeNode) {
-      nodes.push(node);
-    } else if (node.subgraph) {
+    if (node.subgraph) {
       nodes = nodes.concat(getCodeNodes(node.subgraph));
+    } else {
+      nodes.push(node);
     }
   });
 
