@@ -2,10 +2,12 @@
 
 import { SelectInterface, setType } from "baklavajs";
 
-import { arrayType, INumpyArray } from "./interfaceTypes";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import { arrayType, INumpyArray } from "./interfaceTypes";
 import { stringType } from "../base/interfaceTypes";
 
 export default defineCodeNode({
@@ -24,13 +26,13 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const a = this.node.getConnectedOutputInterfaceByInterface("a");
-    if (a) args.push(`a=${this.code?.graph.formatInterfaceLabel(a)}`);
+    if (a != undefined) args.push(`a=${formatInterfaceLabel(a)}`);
 
     const v = this.node.getConnectedOutputInterfaceByInterface("v");
-    if (v) args.push(`v=${this.code?.graph.formatInterfaceLabel(v)}`);
+    if (v != undefined) args.push(`v=${formatInterfaceLabel(v)}`);
 
-    const mode = this.node.getConnectedOutputInterfacesByInterface("mode");
-    if (mode.length > 0) args.push(`mode=${this.code?.graph.formatInterfaceLabels(mode).join(", ")}`);
+    const mode = this.node.getConnectedOutputInterfaceByInterface("mode");
+    if (mode != undefined) args.push(`mode=${formatInterfaceLabel(mode)}`);
     else if (this.node.inputs.mode.value !== "valid") args.push(`mode=${this.node.inputs.mode.value}`);
 
     return `np.convolve(${args.join(", ")})`;

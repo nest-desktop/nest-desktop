@@ -1,9 +1,11 @@
 // humamNetwork.ts
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { displayInSidebar } from "baklavajs";
+
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
-import { displayInSidebar } from "baklavajs";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "humam.Network",
@@ -21,14 +23,14 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const nn = this.node.getConnectedOutputInterfacesByInterface("NN");
-    if (nn.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(nn).join(", ")}`);
+    const nn = this.node.getConnectedOutputInterfaceByInterface("NN");
+    if (nn != undefined) args.push(`${formatInterfaceLabel(nn)}`);
 
-    const sn = this.node.getConnectedOutputInterfacesByInterface("SN");
-    if (sn.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(sn).join(", ")}`);
+    const sn = this.node.getConnectedOutputInterfaceByInterface("SN");
+    if (sn != undefined) args.push(`${formatInterfaceLabel(sn)}`);
 
-    const params = this.node.getConnectedOutputInterfacesByInterface("params");
-    if (params.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(params).join(", ")}`);
+    const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    if (params != undefined) args.push(`${formatInterfaceLabel(params)}`);
 
     return `humam.Network(${args.join(", ")})`;
   },

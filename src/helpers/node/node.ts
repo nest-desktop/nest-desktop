@@ -176,9 +176,7 @@ export class BaseNode extends BaseObj {
   }
 
   get model(): BaseModel {
-    if (this._model?.id !== this._modelId) {
-      this._model = this.getModel(this._modelId);
-    }
+    if (this._model?.id !== this._modelId) this._model = this.getModel(this._modelId);
     return this._model as BaseModel;
   }
 

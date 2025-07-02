@@ -2,10 +2,12 @@
 
 import { setType } from "baklavajs";
 
-import { ITorchTensor, torchTensorType } from "./interfaceTypes";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import { ITorchTensor, torchTensorType } from "./interfaceTypes";
 
 export default defineCodeNode({
   type: "torch.cat",
@@ -20,8 +22,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const tensors = this.node.getConnectedOutputInterfacesByInterface("tensors");
-    if (tensors.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(tensors).join(", ")}`);
+    const tensors = this.node.getConnectedOutputInterfaceByInterface("tensors");
+    if (tensors) args.push(`${formatInterfaceLabel(tensors)}`);
 
     return `torch.cat(${args.join(", ")})`;
   },

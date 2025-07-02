@@ -3,8 +3,9 @@
 import { displayInSidebar, NumberInterface } from "baklavajs";
 import { setType } from "@baklavajs/interface-types";
 
-import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 export default defineCodeNode({
   type: "brainscales2.setup",
@@ -16,8 +17,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const timestep = this.node.getConnectedOutputInterfacesByInterface("timestep");
-    if (timestep.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(timestep).join(", ")}`);
+    const timestep = this.node.getConnectedOutputInterfaceByInterface("timestep");
+    if (timestep != undefined) args.push(`${formatInterfaceLabel(timestep)}`);
     else if (this.node.inputs.timestep.value > 0.000034) args.push(`${this.node.inputs.timestep.value}`);
 
     return `pynn.setup(${args.join(", ")})`;

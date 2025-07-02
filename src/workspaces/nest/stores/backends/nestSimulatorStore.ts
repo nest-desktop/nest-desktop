@@ -16,6 +16,15 @@ export const useNESTSimulatorStore = defineBackendStore("nest", "nest", "http://
   axiosHeaderTokenValue: "NESTServerAuth",
 });
 
+const exec = (source: string, responseKeys: string | string[] = "response"): AxiosPromise<IAxiosResponseData> => {
+  logger.trace("exec");
+
+  const nestSimulatorStore = useNESTSimulatorStore();
+  return nestSimulatorStore
+    .axiosInstance()
+    .post<IAxiosResponseData>("exec", { source, response_keys: responseKeys, return: responseKeys });
+};
+
 const fetchModels = (): void => {
   const modelStore = useNESTModelStore();
   const nestSimulatorStore = useNESTSimulatorStore();
@@ -101,15 +110,6 @@ export const nestSimulatorInit = (): TStore => {
 const resetKernel = (): void => {
   const nestSimulatorStore = useNESTSimulatorStore();
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
-};
-
-const exec = (source: string, responseKeys: string | string[] = "response"): AxiosPromise<IAxiosResponseData> => {
-  logger.trace("exec");
-
-  const nestSimulatorStore = useNESTSimulatorStore();
-  return nestSimulatorStore
-    .axiosInstance()
-    .post<IAxiosResponseData>("exec", { source, response_keys: responseKeys, return: responseKeys });
 };
 
 export default {

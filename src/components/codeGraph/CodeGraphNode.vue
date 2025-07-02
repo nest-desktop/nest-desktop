@@ -12,11 +12,11 @@
 
     <div :title="node.type" class="__title" @pointerdown.self.stop="startDrag" @contextmenu.prevent="openContextMenu">
       <CodeNodeInterface
-        v-if="node.inputs.node"
+        v-if="node.inputs._node"
         :node
-        :intf="node.inputs.node"
+        :intf="node.inputs._node"
         class="--input"
-        data-interface-type="node"
+        data-interface-type="_node"
         style="flex-grow: 0"
       />
 
@@ -27,13 +27,13 @@
         <div class="__menu">
           <v-icon
             :disabled="node.nOutputs === 0"
-            :icon="node.state.integrated ? 'mdi:mdi-tray-arrow-down' : 'mdi:mdi-equal'"
+            :icon="node.state?.integrated ? 'mdi:mdi-tray-arrow-down' : 'mdi:mdi-equal'"
             class="mx-1 --clickable"
             size="xsmall"
             @click="toggleIntegrated"
           />
           <v-icon
-            :icon="node.state.commented ? 'mdi:mdi-pound' : 'mdi:mdi-code-tags'"
+            :icon="node.state?.commented ? 'mdi:mdi-pound' : 'mdi:mdi-code-tags'"
             class="mx-1 --clickable"
             size="xsmall"
             @click="toggleCommented"
@@ -62,11 +62,11 @@
       />
 
       <CodeNodeInterface
-        v-if="node.outputs.node"
+        v-if="node.outputs._node"
         :node
-        :intf="node.outputs.node"
+        :intf="node.outputs._node"
         class="--output"
-        data-interface-type="node"
+        data-interface-type="_node"
       />
     </div>
 
@@ -74,7 +74,7 @@
       <!-- Outputs -->
       <div class="__outputs">
         <template v-for="output in displayedOutputs" :key="output.id">
-          <div v-if="node.state.hidden">
+          <div v-if="node.state?.hidden">
             <div
               v-if="output.port"
               :id="output.id"
@@ -95,7 +95,7 @@
       <!-- Inputs -->
       <div class="__inputs">
         <template v-for="input in displayedInputs" :key="input.id">
-          <div v-if="node.state.hidden">
+          <div v-if="node.state?.hidden">
             <div
               v-if="input.port"
               :id="input.id"
@@ -175,7 +175,7 @@ const classes = computed(() => ({
   "--selected": props.selected,
   "--dragging": props.dragging,
   "--two-column": !!props.node.twoColumn,
-  "--hidden": node.value.state.hidden,
+  "--hidden": node.value.state?.hidden,
 }));
 
 const classesContent = computed(() => ({
@@ -253,6 +253,7 @@ const startResize = (ev: MouseEvent) => {
 };
 
 const toggleCommented = () => {
+  if (!node.value.state) return;
   node.value.state.commented = !node.value.state.commented;
   emit("update");
 };
@@ -263,6 +264,7 @@ const toggleCommented = () => {
 // };
 
 const toggleIntegrated = () => {
+  if (!node.value.state) return;
   node.value.state.integrated = !node.value.state.integrated;
   emit("update");
 };

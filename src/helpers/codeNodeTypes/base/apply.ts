@@ -5,6 +5,7 @@ import { TextInputInterface } from "baklavajs";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "apply",
@@ -24,6 +25,6 @@ export default defineCodeNode({
 
     const args = this.node.getConnectedOutputInterfacesByInterface("args");
 
-    return `${call}(${this.code?.graph.formatInterfaceLabels(args).join(", ")})`;
+    return `${call}(${formatInterfaceLabels(args).join(", ")})`;
   },
 });

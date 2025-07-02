@@ -3,6 +3,7 @@
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 import { NESTCode } from "../../code/code";
@@ -18,8 +19,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const time = this.node.getConnectedOutputInterfacesByInterface("time");
-    if (time.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(time).join(", ")}`);
+    const time = this.node.getConnectedOutputInterfaceByInterface("time");
+    if (time != undefined) args.push(`${formatInterfaceLabel(time)}`);
     else args.push(`${this.node.inputs.time.value}`);
 
     return `nest.Simulate(${args.join(",")})`;

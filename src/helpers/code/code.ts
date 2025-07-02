@@ -2,7 +2,7 @@
 
 import Mustache from "mustache";
 import axios, { AxiosHeaders, AxiosResponse } from "axios";
-import { IGraphState } from "baklavajs";
+import { IGraphState, IGraphTemplateState } from "baklavajs";
 import { UnwrapRef, nextTick, reactive } from "vue";
 
 import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
@@ -23,6 +23,7 @@ export interface IResponseProps {
 
 export interface ICodeProps {
   graph?: IGraphState;
+  graphTemplates?: IGraphTemplateState[];
   templateFilename?: string;
 }
 
@@ -56,7 +57,7 @@ export class BaseCode extends BaseObj {
     if (codeProps) this._state.templateFilename = codeProps?.templateFilename ?? "code";
     if (this._state.templateFilename) this.loadTemplate();
 
-    this._graph = new CodeGraph(this, codeProps?.graph);
+    this._graph = new CodeGraph(this, codeProps);
     this.clean();
   }
 
@@ -243,7 +244,7 @@ export class BaseCode extends BaseObj {
    * @return code props
    */
   toJSON(): ICodeProps {
-    return { graph: this.graph.state.graph };
+    return this.graph.state.editor;
   }
 
   /**

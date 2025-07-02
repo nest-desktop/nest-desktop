@@ -1,8 +1,8 @@
 // norseDataResponse.ts
 
-import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { AbstractCodeNode, formatLabels } from "@/helpers/codeGraph/codeNode";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 
 export default defineCodeNode({
   type: "norse/response",
@@ -17,7 +17,7 @@ export default defineCodeNode({
 
     const outputs = this.node
       .getConnectedNodesByInterface("outputs")
-      .map((node: AbstractCodeNode) => `${this.code?.graph.formatLabels([node])[0]}[0]`);
+      .map((node: AbstractCodeNode) => `${formatLabels([node])[0]}[0]`);
     if (outputs.length > 0) responseData.push(`"outputs": [${outputs.join(", ")}]`);
 
     const states = this.node.getConnectedNodesByInterface("states").map((node: AbstractCodeNode) => `${node.label}[1]`);

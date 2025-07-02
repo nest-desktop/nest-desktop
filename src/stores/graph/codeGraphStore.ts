@@ -20,10 +20,23 @@ export const useCodeGraphStore = defineStore("code-graph", () => {
   const viewModel = useBaklava() as IBaklavaViewModel;
   const editor: Editor = viewModel.editor;
 
-  const newGraph = () => {
-    if (state.token) unsubscribe();
-    state.editor = new Editor().save();
-  };
+  // editor.nodeHooks.afterSave.subscribe(state.token, (state) => {
+  //   saveNodeState(editor.graph, state);
+  //   return state;
+  // });
+
+  // editor.nodeHooks.beforeLoad.subscribe(state.token, (state) => {
+  //   loadNodeState(editor.graph, state);
+  // });
+
+  // const displayedGraph = viewModel.displayedGraph;
+  // if (displayedGraph)
+  //   registerCreateSubgraphCommand(ref(displayedGraph), viewModel.commandHandler, viewModel.switchGraph);
+
+  // const newGraph = () => {
+  //   if (state.token) unsubscribe();
+  //   state.editor = new Editor().save();
+  // };
 
   const subscribe = (call: () => void): void => {
     if (state.token) unsubscribe();
@@ -54,5 +67,5 @@ export const useCodeGraphStore = defineStore("code-graph", () => {
   //   editor.registerGraph(graph);
   // };
 
-  return { editor, newGraph, state, subscribe, unsubscribe, viewModel };
+  return { editor, state, subscribe, unsubscribe, viewModel };
 });

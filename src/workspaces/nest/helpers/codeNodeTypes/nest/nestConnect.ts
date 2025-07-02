@@ -10,12 +10,11 @@ import {
 } from "baklavajs";
 import { nextTick } from "vue";
 
-import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
-import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
-import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
-
+import { AbstractCodeNode, formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { IParamProps } from "@/helpers/common/parameter";
+import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
+import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
 import nestConnect from "./nestConnect";
 import { INESTConnectionProps, NESTConnection } from "../../connection/connection";
@@ -53,10 +52,7 @@ export default defineDynamicCodeNode({
     const pre = this.node.getConnectedOutputInterfacesByInterface("pre");
     const post = this.node.getConnectedOutputInterfacesByInterface("post");
     if (pre.length === 0 || post.length === 0) return this.type;
-    const args = [
-      this.code?.graph.formatInterfaceLabels(pre).join("+"),
-      this.code?.graph.formatInterfaceLabels(post).join("+"),
-    ];
+    const args = [formatInterfaceLabels(pre).join("+"), formatInterfaceLabels(post).join("+")];
     let keyword = "";
 
     const connSpecs = [];
@@ -76,13 +72,11 @@ export default defineDynamicCodeNode({
     if (connSpec.length > 0) args.push(`${connSpec}`);
 
     let synSpec = "";
-
     if (!this.node.inputs.syn_spec.hidden) {
-      const synSpecNode = this.node.getConnectedOutputInterfacesByInterface("syn_spec");
-      if (synSpecNode.length > 0) synSpec = `${this.code?.graph.formatInterfaceLabels(synSpecNode).join(", ")}`;
+      const synSpecNode = this.node.getConnectedOutputInterfaceByInterface("syn_spec");
+      if (synSpecNode != undefined) synSpec = `${formatInterfaceLabel(synSpecNode)}`;
       else synSpec = `"${this.node.inputs.syn_spec.value}"`;
     }
-
     if (args.length === 2) keyword = "syn_spec=";
     if (synSpec.length > 0) args.push(`${keyword}${synSpec}`);
 
@@ -107,10 +101,12 @@ export default defineDynamicCodeNode({
     }
   },
   onPlaced() {
+    // console.log("on placed");
+
     if (!this.node || !this.node.code || !this.node.code.project.network) return;
     const nodeItems = this.code.project.network.nodes.nodeItems;
     this.node.networkItem = nodeItems[this.indexOfNodeType];
-    // if (this.node.networkItem) return;
+    if (this.node.networkItem) return;
 
     nextTick(() => {
       if (!this.node) return;

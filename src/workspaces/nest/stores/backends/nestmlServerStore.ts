@@ -10,7 +10,7 @@ import { useNESTModelStore } from "../model/modelStore";
 
 export const useNESTMLServerStore = defineBackendStore("nest", "nestml", "http://localhost:52426");
 
-export const generateModels = (
+const generateModels = (
   module: {
     models: { name: string; script: string }[];
     name: string;
@@ -47,14 +47,15 @@ export const generateModels = (
     })
     .catch((error: AxiosError) => {
       modelStore.state.stopwatch.build = Date.now() - buildtoc;
-      notifyError((error.response?.data || error.message) as string);
+      console.log(error);
+      notifyError((error.response?.data?.message || error.message) as string);
     })
     .finally(() => {
       closeLoading();
     });
 };
 
-export const fetchNESTMLModels = (moduleName: string): Promise<AxiosResponse> => {
+const fetchNESTMLModels = (moduleName: string): Promise<AxiosResponse> => {
   const nestmlServerStore = useNESTMLServerStore();
   return nestmlServerStore.axiosInstance().get(`/module/${moduleName}/installed`);
 };
@@ -64,4 +65,9 @@ export const nestmlServerInit = (): TStore => {
   const nestmlServerStore: TStore = useNESTMLServerStore();
   nestmlServerStore.init();
   return nestmlServerStore;
+};
+
+export default {
+  generateModels,
+  fetchNESTMLModels,
 };

@@ -2,18 +2,18 @@
 
 import { displayInSidebar, IntegerInterface, NodeInterface, setType, TextInputInterface } from "baklavajs";
 
-import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import { AbstractCodeNode, formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { CodeNodeInterface } from "@/helpers/codeGraph/interface/codeNodeInterface";
 import { IParamProps } from "@/helpers/common/parameter";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
+import { TParameter } from "@/types";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { numberType, stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 import nestParameters from "./nestParameters";
 import { INESTNodeCollection } from "./interfaceTypes";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-import { TParameter } from "@/types";
-import { CodeNodeInterface } from "@/helpers/codeGraph/interface/codeNodeInterface";
 
 interface IParam extends IParamProps {
   hidden?: boolean;
@@ -35,9 +35,8 @@ export default defineDynamicCodeNode({
         if (!this.node) return;
         const paramInterface = this.node.inputs[key];
         if (paramInterface.hidden) return;
-        const outputInterfaces = this.node.getConnectedOutputInterfacesByInterface(key);
-        if (outputInterfaces.length > 0)
-          params.push(`"${key}": ${this.code?.graph.formatInterfaceLabels(outputInterfaces).join(", ")}`);
+        const outputInterface = this.node.getConnectedOutputInterfaceByInterface(key);
+        if (outputInterface != undefined) params.push(`"${key}": ${formatInterfaceLabel(outputInterface)}`);
         else params.push(`"${key}": ${paramInterface.value}`);
       });
 
@@ -51,6 +50,7 @@ export default defineDynamicCodeNode({
       const params = this.node.networkItem?.params;
       Object.keys(this.node.inputs).forEach((key: string) => {
         if (!params[key] || !this.node) return;
+
         const paramInterface = this.node.inputs[key] as CodeNodeInterface;
         const param = params[key];
         if (param.visible == paramInterface.hidden) param.visible = !paramInterface.hidden;
@@ -64,11 +64,14 @@ export default defineDynamicCodeNode({
     if (this.node.networkItem?.params) {
       const params = this.node.networkItem?.params;
       Object.keys(this.node.inputs).forEach((key: string) => {
-        if (!this.node || !params[key]) return;
+        if (!this.node) return;
+
         const paramInterface = this.node.inputs[key];
         const param = params[key];
-        if (paramInterface.hidden == param.visible) paramInterface.setHidden(!param.isVisible);
-        if (paramInterface.value != param.value) paramInterface.value = param.value;
+        if (!param) return;
+
+        if (paramInterface.hidden === param.visible) paramInterface.setHidden(!param.isVisible);
+        if (paramInterface.value !== param.value) paramInterface.value = param.value;
       });
     }
   },
@@ -96,7 +99,7 @@ export default defineDynamicCodeNode({
     if (this.node.inputs)
       Object.entries(this.node.inputs).forEach((input: [string, NodeInterface]) => {
         const paramValues = this.node.getConnectedOutputInterfacesByInterface(input[0]);
-        if (paramValues.length > 0) props[input[0]] = this.code?.graph.formatInterfaceLabels(paramValues).join(", ");
+        if (paramValues.length > 0) props[input[0]] = formatInterfaceLabels(paramValues).join(", ");
         else if (!input[1].hidden) props[input[0]] = input[1].value;
       });
 

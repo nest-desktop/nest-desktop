@@ -2,8 +2,9 @@
 
 import { displayInSidebar } from "baklavajs";
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "nest/response",
@@ -17,8 +18,7 @@ export default defineCodeNode({
     const responseData = [];
 
     const events = this.node.getConnectedOutputInterfacesByInterface("events");
-    if (events.length > 0)
-      responseData.push(`"events": [${this.code?.graph.formatInterfaceLabels(events).join(", ")}]`);
+    if (events.length > 0) responseData.push(`"events": [${formatInterfaceLabels(events).join(", ")}]`);
 
     const positions = this.node.getConnectedNodesByInterface("positions");
     const getPositions = positions.map((pos) => `pos(${pos.label})`);

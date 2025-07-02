@@ -1,8 +1,9 @@
 // elephantMeanFiringRate.ts
 
+import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "elephant.statistics.mean_firing_rate",
@@ -18,8 +19,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const spiketrain = this.node.getConnectedOutputInterfacesByInterface("spiketrain");
-    if (spiketrain.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(spiketrain).join(", ")}`);
+    const spiketrain = this.node.getConnectedOutputInterfaceByInterface("spiketrain");
+    if (spiketrain != undefined) args.push(`${formatInterfaceLabel(spiketrain)}`);
 
     return `elephant.statistics.mean_firing_rate(${args.join(", ")})`;
   },

@@ -2,8 +2,9 @@
 
 import { setType, TextInputInterface } from "baklavajs";
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+
 import { stringType } from "./interfaceTypes";
 
 export default defineCodeNode({

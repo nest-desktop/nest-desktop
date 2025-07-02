@@ -2,10 +2,12 @@
 
 import { IntegerInterface, setType } from "baklavajs";
 
-import { ITorchTensor, torchTensorType } from "./interfaceTypes";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import { ITorchTensor, torchTensorType } from "./interfaceTypes";
 
 export default defineCodeNode({
   type: "torch.rand",
@@ -21,8 +23,8 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const size = this.node.getConnectedOutputInterfacesByInterface("size");
-    if (size.length === 0) args.push(`${this.node.inputs.size.value}`);
-    else args.push(`${this.code?.graph.formatInterfaceLabels(size, false).join(", ")}`);
+    if (size.length > 0) args.push(`${formatInterfaceLabels(size, false).join(", ")}`);
+    else args.push(`${this.node.inputs.size.value}`);
 
     return `torch.rand(${args.join(", ")})`;
   },

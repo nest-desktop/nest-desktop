@@ -4,6 +4,7 @@ import { displayInSidebar, IntegerInterface } from "baklavajs";
 
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "nest.random.uniform_int",
@@ -19,8 +20,8 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const max = this.node.getConnectedOutputInterfacesByInterface("max");
-    if (max.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(max).join(", ")}`);
+    const max = this.node.getConnectedOutputInterfaceByInterface("max");
+    if (max != undefined) args.push(`${formatInterfaceLabel(max)}`);
     else args.push(`${this.node.inputs.max.value}`);
 
     return `nest.random.uniform_int(${args.join(", ")})`;

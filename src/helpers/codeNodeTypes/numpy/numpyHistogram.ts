@@ -2,10 +2,12 @@
 
 import { IntegerInterface, setType } from "baklavajs";
 
-import { arrayType, INumpyArray } from "./interfaceTypes";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
+
+import { arrayType, INumpyArray } from "./interfaceTypes";
 
 export default defineCodeNode({
   type: "numpy.histogram",
@@ -23,10 +25,10 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const x = this.node.getConnectedOutputInterfacesByInterface("x");
-    if (x.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(x).join("+")}`);
+    if (x.length > 0) args.push(`${formatInterfaceLabels(x).join("+")}`);
 
     const bins = this.node.getConnectedOutputInterfaceByInterface("bins");
-    if (bins) args.push(`${this.code?.graph.formatInterfaceLabel(bins)}`);
+    if (bins != undefined) args.push(`${formatInterfaceLabel(bins)}`);
     else args.push(`${this.node.inputs.bins.value}`);
 
     return `np.histogram(${args.join(", ")})`;

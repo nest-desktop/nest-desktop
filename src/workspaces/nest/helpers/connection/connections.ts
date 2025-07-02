@@ -57,8 +57,8 @@ export class NESTConnections extends BaseConnections {
     this.all.forEach((connection: NESTConnection) => connection.clean());
 
     this.all.forEach((connection: NESTConnection) => {
-      if (connection.source.isNode) connection.sourceSlice.update();
-      if (connection.target.isNode) connection.targetSlice.update();
+      if (connection.source?.isNode) connection.sourceSlice.update();
+      if (connection.target?.isNode) connection.targetSlice.update();
     });
   }
 

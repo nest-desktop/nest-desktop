@@ -4,6 +4,7 @@ import { TextInputInterface } from "baklavajs";
 
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "torch.device",
@@ -20,8 +21,8 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const types = this.node.getConnectedOutputInterfacesByInterface("type");
-    if (types.length === 0) args.push(`"${this.node.inputs.type.value}"`);
-    else args.push(`${this.code?.graph.formatInterfaceLabels(types, false).join(", ")}`);
+    if (types.length > 0) args.push(`${formatInterfaceLabels(types, false)}`);
+    else args.push(`"${this.node.inputs.type.value}"`);
 
     return `torch.device(${args.join(", ")})`;
   },

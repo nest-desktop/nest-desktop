@@ -4,8 +4,10 @@ import { setType } from "baklavajs";
 
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
-import { dataframeType, IPandasDataFrame } from "./interfaceTypes";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import { dataframeType, IPandasDataFrame } from "./interfaceTypes";
 
 export default defineCodeNode({
   type: "pandas.DataFrame",
@@ -21,7 +23,7 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const data = this.node.getConnectedOutputInterfaceByInterface("data");
-    if (data) args.push(`${this.code?.graph.formatInterfaceLabel(data)}`);
+    if (data != undefined) args.push(`${formatInterfaceLabel(data)}`);
 
     return `pd.DataFrame(${args.join(", ")})`;
   },

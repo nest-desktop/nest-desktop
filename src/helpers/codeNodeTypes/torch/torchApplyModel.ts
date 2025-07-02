@@ -5,6 +5,7 @@ import { TextInputInterface } from "baklavajs";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "torch/applyModel",
@@ -25,12 +26,12 @@ export default defineCodeNode({
 
     const modelInt = this.node.getConnectedOutputInterfaceByInterface("model");
     let model: string = "";
-    if (modelInt) model = `${this.code?.graph.formatInterfaceLabel(modelInt)}`;
+    if (modelInt != undefined) model = `${formatInterfaceLabel(modelInt)}`;
 
     code = `${this.node.inputs.className.value}(${model})`;
 
     const toInt = this.node.getConnectedOutputInterfaceByInterface("to");
-    if (toInt) code += `.to(${this.code?.graph.formatInterfaceLabel(toInt)})`;
+    if (toInt != undefined) code += `.to(${formatInterfaceLabel(toInt)})`;
 
     return code;
   },

@@ -17,7 +17,7 @@ export class NodeParameter extends BaseParameter {
    * Get model parameter.
    */
   override get modelParam(): ModelParameter {
-    return this.node.model.params[this.id];
+    return this.node.model?.params[this.id];
   }
 
   get node(): TNodeParameterParent {

@@ -3,6 +3,7 @@
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "plotly.graph_objects.Figure",
@@ -19,8 +20,8 @@ export default defineCodeNode({
     const args = [];
 
     const trace = this.node.getConnectedOutputInterfacesByInterface("trace");
-    if (trace.length > 1) args.push(`data=[${this.code?.graph.formatInterfaceLabels(trace).join(", ")}]`);
-    else if (trace.length === 1) args.push(`data=${this.code?.graph.formatInterfaceLabels(trace).join(", ")}`);
+    if (trace.length > 1) args.push(`data=[${formatInterfaceLabels(trace).join(", ")}]`);
+    else if (trace.length === 1) args.push(`data=${formatInterfaceLabels(trace).join(", ")}`);
 
     return `go.Figure(${args.join(", ")})`;
   },

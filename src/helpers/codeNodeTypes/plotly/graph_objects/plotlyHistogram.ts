@@ -2,11 +2,13 @@
 
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
-import { numberType } from "../../base/interfaceTypes";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
 import { getPlotlyGraphObjectsArgs } from "../express/helpers";
+import { numberType } from "../../base/interfaceTypes";
 
 export default defineCodeNode({
   type: "plotly.graph_objects.Histogram",
@@ -26,8 +28,8 @@ export default defineCodeNode({
     const args = getPlotlyGraphObjectsArgs(this.node);
 
     if (!this.node.inputs.nbinsx?.hidden) {
-      const nbinsx = this.node.getConnectedOutputInterfacesByInterface("nbinsx");
-      if (nbinsx.length > 0) args.push(`nbinsx=${this.code?.graph.formatInterfaceLabels(nbinsx).join(", ")}`);
+      const nbinsx = this.node.getConnectedOutputInterfaceByInterface("nbinsx");
+      if (nbinsx != undefined) args.push(`nbinsx=${formatInterfaceLabel(nbinsx)}`);
       else if (this.node.inputs.nbinsx?.value) args.push(`nbinsx=${this.node.inputs.nbinsx?.value}`);
     }
 

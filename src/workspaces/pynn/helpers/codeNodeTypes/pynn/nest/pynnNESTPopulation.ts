@@ -3,9 +3,10 @@
 import { IntegerInterface, SelectInterface } from "baklavajs";
 import { setType } from "@baklavajs/interface-types";
 
-import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 export default defineCodeNode({
   type: "pyNN.Population",
@@ -27,8 +28,8 @@ export default defineCodeNode({
     const args: string[] = [];
     args.push(`${this.node.inputs.size.value}`);
 
-    const cellclass = this.node.getConnectedOutputInterfacesByInterface("cellclass");
-    if (cellclass && cellclass.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(cellclass).join(", ")}`);
+    const cellclass = this.node.getConnectedOutputInterfaceByInterface("cellclass");
+    if (cellclass != undefined) args.push(`${formatInterfaceLabel(cellclass)}`);
     else args.push(`${this.node.inputs.cellclass.value}()`);
 
     return `pyNN.nest.Population(${args.join(", ")})`;

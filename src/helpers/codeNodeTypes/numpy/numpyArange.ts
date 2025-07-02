@@ -2,9 +2,10 @@
 
 import { displayInSidebar, NumberInterface, setType } from "baklavajs";
 
-import { arrayType, INumpyArray } from "./interfaceTypes";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+
+import { arrayType, INumpyArray } from "./interfaceTypes";
 import { numberType } from "../base/interfaceTypes";
 
 export default defineCodeNode({

@@ -39,11 +39,10 @@ const addClearAllCommand = (baklavaView: IBaklavaViewModel) => {
   });
 
   baklavaView.settings.toolbar.commands = [
-    // ...DEFAULT_TOOLBAR_COMMANDS.slice(0, 7),
     ...DEFAULT_TOOLBAR_COMMANDS,
     {
       command: CLEAR_ALL_COMMAND,
-      title: "Clear All", // Tooltip text
+      title: "Clear all", // Tooltip text
       icon: DeleteEmptyOutlineIcon, // defineComponent(() => () => h("div", "clear all")),
     },
     {

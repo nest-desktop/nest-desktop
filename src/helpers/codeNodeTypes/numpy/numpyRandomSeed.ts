@@ -3,6 +3,7 @@
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+
 import { numberType } from "../base/interfaceTypes";
 
 export default defineCodeNode({

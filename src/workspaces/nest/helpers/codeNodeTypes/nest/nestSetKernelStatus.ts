@@ -7,6 +7,7 @@ import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 import { NESTCode } from "../../code/code";
 import { NESTSimulationKernel } from "../../simulation/simulationKernel";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "nest.SetKernelStatus",
@@ -29,19 +30,17 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args: string[] = [];
 
-    const localNumThreads = this.node.getConnectedOutputInterfacesByInterface("local_num_threads");
-    if (localNumThreads.length > 0)
-      args.push(`"local_num_threads": ${this.code?.graph.formatInterfaceLabels(localNumThreads).join(", ")}`);
+    const localNumThreads = this.node.getConnectedOutputInterfaceByInterface("local_num_threads");
+    if (localNumThreads != undefined) args.push(`"local_num_threads": ${formatInterfaceLabel(localNumThreads)}`);
     else if (!this.node.inputs.local_num_threads.hidden)
       args.push(`"local_num_threads": ${this.node.inputs.local_num_threads.value}`);
 
-    const resolution = this.node.getConnectedOutputInterfacesByInterface("resolution");
-    if (resolution.length > 0)
-      args.push(`"resolution": ${this.code?.graph.formatInterfaceLabels(resolution).join(", ")}`);
+    const resolution = this.node.getConnectedOutputInterfaceByInterface("resolution");
+    if (resolution != undefined) args.push(`"resolution": ${formatInterfaceLabel(resolution)}`);
     else if (!this.node.inputs.resolution.hidden) args.push(`"resolution": ${this.node.inputs.resolution.value}`);
 
-    const rngSeed = this.node.getConnectedOutputInterfacesByInterface("rng_seed");
-    if (rngSeed.length > 0) args.push(`"rng_seed": ${this.code?.graph.formatInterfaceLabels(rngSeed).join(", ")}`);
+    const rngSeed = this.node.getConnectedOutputInterfaceByInterface("rng_seed");
+    if (rngSeed) args.push(`"rng_seed": ${formatInterfaceLabel(rngSeed)}`);
     else if (!this.node.inputs.rng_seed.hidden) args.push(`"rng_seed": ${this.node.inputs.rng_seed.value}`);
 
     return args.length > 0 ? `nest.SetKernelStatus({\n\t${args.join(",\n\t")}\n})` : "";

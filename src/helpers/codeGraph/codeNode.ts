@@ -2,16 +2,24 @@
 // Adapted from https://github.com/newcat/baklavajs/blob/987018200389bd86c48544ac4afa7a393fe1e9bc/packages/core/src/node.ts
 
 import Mustache from "mustache";
-import { AbstractNode, Connection, INodeState, NodeInterface, NodeInterfaceDefinition } from "baklavajs";
+import {
+  AbstractNode,
+  Connection,
+  Graph,
+  NodeInterface,
+  NodeInterfaceDefinition,
+  NodeInterfaceDefinitionStates,
+} from "baklavajs";
 
 import { reactive, UnwrapRef } from "vue";
 
-import { BaseCode } from "../code/code";
 import { TConnection, TSimulation } from "@/types";
-import { NodeOutputInterface } from "./interface/nodeOutputInterface";
-
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
+
+import { BaseCode } from "../code/code";
+import { CodeGraph } from "./codeGraph";
+import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 
 interface IAbstractCodeNodeState {
   codeTemplate: string;
@@ -23,6 +31,15 @@ interface IAbstractCodeNodeState {
   role: string;
   script: string;
   token: symbol | null;
+}
+
+export interface ICodeNodeState<I, O> {
+  type: string;
+  title: string;
+  id: string;
+  inputs: NodeInterfaceDefinitionStates<I> & NodeInterfaceDefinitionStates<Record<string, NodeInterface<any>>>;
+  integrated: boolean;
+  outputs: NodeInterfaceDefinitionStates<O> & NodeInterfaceDefinitionStates<Record<string, NodeInterface<any>>>;
 }
 
 export interface CodeNodeInterface extends NodeInterface<any> {
@@ -58,14 +75,12 @@ export abstract class AbstractCodeNode extends AbstractNode {
     // minLevel: 1,
   });
   public modules: string[] = [];
-  public variableName: string = "x";
+  public variableName: string = "n";
 
   constructor() {
     super();
 
     this.twoColumn = true;
-
-    // this.initializeIo();
   }
 
   get code(): BaseCode | undefined {
@@ -149,6 +164,39 @@ export abstract class AbstractCodeNode extends AbstractNode {
   // calculate?: CalculateFunction<any, any> | undefined;
 
   /**
+   * Get connected node input interface to the node interface.
+   * @param nodeInterface string
+   * @returns node input interface instance
+   */
+  getConnectedInputInterfaceByInterface(nodeInterface: string): NodeOutputInterface | null {
+    const nodeInterfaces = this.getConnectedInputInterfacesByInterface(nodeInterface);
+    return nodeInterfaces.length > 0 ? nodeInterfaces[0] : null;
+  }
+
+  /**
+   * Get connected node input interfaces to the node interface.
+   * @param nodeInterface string
+   * @returns node input interface instances
+   */
+  getConnectedInputInterfacesByInterface(nodeInterface: string): NodeOutputInterface[] {
+    let nodeInterfaces: NodeOutputInterface[] = [];
+
+    if (nodeInterface in this.outputs) {
+      const targets = this.graph?.connections
+        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
+        .filter(
+          (c: CodeNodeConnection) =>
+            c.to.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
+        )
+        .map((c: CodeNodeConnection) => c.from) as NodeOutputInterface[];
+
+      if (targets) nodeInterfaces = nodeInterfaces.concat(targets);
+    }
+
+    return nodeInterfaces;
+  }
+
+  /**
    * Get connected node to the node interface.
    * @param nodeInterface string
    * @returns code node instance or null
@@ -208,7 +256,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (type !== "inputs") {
       const targets = this.graph?.connections
-        .filter((c: CodeNodeConnection) => c.from.type !== "node")
+        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
         .filter((c: CodeNodeConnection) => c.from.nodeId === this.id)
         .map((c: CodeNodeConnection) => c.to.nodeId);
       if (targets) nodeIds = nodeIds.concat(targets);
@@ -262,9 +310,9 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node output interface instance
    */
-  getConnectedOutputInterfaceByInterface(nodeInterface: string): NodeOutputInterface | null {
+  getConnectedOutputInterfaceByInterface(nodeInterface: string): NodeOutputInterface | undefined {
     const nodeInterfaces = this.getConnectedOutputInterfacesByInterface(nodeInterface);
-    return nodeInterfaces.length > 0 ? nodeInterfaces[0] : null;
+    return nodeInterfaces.length > 0 ? nodeInterfaces[0] : undefined;
   }
 
   /**
@@ -277,7 +325,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (nodeInterface in this.inputs) {
       const sources = this.graph?.connections
-        .filter((c: CodeNodeConnection) => c.from.type !== "node")
+        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
         .filter(
           (c: CodeNodeConnection) =>
             c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
@@ -290,9 +338,19 @@ export abstract class AbstractCodeNode extends AbstractNode {
     return nodeInterfaces;
   }
 
+  /**
+   * Get connected node output interface to the node interface.
+   * @param nodeInterface string
+   * @returns string
+   */
+  getConnectedOutputVariableByInterface(nodeInterface: string): string | undefined {
+    const sourceNodeInterface = this.getConnectedOutputInterfaceByInterface(nodeInterface);
+    return this.code?.graph && sourceNodeInterface ? formatInterfaceLabel(sourceNodeInterface) : undefined;
+  }
+
   getInputValue(name: string): string {
     const outputInterface = this.getConnectedOutputInterfaceByInterface(name);
-    if (outputInterface) return `${this.code?.graph.formatInterfaceLabel(outputInterface)}`;
+    if (outputInterface) return `${formatInterfaceLabel(outputInterface)}`;
     else return `${this.inputs[name].value}`;
   }
 
@@ -329,10 +387,6 @@ export abstract class AbstractCodeNode extends AbstractNode {
   }
 
   toJSON(): Record<string, unknown> {
-    return this._toJSON();
-  }
-
-  _toJSON(): Record<string, unknown> {
     const props: Record<string, unknown> = {};
 
     if (this.node && this.node.nInputs > 0) {
@@ -349,12 +403,15 @@ export abstract class CodeNode<I, O> extends AbstractCodeNode {
   abstract inputs: NodeInterfaceDefinition<I>;
   abstract outputs: NodeInterfaceDefinition<O>;
 
-  public load(state: INodeState<I, O>): void {
+  public load(state: ICodeNodeState<I, O>): void {
     super.load(state);
+    loadNodeState(this.graph, state);
   }
 
-  public save(): INodeState<I, O> {
-    return super.save();
+  public save(): ICodeNodeState<I, O> {
+    const state = super.save() as ICodeNodeState<I, O>;
+    saveNodeState(this.graph, state);
+    return state;
   }
   /**
    * The default implementation does nothing.
@@ -367,3 +424,102 @@ export abstract class CodeNode<I, O> extends AbstractCodeNode {
 }
 
 export type AbstractCodeNodeConstructor = new () => AbstractCodeNode;
+
+/**
+ * Format labels for output interfaces.
+ * @param outputInterfaces output interface of the node
+ * @param sorted boolean
+ * @returns string array
+ */
+export const formatInterfaceLabels = (outputInterfaces: NodeOutputInterface[], sorted: boolean = true): string[] => {
+  if (outputInterfaces.length === 0) return [];
+  const labels: string[] = [];
+
+  outputInterfaces.forEach((outputInterface: NodeOutputInterface) => {
+    if (!outputInterface.node) return;
+    labels.push(formatInterfaceLabel(outputInterface));
+  });
+
+  if (sorted) labels.sort();
+  return labels;
+};
+
+/**
+ * Format label for output interface.
+ * @param outputInterface output interface of the node
+ * @returns string
+ */
+export const formatInterfaceLabel = (outputInterface: NodeOutputInterface): string => {
+  if (!outputInterface.node) return "";
+  return outputInterface.node.state.integrated ? outputInterface.node.codeTemplate : outputInterface.label;
+};
+
+/**
+ * Format labels of nodes.
+ * @param nodes code nodes
+ * @param sorted boolean
+ * @returns string array
+ */
+export const formatLabels = (nodes: AbstractCodeNode[], sorted: boolean = true): string[] => {
+  const labels: string[] = [];
+
+  if (nodes.length === 0) return labels;
+
+  nodes.forEach((node: AbstractCodeNode) => labels.push(node.state.integrated ? node.codeTemplate : node.label));
+
+  if (sorted) labels.sort();
+  return labels;
+};
+
+/**
+ * Load node state.
+ * @param graph code graph
+ * @param nodeState node state
+ */
+export const loadNodeState = (graph: CodeGraph | Graph | undefined, nodeState: ICodeNodeState<any, any>): void => {
+  if (!graph) return;
+
+  const node = graph.findNodeById(nodeState.id);
+  if (!node) return;
+
+  if (node instanceof AbstractCodeNode) {
+    if (node.state) node.state.integrated = nodeState.integrated;
+
+    Object.entries(nodeState.inputs).forEach(([inputKey, inputItem]) => {
+      if (inputKey === "_node") return;
+      if (node.inputs[inputKey]) node.inputs[inputKey].hidden = inputItem.hidden;
+    });
+
+    Object.entries(nodeState.outputs).forEach(([outputKey, outputItem]) => {
+      if (outputKey === "_node") return;
+
+      if (node.outputs[outputKey]) node.outputs[outputKey].hidden = outputItem.hidden;
+    });
+  }
+};
+
+/**
+ * Save state of node.
+ * @param graph code graph
+ * @param nodeState node state
+ */
+export const saveNodeState = (graph: CodeGraph | Graph | undefined, nodeState: ICodeNodeState<any, any>): void => {
+  if (!graph) return;
+
+  const node = graph.findNodeById(nodeState.id);
+  if (!node) return;
+
+  if (node instanceof AbstractCodeNode) {
+    if (node.state) nodeState.integrated = node.state.integrated;
+
+    Object.entries(nodeState.inputs).forEach(([inputKey]) => {
+      if (inputKey === "_node") return;
+      if (node.inputs[inputKey]) nodeState.inputs[inputKey].hidden = node.inputs[inputKey].hidden;
+    });
+
+    Object.entries(nodeState.outputs).forEach(([outputKey]) => {
+      if (outputKey === "_node") return;
+      if (node.outputs[outputKey]) nodeState.outputs[outputKey].hidden = node.outputs[outputKey].hidden;
+    });
+  }
+};

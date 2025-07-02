@@ -1,8 +1,10 @@
 // brainscales2Projection.ts
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { SelectInterface } from "baklavajs";
+
+import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "brainscales2.Projection",
@@ -21,12 +23,12 @@ export default defineCodeNode({
     if (presynapticNeurons.length === 0 || postsynapticNeurons.length === 0) return this.type;
 
     const args: string[] = [
-      `${this.code?.graph.formatInterfaceLabels(presynapticNeurons).join("+")}`,
-      `${this.code?.graph.formatInterfaceLabels(postsynapticNeurons).join("+")}`,
+      `${formatInterfaceLabels(presynapticNeurons).join("+")}`,
+      `${formatInterfaceLabels(postsynapticNeurons).join("+")}`,
     ];
 
-    const connector = this.node.getConnectedOutputInterfacesByInterface("connector");
-    if (connector.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(connector).join(", ")}`);
+    const connector = this.node.getConnectedOutputInterfaceByInterface("connector");
+    if (connector) args.push(`${formatInterfaceLabel(connector)}`);
     else args.push(`${this.node.inputs.connector.value}()`);
 
     return `pynn.Projection(${args.join(", ")})`;

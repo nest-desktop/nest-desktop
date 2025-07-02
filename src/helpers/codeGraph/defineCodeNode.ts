@@ -43,8 +43,8 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
       if (definition.modules) this.modules = definition.modules;
       if (definition.variableName) this.variableName = definition.variableName;
 
-      this.addInput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
-      this.addOutput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.addInput("_node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.addOutput("_node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
       this.executeFactory("input", definition.inputs);
       this.executeFactory("output", definition.outputs);
       definition.onCreate?.call(this);
@@ -86,7 +86,7 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
     }
 
     override toJSON(): Record<string, unknown> {
-      return definition.toJSON ? definition.toJSON?.call(this) : this._toJSON();
+      return definition.toJSON ? definition.toJSON?.call(this) : super.toJSON();
     }
 
     private executeFactory<V, T extends InterfaceFactory<V>>(type: "input" | "output", factory?: T): void {

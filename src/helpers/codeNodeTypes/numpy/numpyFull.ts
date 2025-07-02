@@ -2,9 +2,11 @@
 
 import { IntegerInterface, NumberInterface, setType } from "baklavajs";
 
-import { arrayType, INumpyArray } from "./interfaceTypes";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import { arrayType, INumpyArray } from "./interfaceTypes";
 import { numberType } from "../base/interfaceTypes";
 
 export default defineCodeNode({
@@ -22,11 +24,11 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const shape = this.node.getConnectedOutputInterfaceByInterface("shape");
-    if (shape) args.push(`shape=${this.code?.graph.formatInterfaceLabel(shape)}`);
+    if (shape != undefined) args.push(`shape=${formatInterfaceLabel(shape)}`);
     else args.push(`shape=${this.node.inputs.shape.value}`);
 
     const fill_value = this.node.getConnectedOutputInterfaceByInterface("fill_value");
-    if (fill_value) args.push(`fill_value=${this.code?.graph.formatInterfaceLabel(fill_value)}`);
+    if (fill_value != undefined) args.push(`fill_value=${formatInterfaceLabel(fill_value)}`);
     else args.push(`fill_value=${this.node.inputs.fill_value.value}`);
 
     return `np.full(${args.join(", ")})`;

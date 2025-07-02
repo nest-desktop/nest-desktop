@@ -4,6 +4,7 @@ import { displayInSidebar, NodeInterface, NumberInterface } from "baklavajs";
 
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "torch.optim.Adam",
@@ -23,8 +24,8 @@ export default defineCodeNode({
     const args: string[] = [];
 
     const params = this.node.getConnectedOutputInterfacesByInterface("params");
-    if (params.length === 0) args.push(`${this.node.inputs.params.value}`);
-    else args.push(`${this.code?.graph.formatInterfaceLabels(params, false).join(", ")}`);
+    if (params.length > 0) args.push(`${formatInterfaceLabels(params, false).join(", ")}`);
+    else args.push(`${this.node.inputs.params.value}`);
 
     return `optim.Adam(${args.join(", ")})`;
   },

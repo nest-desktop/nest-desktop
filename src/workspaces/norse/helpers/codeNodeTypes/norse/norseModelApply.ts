@@ -3,6 +3,7 @@
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "norse/modelApply",
@@ -24,11 +25,11 @@ export default defineCodeNode({
 
     const args: string[] = [];
 
-    const inputs = this.node.getConnectedOutputInterfacesByInterface("inputs");
-    if (inputs && inputs.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(inputs).join(", ")}`);
+    const inputs = this.node.getConnectedOutputInterfaceByInterface("inputs");
+    if (inputs != undefined) args.push(`${formatInterfaceLabel(inputs)}`);
 
-    const state = this.node.getConnectedOutputInterfacesByInterface("state");
-    if (state && state.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(state).join(", ")}`);
+    const state = this.node.getConnectedOutputInterfaceByInterface("state");
+    if (state != undefined) args.push(`${formatInterfaceLabel(state)}`);
 
     return `${models[0].label}(${args.join(", ")})`;
   },

@@ -20,7 +20,7 @@
     <draggable v-model="code.graph.nodes" group="people" item-key="id" @start="drag = true" @end="dragEnd()">
       <template #item="{ element }">
         <v-list-item style="height: 1.4em; min-height: auto; line-height: 16.8px">
-          <v-btn :disabled="element.state.integrated" icon="mdi:mdi-drag" variant="text" size="xsmall" />
+          <v-btn :disabled="element.state?.integrated" icon="mdi:mdi-drag" variant="text" size="xsmall" />
           <span :class="{ hidden: element.idx === -1 }" style="display: inline-block; text-align: right; width: 32px">
             {{ element.idx + 1 }} -
           </span>

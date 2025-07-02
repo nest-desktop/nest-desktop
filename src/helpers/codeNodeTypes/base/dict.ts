@@ -4,6 +4,8 @@ import { displayInSidebar, IntegerInterface, NodeInterface, setType, TextInputIn
 
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
+import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
+
 import { numberType } from "./interfaceTypes";
 
 export default defineDynamicCodeNode({
@@ -30,7 +32,7 @@ export default defineDynamicCodeNode({
       const args = this.node.getConnectedOutputInterfacesByInterface(argId);
       if (args.length > 0) {
         keyword = this.node.inputs[argId].value;
-        value = this.code?.graph.formatInterfaceLabels(args).join(", ");
+        value = formatInterfaceLabels(args).join(", ");
         kwargs.push(keyword ? `${keyword}=${value}` : `${value}`);
       }
     }

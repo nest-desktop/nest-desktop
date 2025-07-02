@@ -5,6 +5,8 @@ import { displayInSidebar, IntegerInterface, setType, TextInputInterface } from 
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
 import { getPlotlyExpressArgs } from "./helpers";
 import { numberType } from "../../base/interfaceTypes";
 
@@ -26,14 +28,14 @@ export default defineCodeNode({
     const args = getPlotlyExpressArgs(this.node);
 
     if (!this.node.inputs.nbins?.hidden) {
-      const nbins = this.node.getConnectedOutputInterfacesByInterface("nbins");
-      if (nbins.length > 0) args.push(`nbins=${this.code?.graph.formatInterfaceLabels(nbins).join(", ")}`);
+      const nbins = this.node.getConnectedOutputInterfaceByInterface("nbins");
+      if (nbins != undefined) args.push(`nbins=${formatInterfaceLabel(nbins)}`);
       else if (this.node.inputs.nbins?.value) args.push(`nbins=${this.node.inputs.nbins?.value}`);
     }
 
     if (!this.node.inputs.range_x?.hidden) {
-      const rangeX = this.node.getConnectedOutputInterfacesByInterface("range_x");
-      if (rangeX.length > 0) args.push(`range_x=${this.code?.graph.formatInterfaceLabels(rangeX).join(", ")}`);
+      const rangeX = this.node.getConnectedOutputInterfaceByInterface("range_x");
+      if (rangeX != undefined) args.push(`range_x=${formatInterfaceLabel(rangeX)}`);
       else if (this.node.inputs.range_x?.value) args.push(`range_x=${this.node.inputs.range_x?.value}`);
     }
 

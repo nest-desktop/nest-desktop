@@ -1,7 +1,8 @@
 // display.ts
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { NodeInterface, TextInterface } from "baklavajs";
+
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 
 export default defineCodeNode({
   type: "display",

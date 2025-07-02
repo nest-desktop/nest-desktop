@@ -1,8 +1,10 @@
 // plotlyFigureAddTrace.ts
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { IntegerInterface } from "baklavajs";
+
+import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "plotly.fig.add_trace",
@@ -17,18 +19,19 @@ export default defineCodeNode({
     if (!this.node) return this.type;
     const args = [];
 
-    const fig = this.node.getConnectedOutputInterfacesByInterface("fig");
-    const figname = this.code?.graph.formatInterfaceLabels(fig).join(", ");
+    const fig = this.node.getConnectedOutputInterfaceByInterface("fig");
+    if (fig != undefined) return this.type;
+    const figname = formatInterfaceLabel(fig);
 
     const trace = this.node.getConnectedOutputInterfaceByInterface("trace");
-    if (trace) args.push(`${this.code?.graph.formatInterfaceLabel(trace)}`);
+    if (trace != undefined) args.push(`${formatInterfaceLabel(trace)}`);
 
     const row = this.node.getConnectedOutputInterfaceByInterface("row");
-    if (row) args.push(`row=${this.code?.graph.formatInterfaceLabel(row)}`);
+    if (row != undefined) args.push(`row=${formatInterfaceLabel(row)}`);
     else args.push(`row=${this.node.inputs.row.value}`);
 
     const col = this.node.getConnectedOutputInterfaceByInterface("col");
-    if (col) args.push(`col=${this.code?.graph.formatInterfaceLabel(col)}`);
+    if (col != undefined) args.push(`col=${formatInterfaceLabel(col)}`);
     else args.push(`col=${this.node.inputs.col.value}`);
 
     return `${figname}.add_trace(${args.join(", ")})`;

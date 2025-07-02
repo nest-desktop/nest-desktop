@@ -422,8 +422,8 @@ export class BaseConnection extends BaseObj {
       synapse: this.synapse.hash,
     };
 
-    if (this.source.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
-    if (this.target.isNode) hashProps.targetModelId = this.targetNode.modelId;
+    if (this.source?.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
+    if (this.target?.isNode) hashProps.targetModelId = this.targetNode.modelId;
 
     this._updateHash(hashProps);
   }

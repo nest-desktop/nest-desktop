@@ -108,7 +108,7 @@
             </slot>
           </v-list>
 
-          <v-list v-if="node.model.isMultimeter" class="py-0">
+          <v-list v-if="node.model?.isMultimeter" class="py-0">
             <v-list-item>
               <NodeRecordSelect :node />
             </v-list-item>

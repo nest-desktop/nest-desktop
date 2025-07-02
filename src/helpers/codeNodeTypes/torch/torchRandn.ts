@@ -2,10 +2,11 @@
 
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
-import { ITorchTensor, torchTensorType } from "./interfaceTypes";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import { ITorchTensor, torchTensorType } from "./interfaceTypes";
 
 export default defineCodeNode({
   type: "torch.randn",

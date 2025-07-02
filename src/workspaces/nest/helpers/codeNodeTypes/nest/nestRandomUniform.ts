@@ -4,6 +4,7 @@ import { displayInSidebar, NumberInterface } from "baklavajs";
 
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
+import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
   type: "nest.random.uniform",
@@ -21,13 +22,13 @@ export default defineCodeNode({
     const args: string[] = [];
     let keyword: string = "";
 
-    const min = this.node.getConnectedOutputInterfacesByInterface("min");
-    if (min.length > 0) args.push(`${this.code?.graph.formatInterfaceLabels(min).join(", ")}`);
+    const min = this.node.getConnectedOutputInterfaceByInterface("min");
+    if (min != undefined) args.push(`${formatInterfaceLabel(min)}`);
     else if (!this.node.inputs.min.hidden) args.push(`${this.node.inputs.min.value}`);
 
     keyword = args.length < 1 ? "max=" : "";
-    const max = this.node.getConnectedOutputInterfacesByInterface("max");
-    if (max.length > 0) args.push(`${keyword}${this.code?.graph.formatInterfaceLabels(max).join(", ")}`);
+    const max = this.node.getConnectedOutputInterfaceByInterface("max");
+    if (max != undefined) args.push(`${keyword}${formatInterfaceLabel(max)}`);
     else if (!this.node.inputs.max.hidden) args.push(`${keyword}${this.node.inputs.max.value}`);
 
     return `nest.random.uniform(${args.join(", ")})`;

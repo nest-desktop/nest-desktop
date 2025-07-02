@@ -11,14 +11,15 @@ import {
   displayInSidebar,
   setType,
 } from "baklavajs";
+import { nextTick } from "vue";
 
 import { truncate } from "@/utils/truncate";
 
-import { AbstractCodeNode, CodeNode } from "./codeNode";
+import { AbstractCodeNode, CodeNode, ICodeNodeState } from "./codeNode";
 import { BaseCode } from "../code/code";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
+import { loadNodeState, saveNodeState } from "./codeNode";
 import { nodeType } from "../codeNodeTypes/base/interfaceTypes";
-import { nextTick } from "vue";
 
 type Dynamic<T> = T & Record<string, any>;
 
@@ -84,10 +85,10 @@ export function defineDynamicCodeNode<I, O>(
       if (definition.modules) this.modules = definition.modules;
       if (definition.variableName) this.variableName = definition.variableName;
 
-      this.addInput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
-      this.addOutput("node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
-      this.staticInputKeys.push("node");
-      this.staticOutputKeys.push("node");
+      this.addInput("_node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.addOutput("_node", new NodeInterface("", null).use(setType, nodeType).setHidden(true));
+      this.staticInputKeys.push("_node");
+      this.staticOutputKeys.push("_node");
 
       this.executeFactory("input", definition.inputs);
       this.executeFactory("output", definition.outputs);
@@ -143,7 +144,7 @@ export function defineDynamicCodeNode<I, O>(
       nextTick(() => this.onUpdate());
     }
 
-    public load(state: INodeState<Dynamic<I>, Dynamic<O>>): void {
+    public load(state: ICodeNodeState<Dynamic<I>, Dynamic<O>>): void {
       // prevent automatic updates during loading
       this.preventUpdate = true;
 
@@ -155,11 +156,13 @@ export function defineDynamicCodeNode<I, O>(
       for (const k of this.staticInputKeys) {
         this.inputs[k].load(state.inputs[k]);
         this.inputs[k].nodeId = this.id;
+        if (k === "_node") continue;
         this.inputs[k].hidden = state.inputs[k].hidden;
       }
       for (const k of this.staticOutputKeys) {
         this.outputs[k].load(state.outputs[k]);
         this.outputs[k].nodeId = this.id;
+        if (k === "_node") continue;
         this.outputs[k].hidden = state.outputs[k].hidden;
       }
 
@@ -204,6 +207,8 @@ export function defineDynamicCodeNode<I, O>(
           this.outputs[k].hidden = state.outputs[k].hidden;
         }
       }
+
+      loadNodeState(this.graph, state);
 
       this.preventUpdate = false;
       this.events.loaded.emit(this);
@@ -273,8 +278,15 @@ export function defineDynamicCodeNode<I, O>(
       });
     }
 
+    override save(): ICodeNodeState<I, O> {
+      const state = super.save();
+      saveNodeState(this.graph, state);
+
+      return state;
+    }
+
     override toJSON(): Record<string, unknown> {
-      return definition.toJSON ? definition.toJSON?.call(this) : this._toJSON();
+      return definition.toJSON ? definition.toJSON?.call(this) : super.toJSON();
     }
   };
 }

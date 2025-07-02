@@ -2,7 +2,7 @@
 
 import { displayInSidebar, NodeInterface, setType, TextInputInterface } from "baklavajs";
 
-import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
+import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { DictInputInterface } from "@/helpers/codeGraph/interface/dictInputInterface";
 import { IParamProps } from "@/helpers/common/parameter";
@@ -27,8 +27,8 @@ export default defineDynamicCodeNode({
     if (!this.node) return this.type;
     const args = [`"${this.node.inputs.existing.value}"`, `"${this.node.inputs.new.value}"`];
 
-    const params = this.node.getConnectedOutputInterfacesByInterface("params");
-    if (params.length > 0) args.push(`params=${this.code?.graph.formatInterfaceLabels(params).join(",\n\t")}`);
+    const params = this.node.getConnectedOutputInterfaceByInterface("params");
+    if (params != undefined) args.push(`params=${formatInterfaceLabel(params)}`);
 
     return `nest.CopyModel(${args.join(", ")})`;
   },

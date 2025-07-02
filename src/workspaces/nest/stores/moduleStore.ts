@@ -6,7 +6,7 @@ import { reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
-import { fetchNESTMLModels, generateModels, useNESTMLServerStore } from "./backends/nestmlServerStore";
+import nestml, { useNESTMLServerStore } from "./backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./model/modelDBStore";
 import type { NESTModel } from "../types";
 
@@ -50,7 +50,8 @@ export const useNESTModuleStore = defineStore(
       clean(moduleName);
 
       state.installedModels = [];
-      fetchNESTMLModels(moduleName)
+      nestml
+        .fetchNESTMLModels(moduleName)
         .then((response: AxiosResponse) => {
           state.installedModels = response.data;
         })
@@ -119,7 +120,7 @@ export const openNESTModuleDialog = (): void => {
         };
       });
 
-      generateModels({ models, name: module.name }).finally(() => {
+      nestml.generateModels({ models, name: module.name }).finally(() => {
         const moduleStore = useNESTModuleStore();
         moduleStore.fetchInstalledModels();
       });

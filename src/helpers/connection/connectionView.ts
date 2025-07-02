@@ -121,8 +121,8 @@ export class ConnectionView {
     const sourceNode = this._connection.sourceNode;
     const targetNode = this._connection.targetNode;
     return (
-      (sourceNode.isNode ? sourceNode.model.isRecorder : false) ||
-      (targetNode.isNode ? targetNode.model.isRecorder : false)
+      (sourceNode.isNode ? sourceNode.model?.isRecorder : false) ||
+      (targetNode.isNode ? targetNode.model?.isRecorder : false)
     );
   }
 
