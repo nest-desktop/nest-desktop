@@ -1,4 +1,4 @@
-// vite.config.mts
+// vite.config.js
 // https://vite.dev/config/
 
 import { URL, fileURLToPath } from "node:url";
@@ -14,8 +14,7 @@ import { VitePWA } from "vite-plugin-pwa";
 // Plugins
 import Vue from "@vitejs/plugin-vue";
 
-// https://vitejs.dev/config/
-export default defineConfig((configEnv: { mode: string }) => ({
+export default defineConfig(() => ({
   build: {
     assetsInclude: ["**/*.nestml"],
     // chunkSizeWarningLimit: 1000, // https://github.com/vitejs/vite/discussions/9440
@@ -23,7 +22,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo: { name: string }) => {
+        assetFileNames: (assetInfo) => {
           const name = assetInfo.name;
           let extType = name.split(".").at(1);
           if (/png|svg/.test(extType)) {
@@ -36,7 +35,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
           }
           return `assets/${extType}/[name]-[hash][extname]`;
         },
-        chunkFileNames: (assetInfo: { facadeModuleId: string; name: string }) => {
+        chunkFileNames: (assetInfo) => {
           // https://github.com/vitejs/vite-plugin-vue/issues/19
           const name = assetInfo.name;
           if (name.startsWith("vendors_")) {
@@ -45,7 +44,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
           return `assets/js/${name}-[hash].js`;
         },
         entryFileNames: "assets/js/[name]-[hash].js",
-        manualChunks: (id: string): string => {
+        manualChunks: (id) => {
           // https://github.com/vitejs/vite/discussions/9440#discussioncomment-10131471
           const path = id.toString().split("/");
           if (path.includes("node_modules")) {
@@ -56,7 +55,7 @@ export default defineConfig((configEnv: { mode: string }) => ({
         },
       },
     },
-    // sourcemap: configEnv.mode === "development",
+    // sourcemap: mode === "development",
   },
   define: {
     global: "window",
