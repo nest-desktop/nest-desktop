@@ -178,6 +178,10 @@ export class NESTCodeGraph extends BaseObj {
       spatialNodes.forEach((spatialNode: AbstractCodeNode) =>
         this.addConnection(spatialNode.outputs.positions, responseNode.inputs.positions),
       );
+
+    this.nodes
+      .filter((node: AbstractCodeNode) => node.type === "nest.Simulate")
+      .forEach((node: AbstractCodeNode) => this.addConnection(node.outputs._node, responseNode.inputs._node));
   }
 
   /**
@@ -189,6 +193,10 @@ export class NESTCodeGraph extends BaseObj {
     const codeNode = this.addNodeAtColumn(nestSimulate, 4, 100);
     codeNode.state.comments = "Run simulation";
     codeNode.inputs.time.value = simulationProps?.time ?? 1000;
+
+    this.nodes
+      .filter((node: AbstractCodeNode) => node.type === "nest.Connect")
+      .forEach((node: AbstractCodeNode) => this.addConnection(node.outputs._node, codeNode.inputs._node));
   }
 
   /**
