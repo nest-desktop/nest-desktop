@@ -126,7 +126,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
           workspace.animationOff();
 
           // Get copied synapse model.
-          let copyModel = this.network.copyModels.all.find(
+          let copyModel = this.network.copyModels.allModels.find(
             (model: NESTCopyModel) => model.id === connection.synapse.copyModel?.id,
           );
 
@@ -254,7 +254,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
     const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
-      .data(this.network.connections.all, (c: NESTConnection | any) => c.uuid);
+      .data(this.network.connections.allConnections, (c: NESTConnection | any) => c.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

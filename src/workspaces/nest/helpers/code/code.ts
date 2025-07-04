@@ -104,7 +104,7 @@ export class NESTCode extends BaseCode {
   //   const nodes = createNodes(this.graph, networkProps.nodes);
 
   //   copySynapseModels(this.graph, networkProps.models, nodes.weightRecorders);
-  //   connectNodes(this.graph, networkProps.connections, nodes.all);
+  //   connectNodes(this.graph, networkProps.connections, nodes.allNodes);
 
   //   // define function getPos
   //   if (nodes.spatial.length > 0) {
@@ -117,8 +117,8 @@ export class NESTCode extends BaseCode {
   //   // update response
   //   const responseNode = this.graph.findNodeByType("nest/response");
   //   if (responseNode) {
-  //     if (nodes.all.length > 0) {
-  //       nodes.all
+  //     if (nodes.allNodes.length > 0) {
+  //       nodes.allNodes
   //         .filter((node: AbstractCodeNode) => node.outputs.events)
   //         .forEach((node: AbstractCodeNode) => {
   //           this.graph.addConnection(node.outputs.events, responseNode.inputs.events);

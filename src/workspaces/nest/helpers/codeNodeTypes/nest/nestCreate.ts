@@ -272,7 +272,7 @@ export const createNodes = (
 ): Record<string, AbstractCodeNode[]> => {
   if (!nodesProps || nodesProps.length === 0) return {};
 
-  const nodes: AbstractCodeNode[] = [];
+  const allNodes: AbstractCodeNode[] = [];
   const spatialNodes: AbstractCodeNode[] = [];
   const weightRecorders: AbstractCodeNode[] = [];
 
@@ -288,8 +288,8 @@ export const createNodes = (
     //     }
     //   });
 
-    nodes.push(codeNode);
+    allNodes.push(codeNode);
   });
 
-  return { all: nodes, spatial: spatialNodes, weightRecorders };
+  return { allNodes, spatialNodes, weightRecorders };
 };

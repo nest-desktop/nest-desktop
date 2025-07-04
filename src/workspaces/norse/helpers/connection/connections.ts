@@ -14,7 +14,7 @@ export class NorseConnections extends BaseConnections {
     return NorseConnection;
   }
 
-  override get all(): NorseConnection[] {
+  override get allConnections(): NorseConnection[] {
     return this.connections as NorseConnection[];
   }
 }

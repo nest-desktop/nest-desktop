@@ -111,13 +111,17 @@
         </slot>
       </template>
 
-      <template v-if="projectViewStore.state.views.controller === 'activity' && project.activities.all.length > 0">
+      <template
+        v-if="projectViewStore.state.views.controller === 'activity' && project.activities.allActivities.length > 0"
+      >
         <slot name="activityController">
           <ActivityChartController :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)" />
         </slot>
       </template>
 
-      <template v-if="projectViewStore.state.views.controller === 'stats' && project.activities.all.length > 0">
+      <template
+        v-if="projectViewStore.state.views.controller === 'stats' && project.activities.allActivities.length > 0"
+      >
         <ActivityStats :activities="(project.activities as Activities)" />
       </template>
     </div>

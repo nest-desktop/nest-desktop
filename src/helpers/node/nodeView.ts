@@ -54,7 +54,7 @@ export class NodeView extends BaseObj {
     if (this._state.color) {
       return this._state.color;
     } else if (this.node.model?.isRecorder) {
-      const connections: TConnection[] = this.node.network.connections.all.filter(
+      const connections: TConnection[] = this.node.network.connections.allConnections.filter(
         (connection: TConnection) => connection.sourceIdx === this.node.idx || connection.targetIdx === this.node.idx,
       );
       if (connections.length === 1 && connections[0].sourceIdx !== connections[0].targetIdx) {

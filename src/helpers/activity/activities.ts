@@ -39,6 +39,9 @@ export class Activities extends BaseObj {
     });
   }
 
+  /**
+   * Get activities.
+   */
   get activities(): Activity[] {
     return this._activities;
   }
@@ -46,7 +49,7 @@ export class Activities extends BaseObj {
   /**
    * Get all activities.
    */
-  get all(): Activity[] {
+  get allActivities(): Activity[] {
     return this._activities;
   }
 
@@ -86,7 +89,7 @@ export class Activities extends BaseObj {
   checkActivities(): void {
     this.logger.trace("check");
 
-    const activities: Activity[] = this._project.activities.all;
+    const activities: Activity[] = this._project.activities.allActivities;
 
     // Check if it has some activities.
     this._state.hasSomeEvents =
@@ -144,14 +147,14 @@ export class Activities extends BaseObj {
     this.logger.trace("reset");
 
     // Reset activities.
-    this.all.forEach((activity: Activity) => activity.reset());
+    this.allActivities.forEach((activity: Activity) => activity.reset());
 
     // Trigger activity changes.
     // this.onUpdate();
   }
 
   toJSON(): IActivityProps[] {
-    return this.all.map((activity: Activity) => activity.toJSON());
+    return this.allActivities.map((activity: Activity) => activity.toJSON());
   }
 
   /**
@@ -199,7 +202,7 @@ export class Activities extends BaseObj {
       }
 
       // Initialize recorded activities.
-      this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
+      this.allActivities.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
     }
 
     // Trigger activity changes.
@@ -211,7 +214,7 @@ export class Activities extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
+      activities: this.allActivities.map((activity: Activity) => activity.hash),
     });
   }
 }

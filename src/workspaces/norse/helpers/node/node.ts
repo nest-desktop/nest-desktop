@@ -25,7 +25,7 @@ export class NorseNode extends BaseNode {
   }
 
   override get connections(): NorseConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: TConnection) => connection.sourceIdx === this.idx,
     ) as NorseConnection[];
   }

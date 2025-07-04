@@ -42,7 +42,7 @@ export class BaseConnection extends BaseObj {
     });
 
     this._connections = connections;
-    // this._idx = this.connections.all.length;
+    // this._idx = this.connections.allConnections.length;
 
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
@@ -80,7 +80,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get idx(): number {
-    return this.connections.all.indexOf(this);
+    return this.connections.allConnections.indexOf(this);
   }
 
   // get name(): string {
@@ -147,7 +147,7 @@ export class BaseConnection extends BaseObj {
   set sourceIdx(value: number) {
     if (value === -1) return;
     this._sourceIdx = value;
-    this._source = this.connections.network.nodes.all[this._sourceIdx];
+    this._source = this.connections.network.nodes.allNodes[this._sourceIdx];
   }
 
   get sourceNode(): TNode {
@@ -187,7 +187,7 @@ export class BaseConnection extends BaseObj {
   set targetIdx(value: number) {
     if (value === -1) return;
     this._targetIdx = value;
-    this._target = this.network.nodes.all[this._targetIdx];
+    this._target = this.network.nodes.allNodes[this._targetIdx];
   }
 
   get targetNode(): TNode {
@@ -218,7 +218,7 @@ export class BaseConnection extends BaseObj {
    * Clean this component.
    */
   clean(): void {
-    // const connections = this.connections.all as TConnection[];
+    // const connections = this.connections.allConnections as TConnection[];
     // this._idx = connections.indexOf(this);
   }
 

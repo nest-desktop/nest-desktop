@@ -24,8 +24,8 @@ export class NodeGroup extends BaseObj {
     this.updateHash();
   }
 
-  get all(): (NodeGroup | TNode)[] {
-    return this._nodes;
+  get allNodes(): (NodeGroup | TNode)[] {
+    return this.nodes;
   }
 
   get connectedNodes(): TNode[] {
@@ -37,14 +37,16 @@ export class NodeGroup extends BaseObj {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
+    return this.network.connections.allConnections.filter(
+      (connection: TConnection) => connection.sourceIdx === this.idx,
+    );
   }
 
   get connectionsWithin(): TConnection[] {
     const nodeIndices = this.nodesDeep.map((node) => node.idx);
     nodeIndices.push(this.idx);
 
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: TConnection) =>
         nodeIndices.includes(connection.sourceIdx) && nodeIndices.includes(connection.targetIdx),
     );
@@ -55,7 +57,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get idx(): number {
-    return this._parent.all.indexOf(this);
+    return this._parent.allNodes.indexOf(this);
   }
 
   /**
@@ -111,13 +113,13 @@ export class NodeGroup extends BaseObj {
   }
 
   get nodeGroups(): TNodeGroup[] {
-    return this._nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+    return this.allNodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
   }
 
   get nodeIndicesDeep(): number[] {
     return [
       ...new Set(
-        this.nodes
+        this.allNodes
           .map((node: TNode | TNodeGroup) => {
             if (node.isGroup) {
               const nodeGroup = node as TNodeGroup;
@@ -132,13 +134,13 @@ export class NodeGroup extends BaseObj {
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+    return this.allNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
   }
 
   get nodeItemsDeep(): TNode[] {
     return [
       ...new Set(
-        this.nodes
+        this.allNodes
           .map((node: TNode | TNodeGroup) => {
             if (node.isGroup) {
               const nodeGroup = node as TNodeGroup;
@@ -157,7 +159,7 @@ export class NodeGroup extends BaseObj {
 
   get nodesDeep(): (TNode | TNodeGroup)[] {
     const nodeIndices = this.nodeIndicesDeep;
-    return this.parent.nodes.filter((node: TNode | TNodeGroup) => nodeIndices.includes(node.idx));
+    return this.parent.allNodes.filter((node: TNode | TNodeGroup) => nodeIndices.includes(node.idx));
   }
 
   get parent(): TNodes | TNodeGroup {
@@ -177,7 +179,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get sourceNodes(): TNode[] {
-    return this.network.connections.all
+    return this.network.connections.allConnections
       .filter((connection: TConnection) => connection.targetIdx === this.idx)
       .map((connection: TConnection) => connection.sourceNode);
   }
@@ -187,7 +189,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get targetNodes(): TNode[] {
-    return this.network.connections.all
+    return this.network.connections.allConnections
       .filter((connection: TConnection) => connection.sourceIdx === this.idx)
       .map((connection: TConnection) => connection.targetNode);
   }

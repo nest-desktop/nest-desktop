@@ -1,8 +1,8 @@
 <template>
   <g id="network">
-    <g :key="graph?.network.connections.all.length" class="synMarker">
+    <g :key="graph?.network.connections.allConnections.length" class="synMarker">
       <defs
-        v-for="(connection, index) of graph?.network.connections.all"
+        v-for="(connection, index) of graph?.network.connections.allConnections"
         :key="'defs' + index"
         :style="{
           color: 'var(--colorNode' + connection.sourceIdx + ')',

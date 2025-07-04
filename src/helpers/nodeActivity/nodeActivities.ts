@@ -16,7 +16,7 @@ export class NodeActivities extends Activities {
   /**
    * Get all activities.
    */
-  override get all(): NodeActivity[] {
+  override get allActivities(): NodeActivity[] {
     let activities = [] as NodeActivity[];
 
     if ("network" in this.project)

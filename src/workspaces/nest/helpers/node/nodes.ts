@@ -20,8 +20,8 @@ export class NESTNodes extends BaseNodes {
     return NESTNode;
   }
 
-  override get all() {
-    return this._nodes as (TNodeGroup | NESTNode)[];
+  override get allNodes(): (TNodeGroup | NESTNode)[] {
+    return this.nodes;
   }
 
   /**
@@ -63,7 +63,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get nodeItems(): NESTNode[] {
-    return this.nodes.filter((node: TNodeGroup | NESTNode) => node.isNode) as NESTNode[];
+    return this.allNodes.filter((node: TNodeGroup | NESTNode) => node.isNode) as NESTNode[];
   }
 
   override get recorders(): NESTNode[] {

@@ -257,7 +257,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @returns activity object
    */
   getActivity(idx: number): Activity {
-    return this._panel.graph.project.activities.all[idx];
+    return this._panel.graph.project.activities.allActivities[idx];
   }
 
   /**
@@ -362,7 +362,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Update activities.
    */
   updateActivities(): void {
-    this.activities = this.panel.graph.project.activities.all;
+    this.activities = this.panel.graph.project.activities.allActivities;
   }
 
   /**

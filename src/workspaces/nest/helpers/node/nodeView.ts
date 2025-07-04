@@ -27,7 +27,7 @@ export class NESTNodeView extends NodeView {
         return connection.sourceNode.view.color;
       }
     } else if (this.node.model.isRecorder) {
-      const connections: NESTConnection[] = this.node.network.connections.all.filter(
+      const connections: NESTConnection[] = this.node.network.connections.allConnections.filter(
         (connection: NESTConnection) =>
           connection.sourceIdx === this._node.idx || connection.targetIdx === this._node.idx,
       );

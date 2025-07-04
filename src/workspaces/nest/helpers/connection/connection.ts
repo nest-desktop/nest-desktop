@@ -67,11 +67,11 @@ export class NESTConnection extends BaseConnection {
   }
 
   override get source(): NESTNode | TNodeGroup {
-    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode | TNodeGroup;
+    return this.connections.network.nodes.allNodes[this.sourceIdx] as NESTNode | TNodeGroup;
   }
 
   override get sourceNode(): NESTNode {
-    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode;
+    return this.connections.network.nodes.allNodes[this.sourceIdx] as NESTNode;
   }
 
   get sourceSlice(): NESTNodeSlice {
@@ -83,11 +83,11 @@ export class NESTConnection extends BaseConnection {
   }
 
   override get target(): NESTNode | TNodeGroup {
-    return this.connections.network.nodes.all[this.targetIdx] as NESTNode | TNodeGroup;
+    return this.connections.network.nodes.allNodes[this.targetIdx] as NESTNode | TNodeGroup;
   }
 
   override get targetNode(): NESTNode {
-    return this.connections.network.nodes.all[this.targetIdx] as NESTNode;
+    return this.connections.network.nodes.allNodes[this.targetIdx] as NESTNode;
   }
 
   get targetSlice(): NESTNodeSlice {

@@ -25,7 +25,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /network.copyModels.hasNodeModels }}
 
 # Create nodes
-{{ #network.nodes.all }}
+{{ #network.nodes.allNodes }}
 {{ #isGroup }}
 {{ view.label }} = {{ toCode }}
 {{ /isGroup }}
@@ -45,11 +45,11 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 }{{ /hasSomeVisibleParams }}{{ #spatial.positions }},
   positions={{ &spatial.code }}{{ /spatial.positions }})
 {{ /isNode }}
-{{ /network.nodes.all }}
+{{ /network.nodes.allNodes }}
 {{ #network.hasSomeNodeCompartments }}
 
 # Create node compartments
-{{ #network.nodes.all }}
+{{ #network.nodes.allNodes }}
 {{ #hasCompartments }}
 {{ view.label }}.compartments = [
 {{ #compartments }}
@@ -60,12 +60,12 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /compartments }}
 ]
 {{ /hasCompartments }}
-{{ /network.nodes.all }}
+{{ /network.nodes.allNodes }}
 {{ /network.hasSomeNodeCompartments }}
 {{ #network.hasSomeNodeReceptors }}
 
 # Create node receptors
-{{ #network.nodes.all }}
+{{ #network.nodes.allNodes }}
 {{ #hasReceptors }}
 {{ view.label }}.receptors = [
 {{ #receptors }}
@@ -76,7 +76,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /receptors }}
 ]
 {{ /hasReceptors }}
-{{ /network.nodes.all }}
+{{ /network.nodes.allNodes }}
 {{ /network.hasSomeNodeReceptors }}
 {{ #network.copyModels.hasSynapseModels }}
 
@@ -91,7 +91,7 @@ nest.CopyModel("{{ existingModelId }}", "{{ newModelId }}"{{ #hasSomeVisiblePara
 {{ /network.copyModels.hasSynapseModels }}
 
 # Connect nodes
-{{ #network.connections.all }}
+{{ #network.connections.allConnections }}
 nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule.value }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
   "rule": "{{ rule.value }}",
 {{ #filteredParams }}
@@ -106,7 +106,7 @@ nest.Connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.la
   "receptor_type": {{ synapse.receptorIdx }},
 {{ /synapse.hasReceptorIndices }}
 }{{ /synapse.hasSomeVisibleParams }}{{ /synapse.hasSynSpec }})
-{{ /network.connections.all }}
+{{ /network.connections.allConnections }}
 
 # Run simulation
 nest.Simulate({{ simulation.time }})

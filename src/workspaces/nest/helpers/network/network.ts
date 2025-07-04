@@ -59,7 +59,11 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   override get isEmpty(): boolean {
-    return this.copyModels.all.length === 0 && this.nodes.all.length === 0 && this.connections.all.length === 0;
+    return (
+      this.copyModels.allModels.length === 0 &&
+      this.nodes.allNodes.length === 0 &&
+      this.connections.allConnections.length === 0
+    );
   }
 
   /**
@@ -194,9 +198,9 @@ export class NESTNetwork extends BaseNetwork {
    */
   override updateHash(): void {
     this._updateHash({
-      models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
-      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-      connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
+      models: this.copyModels.allModels.map((model: NESTCopyModel) => model.hash),
+      nodes: this.nodes.allNodes.map((node: TNode | TNodeGroup) => node.hash),
+      connections: this.connections.allConnections.map((connection: NESTConnection) => connection.hash),
     });
   }
 }

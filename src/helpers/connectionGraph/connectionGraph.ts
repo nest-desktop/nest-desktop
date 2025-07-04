@@ -229,7 +229,7 @@ export class ConnectionGraph extends BaseObj {
     const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
-      .data(this.networkGraph.network.connections.all, (c: TConnection | any) => c.uuid);
+      .data(this.networkGraph.network.connections.allConnections, (c: TConnection | any) => c.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

@@ -128,14 +128,14 @@ export class NESTCodeGraph extends BaseObj {
     nodes = createNodes(this, networkProps.nodes);
 
     // add node parameter interfaces
-    // nodes.all.forEach((node) => {
+    // nodes.allNodes.forEach((node) => {
     //   const paramsNode = node.getConnectedNodeByInterface("params");
     //   if (paramsNode)
     //     paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
     // });
 
     copySynapseModels(this, networkProps.models, nodes.weightRecorders);
-    nodes = connectNodes(this, networkProps.connections, nodes.all);
+    nodes = connectNodes(this, networkProps.connections, nodes.allNodes);
 
     // add synapse parameter interfaces
     // nodes.forEach((node) => {

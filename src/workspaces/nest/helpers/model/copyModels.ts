@@ -17,7 +17,7 @@ export class NESTCopyModels extends BaseObj {
     this.update(copyModelsProps);
   }
 
-  get all(): NESTCopyModel[] {
+  get allModels(): NESTCopyModel[] {
     return this._models;
   }
 
@@ -205,7 +205,7 @@ export class NESTCopyModels extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      models: this._models.map(
+      models: this.allModels.map(
         (model: NESTCopyModel) => model.toJSON(), //TODO node.hash
       ),
     });

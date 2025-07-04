@@ -43,7 +43,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   }
 
   get color(): string {
-    return this.network ? this.network.getNodeColor(this.network.nodes.all.length) : "#424242";
+    return this.network ? this.network.getNodeColor(this.network.nodes.allNodes.length) : "#424242";
   }
 
   get network(): TNetwork | undefined {

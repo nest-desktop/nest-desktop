@@ -142,7 +142,7 @@
       <!-- <template #expanded-row="{ columns, item }">
             <tr>
               <td :colspan="columns.length" v-if="item.group === 'project'">
-                {{ item.props.network.nodes.length }} nodes,
+                {{ item.props.network.nodes.allNodes.length }} nodes,
                 {{ item.props.network.connections.length }} connections
               </td>
             </tr>

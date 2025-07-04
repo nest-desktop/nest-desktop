@@ -74,11 +74,13 @@ export class NESTNode extends BaseNode {
   }
 
   override get connections(): NESTConnection[] {
-    return this.network.connections.all.filter((connection: NESTConnection) => connection.sourceIdx === this.idx);
+    return this.network.connections.allConnections.filter(
+      (connection: NESTConnection) => connection.sourceIdx === this.idx,
+    );
   }
 
   override get connectionsNeuronTargets(): NESTConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: NESTConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
     );
   }
@@ -104,7 +106,7 @@ export class NESTNode extends BaseNode {
   }
 
   override get idx(): number {
-    return this._nodes.all.indexOf(this);
+    return this._nodes.allNodes.indexOf(this);
   }
 
   override get isSpatial(): boolean {
@@ -198,7 +200,7 @@ export class NESTNode extends BaseNode {
   }
 
   override get targetNodes(): NESTNode[] {
-    return this.network.connections.all
+    return this.network.connections.allConnections
       .filter((connection: NESTConnection) => connection.sourceIdx === this.idx)
       .map((connection: NESTConnection) => connection.targetNode);
   }

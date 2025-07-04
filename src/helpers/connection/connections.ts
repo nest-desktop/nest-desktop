@@ -36,7 +36,7 @@ export class BaseConnections extends BaseObj {
     return BaseConnection;
   }
 
-  get all(): TConnection[] {
+  get allConnections(): TConnection[] {
     return this._connections as TConnection[];
   }
 

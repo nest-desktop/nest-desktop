@@ -34,7 +34,7 @@ export default defineDynamicCodeNode({
   },
   onPlaced() {
     if (!this.node || !this.code || !this.code.project.network.copyModels) return;
-    this.node.networkItem = this.code.project.network.copyModels.all[this.indexOfNodeType];
+    this.node.networkItem = this.code.project.network.copyModels.allModels[this.indexOfNodeType];
   },
   onUpdate() {
     if (!this.node) return {};

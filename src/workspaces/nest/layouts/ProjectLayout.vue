@@ -173,7 +173,7 @@
 
         <span v-if="[0, 5].includes(project.network.state.elementTypeIdx)">
           <CopyModelEditor
-            v-for="(copyModel, modelIdx) of project.network.copyModels.all"
+            v-for="(copyModel, modelIdx) of project.network.copyModels.allModels"
             :key="modelIdx"
             :model="copyModel"
           />
@@ -182,7 +182,7 @@
 
       <template #nodes>
         <div :key="project.network.nodes.length">
-          <div v-for="(node, index) in project.network.nodes.all" :key="index">
+          <div v-for="(node, index) in project.network.nodes.allNodes" :key="index">
             <NodeEditor v-if="node.isNode" :node="node as NESTNode">
               <template #nodeMenuContent>
                 <NESTNodeMenuList :node="node as NESTNode" />

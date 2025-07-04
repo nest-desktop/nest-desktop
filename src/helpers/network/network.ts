@@ -88,7 +88,7 @@ export class BaseNetwork extends BaseObj {
   }
 
   get isEmpty(): boolean {
-    return this.nodes.all.length === 0 && this.connections.all.length === 0;
+    return this.nodes.allNodes.length === 0 && this.connections.allConnections.length === 0;
   }
 
   get nodes(): TNodes {
@@ -315,8 +315,8 @@ export class BaseNetwork extends BaseObj {
    */
   updateHash(): void {
     this._updateHash({
-      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-      connections: this.connections.all.map((connection: TConnection) => connection.hash),
+      nodes: this.nodes.allNodes.map((node: TNode | TNodeGroup) => node.hash),
+      connections: this.connections.allConnections.map((connection: TConnection) => connection.hash),
     });
   }
 
@@ -326,6 +326,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
+    this._nodes.allNodes.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
   }
 }

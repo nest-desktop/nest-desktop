@@ -284,7 +284,7 @@ export class NetworkGraphWorkspace extends BaseObj {
       const nodePosition: { x: number; y: number } = connections.state.selectedNode.view.position;
       x = nodePosition.x;
       y = nodePosition.y;
-    } else if (this._state.centerNetwork && nodes.all.length > 0) {
+    } else if (this._state.centerNetwork && nodes.allNodes.length > 0) {
       const networkCenterPos: { x: number; y: number } = this.centerNetworkPos();
       x = networkCenterPos.x;
       y = networkCenterPos.y;

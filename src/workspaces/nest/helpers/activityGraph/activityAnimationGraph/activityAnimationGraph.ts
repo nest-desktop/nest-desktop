@@ -197,7 +197,7 @@ export class ActivityAnimationGraph {
     this._state.nSamples = this.project.simulation.state.biologicalTime * this._state.frames.sampleRate - 1;
 
     // Update activity layers and frames.
-    this.project.activities.all.forEach((activity: NodeActivity) => {
+    this.project.activities.allActivities.forEach((activity: NodeActivity) => {
       const layer = new ActivityAnimationLayer(this, activity);
       let position = activity.idx;
       if (this._layers[position] == null) {

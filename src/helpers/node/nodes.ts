@@ -40,8 +40,8 @@ export class BaseNodes extends BaseObj {
     return BaseNode;
   }
 
-  get all(): (TNodeGroup | BaseNode)[] {
-    return this._nodes;
+  get allNodes(): (TNodeGroup | BaseNode)[] {
+    return this.nodes;
   }
 
   get annotations(): Record<string, string>[] {
@@ -88,11 +88,11 @@ export class BaseNodes extends BaseObj {
   }
 
   get nodeGroups(): TNodeGroup[] {
-    return this._nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+    return this.allNodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+    return this.allNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
   }
 
   get nodes(): (TNode | TNodeGroup)[] {
@@ -476,6 +476,6 @@ export class BaseNodes extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this.all.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
+    this.allNodes.forEach((node: NodeGroup | TNode) => node.view.updateStyle());
   }
 }

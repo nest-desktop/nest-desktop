@@ -78,11 +78,13 @@ export class BaseNode extends BaseObj {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
+    return this.network.connections.allConnections.filter(
+      (connection: TConnection) => connection.sourceIdx === this.idx,
+    );
   }
 
   get connectionsNeurons(): TConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: TConnection) =>
         (connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron) ||
         (connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron),
@@ -90,19 +92,19 @@ export class BaseNode extends BaseObj {
   }
 
   get connectionsNeuronSources(): TConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron,
     );
   }
 
   get connectionsNeuronTargets(): TConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: TConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
     );
   }
 
   get connectionsStimulatorSources(): TConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isStimulator,
     );
   }
@@ -124,7 +126,7 @@ export class BaseNode extends BaseObj {
   }
 
   get idx(): number {
-    return this._nodes.all.indexOf(this);
+    return this._nodes.allNodes.indexOf(this);
   }
 
   /**
@@ -228,7 +230,7 @@ export class BaseNode extends BaseObj {
   }
 
   get nodeIdx(): number {
-    return this._nodes.nodes.indexOf(this);
+    return this._nodes.allNodes.indexOf(this);
   }
 
   get params(): Record<string, NodeParameter> {
@@ -319,13 +321,13 @@ export class BaseNode extends BaseObj {
   }
 
   get sourceNodes(): TNode[] {
-    return this.network.connections.all
+    return this.network.connections.allConnections
       .filter((connection: TConnection) => connection.targetIdx === this.idx)
       .map((connection: TConnection) => connection.sourceNode);
   }
 
   get targetNodes(): TNode[] {
-    return this.network.connections.all
+    return this.network.connections.allConnections
       .filter((connection: TConnection) => connection.sourceIdx === this.idx)
       .map((connection: TConnection) => connection.targetNode);
   }

@@ -260,7 +260,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (type !== "inputs") {
       const targets = this.graph?.connections
-        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
+        .filter((c: CodeNodeConnection) => c.from.type !== "node")
         .filter((c: CodeNodeConnection) => c.from.nodeId === this.id)
         .map((c: CodeNodeConnection) => c.to.nodeId);
       if (targets) nodeIds = nodeIds.concat(targets);
@@ -268,6 +268,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     if (type !== "outputs") {
       const sources = this.graph?.connections
+        .filter((c: CodeNodeConnection) => c.from.type !== "node")
         .filter((c: CodeNodeConnection) => c.to.nodeId === this.id)
         .map((c: CodeNodeConnection) => c.from.nodeId);
 

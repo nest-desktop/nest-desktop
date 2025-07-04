@@ -14,7 +14,7 @@ export class NESTConnections extends BaseConnections {
     return NESTConnection;
   }
 
-  override get all(): NESTConnection[] {
+  override get allConnections(): NESTConnection[] {
     return this._connections as NESTConnection[];
   }
 
@@ -26,7 +26,7 @@ export class NESTConnections extends BaseConnections {
    * filter connection list containing weight recorder.
    */
   get filterWithWeightRecorder(): NESTConnection[] {
-    return this.all.filter((connection: NESTConnection) => connection.synapse.recordedByWeightRecorder);
+    return this.allConnections.filter((connection: NESTConnection) => connection.synapse.recordedByWeightRecorder);
   }
 
   override get network(): NESTNetwork {
@@ -54,9 +54,9 @@ export class NESTConnections extends BaseConnections {
   override clean(): void {
     this.logger.trace("clean");
 
-    this.all.forEach((connection: NESTConnection) => connection.clean());
+    this.allConnections.forEach((connection: NESTConnection) => connection.clean());
 
-    this.all.forEach((connection: NESTConnection) => {
+    this.allConnections.forEach((connection: NESTConnection) => {
       if (connection.source?.isNode) connection.sourceSlice.update();
       if (connection.target?.isNode) connection.targetSlice.update();
     });
@@ -68,6 +68,6 @@ export class NESTConnections extends BaseConnections {
    * @returns connection object
    */
   getBySynapseModelId(modelId: string): NESTConnection | undefined {
-    return this.all.find((connection: NESTConnection) => connection.synapse.modelId === modelId);
+    return this.allConnections.find((connection: NESTConnection) => connection.synapse.modelId === modelId);
   }
 }

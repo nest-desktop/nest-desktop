@@ -62,7 +62,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   get connections(): NESTConnection[] {
-    return this.network.connections.all.filter(
+    return this.network.connections.allConnections.filter(
       (connection: NESTConnection) => connection.synapse.modelId === this._newModelId,
     );
   }
@@ -172,7 +172,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   get idx(): number {
-    return this._copyModels.all.indexOf(this);
+    return this._copyModels.allModels.indexOf(this);
   }
 
   get filteredParams(): NESTCopyModelParameter[] {
@@ -216,7 +216,7 @@ export class NESTCopyModel extends BaseObj {
    */
   set newModelId(value: string) {
     const nodes = this.nodes;
-    const connections = this.network.connections.all.filter(
+    const connections = this.network.connections.allConnections.filter(
       (connection: NESTConnection) => connection.synapse.modelId === this._newModelId,
     );
     this._newModelId = value;
@@ -414,7 +414,7 @@ export class NESTCopyModel extends BaseObj {
       .filter((node: NESTNode) => node.modelId === this.newModelId)
       .forEach((node: NESTNode) => (node.modelId = this._existingModelId));
 
-    this.network.connections.all
+    this.network.connections.allConnections
       .filter((connection: NESTConnection) => connection.synapse.modelId === this.newModelId)
       .forEach((connection: NESTConnection) => (connection.synapse.modelId = this._existingModelId));
 

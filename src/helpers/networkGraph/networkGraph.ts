@@ -157,7 +157,7 @@ export class BaseNetworkGraph extends BaseObj {
     );
 
     watch(
-      () => [this.network.nodes.all.length, this.network.connections.all.length],
+      () => [this.network.nodes.allNodes.length, this.network.connections.allConnections.length],
       () => this.update(),
     );
   }
@@ -230,7 +230,7 @@ export class BaseNetworkGraph extends BaseObj {
         model: node.modelId,
         size: node.size,
       })),
-      connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
+      connections: this.network.connections.allConnections.map((connection: TConnection) => connection.idx),
     });
   }
 }

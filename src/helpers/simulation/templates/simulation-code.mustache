@@ -1,21 +1,21 @@
 # Create nodes
-{{ #network.nodes.all }}
+{{ #network.nodes.allNodes }}
 {{ view.label }} = create("{{ modelId }}"{{ #sizeVisible }}, {{ n }}{{ /sizeVisible }}{{ #hasSomeVisibleParams }}, params={
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
-{{ /network.nodes.all }}
+{{ /network.nodes.allNodes }}
 
 # Connect nodes
-{{ #network.connections.all }}
+{{ #network.connections.allConnections }}
 connect({{ source.view.label }}{{ sourceSlice.indices }}, {{ target.view.label }}{{ targetSlice.indices }}{{ #hasConnSpec }}{{ ^hasSomeVisibleParams }}, "{{ rule.value }}"{{ /hasSomeVisibleParams }}{{ #hasSomeVisibleParams }}, conn_spec={
   "rule": "{{ rule.value }}",
 {{ #filteredParams }}
   "{{ id }}": {{ code }},
 {{ /filteredParams }}
 }{{ /hasSomeVisibleParams }})
-{{ /network.connections.all }}
+{{ /network.connections.allConnections }}
 
 # Run simulation
 simulate({{ simulation.time }})

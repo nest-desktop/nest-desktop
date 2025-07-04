@@ -23,7 +23,7 @@
 
     <v-layout v-resize="onResize" class="activityStats ml-1" full-height>
       <v-expansion-panels v-model="activities.state.activityStatsPanelId" mandatory variant="accordion">
-        <template v-for="(activity, index) in activities.all" :key="index">
+        <template v-for="(activity, index) in activities.allActivities" :key="index">
           <v-expansion-panel v-if="activity">
             <v-expansion-panel-title class="py-0">
               <v-row class="text-button">
@@ -82,7 +82,7 @@ const onResize = () => {
     48 - // project bar
     48 - // toolbar
     64 - // current expansion title panel
-    (activities.value.all.length - 1) * 48 - // other expansion title panel
+    (activities.value.allActivities.length - 1) * 48 - // other expansion title panel
     52; // data table footer
 };
 
