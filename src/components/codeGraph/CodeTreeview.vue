@@ -14,7 +14,7 @@
     />
   </v-sheet> -->
 
-  <!-- <v-treeview :items density="compact" open-all></v-treeview> -->
+  <!-- <v-treeview :items density="compact" open-all /> -->
 
   <v-list density="compact" style="font-size: 12px; font-family: monospace">
     <draggable v-model="code.graph.nodes" group="people" item-key="id" @start="drag = true" @end="dragEnd()">

@@ -14,7 +14,6 @@ import "./main.scss";
 import { IconSet, createVuetify } from "vuetify";
 // Composables
 import * as components from "vuetify/components";
-import { VTreeview } from "vuetify/labs/VTreeview";
 import * as directives from "vuetify/directives";
 // import { md1, md2, md3 } from "vuetify/blueprints";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
@@ -49,7 +48,6 @@ const colors = {
 export const vuetify = createVuetify({
   components: {
     ...components,
-    VTreeview,
   },
   // blueprint: md2,
   defaults: {
