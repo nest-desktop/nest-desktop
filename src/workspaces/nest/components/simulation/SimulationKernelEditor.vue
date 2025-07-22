@@ -19,27 +19,30 @@
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1" title="Simulation kernel">
+    <Card v-if="simulation.kernel.intf" :color="props.color" class="ma-1" title="Simulation kernel">
       <v-card-text>
         <TickSlider
           v-bind="options.threadSettings"
-          v-model="simulation.kernel.localNumThreads"
+          v-model="simulation.kernel.intf.local_num_threads.value"
           :thumb-color="props.color"
           class="mx-1 py-1"
+          @update:model-value="() => simulation.kernel.intf?.local_num_threads.setHidden(false)"
         />
 
         <TickSlider
           v-bind="options.resolutionSettings"
-          v-model="simulation.kernel.resolution"
+          v-model="simulation.kernel.intf.resolution.value"
           :thumb-color="props.color"
           class="mx-1 py-1"
+          @update:model-value="() => simulation.kernel.intf?.resolution.setHidden(false)"
         />
 
         <ValueSlider
           v-bind="options.rngSeedSettings"
-          v-model="simulation.kernel.rngSeed"
+          v-model="simulation.kernel.intf.rng_seed.value"
           :thumb-color="props.color"
           class="mx-1 py-1"
+          @update:model-value="() => simulation.kernel.intf?.rng_seed.setHidden(false)"
         />
 
         <v-checkbox
@@ -53,11 +56,11 @@
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1" title="Simulation">
+    <Card v-if="simulation.intf" :color="props.color" class="ma-1" title="Simulation">
       <v-card-text class="py-0">
         <ValueSlider
           v-bind="options.simulationTimeSettings"
-          v-model="simulation.time"
+          v-model="simulation.intf.time.value"
           :thumb-color="props.color"
           class="mx-1 py-2"
         />
@@ -139,6 +142,7 @@ const state = reactive<{ autoRNGSeed: boolean }>({
  * Updates when the usage of automatic RNG seed is switched on/off.
  */
 function updateAutoRNGSeed() {
+  simulation.value.kernel.intf?.rng_seed.setHidden(false);
   simulation.value.kernel.config?.update({
     autoRNGSeed: state.autoRNGSeed,
   });

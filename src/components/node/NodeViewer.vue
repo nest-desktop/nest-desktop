@@ -1,5 +1,5 @@
 <template>
-  <Card v-if="node" :color="node.view.color" class="node my-1" rounded="1">
+  <Card v-if="node" :color="node.color" class="node my-1" rounded="1">
     <v-card-title>
       <v-row class="ma-0 text-button">
         <NodeAvatar :node :size="48" title="Graphical representation" />

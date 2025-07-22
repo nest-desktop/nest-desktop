@@ -13,7 +13,6 @@ import { BaseObj } from "../common/base";
 
 interface ICodeGraphState {
   editor: IEditorState | null;
-  // graph?: IGraphState | null;
   token: symbol | null;
 }
 
@@ -21,7 +20,6 @@ export class CodeGraph extends BaseObj {
   codeGraphStore = useCodeGraphStore();
 
   public _code: BaseCode | null;
-  // private _graph: Graph = new Graph(new Editor());
   private _state: UnwrapRef<ICodeGraphState>;
 
   constructor(code: BaseCode | null, editorState?: IGraphState) {
@@ -33,11 +31,8 @@ export class CodeGraph extends BaseObj {
 
     this._state = reactive({
       editor: editorState || null,
-      // graph: null,
       token: null,
     });
-
-    this.init();
   }
 
   get code(): BaseCode | null {
@@ -78,6 +73,10 @@ export class CodeGraph extends BaseObj {
 
   get nodes(): AbstractCodeNode[] {
     return this.graph.nodes as AbstractCodeNode[];
+  }
+
+  get nodeCodes(): string[] {
+    return this.nodes.map((node: AbstractCodeNode) => node.script);
   }
 
   get nodesSegregated(): AbstractCodeNode[] {
@@ -174,7 +173,7 @@ export class CodeGraph extends BaseObj {
   }
 
   findNodeById(id: string): AbstractCodeNode | undefined {
-    return this.graph.findNodeById(id) as AbstractCodeNode;
+    return this.graph.findNodeById(id) as AbstractCodeNode | undefined;
   }
 
   findNodeByType(nodeType: string): AbstractCodeNode | undefined {
@@ -215,7 +214,6 @@ export class CodeGraph extends BaseObj {
     this.unsubscribe();
 
     state.graph.id = this.uuid;
-    // const warnings: string[] = this.graph.load(state.graph);
     const warnings: string[] = this.codeGraphStore.editor.load(state);
 
     this.onUpdate();
@@ -226,27 +224,27 @@ export class CodeGraph extends BaseObj {
   /**
    * Triggers on project update.
    */
-  onProjectUpdate = () => {
-    this.logger.trace("on project update:", truncate(this.uuid), truncate(this.graph.id));
-    if (this.uuid !== this.graph.id) return;
+  // onProjectUpdate = () => {
+  //   this.logger.trace("on project update:", truncate(this.uuid), truncate(this.graph.id));
+  //   if (this.uuid !== this.graph.id) return;
 
-    if (this.nodes.length > 0) {
-      this.sortNodes();
-      this.codeNodes.forEach((node) => {
-        if (node.onProjectUpdate) node.onProjectUpdate();
-      });
-    }
+  //   if (this.nodes.length > 0) {
+  //     this.sortNodes();
+  //     this.codeNodes.forEach((node) => {
+  //       if (node.onProjectUpdate) node.onProjectUpdate();
+  //     });
+  //   }
 
-    nextTick(() => {
-      try {
-        this._state.editor = this.save();
-      } catch {
-        this.logger.warn("Save editor state failed.");
-      }
+  //   nextTick(() => {
+  //     try {
+  //       this._state.editor = this.save();
+  //     } catch {
+  //       this.logger.warn("Save editor state failed.");
+  //     }
 
-      this.code?.generate();
-    });
-  };
+  //     this.code?.generate();
+  //   });
+  // };
 
   /**
    * Triggers on code graph update.
@@ -255,14 +253,13 @@ export class CodeGraph extends BaseObj {
     this.logger.trace("on update:", truncate(this.uuid), truncate(this.graph.id));
     if (this.uuid !== this.graph.id) return;
 
-    if (this.nodes.length > 0) {
-      this.sortNodes();
-      this.codeNodes.forEach((node) => {
-        if (node.onGraphUpdate) node.onGraphUpdate();
-      });
-    }
+    if (this.nodes.length > 0) this.sortNodes();
 
     nextTick(() => {
+      this.codeNodes.forEach((node: AbstractCodeNode) => {
+        if (node.onGraphUpdate) node.onGraphUpdate();
+      });
+
       try {
         this._state.editor = this.save();
       } catch {
@@ -276,8 +273,8 @@ export class CodeGraph extends BaseObj {
   /**
    * Render node codes.
    */
-  renderCodes(): void {
-    this.logger.trace("render codes");
+  renderNodeCodes(): void {
+    this.logger.trace("render node codes");
 
     if (this.codeNodes.length === 0) return;
     this.codeNodes.forEach((node) => (node.renderCode ? node.renderCode() : null));

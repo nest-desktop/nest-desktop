@@ -11,7 +11,6 @@ import {
   displayInSidebar,
   setType,
 } from "baklavajs";
-import { nextTick } from "vue";
 
 import { truncate } from "@/utils/truncate";
 
@@ -57,7 +56,7 @@ export interface IDynamicCodeNodeDefinition<I, O> extends IDynamicNodeDefinition
   node?: AbstractCodeNode;
   modules?: string[];
   onGraphUpdate?: (node?: AbstractCodeNode) => void;
-  onProjectUpdate?: (node?: AbstractCodeNode) => void;
+  onModelUpdate?: (node?: AbstractCodeNode) => void;
   toJSON?: (node?: AbstractCodeNode) => Record<string, unknown>;
   variableName?: string;
 }
@@ -138,10 +137,9 @@ export function defineDynamicCodeNode<I, O>(
       definition.onGraphUpdate?.call(this);
     }
 
-    public onProjectUpdate() {
-      this.logger.trace("on project update");
-      definition.onProjectUpdate?.call(this);
-      nextTick(() => this.onUpdate());
+    public onModelUpdate() {
+      this.logger.trace("on model update");
+      definition.onModelUpdate?.call(this);
     }
 
     public load(state: ICodeNodeState<Dynamic<I>, Dynamic<O>>): void {

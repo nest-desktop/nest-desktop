@@ -17,7 +17,7 @@ export class NodeActivity extends Activity {
   }
 
   override get traceColor(): string {
-    return this.recorder.view.color;
+    return this.recorder.state.color;
   }
 
   get elementTypes(): string[] {

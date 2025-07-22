@@ -1,9 +1,8 @@
-// recorderActivities.ts
+// nodeActivities.ts
 
 import { TNode, TProject } from "@/types";
 
 import { Activities } from "../activity/activities";
-import { Activity } from "../activity/activity";
 import { NodeActivity } from "./nodeActivity";
 import { NodeAnalogSignalActivity } from "./nodeAnalogSignalActivity";
 import { NodeSpikeActivity } from "./nodeSpikeActivity";
@@ -41,7 +40,12 @@ export class NodeActivities extends Activities {
             (recorder: TNode) => recorder.activity as NodeAnalogSignalActivity,
           )
         : [];
-    activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
+
+    if (activities.length > 0)
+      activities
+        .filter((activity: NodeAnalogSignalActivity) => activity)
+        .forEach((activity: NodeAnalogSignalActivity, idx: number) => (activity.idx = idx));
+
     return activities;
   }
 
@@ -67,7 +71,12 @@ export class NodeActivities extends Activities {
       "network" in this.project
         ? this.project.network.nodes.recordersSpike.map((recorder: TNode) => recorder.activity as NodeSpikeActivity)
         : [];
-    activities.forEach((activity: NodeSpikeActivity, idx: number) => (activity.idx = idx));
+
+    if (activities.length > 0)
+      activities
+        .filter((activity: NodeSpikeActivity) => activity)
+        .forEach((activity: NodeSpikeActivity, idx: number) => (activity.idx = idx));
+
     return activities;
   }
 

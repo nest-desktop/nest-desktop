@@ -16,7 +16,6 @@ import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNodes } from "./nodes";
-import { IntegerInterface, TextInputInterface } from "baklavajs";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -56,7 +55,7 @@ export class NESTNode extends BaseNode {
     }
 
     return this.network.copyModels.filter((model: NESTCopyModel) =>
-      Object.values(model.params).some((param: BaseParameter) => param.value === this.view.label),
+      Object.values(model.params).some((param: BaseParameter) => param.value === this.label),
     );
   }
 
@@ -118,41 +117,11 @@ export class NESTNode extends BaseNode {
       if (!this._model || this._model.id !== this._copyModel.existingModelId)
         this._model = this.getModel(this._copyModel.existingModelId);
     } else {
-      if (!this._model || this._model.id !== this._modelId) this._model = this.getModel(this._modelId);
+      if (!this._model || this._model.id !== this.modelId) this._model = this.getModel(this.modelId);
     }
 
     return this._model as NESTModel;
   }
-
-  // override get modelId(): string {
-  //   return this._modelId;
-  // }
-
-  // override set modelId(value: string) {
-  //   this._modelId = value;
-
-  //   this.loadModel();
-  //   this.modelOnUpdate();
-
-  //   if (this.codeNodes.node && this.codeNodes.node.inputs.model.value !== value)
-  //     this.codeNodes.node.inputs.model.value = value;
-  // }
-
-  // override get modelId(): string {
-  //   return this._modelId;
-  // }
-
-  // /**
-  //  * Set model ID.
-  //  */
-  // override set modelId(value: string) {
-  //   this._modelId = value;
-
-  //   this.loadModel();
-
-  //   this.updateRecordables();
-  //   this.modelOnUpdate();
-  // }
 
   override get modelParams(): Record<string, ModelParameter> {
     return this.model.params;
@@ -189,10 +158,6 @@ export class NESTNode extends BaseNode {
 
   get receptors(): NESTNodeReceptor[] {
     return this._receptors;
-  }
-
-  override get sizeVisible(): boolean {
-    return this.view.state.showSize && !this._spatial.hasGridPositions;
   }
 
   get spatial(): NESTNodeSpatial {
@@ -278,12 +243,12 @@ export class NESTNode extends BaseNode {
   override loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this.modelId);
 
-    if (this.network.copyModels && this.network.copyModels.findByModelId(this._modelId)) {
-      this._copyModel = this.network.copyModels.getModel(this._modelId);
+    if (this.network.copyModels && this.network.copyModels.findByModelId(this.modelId)) {
+      this._copyModel = this.network.copyModels.getModel(this.modelId);
       this._model = this.getModel(this._copyModel.existingModelId);
     } else {
       this._copyModel = undefined;
-      this._model = this.getModel(this._modelId);
+      this._model = this.getModel(this.modelId);
     }
 
     this.initParameters(paramsProps);
@@ -369,7 +334,7 @@ export class NESTNode extends BaseNode {
   override toJSON(): INESTNodeProps {
     const nodeProps: INESTNodeProps = {
       model: this.modelId,
-      view: this.view.toJSON(),
+      view: this.state.toJSON(),
     };
 
     if (this.size > 1) nodeProps.size = this.size;
@@ -398,32 +363,32 @@ export class NESTNode extends BaseNode {
   /**
    * Update code nodes.
    */
-  override updateCodeNodes(): void {
-    if (!this.codeNodes.node) this.nodes.addCodeNodes(this);
-    const codeNode = this.codeNodes.node;
+  // override updateCodeNodes(): void {
+  //   if (!this.codeNodes.node) this.nodes.addCodeNodes(this);
+  //   const codeNode = this.codeNodes.node;
 
-    codeNode.inputs.model.value = this.modelId;
-    codeNode.inputs.size.value = this.size;
+  //   codeNode.inputs.model.value = this.modelId;
+  //   codeNode.inputs.size.value = this.size;
 
-    if (!this.codeNodes.params) return;
-    const paramsNode = this.codeNodes.params;
+  //   if (!this.codeNodes.params) return;
+  //   const paramsNode = this.codeNodes.params;
 
-    this.paramsAll.forEach((param: NodeParameter) => {
-      if (!this.paramsVisible.includes(param.id) && param.id in paramsNode.inputs) {
-        paramsNode.removeInput(param.id);
-      } else if (this.paramsVisible.includes(param.id) && !(param.id in paramsNode.inputs)) {
-        let inputInterface;
-        if (typeof param.value == "number") {
-          inputInterface = new IntegerInterface(param.id, param.value as number);
-        } else {
-          inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
-        }
-        paramsNode.addInput(param.id, inputInterface);
-      } else if (this.paramsVisible.includes(param.id)) {
-        paramsNode.inputs[param.id].value = param.value;
-      }
-    });
-  }
+  //   this.paramsAll.forEach((param: NodeParameter) => {
+  //     if (!this.paramsVisible.includes(param.id) && param.id in paramsNode.inputs) {
+  //       paramsNode.removeInput(param.id);
+  //     } else if (this.paramsVisible.includes(param.id) && !(param.id in paramsNode.inputs)) {
+  //       let inputInterface;
+  //       if (typeof param.value == "number") {
+  //         inputInterface = new IntegerInterface(param.id, param.value as number);
+  //       } else {
+  //         inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
+  //       }
+  //       paramsNode.addInput(param.id, inputInterface);
+  //     } else if (this.paramsVisible.includes(param.id)) {
+  //       paramsNode.inputs[param.id].value = param.value;
+  //     }
+  //   });
+  // }
 
   /**
    * Update recordables.

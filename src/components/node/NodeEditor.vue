@@ -1,9 +1,9 @@
 <template>
   <Card
     v-if="node.show"
-    :color="node.view.color"
+    :color="node.color"
     class="node ma-1"
-    @mouseenter="node.view.focus()"
+    @mouseenter="node.state.focus()"
     @mouseleave="node.nodes.unfocusNode()"
   >
     <v-expansion-panels
@@ -42,32 +42,32 @@
               <v-card>
                 <v-card-text>
                   <v-checkbox
-                    v-model="node.view.showSize"
+                    v-model="node.sizeVisible"
                     :disabled="node.model.isRecorder"
-                    :color="node.view.color"
+                    :color="node.color"
                     density="compact"
                     hide-details
                     label="population size"
                   >
-                    <template #append> n: {{ node.size }} </template>
+                    <template #append>n: {{ node.size }}</template>
                   </v-checkbox>
 
                   <template v-if="node.modelParams">
-                    <v-checkbox
-                      v-for="(param, index) in node.model.paramsAll"
-                      :key="index"
-                      v-model="node.paramsVisible"
-                      :color="node.view.color"
-                      :label="param.label"
-                      :value="param.id"
-                      density="compact"
-                      hide-details
-                    >
-                      <template #append>
-                        {{ param.id }}: {{ param.value }}
-                        {{ param.unit }}
-                      </template>
-                    </v-checkbox>
+                    <template v-for="(param, index) in node.paramsAll" :key="index">
+                      <v-checkbox
+                        v-model="node.paramsVisible"
+                        :color="node.color"
+                        :label="param.label"
+                        :value="param.id"
+                        density="compact"
+                        hide-details
+                      >
+                        <template #append>
+                          {{ param.id }}: {{ param.value }}
+                          {{ param.unit }}
+                        </template>
+                      </v-checkbox>
+                    </template>
                   </template>
                 </v-card-text>
 
@@ -89,17 +89,10 @@
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
-          <v-list v-if="node.view.state.showSize" class="py-0">
+          <v-list v-if="node.intf && !node.intf.size.hidden" class="py-0">
             <slot name="popItem">
               <v-list-item class="param pl-0 pr-1">
-                <ValueSlider
-                  id="n"
-                  v-model="node.size"
-                  :thumb-color="node.view.color"
-                  input-label="n"
-                  label="population size"
-                  @update:model-value="node.onUpdate()"
-                />
+                <ValueSlider v-model="node.intf.size.value" :thumb-color="node.color" label="population size" />
 
                 <template #append>
                   <Menu :items="popItems" size="x-small" />
@@ -115,12 +108,11 @@
           </v-list>
 
           <v-list class="py-0">
-            <template v-for="(paramId, index) in node.paramsVisible">
+            <template v-for="param in node.paramsAll" :key="param.intf?.id">
               <ParamListItem
-                v-if="node.paramsVisible.length > 0"
-                :key="index"
-                :color="node.view.color"
-                :param="node.params[paramId]"
+                v-if="param.intf && param.intf[param.id] && !param.intf[param.id]?.hidden"
+                :color="node.color"
+                :param
               />
             </template>
           </v-list>
@@ -170,7 +162,7 @@ const popItems = [
   {
     icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
-      node.value.size = 1;
+      if (node.value.intf) node.value.intf.size.value = 1;
     },
     title: "Set default size",
   },

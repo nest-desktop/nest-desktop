@@ -1,9 +1,9 @@
 <template>
   <Card
     v-if="nodeGroup.show"
-    :color="nodeGroup.view.color"
+    :color="nodeGroup.color"
     class="node-group ma-1"
-    @mouseenter="nodeGroup.view.focus()"
+    @mouseenter="nodeGroup.state.focus()"
     @mouseleave="nodeGroup.parentNodes.unfocusNode()"
   >
     <v-card-title class="node-group-title">
@@ -41,7 +41,7 @@
       <v-row>
         <v-expansion-panels
           :key="nodeGroup.connections.length"
-          v-model="nodeGroup.view.expansionPanelIdx"
+          v-model="nodeGroup.state.expansionPanelIdx"
           variant="accordion"
         >
           <ConnectionEditor

@@ -2,11 +2,11 @@
   <div class="simulationKernelEditor">
     <v-toolbar color="transparent" density="compact" title="Simulation kernel editor" />
 
-    <Card :color="props.color" class="ma-1" title="Simulation">
+    <Card v-if="simulation.intf" :color="props.color" class="ma-1" title="Simulation">
       <v-card-text class="py-0">
         <ValueSlider
           v-bind="options.simulationTimeSettings"
-          v-model="simulation.time"
+          v-model="simulation.intf.time.value"
           :thumb-color="props.color"
           class="mx-1 py-2"
         />

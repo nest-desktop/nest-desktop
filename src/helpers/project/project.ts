@@ -53,18 +53,12 @@ export class BaseProject extends BaseObj {
     this._description = projectProps.description || "";
     this._filename = projectProps.filename || "";
 
-    // Initialize model database.
-    this.initModelStore();
-
     // Construct components.
     this._state = new ProjectState(this);
 
     this._code = new this.Code(this, projectProps.code);
     this._activities = new this.Activities(this);
     this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
-
-    // Initialize components.
-    nextTick(() => this.init());
   }
 
   get Activities() {

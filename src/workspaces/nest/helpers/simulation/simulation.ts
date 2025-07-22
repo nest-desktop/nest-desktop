@@ -18,7 +18,7 @@ export class NESTSimulation extends BaseSimulation {
   constructor(project: NESTProject, simulationProps: INESTSimulationProps = {}) {
     super(project, simulationProps);
     this._modules = simulationProps.modules || [];
-    this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
+    this._kernel = new NESTSimulationKernel(this);
   }
 
   get kernel(): NESTSimulationKernel {

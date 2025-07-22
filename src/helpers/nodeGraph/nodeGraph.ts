@@ -47,16 +47,16 @@ export class NodeGraph extends BaseObj {
       const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
       nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-        const nodePosition = node.view.position;
+        const nodePosition = node.state.position;
         nodePosition.x += pos.x;
         nodePosition.y += pos.y;
       });
-      nodeGroup.view.updateCentroid();
+      nodeGroup.state.updateCentroid();
     } else {
-      node.view.position.x = event.x;
-      node.view.position.y = event.y;
+      node.state.position.x = event.x;
+      node.state.position.y = event.y;
 
-      node.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
+      node.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.state.updateCentroid());
     }
 
     nextTick(() => this._networkGraph.render());
@@ -78,13 +78,13 @@ export class NodeGraph extends BaseObj {
     this._nodeGraphShape.init(elem, node);
 
     elem.on("mouseover", (_, n: TNode | TNodeGroup) => {
-      n.view.focus();
+      n.state.focus();
 
       // Draw line between selected node and focused node.
       if (n.network.connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         const selectedNode = n.network.connections.state.selectedNode;
-        const sourcePos = selectedNode.view.position;
-        this._networkGraph.workspace.dragline.drawPath(sourcePos, n.view.position);
+        const sourcePos = selectedNode.state.position;
+        this._networkGraph.workspace.dragline.drawPath(sourcePos, n.state.position);
       }
     });
 
@@ -131,12 +131,12 @@ export class NodeGraph extends BaseObj {
       .style("opacity", 1)
       .style("color", (n: TNode | TNodeGroup | any) => "var(--colorNode" + n.idx + ")")
       .style("background-color", "rgb(var(--v-theme-background))")
-      .attr("transform", (n: TNode | TNodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y})`);
+      .attr("transform", (n: TNode | TNodeGroup | any) => `translate(${n.state.position.x},${n.state.position.y})`);
 
     nodes
       .selectAll(".core")
       .transition(t)
-      .attr("transform", (n: TNode | TNodeGroup | any) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
+      .attr("transform", (n: TNode | TNodeGroup | any) => `scale( ${n.state.isFocused ? 1.2 : 1})`);
   }
 
   /**
@@ -165,11 +165,11 @@ export class NodeGraph extends BaseObj {
       .classed("nodeGroup", (n: TNode | TNodeGroup) => n.isGroup)
       .style("color", (n: TNode | TNodeGroup) => "var(--colorNode" + n.idx + ")")
       .attr("idx", (n: TNode | TNodeGroup) => n.idx)
-      .attr("weight", (n: TNode | TNodeGroup) => n.view.synWeights as string)
+      .attr("weight", (n: TNode | TNodeGroup) => n.state.synWeights as string)
       .attr(
         "transform",
         (n: TNode | TNodeGroup) =>
-          `translate(${n.view.position.x},${n.view.position.y}) scale( ${n.view.isFocused ? 1.2 : 1})`,
+          `translate(${n.state.position.x},${n.state.position.y}) scale( ${n.state.isFocused ? 1.2 : 1})`,
       )
       .style("opacity", 0)
       .call(dragging, null)

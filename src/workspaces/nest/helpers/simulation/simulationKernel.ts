@@ -11,57 +11,26 @@ export interface INESTSimulationKernelProps {
 }
 
 export class NESTSimulationKernel extends BaseObj {
-  private _localNumThreads: number; // number of threads
-  private _resolution: number; // time resolution of simulation steps
   private _simulation: NESTSimulation; // parent
-  private _rngSeed: number; // seed for random renerator
 
-  constructor(simulation: NESTSimulation, kernelProps: INESTSimulationKernelProps = {}) {
+  constructor(simulation: NESTSimulation) {
     super({
       config: { name: "NESTSimulationKernel", simulator: "nest" },
     });
 
     this._simulation = simulation;
-
-    this._resolution = kernelProps.resolution || 0.1;
-    this._localNumThreads = kernelProps.localNumThreads || 1;
-    this._rngSeed = kernelProps.rngSeed || 1;
   }
 
-  get localNumThreads(): number {
-    return this.codeNodes.node ? this.codeNodes.node.inputs.local_num_threads.value : this._localNumThreads;
+  get localNumThreads(): number | undefined {
+    return this.intf?.local_num_threads?.value;
   }
 
-  set localNumThreads(value: number) {
-    if (this.codeNodes.node) this.codeNodes.node.inputs.local_num_threads.value = value;
-    else {
-      this._localNumThreads = value;
-      this._simulation.onUpdate();
-    }
+  get rngSeed(): number | undefined {
+    return this.intf?.rng_seed?.value;
   }
 
-  get rngSeed(): number {
-    return this.codeNodes.node ? this.codeNodes.node.inputs.rng_seed.value : this._rngSeed;
-  }
-
-  set rngSeed(value: number) {
-    if (this.codeNodes.node) this.codeNodes.node.inputs.rng_seed.value = value;
-    else {
-      this._rngSeed = value;
-      this._simulation.onUpdate();
-    }
-  }
-
-  get resolution(): number {
-    return this.codeNodes.node ? this.codeNodes.node.inputs.resolution.value : this._resolution;
-  }
-
-  set resolution(value: number) {
-    if (this.codeNodes.node) this.codeNodes.node.inputs.resolution.value = value;
-    else {
-      this._resolution = value;
-      this._simulation.onUpdate();
-    }
+  get resolution(): number | undefined {
+    return this.intf?.resolution?.value;
   }
 
   get simulation(): NESTSimulation {
@@ -80,14 +49,14 @@ export class NESTSimulationKernel extends BaseObj {
     };
   }
 
-  /**
-   * Update code node.
-   */
-  updateCodeNodes(): void {
-    if (!this.codeNodes.node) return;
+  // /**
+  //  * Update code node.
+  //  */
+  // updateCodeNodes(): void {
+  //   if (!this.codeNodes.node) return;
 
-    this.codeNodes.node.inputs.local_num_threads.value = this._localNumThreads;
-    this.codeNodes.node.inputs.resolution.value = this._resolution;
-    this.codeNodes.node.inputs.rng_seed.value = this._rngSeed;
-  }
+  //   this.codeNodes.node.inputs.local_num_threads.value = this._localNumThreads;
+  //   this.codeNodes.node.inputs.resolution.value = this._resolution;
+  //   this.codeNodes.node.inputs.rng_seed.value = this._rngSeed;
+  // }
 }

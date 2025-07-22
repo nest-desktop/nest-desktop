@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <ColorPicker
-      v-model="node.view.color"
+      v-model="node.state.color"
       :color-scheme="state.colorScheme"
       hide-inputs
       @update:model-value="nodeColorChange()"
@@ -68,7 +68,7 @@ const nodeColorChange = () => {
  * Reset node color.
  */
 const resetColor = () => {
-  if (node.value) node.value.view.color = "";
+  if (node.value) node.value.state.color = "";
   nodeColorChange();
 };
 </script>

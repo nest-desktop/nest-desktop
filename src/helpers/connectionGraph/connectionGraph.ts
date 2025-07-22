@@ -42,30 +42,30 @@ export class ConnectionGraph extends BaseObj {
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     if (connection.source.isNode) {
-      const sourceNodePosition = connection.sourceNode.view.position;
+      const sourceNodePosition = connection.sourceNode.state.position;
       sourceNodePosition.x += pos.x;
       sourceNodePosition.y += pos.y;
     } else {
       connection.sourceNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-        const nodePosition = node.view.position;
+        const nodePosition = node.state.position;
         nodePosition.x += pos.x;
         nodePosition.y += pos.y;
       });
     }
 
     if (connection.target.isNode) {
-      const targetNodePosition = connection.target.view.position;
+      const targetNodePosition = connection.target.state.position;
       targetNodePosition.x += pos.x;
       targetNodePosition.y += pos.y;
     } else {
       connection.targetNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-        const nodePosition = node.view.position;
+        const nodePosition = node.state.position;
         nodePosition.x += pos.x;
         nodePosition.y += pos.y;
       });
     }
 
-    connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
+    connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.state.updateCentroid());
 
     nextTick(() => this._networkGraph.render());
   }
@@ -108,7 +108,7 @@ export class ConnectionGraph extends BaseObj {
         // Draw line between selected node and focused connection.
         if (c.network.connections.state.selectedNode && this.state.dragLine)
           this._networkGraph.workspace.dragline.drawPath(
-            c.network.connections.state.selectedNode.view.position,
+            c.network.connections.state.selectedNode.state.position,
             c.view.markerEndPosition,
           );
 
@@ -121,7 +121,7 @@ export class ConnectionGraph extends BaseObj {
       .on("click", () => {
         const network = this._networkGraph.network;
         const workspace = this._networkGraph.workspace;
-        connection.sourceNode.view.focus();
+        connection.sourceNode.state.focus();
 
         if (network.connections.state.selectedNode && workspace.state.dragLine) {
           // Set cursor position of the focused connection.
@@ -183,8 +183,8 @@ export class ConnectionGraph extends BaseObj {
         .attr(
           "d",
           drawPathNode(
-            connection.source.view.position,
-            connection.target.view.position,
+            connection.source.state.position,
+            connection.target.state.position,
             connection.view.connectionGraphOptions,
           ),
         );
@@ -240,7 +240,7 @@ export class ConnectionGraph extends BaseObj {
       .enter()
       .append("g")
       .attr("class", "connection")
-      .attr("color", (c: TConnection) => c.sourceNode.view.color)
+      .attr("color", (c: TConnection) => c.sourceNode.color)
       .attr("idx", (c: TConnection) => c.idx)
       .attr("hash", (c: TConnection) => c.hash)
       .style("opacity", 0)

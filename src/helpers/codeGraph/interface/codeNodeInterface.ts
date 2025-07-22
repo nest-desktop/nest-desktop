@@ -9,6 +9,8 @@ import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 import { AbstractCodeNode } from "../codeNode";
 
 export class CodeNodeInterface<T = any> extends NodeInterface<T> {
+  public graphId: string = "";
+
   constructor(name: string, value: T) {
     super(name, value);
     this.setComponent(markRaw(CodeNodeInterfaceComponent));
@@ -24,6 +26,7 @@ export class CodeNodeInterface<T = any> extends NodeInterface<T> {
     } else {
       graph = codeGraphStore.editor.graph as Graph;
     }
+
     return graph.findNodeById(this.nodeId) as AbstractCodeNode;
   }
 }

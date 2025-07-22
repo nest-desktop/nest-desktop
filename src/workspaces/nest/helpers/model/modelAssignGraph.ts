@@ -105,11 +105,11 @@ export class NESTModelAssignGraph extends BaseObj {
       const weightRecorder = synapseModel.weightRecorder as NESTNode;
 
       if (weightRecorder) {
-        elem.attr("color", connection.synapse.copyModel.weightRecorder.view.color);
+        elem.attr("color", connection.synapse.copyModel.weightRecorder.state.color);
 
         elem
           .selectAll("path")
-          .attr("d", drawPathMouse(weightRecorder.view.position, connection.view.markerEndPosition))
+          .attr("d", drawPathMouse(weightRecorder.state.position, connection.view.markerEndPosition))
           .style("stroke-dasharray", 8);
       }
     });

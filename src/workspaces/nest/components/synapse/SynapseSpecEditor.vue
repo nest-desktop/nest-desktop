@@ -19,7 +19,7 @@
             v-for="(param, index) in synapse.model.paramsAll"
             :key="index"
             v-model="synapse.paramsVisible"
-            :color="synapse.connection.sourceNode.view.color"
+            :color="synapse.connection.sourceNode.color"
             :label="param.label"
             :value="param.id"
             density="compact"
@@ -50,13 +50,14 @@
     </v-menu>
   </v-btn-group>
 
-  <v-list v-if="synapse.paramsVisible.length > 0" density="compact">
-    <ParamListItem
-      v-for="(param, index) in synapse.filteredParams"
-      :key="index"
-      :color="synapse.connection.sourceNode.view.color"
-      :param="(param as NESTSynapseParameter)"
-    />
+  <v-list density="compact">
+    <template v-for="param in synapse.paramsAll" :key="param.intf?.id">
+      <ParamListItem
+        v-if="param.intf && param.intf[param.id] && !param.intf[param.id]?.hidden"
+        :color="synapse.connection.sourceNode.color"
+        :param
+      />
+    </template>
   </v-list>
 </template>
 
@@ -68,7 +69,6 @@ import { TModel } from "@/types";
 
 import SynapseModelSelect from "./SynapseModelSelect.vue";
 import { NESTSynapse } from "../../helpers/synapse/synapse";
-import { NESTSynapseParameter } from "../../helpers/synapse/synapseParameter";
 
 const props = defineProps<{ synapse: NESTSynapse }>();
 const synapse = computed(() => props.synapse);

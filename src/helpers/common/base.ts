@@ -10,6 +10,7 @@ import { truncate } from "@/utils/truncate";
 
 import { Config } from "./config";
 import { AbstractCodeNode } from "../codeGraph/codeNode";
+import { CodeNodeInterface } from "../codeGraph/interface/codeNodeInterface";
 
 export class BaseObj {
   private _codeNodes: Record<string, AbstractCodeNode> = {};
@@ -18,6 +19,7 @@ export class BaseObj {
   private _hash: string = "";
   private _logger: Logger<ILogObj>;
   private _uuid: string;
+  private _props: unknown = {};
 
   constructor(props?: {
     config?: { name?: string; simulator?: string };
@@ -40,6 +42,10 @@ export class BaseObj {
     return this._codeNodes;
   }
 
+  get codeNode(): AbstractCodeNode | undefined {
+    return this._codeNodes.node;
+  }
+
   get config(): Config | undefined {
     return this._config;
   }
@@ -48,8 +54,20 @@ export class BaseObj {
     return this._hash;
   }
 
+  get intf(): Record<string, CodeNodeInterface> | undefined {
+    return this.codeNode?.inputs;
+  }
+
   get logger(): Logger<ILogObj> {
     return this._logger;
+  }
+
+  get props(): unknown {
+    return this._props;
+  }
+
+  set props(value: unknown) {
+    this._props = value;
   }
 
   get uuid(): string {

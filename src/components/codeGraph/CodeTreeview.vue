@@ -25,6 +25,10 @@
             {{ element.idx + 1 }} -
           </span>
           {{ element.title }}
+
+          <template v-if="appStore.state.devMode" #append>
+            {{ element.shortId }}
+          </template>
         </v-list-item>
       </template>
     </draggable>
@@ -36,6 +40,9 @@ import { computed, ref } from "vue";
 import draggable from "vuedraggable";
 
 import { BaseCode } from "@/helpers/code/code";
+
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
 
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();

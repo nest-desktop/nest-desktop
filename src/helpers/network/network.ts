@@ -8,7 +8,7 @@ import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
 import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
-import { INodeViewProps } from "../node/nodeView";
+import { INodeViewProps } from "../node/nodeViewState";
 import { NetworkState } from "./networkState";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 
@@ -27,7 +27,6 @@ const _elementTypes: { icon: string; id: string; title: string }[] = [
 
 export class BaseNetwork extends BaseObj {
   private _state: NetworkState; // network state
-  private _props: INetworkProps;
 
   public _connections: TConnections;
   public _nodes: TNodes;
@@ -40,12 +39,10 @@ export class BaseNetwork extends BaseObj {
   };
 
   constructor(project: TProject, networkProps: INetworkProps = {}) {
-    super({
-      config: { name: "Network" },
-    });
+    super({ config: { name: "Network" } });
 
     this._project = project;
-    this._props = networkProps;
+    this.props = networkProps;
     this._state = new NetworkState(this);
 
     this._nodes = new this.Nodes(this, networkProps.nodes || []);
@@ -99,10 +96,6 @@ export class BaseNetwork extends BaseObj {
     return this._project;
   }
 
-  get props(): INetworkProps {
-    return this._props;
-  }
-
   get state(): NetworkState {
     return this._state;
   }
@@ -149,8 +142,8 @@ export class BaseNetwork extends BaseObj {
     if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
     // Update synaptic weight label.
-    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
-      connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
+    if (connection.sourceNode.isNode && connection.sourceNode.state.state.synWeights)
+      connection.synapse.weightLabel = connection.sourceNode.state.state.synWeights;
 
     // Update recorder and clean activity panels.
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
@@ -326,6 +319,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.allNodes.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
+    this._nodes.allNodes.forEach((node: TNode | TNodeGroup) => node.state.updateStyle());
   }
 }

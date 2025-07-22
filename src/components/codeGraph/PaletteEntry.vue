@@ -20,13 +20,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
 import { GRAPH_NODE_TYPE_PREFIX } from "@baklavajs/core";
+import { computed, defineComponent, ref } from "vue";
+import { useGraph, useViewModel } from "@baklavajs/renderer-vue";
 
 // import { IMenuItem, ContextMenu } from "../contextmenu";
 // import VerticalDots from "../icons/VerticalDots.vue";
 // import { useGraph, useViewModel } from "../utility";
-import { useGraph, useViewModel } from "@baklavajs/renderer-vue";
 
 export default defineComponent({
   // components: { ContextMenu, VerticalDots },

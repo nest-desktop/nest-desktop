@@ -77,7 +77,7 @@ defineProps<{
 }>();
 
 // const toggleDevMode = () => {
-//   appStore.devMode = !appStore.devMode;
+//   appStore.state.devMode = !appStore.state.devMode;
 // };
 
 // const items: {
@@ -96,7 +96,7 @@ defineProps<{
 //   to: "/sandbox/",
 // },
 // {
-//   color: appStore.devMode ? "green" : "red",
+//   color: appStore.state.devMode ? "green" : "red",
 //   icon: "mdi:mdi-developer-board",
 //   onClick: toggleDevMode,
 //   id: "theme-light-dark",

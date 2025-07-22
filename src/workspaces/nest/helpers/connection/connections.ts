@@ -15,11 +15,11 @@ export class NESTConnections extends BaseConnections {
   }
 
   override get allConnections(): NESTConnection[] {
-    return this._connections as NESTConnection[];
+    return this.connections as NESTConnection[];
   }
 
   override get connections(): NESTConnection[] {
-    return this._connections as NESTConnection[];
+    return super.connections as NESTConnection[];
   }
 
   /**

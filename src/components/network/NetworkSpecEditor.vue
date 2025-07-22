@@ -40,10 +40,10 @@
     <slot name="model" />
 
     <slot name="nodes">
-      <div :key="network.nodes.length">
-        <div v-for="(node, index) in network.nodes.allNodes" :key="index">
-          <NodeEditor v-if="node.isNode" :node="(node as TNode)" />
-          <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" />
+      <div :key="network.nodes.codeNodes.length">
+        <div v-for="(node, index) in network.nodes.codeNodes" :key="index">
+          <NodeEditor :node="(node.view as TNode)" />
+          <!-- <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" /> -->
         </div>
       </div>
     </slot>
@@ -55,8 +55,7 @@ import { computed } from "vue";
 
 import IconBtn from "../common/IconBtn.vue";
 import NodeEditor from "../node/NodeEditor.vue";
-import NodeGroupEditor from "../node/NodeGroupEditor.vue";
-import { TNetwork, TNode, TNodeGroup } from "@/types";
+import { TNetwork, TNode } from "@/types";
 import { range } from "@/utils/array";
 
 const props = defineProps<{ network: TNetwork }>();
@@ -66,7 +65,7 @@ const items = [
   {
     id: "collapseAll",
     onClick: () => {
-      network.value.nodes.nodeItems.forEach((node: TNode) => (node.view.state.expansionPanels = []));
+      network.value.nodes.nodeItems.forEach((node: TNode) => (node.state.state.expansionPanels = []));
     },
     prependIcon: "mdi:mdi-collapse-all-outline",
     title: "collapse all",
@@ -75,7 +74,7 @@ const items = [
     id: "expandAll",
     onClick: () => {
       network.value.nodes.nodeItems.forEach(
-        (node: TNode) => (node.view.state.expansionPanels = range(node.connections.length + 1)),
+        (node: TNode) => (node.state.state.expansionPanels = range(node.connections.length + 1)),
       );
     },
     prependIcon: "mdi:mdi-expand-all-outline",

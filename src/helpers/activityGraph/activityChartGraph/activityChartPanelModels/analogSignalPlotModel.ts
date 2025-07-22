@@ -191,7 +191,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
               textposition: "end",
             },
             line: {
-              color: node.view.color,
+              color: node.state.color,
               dash: "dot",
               width: 2,
             },

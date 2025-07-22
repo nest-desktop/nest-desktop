@@ -162,8 +162,8 @@ export class BaseCode extends BaseObj {
       return;
     }
 
-    // Render code of nodes
-    this.graph.renderCodes();
+    // Render code nodes
+    this.graph.renderNodeCodes();
 
     // Render script of the code component.
     nextTick(() => this.renderCode());
@@ -189,15 +189,6 @@ export class BaseCode extends BaseObj {
     this.graph.init();
     this.generate();
   }
-
-  // /**
-  //  * Initialize code node graph.
-  //  */
-  // initGraph(): void {
-  //   this.logger.trace("init graph");
-
-  //   this.graph.init();
-  // }
 
   /**
    * Load template.

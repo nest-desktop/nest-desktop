@@ -9,12 +9,12 @@ import { nextTick } from "vue";
 import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup } from "@/types";
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
-  let nodeCoords: [number, number][] = nodes.map((node: TNode) => [node.view.position.x, node.view.position.y]);
+  let nodeCoords: [number, number][] = nodes.map((node: TNode) => [node.state.position.x, node.state.position.y]);
 
   // The two additional points will be sufficient for the convex hull algorithm.
   if (nodes.length == 2) {
-    const pos1 = nodes[0].view.position;
-    const pos2 = nodes[1].view.position;
+    const pos1 = nodes[0].state.position;
+    const pos2 = nodes[1].state.position;
 
     // [dx, dy] is the direction vector of the line.
     let dx = pos2.x - pos1.x;
@@ -59,11 +59,11 @@ export class NodeGroupGraph {
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
     nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-      const nodePosition = node.view.position;
+      const nodePosition = node.state.position;
       nodePosition.x += pos.x;
       nodePosition.y += pos.y;
     });
-    nodeGroup.view.updateCentroid();
+    nodeGroup.state.updateCentroid();
 
     nextTick(() => this._networkGraph.render());
   }
@@ -85,10 +85,10 @@ export class NodeGroupGraph {
         "d",
         (nodeGroup: TNodeGroup | any) =>
           "M" +
-          nodeGroup.view.state.polygon
+          nodeGroup.state.state.polygon
             .map((point: [number, number]) => [
-              point[0] - nodeGroup.view.position.x,
-              point[1] - nodeGroup.view.position.y,
+              point[0] - nodeGroup.state.position.x,
+              point[1] - nodeGroup.state.position.y,
             ])
             .join("L") +
           "Z",
@@ -96,7 +96,7 @@ export class NodeGroupGraph {
 
     nodeGroups.attr(
       "transform",
-      (n: TNodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`,
+      (n: TNodeGroup | any) => `translate(${n.state.position.x},${n.state.position.y}) scale(${n.state.state.margin})`,
     );
   }
 
@@ -135,16 +135,16 @@ export class NodeGroupGraph {
     //   .style("text-anchor", "middle")
     //   .style("text-transform", "uppercase", "important")
     //   .style("fill", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
-    //   .text((n: TNodeGroup) => n.view.label);
+    //   .text((n: TNodeGroup) => n.label);
 
     elem.on("mouseover", (_: MouseEvent, n: TNodeGroup) => {
-      n.view.focus();
+      n.state.focus();
 
       // Draw line between selected node and focused node.
       if (n.parent.network.connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         const selectedNode = n.parent.network.connections.state.selectedNode;
-        const sourcePos = selectedNode.view.position;
-        this._networkGraph.workspace.dragline.drawPath(sourcePos, n.view.state.centroid);
+        const sourcePos = selectedNode.state.position;
+        this._networkGraph.workspace.dragline.drawPath(sourcePos, n.state.centroid);
       }
     });
 
@@ -158,7 +158,7 @@ export class NodeGroupGraph {
 
       if (connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         // Set cursor position of the focused node.
-        this._networkGraph.workspace.updateCursorPosition(nodeGroup.view.state.centroid);
+        this._networkGraph.workspace.updateCursorPosition(nodeGroup.state.state.centroid);
 
         this._networkGraph.workspace.animationOff();
 

@@ -1,10 +1,11 @@
 // synapse.ts
 
-import { TConnection, TSynapseParameter } from "@/types";
+import { TConnection, TModel, TSynapseParameter } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseSynapseParameter } from "./synapseParameter";
 import { IParamProps } from "../common/parameter";
+import { ModelParameter } from "../model/modelParameter";
 
 export interface ISynapseProps {
   model?: string;
@@ -13,10 +14,10 @@ export interface ISynapseProps {
 
 export class BaseSynapse extends BaseObj {
   // private readonly _name = "Synapse";
+  public _model: TModel | undefined;
   public _modelId: string = "static";
   public _params: Record<string, TSynapseParameter> = {};
   public _paramsVisible: string[] = [];
-  private _props: ISynapseProps; // raw data of props
 
   public _connection: TConnection; // parent
 
@@ -24,7 +25,7 @@ export class BaseSynapse extends BaseObj {
     super();
 
     this._connection = connection;
-    this._props = synapseProps;
+    this.props = synapseProps as ISynapseProps;
 
     this._modelId = synapseProps?.model || "static";
   }
@@ -59,16 +60,39 @@ export class BaseSynapse extends BaseObj {
     return false;
   }
 
-  get modelId(): string {
-    return this._modelId;
+  get model(): BaseModel {}
+
+  get modelDBStore() {
+    return this.connection.connections.network.project.modelDBStore;
   }
 
-  // get name(): string {
-  //   return this._name;
-  // }
+  get modelId(): string {
+    return this.intf?.model ? this.intf.model.value : this._modelId;
+  }
+
+  set modelId(value: string) {
+    if (this.intf?.model) {
+      this.intf.model.value = value;
+    } else {
+      this._modelId = value;
+    }
+
+    this.loadModel();
+  }
+
+  get modelParams(): Record<string, ModelParameter> {
+    return this.model.params;
+  }
+
+  // Get models of the same element type.
+  get models(): TModel[] {
+    const elementType: string = this.model?.elementType;
+    const models: TModel[] = this.modelDBStore.getModelsByElementType(elementType) as TModel[];
+    return models;
+  }
 
   get paramsAll(): TSynapseParameter[] {
-    return Object.values(this._params);
+    return Object.values(this.params);
   }
 
   get params(): Record<string, TSynapseParameter> {
@@ -82,10 +106,6 @@ export class BaseSynapse extends BaseObj {
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
     this.onUpdate({ preventSimulation: true });
-  }
-
-  get props(): ISynapseProps {
-    return this._props;
   }
 
   get weight(): number {
@@ -120,7 +140,7 @@ export class BaseSynapse extends BaseObj {
    * @param paramProps- synapse parameter props
    */
   addParameter(paramProps: IParamProps): void {
-    // this._logger.trace("add parameter:", param)
+    this.logger.trace("add parameter:", paramProps);
     this._params[paramProps.id] = new BaseSynapseParameter(this, paramProps);
   }
 
@@ -130,6 +150,16 @@ export class BaseSynapse extends BaseObj {
   emptyParams(): void {
     this._params = {};
     this._paramsVisible = [];
+  }
+
+  /**
+   * Get model.
+   * @param modelId model ID
+   */
+  getModel(modelId: string): TModel | undefined {
+    this.logger.trace("get model:", modelId);
+
+    return this.modelDBStore.findModel(modelId);
   }
 
   /**
@@ -145,6 +175,7 @@ export class BaseSynapse extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
+    this.loadModel(this.props.params);
     this.update();
   }
 
@@ -155,6 +186,7 @@ export class BaseSynapse extends BaseObj {
     this.logger.trace("init parameters");
 
     this.emptyParams();
+
     if (paramsProps) paramsProps.forEach((param: IParamProps) => this.addParameter(param));
   }
 
@@ -170,6 +202,32 @@ export class BaseSynapse extends BaseObj {
       weight.state.value = -1 * weight.value;
       this.onUpdate({ preventSimulation: true });
     }
+  }
+
+  /**
+   * Load model.
+   */
+  loadModel(paramsProps?: IParamProps[]): void {
+    this.logger.trace("load model:", this.modelId);
+
+    this._model = this.getModel(this.modelId);
+    this.initParameters(paramsProps);
+    // this.onModelUpdate();
+  }
+
+  /**
+   * Observer for model changes.
+   * @remarks It emits node changes.
+   * @remarks It corrects connection direction to the recorder.
+   * @remarks It updates as analog recorder or other connected analog recorders.
+   */
+  onModelUpdate(): void {
+    this.logger.trace("on model update");
+
+    this.update();
+    this.codeNode?.onModelUpdate();
+    this.codeNodes.params?.onModelUpdate();
+    // this.connection.connections.network.onUpdate({ preventSimulation: true, cleanPanels: recorderModelChanged });
   }
 
   /**

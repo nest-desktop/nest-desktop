@@ -30,6 +30,7 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
   },
 ) {
   const logger = mainLogger.getSubLogger({ name: props.workspace + " project store" });
+  // logger.settings.minLevel = 1;
 
   return defineStore(props.workspace + "-project", () => {
     const state = reactive<IProjectStoreState<TProject | BaseProject>>({
@@ -110,7 +111,7 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
       if (state.project) {
         // Load code graph editor.
         const editorState = state.project.code.graph.state.editor;
-        state.project.code.graph.load(editorState as IEditorState);
+        if (editorState) state.project.code.graph.load(editorState as IEditorState);
         state.project.code.graph.save();
 
         const appStore = useAppStore();

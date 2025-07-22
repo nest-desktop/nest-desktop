@@ -22,15 +22,15 @@ export interface IConnectionProps {
 export class BaseConnection extends BaseObj {
   // private readonly _name = "Connection";
 
-  private _idx: number; // generative
+  // private _idx: number = -1; // generative
   private _params: Record<string, ConnectionParameter> = {};
   private _paramsVisible: string[] = [];
   private _rule: ConnectionRule;
   private _source: TNode | TNodeGroup;
-  private _sourceIdx: number; // Node index
+  private _sourceIdx: number = -1; // Node index
   private _state: ConnectionState;
   private _target: TNode | TNodeGroup;
-  private _targetIdx: number; // Node index
+  private _targetIdx: number = -1; // Node index
   private _view: ConnectionView;
 
   public _connections: TConnections; // parent
@@ -42,6 +42,7 @@ export class BaseConnection extends BaseObj {
     });
 
     this._connections = connections;
+    this.props = connectionProps;
     // this._idx = this.connections.allConnections.length;
 
     this._state = new ConnectionState(this);
@@ -154,11 +155,6 @@ export class BaseConnection extends BaseObj {
     return this.source as TNode;
   }
 
-  // set sourceNode(node: TNode) {
-  //   this._source = node;
-  //   this._sourceIdx = node.idx;
-  // }
-
   get sourceNodeGroup(): TNodeGroup {
     return this.source as TNodeGroup;
   }
@@ -181,7 +177,7 @@ export class BaseConnection extends BaseObj {
   }
 
   get targetIdx(): number {
-    return this._targetIdx;
+    return this._targetIdx ?? -1;
   }
 
   set targetIdx(value: number) {
@@ -193,10 +189,6 @@ export class BaseConnection extends BaseObj {
   get targetNode(): TNode {
     return this.target as TNode;
   }
-
-  // set targetNode(node: TNode) {
-  //   this._targetIdx = node.idx;
-  // }
 
   get targetNodeGroup(): TNodeGroup {
     return this.target as TNodeGroup;
@@ -246,8 +238,8 @@ export class BaseConnection extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this.synapse.init();
     this.update();
+    this.synapse.init();
   }
 
   /**
@@ -289,7 +281,7 @@ export class BaseConnection extends BaseObj {
     this.logger.trace("on update");
     this.updateHash();
 
-    if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
+    if (props.checkSynWeights) this.sourceNode.state.checkSynWeights();
 
     this.connections.network.onUpdate(props);
   }
@@ -308,8 +300,8 @@ export class BaseConnection extends BaseObj {
     this.targetIdx = sourceIdx;
 
     // Check syn weights.
-    this.sourceNode.view.checkSynWeights();
-    this.targetNode.view.checkSynWeights();
+    this.sourceNode.state.checkSynWeights();
+    this.targetNode.state.checkSynWeights();
 
     // Initialize activity graph.
     if (this._view.connectRecorder()) this.recorder.createActivity();
@@ -386,24 +378,7 @@ export class BaseConnection extends BaseObj {
    */
   update(): void {
     this.clean();
-    // this.updateCodeNodes();
     this.updateHash();
-  }
-
-  /**
-   * Update code node.
-   */
-  updateCodeNodes(): void {
-    if (!this.codeNodes.node) return;
-
-    this.codeNodes.node.inputs.source.value = this.sourceIdx;
-    this.codeNodes.node.inputs.target.value = this.targetIdx;
-
-    this.paramsVisible.forEach((paramKey: string) => {
-      if (this.codeNodes.node.inputs[paramKey]) {
-        this.codeNodes.node.inputs[paramKey].value = this.params[paramKey].value;
-      }
-    });
   }
 
   /**

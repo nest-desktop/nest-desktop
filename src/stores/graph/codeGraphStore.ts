@@ -35,7 +35,6 @@ export const useCodeGraphStore = defineStore("code-graph", () => {
 
   // const newGraph = () => {
   //   if (state.token) unsubscribe();
-  //   state.editor = new Editor().save();
   // };
 
   const subscribe = (call: () => void): void => {

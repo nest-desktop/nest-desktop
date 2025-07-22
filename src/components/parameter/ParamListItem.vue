@@ -1,86 +1,81 @@
 <template>
-  <v-list-item v-if="param" :key="param.value" class="param my-1 pa-1" style="line-height: 32px">
-    <template v-if="param.state.random">
-      <v-label class="px-1" style="width: 100%">
-        {{ param.label || param.options.label || param.id }}
-        <v-spacer />
-        {{ param.id }}: {{ param.code }}
-      </v-label>
-    </template>
-
-    <ArrayInput
-      v-else-if="param.options.component === 'arrayInput'"
-      v-bind="param.options"
-      v-model="(param.value as number[])"
-      @update:model-value="update"
-    />
-
-    <v-checkbox
-      v-else-if="param.options.component === 'checkbox'"
-      v-bind="param.options"
-      v-model="(param.value as boolean)"
-      :color="color"
-      density="compact"
-      hide-details
-      @update:model-value="update"
-    />
-
-    <RangeSlider
-      v-else-if="param.options.component === 'rangeSlider'"
-      v-bind="param.options"
-      v-model="(param.value as number[])"
-      :thumb-color="color"
-      @update:model-value="update"
-    />
-
-    <v-select
-      v-else-if="param.options.component === 'select'"
-      v-bind="param.options"
-      v-model="(param.value as string)"
-      :items="param.items"
-      class="pa-1 pb-0"
-      density="compact"
-      hide-details
-      @update:model-value="update"
-    />
-
-    <TickSlider
-      v-else-if="param.options.component === 'tickSlider'"
-      v-bind="param.options"
-      v-model="(param.value as number)"
-      :thumb-color="color"
-      @update:model-value="update"
-    />
-
-    <ValueSlider
-      v-else-if="param.options.component === 'valueSlider'"
-      v-bind="param.options"
-      v-model="(param.value as number)"
-      :thumb-color="color"
-      @update:model-value="update"
-    />
-
-    <template v-else>
-      <v-row class="pt-1" no-gutters>
-        <v-label :title="param.label || param.options.label" class="text-truncate">
-          {{ param.label || param.options.label }}
+  <v-list-item v-if="param" class="param my-1 pa-1" style="line-height: 32px">
+    <template v-if="param.intf && param.intf[param.id]">
+      <template v-if="param.state.random">
+        <v-label class="px-1" style="width: 100%">
+          {{ param.label || param.options.label || param.id }}
+          <v-spacer />
+          {{ param.id }}: {{ param.code }}
         </v-label>
+      </template>
 
-        <v-spacer />
+      <ArrayInput
+        v-else-if="param.options.component === 'arrayInput'"
+        v-bind="param.options"
+        v-model="(param.intf[param.id].value as number[])"
+      />
 
-        <v-text-field
-          v-model="param.value"
-          :label="param.id"
-          :step="param.step"
-          :suffix="param.unit"
-          density="compact"
-          hide-details
-          style="max-width: 80px"
-          type="number"
-          variant="underlined"
-          @update:model-value="update"
-        />
-      </v-row>
+      <v-checkbox
+        v-else-if="param.options.component === 'checkbox'"
+        v-bind="param.options"
+        v-model="(param.intf[param.id].value as boolean)"
+        :color="color"
+        density="compact"
+        hide-details
+      />
+
+      <RangeSlider
+        v-else-if="param.options.component === 'rangeSlider'"
+        v-bind="param.options"
+        v-model="(param.intf[param.id].value as number[])"
+        :thumb-color="color"
+      />
+
+      <v-select
+        v-else-if="param.options.component === 'select'"
+        v-bind="param.options"
+        v-model="(param.intf[param.id].value as string)"
+        :items="param.items"
+        class="pa-1 pb-0"
+        density="compact"
+        hide-details
+      />
+
+      <TickSlider
+        v-else-if="param.options.component === 'tickSlider'"
+        v-bind="param.options"
+        v-model="(param.intf[param.id].value as number)"
+        :thumb-color="color"
+      />
+
+      <ValueSlider
+        v-else-if="param.options.component === 'valueSlider'"
+        v-bind="param.options"
+        v-model="param.intf[param.id].value"
+        :thumb-color="color"
+      />
+
+      <template v-else>
+        <v-row class="pt-1" no-gutters>
+          <v-label :title="param.label || param.options.label" class="text-truncate">
+            {{ param.label || param.options.label }}
+          </v-label>
+
+          <v-spacer />
+
+          <v-text-field
+            v-model="param.intf[param.id].value"
+            :label="param.id"
+            :step="param.step"
+            :suffix="param.unit"
+            density="compact"
+            hide-details
+            style="max-width: 80px"
+            type="number"
+            variant="underlined"
+          />
+        </v-row>
+      </template>
     </template>
 
     <template #append>
@@ -96,8 +91,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick } from "vue";
+import { computed } from "vue";
 
+import { BaseParameter } from "@/helpers/common/parameter";
 import { TParameter } from "@/types";
 
 import ArrayInput from "../controls/ArrayInput.vue";
@@ -106,9 +102,8 @@ import ParamPopover from "../parameter/ParamPopover.vue";
 import RangeSlider from "../controls/RangeSlider.vue";
 import TickSlider from "../controls/TickSlider.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { BaseParameter } from "@/helpers/common/parameter";
 
-const emit = defineEmits(["update:paramValue"]);
+// const emit = defineEmits(["update:paramValue"]);
 const props = defineProps({
   color: { type: String, default: "" },
   param: { type: BaseParameter, required: true },
@@ -116,11 +111,11 @@ const props = defineProps({
 });
 const param = computed(() => props.param as TParameter);
 
-const update = () => {
-  nextTick(() => {
-    emit("update:paramValue", param.value.value);
-  });
-};
+// const update = () => {
+//   nextTick(() => {
+//     emit("update:paramValue", param.intf.value);
+//   });
+// };
 
 const items = [
   {

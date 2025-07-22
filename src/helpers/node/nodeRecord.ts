@@ -44,7 +44,7 @@ export class NodeRecord extends BaseObj {
     // this._activity = node.activity;
 
     this._id = nodeRecordProps.id || "";
-    this._recorderId = nodeRecordProps.recorderId || node.view.label;
+    this._recorderId = nodeRecordProps.recorderId || node.label;
     this._label = nodeRecordProps.label || "";
     this._unit = nodeRecordProps.unit || "";
 
@@ -69,7 +69,7 @@ export class NodeRecord extends BaseObj {
   get color(): string | string[] {
     switch (this.activity.chartGraph.state.traceColor) {
       case "node":
-        return this._node.view.color;
+        return this._node.state.color;
       case "record":
         return this._state.color;
       case "trace":
@@ -108,11 +108,11 @@ export class NodeRecord extends BaseObj {
 
   set node(value: TNode) {
     this._node = value;
-    this._recorderId = this._node.view.label;
+    this._recorderId = this._node.state.label;
   }
 
   get nodeLabel(): string {
-    return this.node.view.label;
+    return this.node.state.label;
   }
 
   get nodeSize(): number {
@@ -186,7 +186,7 @@ export class NodeRecord extends BaseObj {
    * Update color of the node record.
    */
   updateColor(): void {
-    this._state.color = this.node.view.color;
+    this._state.color = this.node.state.color;
   }
 
   /**

@@ -8,11 +8,11 @@
 
         <v-checkbox
           :class="{
-            'text-blue': nestNode.view.state.synWeights === 'excitatory',
-            'text-red': nestNode.view.state.synWeights === 'inhibitory',
+            'text-blue': nestNode.state.synWeights === 'excitatory',
+            'text-red': nestNode.state.synWeights === 'inhibitory',
           }"
-          :indeterminate="!nestNode.view.state.synWeights"
-          :model-value="nestNode.view.state.synWeights"
+          :indeterminate="!nestNode.state.synWeights"
+          :model-value="nestNode.state.synWeights"
           density="compact"
           false-icon="mdi:mdi-minus"
           false-value="inhibitory"
@@ -49,7 +49,7 @@ defineProps<{ node?: TNode }>();
 const updateSynWeights = (node: NESTNode, value: string | null) => {
   if (value == null) return;
 
-  node.view.synWeights = value;
+  node.state.synWeights = value;
   node.onUpdate({ preventSimulation: true });
   node.network.graph.render();
 };

@@ -84,7 +84,7 @@ const state = reactive<{
 const openMenu = () => emit("openMenu", true);
 
 const select = (selectProps: Record<string, unknown>, open?: boolean) => {
-  node.value.view.expandNodePanel();
+  node.value.state.expandNodePanel();
 
   const elementTypesValues = elementTypes.value.map((elementType) => elementType.value);
 

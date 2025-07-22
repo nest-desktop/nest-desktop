@@ -7,7 +7,7 @@ import { BaseNodes } from "./nodes";
 import { BaseObj } from "../common/base";
 import { IActivityProps } from "../activity/activity";
 import { INodeRecordProps, NodeRecord } from "./nodeRecord";
-import { INodeViewProps, NodeView } from "./nodeView";
+import { INodeViewProps, NodeViewState } from "./nodeViewState";
 import { IParamProps } from "../common/parameter";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeActivity } from "../nodeActivity/nodeActivity";
@@ -16,6 +16,7 @@ import { NodeParameter } from "./nodeParameter";
 import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
 import { notifyInfo } from "../common/notification";
 import { onlyUnique, sortString } from "../../utils/array";
+import { nextTick } from "vue";
 
 export interface INodeProps {
   activity?: IActivityProps;
@@ -30,13 +31,12 @@ export interface INodeProps {
 export class BaseNode extends BaseObj {
   private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;
   private _annotations: string[] = [];
-  private _props: INodeProps; // raw data of props
   private _params: Record<string, NodeParameter> = {};
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = [];
-  private _size: number;
-  private _view: NodeView;
+  // private _size: number;
+  private _view: NodeViewState;
   public _model: TModel | undefined;
   public _modelId: string;
   public _nodes: BaseNodes; // parent
@@ -45,14 +45,14 @@ export class BaseNode extends BaseObj {
     super({ config: { name: "Node" } });
 
     this._nodes = nodes;
-    this._props = nodeProps;
+    this.props = nodeProps;
 
     this._modelId = nodeProps.model || "";
+    // this._size = nodeProps.size || 1;
 
-    this._size = nodeProps.size || 1;
     this._annotations = nodeProps.annotations || [];
 
-    this._view = new NodeView(this, nodeProps.view);
+    this._view = new NodeViewState(this, nodeProps.view);
   }
 
   get activity(): NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined {
@@ -65,6 +65,10 @@ export class BaseNode extends BaseObj {
 
   get annotations(): string[] {
     return this._annotations;
+  }
+
+  get color(): string {
+    return this._view.color;
   }
 
   get connectedNodes(): TNode[] {
@@ -126,14 +130,39 @@ export class BaseNode extends BaseObj {
   }
 
   get idx(): number {
-    return this._nodes.allNodes.indexOf(this);
+    return this.nodes.allNodes.indexOf(this);
+  }
+
+  get idxByElementType(): number {
+    let nodes: TNode[];
+    let idx: number;
+
+    switch (this.elementType) {
+      case "neuron":
+        nodes = this.nodes.neurons;
+        idx = nodes.indexOf(this);
+        break;
+      case undefined:
+        nodes = this.nodes.nodeItems;
+        idx = nodes.indexOf(this);
+        break;
+      default:
+        nodes = this.nodes.filterByModelId(this.modelId);
+        idx = nodes.indexOf(this);
+    }
+
+    return idx + 1;
+  }
+
+  get idxByVariableNames(): number {
+    return this.codeNode?.idxByVariableNames ?? -1;
   }
 
   /**
    * Check if it is an excitatory neuron.
    */
   get isExcitatoryNeuron(): boolean {
-    return this.model?.isNeuron && this._view.synWeights === "excitatory";
+    return this.model?.isNeuron && this.state.synWeights === "excitatory";
   }
 
   get isRecorded(): boolean {
@@ -148,7 +177,7 @@ export class BaseNode extends BaseObj {
    * Check if it is an inhibitory neuron.
    */
   get isInhibitoryNeuron(): boolean {
-    return this.model?.isNeuron && this._view.synWeights === "inhibitory";
+    return this.model?.isNeuron && this.state.synWeights === "inhibitory";
   }
 
   get isNode(): boolean {
@@ -174,30 +203,27 @@ export class BaseNode extends BaseObj {
   }
 
   get label(): string {
-    return this._view.label;
+    return this.codeNode?.label ?? "n";
   }
 
-  get model(): BaseModel {
-    if (this._model?.id !== this._modelId) this._model = this.getModel(this._modelId);
-    return this._model as BaseModel;
-  }
+  get model(): BaseModel {}
 
   get modelDBStore() {
     return this.nodes.network.project.modelDBStore;
   }
 
   get modelId(): string {
-    return this._modelId;
+    return this.intf?.model ? this.intf.model.value : this._modelId;
   }
 
-  /**
-   * Set model ID.
-   */
   set modelId(value: string) {
-    this._modelId = value;
+    if (this.intf?.model) {
+      this.intf.model.value = value;
+    } else {
+      this._modelId = value;
+    }
 
     this.loadModel();
-    this.modelOnUpdate();
   }
 
   get modelParams(): Record<string, ModelParameter> {
@@ -211,10 +237,6 @@ export class BaseNode extends BaseObj {
   get models(): TModel[] {
     // Get models of the same element type.
     return this.modelDBStore.getModelsByElementType(this.elementType);
-  }
-
-  get n(): number {
-    return this._size;
   }
 
   get network(): TNetwork {
@@ -244,10 +266,18 @@ export class BaseNode extends BaseObj {
   }
 
   get paramsAll(): NodeParameter[] {
-    return Object.values(this._params);
+    return Object.values(this.params);
   }
 
   get paramsVisible(): string[] {
+    // if (this.codeNodes.params) {
+    //   const paramKeys = Object.keys(this.codeNodes.params.inputs);
+    //   const paramsVisible = paramKeys.filter(
+    //     (key) => !this.params[key].codeNodes.node.inputs[key].hidden,
+    //     // this.codeNodes.params && this.codeNodes.params.inputs[key] && !this.codeNodes.params.inputs[key].hidden,
+    //   );
+    //   return paramsVisible;
+    // }
     return this._paramsVisible;
   }
 
@@ -262,10 +292,6 @@ export class BaseNode extends BaseObj {
 
   get project(): TNetworkProject {
     return this.nodes.network.project as TNetworkProject;
-  }
-
-  get props(): INodeProps {
-    return this._props;
   }
 
   get recordables(): NodeRecord[] {
@@ -302,22 +328,15 @@ export class BaseNode extends BaseObj {
   }
 
   get size(): number {
-    return this.codeNodes.node ? this.codeNodes.node.inputs.size.value : this._size;
-  }
-
-  /**
-   * Set network size.
-   */
-  set size(value: number) {
-    if (this.codeNodes.node) this.codeNodes.node.inputs.size.value = value;
-    else {
-      this._size = value;
-      this.onUpdate();
-    }
+    return this.intf?.size.value;
   }
 
   get sizeVisible(): boolean {
-    return this._view.state.showSize;
+    return !this.intf.size.hidden;
+  }
+
+  set sizeVisible(value: boolean) {
+    if (this.intf.size.hidden === value) this.intf.size.setHidden(!value);
   }
 
   get sourceNodes(): TNode[] {
@@ -326,13 +345,39 @@ export class BaseNode extends BaseObj {
       .map((connection: TConnection) => connection.sourceNode);
   }
 
+  get state(): NodeViewState {
+    return this._view;
+  }
+
   get targetNodes(): TNode[] {
     return this.network.connections.allConnections
       .filter((connection: TConnection) => connection.sourceIdx === this.idx)
       .map((connection: TConnection) => connection.targetNode);
   }
 
-  get view(): NodeView {
+  get variableName(): string {
+    let value: string = "n";
+
+    switch (this.elementType) {
+      case "neuron":
+        value = "n";
+        break;
+      case undefined:
+        value = "n";
+        break;
+      default:
+        value =
+          this.model.abbreviation ||
+          this.modelId
+            .split("_")
+            .map((d: string) => d[0])
+            .join("");
+    }
+
+    return value;
+  }
+
+  get view(): NodeViewState {
     return this._view;
   }
 
@@ -364,7 +409,7 @@ export class BaseNode extends BaseObj {
    * Clean node component.
    */
   clean(): void {
-    this.view.clean();
+    this.state.clean();
   }
 
   /**
@@ -514,23 +559,24 @@ export class BaseNode extends BaseObj {
     this.logger.trace("init parameters");
 
     this.emptyParams();
-    if (this._model) {
-      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
+
+    if (this.model) {
+      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
           const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
           if (nodeParamProps) {
             this.addParameter(
               {
                 ...nodeParamProps,
-                ...modelParam,
+                ...modelParam.props,
               },
               true,
             );
           } else {
-            this.addParameter(modelParam);
+            this.addParameter(modelParam.props);
           }
         } else {
-          this.addParameter(modelParam);
+          this.addParameter(modelParam.props);
         }
       });
     } else if (paramsProps) {
@@ -542,10 +588,11 @@ export class BaseNode extends BaseObj {
    * Load model.
    */
   loadModel(paramsProps?: IParamProps[]): void {
-    this.logger.trace("load model:", this._modelId);
+    this.logger.trace("load model:", this.modelId);
 
-    this._model = this.getModel(this._modelId);
+    this._model = this.getModel(this.modelId);
     this.initParameters(paramsProps);
+    this.onModelUpdate();
   }
 
   /**
@@ -554,14 +601,14 @@ export class BaseNode extends BaseObj {
    * @remarks It corrects connection direction to the recorder.
    * @remarks It updates as analog recorder or other connected analog recorders.
    */
-  modelOnUpdate(): void {
-    this.logger.trace("model change");
-    let recorderModelChanged = false;
+  onModelUpdate(): void {
+    this.logger.trace("on model update");
+    // let recorderModelChanged = false;
 
     if (this.model.isRecorder) {
       this.correctRecorderConnections(); // Correct connection from/to recorder.
       this.updateRecorder(); // Update records of this analog recorder.
-      recorderModelChanged = true;
+      // recorderModelChanged = true;
     } else if (!this.model.isSpikeRecorder) {
       // Updates records of the connected analog recorder.
       this.sourceNodes
@@ -570,7 +617,9 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.nodes.network.onUpdate({ preventSimulation: true, cleanPanels: recorderModelChanged });
+    this.codeNode?.onModelUpdate();
+    this.codeNodes.params?.onModelUpdate();
+    // this.nodes.network.onUpdate({ preventSimulation: true, cleanPanels: recorderModelChanged });
   }
 
   /**
@@ -600,16 +649,6 @@ export class BaseNode extends BaseObj {
     if (this._annotations.indexOf(text) === -1) return;
     this._annotations.splice(this._annotations.indexOf(text), 1);
     if (emitChanges) this.onUpdate();
-  }
-
-  /**
-   * Remove code nodes.
-   */
-  removeCodeNodes(): void {
-    Object.keys(this.codeNodes).forEach((key: string) => {
-      this.codeNodes[key].remove();
-      delete this.codeNodes[key];
-    });
   }
 
   /**
@@ -671,8 +710,8 @@ export class BaseNode extends BaseObj {
    */
   toJSON(): INodeProps {
     const nodeProps: INodeProps = {
-      model: this._modelId,
-      view: this._view.toJSON(),
+      model: this.modelId,
+      view: this.state.toJSON(),
     };
 
     if (this.size > 1) nodeProps.size = this.size;
@@ -707,9 +746,13 @@ export class BaseNode extends BaseObj {
    * Update node.
    */
   update(): void {
+    this.logger.trace("update node", this.modelId);
+
     this.clean();
-    // this.updateCodeNodes();
+    if (this.codeNode) this.codeNode.variableName = this.variableName;
     this.updateHash();
+
+    nextTick(() => this.updateParamsVisibility());
   }
 
   /**
@@ -739,6 +782,14 @@ export class BaseNode extends BaseObj {
       params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
       recordables: this.recordables.map((recordable: NodeRecord) => recordable.uuid),
       size: this.size,
+    });
+  }
+
+  updateParamsVisibility(): void {
+    if (!this.codeNode) return;
+
+    this.paramsAll.forEach((param: NodeParameter) => {
+      if (param.intf && param.intf[param.id]) param.visible = !param.intf[param.id].hidden;
     });
   }
 
@@ -793,9 +844,9 @@ export class BaseNode extends BaseObj {
     this.logger.trace("update records");
 
     // Initialize selected records.
-    if (this._props.records != null) {
+    if (this.props.records != null) {
       // Load record from stored nodes.
-      const recordIds = this._props.records.map((recordProps: INodeRecordProps) => recordProps.id);
+      const recordIds = this.props.records.map((recordProps: INodeRecordProps) => recordProps.id);
       this.records = [...this.recordables.filter((record: NodeRecord) => recordIds.includes(record.id))];
     } else if (this.records.length > 0) {
       const recordIds = this.recordables.map((record: NodeRecord) => record.id);
@@ -810,7 +861,7 @@ export class BaseNode extends BaseObj {
    * Update record colors.
    */
   updateRecordsColor(): void {
-    const color = this._view.color;
+    const color = this.state.color;
     this._recordables.forEach((record: NodeRecord) => (record.state.color = color));
   }
 }

@@ -13,7 +13,6 @@ import {
 
 import { reactive, UnwrapRef } from "vue";
 
-import { TConnection, TSimulation } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -56,8 +55,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
   abstract outputs: Record<string, CodeNodeInterface>;
 
   private _code: BaseCode | undefined;
-  private _networkItem: unknown | undefined;
-  private _simulationItem: TSimulation | undefined;
+  private _view: unknown | undefined;
   private _state: UnwrapRef<IAbstractCodeNodeState> = reactive({
     codeTemplate: "",
     commented: false,
@@ -75,7 +73,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
     // minLevel: 1,
   });
   public modules: string[] = [];
-  public variableName: string = "n";
+  public variableName: string = "x";
 
   constructor() {
     super();
@@ -129,14 +127,6 @@ export abstract class AbstractCodeNode extends AbstractNode {
     return Object.keys(this.inputs).length;
   }
 
-  get networkItem(): unknown | undefined {
-    return this._networkItem;
-  }
-
-  set networkItem(value: unknown) {
-    this._networkItem = value;
-  }
-
   get node(): AbstractCodeNode {
     return this;
   }
@@ -149,20 +139,20 @@ export abstract class AbstractCodeNode extends AbstractNode {
     return this._state.script;
   }
 
-  get simulationItem(): TSimulation | undefined {
-    return this._simulationItem;
-  }
-
-  set simulationItem(value: TSimulation | TConnection) {
-    this._simulationItem = value;
-  }
-
   get state(): UnwrapRef<IAbstractCodeNodeState> {
     return this._state;
   }
 
   get subgraph(): boolean {
     return false;
+  }
+
+  get view(): unknown | undefined {
+    return this._view;
+  }
+
+  set view(value: unknown) {
+    this._view = value;
   }
 
   // calculate?: CalculateFunction<any, any> | undefined;
@@ -359,7 +349,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
     else return `${this.inputs[name].value}`;
   }
 
-  override initializeIntf(type: "input" | "output", key: string, intf: NodeInterface) {
+  override initializeIntf(type: "input" | "output", key: string, intf: CodeNodeInterface) {
     intf.isInput = type === "input";
     intf.nodeId = this.id;
     intf.graphId = this.graph?.id;
@@ -368,7 +358,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
   abstract onGraphUpdate(): void;
 
-  abstract onProjectUpdate(): void;
+  abstract onModelUpdate(): void;
 
   /**
    * Remove this node.

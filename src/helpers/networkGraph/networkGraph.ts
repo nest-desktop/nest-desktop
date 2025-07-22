@@ -225,7 +225,7 @@ export class BaseNetworkGraph extends BaseObj {
   updateHash(): void {
     this._updateHash({
       nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
-        color: node.view.state.color,
+        color: node.color,
         idx: node.idx,
         model: node.modelId,
         size: node.size,

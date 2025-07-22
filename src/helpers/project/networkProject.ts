@@ -37,9 +37,6 @@ export class NetworkProject extends BaseProject {
     this._networkRevision = new NetworkRevision(this);
 
     this._simulation = new this.Simulation(this, projectProps.simulation);
-
-    // Initialize components.
-    // nextTick(() => this.init());
   }
 
   override get Activities() {
@@ -167,7 +164,7 @@ export class NetworkProject extends BaseProject {
 
     this.networkRevision.commit();
 
-    this.code.graph.onProjectUpdate();
+    // this.code.graph.onProjectUpdate();
 
     if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();

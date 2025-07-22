@@ -1,6 +1,6 @@
 // nodeView.ts
 
-import { INodeViewProps, NodeView } from "@/helpers/node/nodeView";
+import { INodeViewProps, NodeView } from "@/helpers/node/nodeViewState";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
@@ -24,7 +24,7 @@ export class NESTNodeView extends NodeView {
       const models = this.node.assignedModels;
       if (models.length === 1) {
         const connection = models[0].connections[0];
-        return connection.sourceNode.view.color;
+        return connection.sourceNode.state.color;
       }
     } else if (this.node.model.isRecorder) {
       const connections: NESTConnection[] = this.node.network.connections.allConnections.filter(
@@ -36,7 +36,7 @@ export class NESTNodeView extends NodeView {
         const node: NESTNode = (
           connection.sourceIdx === this.node.idx ? connection.target : connection.source
         ) as NESTNode;
-        return node.view.color;
+        return node.state.color;
       }
     }
     return this.node.network.getNodeColor(this.node.idx);

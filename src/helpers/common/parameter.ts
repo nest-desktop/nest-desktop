@@ -78,7 +78,6 @@ export class BaseParameter extends BaseObj {
   private _min: number = 0;
   private _readonly: boolean = false;
   private _rules: string[][] = [];
-  private _props: IParamProps;
   private _state: UnwrapRef<IParamState>;
   private _step: number = 1;
   private _ticks: (number | string)[] = [];
@@ -91,7 +90,7 @@ export class BaseParameter extends BaseObj {
       config: { name: "Parameter", ...configProps },
     });
 
-    this._props = paramProps;
+    this.props = paramProps;
     this.init(paramProps);
 
     this._state = reactive<IParamState>({
@@ -226,9 +225,9 @@ export class BaseParameter extends BaseObj {
     return { onUpdate: () => {}, paramsVisible: [] };
   }
 
-  get props(): IParamProps {
-    return this._props;
-  }
+  // get props(): IParamProps {
+  //   return super.props as IParamProps;
+  // }
 
   get readonly(): boolean {
     return this._readonly;
@@ -295,13 +294,18 @@ export class BaseParameter extends BaseObj {
   }
 
   get value(): TParamValue {
-    return this._state.value;
+    return (this.intf ? this.intf.value : this._state.value) as TParamValue;
   }
 
   set value(value: TParamValue) {
-    this._state.value = value;
-    if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
-    this.onUpdate();
+    if (this.intf) {
+      this.intf.value = value;
+      this.intf.setHidden(false);
+    } else {
+      this._state.value = value;
+      if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
+      this.onUpdate();
+    }
   }
 
   get valueFixed(): string {

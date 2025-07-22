@@ -92,12 +92,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _label: string = "";
   private _panel: ActivityChartPanel; // parent
   private _params: Record<string, ActivityChartPanelModelParameter> = {};
-  private _props: IActivityChartPanelModelProps;
   private _state: UnwrapRef<IActivityChartPanelModelState>;
 
   constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
     super();
-    this._props = modelProps;
+    this.props = modelProps;
 
     this._id = "activityChart";
     this._panel = panel;
@@ -202,12 +201,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this.onUpdate();
   }
 
-  get props(): IActivityChartPanelModelProps {
-    return this._props;
-  }
-
   get records(): NodeRecord[] {
-    return this._state.records as NodeRecord[];
+    return this.state.records as NodeRecord[];
   }
 
   get recordsVisible(): NodeRecord[] {
@@ -294,7 +289,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   onUpdate(): void {
     this.update();
-    this._panel.graph.onUpdate();
+    this.panel.graph.onUpdate();
   }
 
   /**
@@ -308,7 +303,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   toJSON(): IActivityChartPanelModelProps {
     const modelProps: IActivityChartPanelModelProps = {
-      id: this._id,
+      id: this.id,
     };
 
     if (this.paramsAll.length > 0) {
@@ -352,7 +347,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update active marker.
-   * @param _record node record object
+   * @param record node record object
    */
   updateActiveMarker(record?: NodeRecord): void {
     this.logger.trace("update activity marker:", record);
@@ -370,7 +365,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateAnalogRecords(): void {
     // Remove old records from other recorder.
-    this._state.records = this.records.filter((panelRecord: NodeRecord) =>
+    this.state.records = this.records.filter((panelRecord: NodeRecord) =>
       panelRecord.node.records.some((record: NodeRecord) => record.id === panelRecord.id),
     ) as NodeRecord[];
 
@@ -400,7 +395,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Update background color.
    */
   updateBackgroundColor(): void {
-    this._data.forEach((data: IActivityChartPanelModelData) => {
+    this.data.forEach((data: IActivityChartPanelModelData) => {
       if (data.marker && data.marker.line && data.type === "histogram")
         data.marker.line.color = currentBackgroundColor();
     });
@@ -420,14 +415,14 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * Update color of records.
    */
   updateRecordsColor(): void {
-    this._data.forEach((data: IActivityChartPanelModelData) => {
+    this.data.forEach((data: IActivityChartPanelModelData) => {
       if (!data && data.class === "background") return;
       const activity = this.activities[data.activityIdx];
 
       let color: string = "";
       if (activity && "recorder" in activity) {
         const recorder = activity.recorder as TNode;
-        if (recorder.model.isSpikeRecorder) color = recorder.view.color;
+        if (recorder.model.isSpikeRecorder) color = recorder.state.color;
       } else {
         const record = this.recordsVisible.find(
           (record: NodeRecord) => record.id === data.recordId && record.activity.idx === data.activityIdx,
@@ -470,7 +465,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    * @remarks It needs activity data.
    */
   updateTime(): void {
-    this._state.time.start = 0;
-    this._state.time.end = Math.max(this._state.time.end, this._panel.graph.currentTime + 1);
+    this.state.time.start = 0;
+    this.state.time.end = Math.max(this.state.time.end, this.panel.graph.currentTime + 1);
   }
 }

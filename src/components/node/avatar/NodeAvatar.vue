@@ -1,15 +1,15 @@
 <template>
-  <StimulatorAvatar v-if="node.elementType === 'stimulator'" :color="node.view.color">
-    {{ node.view.label }}
+  <StimulatorAvatar v-if="node.elementType === 'stimulator'" :color="node.color">
+    {{ node.label }}
   </StimulatorAvatar>
-  <RecorderAvatar v-else-if="node.elementType === 'recorder'" :color="node.view.color">
-    {{ node.view.label }}
+  <RecorderAvatar v-else-if="node.elementType === 'recorder'" :color="node.color">
+    {{ node.label }}
   </RecorderAvatar>
-  <NeuronAvatar v-else-if="node.elementType === 'neuron'" :color="node.view.color" :weight="node.view.synWeights">
-    {{ node.view.label }}
+  <NeuronAvatar v-else-if="node.elementType === 'neuron'" :color="node.color" :weight="node.state.synWeights">
+    {{ node.label }}
   </NeuronAvatar>
-  <v-avatar v-else :color="nodeGroup.view.color" class="node-avatar" variant="tonal">
-    {{ node.view.label }}
+  <v-avatar v-else :color="nodeGroup.color" class="node-avatar" variant="tonal">
+    {{ node.label }}
   </v-avatar>
 </template>
 

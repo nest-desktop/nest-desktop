@@ -65,8 +65,8 @@ onMounted(() => {
   });
 
   // Initialize model and project stores.
-  stores.modelStore.init();
-  stores.projectStore.init();
+  // stores.modelStore.init();
+  // stores.projectStore.init();
 
   nestSimulator.fetchModels();
   nestModuleStore.init();

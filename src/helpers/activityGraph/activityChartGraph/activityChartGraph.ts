@@ -121,12 +121,11 @@ export class ActivityChartGraph extends BaseObj {
   private _models: IActivityChartPanelModelProps[] = models;
   private _panels: ActivityChartPanel[] = [];
   private _project: TProject;
-  private _props: IBaseActivityGraphProps | undefined;
   private _state: UnwrapRef<IActivityChartGraphState>;
 
   constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
     super();
-    this._props = activityGraphProps;
+    this.props = activityGraphProps;
 
     this._project = project;
     this._plotConfig = {
@@ -235,10 +234,6 @@ export class ActivityChartGraph extends BaseObj {
     return this._project;
   }
 
-  get props(): IBaseActivityGraphProps | undefined {
-    return this._props;
-  }
-
   get state(): UnwrapRef<IActivityChartGraphState> {
     return this._state;
   }
@@ -254,7 +249,7 @@ export class ActivityChartGraph extends BaseObj {
   ): void {
     this.logger.trace("add panel:", panelProps.model?.id);
 
-    this._panels.push(new ActivityChartPanel(this, panelProps));
+    this.panels.push(new ActivityChartPanel(this, panelProps));
   }
 
   /**
@@ -283,17 +278,17 @@ export class ActivityChartGraph extends BaseObj {
     });
 
     const activityPanelModels = this.panels.map((panel) => panel.model.id);
-    if (this._project.activities.state.hasSomeAnalogRecorders) {
+    if (this.project.activities.state.hasSomeAnalogRecorders) {
       if (!activityPanelModels.includes("analogSignalPlot")) this.addPanel({ model: { id: "analogSignalPlot" } });
     }
-    if (this._project.activities.state.hasSomeSpikeRecorders) {
+    if (this.project.activities.state.hasSomeSpikeRecorders) {
       if (!activityPanelModels.includes("spikeTimesRasterPlot"))
         this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
       if (!activityPanelModels.includes("spikeTimesHistogram")) this.addPanel({ model: { id: "spikeTimesHistogram" } });
     }
 
-    this._project.activityGraph.activityChartGraph.initPanelModels();
-    this._project.activityGraph.activityChartGraph.panelsAnalogVisible.forEach((panel: ActivityChartPanel) => {
+    this.project.activityGraph.activityChartGraph.initPanelModels();
+    this.project.activityGraph.activityChartGraph.panelsAnalogVisible.forEach((panel: ActivityChartPanel) => {
       panel.model.selectAllNodeRecords();
     });
   }

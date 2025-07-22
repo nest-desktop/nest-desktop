@@ -6,6 +6,7 @@ import { TConnection, TNetwork, TNode, TNodeGroup } from "@/types";
 
 import { BaseConnection, IConnectionProps } from "./connection";
 import { BaseObj } from "../common/base";
+import { AbstractCodeNode } from "../codeGraph/codeNode";
 
 interface IConnectionsState {
   focusedConnection: TConnection | null;
@@ -15,7 +16,7 @@ interface IConnectionsState {
 
 export class BaseConnections extends BaseObj {
   private _state: UnwrapRef<IConnectionsState>; // reactive state
-  public _connections: TConnection[] = [];
+  // public _connections: TConnection[] = [];
   public _network: TNetwork; // parent
 
   constructor(network: TNetwork, connectionsProps: IConnectionProps[] = []) {
@@ -37,11 +38,17 @@ export class BaseConnections extends BaseObj {
   }
 
   get allConnections(): TConnection[] {
-    return this._connections as TConnection[];
+    return this.connections as TConnection[];
+  }
+
+  override get codeNodes(): AbstractCodeNode[] {
+    return this.network.project.code.graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Connect") ?? [];
   }
 
   get connections(): TConnection[] {
-    return this._connections as TConnection[];
+    return this.codeNodes
+      .filter((node: AbstractCodeNode) => node.view)
+      .map((node: AbstractCodeNode) => node.view) as TConnection[];
   }
 
   /**
@@ -55,7 +62,7 @@ export class BaseConnections extends BaseObj {
    * Get length of connection list.
    */
   get length(): number {
-    return this._connections.length;
+    return this.connections.length;
   }
 
   get network(): TNetwork {
@@ -77,26 +84,18 @@ export class BaseConnections extends BaseObj {
   // }
 
   /**
-   * Add code nodes.
-   * @param connection connection component.
-   *
-   */
-  addCodeNodes(connection: TConnection): void {
-    connection;
-  }
-
-  /**
-   * Add connection component to the network.
+   * Create connection component.
    * @param connectionProps connection props
    * @returns connection object
    */
-  addConnection(connectionProps: IConnectionProps): TConnection {
-    this.logger.trace("add");
+  createConnection(codeNode: AbstractCodeNode, connectionProps: IConnectionProps): TConnection {
+    this.logger.trace("create connection");
 
     const connection: TConnection = new this.Connection(this, connectionProps);
-    this.connections.push(connection);
+    connection.codeNodes.node = codeNode;
 
-    this.clean();
+    connection.init();
+
     return connection;
   }
 
@@ -105,6 +104,8 @@ export class BaseConnections extends BaseObj {
    */
   clean(): void {
     this.logger.trace("clean");
+
+    if (!this.connections) return;
 
     this.connections.forEach((connection: TConnection) => connection.clean());
   }
@@ -116,7 +117,6 @@ export class BaseConnections extends BaseObj {
     this.logger.trace("clear");
 
     this.resetState();
-    this._connections = [];
   }
 
   /**
@@ -126,7 +126,7 @@ export class BaseConnections extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this._connections.forEach((connection: TConnection) => connection.init());
+    this.connections.forEach((connection: TConnection) => connection.init());
   }
 
   /**
@@ -138,10 +138,10 @@ export class BaseConnections extends BaseObj {
 
     this.resetState();
 
-    connection.removeCodeNodes();
+    // connection.removeCodeNodes();
 
     // Remove connection from the connection list.
-    this._connections.splice(connection.idx, 1);
+    // this._connections.splice(connection.idx, 1);
 
     this.clean();
   }
@@ -201,13 +201,12 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Update connections.
-   * @param connectionsProps connection props
    */
-  update(connectionsProps?: IConnectionProps[]): void {
+  update(): void {
     this.logger.trace("update");
 
-    if (connectionsProps)
-      connectionsProps.forEach((connectionProps: IConnectionProps) => this.addConnection(connectionProps));
+    // if (connectionsProps)
+    //   connectionsProps.forEach((connectionProps: IConnectionProps) => this.addConnection(connectionProps));
 
     this.clean();
     this.updateHash();

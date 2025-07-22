@@ -40,6 +40,7 @@ export function defineProjectDBStore<
   },
 ) {
   const logger = mainLogger.getSubLogger({ name: props.workspace + " project DB store" });
+  // logger.settings.minLevel = 1;
 
   const db = new props.ProjectDB();
 
@@ -84,11 +85,14 @@ export function defineProjectDBStore<
      * @returns project object
      */
     const createProject = (projectProps?: TProjectProps): TProject => {
-      logger.trace("new project:");
+      logger.trace("create project:", truncate(projectProps?.id));
 
       if (projectProps) projectProps = upgradeProject(projectProps);
 
-      return new props.Project(projectProps) as TProject;
+      const project: TProject = new props.Project(projectProps) as TProject;
+      project.init();
+
+      return project;
     };
 
     /**
@@ -296,8 +300,7 @@ export function defineProjectDBStore<
     const newProject = (projectProps?: TProjectProps): TProject => {
       logger.trace("new project");
 
-      const project = addProject(projectProps);
-      return project;
+      return addProject(projectProps);
     };
 
     /**

@@ -33,7 +33,7 @@
           <ValueSlider
             id="n"
             v-model="nodeSpatial.node.size"
-            :thumb-color="nodeSpatial.node.view.color"
+            :thumb-color="nodeSpatial.node.state.color"
             input-label="n"
             label="population size"
             @update:model-value="nodeSpatial.onUpdate()"

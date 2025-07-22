@@ -8,7 +8,6 @@ import {
   setType,
   TextInputInterface,
 } from "baklavajs";
-import { nextTick } from "vue";
 
 import { AbstractCodeNode, formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
@@ -17,7 +16,7 @@ import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInter
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
 import nestConnect from "./nestConnect";
-import { INESTConnectionProps, NESTConnection } from "../../connection/connection";
+import { INESTConnectionProps } from "../../connection/connection";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { addParameterNode } from "./nestParameters";
 
@@ -27,7 +26,6 @@ import {
   nestNodeCollectionType,
   // nestSynapseCollectionType,
 } from "./interfaceTypes";
-import { NESTNode } from "../../node/node";
 
 export default defineDynamicCodeNode({
   type: "nest.Connect",
@@ -83,41 +81,14 @@ export default defineDynamicCodeNode({
     return `nest.Connect(${args.join(", ")})`;
   },
   onGraphUpdate() {
-    if (!this.node || !this.node.networkItem) return;
-
-    let node: AbstractCodeNode | null = null;
-    const sourceNodes = this.node.getConnectedNodesByInterface("pre");
-    if (sourceNodes) node = sourceNodes[0];
-
-    const targetNodes = this.node.getConnectedNodesByInterface("post");
-    if (targetNodes) node = targetNodes[0];
-
-    if (!node) return;
-
-    const nestNode = node.networkItem as NESTNode;
-    if (nestNode.model?.isRecorder && this.node.networkItem) {
-      nestNode.network.project.activities.init();
-      nestNode.network.project.activityGraph.init();
-    }
-  },
-  onPlaced() {
-    // console.log("on placed");
-
-    if (!this.node || !this.node.code || !this.node.code.project.network) return;
-    const nodeItems = this.code.project.network.nodes.nodeItems;
-    this.node.networkItem = nodeItems[this.indexOfNodeType];
-    if (this.node.networkItem) return;
-
-    nextTick(() => {
-      if (!this.node) return;
-
+    if (!this.node.view) {
       const connectionProps: Record<string, unknown> = {};
 
       const sourceNode = this.node.getConnectedNodeByInterface("pre");
-      if (sourceNode) connectionProps.source = sourceNode.indexOfNodeType;
+      if (sourceNode) connectionProps.source = sourceNode.view.idx;
 
       const targetNode = this.node.getConnectedNodeByInterface("post");
-      if (targetNode) connectionProps.target = targetNode.indexOfNodeType;
+      if (targetNode) connectionProps.target = targetNode.view.idx;
 
       const synParamNode = this.node.getConnectedNodeByInterface("syn_spec");
       if (synParamNode) {
@@ -125,39 +96,14 @@ export default defineDynamicCodeNode({
         if (paramProps.length > 0) connectionProps.synapse = { params: paramProps };
       }
 
-      this.node.networkItem = this.node.code.project.network.connections.addConnection(connectionProps);
-      this.node.networkItem.init();
-      this.node.networkItem.codeNodes.connection = this;
-
-      if (synParamNode) {
-        this.node.networkItem.codeNodes.param = synParamNode;
-        synParamNode.networkItem = this.node.networkItem.synapse;
-      }
-
-      this.node.networkItem.onUpdate({ preventSimulation: true });
-    });
-  },
-
-  onProjectUpdate() {
-    if (!this.node || !this.node.networkItem) return;
-    const connection: NESTConnection = this.node.networkItem as NESTConnection;
-
-    let synSpecNode = this.node.getConnectedNodeByInterface("syn_spec");
-    if (!synSpecNode && connection.synapse?.paramsVisible.length > 0) {
-      const position = { ...this.node.position };
-      position.x -= 400;
-      position.y += 75;
-      synSpecNode = addParameterNode(this.code.graph, [], position);
-      this.code.graph.addConnection(synSpecNode.outputs.out, this.node.inputs.syn_spec);
-    } else if (synSpecNode && connection.synapse?.paramsVisible.length === 0) {
-      synSpecNode?.remove();
-      this.node.inputs.syn_spec.setHidden(true);
+      this.node.view = this.node.code.project.network.connections.createConnection(this.node, connectionProps);
     }
 
-    if (synSpecNode) {
-      synSpecNode.networkItem = connection.synapse;
-      synSpecNode.onUpdate();
-      synSpecNode.onProjectUpdate();
+    const synParamNode = this.node.getConnectedNodeByInterface("syn_spec");
+    if (synParamNode) {
+      synParamNode.view = this.node.view;
+      this.node.view.synapse.codeNodes.params = synParamNode;
+      this.node.view.synapse.paramsAll.forEach((param) => (param.codeNodes.node = synParamNode));
     }
   },
   onUpdate({ conn_spec }) {
@@ -175,9 +121,6 @@ export default defineDynamicCodeNode({
         inputs.outdegree = () => new NumberInterface("outdegree", 1).use(displayInSidebar, true);
         break;
     }
-
-    // inputs.weight = () => new NumberInterface("weight", 1).use(displayInSidebar, true).setHidden(true);
-    // inputs.delay = () => new NumberInterface("delay", 0.1, 0.01, 0.1).use(displayInSidebar, true).setHidden(true);
 
     return { inputs, outputs };
   },

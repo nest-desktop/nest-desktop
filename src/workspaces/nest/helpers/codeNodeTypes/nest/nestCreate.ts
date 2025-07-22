@@ -9,7 +9,6 @@ import {
   displayInSidebar,
   setType,
 } from "baklavajs";
-import { nextTick } from "vue";
 
 import { AbstractCodeNode, formatInterfaceLabel, formatLabel } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
@@ -19,7 +18,6 @@ import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInter
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { numberType, stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
-import { useAppStore } from "@/stores/appStore";
 
 import nestCreate from "../../codeNodeTypes/nest/nestCreate";
 import nestRandomUniform from "./nestRandomUniform";
@@ -27,8 +25,6 @@ import nestSpatialFree from "./nestSpatialFree";
 import { INESTNodeCollection, nestNodeCollectionType } from "./interfaceTypes";
 import { INESTNodeProps } from "../../node/node";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-import { NESTModel } from "../../model/model";
-import { NESTNode } from "../../node/node";
 import { addParameterNode } from "./nestParameters";
 
 export default defineDynamicCodeNode({
@@ -36,7 +32,7 @@ export default defineDynamicCodeNode({
   title: "create node",
   variableName: "node",
   inputs: {
-    model: () => new TextInputInterface("model", "iaf_psc_alpha").use(setType, stringType),
+    model: () => new TextInputInterface("model", "iaf_psc_alpha").use(setType, stringType).use(displayInSidebar, true),
     size: () => new IntegerInterface("size", 1, 1).use(setType, numberType).use(displayInSidebar, true).setHidden(true),
     params: () => new NodeInputInterface("params").use(displayInSidebar, true).setHidden(true),
     positions: () => new NodeInputInterface("positions").use(displayInSidebar, true).setHidden(true),
@@ -80,80 +76,20 @@ export default defineDynamicCodeNode({
     return `nest.Create(${args.join(", ")})`;
   },
   onGraphUpdate() {
-    if (!this.node || !this.node.networkItem) return;
-
-    const appStore = useAppStore();
-    const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
-    const modelIds = modelDBStore.state.models.map((model: NESTModel) => model.id);
-
-    const node: NESTNode = this.node.networkItem as NESTNode;
-    if (node.modelId !== this.node.inputs.model.value && modelIds.includes(this.node.inputs.model.value))
-      node.modelId = this.node.inputs.model.value;
-    if (node.view.showSize == this.node.inputs.size.hidden) node.view.showSize = !this.node.inputs.size.hidden;
-    if (node.size !== this.node.inputs.size.value) node.size = this.node.inputs.size.value;
-  },
-  onPlaced() {
-    if (!this.node || !this.node?.code?.project?.network) return;
-
-    const nodeItems = this.code.project.network.nodes.nodeItems;
-    this.node.networkItem = nodeItems[this.indexOfNodeType];
-    if (this.node.networkItem) return;
-
-    nextTick(() => {
-      const nodeProps: Record<string, unknown> = { model: this.node.inputs.model.value };
-      if (!this.node.inputs.size.hidden) nodeProps.size = this.node.inputs.size.value;
-
-      const paramNode = this.node.getConnectedNodeByInterface("params");
-      if (paramNode) {
-        const paramProps = Object.entries(paramNode.inputs).map(([k, v]) => ({ id: k, value: v.value }));
-        if (paramProps.length > 0) nodeProps.params = paramProps;
-      }
-
+    if (!this.node.view) {
       const idx = this.node.indexOfNodeType;
-      nodeProps.view = { position: { x: 150 * idx, y: 0 + 50 * (idx % 2) } };
-
-      const node: NESTNode = this.node.code.project.network.nodes.addNode(nodeProps);
-      node.init();
-
-      this.node.networkItem = node;
-      this.node.networkItem.codeNodes.node = this;
-
-      if (paramNode) {
-        this.networkItem.codeNodes.param = paramNode;
-        paramNode.networkItem = this.networkItem;
-      }
-
-      this.networkItem.onUpdate({ preventSimulation: true });
-
-      if (this.networkItem.model)
-        this.variableName = this.networkItem.model.isNeuron ? "n" : this.networkItem.model.abbreviation;
-    });
-  },
-  onProjectUpdate() {
-    if (!this.node || !this.node.networkItem) return;
-    const node: NESTNode = this.node.networkItem as NESTNode;
-
-    if (node.model) this.variableName = node.model.isNeuron ? "n" : node.model.abbreviation;
-    if (this.node.inputs.model.value != node.modelId) this.node.inputs.model.value = node.modelId;
-    if (this.node.inputs.size.value != node.size) this.node.inputs.size.value = node.size;
-    if (this.node.inputs.size.hidden == node.view.showSize) this.node.inputs.size.setHidden(!node.view.showSize);
-
-    let paramNode = this.node.getConnectedNodeByInterface("params");
-    if (!paramNode && node.paramsVisible.length > 0) {
-      const position = { ...this.node.position };
-      position.x -= 400;
-      position.y += 50;
-      paramNode = addParameterNode(this.code.graph, [], position);
-      this.code.graph.addConnection(paramNode.outputs.out, this.node.inputs.params);
-    } else if (paramNode && node.paramsVisible.length === 0) {
-      paramNode?.remove();
-      this.node.inputs.params.setHidden(true);
+      this.node.view = this.node.code.project.network.nodes.createNode(this.node, {
+        view: { position: { x: 150 * idx, y: 0 + 50 * (idx % 2) } },
+      });
     }
 
+    if (this.node.view) this.node.variableName = this.node.view.variableName;
+
+    const paramNode = this.node.getConnectedNodeByInterface("params");
     if (paramNode) {
-      paramNode.networkItem = node;
-      paramNode.onUpdate();
-      paramNode.onProjectUpdate();
+      this.node.view.codeNodes.param = paramNode;
+      paramNode.view = this.node.view;
+      this.node.view.paramsAll.forEach((param) => (param.codeNodes.node = paramNode));
     }
   },
   onUpdate({ model }) {
@@ -172,8 +108,8 @@ export default defineDynamicCodeNode({
         new NodeOutputInterface("senders", ".events['senders']").use(displayInSidebar, true).setHidden(true);
     }
 
-    const positions = this.node.getConnectedNodesByInterface("positions") || [];
-    if (positions.length > 0)
+    const positions = this.node.getConnectedNodeByInterface("positions");
+    if (positions)
       outputs.positions = () => new NodeOutputInterface("positions").use(displayInSidebar, true).setHidden(true);
 
     return { inputs, outputs };
@@ -227,7 +163,7 @@ export const createNode = (
   // codeNode.variableName = nodeProps.model as string;
   codeNode.inputs.model.value = nodeProps.model;
   codeNode.inputs.size.value = nodeProps.size ?? 1;
-  codeNode.inputs.size.hidden = nodeProps.size ? nodeProps.size === 1 : true;
+  codeNode.inputs.size.setHidden(nodeProps.size ? nodeProps.size === 1 : true);
   if (nodeProps.model === "weight_recorder") {
     codeNode.variableName = "wr";
     // weightRecorders.push(codeNode);
@@ -240,6 +176,7 @@ export const createNode = (
     position.x -= 400;
     position.y += 50;
     const paramsNode = addParameterNode(graph, params, position);
+    if (codeNode.view?.codeNodes) codeNode.view.codeNodes.params = paramsNode;
     graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
   }
 

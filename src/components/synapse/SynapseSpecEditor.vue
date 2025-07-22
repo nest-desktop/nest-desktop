@@ -3,12 +3,10 @@
     <v-list density="compact" width="100%">
       <v-list-item class="param pl-0 pr-1">
         <ValueSlider
-          :model-value="(synapse.params.weight.state.value as number)"
-          :thumb-color="synapse.connection.sourceNode.view.color"
+          :model-value="(synapse.params.weight.intf.weight.value as number)"
+          :thumb-color="synapse.connection.sourceNode.color"
           v-bind="weightOptions"
-          @update:model-value="update"
         />
-
         <template #append>
           <Menu :items />
         </template>
@@ -26,10 +24,10 @@ import ValueSlider from "../controls/ValueSlider.vue";
 const props = defineProps<{ synapse: TSynapse }>();
 const synapse = computed(() => props.synapse);
 
-const update = (value: number) => {
-  synapse.value.params.weight.state.value = value;
-  synapse.value.onUpdate();
-};
+// const update = (value: number) => {
+//   synapse.value.params.weight.state.value = value;
+//   synapse.value.onUpdate();
+// };
 
 const weightOptions = {
   id: "weight",

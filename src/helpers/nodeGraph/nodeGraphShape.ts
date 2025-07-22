@@ -98,7 +98,7 @@ export class NodeGraphShape extends BaseObj {
     this.logger.trace("draw shape");
 
     selector.attr("elementType", node.elementType);
-    selector.attr("weight", node.view.synWeights);
+    selector.attr("weight", node.state.synWeights);
 
     const elem = selector.select(".core");
     elem.selectAll("*").remove();
@@ -150,7 +150,7 @@ export class NodeGraphShape extends BaseObj {
 
       if (connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         // Set cursor position of the focused node.
-        this._networkGraph.workspace.updateCursorPosition(node.view.position);
+        this._networkGraph.workspace.updateCursorPosition(node.state.position);
 
         this._networkGraph.workspace.animationOff();
 
@@ -188,18 +188,18 @@ export class NodeGraphShape extends BaseObj {
     nodes.each((node: TNode, idx: number, elements: any) => {
       const elem = select(elements[idx]);
 
-      if (elem.attr("elementType") !== node.elementType || elem.attr("weight") !== node.view.synWeights)
+      if (elem.attr("elementType") !== node.elementType || elem.attr("weight") !== node.state.synWeights)
         this.drawShape(elem, node);
 
       elem
         .select(".shape")
         .style("stroke-width", (node.size > 1 ? 1.5 : 1) * this._networkGraph.config?.localStorage.strokeWidth)
-        .style("opacity", node.isGroup ? 0.12 : node.view.opacity ? 1 : 0.6);
+        .style("opacity", node.isGroup ? 0.12 : node.state.opacity ? 1 : 0.6);
 
       elem
         .select("text")
         .attr("dy", node.isGroup || node.isInhibitoryNeuron ? "0.4em" : "0.8em")
-        .text(node.view.label);
+        .text(node.label);
     });
   }
 }

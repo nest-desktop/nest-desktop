@@ -182,8 +182,8 @@
 
       <template #nodes>
         <div :key="project.network.nodes.length">
-          <div v-for="(node, index) in project.network.nodes.allNodes" :key="index">
-            <NodeEditor v-if="node.isNode" :node="node as NESTNode">
+          <div v-for="(node, index) in project.network.nodes.nodes" :key="index">
+            <NodeEditor v-if="node.view && node.isNode" :node="node as NESTNode">
               <template #nodeMenuContent>
                 <NESTNodeMenuList :node="node as NESTNode" />
               </template>
@@ -197,13 +197,10 @@
                   <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial as NESTNodeSpatial" />
 
                   <ValueSlider
-                    v-else
-                    id="n"
-                    v-model="node.size"
+                    v-else-if="node.intf"
+                    v-model="node.intf.size.value"
                     :thumb-color="node.view.color"
-                    input-label="n"
                     label="population size"
-                    @update:model-value="node.onUpdate()"
                   />
 
                   <template #append>
@@ -228,7 +225,7 @@
                   </template>
 
                   <template #synapseSpecEditor>
-                    <SynapseSpecEditor :synapse="(connection.synapse as NESTSynapse)" />
+                    <NESTSynapseSpecEditor :synapse="(connection.synapse as NESTSynapse)" />
                   </template>
                 </ConnectionEditor>
               </template>
@@ -270,7 +267,7 @@ import CopyModelEditor from "../components/model/CopyModelEditor.vue";
 import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
 import NodePosition from "../components/node/NodePosition.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
-import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
+import NESTSynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
 import { NESTNode } from "../helpers/node/node";
 import { NESTNodeSpatial } from "../helpers/node/nodeSpatial/nodeSpatial";
 import { NESTProject, NESTSynapse } from "../types";

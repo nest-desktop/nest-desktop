@@ -2,7 +2,7 @@
 
 import { IParamProps, TParamValue } from "@/helpers/common/parameter";
 import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import { NodeView } from "@/helpers/node/nodeView";
+import { NodeView } from "@/helpers/node/nodeViewState";
 
 import { NESTModelReceptor } from "../../model/modelReceptor/modelReceptor";
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";

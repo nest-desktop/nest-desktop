@@ -97,7 +97,7 @@
                 size="small"
                 style="margin: 1px 2px"
               >
-                {{ appStore.devMode ? item.groupId : item.id }}
+                {{ appStore.state.devMode ? item.groupId : item.id }}
               </v-chip>
             </template> -->
 
@@ -110,7 +110,7 @@
                 label
                 size="small"
               />
-              {{ appStore.devMode ? item.groupId : item.id }}
+              {{ appStore.state.devMode ? item.groupId : item.id }}
               <div style="font-size: 12px">
                 {{ item.labelCapitalize }}
                 <span v-if="item.unit">(${item.unit})</span>

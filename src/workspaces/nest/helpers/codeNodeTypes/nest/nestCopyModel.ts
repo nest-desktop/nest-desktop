@@ -34,7 +34,7 @@ export default defineDynamicCodeNode({
   },
   onPlaced() {
     if (!this.node || !this.code || !this.code.project.network.copyModels) return;
-    this.node.networkItem = this.code.project.network.copyModels.allModels[this.indexOfNodeType];
+    this.node.view = this.code.project.network.copyModels.allModels[this.indexOfNodeType];
   },
   onUpdate() {
     if (!this.node) return {};
@@ -42,7 +42,7 @@ export default defineDynamicCodeNode({
     const inputs: Record<string, () => NodeInterface> = {};
     const outputs: Record<string, () => NodeInterface> = {};
 
-    const node = this.node.networkItem as NESTCopyModel;
+    const node = this.node.view as NESTCopyModel;
 
     if (node && node.paramsVisible.length > 0) {
       node.filteredParams.forEach((param: IParamProps) => {

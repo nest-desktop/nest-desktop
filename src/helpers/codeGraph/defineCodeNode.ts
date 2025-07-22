@@ -23,7 +23,7 @@ export interface ICodeNodeDefinition<I, O> extends INodeDefinition<I, O> {
   node?: AbstractCodeNode;
   modules?: string[];
   onGraphUpdate?: (node?: AbstractCodeNode) => void;
-  onProjectUpdate?: (node?: AbstractCodeNode) => void;
+  onModelUpdate?: (node?: AbstractCodeNode) => void;
   toJSON?: (node?: AbstractCodeNode) => Record<string, unknown>;
   variableName?: string;
 }
@@ -80,9 +80,9 @@ export function defineCodeNode<I, O>(definition: ICodeNodeDefinition<I, O>): new
       definition.onGraphUpdate?.call(this);
     }
 
-    public onProjectUpdate() {
-      this.logger.trace("on network update");
-      definition.onProjectUpdate?.call(this);
+    public onModelUpdate() {
+      this.logger.trace("on model update");
+      definition.onModelUpdate?.call(this);
     }
 
     override toJSON(): Record<string, unknown> {

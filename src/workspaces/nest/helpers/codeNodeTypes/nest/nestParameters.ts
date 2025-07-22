@@ -4,7 +4,6 @@ import { displayInSidebar, IntegerInterface, NodeInterface, setType, TextInputIn
 
 import { AbstractCodeNode, formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
-import { CodeNodeInterface } from "@/helpers/codeGraph/interface/codeNodeInterface";
 import { IParamProps } from "@/helpers/common/parameter";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { TParameter } from "@/types";
@@ -43,49 +42,18 @@ export default defineDynamicCodeNode({
     if (params.length === 0) return "{}";
     return `{\n\t${params.join(",\n\t")}\n}`;
   },
-  onGraphUpdate() {
-    if (!this.node) return;
-
-    if (this.node.networkItem?.params) {
-      const params = this.node.networkItem?.params;
-      Object.keys(this.node.inputs).forEach((key: string) => {
-        if (!params[key] || !this.node) return;
-
-        const paramInterface = this.node.inputs[key] as CodeNodeInterface;
-        const param = params[key];
-        if (param.visible == paramInterface.hidden) param.visible = !paramInterface.hidden;
-        if (param.value != paramInterface.value) param.value = paramInterface.value;
-      });
-    }
-  },
-  onProjectUpdate() {
-    if (!this.node) return;
-
-    if (this.node.networkItem?.params) {
-      const params = this.node.networkItem?.params;
-      Object.keys(this.node.inputs).forEach((key: string) => {
-        if (!this.node) return;
-
-        const paramInterface = this.node.inputs[key];
-        const param = params[key];
-        if (!param) return;
-
-        if (paramInterface.hidden === param.visible) paramInterface.setHidden(!param.isVisible);
-        if (paramInterface.value !== param.value) paramInterface.value = param.value;
-      });
-    }
-  },
   onUpdate() {
     if (!this.node) return {};
     const inputs: Record<string, () => NodeInterface> = {};
 
-    if (this.node?.networkItem && this.node.networkItem?.params) {
-      const params = this.node.networkItem?.params as TParameter[];
+    if (this.node.view?.paramsAll) {
+      const params = this.node.view.paramsAll as TParameter[];
       const paramVisible = this.node.state.props ? this.node.state.props?.map((prop) => prop.id) : [];
 
-      Object.values(params).forEach((param: TParameter) => {
+      params.forEach((param: TParameter) => {
+        // param.codeNodes.node = this.node as AbstractCodeNode;
         const paramJSON = param.toJSON() as IParam;
-        paramJSON.hidden = !paramVisible.includes(param.id);
+        paramJSON.hidden = !paramVisible.includes(paramView.id);
         inputs[param.id] = () => createParameterInterface(paramJSON);
       });
     }
@@ -96,7 +64,7 @@ export default defineDynamicCodeNode({
     if (!this.node) return {};
     const props: Record<string, unknown> = {};
 
-    if (this.node.inputs)
+    if (this.node && this.node.inputs)
       Object.entries(this.node.inputs).forEach((input: [string, NodeInterface]) => {
         const paramValues = this.node.getConnectedOutputInterfacesByInterface(input[0]);
         if (paramValues.length > 0) props[input[0]] = formatInterfaceLabels(paramValues).join(", ");
@@ -109,15 +77,16 @@ export default defineDynamicCodeNode({
 
 export const addParameterNode = (
   graph: CodeGraph | NESTCodeGraph,
-  params: IParamProps[] = [],
+  paramProps: IParamProps[] = [],
   position: { x: number; y: number } = { x: 0, y: 0 },
 ): AbstractCodeNode => {
-  const paramsNode = graph.addNodeAtCoordinates(nestParameters, position, params);
+  const paramsNode = graph.addNodeAtCoordinates(nestParameters, position, paramProps);
   paramsNode.state.integrated = true;
+  paramsNode.state.props = paramProps;
 
-  params.forEach((param: IParamProps) => {
-    const paramInterface = createParameterInterface(param);
-    paramsNode.addInput(param.id, paramInterface);
+  paramProps.forEach((paramProp: IParamProps) => {
+    const paramInterface = createParameterInterface(paramProp);
+    paramsNode.addInput(paramProp.id, paramInterface);
   });
 
   return paramsNode;

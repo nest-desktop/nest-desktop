@@ -54,19 +54,11 @@ export class BaseSimulation extends BaseObj {
   }
 
   get time(): number {
-    return this._codeNodes.node ? this._codeNodes.node.inputs.time.value : this._time;
-  }
-
-  set time(value: number) {
-    if (this._codeNodes.node) this._codeNodes.node.inputs.time.value = value;
-    else {
-      this._time = value;
-      this.onUpdate();
-    }
+    return this.intf?.time?.value;
   }
 
   get timeFixed(): string {
-    return this._time.toFixed(1);
+    return this.time.toFixed(1);
   }
 
   beforeSimulation(): void {}
@@ -80,24 +72,8 @@ export class BaseSimulation extends BaseObj {
     this.updateHash();
   }
 
-  // /**
-  //  * Generate seed.
-  //  *
-  //  * Generate simulation code.
-  //  *
-  //  * @remarks It updates simulation codes.
-  //  */
-  // generateSeed(): void {
-  //   this.logger.trace("generate seed");
-
-  //   if (this._kernel.config.autoRNGSeed) {
-  //     this._kernel.rngSeed = Math.round(Math.random() * 1000);
-  //     this.onUpdate();
-  //   }
-  // }
-
   /**
-   * Observer for  simulation changes.
+   * Observer for simulation changes.
    */
   onUpdate(props = {}): void {
     this.updateHash();
@@ -175,11 +151,11 @@ export class BaseSimulation extends BaseObj {
   /**
    * Update code node.
    */
-  updateCodeNodes(): void {
-    if (!this.codeNodes.node) return;
+  // updateCodeNodes(): void {
+  //   if (!this.codeNodes.node) return;
 
-    this.codeNodes.node.inputs.time.value = this._time;
-  }
+  //   this.codeNodes.node.inputs.time.value = this._time;
+  // }
 
   /**
    * Update hash.

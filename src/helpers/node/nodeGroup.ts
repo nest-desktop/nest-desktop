@@ -188,6 +188,10 @@ export class NodeGroup extends BaseObj {
     return;
   }
 
+  get state(): NodeGroupView {
+    return this._view;
+  }
+
   get targetNodes(): TNode[] {
     return this.network.connections.allConnections
       .filter((connection: TConnection) => connection.sourceIdx === this.idx)
@@ -195,7 +199,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get toCode(): string {
-    return this.nodes.map((node: TNode | TNodeGroup) => node.view.label).join(" + ");
+    return this.nodes.map((node: TNode | TNodeGroup) => node.label).join(" + ");
   }
 
   get view(): NodeGroupView {
@@ -213,7 +217,7 @@ export class NodeGroup extends BaseObj {
    * Clean node group.
    */
   clean(): void {
-    this.view.updateCentroid();
+    this.state.updateCentroid();
   }
 
   /**
@@ -344,7 +348,7 @@ export class NodeGroup extends BaseObj {
    * Update node.
    */
   update(): void {
-    this.view.updateCentroid();
+    this.state.updateCentroid();
     this.updateHash();
   }
 

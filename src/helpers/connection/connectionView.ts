@@ -27,8 +27,8 @@ export class ConnectionView {
   }
 
   get centerPosition(): { x: number; y: number } {
-    const p0 = this._connection.source.view.position;
-    const p1 = this._connection.target.view.position;
+    const p0 = this._connection.source.state.position;
+    const p1 = this._connection.target.state.position;
     return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
   }
 
@@ -68,8 +68,8 @@ export class ConnectionView {
   }
 
   get markerEndPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.position;
-    const target = this._connection.target.view.position;
+    const source = this._connection.source.state.position;
+    const target = this._connection.target.state.position;
     const path = calcPathNode(source, target, this.connectionGraphOptions);
     return { x: path.x2, y: path.y2 };
   }
@@ -87,7 +87,7 @@ export class ConnectionView {
   }
 
   get pathCentroidPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.position;
+    const source = this._connection.source.state.position;
     const target = this._connection.view.markerEndPosition;
     const path = calcPathNode(source, target, this.connectionGraphOptions);
     const x2 = path.x1 + Math.cos(0) * path.tr;
@@ -100,7 +100,7 @@ export class ConnectionView {
   }
 
   get toRight(): boolean {
-    return this._connection.source.view.position.x < this._connection.target.view.position.x;
+    return this._connection.source.state.position.x < this._connection.target.state.position.x;
   }
 
   /**
@@ -141,8 +141,8 @@ export class ConnectionView {
       return 0;
     }
 
-    const source: { x: number; y: number } = this._connection.source.view.position;
-    const target: { x: number; y: number } = this._connection.target.view.position;
+    const source: { x: number; y: number } = this._connection.source.state.position;
+    const target: { x: number; y: number } = this._connection.target.state.position;
     const x1: number = source.x;
     const y1: number = source.y;
     const x2: number = target.x;

@@ -6,7 +6,6 @@ import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
-import { NESTCopyModelParameter } from "../model/copyModelParameter";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTSynapseParameter } from "./synapseParameter";
@@ -21,7 +20,6 @@ export interface INESTSynapseProps extends ISynapseProps {
 export class NESTSynapse extends BaseSynapse {
   private _copyModel: NESTCopyModel | undefined;
   private _receptorIdx: number = 0;
-  public _model: NESTModel;
 
   constructor(connection: NESTConnection, synapseProps?: INESTSynapseProps) {
     super(connection, synapseProps);
@@ -32,6 +30,15 @@ export class NESTSynapse extends BaseSynapse {
 
   get connection(): NESTConnection {
     return this._connection as NESTConnection;
+  }
+
+  get copyModel(): NESTCopyModel | undefined {
+    return this._copyModel;
+  }
+
+  // Get all copied synapse models.
+  get copyModels(): NESTCopyModel[] {
+    return this.network.copyModels.synapseModels as NESTCopyModel[];
   }
 
   get delay(): TParamValue {
@@ -77,7 +84,7 @@ export class NESTSynapse extends BaseSynapse {
     return this.modelId === "static_synapse";
   }
 
-  get model(): NESTModel {
+  override get model(): NESTModel {
     if (this._copyModel) {
       if (!this._model || this._model.id !== this._copyModel.existingModelId)
         this._model = this.getModel(this._copyModel.existingModelId);
@@ -103,10 +110,6 @@ export class NESTSynapse extends BaseSynapse {
   //   return this._model;
   // }
 
-  get copyModel(): NESTCopyModel | undefined {
-    return this._copyModel;
-  }
-
   get modelDBStore() {
     return this.connection.connections.network.project.modelDBStore;
   }
@@ -115,21 +118,21 @@ export class NESTSynapse extends BaseSynapse {
    * Get model ID.
    */
   override get modelId(): string {
-    return this._modelId;
+    return this.intf?.model ? this.intf.model.value : this._modelId;
   }
 
   /**
    * Set model ID.
    */
   set modelId(value: string) {
-    this._modelId = value;
+    if (this.intf?.model) {
+      this.intf.model.value = value;
+    } else {
+      this._modelId = value;
+    }
 
     this.loadModel();
-    this.modelOnUpdate();
-  }
-
-  get modelParams(): Record<string, ModelParameter | NESTCopyModelParameter> {
-    return this.model.params;
+    this.onModelUpdate();
   }
 
   // Get models of the same element type.
@@ -137,11 +140,6 @@ export class NESTSynapse extends BaseSynapse {
     const elementType: string = this.model?.elementType;
     const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
     return models;
-  }
-
-  // Get all copied synapse models.
-  get copyModels(): NESTCopyModel[] {
-    return this.network.copyModels.synapseModels as NESTCopyModel[];
   }
 
   get network(): NESTNetwork {
@@ -169,11 +167,11 @@ export class NESTSynapse extends BaseSynapse {
   }
 
   override get paramsAll(): NESTSynapseParameter[] {
-    return Object.values(this._params) as NESTSynapseParameter[];
+    return Object.values(this.params) as NESTSynapseParameter[];
   }
 
   override get params(): Record<string, NESTSynapseParameter> {
-    return this._params as Record<string, NESTSynapseParameter>;
+    return super.params as Record<string, NESTSynapseParameter>;
   }
 
   get showReceptorType(): boolean {
@@ -185,20 +183,10 @@ export class NESTSynapse extends BaseSynapse {
    * @param paramProps parameter props
    */
   addParameter(paramProps: IParamProps, visible?: boolean): void {
-    // this._logger.trace("add parameter:", param)
+    this.logger.trace("add parameter:", paramProps.id);
+
     this.params[paramProps.id] = new NESTSynapseParameter(this, paramProps);
     if (visible) this._paramsVisible.push(paramProps.id);
-  }
-
-  /**
-   * Get synapse model.
-   * @param modelId string
-   * @returns NEST model object
-   */
-  getModel(modelId: string): NESTModel {
-    this.logger.trace("get model:", modelId);
-
-    return this.modelDBStore.findModel(modelId) as NESTModel;
   }
 
   /**
@@ -220,23 +208,23 @@ export class NESTSynapse extends BaseSynapse {
 
     this.emptyParams();
 
-    if (this._model) {
-      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
+    if (this.model) {
+      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
-          const synapseParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
-          if (synapseParamProps) {
+          const synParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
+          if (synParamProps) {
             this.addParameter(
               {
-                ...synapseParamProps,
-                ...modelParam,
+                ...synParamProps,
+                ...modelParam.props,
               },
               true,
             );
           } else {
-            this.addParameter(modelParam);
+            this.addParameter(modelParam.props);
           }
         } else {
-          this.addParameter(modelParam);
+          this.addParameter(modelParam.props);
         }
       });
     } else if (paramsProps) {
@@ -249,7 +237,7 @@ export class NESTSynapse extends BaseSynapse {
    * @param paramsProps list of param props
    * @remarks It adds parameters.
    */
-  loadModel(paramsProps?: IParamProps[]): void {
+  override loadModel(paramsProps?: IParamProps[]): void {
     this.logger.trace("load model:", this._modelId);
 
     if (this.network.copyModels && this.network.copyModels.findByModelId(this._modelId)) {
@@ -261,16 +249,7 @@ export class NESTSynapse extends BaseSynapse {
     }
 
     this.initParameters(paramsProps);
-  }
-
-  /**
-   * Observer for model changes.
-   * @remarks It emits synapse changes.
-   */
-  modelOnUpdate(): void {
-    this.initParameters();
-    this.connection.network.clean();
-    this.onUpdate({ preventSimulation: true });
+    this.onModelUpdate();
   }
 
   /**

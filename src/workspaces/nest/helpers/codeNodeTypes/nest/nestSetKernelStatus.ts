@@ -5,8 +5,6 @@ import { displayInSidebar, IntegerInterface, NumberInterface, setType } from "ba
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
-import { NESTCode } from "../../code/code";
-import { NESTSimulationKernel } from "../../simulation/simulationKernel";
 import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 
 export default defineCodeNode({
@@ -45,31 +43,11 @@ export default defineCodeNode({
 
     return args.length > 0 ? `nest.SetKernelStatus({\n\t${args.join(",\n\t")}\n})` : "";
   },
-  onGraphUpdate() {
-    if (!this.node || !this.node.simulationItem) return;
-    const kernel: NESTSimulationKernel = this.node.simulationItem as NESTSimulationKernel;
-
-    if (kernel.resolution !== this.node.inputs?.resolution.value)
-      kernel.resolution = this.node.inputs?.resolution.value;
-    if (kernel.localNumThreads !== this.node.inputs?.local_num_threads.value)
-      kernel.localNumThreads = this.node.inputs?.local_num_threads.value;
-    if (kernel.rngSeed !== this.node.inputs?.rng_seed.value) kernel.rngSeed = this.node.inputs?.rng_seed.value;
-  },
   onPlaced() {
     if (!this.node || !this.code) return;
-    const code = this.code as NESTCode;
 
-    if (!code.project.simulation.kernel) return;
-    this.node.simulationItem = code.project.simulation.kernel;
-    this.node.simulationItem.codeNodes.node = this;
-  },
-  onProjectUpdate() {
-    if (!this.node || !this.node.simulationItem) return;
-    const kernel: NESTSimulationKernel = this.node.simulationItem as NESTSimulationKernel;
-
-    if (this.node.inputs.resolution.value !== kernel.resolution) this.node.inputs.resolution.value = kernel.resolution;
-    if (this.node.inputs.local_num_threads.value !== kernel.localNumThreads)
-      this.node.inputs.local_num_threads.value = kernel.localNumThreads;
-    if (this.node.inputs.rng_seed.value !== kernel.rngSeed) this.node.inputs.rng_seed.value = kernel.rngSeed;
+    if (!this.node.code.project.simulation.kernel) return;
+    this.node.view = this.node.code.project.simulation.kernel;
+    this.node.view.codeNodes.node = this;
   },
 });

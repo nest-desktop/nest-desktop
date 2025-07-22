@@ -32,11 +32,25 @@
     </div>
 
     <v-spacer />
-    <v-toolbar density="compact">
-      <v-btn icon="mdi:mdi-backup-restore" size="x-small" title="reset" @click="node.codeTemplate = ''" />
-    </v-toolbar>
 
-    <codemirror v-if="node" v-model="node.codeTemplate" />
+    <template v-if="node">
+      <div class="__interface">
+        <label>Variable name</label>
+        <input
+          v-model="node.variableName"
+          type="text"
+          class="baklava-input"
+          title="Variable name"
+          @blur="doneRenaming"
+          @keydown.enter="doneRenaming"
+        />
+      </div>
+      <v-toolbar density="compact">
+        <v-btn icon="mdi:mdi-backup-restore" size="x-small" title="reset" @click="node.codeTemplate = ''" />
+      </v-toolbar>
+
+      <codemirror v-model="node.codeTemplate" />
+    </template>
   </div>
 </template>
 
@@ -72,6 +86,10 @@ const displayedInterfaces = computed(() => {
 
 const close = () => {
   graph.value.sidebar.visible = false;
+};
+
+const doneRenaming = () => {
+  node.value?.events.update.emit(null);
 };
 
 const startResize = (event: MouseEvent) => {

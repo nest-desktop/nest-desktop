@@ -43,7 +43,7 @@ export class NetworkGraphDragline extends BaseObj {
     if (this.network && this.network.connections.state.selectedNode != null) {
       const selectedNode = this.network.connections.state.selectedNode;
 
-      const sourcePosition: { x: number; y: number } = selectedNode.view.position;
+      const sourcePosition: { x: number; y: number } = selectedNode.state.position;
       const position: number[] = pointer(event, this._workspace.selector.node());
       const targetPosition: { x: number; y: number } = {
         x: position[0],
@@ -54,7 +54,7 @@ export class NetworkGraphDragline extends BaseObj {
         .select(".dragline")
         .select("path")
         .style("opacity", 0.5)
-        .style("stroke", selectedNode.view.color)
+        .style("stroke", selectedNode.color)
         .attr("d", drawPathMouse(sourcePosition, targetPosition));
     } else {
       this.logger.warn("No node was selected when dragLine() got executed!");

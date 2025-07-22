@@ -1,14 +1,11 @@
 // nodes.ts
 
-import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseNodes } from "@/helpers/node/nodes";
-import { TNode, TNodeGroup } from "@/types";
+import { TNodeGroup } from "@/types";
 
 import { INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
-import { NESTCode } from "../code/code";
 import { NESTNetwork } from "../network/network";
-import { createNode } from "../codeNodeTypes/nest/nestCreate";
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
@@ -21,7 +18,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get allNodes(): (TNodeGroup | NESTNode)[] {
-    return this.nodes;
+    return this.nodes as (TNodeGroup | NESTNode)[];
   }
 
   /**
@@ -59,7 +56,7 @@ export class NESTNodes extends BaseNodes {
   }
 
   override get nodes(): (TNodeGroup | NESTNode)[] {
-    return this._nodes as (TNodeGroup | NESTNode)[];
+    return super.nodes as (TNodeGroup | NESTNode)[];
   }
 
   override get nodeItems(): NESTNode[] {
@@ -88,20 +85,20 @@ export class NESTNodes extends BaseNodes {
     return this.nodeItems.filter((node: NESTNode) => node.model?.isWeightRecorder);
   }
 
-  /**
-   * Add code nodes.
-   * @param node node component.
-   */
-  override addCodeNodes(node: TNode | TNodeGroup): void {
-    this.logger.trace("add code nodes");
+  // /**
+  //  * Add code nodes.
+  //  * @param node node component.
+  //  */
+  // override addCodeNodes(node: TNode | TNodeGroup): void {
+  //   this.logger.trace("add code nodes");
 
-    if (node.isGroup) return;
-    const code = this.network.project.code as NESTCode;
-    node = node as NESTNode;
+  //   if (node.isGroup) return;
+  //   const code = this.network.project.code as NESTCode;
+  //   node = node as NESTNode;
 
-    const idx = code.graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
-    node.codeNodes.node = node.codeNodes.node ?? createNode(code.graph, node.toJSON(), idx);
-  }
+  //   const idx = code.graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
+  //   node.codeNodes.node = node.codeNodes.node ?? createNode(code.graph, node.toJSON(), idx);
+  // }
 
   /**
    * Clean weight recorder components.
@@ -117,9 +114,7 @@ export class NESTNodes extends BaseNodes {
   override updateRecordsColor(): void {
     this.logger.trace("update records color");
 
-    this.recorders.forEach((recorder: NESTNode) => {
-      recorder.updateRecordsColor();
-    });
+    this.recorders.forEach((recorder: NESTNode) => recorder.updateRecordsColor());
 
     const activityGraph = this.network.project.activityGraph as NESTActivityGraph;
 

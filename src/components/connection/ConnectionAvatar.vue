@@ -11,7 +11,7 @@
       <NodeAvatar :node="connection.source" />
     </v-btn>
 
-    <v-btn :color="connection.sourceNode.view.color" :icon="connection.synapse.icon" size="small" variant="text" />
+    <v-btn :color="connection.sourceNode.color" :icon="connection.synapse.icon" size="small" variant="text" />
 
     <v-btn
       class="rounded-circle"

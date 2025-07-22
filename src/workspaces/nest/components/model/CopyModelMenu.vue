@@ -18,14 +18,14 @@
 
             <!-- <template v-if="item.input === 'checkbox'">
               <v-checkbox
-                :color="node.view.color"
+                :color="node.state.color"
                 :input-value="state[item.value]"
               />
             </template>
 
             <template v-if="item.input === 'switch'">
               <v-switch
-                :color="node.view.color"
+                :color="node.state.color"
                 :value="state[item.value]"
                 dense
                 hide-details
