@@ -34,7 +34,7 @@
     "@codemirror/view": "~6.38",
     "@mdi/font": "~7.4",
     "@vueuse/core": "~13.5",
-    "axios": "~1.10",
+    "axios": "~1.11",
     "baklavajs": "~2.7",
     "codemirror": "~6.0",
     "d3": "~7.9",
