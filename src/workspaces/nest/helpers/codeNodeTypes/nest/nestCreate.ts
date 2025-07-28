@@ -83,8 +83,6 @@ export default defineDynamicCodeNode({
       });
     }
 
-    if (this.node.view) this.node.variableName = this.node.view.variableName;
-
     const paramNode = this.node.getConnectedNodeByInterface("params");
     if (paramNode) {
       this.node.view.codeNodes.param = paramNode;
@@ -97,6 +95,7 @@ export default defineDynamicCodeNode({
   },
   onModelUpdate() {
     if (!this.node) return;
+    if (this.node.view) this.node.variableName = this.node.view.variableName;
   },
   onUpdate({ model }) {
     if (!this.node) return {};

@@ -283,7 +283,9 @@ export class BaseNode extends BaseObj {
   }
 
   set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
+    this._paramsVisible = this.paramsAll
+      .filter((param: TParameter) => values.includes(param.id))
+      .map((param: TParameter) => param.id);
 
     this.paramsAll.forEach((param: TParameter) => {
       if (!param.intf) return;
