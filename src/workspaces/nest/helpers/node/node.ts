@@ -248,6 +248,7 @@ export class NESTNode extends BaseNode {
     }
 
     this.initParameters(paramsProps);
+    this.onModelUpdate();
   }
 
   /**

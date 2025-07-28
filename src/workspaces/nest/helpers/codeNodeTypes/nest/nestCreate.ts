@@ -90,11 +90,13 @@ export default defineDynamicCodeNode({
       this.node.view.codeNodes.param = paramNode;
       this.node.view.paramsAll.forEach((param) => (param.codeNodes.node = paramNode));
 
-      if (!paramNode.view) {
-        paramNode.view = this.node.view;
-        paramNode.onUpdate();
-      }
+      if (!paramNode.view) paramNode.view = this.node.view;
+
+      paramNode.onUpdate();
     }
+  },
+  onModelUpdate() {
+    if (!this.node) return;
   },
   onUpdate({ model }) {
     if (!this.node) return {};

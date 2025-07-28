@@ -624,8 +624,7 @@ export class BaseNode extends BaseObj {
     }
 
     this.update();
-    this.codeNode?.onModelUpdate();
-    this.codeNodes.params?.onModelUpdate();
+    nextTick(() => this.codeNode?.onModelUpdate());
   }
 
   /**
