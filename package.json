@@ -33,7 +33,7 @@
     "@codemirror/theme-one-dark": "~6.1",
     "@codemirror/view": "~6.38",
     "@mdi/font": "~7.4",
-    "@vueuse/core": "~13.5",
+    "@vueuse/core": "~13.6",
     "axios": "~1.11",
     "baklavajs": "~2.7",
     "codemirror": "~6.0",
