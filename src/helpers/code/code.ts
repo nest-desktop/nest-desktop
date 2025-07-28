@@ -187,7 +187,7 @@ export class BaseCode extends BaseObj {
     this.logger.trace("init");
 
     this.graph.init();
-    this.generate();
+    // this.generate();
   }
 
   /**

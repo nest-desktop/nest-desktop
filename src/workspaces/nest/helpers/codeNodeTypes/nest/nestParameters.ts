@@ -51,9 +51,8 @@ export default defineDynamicCodeNode({
       const paramVisible = this.node.state.props ? this.node.state.props?.map((prop) => prop.id) : [];
 
       params.forEach((param: TParameter) => {
-        // param.codeNodes.node = this.node as AbstractCodeNode;
         const paramJSON = param.toJSON() as IParam;
-        paramJSON.hidden = !paramVisible.includes(paramView.id);
+        paramJSON.hidden = !paramVisible.includes(param.id);
         inputs[param.id] = () => createParameterInterface(paramJSON);
       });
     }
@@ -99,7 +98,9 @@ export const createParameterInterface = (param: IParam): NodeInterface => {
   } else {
     paramInterface = new TextInputInterface(param.id, JSON.stringify(param.value)).use(setType, stringType);
   }
+
   paramInterface.use(displayInSidebar, true);
   paramInterface.setHidden(param.hidden ?? false);
+
   return paramInterface;
 };

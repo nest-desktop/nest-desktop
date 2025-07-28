@@ -11,16 +11,16 @@ export class BaseSynapseParameter extends BaseParameter {
     this._synapse = synapse;
   }
 
+  get parent(): TSynapse {
+    return this.synapse;
+  }
+
   get synapse(): TSynapse {
     return this._synapse;
   }
 
   get types(): any[] {
     return this.config?.localStorage.types;
-  }
-
-  get parent(): TSynapse {
-    return this.synapse;
   }
 
   /**

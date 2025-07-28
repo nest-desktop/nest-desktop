@@ -122,18 +122,19 @@ export class NetworkProject extends BaseProject {
     // Initialize code.
     this.code.init();
 
+    // TODO: initializing others might be obsolete
     nextTick(() => {
       // Initialize network.
-      this.network.init();
+      // this.network.init();
 
       // Initialize network history.
-      this.networkRevision.init();
+      // this.networkRevision.init();
 
       // Initialize simulation.
-      this.simulation.init();
+      // this.simulation.init();
 
       // Initialize activities.
-      this.activities.init();
+      // this.activities.init();
 
       // Initialize activity graph.
       this.activityGraph.init();
@@ -163,8 +164,6 @@ export class NetworkProject extends BaseProject {
     this.activities.checkRecorders();
 
     this.networkRevision.commit();
-
-    // this.code.graph.onProjectUpdate();
 
     if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();

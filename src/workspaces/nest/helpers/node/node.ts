@@ -104,10 +104,6 @@ export class NESTNode extends BaseNode {
     return this.paramsVisible.length > 0 || this.modelId === "multimeter";
   }
 
-  override get idx(): number {
-    return this._nodes.allNodes.indexOf(this);
-  }
-
   override get isSpatial(): boolean {
     return this._spatial.hasPositions;
   }
@@ -176,7 +172,7 @@ export class NESTNode extends BaseNode {
    */
   addCompartment(compartmentProps: INESTNodeCompartmentProps): void {
     const compartment = new NESTNodeCompartment(this, compartmentProps);
-    this._compartments.push(compartment);
+    this.compartments.push(compartment);
     compartment.clean();
   }
 
@@ -320,7 +316,7 @@ export class NESTNode extends BaseNode {
    */
   toggleSpatial(emitOnUpdate: boolean = true): void {
     const term: string = this.size === 1 ? "grid" : "free";
-    this._spatial.init({
+    this.spatial.init({
       positions: this.spatial.hasPositions ? undefined : term,
     });
 
@@ -349,46 +345,16 @@ export class NESTNode extends BaseNode {
     if (this.model?.isMultimeter) nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
 
     // Add positions if this node is spatial.
-    if (this._spatial.hasPositions) nodeProps.spatial = this._spatial.toJSON();
+    if (this.spatial.hasPositions) nodeProps.spatial = this.spatial.toJSON();
 
-    if (this._compartments.length > 0)
-      nodeProps.compartments = this._compartments.map((compartment: NESTNodeCompartment) => compartment.toJSON());
+    if (this.compartments.length > 0)
+      nodeProps.compartments = this.compartments.map((compartment: NESTNodeCompartment) => compartment.toJSON());
 
-    if (this._receptors.length > 0)
-      nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
+    if (this.receptors.length > 0)
+      nodeProps.receptors = this.receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
 
     return nodeProps;
   }
-
-  /**
-   * Update code nodes.
-   */
-  // override updateCodeNodes(): void {
-  //   if (!this.codeNodes.node) this.nodes.addCodeNodes(this);
-  //   const codeNode = this.codeNodes.node;
-
-  //   codeNode.inputs.model.value = this.modelId;
-  //   codeNode.inputs.size.value = this.size;
-
-  //   if (!this.codeNodes.params) return;
-  //   const paramsNode = this.codeNodes.params;
-
-  //   this.paramsAll.forEach((param: NodeParameter) => {
-  //     if (!this.paramsVisible.includes(param.id) && param.id in paramsNode.inputs) {
-  //       paramsNode.removeInput(param.id);
-  //     } else if (this.paramsVisible.includes(param.id) && !(param.id in paramsNode.inputs)) {
-  //       let inputInterface;
-  //       if (typeof param.value == "number") {
-  //         inputInterface = new IntegerInterface(param.id, param.value as number);
-  //       } else {
-  //         inputInterface = new TextInputInterface(param.id, JSON.stringify(param.value));
-  //       }
-  //       paramsNode.addInput(param.id, inputInterface);
-  //     } else if (this.paramsVisible.includes(param.id)) {
-  //       paramsNode.inputs[param.id].value = param.value;
-  //     }
-  //   });
-  // }
 
   /**
    * Update recordables.

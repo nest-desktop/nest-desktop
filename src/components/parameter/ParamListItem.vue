@@ -5,7 +5,7 @@
         <v-label class="px-1" style="width: 100%">
           {{ param.label || param.options.label || param.id }}
           <v-spacer />
-          {{ param.id }}: {{ param.code }}
+          {{ param.id }}: {{ param.value }}
         </v-label>
       </template>
 

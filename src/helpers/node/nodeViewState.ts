@@ -196,20 +196,26 @@ export class NodeViewState extends BaseObj {
     return nodeViewProps;
   }
 
+  update(nodeViewProps: INodeViewProps): void {
+    this.state.position = nodeViewProps.position;
+  }
+
   /**
    * Update hash.
    */
   updateHash(): void {
     this._updateHash({
       color: this.color,
-      position: this._state.position,
+      position: this.state.position,
     });
   }
 
   /**
-   * Update element for node color.
+   * Update style for node color.
    */
   updateStyle(): void {
+    this.logger.trace("update style");
+
     const root = document.documentElement;
     root.style.setProperty("--colorNode" + this.node.idx, this.color);
   }

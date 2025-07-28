@@ -88,8 +88,8 @@ export class BaseSimulation extends BaseObj {
   resetState(): void {
     this.logger.trace("reset state");
 
-    this._state.biologicalTime = 0;
-    this._state.timeInfo = {
+    this.state.biologicalTime = 0;
+    this.state.timeInfo = {
       begin: 0,
       current: 0,
       end: 0,
@@ -124,7 +124,7 @@ export class BaseSimulation extends BaseObj {
         return response;
       })
       .finally(() => {
-        this._state.running = false;
+        this.state.running = false;
       });
   }
 
@@ -144,18 +144,8 @@ export class BaseSimulation extends BaseObj {
    * Update simulation.
    */
   update(): void {
-    // this.updateCodeNodes();
     this.updateHash();
   }
-
-  /**
-   * Update code node.
-   */
-  // updateCodeNodes(): void {
-  //   if (!this.codeNodes.node) return;
-
-  //   this.codeNodes.node.inputs.time.value = this._time;
-  // }
 
   /**
    * Update hash.

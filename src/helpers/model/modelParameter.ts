@@ -36,7 +36,6 @@ export class ModelParameter extends BaseParameter {
       id: this.id,
       label: this.label,
       value: this.value,
-      // visible: this.visible as boolean,
     };
 
     if (this.unit) paramProps.unit = this.unit;

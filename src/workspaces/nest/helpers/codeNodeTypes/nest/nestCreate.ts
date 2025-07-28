@@ -88,8 +88,12 @@ export default defineDynamicCodeNode({
     const paramNode = this.node.getConnectedNodeByInterface("params");
     if (paramNode) {
       this.node.view.codeNodes.param = paramNode;
-      paramNode.view = this.node.view;
       this.node.view.paramsAll.forEach((param) => (param.codeNodes.node = paramNode));
+
+      if (!paramNode.view) {
+        paramNode.view = this.node.view;
+        paramNode.onUpdate();
+      }
     }
   },
   onUpdate({ model }) {

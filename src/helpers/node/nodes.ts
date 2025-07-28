@@ -100,6 +100,10 @@ export class BaseNodes extends BaseObj {
     return this.allNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
   }
 
+  get nodeUuids(): string {
+    return this.allNodes.map((node) => node.uuid);
+  }
+
   get nodes(): (TNode | TNodeGroup)[] {
     return this.codeNodes.filter((node: AbstractCodeNode) => node.view).map((node) => node.view) as (
       | TNode
@@ -254,7 +258,7 @@ export class BaseNodes extends BaseObj {
    * @returns node instance
    */
   createNode(codeNode: AbstractCodeNode, nodeProps: INodeProps): TNode {
-    this.logger.trace("create node:", nodeProps.model);
+    this.logger.trace("create node");
 
     const node: TNode = new this.Node(this, nodeProps);
     node.codeNodes.node = codeNode;

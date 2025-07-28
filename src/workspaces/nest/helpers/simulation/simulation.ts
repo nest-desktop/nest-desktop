@@ -50,8 +50,8 @@ export class NESTSimulation extends BaseSimulation {
   generateSeed(): void {
     this.logger.trace("generate seed");
 
-    if (this._kernel.config?.localStorage.autoRNGSeed) {
-      this._kernel.rngSeed = Math.round(Math.random() * 1000);
+    if (this.kernel.config?.localStorage.autoRNGSeed) {
+      this.kernel.rngSeed = Math.round(Math.random() * 1000);
       this.onUpdate();
     }
   }
@@ -62,7 +62,7 @@ export class NESTSimulation extends BaseSimulation {
    */
   override toJSON(): INESTSimulationProps {
     const simulationProps: INESTSimulationProps = {
-      kernel: this._kernel.toJSON(),
+      kernel: this.kernel.toJSON(),
       time: this.time,
     };
     if (this._modules.length > 0) simulationProps.modules = this._modules;
@@ -70,20 +70,11 @@ export class NESTSimulation extends BaseSimulation {
   }
 
   /**
-   * Update simulation.
-   */
-  override update(): void {
-    this.updateCodeNodes();
-    this._kernel.updateCodeNodes();
-    this.updateHash();
-  }
-
-  /**
    * Update hash.
    */
   override updateHash(): void {
     this._updateHash({
-      kernel: this._kernel.toJSON(),
+      kernel: this.kernel.toJSON(),
       time: this.time,
     });
   }

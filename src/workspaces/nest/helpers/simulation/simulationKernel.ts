@@ -48,15 +48,4 @@ export class NESTSimulationKernel extends BaseObj {
       rngSeed: this.rngSeed,
     };
   }
-
-  // /**
-  //  * Update code node.
-  //  */
-  // updateCodeNodes(): void {
-  //   if (!this.codeNodes.node) return;
-
-  //   this.codeNodes.node.inputs.local_num_threads.value = this._localNumThreads;
-  //   this.codeNodes.node.inputs.resolution.value = this._resolution;
-  //   this.codeNodes.node.inputs.rng_seed.value = this._rngSeed;
-  // }
 }

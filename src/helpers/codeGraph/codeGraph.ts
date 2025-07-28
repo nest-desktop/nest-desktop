@@ -222,31 +222,6 @@ export class CodeGraph extends BaseObj {
   }
 
   /**
-   * Triggers on project update.
-   */
-  // onProjectUpdate = () => {
-  //   this.logger.trace("on project update:", truncate(this.uuid), truncate(this.graph.id));
-  //   if (this.uuid !== this.graph.id) return;
-
-  //   if (this.nodes.length > 0) {
-  //     this.sortNodes();
-  //     this.codeNodes.forEach((node) => {
-  //       if (node.onProjectUpdate) node.onProjectUpdate();
-  //     });
-  //   }
-
-  //   nextTick(() => {
-  //     try {
-  //       this._state.editor = this.save();
-  //     } catch {
-  //       this.logger.warn("Save editor state failed.");
-  //     }
-
-  //     this.code?.generate();
-  //   });
-  // };
-
-  /**
    * Triggers on code graph update.
    */
   onUpdate = () => {

@@ -103,7 +103,7 @@ export class NESTConnection extends BaseConnection {
     this.rule.reset();
     this.initParameters();
     this.synapse.modelId = "static_synapse";
-    this._mask.unmask();
+    this.mask.unmask();
   }
 
   /**
@@ -135,27 +135,10 @@ export class NESTConnection extends BaseConnection {
     if (this.synapse.modelId !== "static_synapse" || this.synapse.paramsVisible.length > 0)
       connectionProps.synapse = this._synapse.toJSON();
 
-    if (this._sourceSlice.visible) connectionProps.sourceSlice = this._sourceSlice.toJSON();
-    if (this._targetSlice.visible) connectionProps.targetSlice = this._targetSlice.toJSON();
-    if (this._mask.hasMask) connectionProps.mask = this._mask.toJSON();
+    if (this.sourceSlice.visible) connectionProps.sourceSlice = this.sourceSlice.toJSON();
+    if (this.targetSlice.visible) connectionProps.targetSlice = this.targetSlice.toJSON();
+    if (this.mask.hasMask) connectionProps.mask = this.mask.toJSON();
 
     return connectionProps;
-  }
-
-  /**
-   * Update code node.
-   */
-  override updateCodeNode(): void {
-    if (!this.codeNode) return;
-
-    this.codeNode.inputs.pre.value = this.sourceIdx;
-    this.codeNode.inputs.post.value = this.targetIdx;
-    this.codeNode.inputs.conn_spec.value = this.rule.value;
-
-    this.paramsVisible.forEach((paramKey: string) => {
-      if (this.codeNode.inputs[paramKey]) {
-        this.codeNode.inputs[paramKey].value = this.params[paramKey].value;
-      }
-    });
   }
 }

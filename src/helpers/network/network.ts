@@ -11,6 +11,8 @@ import { INodeProps } from "../node/node";
 import { INodeViewProps } from "../node/nodeViewState";
 import { NetworkState } from "./networkState";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
+import { createNode } from "@/workspaces/nest/helpers/codeNodeTypes/nest/nestCreate";
+import { nextTick } from "vue";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -158,19 +160,22 @@ export class BaseNetwork extends BaseObj {
    * @param view node view props
    */
   createNode(model?: string, view?: INodeViewProps): void {
-    this.logger.trace("create node");
+    this.logger.debug("create node");
 
-    // Add node.
-    const node = this.nodes.addNode({
+    // Create node.
+    const codeNode = createNode(this.project.code.graph, {
       model: model || this._defaultModels[view?.elementType || "neuron"],
-      view,
+    });
+
+    nextTick(() => {
+      if (codeNode && codeNode.view) codeNode.view.state.update(view);
     });
 
     // Initialize node.
-    node.init();
+    // node.init();
 
     // Trigger network change.
-    this.onUpdate({ preventSimulation: true });
+    // this.onUpdate({ preventSimulation: true });
   }
 
   /**
@@ -319,6 +324,6 @@ export class BaseNetwork extends BaseObj {
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.allNodes.forEach((node: TNode | TNodeGroup) => node.state.updateStyle());
+    this.nodes.allNodes.forEach((node: TNode | TNodeGroup) => node.state.updateStyle());
   }
 }

@@ -155,7 +155,7 @@ export class NESTNetwork extends BaseNetwork {
    * @remarks Do not use it in the constructor.
    */
   override init(): void {
-    this.logger.trace("init");
+    this.logger.debug("init");
 
     this.nodes.init();
     this.connections.init();

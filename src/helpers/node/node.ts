@@ -1,6 +1,16 @@
 // node.ts
 
-import { TConnection, TModel, TNetwork, TNetworkProject, TNode, TNodeGroup, TNodes, TSimulation } from "@/types";
+import {
+  TConnection,
+  TModel,
+  TNetwork,
+  TNetworkProject,
+  TNode,
+  TNodeGroup,
+  TNodes,
+  TParameter,
+  TSimulation,
+} from "@/types";
 
 import { BaseModel, IModelStateProps, TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
@@ -35,7 +45,6 @@ export class BaseNode extends BaseObj {
   private _paramsVisible: string[] = [];
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = [];
-  // private _size: number;
   private _view: NodeViewState;
   public _model: TModel | undefined;
   public _modelId: string;
@@ -68,7 +77,7 @@ export class BaseNode extends BaseObj {
   }
 
   get color(): string {
-    return this._view.color;
+    return this.state.color;
   }
 
   get connectedNodes(): TNode[] {
@@ -118,7 +127,7 @@ export class BaseNode extends BaseObj {
   }
 
   get filteredParams(): NodeParameter[] {
-    return this._paramsVisible.map((paramId) => this._params[paramId]);
+    return this.paramsVisible.map((paramId) => this.params[paramId]);
   }
 
   get firstTargetNodeSize(): number {
@@ -126,11 +135,11 @@ export class BaseNode extends BaseObj {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0;
+    return this.paramsVisible.length > 0;
   }
 
   get idx(): number {
-    return this.nodes.allNodes.indexOf(this);
+    return this.nodes.nodeUuids.indexOf(this.uuid);
   }
 
   get idxByElementType(): number {
@@ -248,11 +257,11 @@ export class BaseNode extends BaseObj {
   }
 
   get nodeGroups(): TNodeGroup[] {
-    return this._nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
+    return this.nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => nodeGroup.nodeItemsDeep.includes(this));
   }
 
   get nodeIdx(): number {
-    return this._nodes.allNodes.indexOf(this);
+    return this.nodes.allNodes.indexOf(this);
   }
 
   get params(): Record<string, NodeParameter> {
@@ -270,20 +279,18 @@ export class BaseNode extends BaseObj {
   }
 
   get paramsVisible(): string[] {
-    // if (this.codeNodes.params) {
-    //   const paramKeys = Object.keys(this.codeNodes.params.inputs);
-    //   const paramsVisible = paramKeys.filter(
-    //     (key) => !this.params[key].codeNodes.node.inputs[key].hidden,
-    //     // this.codeNodes.params && this.codeNodes.params.inputs[key] && !this.codeNodes.params.inputs[key].hidden,
-    //   );
-    //   return paramsVisible;
-    // }
     return this._paramsVisible;
   }
 
   set paramsVisible(values: string[]) {
     this._paramsVisible = values;
-    this.onUpdate({ preventSimulation: true });
+
+    this.paramsAll.forEach((param: TParameter) => {
+      if (!param.intf) return;
+      param.intf[param.id].setHidden(!this._paramsVisible.includes(param.id));
+    });
+
+    this.codeNode?.code?.onUpdate();
   }
 
   get parentNodes(): TNodes {
@@ -332,11 +339,11 @@ export class BaseNode extends BaseObj {
   }
 
   get sizeVisible(): boolean {
-    return !this.intf.size.hidden;
+    return !this.intf?.size.hidden;
   }
 
   set sizeVisible(value: boolean) {
-    if (this.intf.size.hidden === value) this.intf.size.setHidden(!value);
+    if (this.intf?.size.hidden === value) this.intf.size.setHidden(!value);
   }
 
   get sourceNodes(): TNode[] {
@@ -387,8 +394,8 @@ export class BaseNode extends BaseObj {
    * @param emitChanges boolean
    */
   addAnnotation(text: string, emitChanges: boolean = true): void {
-    if (this._annotations.indexOf(text) !== -1) return;
-    this._annotations.push(text);
+    if (this.annotations.indexOf(text) !== -1) return;
+    this.annotations.push(text);
 
     if (emitChanges) this.onUpdate();
   }
@@ -401,8 +408,8 @@ export class BaseNode extends BaseObj {
   addParameter(paramProps: IParamProps, visible: boolean = false): void {
     this.logger.trace("add parameter", paramProps.id);
 
-    this._params[paramProps.id] = new NodeParameter(this, paramProps);
-    if (visible) this._paramsVisible.push(paramProps.id);
+    this.params[paramProps.id] = new NodeParameter(this, paramProps);
+    if (visible) this.paramsVisible.push(paramProps.id);
   }
 
   /**
@@ -619,7 +626,6 @@ export class BaseNode extends BaseObj {
     this.update();
     this.codeNode?.onModelUpdate();
     this.codeNodes.params?.onModelUpdate();
-    // this.nodes.network.onUpdate({ preventSimulation: true, cleanPanels: recorderModelChanged });
   }
 
   /**
@@ -646,8 +652,8 @@ export class BaseNode extends BaseObj {
    * @param text string
    */
   removeAnnotation(text: string, emitChanges: boolean = true): void {
-    if (this._annotations.indexOf(text) === -1) return;
-    this._annotations.splice(this._annotations.indexOf(text), 1);
+    if (this.annotations.indexOf(text) === -1) return;
+    this.annotations.splice(this._annotations.indexOf(text), 1);
     if (emitChanges) this.onUpdate();
   }
 
@@ -656,10 +662,10 @@ export class BaseNode extends BaseObj {
    * @param recordId string
    */
   removeRecord(recordId: string): void {
-    const recordIds = this._records.map((record: NodeRecord) => record.id);
+    const recordIds = this.records.map((record: NodeRecord) => record.id);
     const recordIdx = recordIds.indexOf(recordId);
-    this._records.splice(recordIdx, 1);
-    this._records = [...this._records];
+    this.records.splice(recordIdx, 1);
+    this.records = [...this._records];
   }
 
   /**
@@ -685,7 +691,7 @@ export class BaseNode extends BaseObj {
    * Select this node.
    */
   select(): void {
-    this._nodes.selectNode(this);
+    this.nodes.selectNode(this);
   }
 
   /**
@@ -720,10 +726,10 @@ export class BaseNode extends BaseObj {
       nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
 
     // Add annotations if provided.
-    if (this._annotations.length > 0) nodeProps.annotations = this._annotations;
+    if (this.annotations.length > 0) nodeProps.annotations = this.annotations;
 
     // Add records if this model is multimeter.
-    if (this.model.isMultimeter) nodeProps.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
+    if (this.model.isMultimeter) nodeProps.records = this.records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
 
     return nodeProps;
   }
@@ -732,14 +738,14 @@ export class BaseNode extends BaseObj {
    * Toggle the selection of this node group.
    */
   toggleSelection(): void {
-    this._nodes.toggleNodeSelection(this);
+    this.nodes.toggleNodeSelection(this);
   }
 
   /**
    * Unselect this node.
    */
   unselect(): void {
-    this._nodes.unselectNode(this);
+    this.nodes.unselectNode(this);
   }
 
   /**
@@ -749,10 +755,13 @@ export class BaseNode extends BaseObj {
     this.logger.trace("update node", this.modelId);
 
     this.clean();
-    if (this.codeNode) this.codeNode.variableName = this.variableName;
-    this.updateHash();
+    // if (this.codeNode) this.codeNode.variableName = this.variableName;
 
-    nextTick(() => this.updateParamsVisibility());
+    nextTick(() => {
+      this.state.updateStyle();
+      this.updateHash();
+      this.updateParamsVisibility();
+    });
   }
 
   /**
@@ -766,11 +775,6 @@ export class BaseNode extends BaseObj {
     this.updateRecordables();
     this.updateRecords();
   }
-
-  /**
-   * Update code node.
-   */
-  updateCodeNodes(): void {}
 
   /**
    * Update hash.
@@ -862,6 +866,6 @@ export class BaseNode extends BaseObj {
    */
   updateRecordsColor(): void {
     const color = this.state.color;
-    this._recordables.forEach((record: NodeRecord) => (record.state.color = color));
+    this.recordables.forEach((record: NodeRecord) => (record.state.color = color));
   }
 }

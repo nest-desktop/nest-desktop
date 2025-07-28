@@ -96,12 +96,8 @@ export class BaseParameter extends BaseObj {
     this._state = reactive<IParamState>({
       random: false,
       disabled: paramProps.disabled != undefined ? paramProps.disabled : true,
-      value: paramProps.value || 0,
+      value: paramProps.value ?? 0,
     });
-  }
-
-  get code(): string {
-    return this.toPythonCode();
   }
 
   get component(): TParamComponent {
@@ -124,9 +120,6 @@ export class BaseParameter extends BaseObj {
     return this._id;
   }
 
-  /**
-   * Check if this parameter is constant.
-   */
   get isConstant(): boolean {
     return this._type.id === "constant";
   }
@@ -225,10 +218,6 @@ export class BaseParameter extends BaseObj {
     return { onUpdate: () => {}, paramsVisible: [] };
   }
 
-  // get props(): IParamProps {
-  //   return super.props as IParamProps;
-  // }
-
   get readonly(): boolean {
     return this._readonly;
   }
@@ -294,15 +283,17 @@ export class BaseParameter extends BaseObj {
   }
 
   get value(): TParamValue {
-    return (this.intf ? this.intf.value : this._state.value) as TParamValue;
+    return (this.intf?.value ?? this.state.value ?? this.modelParam.value ?? 0) as TParamValue;
   }
 
   set value(value: TParamValue) {
+    if (value == undefined) return;
+
     if (this.intf) {
       this.intf.value = value;
       this.intf.setHidden(false);
     } else {
-      this._state.value = value;
+      this.state.value = value;
       if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
       this.onUpdate();
     }
@@ -396,7 +387,7 @@ export class BaseParameter extends BaseObj {
    */
   reset(): void {
     this.typeId = "constant";
-    if (this.options) this._state.value = this.options.defaultValue;
+    if (this.options) this.state.value = this.options.defaultValue;
   }
 
   /**
@@ -425,15 +416,15 @@ export class BaseParameter extends BaseObj {
    */
   toJSON(): IParamProps {
     const paramProps: IParamProps = {
-      id: this._id,
+      id: this.id,
       value: this.value,
     };
 
     // Add value factors if existed.
-    if (this._factors.length > 0) paramProps.factors = this._factors;
+    if (this.factors.length > 0) paramProps.factors = this.factors;
 
     // Add rules for validation if existed.
-    if (this._rules.length > 0) paramProps.rules = this._rules;
+    if (this.rules.length > 0) paramProps.rules = this.rules;
 
     // Add param type if not constant.
     if (!this.isConstant) paramProps.type = this.typeToJSON();
@@ -442,61 +433,10 @@ export class BaseParameter extends BaseObj {
   }
 
   /**
-   * Generate the Python code for this parameter.
-   * @returns parameter as Python code
-   */
-  toPythonCode(): string {
-    let value: string;
-    if (this.isConstant) {
-      // Constant value.
-      if (this._format === "integer") {
-        // Integer value
-        value = this.toFixed(this.value as number, 0);
-      } else if (this._format === "float") {
-        // Float value
-        value = this.toFixed(this.value as number);
-      } else if (typeof this.value === "string") {
-        // TODO: this condition should be checked if it is really possible.
-        // String value
-        value = this.value as string;
-      } else if (typeof this.value === "boolean") {
-        // Boolean value
-        value = this.value ? "True" : "False";
-      } else if (Array.isArray(this.value)) {
-        value = JSON.stringify(this.value.map((value) => value));
-      } else {
-        value = JSON.stringify(this.value);
-      }
-    } else if (this._type.id.startsWith("np")) {
-      const specs: string = this.specs
-        .filter((spec: IParamTypeSpec) => !(spec.optional && spec.value === spec.default))
-        .map((spec: IParamTypeSpec) => spec.value)
-        .join(", ");
-      value = `${this._type.id}(${specs})`;
-    } else if (this._type.id === "spatial.distance") {
-      // Distance-dependent linear function.
-      const specs: IParamTypeSpec[] = this.specs;
-      value = "";
-      value += specs[0].value !== 1 ? `${specs[0].value} * ` : "";
-      value += `nest.${this._type.id}`;
-      value += specs[1].value !== 0 ? ` + ${specs[1].value}` : "";
-    } else if (this._type.id.startsWith("spatial")) {
-      // Spatial distribution.
-      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
-      value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
-    } else {
-      // Non-spatial distribution.
-      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
-      value = `nest.${this._type.id}(${specs})`;
-    }
-    return value;
-  }
-
-  /**
    * Toggle disabled state.
    */
   toggleDisabled(): void {
-    this._state.disabled = !this._state.disabled;
+    this.state.disabled = !this.state.disabled;
     this.onUpdate();
   }
 
@@ -506,11 +446,11 @@ export class BaseParameter extends BaseObj {
    */
   typeToJSON(): IParamType {
     const paramType: IParamType = {
-      id: this._type.id,
+      id: this.type.id,
     };
 
-    if (this._type.specs)
-      paramType.specs = this._type.specs.map((spec: IParamTypeSpec) => ({
+    if (this.type.specs)
+      paramType.specs = this.type.specs.map((spec: IParamTypeSpec) => ({
         id: spec.id,
         value: Number(spec.value),
       }));
