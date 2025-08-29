@@ -8,11 +8,8 @@ import { BaseObj } from "../common/base";
 import { IConnectionProps } from "../connection/connection";
 import { INodeGroupProps } from "../node/nodeGroup";
 import { INodeProps } from "../node/node";
-import { INodeViewProps } from "../node/nodeViewState";
 import { NetworkState } from "./networkState";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
-import { createNode } from "@/workspaces/nest/helpers/codeNodeTypes/nest/nestCreate";
-import { nextTick } from "vue";
 
 export interface INetworkProps {
   nodes?: (INodeProps | INodeGroupProps)[];
@@ -33,12 +30,6 @@ export class BaseNetwork extends BaseObj {
   public _connections: TConnections;
   public _nodes: TNodes;
   public _project: TProject; // parent
-
-  private _defaultModels: Record<string, string> = {
-    neuron: "iaf_psc_alpha",
-    recorder: "voltmeter",
-    stimulator: "dc_generator",
-  };
 
   constructor(project: TProject, networkProps: INetworkProps = {}) {
     super({ config: { name: "Network" } });
@@ -71,10 +62,6 @@ export class BaseNetwork extends BaseObj {
 
   get connections(): TConnections {
     return this._connections;
-  }
-
-  set defaultModels(value: Record<string, string>) {
-    this._defaultModels = value;
   }
 
   get elementTypes() {
@@ -122,61 +109,42 @@ export class BaseNetwork extends BaseObj {
     this.nodes.clear();
   }
 
+  // /**
+  //  * Connect node components by user interaction.
+  //  * @param sourceIdx node index
+  //  * @param targetIdx node index
+  //  * @remarks When it connects to a recorder, it initializes activity graph.
+  //  */
+  // connectNodes(sourceIdx: number, targetIdx: number): void {
+  //   this.logger.trace("connect nodes");
+
+  //   // Add connection.
+  //   const connection: TConnection | undefined = this.connections.addConnection({
+  //     source: sourceIdx,
+  //     target: targetIdx,
+  //   });
+
+  //   // Initialize connection.
+  //   connection.init();
+
+  //   // Correct connections with recorder.
+  //   if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
+
+  //   // Update synaptic weight label.
+  //   if (connection.sourceNode.isNode && connection.sourceNode.state.state.synWeights)
+  //     connection.synapse.weightLabel = connection.sourceNode.state.state.synWeights;
+
+  //   // Update recorder and clean activity panels.
+  //   if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+
+  //   // Trigger network change.
+  //   this.onUpdate({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
+  // }
+
   /**
-   * Connect node components by user interaction.
-   * @param sourceIdx node index
-   * @param targetIdx node index
-   * @remarks When it connects to a recorder, it initializes activity graph.
+   * Create node component on user interaction.
    */
-  connectNodes(sourceIdx: number, targetIdx: number): void {
-    this.logger.trace("connect nodes");
-
-    // Add connection.
-    const connection: TConnection | undefined = this.connections.addConnection({
-      source: sourceIdx,
-      target: targetIdx,
-    });
-
-    // Initialize connection.
-    connection.init();
-
-    // Correct connections with recorder.
-    if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
-
-    // Update synaptic weight label.
-    if (connection.sourceNode.isNode && connection.sourceNode.state.state.synWeights)
-      connection.synapse.weightLabel = connection.sourceNode.state.state.synWeights;
-
-    // Update recorder and clean activity panels.
-    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
-
-    // Trigger network change.
-    this.onUpdate({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
-  }
-
-  /**
-   * Create node component by user interaction.
-   * @param model model name of default models
-   * @param view node view props
-   */
-  createNode(model?: string, view?: INodeViewProps): void {
-    this.logger.debug("create node");
-
-    // Create node.
-    const codeNode = createNode(this.project.code.graph, {
-      model: model || this._defaultModels[view?.elementType || "neuron"],
-    });
-
-    nextTick(() => {
-      if (codeNode && codeNode.view) codeNode.view.state.update(view);
-    });
-
-    // Initialize node.
-    // node.init();
-
-    // Trigger network change.
-    // this.onUpdate({ preventSimulation: true });
-  }
+  // abstract createNode(): void;
 
   /**
    * Delete connection component from the network.
@@ -293,20 +261,20 @@ export class BaseNetwork extends BaseObj {
     };
   }
 
-  /**
-   * Update network component.
-   * @param networkProps network props
-   */
-  update(networkProps: INetworkProps): void {
-    this.logger.trace("update");
+  // /**
+  //  * Update network component.
+  //  * @param networkProps network props
+  //  */
+  // update(networkProps: INetworkProps): void {
+  //   this.logger.trace("update");
 
-    this.clear();
+  //   this.clear();
 
-    this.nodes.update(networkProps.nodes);
-    this.connections.update(networkProps.connections);
+  //   this.nodes.update(networkProps.nodes);
+  //   this.connections.update(networkProps.connections);
 
-    this.init();
-  }
+  //   this.init();
+  // }
 
   /**
    * Update hash.

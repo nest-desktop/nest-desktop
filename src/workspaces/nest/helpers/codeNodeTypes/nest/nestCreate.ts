@@ -161,8 +161,12 @@ export default defineDynamicCodeNode({
 export const createNode = (
   graph: CodeGraph | NESTCodeGraph,
   nodeProps: INESTNodeProps,
-  idx: number = 0,
+  idx: number = -1,
 ): AbstractCodeNode => {
+  if (idx === -1) {
+    idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
+  }
+
   const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx, nodeProps);
   if (idx === 0) codeNode.state.comments = "Create nodes";
   // codeNode.variableName = nodeProps.model as string;
@@ -218,18 +222,8 @@ export const createNodes = (
   const spatialNodes: AbstractCodeNode[] = [];
   const weightRecorders: AbstractCodeNode[] = [];
 
-  nodesProps.forEach((nodeProps: INESTNodeProps | INodeGroupProps, idx: number) => {
-    const codeNode: AbstractCodeNode = createNode(graph, nodeProps as INESTNodeProps, idx);
-
-    // const paramsNode = codeNode.getConnectedNodeByInterface("params");
-    // if (paramsNode)
-    //   nodeProps.params.forEach((param) => {
-    //     if ("visible" in param ? param.visible : true) {
-    //       const paramInterface = createParameterInterface(param);
-    //       paramsNode.addInput(param.id, paramInterface);
-    //     }
-    //   });
-
+  nodesProps.forEach((nodeProps: INESTNodeProps | INodeGroupProps) => {
+    const codeNode: AbstractCodeNode = createNode(graph, nodeProps as INESTNodeProps);
     allNodes.push(codeNode);
   });
 

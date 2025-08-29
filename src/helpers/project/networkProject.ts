@@ -92,8 +92,8 @@ export class NetworkProject extends BaseProject {
   checkoutNetwork(): void {
     this.logger.trace("checkout network");
 
-    const networkProps = this._networkRevision.load();
-    this.network.update(networkProps);
+    // const networkProps = this._networkRevision.load();
+    // this.network.update(networkProps);
     this.network.clean();
 
     // Generate simulation code.

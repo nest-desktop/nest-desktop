@@ -1,8 +1,11 @@
 // network.ts
 
+import { nextTick } from "vue";
+
 import { BaseNetwork } from "@/helpers/network/network";
 import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { TNetworkProps, TNode, TNodeGroup } from "@/types";
+import { INodeViewProps } from "@/helpers/node/nodeViewState";
 
 import { INESTConnectionProps, NESTConnection } from "../connection/connection";
 import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
@@ -12,6 +15,8 @@ import { NESTCopyModels } from "../model/copyModels";
 import { NESTModel } from "../model/model";
 import { NESTNodes } from "../node/nodes";
 import { NESTProject } from "../project/project";
+import { connectNode } from "../codeNodeTypes/nest/nestConnect";
+import { createNode } from "../codeNodeTypes/nest/nestCreate";
 
 export interface INESTNetworkProps {
   models?: INESTCopyModelProps[];
@@ -27,6 +32,12 @@ const _elementTypes: { icon: string; id: string; title: string }[] = [
   { icon: "graph:recorder", id: "recorder", title: "recorder" },
   { icon: "nest:copy-model", id: "model", title: "model" },
 ];
+
+const _defaultModels: Record<string, string> = {
+  neuron: "iaf_psc_alpha",
+  recorder: "voltmeter",
+  stimulator: "dc_generator",
+};
 
 // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
 export function isNESTNetworkProps(networkProps: TNetworkProps): networkProps is INESTNetworkProps {
@@ -118,6 +129,68 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
+   * Connect node components by user interaction.
+   * @param sourceIdx node index
+   * @param targetIdx node index
+   * @remarks When it connects to a recorder, it initializes activity graph.
+   */
+  connectNodes(sourceIdx: number, targetIdx: number): void {
+    this.logger.trace("connect nodes");
+
+    connectNode(this.project.code.graph, { source: sourceIdx, target: targetIdx }, this.nodes.codeNodes);
+
+    // nextTick(() => {
+    //   if (codeNode && codeNode.view) codeNode.view.state.update(view);
+    // });
+
+    // // Add connection.
+    // const connection: TConnection | undefined = this.connections.addConnection({
+    //   source: sourceIdx,
+    //   target: targetIdx,
+    // });
+
+    // // Initialize connection.
+    // connection.init();
+
+    // // Correct connections with recorder.
+    // if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
+
+    // // Update synaptic weight label.
+    // if (connection.sourceNode.isNode && connection.sourceNode.state.state.synWeights)
+    //   connection.synapse.weightLabel = connection.sourceNode.state.state.synWeights;
+
+    // // Update recorder and clean activity panels.
+    // if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+
+    // // Trigger network change.
+    // this.onUpdate({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
+  }
+
+  /**
+   * Create node component on user interaction.
+   * @param model model name of default models
+   * @param view node view props
+   */
+  override createNode(model?: string, view?: INodeViewProps): void {
+    this.logger.debug("create node");
+
+    // Create node.
+    const codeNode = createNode(this.project.code.graph, {
+      model: model || _defaultModels[view?.elementType || "neuron"],
+    });
+
+    nextTick(() => {
+      if (codeNode && codeNode.view) codeNode.view.state.update(view);
+    });
+
+    // Initialize node.
+    // node.init();
+
+    // Trigger network change.
+    // this.onUpdate({ preventSimulation: true });
+  }
+
+  /**
    * Delete model component from the network.
    * @param model NEST copy model
    *
@@ -177,21 +250,21 @@ export class NESTNetwork extends BaseNetwork {
     };
   }
 
-  /**
-   * Update network component.
-   * @param network network props
-   */
-  override update(networkProps: INESTNetworkProps): void {
-    this.logger.trace("update");
+  // /**
+  //  * Update network component.
+  //  * @param network network props
+  //  */
+  // override update(networkProps: INESTNetworkProps): void {
+  //   this.logger.trace("update");
 
-    this.clear();
+  //   this.clear();
 
-    this.copyModels.update(networkProps.models);
-    this.nodes.update(networkProps.nodes);
-    this.connections.update(networkProps.connections);
+  //   this.copyModels.update(networkProps.models);
+  //   this.nodes.update(networkProps.nodes);
+  //   this.connections.update(networkProps.connections);
 
-    this.init();
-  }
+  //   this.init();
+  // }
 
   /**
    * Update hash.

@@ -126,66 +126,79 @@ export default defineDynamicCodeNode({
   },
 });
 
+export const connectNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  connectionProps?: INESTConnectionProps,
+  nodes: AbstractCodeNode[] = [],
+  idx: number = -1,
+): AbstractCodeNode => {
+  if (idx === -1) {
+    idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Connect").length;
+  }
+
+  // nest.Connect
+  const codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, connectionProps);
+  codeNode.state.props = connectionProps;
+
+  if (idx === 0) codeNode.state.comments = "Connect nodes";
+
+  if (connectionProps.params) {
+    const params = connectionProps.params.filter((param: IParamProps) => ("visible" in param ? param.visible : true));
+
+    if (params && params.length > 0) {
+      const position = { ...codeNode.position };
+      position.x -= 400;
+      position.y += 75;
+      const paramsNode = addParameterNode(graph, params, position);
+      graph.addConnection(paramsNode.outputs.out, codeNode.inputs.conn_spec);
+    }
+  }
+
+  if (connectionProps.synapse) {
+    const syn_spec: IParamProps[] = [];
+    if (connectionProps.synapse.model && connectionProps.synapse.model !== "static_synapse") {
+      syn_spec.push({
+        id: "synapse_model",
+        value: connectionProps.synapse.model,
+      });
+    }
+
+    // params
+    const synParams = connectionProps.synapse.params?.filter((param: IParamProps) =>
+      "visible" in param ? param.visible : true,
+    );
+    if (synParams && synParams.length > 0)
+      synParams.forEach((param: IParamProps) => {
+        syn_spec.push(param);
+      });
+
+    if (syn_spec.length > 0) {
+      const position = { ...codeNode.position };
+      position.x -= 400;
+      position.y += 75;
+      const paramsNode = addParameterNode(graph, syn_spec, position);
+      graph.addConnection(paramsNode.outputs.out, codeNode.inputs.syn_spec);
+    }
+  }
+
+  if (nodes) {
+    graph.addConnection(codeNode.inputs.pre, nodes[connectionProps.source].outputs.out);
+    graph.addConnection(nodes[connectionProps.target].outputs.out, codeNode.inputs.post);
+  }
+
+  return codeNode;
+};
+
 export const connectNodes = (
   graph: CodeGraph | NESTCodeGraph,
   connectionsProps?: INESTConnectionProps[],
   nodes: AbstractCodeNode[] = [],
 ): AbstractCodeNode[] => {
   if (!connectionsProps || connectionsProps.length === 0) return [];
-  let codeNode: AbstractCodeNode;
   const codeNodes: AbstractCodeNode[] = [];
 
-  connectionsProps.forEach((connectionProps: INESTConnectionProps, idx: number) => {
-    // nest.Connect
-    codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, connectionProps);
-    codeNode.state.props = connectionProps;
-
-    if (idx === 0) codeNode.state.comments = "Connect nodes";
-
-    if (connectionProps.params) {
-      const params = connectionProps.params.filter((param: IParamProps) => ("visible" in param ? param.visible : true));
-
-      if (params && params.length > 0) {
-        const position = { ...codeNode.position };
-        position.x -= 400;
-        position.y += 75;
-        const paramsNode = addParameterNode(graph, params, position);
-        graph.addConnection(paramsNode.outputs.out, codeNode.inputs.conn_spec);
-      }
-    }
-
-    if (connectionProps.synapse) {
-      const syn_spec: IParamProps[] = [];
-      if (connectionProps.synapse.model && connectionProps.synapse.model !== "static_synapse") {
-        syn_spec.push({
-          id: "synapse_model",
-          value: connectionProps.synapse.model,
-        });
-      }
-
-      // params
-      const synParams = connectionProps.synapse.params?.filter((param: IParamProps) =>
-        "visible" in param ? param.visible : true,
-      );
-      if (synParams && synParams.length > 0)
-        synParams.forEach((param: IParamProps) => {
-          syn_spec.push(param);
-        });
-
-      if (syn_spec.length > 0) {
-        const position = { ...codeNode.position };
-        position.x -= 400;
-        position.y += 75;
-        const paramsNode = addParameterNode(graph, syn_spec, position);
-        graph.addConnection(paramsNode.outputs.out, codeNode.inputs.syn_spec);
-      }
-    }
-
-    if (nodes) {
-      graph.addConnection(codeNode.inputs.pre, nodes[connectionProps.source].outputs.out);
-      graph.addConnection(nodes[connectionProps.target].outputs.out, codeNode.inputs.post);
-    }
-
+  connectionsProps.forEach((connectionProps: INESTConnectionProps) => {
+    const codeNode = connectNode(graph, connectionProps, nodes);
     codeNodes.push(codeNode);
   });
 
