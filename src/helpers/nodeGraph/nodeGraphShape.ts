@@ -154,7 +154,7 @@ export class NodeGraphShape extends BaseObj {
 
         this._networkGraph.workspace.animationOff();
 
-        this._networkGraph.network.connectNodes(connections.state.selectedNode.idx, node.idx);
+        this._networkGraph.network.connections.addConnection(connections.state.selectedNode.idx, node.idx);
         this._networkGraph.update();
 
         if (!this._networkGraph.workspace.altPressed) {

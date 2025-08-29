@@ -12,18 +12,17 @@ import {
 
 import { AbstractCodeNode, formatInterfaceLabel, formatLabel } from "@/helpers/codeGraph/codeNode";
 import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
-import { INodeGroupProps } from "@/helpers/node/nodeGroup";
 import { IParamProps } from "@/helpers/common/parameter";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import { numberType, stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
-import nestCreate from "../../codeNodeTypes/nest/nestCreate";
+import nestCreate from "./nestCreate";
 import nestRandomUniform from "./nestRandomUniform";
 import nestSpatialFree from "./nestSpatialFree";
 import { INESTNodeCollection, nestNodeCollectionType } from "./interfaceTypes";
-import { INESTNodeProps } from "../../node/node";
+import { INESTNodeProps, NESTNode } from "../../node/node";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { addParameterNode } from "./nestParameters";
 
@@ -76,11 +75,18 @@ export default defineDynamicCodeNode({
     return `nest.Create(${args.join(", ")})`;
   },
   onGraphUpdate() {
+    if (!this.node) return;
+
     if (!this.node.view) {
       const idx = this.node.indexOfNodeType;
-      this.node.view = this.node.code.project.network.nodes.createNode(this.node, {
+      const node = new NESTNode(this.node.code?.project.network.nodes, {
         view: { position: { x: 150 * idx, y: 0 + 50 * (idx % 2) } },
       });
+
+      this.node.view = node;
+      node.codeNodes.node = this.node;
+
+      node.init();
     }
 
     const paramNode = this.node.getConnectedNodeByInterface("params");
@@ -158,14 +164,12 @@ export default defineDynamicCodeNode({
   },
 });
 
-export const createNode = (
+export const addNESTCreateNode = (
   graph: CodeGraph | NESTCodeGraph,
   nodeProps: INESTNodeProps,
   idx: number = -1,
 ): AbstractCodeNode => {
-  if (idx === -1) {
-    idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
-  }
+  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
 
   const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx, nodeProps);
   if (idx === 0) codeNode.state.comments = "Create nodes";
@@ -210,22 +214,4 @@ export const createNode = (
   }
 
   return codeNode;
-};
-
-export const createNodes = (
-  graph: CodeGraph | NESTCodeGraph,
-  nodesProps?: (INESTNodeProps | INodeGroupProps)[],
-): Record<string, AbstractCodeNode[]> => {
-  if (!nodesProps || nodesProps.length === 0) return {};
-
-  const allNodes: AbstractCodeNode[] = [];
-  const spatialNodes: AbstractCodeNode[] = [];
-  const weightRecorders: AbstractCodeNode[] = [];
-
-  nodesProps.forEach((nodeProps: INESTNodeProps | INodeGroupProps) => {
-    const codeNode: AbstractCodeNode = createNode(graph, nodeProps as INESTNodeProps);
-    allNodes.push(codeNode);
-  });
-
-  return { allNodes, spatialNodes, weightRecorders };
 };

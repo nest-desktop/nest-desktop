@@ -8,19 +8,21 @@ import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
 import { setViewSettings } from "@/plugins/baklava";
 
-// import { BaseCode } from "../code/code";
 import nestDataResponse from "../codeNodeTypes/nest/nestDataResponse";
 import nestInstall from "../codeNodeTypes/nest/nestInstall";
 import nestResetKernel from "../codeNodeTypes/nest/nestResetKernel";
 import nestSetKernelStatus from "../codeNodeTypes/nest/nestSetKernelStatus";
 import nestSimulate from "../codeNodeTypes/nest/nestSimulate";
 import { INESTNetworkProps } from "../network/network";
+import { INESTNodeProps } from "../node/node";
 import { INESTProjectProps } from "../project/project";
 import { INESTSimulationKernelProps } from "../simulation/simulationKernel";
 import { INESTSimulationProps } from "../simulation/simulation";
-import { connectNodes } from "../codeNodeTypes/nest/nestConnect";
-import { copyNodeModels, copySynapseModels } from "../codeNodeTypes/nest/nestCopyModel";
-import { createNodes } from "../codeNodeTypes/nest/nestCreate";
+import { addNESTCreateNode } from "../codeNodeTypes/nest/nestCreate";
+import { addNESTCopyModel, addNESTCopySynapseModel } from "../codeNodeTypes/nest/nestCopyModel";
+import { INESTConnectionProps } from "../connection/connection";
+import { addNESTConnectNode } from "../codeNodeTypes/nest/nestConnect";
+import { INESTCopyModelProps } from "../model/copyModel";
 
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;
@@ -122,27 +124,38 @@ export class NESTCodeGraph extends BaseObj {
   addNetworkCodeNodes(networkProps: INESTNetworkProps): void {
     this.logger.trace("add network code nodes");
     if (!networkProps) return;
-    let nodes;
 
-    if (networkProps.models) copyNodeModels(this, networkProps.models);
-    nodes = createNodes(this, networkProps.nodes);
+    if (networkProps.models) {
+      const nodeModels = networkProps.models.filter(
+        (modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"),
+      );
 
-    // add node parameter interfaces
-    // nodes.allNodes.forEach((node) => {
-    //   const paramsNode = node.getConnectedNodeByInterface("params");
-    //   if (paramsNode)
-    //     paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
-    // });
+      if (nodeModels) nodeModels.forEach((modelProps: INESTCopyModelProps) => addNESTCopyModel(this, modelProps));
+    }
 
-    copySynapseModels(this, networkProps.models, nodes.weightRecorders);
-    nodes = connectNodes(this, networkProps.connections, nodes.allNodes);
+    let nestNodes: AbstractCodeNode[] = [];
+    if (networkProps.nodes)
+      nestNodes = networkProps.nodes.map((nodeProps: INESTNodeProps) => addNESTCreateNode(this, nodeProps));
 
-    // add synapse parameter interfaces
-    // nodes.forEach((node) => {
-    //   const paramsNode = node.getConnectedNodeByInterface("syn_spec");
-    //   if (paramsNode)
-    //     paramsNode.state.props?.forEach((prop) => (paramsNode.inputs[prop.id] = createParameterInterface(prop)));
-    // });
+    if (networkProps.models) {
+      const synapseModels = networkProps.models.filter((modelProps: INESTCopyModelProps) =>
+        modelProps.existing.includes("synapse"),
+      );
+
+      if (synapseModels) {
+        const weightRecorders: AbstractCodeNode[] = nestNodes.filter(
+          (codeNode: AbstractCodeNode) => codeNode.inputs.model.value === "weight_recorder",
+        );
+        synapseModels.forEach((modelProps: INESTCopyModelProps) =>
+          addNESTCopySynapseModel(this, modelProps, weightRecorders),
+        );
+      }
+    }
+
+    if (networkProps.connections)
+      networkProps.connections.forEach((connectionProps: INESTConnectionProps) =>
+        addNESTConnectNode(this, connectionProps, nestNodes),
+      );
   }
 
   /**

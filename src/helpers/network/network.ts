@@ -109,43 +109,6 @@ export class BaseNetwork extends BaseObj {
     this.nodes.clear();
   }
 
-  // /**
-  //  * Connect node components by user interaction.
-  //  * @param sourceIdx node index
-  //  * @param targetIdx node index
-  //  * @remarks When it connects to a recorder, it initializes activity graph.
-  //  */
-  // connectNodes(sourceIdx: number, targetIdx: number): void {
-  //   this.logger.trace("connect nodes");
-
-  //   // Add connection.
-  //   const connection: TConnection | undefined = this.connections.addConnection({
-  //     source: sourceIdx,
-  //     target: targetIdx,
-  //   });
-
-  //   // Initialize connection.
-  //   connection.init();
-
-  //   // Correct connections with recorder.
-  //   if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
-
-  //   // Update synaptic weight label.
-  //   if (connection.sourceNode.isNode && connection.sourceNode.state.state.synWeights)
-  //     connection.synapse.weightLabel = connection.sourceNode.state.state.synWeights;
-
-  //   // Update recorder and clean activity panels.
-  //   if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
-
-  //   // Trigger network change.
-  //   this.onUpdate({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
-  // }
-
-  /**
-   * Create node component on user interaction.
-   */
-  // abstract createNode(): void;
-
   /**
    * Delete connection component from the network.
    * @param connection connection object
@@ -157,7 +120,7 @@ export class BaseNetwork extends BaseObj {
     const cleanPanels = connection.view.connectRecorder();
 
     // Remove connection from the list.
-    this.connections.remove(connection);
+    this.connections.removeConnection(connection);
 
     // Update recorder.
     if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
@@ -185,10 +148,10 @@ export class BaseNetwork extends BaseObj {
     this.connections.removeByNode(node);
 
     // Remove node in node groups
-    this.nodes.removeNodeInNodeGroups(node);
+    // this.nodes.removeNodeInNodeGroups(node);
 
     // Remove node from the list.
-    this.nodes.remove(node);
+    this.nodes.removeNode(node);
 
     // Clean node groups.
     this.nodes.cleanNodeGroups();

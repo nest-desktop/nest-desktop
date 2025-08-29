@@ -192,7 +192,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
       this._workspace.animationOff();
 
-      this.network.createNode(model.id, {
+      this.network.nodes.addNode(model.id, {
         elementType,
         position: Object.assign({}, this.position),
       });
@@ -292,7 +292,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
     this._workspace.animationOff();
 
-    this.network.createNode(modelId, {
+    this.network.nodes.addNode(modelId, {
       elementType,
       position: Object.assign({}, this.position),
     });

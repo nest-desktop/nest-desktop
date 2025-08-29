@@ -4,6 +4,7 @@ import { BaseConnections } from "@/helpers/connection/connections";
 
 import { INESTConnectionProps, NESTConnection } from "./connection";
 import { NESTNetwork } from "../network/network";
+import { addNESTConnectNode } from "../codeNodeTypes/nest/nestConnect";
 
 export class NESTConnections extends BaseConnections {
   constructor(network: NESTNetwork, connectionsProps: INESTConnectionProps[] = []) {
@@ -33,20 +34,20 @@ export class NESTConnections extends BaseConnections {
     return this._network as NESTNetwork;
   }
 
-  // /**
-  //  * Add connection component to the network.
-  //  * @param connectionProps connection props
-  //  * @returns connection object
-  //  */
-  // override addConnection(connectionProps: INESTConnectionProps): NESTConnection {
-  //   this.logger.trace("add");
+  /**
+   * Connect node components by user interaction.
+   * @param sourceIdx node index
+   * @param targetIdx node index
+   */
+  addConnection(sourceIdx: number, targetIdx: number): void {
+    this.logger.trace("connect nodes");
 
-  //   const connection: NESTConnection = new this.Connection(this, connectionProps);
-  //   this.connections.push(connection);
-
-  //   this.clean();
-  //   return connection;
-  // }
+    addNESTConnectNode(
+      this.network.project.code.graph,
+      { source: sourceIdx, target: targetIdx },
+      this.network.nodes.codeNodes,
+    );
+  }
 
   /**
    * Clean nodes and connection components.

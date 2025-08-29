@@ -54,7 +54,7 @@ export class NodeGraphConnector extends BaseObj {
     const workspace = this._networkGraph.workspace;
 
     if (network.connections.state.selectedNode && network.nodes.state.focusedNode && workspace.state.dragLine) {
-      this._networkGraph.network.connectNodes(
+      this._networkGraph.network.connections.addConnection(
         network.connections.state.selectedNode.idx,
         network.nodes.state.focusedNode.idx,
       );

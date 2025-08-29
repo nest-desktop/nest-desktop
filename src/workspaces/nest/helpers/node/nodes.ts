@@ -2,10 +2,19 @@
 
 import { BaseNodes } from "@/helpers/node/nodes";
 import { TNodeGroup } from "@/types";
+import { nextTick } from "vue";
 
 import { INESTNodeProps, NESTNode } from "./node";
+import { INodeViewProps } from "@/helpers/node/nodeViewState";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTNetwork } from "../network/network";
+import { addNESTCreateNode } from "../codeNodeTypes/nest/nestCreate";
+
+const _defaultModels: Record<string, string> = {
+  neuron: "iaf_psc_alpha",
+  recorder: "voltmeter",
+  stimulator: "dc_generator",
+};
 
 export class NESTNodes extends BaseNodes {
   constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
@@ -85,20 +94,23 @@ export class NESTNodes extends BaseNodes {
     return this.nodeItems.filter((node: NESTNode) => node.model?.isWeightRecorder);
   }
 
-  // /**
-  //  * Add code nodes.
-  //  * @param node node component.
-  //  */
-  // override addCodeNodes(node: TNode | TNodeGroup): void {
-  //   this.logger.trace("add code nodes");
+  /**
+   * Add node component on user interaction.
+   * @param model model name of default models
+   * @param view node view props
+   */
+  override addNode(model?: string, view?: INodeViewProps): void {
+    this.logger.debug("create node");
 
-  //   if (node.isGroup) return;
-  //   const code = this.network.project.code as NESTCode;
-  //   node = node as NESTNode;
+    // Create node.
+    const codeNode = addNESTCreateNode(this.network.project.code.graph, {
+      model: model || _defaultModels[view?.elementType || "neuron"],
+    });
 
-  //   const idx = code.graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
-  //   node.codeNodes.node = node.codeNodes.node ?? createNode(code.graph, node.toJSON(), idx);
-  // }
+    nextTick(() => {
+      if (codeNode && codeNode.view) codeNode.view.state.update(view);
+    });
+  }
 
   /**
    * Clean weight recorder components.

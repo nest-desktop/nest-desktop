@@ -16,7 +16,7 @@ import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInter
 import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
 import nestConnect from "./nestConnect";
-import { INESTConnectionProps } from "../../connection/connection";
+import { INESTConnectionProps, NESTConnection } from "../../connection/connection";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { addParameterNode } from "./nestParameters";
 
@@ -81,6 +81,8 @@ export default defineDynamicCodeNode({
     return `nest.Connect(${args.join(", ")})`;
   },
   onGraphUpdate() {
+    if (!this.node) return;
+
     if (!this.node.view) {
       const connectionProps: Record<string, unknown> = {};
 
@@ -96,7 +98,14 @@ export default defineDynamicCodeNode({
         if (paramProps.length > 0) connectionProps.synapse = { params: paramProps };
       }
 
-      this.node.view = this.node.code.project.network.connections.createConnection(this.node, connectionProps);
+      const connection: NESTConnection = new NESTConnection(
+        this.node.code.project.network.connections,
+        connectionProps,
+      );
+
+      this.node.view = connection;
+      connection.codeNodes.node = this.node;
+      connection.init();
     }
 
     const synParamNode = this.node.getConnectedNodeByInterface("syn_spec");
@@ -126,7 +135,7 @@ export default defineDynamicCodeNode({
   },
 });
 
-export const connectNode = (
+export const addNESTConnectNode = (
   graph: CodeGraph | NESTCodeGraph,
   connectionProps?: INESTConnectionProps,
   nodes: AbstractCodeNode[] = [],
@@ -187,20 +196,4 @@ export const connectNode = (
   }
 
   return codeNode;
-};
-
-export const connectNodes = (
-  graph: CodeGraph | NESTCodeGraph,
-  connectionsProps?: INESTConnectionProps[],
-  nodes: AbstractCodeNode[] = [],
-): AbstractCodeNode[] => {
-  if (!connectionsProps || connectionsProps.length === 0) return [];
-  const codeNodes: AbstractCodeNode[] = [];
-
-  connectionsProps.forEach((connectionProps: INESTConnectionProps) => {
-    const codeNode = connectNode(graph, connectionProps, nodes);
-    codeNodes.push(codeNode);
-  });
-
-  return codeNodes;
 };

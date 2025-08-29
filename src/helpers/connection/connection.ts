@@ -336,15 +336,15 @@ export class BaseConnection extends BaseObj {
     this.network.deleteConnection(this);
   }
 
-  /**
-   * Remove code nodes.
-   */
-  removeCodeNodes(): void {
-    Object.keys(this.codeNodes).forEach((key: string) => {
-      this.codeNodes[key].remove();
-      delete this.codeNodes[key];
-    });
-  }
+  // /**
+  //  * Remove code nodes.
+  //  */
+  // removeCodeNodes(): void {
+  //   Object.keys(this.codeNodes).forEach((key: string) => {
+  //     this.codeNodes[key].remove();
+  //     delete this.codeNodes[key];
+  //   });
+  // }
 
   // /**
   //  * Sets all params to visible.

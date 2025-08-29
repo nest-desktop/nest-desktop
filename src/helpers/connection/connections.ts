@@ -84,19 +84,12 @@ export class BaseConnections extends BaseObj {
   // }
 
   /**
-   * Create connection component.
-   * @param connectionProps connection props
-   * @returns connection object
+   * add connection components by user interaction.
+   * @param sourceIdx node index
+   * @param targetIdx node index
    */
-  createConnection(codeNode: AbstractCodeNode, connectionProps: IConnectionProps): TConnection {
-    this.logger.trace("create connection");
-
-    const connection: TConnection = new this.Connection(this, connectionProps);
-    connection.codeNodes.node = codeNode;
-
-    connection.init();
-
-    return connection;
+  addConnection(sourceIdx: number, targetIdx: number): void {
+    this.logger.trace("connect nodes");
   }
 
   /**
@@ -133,15 +126,11 @@ export class BaseConnections extends BaseObj {
    * Remove connection component from the network.
    * @param connection connection object
    */
-  remove(connection: TConnection): void {
+  removeConnection(connection: TConnection): void {
     this.logger.trace("remove");
 
     this.resetState();
-
-    // connection.removeCodeNodes();
-
-    // Remove connection from the connection list.
-    // this._connections.splice(connection.idx, 1);
+    this.network.project.code.graph.removeNode(connection.codeNode);
 
     this.clean();
   }

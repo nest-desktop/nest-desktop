@@ -8,6 +8,7 @@ import { BaseNode, INodeProps } from "./node";
 import { BaseObj } from "../common/base";
 import { INodeGroupProps, NodeGroup } from "./nodeGroup";
 import { AbstractCodeNode } from "../codeGraph/codeNode";
+import { INodeViewProps } from "./nodeViewState";
 
 interface INodesState {
   annotations: Record<string, string>[];
@@ -194,20 +195,14 @@ export class BaseNodes extends BaseObj {
   //   node;
   // }
 
-  // /**
-  //  * Add node component.
-  //  * @param nodeProps node props
-  //  */
-  // addNode(nodeProps: INodeProps): TNode {
-  //   this.logger.debug("add node:", nodeProps.model);
-
-  //   const node = new this.Node(this, nodeProps);
-  //   this._nodes.push(node);
-
-  //   node.init();
-  //   node.updateHash();
-  //   return node;
-  // }
+  /**
+   * Add node component on user interaction.
+   * @param model model name of default models
+   * @param view node view props
+   */
+  addNode(model?: string, view?: INodeViewProps): void {
+    this.logger.debug("create node");
+  }
 
   // /**
   //  * Add node group component.
@@ -252,23 +247,6 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
-   * Create node component.
-   * @param codeNode abstract code node instance
-   * @param nodeProps node props
-   * @returns node instance
-   */
-  createNode(codeNode: AbstractCodeNode, nodeProps: INodeProps): TNode {
-    this.logger.trace("create node");
-
-    const node: TNode = new this.Node(this, nodeProps);
-    node.codeNodes.node = codeNode;
-
-    node.init();
-
-    return node;
-  }
-
-  /**
    * Filter nodes by model ID.
    * @param modelId string
    * @returns Array of node
@@ -300,13 +278,13 @@ export class BaseNodes extends BaseObj {
    * Remove node component from the network.
    * @param node node object
    */
-  remove(node: TNode | TNodeGroup): void {
+  removeNode(node: TNode | TNodeGroup): void {
     this.logger.trace("remove node");
 
     this._network.state.unselectAll();
 
-    // Remove node from the node list.
-    // this._nodes.splice(node.idx, 1);
+    if (!node.codeNode || !node.codeNode.graph) return;
+    this.network.project.code.graph.removeNode(node.codeNode);
   }
 
   /**

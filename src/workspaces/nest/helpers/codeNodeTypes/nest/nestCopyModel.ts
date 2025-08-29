@@ -61,11 +61,13 @@ export default defineDynamicCodeNode({
   },
 });
 
-const copyModel = (
+export const addNESTCopyModel = (
   graph: CodeGraph | NESTCodeGraph,
   modelProps: INESTCopyModelProps,
-  idx: number = 0,
+  idx: number = -1,
 ): AbstractCodeNode => {
+  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.CopyModel").length;
+
   const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx, modelProps);
   codeNode.inputs.existing.value = modelProps.existing;
   codeNode.inputs.new.value = modelProps.new;
@@ -83,51 +85,25 @@ const copyModel = (
   return codeNode;
 };
 
-export const copyNodeModels = (
+export const addNESTCopySynapseModel = (
   graph: CodeGraph | NESTCodeGraph,
-  modelsProps: INESTCopyModelProps[],
-): AbstractCodeNode[] => {
-  if (!modelsProps || modelsProps.length === 0) return [];
-
-  const nodes: AbstractCodeNode[] = [];
-
-  // Copy node model
-  modelsProps
-    .filter((modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"))
-    .forEach((modelProps: INESTCopyModelProps, idx: number) => {
-      const codeNode: AbstractCodeNode = copyModel(graph, modelProps as INESTCopyModelProps, idx);
-      nodes.push(codeNode);
-    });
-
-  return nodes;
-};
-
-export const copySynapseModels = (
-  graph: CodeGraph | NESTCodeGraph,
-  modelsProps?: INESTCopyModelProps[],
+  modelProps: INESTCopyModelProps,
   weightRecorders: AbstractCodeNode[] = [],
-): void => {
-  // Copy synapse model
-  if (!modelsProps || modelsProps.length === 0) return;
-  let codeNode: AbstractCodeNode;
+  idx: number = -1,
+): AbstractCodeNode => {
+  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.CopyModel").length;
 
-  const copiedNodeModels = modelsProps.filter(
-    (modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"),
-  );
+  const codeNode = addNESTCopyModel(graph, modelProps);
 
-  modelsProps
-    .filter((modelProps: INESTCopyModelProps) => modelProps.existing.includes("synapse"))
-    .forEach((modelProps: INESTCopyModelProps, idx: number) => {
-      codeNode = copyModel(graph, modelProps, copiedNodeModels.length + idx);
+  if (weightRecorders) {
+    const weightRecorderParam = modelProps.params?.find((param) => param.id === "weight_recorder");
+    if (weightRecorderParam) {
+      const weightRecorderCode = weightRecorders.find(
+        (codeNode, idx) => codeNode.variableName + (idx + 1) === weightRecorderParam.value,
+      );
+      if (weightRecorderCode) graph.addConnection(weightRecorderCode.outputs.out, codeNode.inputs.weight_recorder);
+    }
+  }
 
-      if (weightRecorders) {
-        const weightRecorderParam = modelProps.params?.find((param) => param.id === "weight_recorder");
-        if (weightRecorderParam) {
-          const weightRecorderCode = weightRecorders.find(
-            (codeNode, idx) => codeNode.variableName + (idx + 1) === weightRecorderParam.value,
-          );
-          if (weightRecorderCode) graph.addConnection(weightRecorderCode.outputs.out, codeNode.inputs.weight_recorder);
-        }
-      }
-    });
+  return codeNode;
 };

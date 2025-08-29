@@ -1,6 +1,6 @@
 // codeGraph.ts
 
-import { Connection, Graph, IEditorState, IGraphState, NodeInterface } from "baklavajs";
+import { AbstractNode, Connection, Graph, IEditorState, IGraphState, NodeInterface } from "baklavajs";
 import { nextTick, reactive, UnwrapRef } from "vue";
 import toposort from "toposort";
 
@@ -106,9 +106,9 @@ export class CodeGraph extends BaseObj {
    * Add code node to graph.
    * @param node code node
    */
-  addNode(node: AbstractCodeNode): void {
+  addNode(node: AbstractCodeNode): AbstractCodeNode | undefined {
     if (this.code) node.code = this.code;
-    this.graph.addNode(node);
+    return this.graph.addNode(node as AbstractNode) as AbstractCodeNode;
   }
 
   /**
@@ -244,6 +244,15 @@ export class CodeGraph extends BaseObj {
       this.code?.generate();
     });
   };
+
+  /**
+   * Remove node from the graph.
+   * @param codeNode AbstractCodeNode
+   */
+  removeNode(codeNode: AbstractCodeNode): void {
+    codeNode.remove();
+    // this.graph.removeNode(codeNode as AbstractNode);
+  }
 
   /**
    * Render node codes.

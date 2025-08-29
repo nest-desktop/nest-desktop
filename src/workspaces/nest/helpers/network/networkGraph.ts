@@ -9,6 +9,12 @@ import { NESTNetwork } from "./network";
 import { NESTConnectionGraph } from "../connection/connectionGraph";
 import { NESTNodeGraph } from "../node/nodeGraph";
 
+const _defaultModels: Record<string, string> = {
+  neuron: "iaf_psc_alpha",
+  recorder: "voltmeter",
+  stimulator: "dc_generator",
+};
+
 export class NESTNetworkGraph extends BaseNetworkGraph {
   private _modelAssignGraph: NESTModelAssignGraph;
 
