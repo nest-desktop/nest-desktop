@@ -16,6 +16,7 @@
     "clean": "rm -rf build coverage dist dist-electron nest_desktop.egg-info pydist release yarn-error.log",
     "coverage": "vitest run --coverage",
     "dev": "vite",
+    "dev:offline": "vite --offline",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "lint": "eslint .",
     "postinstall": "electron-builder install-app-deps",
