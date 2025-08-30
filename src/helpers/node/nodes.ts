@@ -278,13 +278,31 @@ export class BaseNodes extends BaseObj {
    * Remove node component from the network.
    * @param node node object
    */
-  removeNode(node: TNode | TNodeGroup): void {
+  removeNode(node: TNode): void {
     this.logger.trace("remove node");
-
-    this._network.state.unselectAll();
-
     if (!node.codeNode || !node.codeNode.graph) return;
+
+    this.network.state.unselectAll();
+
+    const recorders = node.connectedRecorders;
+
+    // Remove connection from the list.
+    node.removeConnections();
+
+    // Remove node in node groups
+    // this.nodes.removeNodeInNodeGroups(node);
+
+    // Remove node from the list.
     this.network.project.code.graph.removeNode(node.codeNode);
+
+    // Clean node groups.
+    // this.nodes.cleanNodeGroups();
+
+    // Update recorder.
+    if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
+
+    // Trigger network change.
+    // this.onUpdate({ cleanPanels, preventSimulation: true });
   }
 
   /**

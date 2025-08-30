@@ -26,6 +26,8 @@ import {
   nestNodeCollectionType,
   // nestSynapseCollectionType,
 } from "./interfaceTypes";
+import { updateRecorderNode } from "./nestCreate";
+import { getSimulateNode } from "./nestSimulate";
 
 export default defineDynamicCodeNode({
   type: "nest.Connect",
@@ -114,6 +116,9 @@ export default defineDynamicCodeNode({
       this.node.view.synapse.codeNodes.params = synParamNode;
       this.node.view.synapse.paramsAll.forEach((param) => (param.codeNodes.node = synParamNode));
     }
+
+    if (!this.node.view && !this.node.view.model && !this.node.view.model.isRecorder) return;
+    updateRecorderNode(this.node.graph, this.node.view.recorder.codeNode);
   },
   onUpdate({ conn_spec }) {
     const inputs: Record<string, () => NodeInterface> = {};
@@ -194,6 +199,11 @@ export const addNESTConnectNode = (
     graph.addConnection(codeNode.inputs.pre, nodes[connectionProps.source].outputs.out);
     graph.addConnection(nodes[connectionProps.target].outputs.out, codeNode.inputs.post);
   }
+
+  const simulateNode = getSimulateNode(graph);
+
+  if (!graph.hasConnection(codeNode.outputs._node, simulateNode.inputs._node))
+    graph.addConnection(codeNode.outputs._node, simulateNode.inputs._node);
 
   return codeNode;
 };

@@ -189,6 +189,18 @@ export class CodeGraph extends BaseObj {
   }
 
   /**
+   * Check whether the graph has this connection.
+   * @param from node interface
+   * @param to node interface
+   * @returns boolean
+   */
+  hasConnection(from: NodeInterface, to: NodeInterface): boolean {
+    return this.connections.some(
+      (connection: Connection) => connection.from.id === from.id && connection.to.id === to.id,
+    );
+  }
+
+  /**
    * Initialize code graph.
    */
   init(): void {
@@ -244,6 +256,10 @@ export class CodeGraph extends BaseObj {
       this.code?.generate();
     });
   };
+
+  removeConnection(connection: Connection): void {
+    this.graph.removeConnection(connection);
+  }
 
   /**
    * Remove node from the graph.

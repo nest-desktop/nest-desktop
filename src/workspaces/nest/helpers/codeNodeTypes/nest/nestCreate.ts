@@ -25,6 +25,7 @@ import { INESTNodeCollection, nestNodeCollectionType } from "./interfaceTypes";
 import { INESTNodeProps, NESTNode } from "../../node/node";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { addParameterNode } from "./nestParameters";
+import { getResponseNode } from "./nestDataResponse";
 
 export default defineDynamicCodeNode({
   type: "nest.Create",
@@ -214,4 +215,24 @@ export const addNESTCreateNode = (
   }
 
   return codeNode;
+};
+
+export const updateRecorderNode = (graph: CodeGraph | NESTCodeGraph, codeNode: AbstractCodeNode) => {
+  if (!codeNode.outputs.events || !codeNode.view) return;
+
+  const responseNode = getResponseNode(graph);
+
+  const isRecorder = codeNode.view.model.isRecorder;
+  const hasConnection = codeNode.code.graph.hasConnection(codeNode.outputs.events, responseNode.inputs.events);
+
+  if (!isRecorder && hasConnection) {
+    graph.connections
+      .filter(
+        (connection: Connection) =>
+          connection.from.id === codeNode.outputs.events.id || connection.to.id === codeNode.outputs.events.id,
+      )
+      .forEach((connection: Connection) => {
+        graph.removeConnection(connection);
+      });
+  } else if (isRecorder && !hasConnection) graph.addConnection(codeNode.outputs.events, responseNode.inputs.events);
 };

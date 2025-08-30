@@ -333,18 +333,8 @@ export class BaseConnection extends BaseObj {
    * Delete connection from the network.
    */
   remove(): void {
-    this.network.deleteConnection(this);
+    this.connections.removeConnection(this);
   }
-
-  // /**
-  //  * Remove code nodes.
-  //  */
-  // removeCodeNodes(): void {
-  //   Object.keys(this.codeNodes).forEach((key: string) => {
-  //     this.codeNodes[key].remove();
-  //     delete this.codeNodes[key];
-  //   });
-  // }
 
   // /**
   //  * Sets all params to visible.

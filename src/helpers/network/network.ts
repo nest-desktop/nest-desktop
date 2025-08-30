@@ -109,59 +109,60 @@ export class BaseNetwork extends BaseObj {
     this.nodes.clear();
   }
 
-  /**
-   * Delete connection component from the network.
-   * @param connection connection object
-   * @remarks It update recorder and emits network changes.
-   */
-  deleteConnection(connection: TConnection): void {
-    this.logger.trace("delete connection");
+  // /**
+  //  * Delete connection component from the network.
+  //  * @param connection connection object
+  //  * @remarks It update recorder and emits network changes.
+  //  */
+  // deleteConnection(connection: TConnection): void {
+  //   this.logger.trace("delete connection");
 
-    const cleanPanels = connection.view.connectRecorder();
+  //   // const cleanPanels = connection.view.connectRecorder();
 
-    // Remove connection from the list.
-    this.connections.removeConnection(connection);
+  //   // Remove connection from the list.
+  //   this.connections.removeConnection(connection);
 
-    // Update recorder.
-    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+  //   // Update recorder.
+  //   // if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
-    // Trigger network change.
-    this.onUpdate({ cleanPanels, preventSimulation: true });
-  }
+  //   // Trigger network change.
+  //   // this.onUpdate({ cleanPanels, preventSimulation: true });
+  // }
 
-  /**
-   * Delete node component from the network.
-   * @param node node or node group object
-   * @remarks It emits network changes.
-   */
-  deleteNode(node: TNode | TNodeGroup): void {
-    this.logger.trace("delete node");
+  // /**
+  //  * Delete node component from the network.
+  //  * @param node node object
+  //  * @remarks It emits network changes.
+  //  */
+  // deleteNode(node: TNode): void {
+  //   this.logger.trace("delete node");
 
-    let cleanPanels = node.isRecorded;
-    if (node.isNode) {
-      const nodeItem = node as TNode;
-      cleanPanels = nodeItem.model.isRecorder || node.isRecorded;
-    }
-    const recorders = node.connectedRecorders;
+  //   let cleanPanels = node.isRecorded;
+  //   if (node.isNode) {
+  //     const nodeItem = node as TNode;
+  //     cleanPanels = nodeItem.model.isRecorder || node.isRecorded;
+  //   }
+  //   const recorders = node.connectedRecorders;
 
-    // Remove connection from the list.
-    this.connections.removeByNode(node);
+  //   // Remove connection from the list.
+  //   // this.connections.removeByNode(node);
+  //   node.removeConnections();
 
-    // Remove node in node groups
-    // this.nodes.removeNodeInNodeGroups(node);
+  //   // Remove node in node groups
+  //   // this.nodes.removeNodeInNodeGroups(node);
 
-    // Remove node from the list.
-    this.nodes.removeNode(node);
+  //   // Remove node from the list.
+  //   this.nodes.removeNode(node);
 
-    // Clean node groups.
-    this.nodes.cleanNodeGroups();
+  //   // Clean node groups.
+  //   this.nodes.cleanNodeGroups();
 
-    // Update recorder.
-    if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
+  //   // Update recorder.
+  //   if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
 
-    // Trigger network change.
-    this.onUpdate({ cleanPanels, preventSimulation: true });
-  }
+  //   // Trigger network change.
+  //   this.onUpdate({ cleanPanels, preventSimulation: true });
+  // }
 
   /**
    * Get models of the element type.

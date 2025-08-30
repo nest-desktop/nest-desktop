@@ -8,11 +8,11 @@ import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
 import { setViewSettings } from "@/plugins/baklava";
 
-import nestDataResponse from "../codeNodeTypes/nest/nestDataResponse";
+import { getResponseNode } from "../codeNodeTypes/nest/nestDataResponse";
 import nestInstall from "../codeNodeTypes/nest/nestInstall";
 import nestResetKernel from "../codeNodeTypes/nest/nestResetKernel";
 import nestSetKernelStatus from "../codeNodeTypes/nest/nestSetKernelStatus";
-import nestSimulate from "../codeNodeTypes/nest/nestSimulate";
+import { getSimulateNode } from "../codeNodeTypes/nest/nestSimulate";
 import { INESTNetworkProps } from "../network/network";
 import { INESTNodeProps } from "../node/node";
 import { INESTProjectProps } from "../project/project";
@@ -180,7 +180,7 @@ export class NESTCodeGraph extends BaseObj {
       }
     }
 
-    const responseNode = this.addNodeAtColumn(nestDataResponse, 4, 600);
+    const responseNode = getResponseNode(this);
 
     codeNodes.forEach((codeNode: AbstractCodeNode) => {
       if (!codeNode.inputs.model.value.includes("recorder") && !codeNode.inputs.model.value.includes("meter")) return;
@@ -192,18 +192,18 @@ export class NESTCodeGraph extends BaseObj {
         this.addConnection(spatialNode.outputs.positions, responseNode.inputs.positions),
       );
 
-    this.nodes
-      .filter((node: AbstractCodeNode) => node.type === "nest.Simulate")
-      .forEach((node: AbstractCodeNode) => this.addConnection(node.outputs._node, responseNode.inputs._node));
+    const simulateNode = getSimulateNode(this);
+    this.addConnection(simulateNode.outputs._node, responseNode.inputs._node);
   }
 
   /**
    * Add code nodes from simulation props.
    */
   addSimulationCodeNode(simulationProps: INESTSimulationProps): void {
-    this.logger.trace("add simulation code nodes");
+    this.logger.trace("add simulation code node");
+
     // nest.Simulate
-    const codeNode = this.addNodeAtColumn(nestSimulate, 4, 100);
+    const codeNode = getSimulateNode(this);
     codeNode.state.comments = "Run simulation";
     codeNode.inputs.time.value = simulationProps?.time ?? 1000;
 
@@ -227,6 +227,18 @@ export class NESTCodeGraph extends BaseObj {
       codeNode.inputs.rng_seed.value = kernelProps.rngSeed;
       codeNode.inputs.rng_seed.hidden = false;
     }
+  }
+
+  /**
+   * Check whether the graph has this connection.
+   * @param from node interface
+   * @param to node interface
+   * @returns boolean
+   */
+  hasConnection(from: NodeInterface, to: NodeInterface): boolean {
+    return this.connections.some(
+      (connection: Connection) => connection.from.id === from.id && connection.to.id === to.id,
+    );
   }
 
   /**

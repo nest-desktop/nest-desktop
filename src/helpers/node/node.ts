@@ -96,6 +96,12 @@ export class BaseNode extends BaseObj {
     );
   }
 
+  get connectionsAll(): TConnection[] {
+    return this.network.connections.allConnections.filter(
+      (connection: TConnection) => connection.sourceIdx === this.idx || connection.targetIdx === this.idx,
+    );
+  }
+
   get connectionsNeurons(): TConnection[] {
     return this.network.connections.allConnections.filter(
       (connection: TConnection) =>
@@ -645,7 +651,7 @@ export class BaseNode extends BaseObj {
    * @remarks It removes node component of the network.
    */
   remove(): void {
-    this.network.deleteNode(this);
+    this.nodes.removeNode(this);
   }
 
   /**
@@ -656,6 +662,21 @@ export class BaseNode extends BaseObj {
     if (this.annotations.indexOf(text) === -1) return;
     this.annotations.splice(this._annotations.indexOf(text), 1);
     if (emitChanges) this.onUpdate();
+  }
+
+  /**
+   * Remove connections.
+   */
+  removeConnections(): void {
+    this.connectionsAll.forEach((connection: TConnection) => connection.removeCodeNodes());
+
+    // Update source and target idx in connections
+    this.connectionsAll.forEach((connection: TConnection) => {
+      if (connection.sourceIdx > this.idx) connection.sourceIdx -= 1;
+      if (connection.targetIdx > this.idx) connection.targetIdx -= 1;
+    });
+
+    // this.network.clean();
   }
 
   /**

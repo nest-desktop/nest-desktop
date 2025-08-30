@@ -4,7 +4,11 @@ import { displayInSidebar } from "baklavajs";
 
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
+import { AbstractCodeNode, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
+
+import nestDataResponse from "./nestDataResponse";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 
 export default defineCodeNode({
   type: "nest/response",
@@ -29,3 +33,9 @@ export default defineCodeNode({
     return `response = {\n\t${responseData.join(",\n\t")}\n}`;
   },
 });
+
+export const getResponseNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  let responseNode = graph.nodes.find((node: AbstractCodeNode) => node.type === "nest/response");
+  if (!responseNode) responseNode = graph.addNodeAtColumn(nestDataResponse, 4, 600);
+  return responseNode;
+};

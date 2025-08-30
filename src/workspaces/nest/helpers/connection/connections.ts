@@ -42,7 +42,7 @@ export class NESTConnections extends BaseConnections {
   addConnection(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
-    addNESTConnectNode(
+    const codeNode = addNESTConnectNode(
       this.network.project.code.graph,
       { source: sourceIdx, target: targetIdx },
       this.network.nodes.codeNodes,

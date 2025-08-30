@@ -38,12 +38,12 @@ export class BaseObj {
       });
   }
 
-  get codeNodes(): Record<string, AbstractCodeNode> {
-    return this._codeNodes;
-  }
-
   get codeNode(): AbstractCodeNode | undefined {
     return this._codeNodes.node;
+  }
+
+  get codeNodes(): Record<string, AbstractCodeNode> {
+    return this._codeNodes;
   }
 
   get config(): Config | undefined {
@@ -76,6 +76,13 @@ export class BaseObj {
 
   get shortUuid(): string {
     return truncate(this._uuid);
+  }
+
+  /**
+   * Remove code nodes.
+   */
+  removeCodeNodes(): void {
+    Object.values(this.codeNodes).forEach((codeNode: AbstractCodeNode) => codeNode.remove());
   }
 
   /**

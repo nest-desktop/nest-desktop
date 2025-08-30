@@ -3,8 +3,12 @@
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
+
+import nestSimulate from "./nestSimulate";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 
 export default defineCodeNode({
   type: "nest.Simulate",
@@ -30,3 +34,9 @@ export default defineCodeNode({
     this.node.view.codeNodes.node = this;
   },
 });
+
+export const getSimulateNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  let simulateNode = graph.nodes.find((node: AbstractCodeNode) => node.type === "nest.Simulate");
+  if (!simulateNode) simulateNode = graph.addNodeAtColumn(nestSimulate, 4, 100);
+  return simulateNode;
+};

@@ -132,6 +132,8 @@ export class BaseConnections extends BaseObj {
     this.resetState();
     this.network.project.code.graph.removeNode(connection.codeNode);
 
+    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+
     this.clean();
   }
 
@@ -146,9 +148,9 @@ export class BaseConnections extends BaseObj {
       .filter((connection: TConnection) => connection.source === node || connection.target == node)
       .forEach((connection: TConnection) => connection.removeCodeNodes());
 
-    this._connections = this.connections.filter(
-      (connection: TConnection) => connection.source !== node && connection.target !== node,
-    );
+    // this._connections = this.connections.filter(
+    //   (connection: TConnection) => connection.source !== node && connection.target !== node,
+    // );
 
     // Update source and target idx in connections
     this.connections.forEach((connection: TConnection) => {
