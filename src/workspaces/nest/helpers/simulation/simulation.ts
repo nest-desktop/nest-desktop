@@ -4,6 +4,7 @@ import { BaseSimulation } from "@/helpers/simulation/simulation";
 
 import { INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 import { NESTProject } from "../project/project";
+import { loadNESTInstallNodes } from "../codeNodeTypes/nest/nestInstall";
 
 export interface INESTSimulationProps {
   kernel?: INESTSimulationKernelProps;
@@ -31,6 +32,7 @@ export class NESTSimulation extends BaseSimulation {
 
   set modules(value: string[]) {
     this._modules = value;
+    loadNESTInstallNodes(this.project.code.graph, this._modules);
   }
 
   override get project(): NESTProject {
