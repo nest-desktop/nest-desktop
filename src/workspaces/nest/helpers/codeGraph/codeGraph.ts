@@ -1,28 +1,35 @@
 // codeGraph.ts
 
 import toposort from "toposort";
-import { Connection, Graph, IBaklavaViewModel, IEditorState, INodeState, NodeInterface, useBaklava } from "baklavajs";
+import {
+  AbstractNode,
+  Connection,
+  Graph,
+  IBaklavaViewModel,
+  IEditorState,
+  INodeState,
+  NodeInterface,
+  useBaklava,
+} from "baklavajs";
 
-import functionNode from "@/helpers/codeNodeTypes/base/function";
 import { AbstractCodeNode } from "@/helpers/codeGraph/codeNode";
 import { BaseObj } from "@/helpers/common/base";
 import { setViewSettings } from "@/plugins/baklava";
 
-import { getResponseNode } from "../codeNodeTypes/nest/nestDataResponse";
-import nestInstall from "../codeNodeTypes/nest/nestInstall";
-import nestResetKernel from "../codeNodeTypes/nest/nestResetKernel";
-import nestSetKernelStatus from "../codeNodeTypes/nest/nestSetKernelStatus";
-import { getSimulateNode } from "../codeNodeTypes/nest/nestSimulate";
+import { INESTConnectionProps } from "../connection/connection";
+import { INESTCopyModelProps } from "../model/copyModel";
 import { INESTNetworkProps } from "../network/network";
 import { INESTNodeProps } from "../node/node";
 import { INESTProjectProps } from "../project/project";
-import { INESTSimulationKernelProps } from "../simulation/simulationKernel";
-import { INESTSimulationProps } from "../simulation/simulation";
-import { addNESTCreateNode } from "../codeNodeTypes/nest/nestCreate";
-import { addNESTCopyModel, addNESTCopySynapseModel } from "../codeNodeTypes/nest/nestCopyModel";
-import { INESTConnectionProps } from "../connection/connection";
-import { addNESTConnectNode } from "../codeNodeTypes/nest/nestConnect";
-import { INESTCopyModelProps } from "../model/copyModel";
+import { loadNESTCopyModelNode, loadNESTCopySynapseModelNode } from "../codeNodeTypes/nest/nestCopyModel";
+import { loadNESTCreateNode } from "../codeNodeTypes/nest/nestCreate";
+import { loadNESTDataResponseNode } from "../codeNodeTypes/nest/nestDataResponse";
+import { loadNESTInstallNodes } from "../codeNodeTypes/nest/nestInstall";
+import { loadNESTResetKernelNode } from "../codeNodeTypes/nest/nestResetKernel";
+import { loadNESTSetKernelStatusNode } from "../codeNodeTypes/nest/nestSetKernelStatus";
+import { loadNESTSimulationNode } from "../codeNodeTypes/nest/nestSimulate";
+import { loadNESTConnectNode } from "../codeNodeTypes/nest/nestConnect";
+import { findNodeByType, getCodeNodes } from "@/helpers/codeGraph/codeGraph";
 
 export class NESTCodeGraph extends BaseObj {
   private _viewModel: IBaklavaViewModel;
@@ -34,7 +41,11 @@ export class NESTCodeGraph extends BaseObj {
     this._viewModel = useBaklava();
     setViewSettings(this._viewModel);
 
-    this.load(projectProps);
+    this.loadByProject(projectProps);
+  }
+
+  get codeNodes(): AbstractCodeNode[] {
+    return getCodeNodes(this);
   }
 
   get connections(): Connection[] {
@@ -63,8 +74,22 @@ export class NESTCodeGraph extends BaseObj {
     this.graph.addConnection(from, to);
   }
 
-  addNode(node: AbstractCodeNode): void {
-    this.graph.addNode(node);
+  /**
+   * Add code node to graph.
+   * @param node code node
+   * @param idx number
+   */
+  addNode(node: AbstractCodeNode, idx: number = -1): AbstractCodeNode {
+    const codeNode = this.graph.addNode(node as AbstractNode) as AbstractCodeNode;
+
+    if (idx != -1) {
+      const nodes = [...this.graph.nodes];
+      nodes.pop();
+      nodes.splice(idx, 0, codeNode);
+      this.graph._nodes = nodes;
+    }
+
+    return codeNode;
   }
 
   /**
@@ -72,6 +97,7 @@ export class NESTCodeGraph extends BaseObj {
    * @param nodeType
    * @param col column
    * @param offset number
+   * @param idx number
    * @param props optional
    * @returns Abstract code node
    */
@@ -79,6 +105,7 @@ export class NESTCodeGraph extends BaseObj {
     nodeType: new () => AbstractCodeNode,
     col: number = 0,
     offset: number = 100,
+    idx: number = -1,
     props?: unknown,
   ): AbstractCodeNode {
     const left = 300;
@@ -88,7 +115,7 @@ export class NESTCodeGraph extends BaseObj {
     const node = new nodeType();
     if (props) node.props = props;
 
-    this.addNode(node);
+    this.addNode(node, idx);
     if (node.position) {
       node.position.x = left + col * (width + space);
       node.position.y = offset;
@@ -101,132 +128,27 @@ export class NESTCodeGraph extends BaseObj {
    * Add code node at coordinates.
    * @param nodeType
    * @param position position
+   * @param idx number
    * @param props optional
    * @returns Abstract code node
    */
   addNodeAtCoordinates(
     nodeType: new () => AbstractCodeNode,
     position: { x: number; y: number } = { x: 0, y: 0 },
+    idx: number = -1,
     props?: unknown,
   ): AbstractCodeNode {
     const node = new nodeType();
     if (props) node.props = props;
 
-    this.addNode(node);
+    this.addNode(node, idx);
     if (node.position) node.position = position;
 
     return node;
   }
 
-  /**
-   * Add code nodes from network props.
-   */
-  addNetworkCodeNodes(networkProps: INESTNetworkProps): void {
-    this.logger.trace("add network code nodes");
-    if (!networkProps) return;
-
-    if (networkProps.models) {
-      const nodeModels = networkProps.models.filter(
-        (modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"),
-      );
-
-      if (nodeModels) nodeModels.forEach((modelProps: INESTCopyModelProps) => addNESTCopyModel(this, modelProps));
-    }
-
-    let nestNodes: AbstractCodeNode[] = [];
-    if (networkProps.nodes)
-      nestNodes = networkProps.nodes.map((nodeProps: INESTNodeProps) => addNESTCreateNode(this, nodeProps));
-
-    if (networkProps.models) {
-      const synapseModels = networkProps.models.filter((modelProps: INESTCopyModelProps) =>
-        modelProps.existing.includes("synapse"),
-      );
-
-      if (synapseModels) {
-        const weightRecorders: AbstractCodeNode[] = nestNodes.filter(
-          (codeNode: AbstractCodeNode) => codeNode.inputs.model.value === "weight_recorder",
-        );
-        synapseModels.forEach((modelProps: INESTCopyModelProps) =>
-          addNESTCopySynapseModel(this, modelProps, weightRecorders),
-        );
-      }
-    }
-
-    if (networkProps.connections)
-      networkProps.connections.forEach((connectionProps: INESTConnectionProps) =>
-        addNESTConnectNode(this, connectionProps, nestNodes),
-      );
-  }
-
-  /**
-   * Add code node for reset kernel.
-   */
-  addResetKernelCodeNode(): void {
-    // nest.ResetKernel
-    this.addNodeAtColumn(nestResetKernel, -2, 100);
-  }
-
-  /**
-   * Add code node for response.
-   */
-  addResponseCodeNode(): void {
-    const codeNodes = this.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create");
-    const spatialNodes = codeNodes.filter((node: AbstractCodeNode) => !node.inputs.positions.hidden);
-    if (spatialNodes.length > 0) {
-      if (!this.nodes.find((node: AbstractCodeNode) => node.type === "function")) {
-        const funcNode = this.addNodeAtColumn(functionNode, 4, 900);
-        funcNode.inputs.code.hidden = false;
-        funcNode.inputs.code.value = "pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
-      }
-    }
-
-    const responseNode = getResponseNode(this);
-
-    codeNodes.forEach((codeNode: AbstractCodeNode) => {
-      if (!codeNode.inputs.model.value.includes("recorder") && !codeNode.inputs.model.value.includes("meter")) return;
-      this.addConnection(codeNode.outputs.events, responseNode.inputs.events);
-    });
-
-    if (spatialNodes.length > 0 && responseNode.inputs.positions)
-      spatialNodes.forEach((spatialNode: AbstractCodeNode) =>
-        this.addConnection(spatialNode.outputs.positions, responseNode.inputs.positions),
-      );
-
-    const simulateNode = getSimulateNode(this);
-    this.addConnection(simulateNode.outputs._node, responseNode.inputs._node);
-  }
-
-  /**
-   * Add code nodes from simulation props.
-   */
-  addSimulationCodeNode(simulationProps: INESTSimulationProps): void {
-    this.logger.trace("add simulation code node");
-
-    // nest.Simulate
-    const codeNode = getSimulateNode(this);
-    codeNode.state.comments = "Run simulation";
-    codeNode.inputs.time.value = simulationProps?.time ?? 1000;
-
-    this.nodes
-      .filter((node: AbstractCodeNode) => node.type === "nest.Connect")
-      .forEach((node: AbstractCodeNode) => this.addConnection(node.outputs._node, codeNode.inputs._node));
-  }
-
-  /**
-   * Add code nodes from simulation kernel props.
-   */
-  addSimulationKernelCodeNode(kernelProps?: INESTSimulationKernelProps): void {
-    // nest.SetKernelStatus
-    const codeNode = this.addNodeAtColumn(nestSetKernelStatus, -2, 200);
-    codeNode.state.comments = "Set simulation kernel";
-    if (kernelProps) {
-      codeNode.inputs.local_num_threads.value = kernelProps.localNumThreads;
-      codeNode.inputs.local_num_threads.hidden = kernelProps.localNumThreads === 1;
-      codeNode.inputs.resolution.value = kernelProps.resolution;
-      codeNode.inputs.resolution.hidden = kernelProps.resolution === 0.1;
-      codeNode.inputs.rng_seed.value = kernelProps.rngSeed;
-      codeNode.inputs.rng_seed.hidden = false;
-    }
+  findNodeByType(nodeType: string): AbstractCodeNode | undefined {
+    return findNodeByType(this, nodeType);
   }
 
   /**
@@ -242,24 +164,64 @@ export class NESTCodeGraph extends BaseObj {
   }
 
   /**
-   * Load code graph.
+   * Load code graph from project props.
    */
-  load(projectProps: INESTProjectProps): void {
-    this.addResetKernelCodeNode();
+  loadByProject(projectProps: INESTProjectProps): void {
+    loadNESTResetKernelNode(this);
 
     // nest.Install
-    if (projectProps.simulation?.modules) this.addNodeAtColumn(nestInstall, -2, 200);
+    if (projectProps.simulation?.modules) loadNESTInstallNodes(this, projectProps.simulation.modules);
 
     // nest.SetKernelStatus
-    if (projectProps.simulation?.kernel) this.addSimulationKernelCodeNode(projectProps.simulation.kernel);
+    if (projectProps.simulation?.kernel) loadNESTSetKernelStatusNode(this, projectProps.simulation.kernel);
 
     // nest.Create & nest.Connect
-    if (projectProps.network) this.addNetworkCodeNodes(projectProps.network);
+    if (projectProps.network) this.loadNetworkNodes(projectProps.network);
 
     // nest.Simulate
-    if (projectProps.simulation) this.addSimulationCodeNode(projectProps.simulation);
+    if (projectProps.simulation) loadNESTSimulationNode(this, projectProps.simulation);
 
-    this.addResponseCodeNode();
+    loadNESTDataResponseNode(this);
+  }
+
+  /**
+   * load code nodes from network props.
+   */
+  loadNetworkNodes(networkProps: INESTNetworkProps): void {
+    this.logger.trace("add network code nodes");
+    if (!networkProps) return;
+
+    if (networkProps.models) {
+      const nodeModels = networkProps.models.filter(
+        (modelProps: INESTCopyModelProps) => !modelProps.existing.includes("synapse"),
+      );
+
+      if (nodeModels) nodeModels.forEach((modelProps: INESTCopyModelProps) => loadNESTCopyModelNode(this, modelProps));
+    }
+
+    let nestNodes: AbstractCodeNode[] = [];
+    if (networkProps.nodes)
+      nestNodes = networkProps.nodes.map((nodeProps: INESTNodeProps) => loadNESTCreateNode(this, nodeProps));
+
+    if (networkProps.models) {
+      const synapseModels = networkProps.models.filter((modelProps: INESTCopyModelProps) =>
+        modelProps.existing.includes("synapse"),
+      );
+
+      if (synapseModels) {
+        const weightRecorders: AbstractCodeNode[] = nestNodes.filter(
+          (codeNode: AbstractCodeNode) => codeNode.inputs.model.value === "weight_recorder",
+        );
+        synapseModels.forEach((modelProps: INESTCopyModelProps) =>
+          loadNESTCopySynapseModelNode(this, modelProps, weightRecorders),
+        );
+      }
+    }
+
+    if (networkProps.connections)
+      networkProps.connections.forEach((connectionProps: INESTConnectionProps) =>
+        loadNESTConnectNode(this, connectionProps, nestNodes),
+      );
   }
 
   /**

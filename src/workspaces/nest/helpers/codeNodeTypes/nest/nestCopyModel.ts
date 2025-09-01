@@ -13,7 +13,7 @@ import { stringType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 import nestCopyModel from "./nestCopyModel";
 import { INESTCopyModelProps, NESTCopyModel } from "../../model/copyModel";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-import { addParameterNode } from "./nestParameters";
+import { loadNESTParameterNode } from "./nestParameters";
 
 export default defineDynamicCodeNode({
   type: "nest.CopyModel",
@@ -61,14 +61,19 @@ export default defineDynamicCodeNode({
   },
 });
 
-export const addNESTCopyModel = (
+export const addNESTCopyModelNode = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
+  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.CopyModel").length;
+
+  const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx);
+  return codeNode;
+};
+
+export const loadNESTCopyModelNode = (
   graph: CodeGraph | NESTCodeGraph,
   modelProps: INESTCopyModelProps,
   idx: number = -1,
 ): AbstractCodeNode => {
-  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.CopyModel").length;
-
-  const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx, modelProps);
+  const codeNode = addNESTCopyModelNode(graph, idx);
   codeNode.inputs.existing.value = modelProps.existing;
   codeNode.inputs.new.value = modelProps.new;
 
@@ -78,22 +83,20 @@ export const addNESTCopyModel = (
     const position = { ...codeNode.position };
     position.x -= 400;
     position.y += 100;
-    const paramsNode = addParameterNode(graph, params, position);
+    const paramsNode = loadNESTParameterNode(graph, params, position);
     graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
   }
 
   return codeNode;
 };
 
-export const addNESTCopySynapseModel = (
+export const loadNESTCopySynapseModelNode = (
   graph: CodeGraph | NESTCodeGraph,
   modelProps: INESTCopyModelProps,
   weightRecorders: AbstractCodeNode[] = [],
   idx: number = -1,
 ): AbstractCodeNode => {
-  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.CopyModel").length;
-
-  const codeNode = addNESTCopyModel(graph, modelProps);
+  const codeNode = loadNESTCopyModelNode(graph, modelProps, idx);
 
   if (weightRecorders) {
     const weightRecorderParam = modelProps.params?.find((param) => param.id === "weight_recorder");

@@ -8,7 +8,7 @@ import { INESTNodeProps, NESTNode } from "./node";
 import { INodeViewProps } from "@/helpers/node/nodeViewState";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTNetwork } from "../network/network";
-import { addNESTCreateNode } from "../codeNodeTypes/nest/nestCreate";
+import { loadNESTCreateNode } from "../codeNodeTypes/nest/nestCreate";
 
 const _defaultModels: Record<string, string> = {
   neuron: "iaf_psc_alpha",
@@ -100,10 +100,10 @@ export class NESTNodes extends BaseNodes {
    * @param view node view props
    */
   override addNode(model?: string, view?: INodeViewProps): void {
-    this.logger.debug("create node");
+    this.logger.trace("add node");
 
     // Create node.
-    const codeNode = addNESTCreateNode(this.network.project.code.graph, {
+    const codeNode = loadNESTCreateNode(this.network.project.code.graph, {
       model: model || _defaultModels[view?.elementType || "neuron"],
     });
 

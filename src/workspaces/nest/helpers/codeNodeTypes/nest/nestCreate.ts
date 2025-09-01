@@ -24,8 +24,8 @@ import nestSpatialFree from "./nestSpatialFree";
 import { INESTNodeCollection, nestNodeCollectionType } from "./interfaceTypes";
 import { INESTNodeProps, NESTNode } from "../../node/node";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-import { addParameterNode } from "./nestParameters";
-import { getResponseNode } from "./nestDataResponse";
+import { getNESTDataResponseNode } from "./nestDataResponse";
+import { updateNESTParameterNode } from "./nestParameters";
 
 export default defineDynamicCodeNode({
   type: "nest.Create",
@@ -165,15 +165,21 @@ export default defineDynamicCodeNode({
   },
 });
 
-export const addNESTCreateNode = (
+export const addNESTCreateNode = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
+  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
+
+  const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx);
+  if (idx === 0) codeNode.state.comments = "Create nodes";
+  return codeNode;
+};
+
+export const loadNESTCreateNode = (
   graph: CodeGraph | NESTCodeGraph,
   nodeProps: INESTNodeProps,
   idx: number = -1,
 ): AbstractCodeNode => {
-  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create").length;
+  const codeNode = addNESTCreateNode(graph, idx);
 
-  const codeNode = graph.addNodeAtColumn(nestCreate, 1, 100 + 290 * idx, nodeProps);
-  if (idx === 0) codeNode.state.comments = "Create nodes";
   // codeNode.variableName = nodeProps.model as string;
   codeNode.inputs.model.value = nodeProps.model;
   codeNode.inputs.size.value = nodeProps.size ?? 1;
@@ -185,14 +191,7 @@ export const addNESTCreateNode = (
 
   // params
   const params = nodeProps.params?.filter((param: IParamProps) => ("visible" in param ? param.visible : true));
-  if (params && params.length > 0) {
-    const position = { ...codeNode.position };
-    position.x -= 400;
-    position.y += 50;
-    const paramsNode = addParameterNode(graph, params, position);
-    if (codeNode.view?.codeNodes) codeNode.view.codeNodes.params = paramsNode;
-    graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
-  }
+  updateNESTParameterNode(graph, codeNode, params);
 
   // positions
   if (nodeProps.spatial) {
@@ -220,7 +219,7 @@ export const addNESTCreateNode = (
 export const updateRecorderNode = (graph: CodeGraph | NESTCodeGraph, codeNode: AbstractCodeNode) => {
   if (!codeNode.outputs.events || !codeNode.view) return;
 
-  const responseNode = getResponseNode(graph);
+  const responseNode = getNESTDataResponseNode(graph);
 
   const isRecorder = codeNode.view.model.isRecorder;
   const hasConnection = codeNode.code.graph.hasConnection(codeNode.outputs.events, responseNode.inputs.events);
@@ -231,8 +230,6 @@ export const updateRecorderNode = (graph: CodeGraph | NESTCodeGraph, codeNode: A
         (connection: Connection) =>
           connection.from.id === codeNode.outputs.events.id || connection.to.id === codeNode.outputs.events.id,
       )
-      .forEach((connection: Connection) => {
-        graph.removeConnection(connection);
-      });
+      .forEach((connection: Connection) => graph.removeConnection(connection));
   } else if (isRecorder && !hasConnection) graph.addConnection(codeNode.outputs.events, responseNode.inputs.events);
 };

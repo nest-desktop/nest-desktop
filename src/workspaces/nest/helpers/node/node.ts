@@ -16,6 +16,7 @@ import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNodes } from "./nodes";
+import { updateNESTParameterNode } from "../codeNodeTypes/nest/nestParameters";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -355,6 +356,13 @@ export class NESTNode extends BaseNode {
       nodeProps.receptors = this.receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
 
     return nodeProps;
+  }
+
+  updateParamsCodeNodeHidden(): void {
+    const params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
+    updateNESTParameterNode(this.network.project.code.graph, this.codeNode, params);
+
+    super.updateParamsCodeNodeHidden();
   }
 
   /**

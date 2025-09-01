@@ -293,12 +293,7 @@ export class BaseNode extends BaseObj {
       .filter((param: TParameter) => values.includes(param.id))
       .map((param: TParameter) => param.id);
 
-    this.paramsAll.forEach((param: TParameter) => {
-      if (!param.intf) return;
-      param.intf[param.id].setHidden(!this._paramsVisible.includes(param.id));
-    });
-
-    this.codeNode?.code?.onUpdate();
+    this.updateParamsCodeNodeHidden();
   }
 
   get parentNodes(): TNodes {
@@ -817,6 +812,15 @@ export class BaseNode extends BaseObj {
     this.paramsAll.forEach((param: NodeParameter) => {
       if (param.intf && param.intf[param.id]) param.visible = !param.intf[param.id].hidden;
     });
+  }
+
+  updateParamsCodeNodeHidden(): void {
+    this.paramsAll.forEach((param: TParameter) => {
+      if (!param.intf) return;
+      param.intf[param.id].setHidden(!this._paramsVisible.includes(param.id));
+    });
+
+    this.codeNode?.code?.onUpdate();
   }
 
   /**

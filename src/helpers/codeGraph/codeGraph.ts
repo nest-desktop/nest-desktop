@@ -105,10 +105,21 @@ export class CodeGraph extends BaseObj {
   /**
    * Add code node to graph.
    * @param node code node
+   * @param idx number
    */
-  addNode(node: AbstractCodeNode): AbstractCodeNode | undefined {
+  addNode(node: AbstractCodeNode, idx: number = -1): AbstractCodeNode | undefined {
     if (this.code) node.code = this.code;
-    return this.graph.addNode(node as AbstractNode) as AbstractCodeNode;
+
+    const codeNode = this.graph.addNode(node as AbstractNode) as AbstractCodeNode;
+
+    if (idx != -1) {
+      const nodes = [...this.graph.nodes];
+      nodes.pop();
+      nodes.splice(idx, 0, codeNode);
+      this.graph._nodes = nodes;
+    }
+
+    return codeNode;
   }
 
   /**
@@ -116,6 +127,7 @@ export class CodeGraph extends BaseObj {
    * @param nodeType
    * @param col column
    * @param offset number
+   * @param idx number
    * @param props optional
    * @returns Abstract code node
    */
@@ -123,6 +135,7 @@ export class CodeGraph extends BaseObj {
     nodeType: new () => AbstractCodeNode,
     col: number = 0,
     offset: number = 100,
+    idx: number = -1,
     props?: unknown,
   ): AbstractCodeNode {
     const left = 300;
@@ -132,7 +145,7 @@ export class CodeGraph extends BaseObj {
     const node = new nodeType();
     if (props) node.state.props = props;
 
-    this.addNode(node);
+    this.addNode(node, idx);
     if (node.position) {
       node.position.x = left + col * (width + space);
       node.position.y = offset;
@@ -145,18 +158,20 @@ export class CodeGraph extends BaseObj {
    * Add code node at coordinates.
    * @param nodeType
    * @param position
+   * @param idx number
    * @param props optional
    * @returns Abstract code node
    */
   addNodeAtCoordinates(
     nodeType: new () => AbstractCodeNode,
     position: { x: number; y: number } = { x: 0, y: 0 },
+    idx: number = -1,
     props?: unknown,
   ): AbstractCodeNode {
     const node = new nodeType();
     if (props) node.state.props = props;
 
-    this.addNode(node);
+    this.addNode(node, idx);
     if (node.position) node.position = position;
 
     return node;
@@ -177,7 +192,7 @@ export class CodeGraph extends BaseObj {
   }
 
   findNodeByType(nodeType: string): AbstractCodeNode | undefined {
-    return this.codeNodes.find((node: AbstractCodeNode) => node.type === nodeType);
+    return findNodeByType(this, nodeType);
   }
 
   getNodesBySameType(type: string): AbstractCodeNode[] {
@@ -343,7 +358,7 @@ export class CodeGraph extends BaseObj {
   }
 }
 
-const getCodeNodes = (graph: CodeGraph | Graph): AbstractCodeNode[] => {
+export const getCodeNodes = (graph: CodeGraph | Graph): AbstractCodeNode[] => {
   let nodes: AbstractCodeNode[] = [];
 
   graph.nodes.forEach((node) => {
@@ -355,4 +370,9 @@ const getCodeNodes = (graph: CodeGraph | Graph): AbstractCodeNode[] => {
   });
 
   return nodes;
+};
+
+export const findNodeByType = (graph: CodeGraph | Graph, nodeType: string): AbstractCodeNode | undefined => {
+  const codeNodes = getCodeNodes(graph);
+  return codeNodes.find((codeNode: AbstractCodeNode) => codeNode.type === nodeType);
 };

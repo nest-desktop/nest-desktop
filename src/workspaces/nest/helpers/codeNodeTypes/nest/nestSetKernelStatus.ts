@@ -2,10 +2,14 @@
 
 import { displayInSidebar, IntegerInterface, NumberInterface, setType } from "baklavajs";
 
+import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph, findNodeByType } from "@/helpers/codeGraph/codeGraph";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
-import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import nestSetKernelStatus from "./nestSetKernelStatus";
+import { INESTSimulationKernelProps } from "../../simulation/simulationKernel";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 
 export default defineCodeNode({
   type: "nest.SetKernelStatus",
@@ -51,3 +55,31 @@ export default defineCodeNode({
     this.node.view.codeNodes.node = this;
   },
 });
+
+export const addNESTSetKernelStatusNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  const codeNode = graph.addNodeAtColumn(nestSetKernelStatus, -2, 200);
+  codeNode.state.comments = "Set simulation kernel";
+  return codeNode;
+};
+
+export const getNESTSetKernelStatusNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  const codeNode = findNodeByType(graph, "nest.SetKernelStatus");
+  if (!codeNode) return addNESTSetKernelStatusNode(graph);
+  return codeNode;
+};
+
+export const loadNESTSetKernelStatusNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  kernelProps?: INESTSimulationKernelProps,
+): void => {
+  const codeNode = getNESTSetKernelStatusNode(graph);
+
+  if (kernelProps) {
+    codeNode.inputs.local_num_threads.value = kernelProps.localNumThreads;
+    codeNode.inputs.local_num_threads.hidden = kernelProps.localNumThreads === 1;
+    codeNode.inputs.resolution.value = kernelProps.resolution;
+    codeNode.inputs.resolution.hidden = kernelProps.resolution === 0.1;
+    codeNode.inputs.rng_seed.value = kernelProps.rngSeed;
+    codeNode.inputs.rng_seed.hidden = false;
+  }
+};

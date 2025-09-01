@@ -74,12 +74,23 @@ export default defineDynamicCodeNode({
   },
 });
 
-export const addParameterNode = (
+export const addNESTParameterNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  position: { x: number; y: number } = { x: 0, y: 0 },
+  idx: number = -1,
+): AbstractCodeNode => {
+  const codeNode = graph.addNodeAtCoordinates(nestParameters, position, idx);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
+
+export const loadNESTParameterNode = (
   graph: CodeGraph | NESTCodeGraph,
   paramProps: IParamProps[] = [],
   position: { x: number; y: number } = { x: 0, y: 0 },
+  idx: number = -1,
 ): AbstractCodeNode => {
-  const paramsNode = graph.addNodeAtCoordinates(nestParameters, position, paramProps);
+  const paramsNode = addNESTParameterNode(graph, position, idx);
   paramsNode.state.integrated = true;
   paramsNode.state.props = paramProps;
 
@@ -103,4 +114,28 @@ export const createParameterInterface = (param: IParam): NodeInterface => {
   paramInterface.setHidden(param.hidden ?? false);
 
   return paramInterface;
+};
+
+export const updateNESTParameterNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  codeNode: AbstractCodeNode,
+  params: IParamProps[] = [],
+): void => {
+  let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface("params");
+
+  if (params && params.length === 0) {
+    if (paramsNode) paramsNode.remove();
+    return;
+  }
+
+  if (!paramsNode) {
+    const position = { ...codeNode.position };
+    position.x -= 400;
+    position.y += 50;
+    const idx = graph.nodes.indexOf(codeNode);
+    paramsNode = loadNESTParameterNode(graph, params, position, idx);
+  }
+
+  if (codeNode.view?.codeNodes) codeNode.view.codeNodes.params = paramsNode;
+  graph.addConnection(paramsNode.outputs.out, codeNode.inputs.params);
 };

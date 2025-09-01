@@ -18,7 +18,7 @@ import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 import nestConnect from "./nestConnect";
 import { INESTConnectionProps, NESTConnection } from "../../connection/connection";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-import { addParameterNode } from "./nestParameters";
+import { loadNESTParameterNode } from "./nestParameters";
 
 import {
   INESTNodeCollection,
@@ -27,7 +27,7 @@ import {
   // nestSynapseCollectionType,
 } from "./interfaceTypes";
 import { updateRecorderNode } from "./nestCreate";
-import { getSimulateNode } from "./nestSimulate";
+import { getNESTSimulateNode } from "./nestSimulate";
 
 export default defineDynamicCodeNode({
   type: "nest.Connect",
@@ -140,7 +140,7 @@ export default defineDynamicCodeNode({
   },
 });
 
-export const addNESTConnectNode = (
+export const loadNESTConnectNode = (
   graph: CodeGraph | NESTCodeGraph,
   connectionProps?: INESTConnectionProps,
   nodes: AbstractCodeNode[] = [],
@@ -151,7 +151,7 @@ export const addNESTConnectNode = (
   }
 
   // nest.Connect
-  const codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, connectionProps);
+  const codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, -1, connectionProps);
   codeNode.state.props = connectionProps;
 
   if (idx === 0) codeNode.state.comments = "Connect nodes";
@@ -163,7 +163,7 @@ export const addNESTConnectNode = (
       const position = { ...codeNode.position };
       position.x -= 400;
       position.y += 75;
-      const paramsNode = addParameterNode(graph, params, position);
+      const paramsNode = loadNESTParameterNode(graph, params, position);
       graph.addConnection(paramsNode.outputs.out, codeNode.inputs.conn_spec);
     }
   }
@@ -190,7 +190,7 @@ export const addNESTConnectNode = (
       const position = { ...codeNode.position };
       position.x -= 400;
       position.y += 75;
-      const paramsNode = addParameterNode(graph, syn_spec, position);
+      const paramsNode = loadNESTParameterNode(graph, syn_spec, position);
       graph.addConnection(paramsNode.outputs.out, codeNode.inputs.syn_spec);
     }
   }
@@ -200,7 +200,7 @@ export const addNESTConnectNode = (
     graph.addConnection(nodes[connectionProps.target].outputs.out, codeNode.inputs.post);
   }
 
-  const simulateNode = getSimulateNode(graph);
+  const simulateNode = getNESTSimulateNode(graph);
 
   if (!graph.hasConnection(codeNode.outputs._node, simulateNode.inputs._node))
     graph.addConnection(codeNode.outputs._node, simulateNode.inputs._node);

@@ -4,7 +4,7 @@ import { BaseConnections } from "@/helpers/connection/connections";
 
 import { INESTConnectionProps, NESTConnection } from "./connection";
 import { NESTNetwork } from "../network/network";
-import { addNESTConnectNode } from "../codeNodeTypes/nest/nestConnect";
+import { loadNESTConnectNode } from "../codeNodeTypes/nest/nestConnect";
 
 export class NESTConnections extends BaseConnections {
   constructor(network: NESTNetwork, connectionsProps: INESTConnectionProps[] = []) {
@@ -42,7 +42,7 @@ export class NESTConnections extends BaseConnections {
   addConnection(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
-    const codeNode = addNESTConnectNode(
+    loadNESTConnectNode(
       this.network.project.code.graph,
       { source: sourceIdx, target: targetIdx },
       this.network.nodes.codeNodes,

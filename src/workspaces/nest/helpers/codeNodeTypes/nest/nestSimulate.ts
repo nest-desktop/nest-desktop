@@ -2,12 +2,13 @@
 
 import { displayInSidebar, IntegerInterface, setType } from "baklavajs";
 
-import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph, findNodeByType } from "@/helpers/codeGraph/codeGraph";
+import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 import nestSimulate from "./nestSimulate";
-import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
+import { INESTSimulationProps } from "../../simulation/simulation";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 
 export default defineCodeNode({
@@ -35,8 +36,29 @@ export default defineCodeNode({
   },
 });
 
-export const getSimulateNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
-  let simulateNode = graph.nodes.find((node: AbstractCodeNode) => node.type === "nest.Simulate");
-  if (!simulateNode) simulateNode = graph.addNodeAtColumn(nestSimulate, 4, 100);
-  return simulateNode;
+export const addNESTSimulateNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  const codeNode = graph.addNodeAtColumn(nestSimulate, 4, 100);
+  codeNode.state.comments = "Run simulation";
+  return codeNode;
+};
+
+export const getNESTSimulateNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  const codeNode = findNodeByType(graph, "nest.Simulate");
+  if (!codeNode) return addNESTSimulateNode(graph);
+  return codeNode;
+};
+
+export const loadNESTSimulationNode = (
+  graph: CodeGraph | NESTCodeGraph,
+  simulationProps: INESTSimulationProps,
+): void => {
+  const codeNode = getNESTSimulateNode(graph);
+
+  if (simulationProps) {
+    codeNode.inputs.time.value = simulationProps.time ?? 1000;
+  }
+
+  graph.nodes
+    .filter((node: AbstractCodeNode) => node.type === "nest.Connect")
+    .forEach((node: AbstractCodeNode) => graph.addConnection(node.outputs._node, codeNode.inputs._node));
 };
