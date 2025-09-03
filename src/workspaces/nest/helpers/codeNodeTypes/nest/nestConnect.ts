@@ -17,17 +17,15 @@ import { defineDynamicCodeNode } from "@/helpers/codeGraph/dynamicCodeNode";
 
 import nestConnect from "./nestConnect";
 import { INESTConnectionProps, NESTConnection } from "../../connection/connection";
-import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-import { loadNESTParameterNode } from "./nestParameters";
-
 import {
   INESTNodeCollection,
   // INESTSynapseCollection,
   nestNodeCollectionType,
   // nestSynapseCollectionType,
 } from "./interfaceTypes";
-import { updateRecorderNode } from "./nestCreate";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { getNESTSimulateNode } from "./nestSimulate";
+import { loadNESTParameterNode } from "./nestParameters";
 
 export default defineDynamicCodeNode({
   type: "nest.Connect",
@@ -117,8 +115,8 @@ export default defineDynamicCodeNode({
       this.node.view.synapse.paramsAll.forEach((param) => (param.codeNodes.node = synParamNode));
     }
 
-    if (!this.node.view && !this.node.view.model && !this.node.view.model.isRecorder) return;
-    updateRecorderNode(this.node.graph, this.node.view.recorder.codeNode);
+    // if (!this.node.view && !this.node.view.model && !this.node.view.model.isRecorder) return;
+    // updateRecorderNode(this.node.graph, this.node.view.recorder.codeNode);
   },
   onUpdate({ conn_spec }) {
     const inputs: Record<string, () => NodeInterface> = {};
@@ -140,21 +138,21 @@ export default defineDynamicCodeNode({
   },
 });
 
+export const addNESTConnectNode = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
+  if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Connect").length;
+  const codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, -1);
+  if (idx === 0) codeNode.state.comments = "Connect nodes";
+  return codeNode;
+};
+
 export const loadNESTConnectNode = (
   graph: CodeGraph | NESTCodeGraph,
   connectionProps?: INESTConnectionProps,
   nodes: AbstractCodeNode[] = [],
   idx: number = -1,
 ): AbstractCodeNode => {
-  if (idx === -1) {
-    idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Connect").length;
-  }
-
-  // nest.Connect
-  const codeNode = graph.addNodeAtColumn(nestConnect, 3, 100 + 200 * idx, -1, connectionProps);
+  const codeNode = addNESTConnectNode(graph, idx);
   codeNode.state.props = connectionProps;
-
-  if (idx === 0) codeNode.state.comments = "Connect nodes";
 
   if (connectionProps.params) {
     const params = connectionProps.params.filter((param: IParamProps) => ("visible" in param ? param.visible : true));

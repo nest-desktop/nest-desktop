@@ -37,6 +37,7 @@ export interface INodeProps {
   size?: number;
   view?: INodeViewProps;
 }
+
 // export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
 export class BaseNode extends BaseObj {
   private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;

@@ -8,8 +8,14 @@ import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 import nestSimulate from "./nestSimulate";
-import { INESTSimulationProps } from "../../simulation/simulation";
+import { INESTKernelProps } from "./nestSetKernelStatus";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+
+export interface INESTSimulationProps {
+  kernel?: INESTKernelProps;
+  time?: number;
+  modules?: string[];
+}
 
 export default defineCodeNode({
   type: "nest.Simulate",
@@ -51,14 +57,14 @@ export const getNESTSimulateNode = (graph: CodeGraph | NESTCodeGraph): AbstractC
 export const loadNESTSimulationNode = (
   graph: CodeGraph | NESTCodeGraph,
   simulationProps: INESTSimulationProps,
-): void => {
+): AbstractCodeNode => {
   const codeNode = getNESTSimulateNode(graph);
-
-  if (simulationProps) {
-    codeNode.inputs.time.value = simulationProps.time ?? 1000;
-  }
+  codeNode.state.props = simulationProps;
+  if (simulationProps) codeNode.updateValues(simulationProps);
 
   graph.nodes
     .filter((node: AbstractCodeNode) => node.type === "nest.Connect")
     .forEach((node: AbstractCodeNode) => graph.addConnection(node.outputs._node, codeNode.inputs._node));
+
+  return codeNode;
 };

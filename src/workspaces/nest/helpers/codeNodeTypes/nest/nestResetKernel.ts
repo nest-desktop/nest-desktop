@@ -23,6 +23,6 @@ export const getNESTResetKernelNode = (graph: CodeGraph | NESTCodeGraph): Abstra
   return codeNode;
 };
 
-export const loadNESTResetKernelNode = (graph: CodeGraph | NESTCodeGraph): void => {
-  getNESTResetKernelNode(graph);
+export const loadNESTResetKernelNode = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  return getNESTResetKernelNode(graph);
 };

@@ -2,9 +2,18 @@
 
 import { displayInSidebar, NumberInterface } from "baklavajs";
 
+import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import nestRandomUniform from "./nestRandomUniform";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+
+export interface INESTRandomUniformProps {
+  min?: number;
+  max?: number;
+}
 
 export default defineCodeNode({
   type: "nest.random.uniform",
@@ -34,3 +43,22 @@ export default defineCodeNode({
     return `nest.random.uniform(${args.join(", ")})`;
   },
 });
+
+export const addNESTRandomUniform = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
+  const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.random.uniform").length;
+  const codeNode = graph.addNodeAtColumn(nestRandomUniform, -2, 900 + 240 * typeIdx, idx);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
+
+export const loadNESTRandomUniform = (
+  graph: CodeGraph | NESTCodeGraph,
+  randProps?: INESTRandomUniformProps,
+  idx: number = -1,
+): AbstractCodeNode => {
+  const codeNode = addNESTRandomUniform(graph, idx);
+  codeNode.state.props = randProps;
+  if (randProps) codeNode.updateValues(randProps);
+
+  return codeNode;
+};

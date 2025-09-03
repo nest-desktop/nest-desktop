@@ -2,9 +2,17 @@
 
 import { displayInSidebar, NumberInterface } from "baklavajs";
 
+import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import nestRandomExponential from "./nestRandomExponential";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+
+export interface INESTRandomExponentialProps {
+  beta?: number;
+}
 
 export default defineCodeNode({
   type: "nest.random.exponential",
@@ -27,3 +35,20 @@ export default defineCodeNode({
     return `nest.random.exponential(${args.join(", ")})`;
   },
 });
+
+export const addNESTRandomExponential = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  const codeNode = graph.addNodeAtColumn(nestRandomExponential, -2, 900);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
+
+export const loadNESTRandomNormal = (
+  graph: CodeGraph | NESTCodeGraph,
+  randProps?: INESTRandomExponentialProps,
+): AbstractCodeNode => {
+  const codeNode = addNESTRandomExponential(graph);
+  codeNode.state.props = randProps;
+  if (randProps) codeNode.updateValues(randProps);
+
+  return codeNode;
+};

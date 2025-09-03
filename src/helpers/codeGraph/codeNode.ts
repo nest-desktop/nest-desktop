@@ -399,6 +399,14 @@ export abstract class AbstractCodeNode extends AbstractNode {
 
     return props;
   }
+
+  updateValues(props: Record<string, unknown>): void {
+    Object.keys(props).forEach((key: string) => {
+      if (!(key in this.inputs)) return;
+      this.inputs[key].value = props[key];
+      this.inputs[key].setHidden(false);
+    });
+  }
 }
 
 export abstract class CodeNode<I, O> extends AbstractCodeNode {

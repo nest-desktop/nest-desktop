@@ -8,8 +8,13 @@ import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
 import { numberType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 import nestSetKernelStatus from "./nestSetKernelStatus";
-import { INESTSimulationKernelProps } from "../../simulation/simulationKernel";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+
+export interface INESTKernelProps {
+  resolution?: number;
+  localNumThreads?: number;
+  rngSeed?: number;
+}
 
 export default defineCodeNode({
   type: "nest.SetKernelStatus",
@@ -70,16 +75,11 @@ export const getNESTSetKernelStatusNode = (graph: CodeGraph | NESTCodeGraph): Ab
 
 export const loadNESTSetKernelStatusNode = (
   graph: CodeGraph | NESTCodeGraph,
-  kernelProps?: INESTSimulationKernelProps,
-): void => {
+  kernelProps?: INESTKernelProps,
+): AbstractCodeNode => {
   const codeNode = getNESTSetKernelStatusNode(graph);
+  codeNode.state.props = kernelProps;
+  if (kernelProps) codeNode.updateValues(kernelProps);
 
-  if (kernelProps) {
-    codeNode.inputs.local_num_threads.value = kernelProps.localNumThreads;
-    codeNode.inputs.local_num_threads.hidden = kernelProps.localNumThreads === 1;
-    codeNode.inputs.resolution.value = kernelProps.resolution;
-    codeNode.inputs.resolution.hidden = kernelProps.resolution === 0.1;
-    codeNode.inputs.rng_seed.value = kernelProps.rngSeed;
-    codeNode.inputs.rng_seed.hidden = false;
-  }
+  return codeNode;
 };

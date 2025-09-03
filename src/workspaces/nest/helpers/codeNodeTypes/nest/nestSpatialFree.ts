@@ -2,10 +2,14 @@
 
 import { CheckboxInterface, displayInSidebar, IntegerInterface, NumberInterface } from "baklavajs";
 
+import { AbstractCodeNode, formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { NodeInputInterface } from "@/helpers/codeGraph/interface/nodeInputInterface";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { formatInterfaceLabel, formatInterfaceLabels } from "@/helpers/codeGraph/codeNode";
+
+import nestSpatialFree from "./nestSpatialFree";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 
 export default defineCodeNode({
   type: "nest.spatial.free",
@@ -19,6 +23,20 @@ export default defineCodeNode({
   },
   outputs: {
     out: () => new NodeOutputInterface(),
+  },
+  onGraphUpdate() {
+    if (!this.node) return;
+
+    if (!this.node.view) {
+      const codeNode = this.node.getConnectedNodeByInterface("out");
+
+      if (!codeNode || !codeNode.view) return;
+
+      this.node.view = codeNode.view.spatial;
+      this.node.view.codeNodes.node = this.node;
+    }
+
+    this.node.view.init();
   },
   codeTemplate() {
     if (!this.node) return this.type;
@@ -49,3 +67,16 @@ export default defineCodeNode({
     return args.length > 1 ? `nest.spatial.free(\n\t${args.join(",\n\t")}\n)` : `nest.spatial.free(${args.join(", ")})`;
   },
 });
+
+export const addNESTSpatialFree = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
+  const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.spatial.free").length;
+  const codeNode = graph.addNodeAtColumn(nestSpatialFree, -1, 900 + 240 * typeIdx, idx);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
+
+export const loadNESTSpatialFree = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
+  const codeNode = addNESTSpatialFree(graph, idx);
+
+  return codeNode;
+};

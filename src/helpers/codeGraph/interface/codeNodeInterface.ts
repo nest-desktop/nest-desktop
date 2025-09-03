@@ -29,4 +29,13 @@ export class CodeNodeInterface<T = any> extends NodeInterface<T> {
 
     return graph.findNodeById(this.nodeId) as AbstractCodeNode;
   }
+
+  get xx(): string {
+    return "xx";
+  }
+
+  setValue(value: T): void {
+    this.value = value;
+    this.setHidden(false);
+  }
 }

@@ -49,15 +49,15 @@ export const getNESTDataResponseNode = (graph: CodeGraph | NESTCodeGraph): Abstr
 export const loadNESTDataResponseNode = (graph: CodeGraph | NESTCodeGraph): void => {
   const codeNodes = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.Create");
   const spatialNodes = codeNodes.filter((node: AbstractCodeNode) => !node.inputs.positions.hidden);
-  if (spatialNodes.length > 0) {
-    if (!graph.findNodeByType("function")) {
-      const funcNode = graph.addNodeAtColumn(functionNode, 4, 900);
-      funcNode.inputs.code.hidden = false;
-      funcNode.inputs.code.value = "pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
-    }
-  }
 
   const responseNode = getNESTDataResponseNode(graph);
+  const simulateNode = getNESTSimulateNode(graph);
+
+  if (spatialNodes.length > 0 && !graph.findNodeByType("function")) {
+    const funcNode = graph.addNodeAtColumn(functionNode, 4, 900);
+    funcNode.inputs.code.hidden = false;
+    funcNode.inputs.code.value = "pos = lambda n: dict(zip(n.global_id, nest.GetPosition(n)))";
+  }
 
   codeNodes.forEach((codeNode: AbstractCodeNode) => {
     if (!codeNode.inputs.model.value.includes("recorder") && !codeNode.inputs.model.value.includes("meter")) return;
@@ -69,6 +69,5 @@ export const loadNESTDataResponseNode = (graph: CodeGraph | NESTCodeGraph): void
       graph.addConnection(spatialNode.outputs.positions, responseNode.inputs.positions),
     );
 
-  const simulateNode = getNESTSimulateNode(graph);
   graph.addConnection(simulateNode.outputs._node, responseNode.inputs._node);
 };

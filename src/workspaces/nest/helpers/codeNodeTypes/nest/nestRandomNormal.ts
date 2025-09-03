@@ -2,9 +2,18 @@
 
 import { displayInSidebar, NumberInterface } from "baklavajs";
 
+import { AbstractCodeNode, formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+import { CodeGraph } from "@/helpers/codeGraph/codeGraph";
 import { NodeOutputInterface } from "@/helpers/codeGraph/interface/nodeOutputInterface";
 import { defineCodeNode } from "@/helpers/codeGraph/defineCodeNode";
-import { formatInterfaceLabel } from "@/helpers/codeGraph/codeNode";
+
+import nestRandomNormal from "./nestRandomNormal";
+import { NESTCodeGraph } from "../../codeGraph/codeGraph";
+
+export interface INESTRandomNormalProps {
+  mean?: number;
+  std?: number;
+}
 
 export default defineCodeNode({
   type: "nest.random.normal",
@@ -34,3 +43,20 @@ export default defineCodeNode({
     return `nest.random.normal(${args.join(", ")})`;
   },
 });
+
+export const addNESTRandomNormal = (graph: CodeGraph | NESTCodeGraph): AbstractCodeNode => {
+  const codeNode = graph.addNodeAtColumn(nestRandomNormal, -2, 900);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
+
+export const loadNESTRandomNormal = (
+  graph: CodeGraph | NESTCodeGraph,
+  randProps?: INESTRandomNormalProps,
+): AbstractCodeNode => {
+  const codeNode = addNESTRandomNormal(graph);
+  codeNode.state.props = randProps;
+  if (randProps) codeNode.updateValues(randProps);
+
+  return codeNode;
+};

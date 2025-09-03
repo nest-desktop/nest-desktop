@@ -63,7 +63,6 @@ export default defineDynamicCodeNode({
 
 export const addNESTCopyModelNode = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
   if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.CopyModel").length;
-
   const codeNode = graph.addNodeAtColumn(nestCopyModel, 0 - 1, 100 + 250 * idx);
   return codeNode;
 };
@@ -74,6 +73,8 @@ export const loadNESTCopyModelNode = (
   idx: number = -1,
 ): AbstractCodeNode => {
   const codeNode = addNESTCopyModelNode(graph, idx);
+  codeNode.state.props = modelProps;
+
   codeNode.inputs.existing.value = modelProps.existing;
   codeNode.inputs.new.value = modelProps.new;
 

@@ -17,6 +17,7 @@ import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNodes } from "./nodes";
 import { updateNESTParameterNode } from "../codeNodeTypes/nest/nestParameters";
+import { updateNESTSpatialNode } from "../codeNodeTypes/nest/nestCreate";
 
 export interface INESTNodeProps extends INodeProps {
   compartments?: INESTNodeCompartmentProps[];
@@ -316,13 +317,14 @@ export class NESTNode extends BaseNode {
   /**
    * Toggle spatial mode.
    */
-  toggleSpatial(emitOnUpdate: boolean = true): void {
-    const term: string = this.size === 1 ? "grid" : "free";
-    this.spatial.init({
-      positions: this.spatial.hasPositions ? undefined : term,
-    });
+  toggleSpatial(): void {
+    const spatialProps = { positions: this.size === 1 ? "grid" : "free" };
 
-    if (emitOnUpdate) this.onUpdate();
+    updateNESTSpatialNode(
+      this.network.project.code.graph,
+      this.codeNode,
+      this.spatial.hasPositions ? undefined : spatialProps,
+    );
   }
 
   /**

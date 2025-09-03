@@ -60,16 +60,18 @@ export class NESTNodeSpatial extends BaseObj {
   /**
    * Initialize spatial node.
    */
-  init(nodeSpatialProps: INESTNodeSpatialProps): void {
-    switch (nodeSpatialProps.positions) {
-      case "free":
-        this._positions = new FreePositions(this, nodeSpatialProps.specs);
+  init(): void {
+    this.logger.debug("init spatial node");
+
+    this._positions = undefined;
+    if (!this.codeNode) return;
+
+    switch (this.codeNode.type) {
+      case "nest.spatial.free":
+        this._positions = new FreePositions(this);
         break;
-      case "grid":
-        this._positions = new GridPositions(this, nodeSpatialProps.specs);
-        break;
-      default:
-        this._positions = undefined;
+      case "nest.spatial.grid":
+        this._positions = new GridPositions(this);
         break;
     }
   }
