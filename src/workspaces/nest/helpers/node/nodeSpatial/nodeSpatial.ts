@@ -61,7 +61,7 @@ export class NESTNodeSpatial extends BaseObj {
    * Initialize spatial node.
    */
   init(): void {
-    this.logger.debug("init spatial node");
+    this.logger.trace("init spatial node");
 
     this._positions = undefined;
     if (!this.codeNode) return;

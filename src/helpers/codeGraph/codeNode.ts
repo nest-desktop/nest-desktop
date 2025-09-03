@@ -19,6 +19,7 @@ import { truncate } from "@/utils/truncate";
 import { BaseCode } from "../code/code";
 import { CodeGraph } from "./codeGraph";
 import { NodeOutputInterface } from "./interface/nodeOutputInterface";
+import { NodeInputInterface } from "./interface/nodeInputInterface";
 
 interface IAbstractCodeNodeState {
   codeTemplate: string;
@@ -162,7 +163,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node input interface instance
    */
-  getConnectedInputInterfaceByInterface(nodeInterface: string): NodeOutputInterface | null {
+  getConnectedInputInterfaceByInterface(nodeInterface: string): NodeInputInterface | null {
     const nodeInterfaces = this.getConnectedInputInterfacesByInterface(nodeInterface);
     return nodeInterfaces.length > 0 ? nodeInterfaces[0] : null;
   }
@@ -172,22 +173,8 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node input interface instances
    */
-  getConnectedInputInterfacesByInterface(nodeInterface: string): NodeOutputInterface[] {
-    let nodeInterfaces: NodeOutputInterface[] = [];
-
-    if (nodeInterface in this.outputs) {
-      const targets = this.graph?.connections
-        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
-        .filter(
-          (c: CodeNodeConnection) =>
-            c.to.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
-        )
-        .map((c: CodeNodeConnection) => c.from) as NodeOutputInterface[];
-
-      if (targets) nodeInterfaces = nodeInterfaces.concat(targets);
-    }
-
-    return nodeInterfaces;
+  getConnectedInputInterfacesByInterface(nodeInterface: string): NodeInputInterface[] {
+    return this.getConnectedInterfacesByInterface(nodeInterface, "outputs") as NodeInputInterface[];
   }
 
   /**
@@ -195,8 +182,8 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns code node instance or null
    */
-  getConnectedInterfaceByInterface(nodeInterface: string): NodeInterface | null {
-    const interfaces = this.getConnectedInterfacesByInterface(nodeInterface);
+  getConnectedInterfaceByInterface(nodeInterface: string, type?: "inputs" | "outputs"): NodeInterface | null {
+    const interfaces = this.getConnectedInterfacesByInterface(nodeInterface, type);
     return interfaces.length > 0 ? interfaces[0] : null;
   }
 
@@ -205,11 +192,12 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node interface instances
    */
-  getConnectedInterfacesByInterface(nodeInterface: string): NodeInterface[] {
+  getConnectedInterfacesByInterface(nodeInterface: string, type?: "inputs" | "outputs"): NodeInterface[] {
     let nodeInterfaces: NodeInterface[] = [];
 
-    if (nodeInterface in this.inputs) {
+    if (type !== "outputs" && nodeInterface in this.inputs) {
       const sources = this.graph?.connections
+        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
         .filter(
           (c: CodeNodeConnection) =>
             c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
@@ -217,8 +205,10 @@ export abstract class AbstractCodeNode extends AbstractNode {
         .map((c: CodeNodeConnection) => c.from);
       if (sources) nodeInterfaces = nodeInterfaces.concat(sources);
     }
-    if (nodeInterface in this.outputs) {
+
+    if (type !== "inputs" && nodeInterface in this.outputs) {
       const targets = this.graph?.connections
+        .filter((c: CodeNodeConnection) => c.to.type !== "_node")
         .filter(
           (c: CodeNodeConnection) =>
             c.from.id === this.outputs[nodeInterface].id || c.from.id === this.outputs[nodeInterface].id,
@@ -235,8 +225,8 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns node interface instance or null
    */
-  getConnectedNodeByInterface(nodeInterface: string): AbstractCodeNode | null {
-    const nodes = this.getConnectedNodesByInterface(nodeInterface);
+  getConnectedNodeByInterface(nodeInterface: string, type?: "inputs" | "outputs"): AbstractCodeNode | null {
+    const nodes = this.getConnectedNodesByInterface(nodeInterface, type);
     return nodes.length > 0 ? nodes[0] : null;
   }
 
@@ -274,10 +264,10 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @param nodeInterface string
    * @returns code node instances
    */
-  getConnectedNodesByInterface(nodeInterface: string): AbstractCodeNode[] {
+  getConnectedNodesByInterface(nodeInterface: string, type?: "inputs" | "outputs"): AbstractCodeNode[] {
     let nodeIds: string[] = [];
 
-    if (nodeInterface in this.inputs) {
+    if (type !== "outputs" && nodeInterface in this.inputs) {
       const sources = this.graph?.connections
         .filter(
           (c: CodeNodeConnection) =>
@@ -286,7 +276,8 @@ export abstract class AbstractCodeNode extends AbstractNode {
         .map((c: CodeNodeConnection) => c.from.nodeId);
       if (sources) nodeIds = nodeIds.concat(sources);
     }
-    if (nodeInterface in this.outputs) {
+
+    if (type !== "inputs" && nodeInterface in this.outputs) {
       const targets = this.graph?.connections
         .filter(
           (c: CodeNodeConnection) =>
@@ -316,21 +307,7 @@ export abstract class AbstractCodeNode extends AbstractNode {
    * @returns node output interface instances
    */
   getConnectedOutputInterfacesByInterface(nodeInterface: string): NodeOutputInterface[] {
-    let nodeInterfaces: NodeOutputInterface[] = [];
-
-    if (nodeInterface in this.inputs) {
-      const sources = this.graph?.connections
-        .filter((c: CodeNodeConnection) => c.from.type !== "_node")
-        .filter(
-          (c: CodeNodeConnection) =>
-            c.to.id === this.inputs[nodeInterface].id || c.from.id === this.inputs[nodeInterface].id,
-        )
-        .map((c: CodeNodeConnection) => c.from) as NodeOutputInterface[];
-
-      if (sources) nodeInterfaces = nodeInterfaces.concat(sources);
-    }
-
-    return nodeInterfaces;
+    return this.getConnectedInterfacesByInterface(nodeInterface, "inputs") as NodeOutputInterface[];
   }
 
   /**

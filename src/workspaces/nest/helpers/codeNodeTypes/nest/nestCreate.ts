@@ -23,10 +23,11 @@ import { INESTNodeCollection, nestNodeCollectionType } from "./interfaceTypes";
 import { INESTNodeSpatialProps } from "../../node/nodeSpatial/nodeSpatial";
 import { NESTCodeGraph } from "../../codeGraph/codeGraph";
 import { NESTNode } from "../../node/node";
-import { getNESTDataResponseNode } from "./nestDataResponse";
+import { getNESTDataResponseNode, loadNESTDataResponseNode } from "./nestDataResponse";
 import { loadNESTRandomUniform } from "./nestRandomUniform";
 import { loadNESTSpatialFree } from "./nestSpatialFree";
 import { updateNESTParameterNode } from "./nestParameters";
+import { nextTick } from "vue";
 
 export interface INESTNodeProps {
   model?: string;
@@ -102,18 +103,25 @@ export default defineDynamicCodeNode({
     // const paramsNode = updateNESTParameterNode(this.node.graph, this.node, paramsProps);
 
     const paramsNode = this.node.getConnectedNodeByInterface("params");
+    this.node.view.codeNodes.params = paramsNode;
+    this.node.view.paramsAll.forEach((param) => (param.codeNodes.node = paramsNode));
+
     if (paramsNode) {
-      this.node.view.codeNodes.params = paramsNode;
-
-      this.node.view.paramsAll.forEach((param) => (param.codeNodes.node = paramsNode));
       if (!paramsNode.view) paramsNode.view = this.node.view;
-
       paramsNode.onUpdate();
     }
 
-    const spatialNode = this.node.getConnectedNodeByInterface("positions");
+    const spatialNode = this.node.getConnectedNodeByInterface("positions", "inputs");
     this.node.view.codeNodes.spatial = spatialNode;
     this.node.view.spatial.codeNodes.node = spatialNode;
+
+    const responseNode = this.node.getConnectedNodeByInterface("positions", "outputs");
+
+    if (spatialNode) {
+      if (!spatialNode.view) spatialNode.view = this.node.view.spatial;
+
+      spatialNode.onGraphUpdate();
+    }
   },
   onModelUpdate() {
     if (!this.node) return;
@@ -135,7 +143,7 @@ export default defineDynamicCodeNode({
         new NodeOutputInterface("senders", ".events['senders']").use(displayInSidebar, true).setHidden(true);
     }
 
-    const positions = this.node.getConnectedNodeByInterface("positions");
+    const positions = this.node.getConnectedNodeByInterface("positions", "inputs");
     if (positions)
       outputs.positions = () => new NodeOutputInterface("positions").use(displayInSidebar, true).setHidden(true);
 
@@ -273,7 +281,11 @@ export const updateNESTSpatialNode = (
     // }
   }
 
-  spatialNode.onGraphUpdate();
-
   // spatialNode.updateValues(spatialProps);
+
+  nextTick(() => {
+    codeNode.onUpdate();
+    spatialNode.onGraphUpdate();
+    loadNESTDataResponseNode(graph);
+  });
 };
