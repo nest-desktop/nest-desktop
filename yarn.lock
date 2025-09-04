@@ -1076,9 +1076,9 @@
   optionalDependencies:
     global-agent "^3.0.0"
 
-"@electron/node-gyp@git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2":
+"@electron/node-gyp@https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2":
   version "10.2.0-electron.1"
-  resolved "git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2"
+  resolved "https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2"
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
@@ -2634,7 +2634,7 @@
     fflate "~0.8.2"
     meshoptimizer "~0.22.0"
 
-"@types/toposort@^2.0.7":
+"@types/toposort@~2.0":
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/@types/toposort/-/toposort-2.0.7.tgz#dbf7efa6d81fe464283462a0fa93ce808b46d8bb"
   integrity sha512-sQNk65vbC36+UixCkcky+dCr7MlflHcVILg1FVGqlUntsLFv9xd9ToWIVko/gTuin+cVe16t+2YubEFkhnSuPQ==
