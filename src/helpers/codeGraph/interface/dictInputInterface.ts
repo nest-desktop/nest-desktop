@@ -5,7 +5,7 @@ import DictInputComponent from "@/components/codeGraph/DictInputComponent.vue";
 import { dictType } from "@/helpers/codeNodeTypes/base/interfaceTypes";
 
 export class DictInputInterface extends NodeInterface {
-  constructor(name: string, value: Record<string, any>) {
+  constructor(name: string, value: Record<string, unknown>) {
     super(name, value);
     this.setComponent(markRaw(DictInputComponent));
     this.use(setType, dictType);

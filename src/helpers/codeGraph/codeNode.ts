@@ -10,7 +10,6 @@ import {
   NodeInterfaceDefinition,
   NodeInterfaceDefinitionStates,
 } from "baklavajs";
-
 import { reactive, UnwrapRef } from "vue";
 
 import { logger as mainLogger } from "@/utils/logger";
@@ -18,8 +17,8 @@ import { truncate } from "@/utils/truncate";
 
 import { BaseCode } from "../code/code";
 import { CodeGraph } from "./codeGraph";
-import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 import { NodeInputInterface } from "./interface/nodeInputInterface";
+import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 
 interface IAbstractCodeNodeState {
   codeTemplate: string;
@@ -42,7 +41,7 @@ export interface ICodeNodeState<I, O> {
   outputs: NodeInterfaceDefinitionStates<O> & NodeInterfaceDefinitionStates<Record<string, NodeInterface<any>>>;
 }
 
-export interface CodeNodeInterface extends NodeInterface<any> {
+export interface CodeNodeInterface extends NodeInterface<unknown> {
   type?: string;
 }
 
@@ -326,7 +325,13 @@ export abstract class AbstractCodeNode extends AbstractNode {
     else return `${this.inputs[name].value}`;
   }
 
-  override initializeIntf(type: "input" | "output", key: string, intf: CodeNodeInterface) {
+  /**
+   * Initialize code node interface.
+   * @param type input or output
+   * @param key  key for events
+   * @param intf code node interface
+   */
+  private override initializeIntf(type: "input" | "output", key: string, intf: CodeNodeInterface): void {
     intf.isInput = type === "input";
     intf.nodeId = this.id;
     intf.graphId = this.graph?.id;
@@ -486,7 +491,6 @@ export const loadNodeState = (graph: CodeGraph | Graph | undefined, nodeState: I
 
     Object.entries(nodeState.outputs).forEach(([outputKey, outputItem]) => {
       if (outputKey === "_node") return;
-
       if (node.outputs[outputKey]) node.outputs[outputKey].hidden = outputItem.hidden;
     });
   }

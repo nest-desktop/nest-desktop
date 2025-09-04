@@ -8,7 +8,7 @@ import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 
 import { AbstractCodeNode } from "../codeNode";
 
-export class CodeNodeInterface<T = any> extends NodeInterface<T> {
+export class CodeNodeInterface<T = unknown> extends NodeInterface<T> {
   public graphId: string = "";
 
   constructor(name: string, value: T) {
@@ -28,10 +28,6 @@ export class CodeNodeInterface<T = any> extends NodeInterface<T> {
     }
 
     return graph.findNodeById(this.nodeId) as AbstractCodeNode;
-  }
-
-  get xx(): string {
-    return "xx";
   }
 
   setValue(value: T): void {

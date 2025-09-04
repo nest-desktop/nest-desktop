@@ -20,7 +20,7 @@ import { NodeOutputInterface } from "./interface/nodeOutputInterface";
 import { loadNodeState, saveNodeState } from "./codeNode";
 import { nodeType } from "../codeNodeTypes/base/interfaceTypes";
 
-type Dynamic<T> = T & Record<string, any>;
+type Dynamic<T> = T & Record<string, unknown>;
 
 /**
  * @internal

@@ -1,8 +1,8 @@
 // codeGraph.ts
 
+import toposort from "toposort";
 import { AbstractNode, Connection, Graph, IEditorState, IGraphState, NodeInterface } from "baklavajs";
 import { nextTick, reactive, UnwrapRef } from "vue";
-import toposort from "toposort";
 
 import { truncate } from "@/utils/truncate";
 import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
@@ -10,6 +10,7 @@ import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 import { AbstractCodeNode } from "./codeNode";
 import { BaseCode } from "../code/code";
 import { BaseObj } from "../common/base";
+import { CodeNodeInterface } from "./interface/codeNodeInterface";
 
 interface ICodeGraphState {
   editor: IEditorState | null;
@@ -96,9 +97,9 @@ export class CodeGraph extends BaseObj {
    * @param from code node interface
    * @param to code node interface
    */
-  addConnection(from: NodeInterface, to: NodeInterface): void {
-    from.hidden = false;
-    to.hidden = false;
+  addConnection(from: CodeNodeInterface | NodeInterface, to: CodeNodeInterface | NodeInterface): void {
+    if (from.type !== "node") from.hidden = false;
+    if (to.type !== "node") to.hidden = false;
     this.graph.addConnection(from, to);
   }
 

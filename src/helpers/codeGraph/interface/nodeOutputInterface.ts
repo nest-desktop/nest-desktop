@@ -6,7 +6,7 @@ import NodeOutputComponent from "@/components/codeGraph/NodeOutputComponent.vue"
 
 import { CodeNodeInterface } from "./codeNodeInterface";
 
-export class NodeOutputInterface<T = any> extends CodeNodeInterface<T> {
+export class NodeOutputInterface<T = unknown> extends CodeNodeInterface<T> {
   private _codeTemplate = "";
 
   constructor(name: string = "", codeTemplate: string = "") {
