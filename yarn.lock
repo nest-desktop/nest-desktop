@@ -1076,9 +1076,9 @@
   optionalDependencies:
     global-agent "^3.0.0"
 
-"@electron/node-gyp@git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2":
+"@electron/node-gyp@https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2":
   version "10.2.0-electron.1"
-  resolved "git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2"
+  resolved "https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2"
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
@@ -2412,7 +2412,7 @@
   resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.2.6.tgz#9d4f903f4ad373699b253aa1369727bc5042811f"
   integrity sha512-t+8/QWTAhOFlrF1IVZqKnMRJi84EgkIK5Kh0p2JV4OLywUvCwJPFxbJAl7XAow7DVIHsF+xW9f1MVzg0L6Szjw==
 
-"@types/node@*":
+"@types/node@*", "@types/node@~24.3":
   version "24.3.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-24.3.0.tgz#89b09f45cb9a8ee69466f18ee5864e4c3eb84dec"
   integrity sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow==
@@ -2423,13 +2423,6 @@
   version "22.18.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.18.0.tgz#9e4709be4f104e3568f7dd1c71e2949bf147a47b"
   integrity sha512-m5ObIqwsUp6BZzyiy4RdZpzWGub9bqLJMvZDD0QMXhxjqMHMENlj+SqF5QxoUwaQNFe+8kz8XM8ZQhqkQPTgMQ==
-  dependencies:
-    undici-types "~6.21.0"
-
-"@types/node@~22.15":
-  version "22.15.35"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.15.35.tgz#611a3172bcb4ec5761ee394c6e9c07620c70364e"
-  integrity sha512-stV91mHxlWpDksiUiivmFfQzjy2JLlb2NUTxKipiANEbxBZsdbDU9fSrT7SHY4uoCXAxYfJZVasn3x2/hqpd3g==
   dependencies:
     undici-types "~6.21.0"
 
@@ -2634,7 +2627,7 @@
     fflate "~0.8.2"
     meshoptimizer "~0.22.0"
 
-"@types/toposort@^2.0.7":
+"@types/toposort@~2.0":
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/@types/toposort/-/toposort-2.0.7.tgz#dbf7efa6d81fe464283462a0fa93ce808b46d8bb"
   integrity sha512-sQNk65vbC36+UixCkcky+dCr7MlflHcVILg1FVGqlUntsLFv9xd9ToWIVko/gTuin+cVe16t+2YubEFkhnSuPQ==

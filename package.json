@@ -68,13 +68,13 @@
     "@types/d3": "~7.4",
     "@types/js-yaml": "~4.0",
     "@types/mustache": "~4.2",
-    "@types/node": "~22.15",
+    "@types/node": "~24.3",
     "@types/object-hash": "~3.0",
     "@types/pouchdb": "~6.4",
     "@types/pouchdb-upsert": "~2.2",
     "@types/semver": "~7.7",
     "@types/three": "~0.180",
-    "@types/toposort": "^2.0.7",
+    "@types/toposort": "~2.0",
     "@types/uuid": "~10.0",
     "@types/webfontloader": "~1.6",
     "@vite-pwa/assets-generator": "~1.0",
@@ -113,7 +113,7 @@
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "elestron: Could not detect abi for version 38.0.0 and runtime electron.",
-    "node: Use node LTS version (v22)",
+    "node: Use node LTS version (v24)",
     "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
   ],
   "bugs": {
