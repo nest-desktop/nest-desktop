@@ -86,13 +86,7 @@ export const useAppStore = defineStore(
       const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
       const themeValue = state.theme === "auto" ? (darkThemeQuery.matches ? "dark" : "light") : state.theme;
 
-      if (themeInstance.global) {
-        themeInstance.global.name.value = themeValue;
-        // @ts-expect-error Property 'window' does not exist on type 'ThemeInstance'.
-      } else if (themeInstance.window) {
-        // @ts-expect-error Property 'window' does not exist on type 'ThemeInstance'.
-        themeInstance.window.name.value = themeValue;
-      }
+      themeInstance.change(themeValue);
 
       window.dispatchEvent(new Event("relayout"));
     };
