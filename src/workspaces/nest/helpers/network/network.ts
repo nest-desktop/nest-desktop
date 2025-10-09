@@ -139,7 +139,7 @@ export class NESTNetwork extends BaseNetwork {
    * @returns a list of models
    */
   getNodeModelsByElementType(elementType: string): (NESTModel | NESTCopyModel)[] {
-    this.logger.debug("get node models by element type", elementType);
+    this.logger.trace("get node models by element type", elementType);
     return elementType === "copied"
       ? this.copyModels.filterByGeneralElementType("node")
       : this.project.modelDBStore.getModelsByElementType(elementType);
