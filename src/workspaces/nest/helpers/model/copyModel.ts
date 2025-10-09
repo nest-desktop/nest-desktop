@@ -93,7 +93,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0 && "weight_recorder" in this.params;
+    return this._paramsVisible.length > 0 || this.hasWeightRecorderParam;
   }
 
   get copyModels(): NESTCopyModels {
@@ -347,15 +347,14 @@ export class NESTCopyModel extends BaseObj {
     this.logger.trace("Add parameters");
 
     this.emptyParams();
-
     if (this.model) {
       this.model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
-          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
-          if (nodeParamProps) {
+          const modelParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
+          if (modelParamProps) {
             this.addParameter(
               {
-                ...nodeParamProps,
+                ...modelParamProps,
                 ...modelParam,
               },
               true,

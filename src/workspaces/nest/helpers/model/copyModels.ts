@@ -83,7 +83,9 @@ export class NESTCopyModels extends BaseObj {
       new: modelId + "_copied" + (this._models.length + 1),
       params: paramProps,
     };
-    return this.add(modelProps);
+    const copyModel = this.add(modelProps);
+    copyModel.init();
+    return copyModel;
   }
 
   /**

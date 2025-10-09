@@ -138,7 +138,7 @@ import ParamListItem from "@/components/parameter/ParamListItem.vue";
 
 import CopyModelMenu from "./CopyModelMenu.vue";
 import { NESTModel } from "../../helpers/model/model";
-import { NESTCopyModel } from "../../helpers/model/copyModel";
+import type { NESTCopyModel } from "../../helpers/model/copyModel";
 
 const props = defineProps<{ model: NESTCopyModel }>();
 const model = computed(() => props.model);
