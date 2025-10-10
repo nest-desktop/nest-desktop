@@ -1,4 +1,27 @@
 <template>
+  <v-snackbar v-model="code.state.locked" :timeout="-1">
+    <v-icon color="warning" icon="mdi:mdi-exclamation-thick" />
+    <v-icon color="warning" icon="mdi:mdi-exclamation-thick" />
+    The code script has been edited and locked for updates.
+
+    <template #actions>
+      <v-btn variant="outlined" style="--v-btn-height: 36px" @click="lockCode(false)">Unlock</v-btn>
+    </template>
+  </v-snackbar>
+
+  <div style="position: absolute; right: 12px; top: 8px; z-index: 1000">
+    <!-- <v-fab
+      v-if="code.state.locked"
+      color="warning"
+      icon="mdi:mdi-sync-off"
+      size="small"
+      title="The script is locked."
+      variant="text"
+      @click="lockCode(false)"
+    /> -->
+    <CopyToClipboard :text="code.script" />
+  </div>
+
   <codemirror
     v-model="code.script"
     :extensions
@@ -7,6 +30,7 @@
     @focus="() => (state.focused = true)"
     @ready="handleReady"
     @update="updateView($event)"
+    @keydown="lockCode(true)"
   />
 </template>
 
@@ -18,6 +42,7 @@ import { computed, nextTick, reactive, shallowRef, watch } from "vue";
 import { TCode } from "@/types";
 import { autocompletion, basicSetup, languagePython, oneDark, codeError } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
+import CopyToClipboard from "./CopyToClipboard.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -48,6 +73,11 @@ const handleReady = (payload: MouseEvent) => {
 
 const updateView = (event: EditorView) => {
   state.cursor = event.state.selection.ranges[0];
+};
+
+const lockCode = (value: boolean) => {
+  code.value.state.locked = value;
+  if (!value) code.value.generate();
 };
 
 watch(

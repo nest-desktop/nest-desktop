@@ -26,6 +26,7 @@ export interface ICodeProps {
 
 interface ICodeState {
   error: IAxiosErrorData;
+  locked: boolean;
   script: string;
   template?: string;
   templateFilename: string;
@@ -44,9 +45,10 @@ export class BaseCode extends BaseObj {
         lineNumber: -1,
         message: "",
       },
+      locked: false,
+      script: "",
       templateFilename: codeProps?.templateFilename || "code",
       template: "",
-      script: "",
     });
 
     if (this._state.templateFilename) this.loadTemplate();
@@ -140,6 +142,7 @@ export class BaseCode extends BaseObj {
    * Renders the script and generates the hash.
    */
   generate(): void {
+    if (this.state.locked) return;
     this.logger.trace("generate");
 
     if (this._state.template) {
