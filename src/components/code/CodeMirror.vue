@@ -1,24 +1,14 @@
 <template>
   <v-snackbar v-model="code.state.locked" :timeout="-1">
     <v-icon color="warning" icon="mdi:mdi-exclamation-thick" />
-    <v-icon color="warning" icon="mdi:mdi-exclamation-thick" />
-    The code script has been edited and locked for updates.
+    The code script has been edited and will not be generated.
 
     <template #actions>
-      <v-btn variant="outlined" style="--v-btn-height: 36px" @click="lockCode(false)">Unlock</v-btn>
+      <v-btn variant="outlined" style="--v-btn-height: 36px" @click="lockCode(false)">Undo</v-btn>
     </template>
   </v-snackbar>
 
   <div style="position: absolute; right: 12px; top: 8px; z-index: 1000">
-    <!-- <v-fab
-      v-if="code.state.locked"
-      color="warning"
-      icon="mdi:mdi-sync-off"
-      size="small"
-      title="The script is locked."
-      variant="text"
-      @click="lockCode(false)"
-    /> -->
     <CopyToClipboard :text="code.script" />
   </div>
 
@@ -99,7 +89,7 @@ watch(
 );
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .px-1px {
   padding-left: 1px;
   padding-right: 1px;
@@ -110,6 +100,6 @@ watch(
 }
 
 .cm-panels-bottom {
-  padding: 4px;
+  padding: 0 4px;
 }
 </style>

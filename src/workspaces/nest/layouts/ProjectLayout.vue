@@ -110,61 +110,59 @@
       </template>
 
       <template #nodes>
-        <div :key="project.network.nodes.length">
-          <div v-for="(node, index) in project.network.nodes.all" :key="index">
-            <NodeEditor v-if="node.isNode" :node="node as NESTNode">
-              <template #nodeMenuContent>
-                <NESTNodeMenuList :node="node as NESTNode" />
-              </template>
+        <div v-for="(node, index) in project.network.nodes.all" :key="index">
+          <NodeEditor v-if="node.isNode" :node="node as NESTNode">
+            <template #nodeMenuContent>
+              <NESTNodeMenuList :node="node as NESTNode" />
+            </template>
 
-              <template #nodeModelSelect="{ selectState }">
-                <NodeModelSelect :element-types :node="node as NESTNode" @open-menu="() => (selectState.menu = true)" />
-              </template>
+            <template #nodeModelSelect="{ selectState }">
+              <NodeModelSelect :element-types :node="node as NESTNode" @open-menu="() => (selectState.menu = true)" />
+            </template>
 
-              <template #popItem>
-                <v-list-item class="param pl-0 pr-1">
-                  <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial as NESTNodeSpatial" />
+            <template #popItem>
+              <v-list-item class="param pl-0 pr-1">
+                <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial as NESTNodeSpatial" />
 
-                  <ValueSlider
-                    v-else
-                    id="n"
-                    v-model="node.size"
-                    :thumb-color="node.view.color"
-                    input-label="n"
-                    label="population size"
-                    @update:model-value="node.changes()"
-                  />
+                <ValueSlider
+                  v-else
+                  id="n"
+                  v-model="node.size"
+                  :thumb-color="node.view.color"
+                  input-label="n"
+                  label="population size"
+                  @update:model-value="node.changes()"
+                />
 
-                  <template #append>
-                    <Menu :items="getPopItems(node as NESTNode)" size="x-small" />
-                  </template>
-                </v-list-item>
-              </template>
+                <template #append>
+                  <Menu :items="getPopItems(node as NESTNode)" size="x-small" />
+                </template>
+              </v-list-item>
+            </template>
 
-              <template #connectionEditor>
-                <ConnectionEditor
-                  v-for="(connection, connectionIdx) in node.connections"
-                  :key="connectionIdx"
-                  :connection
-                >
-                  <template #panelTitle>
-                    <div class="d-flex flex-column justify-center align-center text-grey">
-                      {{ connection.rule.value }}
-                      <div v-if="connection.view.connectOnlyNeurons()">
-                        {{ connection.synapse.modelId }}
-                      </div>
+            <template #connectionEditor>
+              <ConnectionEditor
+                v-for="(connection, connectionIdx) in node.connections"
+                :key="connectionIdx"
+                :connection
+              >
+                <template #panelTitle>
+                  <div class="d-flex flex-column justify-center align-center text-grey">
+                    {{ connection.rule.value }}
+                    <div v-if="connection.view.connectOnlyNeurons()">
+                      {{ connection.synapse.modelId }}
                     </div>
-                  </template>
+                  </div>
+                </template>
 
-                  <template #synapseSpecEditor>
-                    <SynapseSpecEditor :synapse="(connection.synapse as NESTSynapse)" />
-                  </template>
-                </ConnectionEditor>
-              </template>
-            </NodeEditor>
+                <template #synapseSpecEditor>
+                  <SynapseSpecEditor :synapse="(connection.synapse as NESTSynapse)" />
+                </template>
+              </ConnectionEditor>
+            </template>
+          </NodeEditor>
 
-            <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" />
-          </div>
+          <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" />
         </div>
       </template>
 
@@ -174,6 +172,7 @@
     </ProjectController>
 
     <router-view :key="projectStore.state.projectId" name="project" />
+    <BottomCode :code="project.code" :store="projectViewStore" />
   </template>
 </template>
 
@@ -181,6 +180,7 @@
 import { computed, onMounted, ref } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
+import BottomCode from "@/components/code/BottomCode.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";
@@ -211,6 +211,9 @@ const route = useRoute();
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
+
+import { useNavStore } from "@/stores/navStore";
+const navStore = useNavStore();
 
 import { doCopyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();

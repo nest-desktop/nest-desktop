@@ -1,10 +1,17 @@
 <template>
   <v-tooltip v-if="copied" text="Copied">
     <template #activator="tooltipProps">
-      <v-fab v-bind="tooltipProps.props" icon="mdi:mdi-check-bold" color="success" size="small" variant="text" />
+      <v-btn v-bind="tooltipProps.props" color="success" icon="mdi:mdi-check-bold" size="small" variant="tonal" />
     </template>
   </v-tooltip>
-  <v-fab v-else icon="mdi:mdi-content-copy" size="small" variant="text" @click="copy" />
+  <v-btn
+    v-else
+    icon="mdi:mdi-content-copy"
+    size="small"
+    title="Copy code script"
+    variant="tonal"
+    @click="copy"
+  />
 </template>
 
 <script setup lang="ts">
@@ -23,7 +30,7 @@ const copy = async () => {
   try {
     await toClipboard(text.value as string);
     copied.value = true;
-    setTimeout(() => (copied.value = false), 1500);
+    setTimeout(() => (copied.value = false), 2000);
   } catch (e) {
     console.error(e);
   }

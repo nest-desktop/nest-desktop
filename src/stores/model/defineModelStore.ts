@@ -259,18 +259,6 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
         updateRecentAddedModels,
         updateProject,
       };
-    },
-    {
-      persist: [
-        {
-          pick: ["state.recentAddedModels"],
-          storage: localStorage,
-        },
-        {
-          pick: ["state.bottomNav", "state.controller", "state.views"],
-          storage: sessionStorage,
-        },
-      ],
-    },
+    }
   );
 }
