@@ -3,7 +3,7 @@
     <v-expansion-panels class="pa-0" variant="accordion">
       <v-expansion-panel density="compact">
         <v-expansion-panel-title class="expansion-panel-title d-flex align-center pl-0 pr-2">
-          <v-btn-group mandatory variant="text" @click.stop>
+          <v-btn-group mandatory variant="text" style="overflow-x: hidden" @click.stop>
             <v-btn icon="mdi:mdi-skip-backward" title="set first frame" @click="graph.setFirstFrame()" />
             <v-btn :active="graph.state.frames.speed < -1" icon title="speed down" @click="graph.decrementFrameSpeed()">
               <v-icon class="mdi-rotate-180" icon="mdi:mdi-fast-forward" />

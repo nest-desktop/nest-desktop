@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div style="height: 100%; position: relative; width: 100%">
     <v-snackbar v-model="code.state.locked" :timeout="-1">
       <v-icon color="warning" icon="mdi:mdi-exclamation-thick" />
       The code script has been edited and will not be generated.
