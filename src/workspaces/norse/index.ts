@@ -64,7 +64,7 @@ export const norse: IWorkspaceProps = {
     "norse-accent": "#e6007e",
     "norse-green": "#0F9959",
     "norse-logo": "#000080",
-    norse: "#e6007e",
+    "norse": "#e6007e",
   },
   title: "Norse",
   views: {},

@@ -156,13 +156,13 @@
                 </template>
 
                 <template #synapseSpecEditor>
-                  <SynapseSpecEditor :synapse="(connection.synapse as NESTSynapse)" />
+                  <SynapseSpecEditor :synapse="connection.synapse as NESTSynapse" />
                 </template>
               </ConnectionEditor>
             </template>
           </NodeEditor>
 
-          <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" />
+          <NodeGroupEditor v-if="node.isGroup" :node-group="node as TNodeGroup" />
         </div>
       </template>
 

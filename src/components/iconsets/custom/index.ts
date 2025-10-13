@@ -9,7 +9,7 @@ import type { IconSet, IconProps } from "vuetify";
 const customSvgNameToComponent: Record<string, any> = {
   "dice-multiple-outline": diceMultipleOutlineIcon,
   "dots-grid": dotsGridIcon,
-  slider: sliderIcon,
+  "slider": sliderIcon,
 };
 
 const custom: IconSet = {

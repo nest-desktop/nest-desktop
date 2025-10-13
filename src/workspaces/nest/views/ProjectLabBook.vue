@@ -5,12 +5,12 @@
     </v-layout>
 
     <v-row no-gutters>
-      <v-col  v-if="currentProject.network.models.all.length > 0" class="pa-1" cols="12" :sm="6">
+      <v-col v-if="currentProject.network.models.all.length > 0" class="pa-1" cols="12" :sm="6">
         <div class="text-button">Copied models</div>
         <CopyModelViewer
           v-for="(model, index) in currentProject.network.models.all"
           :key="index"
-          :model="(model as NESTCopyModel)"
+          :model="model as NESTCopyModel"
         />
       </v-col>
 
@@ -19,7 +19,7 @@
         <NodeViewer
           v-for="(node, index) in currentProject.network.nodes.stimulators"
           :key="index"
-          :node="(node as NESTNode)"
+          :node="node as NESTNode"
         />
       </v-col>
 
@@ -28,7 +28,7 @@
         <NodeViewer
           v-for="(node, index) in currentProject.network.nodes.neurons"
           :key="index"
-          :node="(node as NESTNode)"
+          :node="node as NESTNode"
         />
       </v-col>
 
@@ -37,7 +37,7 @@
         <NodeViewer
           v-for="(node, index) in currentProject.network.nodes.recorders"
           :key="index"
-          :node="(node as NESTNode)"
+          :node="node as NESTNode"
         />
       </v-col>
     </v-row>

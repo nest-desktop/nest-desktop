@@ -3,7 +3,7 @@
     <v-list density="compact" width="100%">
       <v-list-item class="param pl-0 pr-1">
         <ValueSlider
-          :model-value="(synapse.params.weight.state.value as number)"
+          :model-value="synapse.params.weight.state.value as number"
           :thumb-color="synapse.connection.sourceNode.view.color"
           v-bind="weightOptions"
           @update:model-value="update"

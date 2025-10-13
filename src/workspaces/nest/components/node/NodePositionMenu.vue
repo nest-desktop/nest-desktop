@@ -22,10 +22,11 @@
           step="1"
           true-icon="mdi:mdi-numeric-3"
           @update:model-value="
-            (value: boolean | null) => nextTick(() => {
-              nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 })
-              nodeSpatial.changes()
-            })
+            (value: boolean | null) =>
+              nextTick(() => {
+                nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 });
+                nodeSpatial.changes();
+              })
           "
         />
 

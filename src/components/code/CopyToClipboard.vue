@@ -4,14 +4,7 @@
       <v-btn v-bind="tooltipProps.props" color="success" icon="mdi:mdi-check-bold" size="small" variant="tonal" />
     </template>
   </v-tooltip>
-  <v-btn
-    v-else
-    icon="mdi:mdi-content-copy"
-    size="small"
-    title="Copy code script"
-    variant="tonal"
-    @click="copy"
-  />
+  <v-btn v-else icon="mdi:mdi-content-copy" size="small" title="Copy code script" variant="tonal" @click="copy" />
 </template>
 
 <script setup lang="ts">

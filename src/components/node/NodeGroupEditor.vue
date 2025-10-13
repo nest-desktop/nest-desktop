@@ -25,7 +25,7 @@
               }
             "
           >
-            <NodeAvatar :node="(node as TNode)" size="32" />
+            <NodeAvatar :node="node as TNode" size="32" />
           </v-btn>
         </v-btn-group>
 
@@ -47,7 +47,7 @@
           <ConnectionEditor
             v-for="(connection, index) in nodeGroup.connections"
             :key="index"
-            :connection="(connection as TConnection)"
+            :connection="connection as TConnection"
           />
         </v-expansion-panels>
       </v-row>

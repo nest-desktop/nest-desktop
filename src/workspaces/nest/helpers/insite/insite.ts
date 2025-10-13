@@ -303,8 +303,8 @@ export class Insite extends BaseObj {
           senders.length > 0
             ? 250
             : this._state.spikesRequestTimeout >= 5000
-            ? 5000
-            : this._state.spikesRequestTimeout + 250;
+              ? 5000
+              : this._state.spikesRequestTimeout + 250;
 
         if (senders == undefined || senders.length === 0) {
           setTimeout(() => this.getAllFirstSpikeActivity(), this._state.spikesRequestTimeout);

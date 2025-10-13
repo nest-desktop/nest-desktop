@@ -25,7 +25,7 @@
         <ConnectionViewer
           v-for="(connection, index) in node.connections"
           :key="index"
-          :connection="(connection as BaseConnection)"
+          :connection="connection as BaseConnection"
         />
       </v-expansion-panels>
     </v-card-actions>

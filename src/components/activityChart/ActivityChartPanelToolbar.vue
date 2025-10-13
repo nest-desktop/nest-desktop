@@ -20,7 +20,7 @@
             <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="itemProps" />
           </template>
 
-          <ActivityChartPanelMenuPopover :graph="(panel.graph as ActivityChartGraph)" @changed="selectModel" />
+          <ActivityChartPanelMenuPopover :graph="panel.graph as ActivityChartGraph" @changed="selectModel" />
         </v-menu>
       </v-btn-group>
     </template>

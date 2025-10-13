@@ -59,7 +59,7 @@ export class SimulationCode extends BaseCode {
             notifyError(responseData.message as string);
             this.state.error = responseData;
           }
-          console.log(responseData)
+          console.log(responseData);
         } else if ("request" in error) {
           // The request was made but no response was received.
           notifyError("Failed to perform simulation (Simulator backend is not running).");

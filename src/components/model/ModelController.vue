@@ -27,7 +27,11 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="modelViewStore.state.bottomCode.active && modelStore.state.project ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
+          :icon="
+            modelViewStore.state.bottomCode.active && modelStore.state.project
+              ? 'mdi:mdi-arrow-expand-down'
+              : 'mdi:mdi-arrow-expand-up'
+          "
           :disabled="modelStore.state.project == null"
           value="code"
           variant="plain"
@@ -51,16 +55,12 @@
 
       <v-list>
         <v-list-subheader>States</v-list-subheader>
-        <ParamViewer
-          v-for="(state, index) in modelStore.model.states"
-          :key="index"
-          :param="(state as TModelParameter)"
-        />
+        <ParamViewer v-for="(state, index) in modelStore.model.states" :key="index" :param="state as TModelParameter" />
       </v-list>
 
       <v-list>
         <v-list-subheader>Parameters</v-list-subheader>
-        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param="(param as TModelParameter)" />
+        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param="param as TModelParameter" />
       </v-list>
     </template>
 
@@ -104,7 +104,7 @@
         <ParamListItem
           v-for="(param, index) in modelParams"
           :key="index"
-          :param="(param as TModelParameter)"
+          :param="param as TModelParameter"
           @update:param-value="updateCode()"
         >
           <template #append>
@@ -131,7 +131,7 @@
     <template v-else-if="modelViewStore.state.views.controller === 'activity'">
       <slot name="activityController">
         <ActivityChartController
-          :graph="(modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph)"
+          :graph="modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph"
         />
       </slot>
     </template>

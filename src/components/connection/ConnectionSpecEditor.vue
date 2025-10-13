@@ -51,7 +51,7 @@
       v-for="(param, index) in connection.filteredParams"
       :key="index"
       :color="connection.sourceNode.view.color"
-      :param="(param as ConnectionParameter)"
+      :param="param as ConnectionParameter"
     />
   </v-list>
 </template>

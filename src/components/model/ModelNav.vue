@@ -99,7 +99,7 @@
               <template #append>
                 <template v-if="item.state">
                   <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
-                  <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
+                  <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="item as TModel" />
                 </template>
               </template>
             </v-list-item>

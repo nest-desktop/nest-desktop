@@ -91,7 +91,7 @@ export const nest: IWorkspaceProps = {
   route,
   stores: {},
   theme: {
-    nest: "ff6633",
+    "nest": "ff6633",
     "nest-model": "ff6633",
     "nest-project": "1281b3",
   },

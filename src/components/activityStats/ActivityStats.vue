@@ -27,7 +27,7 @@
           <v-expansion-panel v-if="activity">
             <v-expansion-panel-title class="py-0">
               <v-row class="text-button">
-                <NodeAvatar :node="(activity.recorder as TNode)" />
+                <NodeAvatar :node="activity.recorder as TNode" />
                 <v-spacer />
                 {{ activity.recorder.model.state.label }}
                 <v-spacer />

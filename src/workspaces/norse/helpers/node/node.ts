@@ -35,12 +35,12 @@ export class NorseNode extends BaseNode {
       this.hasStart && this.hasStop
         ? (this.simulation.time > this.stop ? this.stop : this.simulation.time) - this.start
         : this.hasStart
-        ? this.simulation.time > this.start
-          ? this.simulation.time - this.start
-          : 0
-        : this.hasStop
-        ? this.stop
-        : this.simulation.time
+          ? this.simulation.time > this.start
+            ? this.simulation.time - this.start
+            : 0
+          : this.hasStop
+            ? this.stop
+            : this.simulation.time
     ) as number;
   }
 

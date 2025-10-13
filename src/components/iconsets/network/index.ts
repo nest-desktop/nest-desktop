@@ -27,7 +27,7 @@ const networkSvgNameToComponent: Record<string, any> = {
   "synapse-inhibitory": synapseInhibitory,
   "synapse-recorder": synapseRecorder,
   connection,
-  network: networkIcon,
+  "network": networkIcon,
   recorder,
   stimulator,
 };

@@ -49,7 +49,7 @@
     <div :key="projectStore.state.projectId" style="height: 100%">
       <template v-if="projectViewStore.state.views.controller === 'network'">
         <slot name="network">
-          <NetworkSpecEditor :network="(project.network as BaseNetwork)">
+          <NetworkSpecEditor :network="project.network as BaseNetwork">
             <template #model>
               <slot name="model" />
             </template>
@@ -62,7 +62,7 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'kernel'">
         <slot name="simulationKernel">
-          <SimulationKernelEditor :simulation="(project.simulation as BaseSimulation)" />
+          <SimulationKernelEditor :simulation="project.simulation as BaseSimulation" />
         </slot>
       </template>
 
@@ -101,12 +101,12 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'activity'">
         <slot name="activityController">
-          <ActivityChartController :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)" />
+          <ActivityChartController :graph="project.activityGraph.activityChartGraph as ActivityChartGraph" />
         </slot>
       </template>
 
       <template v-else-if="projectViewStore.state.views.controller === 'stats'">
-        <ActivityStats :activities="(project.activities as Activities)" />
+        <ActivityStats :activities="project.activities as Activities" />
       </template>
     </div>
   </v-navigation-drawer>

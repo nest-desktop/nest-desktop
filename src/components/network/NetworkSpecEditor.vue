@@ -41,8 +41,8 @@
 
     <slot name="nodes">
       <div v-for="(node, index) in network.nodes.all" :key="index">
-        <NodeEditor v-if="node.isNode" :node="(node as TNode)" />
-        <NodeGroupEditor v-if="node.isGroup" :node-group="(node as TNodeGroup)" />
+        <NodeEditor v-if="node.isNode" :node="node as TNode" />
+        <NodeGroupEditor v-if="node.isGroup" :node-group="node as TNodeGroup" />
       </div>
     </slot>
   </div>
