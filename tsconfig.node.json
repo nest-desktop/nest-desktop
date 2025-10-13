@@ -20,6 +20,6 @@
     "types": ["node"],
 
     /* Check for class properties that are declared but not set in the constructor. */
-    "strictPropertyInitialization": false,             
+    "strictPropertyInitialization": false
   }
 }

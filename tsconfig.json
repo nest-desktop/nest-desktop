@@ -1,37 +1,4 @@
 {
-  // "compilerOptions": {
-  //   "baseUrl": ".",
-  //   "target": "ESNext",
-  //   "useDefineForClassFields": true,
-  //   "module": "ESNext",
-  //   "esModuleInterop": true,
-  //   "lib": ["ESNext", "DOM"],
-  //   "skipLibCheck": true,
-
-  // // Allow property without initialization.
-  // "strictPropertyInitialization": false,
-
-  //   /* Bundler mode */
-  //   "moduleResolution": "bundler",
-  //   "allowImportingTsExtensions": true,
-  //   "resolveJsonModule": true,
-  //   "isolatedModules": true,
-  //   "noEmit": true,
-  //   "jsx": "preserve",
-
-  //   /* Linting */
-  //   "strict": true,
-  //   "noUnusedLocals": true,
-  //   "noUnusedParameters": true,
-  //   "noFallthroughCasesInSwitch": true,
-
-  //   "paths": {
-  //     "@/*": ["src/*"]
-  //   },
-  //   "types": ["vite-plugin-pwa/client"]
-  // },
-  // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "electron"],
-  // "exclude": ["node_modules", "src/**/_*.*"],
   "files": [],
   "references": [
     {
