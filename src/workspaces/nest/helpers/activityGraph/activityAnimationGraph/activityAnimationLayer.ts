@@ -1,6 +1,6 @@
 // activityAnimationLayer.ts
 
-import { GridHelper, Group, type Object3DEventMap, type Vector3 } from "three";
+import { GridHelper, Group, type Object3DEventMap, Vector3 } from "three";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { IEventProps } from "@/helpers/activity/activity";
