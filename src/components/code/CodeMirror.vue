@@ -15,7 +15,7 @@
   <codemirror
     v-model="code.script"
     :extensions
-    style="font-size: 0.75rem; width: 100%"
+    style="font-size: 0.75rem; width: 100%; height: 100%"
     @blur="() => (state.focused = false)"
     @focus="() => (state.focused = true)"
     @ready="handleReady"
@@ -89,7 +89,7 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .px-1px {
   padding-left: 1px;
   padding-right: 1px;

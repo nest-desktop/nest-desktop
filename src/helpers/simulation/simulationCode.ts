@@ -28,6 +28,8 @@ export class SimulationCode extends BaseCode {
 
     return this.exec()
       .then((response: AxiosResponse<IAxiosResponseData>) => {
+        if (!response) return response;
+
         switch (response.status) {
           case 0:
             notifyError("Failed to find Simulator.");
@@ -43,6 +45,7 @@ export class SimulationCode extends BaseCode {
           default:
             break;
         }
+
         return response;
       })
       .catch((error: AxiosError<IAxiosErrorData | string>) => {
@@ -56,6 +59,7 @@ export class SimulationCode extends BaseCode {
             notifyError(responseData.message as string);
             this.state.error = responseData;
           }
+          console.log(responseData)
         } else if ("request" in error) {
           // The request was made but no response was received.
           notifyError("Failed to perform simulation (Simulator backend is not running).");

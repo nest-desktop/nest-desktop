@@ -14,7 +14,7 @@
     title="Edit mode"
   /> -->
 
-  <CodeMirror v-if="code" :code />
+  <CodeMirror v-if="code" :code style="height:100%" />
 </template>
 
 <script setup lang="ts">

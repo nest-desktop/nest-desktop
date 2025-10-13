@@ -132,6 +132,8 @@ export function defineBackendStore(workspace: string, name: string, url: string,
         axiosInstance
           .get(baseURL)
           .then((response: AxiosResponse<IAxiosResponseData>) => {
+            if (!response) return baseURL;
+
             state.response = response;
             switch (response.status) {
               case 200:
@@ -141,6 +143,7 @@ export function defineBackendStore(workspace: string, name: string, url: string,
                 notifyError(`${baseURL} (${name} backend) ${response.statusText.toLowerCase()}.`);
                 break;
             }
+
             return baseURL;
           })
           .catch((error: AxiosError<IAxiosResponseData>) => {
