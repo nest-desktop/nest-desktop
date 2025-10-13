@@ -1,8 +1,8 @@
 // networkState.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TNetwork } from "@/types";
+import type { TNetwork } from "@/types";
 
 interface INetworkState {
   displayIdx: {

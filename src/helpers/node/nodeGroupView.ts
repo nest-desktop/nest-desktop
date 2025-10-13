@@ -1,10 +1,10 @@
 // nodeGroupView.ts
 
 import { polygonCentroid } from "d3";
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "../common/base";
-import { TNodeGroup } from "@/types";
+import { type TNodeGroup } from "@/types";
 import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
 
 export interface INodeGroupViewProps {

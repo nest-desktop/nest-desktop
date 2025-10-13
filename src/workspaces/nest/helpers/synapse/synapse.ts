@@ -1,7 +1,8 @@
 // synapse.ts
 
-import { BaseSynapse, ISynapseProps } from "@/helpers/synapse/synapse";
-import { IParamProps, TParamValue } from "@/helpers/common/parameter";
+import type { IParamProps, TParamValue } from "@/helpers/common/parameter";
+import type { TElementType } from "@/helpers/model/model";
+import { BaseSynapse, type ISynapseProps } from "@/helpers/synapse/synapse";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
@@ -10,7 +11,6 @@ import { NESTCopyModelParameter } from "../model/copyModelParameter";
 import { NESTModel } from "../model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTSynapseParameter } from "./synapseParameter";
-import { TElementType } from "@/helpers/model/model";
 
 export interface INESTSynapseProps extends ISynapseProps {
   receptorIdx?: number;

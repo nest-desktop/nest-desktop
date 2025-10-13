@@ -1,11 +1,11 @@
 // simulationCode.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, type AxiosResponse } from "axios";
 
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TNetworkProject } from "@/types";
+import type { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { TNetworkProject } from "@/types";
 
-import { BaseCode, ICodeProps } from "../code/code";
+import { BaseCode, type ICodeProps } from "../code/code";
 import { notifyError, notifySuccess } from "../common/notification";
 
 export class SimulationCode extends BaseCode {

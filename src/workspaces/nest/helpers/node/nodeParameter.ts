@@ -1,6 +1,6 @@
 // nodeParameter.ts
 
-import { IParamProps, IParamTypeSpec } from "@/helpers/common/parameter";
+import type { IParamProps, IParamTypeSpec } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTNode } from "./node";

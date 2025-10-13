@@ -4,9 +4,9 @@ import { defineStore } from "pinia";
 import { computed, nextTick, reactive } from "vue";
 
 import router from "@/router";
-import { BaseProject, IBaseProjectProps } from "@/helpers/project/project";
-import { TElementType } from "@/helpers/model/model";
-import { Class, TNetwork, TRoute, TSimulation, TStore } from "@/types";
+import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
+import type { TElementType } from "@/helpers/model/model";
+import type { Class, TNetwork, TRoute, TSimulation, TStore } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";

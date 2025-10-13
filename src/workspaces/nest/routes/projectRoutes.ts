@@ -1,6 +1,6 @@
 // projectRoutes.ts
 
-import { TProjectRoute, TRoute } from "@/types";
+import type { TProjectRoute, TRoute } from "@/types";
 import { projectBeforeEnter, projectNew, projectRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
 import { logger as mainLogger } from "@/utils/logger";

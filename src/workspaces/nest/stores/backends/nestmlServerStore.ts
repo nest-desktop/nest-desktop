@@ -1,8 +1,8 @@
 // nestmlServerStore.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, type AxiosResponse } from "axios";
 
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { notifyError, notifySuccess } from "@/helpers/common/notification";

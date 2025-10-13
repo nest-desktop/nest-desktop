@@ -1,14 +1,14 @@
 // project.ts
 
-import { TActivityGraph, TStore, TCode } from "@/types";
+import type { TActivityGraph, TStore, TCode } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 import { Activities } from "../activity/activities";
-import { BaseActivityGraph, IBaseActivityGraphProps } from "../activityGraph/activityGraph";
-import { BaseCode, ICodeProps } from "../code/code";
+import { BaseActivityGraph, type IBaseActivityGraphProps } from "../activityGraph/activityGraph";
+import { BaseCode, type ICodeProps } from "../code/code";
 import { BaseObj } from "../common/base";
-import { IDoc } from "../common/database";
+import type { IDoc } from "../common/database";
 import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
 

@@ -2,7 +2,7 @@
 
 import { defineViewStore } from "@/stores/defineViewStore";
 
-import { IWorkspaceProps } from "../";
+import type { IWorkspaceProps } from "../";
 import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 import iconSet from "./components/iconSet";
 import route from "./routes";

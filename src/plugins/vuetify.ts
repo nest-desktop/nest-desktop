@@ -9,7 +9,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./main.scss";
 
-import { IconSet, createVuetify } from "vuetify";
+import { type IconSet, createVuetify } from "vuetify";
 // Composables
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";

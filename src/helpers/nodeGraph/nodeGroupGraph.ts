@@ -6,7 +6,7 @@
 import { drag, polygonHull } from "d3";
 import { nextTick } from "vue";
 
-import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup } from "@/types";
+import type { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup } from "@/types";
 
 export const polygonGenerator = (nodes: TNode[]): [number, number][] => {
   let nodeCoords: [number, number][] = nodes.map((node: TNode) => [node.view.position.x, node.view.position.y]);

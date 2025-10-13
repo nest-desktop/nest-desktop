@@ -8,7 +8,7 @@ import { autocompletion } from "@codemirror/autocomplete";
 import { json } from "@codemirror/lang-json";
 import { python } from "@codemirror/lang-python";
 import { yaml } from "@codemirror/lang-yaml";
-import { Compartment, Extension } from "@codemirror/state";
+import { Compartment, type Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 
 import { highlightLine } from "./codeMirrorExtensions/highlightLine";

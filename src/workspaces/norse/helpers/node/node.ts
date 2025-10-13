@@ -1,11 +1,10 @@
 // node.ts
 
-// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 
-import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { IParamProps } from "@/helpers/common/parameter";
-import { TConnection } from "@/types";
+import { BaseNode, type INodeProps } from "@/helpers/node/node";
+import type { IParamProps } from "@/helpers/common/parameter";
+import type { TConnection } from "@/types";
 
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";

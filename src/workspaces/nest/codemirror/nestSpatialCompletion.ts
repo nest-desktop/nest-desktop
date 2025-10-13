@@ -1,6 +1,6 @@
 // nestSpatialCompletion.ts
 
-import { CompletionContext } from "@codemirror/autocomplete";
+import type { CompletionContext } from "@codemirror/autocomplete";
 
 const completions = [
   {

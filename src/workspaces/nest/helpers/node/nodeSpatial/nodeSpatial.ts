@@ -3,8 +3,8 @@
 import { BaseObj } from "@/helpers/common/base";
 
 import { FreePositions } from "./freePositions";
-import { GridPositions, IGridPositionsProps } from "./gridPositions";
-import { IBasePositionsProps } from "./basePositions";
+import { GridPositions, type IGridPositionsProps } from "./gridPositions";
+import type { IBasePositionsProps } from "./basePositions";
 import { NESTNode } from "../node";
 
 export interface INESTNodeSpatialProps {

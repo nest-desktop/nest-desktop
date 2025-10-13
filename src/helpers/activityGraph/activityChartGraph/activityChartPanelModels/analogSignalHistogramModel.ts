@@ -2,7 +2,7 @@
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
-import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { NodeRecord } from "../../../node/nodeRecord";
 import { histogram } from "../graphObjects/histogram";
 import { max, min } from "../../../../utils/array";

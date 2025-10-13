@@ -1,11 +1,11 @@
 // activities.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { IResponseData } from "@/stores/defineBackendStore";
-import { TProject } from "@/types";
+import type { IResponseData } from "@/stores/defineBackendStore";
+import type { TProject } from "@/types";
 
-import { Activity, IActivityProps, IEventProps } from "./activity";
+import { Activity, type IActivityProps, type IEventProps } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { BaseObj } from "../common/base";
 import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";

@@ -1,18 +1,17 @@
-{
-  // "compilerOptions": {
-  //   "allowSyntheticDefaultImports": true,
-  //   "composite": true,
-  //   "isolatedModules": true,
-  //   "module": "ESNext",
-  //   "moduleResolution": "Node"
-  // },
-  // "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"]
+// https://github.com/tsconfig/bases/blob/main/bases/node-lts.json
 
-  // https://github.com/tsconfig/bases/blob/main/bases/node-lts.json
+{
   "extends": "@tsconfig/node-lts/tsconfig.json",
-  "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "nightwatch.conf.*", "playwright.config.*"],
+  "include": [
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*",
+    "eslint.config.*", 
+    "electron"
+  ],
   "compilerOptions": {
-    "composite": true,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 
@@ -20,7 +19,7 @@
     "moduleResolution": "Bundler",
     "types": ["node"],
 
-    // Allow property without initialization.
-    "strictPropertyInitialization": false
+    /* Check for class properties that are declared but not set in the constructor. */
+    "strictPropertyInitialization": false,             
   }
 }

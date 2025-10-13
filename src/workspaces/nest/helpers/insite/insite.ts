@@ -1,9 +1,9 @@
 // insite.ts
 
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
+import type { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { notifySuccess } from "@/helpers/common/notification";
 

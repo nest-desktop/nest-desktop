@@ -1,6 +1,6 @@
 // paramQuery.ts
 
-import { RouteLocationNormalizedLoaded } from "vue-router";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 /**
  * Get parameter from URL.

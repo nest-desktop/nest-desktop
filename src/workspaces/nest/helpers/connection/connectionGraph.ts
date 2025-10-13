@@ -4,7 +4,7 @@ import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
 import { ConnectionGraph } from "@/helpers/connectionGraph/connectionGraph";
-import { TDragBehavior, TNodeGroup, TSelection } from "@/types";
+import type { TDragBehavior, TNodeGroup, TSelection } from "@/types";
 import { drawPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
 
 import { NESTNetworkGraph } from "../network/networkGraph";

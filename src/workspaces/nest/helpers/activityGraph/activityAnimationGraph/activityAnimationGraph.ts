@@ -1,7 +1,7 @@
 // activityAnimationGraph.ts
 
-import { Group, Object3DEventMap } from "three";
-import { UnwrapRef, reactive } from "vue";
+import { Group, type Object3DEventMap } from "three";
+import { type UnwrapRef, reactive } from "vue";
 
 import { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
 

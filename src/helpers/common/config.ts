@@ -1,6 +1,6 @@
 // config.ts
 
-import { TValue } from "@/types";
+import type { TValue } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 
 export interface IConfigProps {

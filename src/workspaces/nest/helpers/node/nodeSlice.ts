@@ -1,9 +1,9 @@
 // nodeSlice.ts
 
 import { BaseObj } from "@/helpers/common/base";
-import { IParamProps } from "@/helpers/common/parameter";
+import type { IParamProps } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
-import { TNodeGroup } from "@/types";
+import type { TNodeGroup } from "@/types";
 
 import { NESTNode } from "./node";
 

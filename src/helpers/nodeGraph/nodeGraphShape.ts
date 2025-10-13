@@ -2,7 +2,7 @@
 
 import { select } from "d3";
 
-import { TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
+import type { TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 

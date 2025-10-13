@@ -1,11 +1,11 @@
 // routes.ts
 
-import { RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
+import type { RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
 import { errorDialog } from "vuetify3-dialog";
 
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
-import { TModel, TModelRoute, TProject, TProjectRoute } from "@/types";
+import type { TModel, TModelRoute, TProject, TProjectRoute } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 

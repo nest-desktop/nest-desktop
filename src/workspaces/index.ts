@@ -4,17 +4,17 @@
  * Automatically included in `./src/main.ts`
  */
 
-import { App } from "vue";
-import { RouteRecordRaw } from "vue-router";
-import { IconSet } from "vuetify";
+import type { App } from "vue";
+import type { RouteRecordRaw } from "vue-router";
+import type { IconSet } from "vuetify";
 
 import { Config } from "@/helpers/common/config";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
 import router from "@/router";
 import { useAppStore } from "@/stores/appStore";
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
-import { CompletionSource } from "@codemirror/autocomplete";
+import type { CompletionSource } from "@codemirror/autocomplete";
 
 import { nest } from "./nest";
 import { norse } from "./norse";

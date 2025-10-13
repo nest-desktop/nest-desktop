@@ -1,6 +1,6 @@
 // notification.ts
 
-import { Level, createNotification } from "vuetify3-dialog";
+import { type Level, createNotification } from "vuetify3-dialog";
 
 import { useAppStore } from "@/stores/appStore";
 

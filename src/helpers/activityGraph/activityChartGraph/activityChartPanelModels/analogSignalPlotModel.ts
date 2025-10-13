@@ -1,10 +1,10 @@
 // analogSignalPlotModel.ts
 
-import { TNode } from "@/types";
+import type { TNode } from "@/types";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
-import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { NodeRecord } from "../../../node/nodeRecord";
 import { currentBackgroundColor, currentColor } from "../../../common/theme";
 import { line } from "../graphObjects/line";

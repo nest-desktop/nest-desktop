@@ -1,9 +1,9 @@
 // insiteAccessStore.ts
 
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
 import { defineBackendStore } from "@/stores/defineBackendStore";
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 
 export const useInsiteAccessStore = defineBackendStore("nest", "insite", "http://localhost:52056");
 

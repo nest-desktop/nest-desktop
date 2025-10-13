@@ -2,7 +2,7 @@
 
 import { pointer } from "d3";
 
-import { TNetwork } from "@/types";
+import type { TNetwork } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";

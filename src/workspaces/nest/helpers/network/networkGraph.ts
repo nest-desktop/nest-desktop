@@ -1,6 +1,6 @@
 // networkGraph.ts
 
-import { Ref } from "vue";
+import type { Ref } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 

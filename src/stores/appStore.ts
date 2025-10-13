@@ -2,7 +2,7 @@
 
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
-import { ThemeInstance } from "vuetify";
+import type { ThemeInstance } from "vuetify";
 
 import { workspaces } from "@/workspaces";
 

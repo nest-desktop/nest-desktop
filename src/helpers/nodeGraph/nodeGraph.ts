@@ -3,7 +3,7 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
+import type { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeGraphConnector } from "./nodeGraphConnector";

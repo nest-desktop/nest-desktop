@@ -1,8 +1,8 @@
 // modelDB.ts
 
-import { TModel, TModelProps } from "@/types";
+import type { TModel, TModelProps } from "@/types";
 
-import { DatabaseService, IDoc, IRes } from "../common/database";
+import { DatabaseService, type IDoc, type IRes } from "../common/database";
 
 export class BaseModelDB extends DatabaseService {
   constructor(name: string = "MODEL_STORE") {

@@ -1,7 +1,7 @@
 // base.ts
 // https://tslog.js.org/#/
 
-import { ILogObj, ISettingsParam, Logger } from "tslog";
+import { type ILogObj, type ISettingsParam, Logger } from "tslog";
 import { sha1 } from "object-hash";
 import { v4 as uuidv4 } from "uuid";
 

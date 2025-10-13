@@ -10,10 +10,8 @@
 // 5 - error
 // 6 - fatal
 
-import { ILogObj, Logger } from "tslog";
+import { type ILogObj, Logger } from "tslog";
 
-// @ts-expect-error The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022',
-// 'esnext', 'system', 'node16', 'node18', or 'nodenext'.
 const PROD = import.meta.env.PROD;
 
 const logger: Logger<ILogObj> = new Logger({

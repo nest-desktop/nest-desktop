@@ -1,7 +1,7 @@
 // synapseParameter.ts
 
 import { BaseSynapseParameter } from "@/helpers/synapse/synapseParameter";
-import { IParamProps, IParamType } from "@/helpers/common/parameter";
+import type { IParamProps, IParamType } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTCopyModelParameter } from "../model/copyModelParameter";

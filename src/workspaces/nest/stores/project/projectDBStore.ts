@@ -2,7 +2,7 @@
 
 import { defineProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
-import { INESTProjectProps, NESTProject } from "../../helpers/project/project";
+import { type INESTProjectProps, NESTProject } from "../../helpers/project/project";
 import { NESTProjectDB } from "../../helpers/project/projectDB";
 
 const projectAssets = [

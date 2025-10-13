@@ -1,6 +1,6 @@
 // index.ts
 
-import { RouteRecordRaw } from "vue-router";
+import { type RouteRecordRaw } from "vue-router";
 
 import { setCurrentWorkspace } from "@/stores/appStore";
 import { closeNav } from "@/stores/navStore";

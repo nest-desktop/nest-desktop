@@ -1,6 +1,6 @@
 // connection.ts
 
-import { BaseConnection, IConnectionProps } from "@/helpers/connection/connection";
+import { BaseConnection, type IConnectionProps } from "@/helpers/connection/connection";
 
 import { NorseConnections } from "./connections";
 

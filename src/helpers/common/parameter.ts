@@ -1,12 +1,12 @@
 // parameter.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TParameter } from "@/types";
+import type { TParameter } from "@/types";
 import { truncate } from "@/utils/truncate";
 
 import { BaseObj } from "./base";
-import { IConfigProps } from "./config";
+import type { IConfigProps } from "./config";
 
 export interface IParamOptions {
   component?: TParamComponent;

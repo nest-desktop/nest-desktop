@@ -2,11 +2,11 @@
 
 // import { nextTick } from "vue";
 
-import { TNode, TProject } from "@/types";
+import type { TNode, TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { INetworkProps } from "./network";
-import { INodeProps } from "../node/node";
+import type { INetworkProps } from "./network";
+import type { INodeProps } from "../node/node";
 
 interface INetworkRevisionProps extends INetworkProps {
   codeHash?: string;

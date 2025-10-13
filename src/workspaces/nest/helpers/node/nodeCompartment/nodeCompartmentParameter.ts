@@ -1,6 +1,6 @@
 // nodeCompartmentParameter.ts
 
-import { IParamProps } from "@/helpers/common/parameter";
+import type { IParamProps } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTModelCompartmentParameter } from "../../model/modelCompartmentParameter";

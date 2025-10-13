@@ -1,7 +1,7 @@
 // highlightLine.ts
 
-import { Extension, RangeSetBuilder } from "@codemirror/state";
-import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
+import { type Extension, RangeSetBuilder } from "@codemirror/state";
+import { Decoration, type DecorationSet, EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
 
 export function highlightLineDeco(view: EditorView, lineNumber: number, className: string): DecorationSet {
   const builder = new RangeSetBuilder();

@@ -6,7 +6,7 @@ import Mustache from "mustache";
 import { round } from "@/utils/converter";
 import { randomUniformFloat } from "@/utils/random";
 
-import { BasePositions, IBasePositionsProps } from "./basePositions";
+import { BasePositions, type IBasePositionsProps } from "./basePositions";
 import { NESTNodeSpatial } from "./nodeSpatial";
 
 export class FreePositions extends BasePositions {

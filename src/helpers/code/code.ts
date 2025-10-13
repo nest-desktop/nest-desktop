@@ -1,12 +1,11 @@
 // code.ts
 
-// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
-import axios, { AxiosHeaders, AxiosResponse } from "axios";
-import { UnwrapRef, nextTick, reactive } from "vue";
+import axios, { AxiosHeaders, type AxiosResponse } from "axios";
+import { type UnwrapRef, nextTick, reactive } from "vue";
 
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TProject } from "@/types";
+import type { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { download } from "../../utils/download";

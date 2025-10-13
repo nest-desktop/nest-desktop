@@ -1,9 +1,9 @@
-// recorderActivity.ts
+// nodeActivity.ts
 
 // import { NodeRecord } from "@/helpers/node/nodeRecord";
-import { TNetworkProject, TNode } from "@/types";
+import type { TNetworkProject, TNode } from "@/types";
 
-import { Activity, IActivityProps } from "../activity/activity";
+import { Activity, type IActivityProps } from "../activity/activity";
 import { sum } from "@/utils/array";
 
 export class NodeActivity extends Activity {

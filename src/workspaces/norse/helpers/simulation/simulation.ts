@@ -1,6 +1,6 @@
 // simulation.ts
 
-import { BaseSimulation, ISimulationProps } from "@/helpers/simulation/simulation";
+import { BaseSimulation, type ISimulationProps } from "@/helpers/simulation/simulation";
 
 import { NorseProject } from "../project/project";
 

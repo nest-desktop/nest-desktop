@@ -1,14 +1,14 @@
 // network.ts
 
-import { TConnection, TConnections, TModel, TNetworkGraph, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import type { TConnection, TConnections, TModel, TNetworkGraph, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
 import { BaseConnections } from "../connection/connections";
 import { BaseNodes } from "../node/nodes";
 import { BaseObj } from "../common/base";
-import { IConnectionProps } from "../connection/connection";
-import { INodeGroupProps } from "../node/nodeGroup";
-import { INodeProps } from "../node/node";
-import { INodeViewProps } from "../node/nodeView";
+import type { IConnectionProps } from "../connection/connection";
+import type { INodeGroupProps } from "../node/nodeGroup";
+import type { INodeProps } from "../node/node";
+import type { INodeViewProps } from "../node/nodeView";
 import { NetworkState } from "./networkState";
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 

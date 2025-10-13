@@ -2,7 +2,7 @@
 
 import { drag, select, transition } from "d3";
 
-import { TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
+import type { TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";

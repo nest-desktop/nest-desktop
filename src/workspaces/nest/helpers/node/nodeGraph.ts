@@ -2,7 +2,7 @@
 
 import { select } from "d3";
 
-import { TNetworkGraph } from "@/types";
+import type { TNetworkGraph } from "@/types";
 import { NodeGraph } from "@/helpers/nodeGraph/nodeGraph";
 
 import { NESTNetwork } from "../network/network";

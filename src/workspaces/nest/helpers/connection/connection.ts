@@ -1,12 +1,12 @@
 // connection.ts
 
-import { BaseConnection, IConnectionProps } from "@/helpers/connection/connection";
+import { BaseConnection, type IConnectionProps } from "@/helpers/connection/connection";
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
-import { IParamProps } from "@/helpers/common/parameter";
-import { TNodeGroup } from "@/types";
+import type { IParamProps } from "@/helpers/common/parameter";
+import type { TNodeGroup } from "@/types";
 
-import { INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
-import { INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
+import { type INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
+import { type INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
 import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";

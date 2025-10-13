@@ -1,14 +1,14 @@
 // networkGraphNodeAddPanel.ts
 
 import { arc } from "d3";
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TArc, TModel, TNetwork, TSelection } from "@/types";
+import type { TArc, TModel, TNetwork, TSelection } from "@/types";
 import { useAppStore } from "@/stores/appStore";
 
 import { BaseObj } from "../common/base";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { TElementType } from "../model/model";
+import type { TElementType } from "../model/model";
 import { darkMode } from "../common/theme";
 
 export interface INetworkGraphAddPanelState {

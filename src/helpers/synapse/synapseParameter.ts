@@ -1,7 +1,7 @@
 // synapseParameter.ts
 
-import { BaseParameter, IParamProps, IParamType } from "@/helpers/common/parameter";
-import { TSynapse } from "@/types";
+import { BaseParameter, type IParamProps, type IParamType } from "@/helpers/common/parameter";
+import type { TSynapse } from "@/types";
 
 export class BaseSynapseParameter extends BaseParameter {
   public _synapse: TSynapse;

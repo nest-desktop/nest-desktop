@@ -3,8 +3,8 @@
 import { select } from "d3";
 
 import { BaseObj } from "@/helpers/common/base";
-import { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
-import { TSelection } from "@/types";
+import type { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
+import type { TSelection } from "@/types";
 import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 
 import { NESTConnection } from "../connection/connection";

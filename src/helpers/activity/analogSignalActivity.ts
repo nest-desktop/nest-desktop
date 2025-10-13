@@ -1,8 +1,8 @@
 // analogSignalActivity.ts
 
-import { TProject } from "@/types";
+import type { TProject } from "@/types";
 
-import { Activity, IActivityProps } from "./activity";
+import { Activity, type IActivityProps } from "./activity";
 
 export class AnalogSignalActivity extends Activity {
   constructor(project: TProject, activityProps: IActivityProps = {}) {

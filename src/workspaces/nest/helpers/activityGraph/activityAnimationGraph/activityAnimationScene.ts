@@ -8,7 +8,7 @@ import {
   Color,
   DirectionalLight,
   Group,
-  Object3DEventMap,
+  type Object3DEventMap,
   PerspectiveCamera,
   Plane,
   PlaneHelper,
@@ -17,7 +17,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
 import { darkMode } from "@/helpers/common/theme";
 import { useAppStore } from "@/stores/appStore";

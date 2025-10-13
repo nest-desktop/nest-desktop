@@ -1,6 +1,6 @@
 // nodeReceptorParameters.ts
 
-import { IParamProps } from "@/helpers/common/parameter";
+import type { IParamProps } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
 
 import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";

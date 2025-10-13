@@ -5,7 +5,7 @@ import { reactive, watch } from "vue";
 
 import router from "@/router";
 import { BaseProject } from "@/helpers/project/project";
-import { Class, TRoute, TStore } from "@/types";
+import type { Class, TRoute, TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 

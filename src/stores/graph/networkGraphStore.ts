@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 
-import { TNetworkGraph } from "@/types";
+import type { TNetworkGraph } from "@/types";
 
 export const useNetworkGraphStore = defineStore("network-graph", () => {
   const state = reactive<{

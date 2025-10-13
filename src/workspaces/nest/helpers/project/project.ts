@@ -1,9 +1,9 @@
 // project.ts
 
-import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
-import { INESTNetworkProps, NESTNetwork } from "../network/network";
-import { INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
+import { type INESTNetworkProps, NESTNetwork } from "../network/network";
+import { type INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
 import { Insite } from "../insite/insite";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTSimulationCode } from "../simulation/simulationCode";

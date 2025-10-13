@@ -1,6 +1,6 @@
 // modelRoutes.ts
 
-import { TModelRoute, TRoute } from "@/types";
+import type { TModelRoute, TRoute } from "@/types";
 import { modelBeforeEnter, modelRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
 

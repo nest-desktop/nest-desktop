@@ -1,10 +1,10 @@
 // copyModel.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "@/helpers/common/base";
-import { BaseParameter, IParamProps, TParamValue } from "@/helpers/common/parameter";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { BaseParameter, type IParamProps, type TParamValue } from "@/helpers/common/parameter";
+import type { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";

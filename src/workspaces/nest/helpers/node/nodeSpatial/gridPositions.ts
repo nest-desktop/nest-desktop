@@ -3,7 +3,7 @@
 import { range } from "@/utils/array";
 import { round } from "@/utils/converter";
 
-import { BasePositions, IBasePositionsProps } from "./basePositions";
+import { BasePositions, type IBasePositionsProps } from "./basePositions";
 import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IGridPositionsProps extends IBasePositionsProps {

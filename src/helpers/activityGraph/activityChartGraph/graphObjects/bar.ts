@@ -1,6 +1,6 @@
 // bar.ts
 
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 
 export const bar = (args: IActivityChartPanelModelData) => ({

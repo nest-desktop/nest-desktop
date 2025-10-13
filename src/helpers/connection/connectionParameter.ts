@@ -1,9 +1,9 @@
 // connectionParameter.ts
 
-import { TConnection } from "@/types";
+import type { TConnection } from "@/types";
 
-import { BaseParameter, IParamProps, IParamType } from "../common/parameter";
-import { IConnectionRuleConfig } from "./connectionRule";
+import { BaseParameter, type IParamProps, type IParamType } from "../common/parameter";
+import type { IConnectionRuleConfig } from "./connectionRule";
 
 export class ConnectionParameter extends BaseParameter {
   public _connection: TConnection;

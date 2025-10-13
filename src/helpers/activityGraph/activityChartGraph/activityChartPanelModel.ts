@@ -1,17 +1,18 @@
 // activityChartPanelModel.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
+
+import type { TNode } from "@/types";
 
 import { Activity } from "../../activity/activity";
 import { BaseObj } from "../../common/base";
-import { IParamProps, TParamValue } from "../../common/parameter";
+import type { IParamProps, TParamValue } from "../../common/parameter";
 import { currentBackgroundColor } from "../../common/theme";
 import { NodeRecord } from "../../node/nodeRecord";
 import { ActivityChartPanel } from "./activityChartPanel";
 import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
 import { NodeAnalogSignalActivity } from "../../nodeActivity/nodeAnalogSignalActivity";
 import { NodeActivity } from "../../nodeActivity/nodeActivity";
-import { TNode } from "@/types";
 
 export interface IActivityChartPanelModelData {
   activityIdx?: number;

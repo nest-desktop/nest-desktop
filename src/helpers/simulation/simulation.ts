@@ -1,10 +1,10 @@
 // simulation.ts
 
-import { AxiosResponse } from "axios";
-import { UnwrapRef, reactive } from "vue";
+import type { AxiosResponse } from "axios";
+import { type UnwrapRef, reactive } from "vue";
 
-import { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
-import { TNetworkProject } from "@/types";
+import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import type { TNetworkProject } from "@/types";
 
 import { BaseObj } from "../common/base";
 

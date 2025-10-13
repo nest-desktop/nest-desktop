@@ -1,7 +1,7 @@
 // norseSimulatorStore.ts
 
-import { TStore } from "@/types";
-import { defineBackendStore, IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { TStore } from "@/types";
+import { defineBackendStore, type IAxiosResponseData } from "@/stores/defineBackendStore";
 
 export const useNorseSimulatorStore = defineBackendStore("norse", "norse", "http://localhost:11428");
 

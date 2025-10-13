@@ -1,6 +1,6 @@
 // modelCompartmentParameter.ts
 
-import { IParamProps } from "@/helpers/common/parameter";
+import type { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTModel } from "./model";

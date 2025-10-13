@@ -1,9 +1,9 @@
 // networkGraph.ts
 
 import { select } from "d3";
-import { Ref, UnwrapRef, nextTick, reactive, watch } from "vue";
+import { type Ref, type UnwrapRef, nextTick, reactive, watch } from "vue";
 
-import { TConnection, TNetwork, TNode, TNodeGroup, TSelection } from "@/types";
+import type { TConnection, TNetwork, TNode, TNodeGroup, TSelection } from "@/types";
 import { debounce } from "@/utils/events";
 
 import { BaseNode } from "../node/node";

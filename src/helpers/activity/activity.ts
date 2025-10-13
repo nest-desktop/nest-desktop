@@ -1,8 +1,8 @@
 // activity.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TProject } from "@/types";
+import type { TProject } from "@/types";
 
 import { ActivityChartGraph } from "../activityGraph/activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";

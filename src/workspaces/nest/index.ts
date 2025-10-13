@@ -3,7 +3,7 @@
 import { defineViewStore } from "@/stores/defineViewStore";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { IWorkspaceProps } from "../";
+import type { IWorkspaceProps } from "../";
 import {
   nestCompletions,
   nestRandomCompletions,
