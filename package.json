@@ -22,7 +22,8 @@
     "preview": "vite preview",
     "preview:test": "vite preview --outDir ./coverage",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@codemirror/autocomplete": "~6.19",
@@ -87,6 +88,7 @@
     "eslint": "~9.37",
     "eslint-plugin-vue": "~10.5",
     "js-yaml": "~4.1",
+    "prettier": "^3.6.2",
     "register-service-worker": "~1.7",
     "sass": "~1.93",
     "semver": "~7.7",
