@@ -2,7 +2,7 @@
   <div style="height: 100%; position: relative; width: 100%">
     <v-snackbar v-model="code.state.locked" :timeout="-1">
       <v-icon color="warning" icon="mdi:mdi-exclamation-thick" />
-      The code script has been edited and will not be generated.
+      The code script has been edited and is locked from the generation.
 
       <template #actions>
         <v-btn variant="outlined" style="--v-btn-height: 36px" @click="lockCode(false)">reset</v-btn>
