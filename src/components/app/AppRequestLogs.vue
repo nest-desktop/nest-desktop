@@ -57,7 +57,9 @@
           </template>
         </v-toolbar>
 
-        <div class="px-2" v-html="log.htmlContent" />
+        <div class="px-2">
+          {{ log.htmlContent }}
+        </div>
 
         <v-divider class="my-1" />
       </v-list-item>
