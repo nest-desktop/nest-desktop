@@ -8,13 +8,13 @@
   >
     <div class="resize-handle bottom" @mousedown="store.resizeBottomNav()" />
 
-    <CodeMirror :code class="bottomCode" />
+    <CodeEditor :code class="bottomCode" />
   </v-bottom-navigation>
 </template>
 
 <script setup lang="ts">
 import { TCode, TStore } from "@/types";
-import CodeMirror from "../code/CodeMirror.vue";
+import CodeEditor from "./CodeEditor.vue";
 
 defineProps<{ code: TCode; store: TStore }>();
 

@@ -197,7 +197,7 @@ const controllerItems: IControllerItem[] = [
 ];
 
 //
-// CodeMirror
+// Code editor
 //
 
 const extensions: Extension[] = [basicSetup, languageJSON()];

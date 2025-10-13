@@ -237,7 +237,7 @@ const updateCode = () => {
 };
 
 //
-// CodeMirror
+// Code editor
 //
 
 const extensions: Extension[] = [basicSetup, languageJSON()];
