@@ -212,9 +212,6 @@ const route = useRoute();
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNavStore } from "@/stores/navStore";
-const navStore = useNavStore();
-
 import { doCopyModel, useNESTProjectStore } from "../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
