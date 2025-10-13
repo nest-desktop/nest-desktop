@@ -17,7 +17,7 @@ import stimulator from "./nodes/StimulatorIcon.vue";
 
 import type { IconSet, IconProps } from "vuetify";
 
-const networkSvgNameToComponent: Record<string, any> = {
+const networkSvgNameToComponent: Record<string, unknown> = {
   neuron,
   "neuron-shape": neuronShape,
   "neuron-mixed": neuron,

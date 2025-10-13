@@ -19,10 +19,11 @@ export interface IActivityAnimationLayerFrame {
 }
 
 interface IActivityAnimationLayerModel {
-  component: any;
+  component: ActivityAnimationLayerModel;
   title: string;
   value: string;
 }
+
 export interface IActivityAnimationLayerState {
   layout: { extent: number[][] };
   modelSelected?: IActivityAnimationLayerModel;

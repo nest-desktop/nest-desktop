@@ -83,7 +83,7 @@ export class NodeGroupGraph {
       .selectAll("path")
       .attr(
         "d",
-        (nodeGroup: TNodeGroup | any) =>
+        (nodeGroup: TNodeGroup) =>
           "M" +
           nodeGroup.view.state.polygon
             .map((point: [number, number]) => [
@@ -96,7 +96,7 @@ export class NodeGroupGraph {
 
     nodeGroups.attr(
       "transform",
-      (n: TNodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`,
+      (n: TNodeGroup) => `translate(${n.view.position.x},${n.view.position.y}) scale(${n.view.state.margin})`,
     );
   }
 

@@ -125,7 +125,7 @@ export class ActivityAnimationGraph {
    * Initialize animation scene.
    * @remarks It should be initialized in the vue component is mounted.
    */
-  initScene(ref: any): void {
+  initScene(ref: HTMLElement): void {
     this.destroyScene();
     this._scene = new ActivityAnimationScene(this, ref);
     this.updateScene();

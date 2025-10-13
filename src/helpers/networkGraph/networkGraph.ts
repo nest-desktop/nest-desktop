@@ -112,7 +112,7 @@ export class BaseNetworkGraph extends BaseObj {
    * Call on drag start.
    * @param event mouse event
    */
-  dragStart(event: MouseEvent | any): void {
+  dragStart(event: MouseEvent): void {
     this._workspace.state.dragging = true;
     if (event.sourceEvent.srcElement.parentNode instanceof BaseNode) {
       select(event.sourceEvent.srcElement.parentNode).classed("active", true);
@@ -124,7 +124,7 @@ export class BaseNetworkGraph extends BaseObj {
    * Call on drag end.
    * @param event mouse event
    */
-  dragEnd(event: MouseEvent | any): void {
+  dragEnd(event: MouseEvent): void {
     this._workspace.state.dragging = false;
     // If-clause to prevent the error message
     // when mouseup happens outside the window.

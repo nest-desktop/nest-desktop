@@ -56,6 +56,7 @@
 import { computed, nextTick, reactive } from "vue";
 
 import NESTModuleSelect from "../module/NESTModuleSelect.vue";
+import { NESTModel } from "../../types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -81,5 +82,5 @@ const fetchInstalledModels = () => {
   });
 };
 
-const items = [{ title: "Remove from the module", onClick: (idx) => state.selectedModule.models.splice(idx, 1) }];
+// const items = [{ title: "Remove from the module", onClick: (idx) => state.selectedModule.models.splice(idx, 1) }];
 </script>

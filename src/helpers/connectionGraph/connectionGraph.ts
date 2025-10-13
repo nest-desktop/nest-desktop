@@ -166,14 +166,14 @@ export class ConnectionGraph extends BaseObj {
     const t = transition().duration(duration);
 
     connections
-      .style("color", (c: TConnection | any) => {
+      .style("color", (c: TConnection) => {
         if (!c.source) return;
         return "var(--colorNode" + c.sourceIdx + ")";
       })
       .transition(t)
       .style("opacity", 1);
 
-    connections.each((connection: TConnection, idx: number, elements: any[]) => {
+    connections.each((connection: TConnection, idx: number, elements: HTMLElement[]) => {
       if (!connection.source) return;
       const elem: TSelection = select(elements[idx]);
 
@@ -229,7 +229,7 @@ export class ConnectionGraph extends BaseObj {
     const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
-      .data(this.networkGraph.network.connections.all, (c: TConnection | any) => c.uuid);
+      .data(this.networkGraph.network.connections.all, (c: TConnection) => c.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

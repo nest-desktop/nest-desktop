@@ -185,7 +185,7 @@ export class NodeGraphShape extends BaseObj {
     const nodes: TSelection = select("g#nodes").selectAll("g.node");
 
     // Check if neuron has to change its shape.
-    nodes.each((node: TNode, idx: number, elements: any) => {
+    nodes.each((node: TNode, idx: number, elements: HTMLElement[]) => {
       const elem = select(elements[idx]);
 
       if (elem.attr("elementType") !== node.elementType || elem.attr("weight") !== node.view.synWeights)

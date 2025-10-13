@@ -56,14 +56,18 @@
 </template>
 
 <script setup lang="ts">
+import { toRef } from "vue";
+
+import { TConnection, TNode, TNodeGroup } from "@/types";
+
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
 import Menu from "../common/Menu.vue";
 import NodeAvatar from "./avatar/NodeAvatar.vue";
 import NodeGroupMenuList from "./NodeGroupMenuList.vue";
-import { TConnection, TNode, TNodeGroup } from "@/types";
 
-defineProps<{ nodeGroup: TNodeGroup }>();
+const props = defineProps<{ nodeGroup: TNodeGroup }>();
+const nodeGroup = toRef(props, "nodeGroup");
 </script>
 
 <style lang="scss">

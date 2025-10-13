@@ -47,14 +47,14 @@ export class ActivityAnimationScene {
   private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
   private _layerGraphGroup?: Group<Object3DEventMap>;
-  private _ref: any;
+  private _ref: HTMLElement;
   private _renderer: WebGLRenderer;
   private _scene: Scene;
   private _state: UnwrapRef<IActivityAnimationSceneState>;
   private _stats: Stats;
   private _useStats = false;
 
-  constructor(graph: ActivityAnimationGraph, ref: any) {
+  constructor(graph: ActivityAnimationGraph, ref: HTMLElement) {
     this._graph = graph;
     this._ref = ref;
 

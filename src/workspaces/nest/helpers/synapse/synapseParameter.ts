@@ -1,7 +1,7 @@
 // synapseParameter.ts
 
 import { BaseSynapseParameter } from "@/helpers/synapse/synapseParameter";
-import { IParamProps } from "@/helpers/common/parameter";
+import { IParamProps, IParamType } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTCopyModelParameter } from "../model/copyModelParameter";
@@ -23,9 +23,9 @@ export class NESTSynapseParameter extends BaseSynapseParameter {
     return this._synapse as NESTSynapse;
   }
 
-  override get types(): any[] {
-    const types: any[] = this.config?.localStorage.types;
-    return !this.synapse.isSpatial ? types.filter((type: any) => !type.id.startsWith("spatial")) : types;
+  override get types(): IParamType[] {
+    const types: IParamType[] = this.config?.localStorage.types;
+    return !this.synapse.isSpatial ? types.filter((type: IParamType) => !type.id.startsWith("spatial")) : types;
   }
 
   override get parent(): NESTSynapse {
