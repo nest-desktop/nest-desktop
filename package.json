@@ -23,7 +23,7 @@
     "preview:test": "vite preview --outDir ./coverage",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/ index.html"
   },
   "dependencies": {
     "@codemirror/autocomplete": "~6.19",
