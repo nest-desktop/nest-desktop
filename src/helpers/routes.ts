@@ -86,7 +86,7 @@ export const modelBeforeEnter = (to: TModelRoute): void => {
 /**
  * Redirect to model route.
  * @param to model router
- * @returns model router
+ * @returns router
  */
 export const modelRedirect = (to: TModelRoute): TRoute => {
   logger.trace("redirect to model:", to.params.modelId);
@@ -97,7 +97,10 @@ export const modelRedirect = (to: TModelRoute): TRoute => {
   const modelStore = appStore.currentWorkspace.stores.modelStore;
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
 
-  return modelStore.routeTo(to);
+  if (!modelStore.state.modelId && appStore.currentWorkspace.stores.modelDBStore.state.models.length > 0)
+    modelStore.state.modelId = appStore.currentWorkspace.stores.modelDBStore.getRecentModelId();
+
+  return modelStore.routeTo();
 };
 
 /**
@@ -122,7 +125,7 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
       errorDialog({
         text: `Model "${props.route.params.modelId}" not found.`,
       });
-  }, 500);
+  }, 1000);
 };
 
 /**
@@ -151,7 +154,7 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
         if (answer) newProjectRoute(props.router);
       });
     }
-  }, 500);
+  }, 1000);
 };
 
 /**
@@ -187,7 +190,7 @@ export const projectBeforeEnter = (to: TProjectRoute): void => {
 
 /**
  * Create a new project.
- * @returns project route
+ * @returns route
  */
 export const projectNew = (): TRoute => {
   logger.trace("create a new project");
@@ -204,7 +207,7 @@ export const projectNew = (): TRoute => {
 /**
  * Redirect to project route.
  * @param to project route
- * @returns project route
+ * @returns route
  */
 export const projectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to project:", truncate(to.params.projectId));
