@@ -11,13 +11,20 @@ const nestModelRedirect = (to: TModelRoute): TRoute => {
 
   const appStore = useAppStore();
   const modelStore = useNESTModelStore();
-  const modelViewStore = appStore.currentWorkspace.views.model;
-  if (modelStore.model && !modelStore.model.isNeuron) {
-    if (modelViewStore.state.views.main === "explore") {
-      modelViewStore.state.views.main = "doc";
-    }
-    if (modelViewStore.state.views.controller === "code") {
-      modelViewStore.state.views.controller = "defaults";
+
+  if (appStore.currentWorkspace) {
+    const modelViewStore = appStore.currentWorkspace.views.model;
+
+    if (!modelStore.state.modelId && appStore.currentWorkspace.stores.modelDBStore.state.models.length > 0)
+      modelStore.state.modelId = appStore.currentWorkspace.stores.modelDBStore.getRecentModelId();
+
+    if (modelStore.model && !modelStore.model.isNeuron) {
+      if (modelViewStore.state.views.main === "explore") {
+        modelViewStore.state.views.main = "doc";
+      }
+      if (modelViewStore.state.views.controller === "code") {
+        modelViewStore.state.views.controller = "defaults";
+      }
     }
   }
 

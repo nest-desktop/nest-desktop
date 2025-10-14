@@ -138,10 +138,15 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
      */
     const routeTo = (): TRoute => {
       const appStore = useAppStore();
-      const modelViewStore = appStore.currentWorkspace.views.model;
+
+      let routerMainView = "edit";
+      if (appStore.currentWorkspace) {
+        const modelViewStore = appStore.currentWorkspace.views.model;
+        routerMainView = modelViewStore.state.views.main;
+      }
 
       return {
-        path: "/" + props.workspace + "/model/" + state.modelId + "/" + modelViewStore.state.views.main,
+        path: "/" + props.workspace + "/model/" + state.modelId + "/" + routerMainView,
       };
     };
 

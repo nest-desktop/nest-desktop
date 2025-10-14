@@ -18,18 +18,22 @@ const nestProjectBeforeEnter = (to: TProjectRoute): void => {
   if (!currentProject.value) return;
 
   const appStore = useAppStore();
-  const projectViewStore = appStore.currentWorkspace.views.project;
-  if (!currentProject.value.network.nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+  if (!appStore.currentWorkspace) return
+  if (!currentProject.value.network.nodes.hasSomeSpatialNodes)
+    appStore.currentWorkspace.views.project.state.views.activity = "abstract";
+
 };
 
 const nestProjectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId));
   projectRedirect(to);
 
-  if (currentProject) {
-    const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (!currentProject.value.network.nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+  const appStore = useAppStore();
+  if (appStore.currentWorkspace) {
+    if (currentProject.value) {
+      const projectViewStore = appStore.currentWorkspace.views.project;
+      if (!currentProject.value.network.nodes.hasSomeSpatialNodes) projectViewStore.state.views.activity = "abstract";
+    }
   }
 
   const projectStore = useNESTProjectStore();

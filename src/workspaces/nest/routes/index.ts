@@ -9,7 +9,7 @@ import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
 
 export default {
-  path: "nest",
+  path: "nest/",
   name: "nestLayout",
   beforeEnter: () => setCurrentWorkspace("nest"),
   component: () => import("../layouts/MainLayout.vue"),
