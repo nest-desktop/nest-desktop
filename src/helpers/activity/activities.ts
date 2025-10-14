@@ -21,7 +21,7 @@ interface IActivitiesState {
 }
 
 export class Activities extends BaseObj {
-  private _activities: Activity[];
+  private _activities: Activity[] = [];
   private _state: UnwrapRef<IActivitiesState>;
   public _project: TProject;
 
@@ -178,7 +178,7 @@ export class Activities extends BaseObj {
             (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         } else {
-          activityProps.nodeIds = activityProps.events?.senders.filter(
+          activityProps.nodeIds = activityProps.events?.senders?.filter(
             (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         }

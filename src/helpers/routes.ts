@@ -92,7 +92,7 @@ export const modelRedirect = (to: TModelRoute): TRoute => {
   logger.trace("redirect to model:", to.params.modelId);
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return {'path': '/'} as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
 
   const modelStore = appStore.currentWorkspace.stores.modelStore;
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
@@ -193,7 +193,7 @@ export const projectNew = (): TRoute => {
   logger.trace("create a new project");
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return {'path': '/'} as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
 
   const projectStore = appStore.currentWorkspace.stores.projectStore;
   projectStore.newProject();
@@ -211,7 +211,7 @@ export const projectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return {'path': '/'} as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
 
   const projectStore = appStore.currentWorkspace.stores.projectStore;
 

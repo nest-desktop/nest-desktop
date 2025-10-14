@@ -18,10 +18,9 @@ const nestProjectBeforeEnter = (to: TProjectRoute): void => {
   if (!currentProject.value) return;
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return
+  if (!appStore.currentWorkspace) return;
   if (!currentProject.value.network.nodes.hasSomeSpatialNodes)
     appStore.currentWorkspace.views.project.state.views.activity = "abstract";
-
 };
 
 const nestProjectRedirect = (to: TProjectRoute): TRoute => {

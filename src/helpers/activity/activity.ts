@@ -134,7 +134,7 @@ export class Activity extends BaseObj {
   }
 
   get traceColor(): string {
-    return this.colors[this._idx];
+    return this.colors[this._idx] ?? "";
   }
 
   get traceLabel(): string {
@@ -176,9 +176,11 @@ export class Activity extends BaseObj {
       if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);
     });
     let csv = eventKeys.join(",") + "\n";
-    csv += this._events.times
-      .map((_: number, idx: number) => eventKeys.map((key) => this._events[key][idx]).join(","))
-      .join("\n");
+    if (this._events.times) {
+      csv += this._events.times
+        .map((_: number, idx: number) => eventKeys.map((key) => this._events[key][idx]).join(","))
+        .join("\n");
+    }
     download(csv, "events", "csv");
   }
 
@@ -270,8 +272,8 @@ export class Activity extends BaseObj {
     if (eventKeys == undefined || eventKeys.length === 0) return;
 
     eventKeys.forEach((eventKey: string) => {
-      const newEvents: number[] = events[eventKey];
-      if (newEvents) {
+      const newEvents = events[eventKey] as number[];
+      if (newEvents && this._events[eventKey]) {
         this._events[eventKey] = this._events[eventKey].concat(newEvents);
         updated = true;
       }
