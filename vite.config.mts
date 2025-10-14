@@ -15,7 +15,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import Vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
-export default defineConfig((configEnv: { mode: string }) => ({
+export default defineConfig(({ mode }) => ({
   build: {
     assetsInclude: ["**/*.nestml"],
     // chunkSizeWarningLimit: 1000, // https://github.com/vitejs/vite/discussions/9440
@@ -23,22 +23,22 @@ export default defineConfig((configEnv: { mode: string }) => ({
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo: { name: string }) => {
-          const name = assetInfo.name;
-          let extType = name.split(".").at(1);
+        assetFileNames: ({ names }) => {
+          const name = names[0] ?? "";
+          let extType = name.split(".").at(1) ?? "";
           if (/png|svg/.test(extType)) {
             extType = "img";
           } else if (/woff|woff2|eot|ttf|otf/.test(extType)) {
             extType = "fonts";
           }
+          // TODO: without these lines, icons of the materials design might be broken.
           if (name.startsWith("vendors_")) {
             return `assets/${extType}/vendors/${name.slice(8)}-[hash][extname]`;
           }
           return `assets/${extType}/[name]-[hash][extname]`;
         },
-        chunkFileNames: (assetInfo: { facadeModuleId: string; name: string }) => {
+        chunkFileNames: ({ name }) => {
           // https://github.com/vitejs/vite-plugin-vue/issues/19
-          const name = assetInfo.name;
           if (name.startsWith("vendors_")) {
             return `assets/js/vendors/${name.slice(8)}-[hash].js`;
           }
@@ -56,10 +56,10 @@ export default defineConfig((configEnv: { mode: string }) => ({
         },
       },
     },
-    sourcemap: configEnv.mode === "development",
+    sourcemap: mode === "development",
   },
   define: {
-    global: "window",
+    "global": "window",
     "process.env": {
       APP_VERSION: process.env.npm_package_version,
     },
