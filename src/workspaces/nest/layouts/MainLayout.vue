@@ -39,6 +39,13 @@ const navItems = [
     title: "Model",
     to: { name: "nestModelRoot" },
   },
+  {
+    icon: "mdi:mdi-sitemap-outline",
+    id: "nestCode",
+    workspace: "nest",
+    title: "Code",
+    to: { name: "nestCodeLayout" },
+  },
 ];
 
 onMounted(() => {
