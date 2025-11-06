@@ -851,6 +851,67 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
+"@babsey/code-graph@~0.3":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@babsey/code-graph/-/code-graph-0.3.0.tgz#e12011577d3901c4d336f8a10d4fe2d2b581ddb6"
+  integrity sha512-7H4hgWYAW4oju6ShyYQ0eeWl7mCa4oT1lgU2pw8Gk78M250WNTiioNkIpGYp/RBnK1//UKjJKIq2k3yyljwH2A==
+  dependencies:
+    "@codemirror/lang-python" "~6.2"
+    "@codemirror/theme-one-dark" "~6.1"
+    "@vueuse/core" "~14.0"
+    baklavajs "~2.8"
+    codemirror "~6.0"
+    mustache "~4.2"
+    splitpanes "~4.0"
+    toposort "~2.0"
+    uuid "~13.0"
+    vue "~3.5"
+    vue-clipboard3 "~2.0"
+    vue-codemirror "~6.1"
+
+"@baklavajs/core@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/core/-/core-2.8.1.tgz#76e9b781b8dde9cf16de1f7e0ae98be910274d55"
+  integrity sha512-pS8LlTN3+im2QYAOIoj4NfxM/f8fwc2acF9sLwIPOZ+a8DoSYlzsyQX7VFMqg9MshhiJBH0qVhIHFO2kRga7uQ==
+  dependencies:
+    "@baklavajs/events" "^2.8.0"
+    uuid "^13.0.0"
+
+"@baklavajs/engine@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/engine/-/engine-2.8.1.tgz#4f16b4c94600bfb5f94616134202640a216d03c2"
+  integrity sha512-MbkgzqN9vgS1Bm+VIJL8fVLemj//jWbo5eMihOj/bcctDLdz1DTlawhr06IpPutE+TMvwF24jpWIOdEeWhSjbQ==
+  dependencies:
+    "@baklavajs/core" "^2.8.1"
+    "@baklavajs/events" "^2.8.0"
+
+"@baklavajs/events@^2.8.0":
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@baklavajs/events/-/events-2.8.0.tgz#3dd987964c6464c74dcd449a5bbcff6ede2b5965"
+  integrity sha512-dPl2Z8p7o9HwEOd3TclnHMQTSCuGyUcHyzAxijuQI13LTWUMbtyHl1yBMH5wuy+yUsR6/NQnH//4+rDCyiFoJw==
+
+"@baklavajs/interface-types@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/interface-types/-/interface-types-2.8.1.tgz#b217d68d4b9e3cbee6d67bdae4239f0e6cc3aeb3"
+  integrity sha512-QQ1gjhCX0eAhIIwZPbr9FGHVEcdnEGR+FXKf0SdrOazgCS4DPwQVEXs2yj8+0i4hqgWnV7Vs4cPm9cqqIKj+QQ==
+  dependencies:
+    "@baklavajs/core" "^2.8.1"
+    "@baklavajs/engine" "^2.8.1"
+    "@baklavajs/renderer-vue" "^2.8.1"
+
+"@baklavajs/renderer-vue@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/renderer-vue/-/renderer-vue-2.8.1.tgz#48f5b99cbf23ef169987fab2f20bcad1dfb3833f"
+  integrity sha512-RzUYZ3rePfqOnZGXQQoQpccUBg6dCgOx/qTDjzrw01ZwCciZbNfZPV5dp8ednOXQKukPmmvl161MVUgEuBXQqg==
+  dependencies:
+    "@baklavajs/core" "^2.8.1"
+    "@baklavajs/events" "^2.8.0"
+
+"@baklavajs/themes@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@baklavajs/themes/-/themes-2.8.1.tgz#c168379510c1e597b3361ceb014e7663f0b16e0b"
+  integrity sha512-qmOfY+Pqk7PY2PJm+ML3vW2CD1taRjxNKmIAJ3x5IbiBaPh2a/DqZz4kwr2PktfOuYokuMLorsm50jj0rlKifA==
+
 "@bcoe/v8-coverage@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-1.0.2.tgz#bbe12dca5b4ef983a0d0af4b07b9bc90ea0ababa"
@@ -1025,9 +1086,9 @@
   optionalDependencies:
     global-agent "^3.0.0"
 
-"@electron/node-gyp@git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2":
+"@electron/node-gyp@https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2":
   version "10.2.0-electron.1"
-  resolved "git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2"
+  resolved "https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2"
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
@@ -2614,6 +2675,11 @@
   resolved "https://registry.yarnpkg.com/@types/verror/-/verror-1.10.11.tgz#d3d6b418978c8aa202d41e5bb3483227b6ecc1bb"
   integrity sha512-RlDm9K7+o5stv0Co8i8ZRGxDbrTxhJtgjqjFyVh/tXQyl/rYtTKlnTvZ88oSTeYREWurwx20Js4kTuKCsFkUtg==
 
+"@types/web-bluetooth@^0.0.21":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz#525433c784aed9b457aaa0ee3d92aeb71f346b63"
+  integrity sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==
+
 "@types/webfontloader@~1.6":
   version "1.6.38"
   resolved "https://registry.yarnpkg.com/@types/webfontloader/-/webfontloader-1.6.38.tgz#2cb965a7e7e4a83af6bac67688bc7d1c076107e8"
@@ -3106,6 +3172,25 @@
   dependencies:
     upath "^2.0.1"
 
+"@vueuse/core@~14.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-14.0.0.tgz#a3d9520935a191b167cb91e08f698545e46bf0a6"
+  integrity sha512-d6tKRWkZE8IQElX2aHBxXOMD478fHIYV+Dzm2y9Ag122ICBpNKtGICiXKOhWU3L1kKdttDD9dCMS4bGP3jhCTQ==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.21"
+    "@vueuse/metadata" "14.0.0"
+    "@vueuse/shared" "14.0.0"
+
+"@vueuse/metadata@14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.0.0.tgz#139231dc8503f172a7a45ce1ceaa7a415befbf3c"
+  integrity sha512-6yoGqbJcMldVCevkFiHDBTB1V5Hq+G/haPlGIuaFZHpXC0HADB0EN1ryQAAceiW+ryS3niUwvdFbGiqHqBrfVA==
+
+"@vueuse/shared@14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.0.0.tgz#15a424285fd6d453d1a99d1caba8cc293992868d"
+  integrity sha512-mTCA0uczBgurRlwVaQHfG0Ja7UdGe4g9mwffiJmvLiTtp1G4AQyIjej6si/k8c8pUwTfVpNufck+23gXptPAkw==
+
 "@webgpu/types@*":
   version "0.1.66"
   resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.66.tgz#afba7a8f32494416643d6077ce0445fc45df4346"
@@ -3412,6 +3497,17 @@ babel-plugin-polyfill-regenerator@^0.6.5:
   integrity sha512-ISqQ2frbiNU9vIJkzg7dlPpznPZ4jOiUQ1uSmB0fEHeowtN3COYRsXr/xexn64NpU13P06jc/L5TgiJXOgrbEg==
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.6.5"
+
+baklavajs@~2.8:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/baklavajs/-/baklavajs-2.8.1.tgz#868e6fbaf94b5817497b3605f528c6bc2a25e291"
+  integrity sha512-dfZx1fsVMz7K5cKXKLglCOPyZGSGMkgx0z8wAgIE8vSsMRS9axx08ZjAz7StJrMV3mxH/qmoqq9Mw+nw7jQukw==
+  dependencies:
+    "@baklavajs/core" "^2.8.1"
+    "@baklavajs/engine" "^2.8.1"
+    "@baklavajs/interface-types" "^2.8.1"
+    "@baklavajs/renderer-vue" "^2.8.1"
+    "@baklavajs/themes" "^2.8.1"
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -7551,6 +7647,11 @@ speakingurl@^14.0.1:
   resolved "https://registry.yarnpkg.com/speakingurl/-/speakingurl-14.0.1.tgz#f37ec8ddc4ab98e9600c1c9ec324a8c48d772a53"
   integrity sha512-1POYv7uv2gXoyGFpBCmpDVSNV74IfsWlDW216UPjbWufNf+bSU6GdbDsxdcxtfwb4xlI3yxzOTKClUosxARYrQ==
 
+splitpanes@~4.0:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/splitpanes/-/splitpanes-4.0.4.tgz#e8dfbbef4e93853ea336dc43f903e20946b42c1d"
+  integrity sha512-RbysugZhjbCw5fgplvk3hOXr41stahQDtZhHVkhnnJI6H4wlGDhM2kIpbehy7v92duy9GnMa8zIhHigIV1TWtg==
+
 sprintf-js@^1.1.2:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.1.3.tgz#4914b903a2f8b685d17fdf78a70e917e872e444a"
@@ -7883,6 +7984,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+toposort@~2.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/toposort/-/toposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
+  integrity sha512-0a5EOkAUp8D4moMi2W8ZF8jcga7BgZd91O/yabJCFY8az+XSzeGyTKs0Aoo897iV1Nj6guFq8orWDS96z91oGg==
+
 totalist@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/totalist/-/totalist-3.0.1.tgz#ba3a3d600c915b1a97872348f79c127475f6acf8"
@@ -8180,7 +8286,7 @@ uuid@8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-uuid@~13.0:
+uuid@^13.0.0, uuid@~13.0:
   version "13.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-13.0.0.tgz#263dc341b19b4d755eb8fe36b78d95a6b65707e8"
   integrity sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
