@@ -73,11 +73,11 @@ const tabItems = [
     icon: {
       icon: "network:network",
     },
-    id: "networkEditor",
+    id: "graphEditor",
     label: "Editor",
-    title: "Network editor",
+    title: "Graph editor",
     to: {
-      name: "NetworkEditor",
+      name: "GraphEditor",
     },
   },
   {
