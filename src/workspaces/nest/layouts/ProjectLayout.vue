@@ -3,6 +3,61 @@
 
   <template v-if="projectStore.state.projectId && projectStore.props.workspace === 'nest'">
     <ProjectBar color="nest-project">
+      <template #graphEditor>
+        <v-tab
+          :to="{
+            name: 'nestGraphEditor',
+            params: { projectId: projectStore.state.projectId },
+          }"
+          class="tab-graph-editor"
+          size="small"
+          stacked
+          title="Graph Editor"
+          value="editor"
+        >
+          <v-icon
+            :icon="projectViewStore.state.views.graph == 'network' ? 'graph:network' : 'mdi:mdi-sitemap-outline'"
+          />
+          Editor
+        </v-tab>
+
+        <v-btn height="100%" rounded="0" variant="plain" width="32" style="min-width: 32px">
+          <v-icon icon="mdi:mdi-menu-down" />
+
+          <v-menu activator="parent" target=".tab-graph-editor">
+            <v-list density="compact">
+              <v-list-item
+                :active="projectViewStore.state.views.graph == 'code'"
+                :to="{
+                  name: 'nestGraphEditor',
+                  params: { projectId: projectStore.state.projectId },
+                  query: { graphView: 'code' },
+                }"
+                prepend-icon="graph:flowchart"
+              >
+                code (beta)
+              </v-list-item>
+              <v-list-item
+                :active="projectViewStore.state.views.graph == 'network'"
+                :to="{
+                  name: 'nestGraphEditor',
+                  params: { projectId: projectStore.state.projectId },
+                  query: { graphView: 'network' },
+                }"
+                exact
+              >
+                <template #prepend>
+                  <v-icon icon="graph:network" />
+                </template>
+                network
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-btn>
+
+        <v-divider vertical />
+      </template>
+
       <template #activityExplorer>
         <v-tab
           :to="{
@@ -31,15 +86,27 @@
 
           <v-menu activator="parent" target=".tab-activity-explorer">
             <v-list density="compact">
-              <v-list-item @click="() => (projectViewStore.state.views.activity = 'abstract')">
+              <v-list-item
+                :active="projectViewStore.state.views.activity == 'abstract'"
+                :to="{
+                  name: 'nestActivityExplorer',
+                  params: { projectId: projectStore.state.projectId },
+                  query: { activityView: 'abstract' },
+                }"
+              >
                 <template #prepend>
                   <v-icon class="mdi-flip-v" icon="mdi:mdi-border-style" />
                 </template>
                 abstract
               </v-list-item>
               <v-list-item
+                :active="projectViewStore.state.views.activity == 'spatial'"
+                :to="{
+                  name: 'nestActivityExplorer',
+                  params: { projectId: projectStore.state.projectId },
+                  query: { activityView: 'spatial' },
+                }"
                 prepend-icon="mdi:mdi-axis-arrow"
-                @click="() => (projectViewStore.state.views.activity = 'spatial')"
               >
                 spatial
               </v-list-item>
@@ -177,7 +244,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
 import BottomCode from "@/components/code/BottomCode.vue";
@@ -244,4 +311,20 @@ const getPopItems = (node: NESTNode) => [
 ];
 
 onMounted(() => mountProjectLayout({ route, router }));
+
+watch(
+  () => route.query?.graphView,
+  (graphView) => {
+    if (!["code", "network"].includes(graphView as string)) return;
+    projectViewStore.value.state.views.graph = graphView;
+  },
+);
+
+watch(
+  () => route.query?.activityView,
+  (activityView) => {
+    if (!["abstract", "spatial"].includes(activityView as string)) return;
+    projectViewStore.value.state.views.activity = activityView;
+  },
+);
 </script>
