@@ -75,6 +75,7 @@ export const nest: IWorkspaceProps = {
         views: {
           activity: "abstract",
           controller: "",
+          graph: "network",
           main: "edit",
         },
       })(),
