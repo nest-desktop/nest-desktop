@@ -159,7 +159,7 @@ const controllerItems: IControllerItem[] = [
   {
     id: "network",
     icon: {
-      icon: "network:network",
+      icon: "graph:network",
     },
     title: "Edit network",
   },
