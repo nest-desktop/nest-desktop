@@ -81,5 +81,9 @@ export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
 export type TValue = any;
 
 export type TRoute = { path: string };
-export type TProjectRoute = { params: { projectId: string }; path: string };
+export type TProjectRoute = {
+  params: { projectId: string };
+  path: string;
+  query?: { activityView?: string; graphView?: string };
+};
 export type TModelRoute = { params: { modelId: string }; path: string };
