@@ -2,10 +2,11 @@
 
 import { defineStore } from "pinia";
 import { reactive, watch } from "vue";
+import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 
 import router from "@/router";
+import type { Class, TStore } from "@/types";
 import { BaseProject } from "@/helpers/project/project";
-import type { Class, TRoute, TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -138,13 +139,13 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
      * Get route path of current model.
      * @returns
      */
-    const routeTo = (): TRoute => {
+    const routeTo = (): RouteLocationNormalizedLoadedGeneric => {
       const appStore = useAppStore();
       const projectViewStore = appStore.currentWorkspace.views.project;
 
       return {
         path: "/" + props.workspace + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
-      };
+      } as RouteLocationNormalizedLoadedGeneric;
     };
 
     /**
