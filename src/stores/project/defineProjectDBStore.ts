@@ -3,11 +3,11 @@
 import { defineStore } from "pinia";
 import { nextTick, reactive } from "vue";
 
-import { BaseProject, IBaseProjectProps } from "@/helpers/project/project";
+import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { Class, TProjectDB } from "@/types";
-import { IActivityProps } from "@/helpers/activity/activity";
-import { IDoc, IRes } from "@/helpers/common/database";
+import type { Class, TProjectDB } from "@/types";
+import type { IActivityProps } from "@/helpers/activity/activity";
+import type { IDoc, IRes } from "@/helpers/common/database";
 import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";

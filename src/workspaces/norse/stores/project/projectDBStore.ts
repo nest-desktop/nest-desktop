@@ -2,7 +2,7 @@
 
 import { defineProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
-import { INorseProjectProps, NorseProject } from "../../helpers/project/project";
+import { type INorseProjectProps, NorseProject } from "../../helpers/project/project";
 import { NorseProjectDB } from "../../helpers/project/projectDB";
 
 const projectAssets = [

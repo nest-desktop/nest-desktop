@@ -1,11 +1,10 @@
 // node.ts
 
-// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
 
-import { BaseNode, INodeProps } from "@/helpers/node/node";
-import { IParamProps } from "@/helpers/common/parameter";
-import { TConnection } from "@/types";
+import { BaseNode, type INodeProps } from "@/helpers/node/node";
+import type { IParamProps } from "@/helpers/common/parameter";
+import type { TConnection } from "@/types";
 
 import { NorseConnection } from "../connection/connection";
 import { NorseModel } from "../model/model";
@@ -35,12 +34,12 @@ export class NorseNode extends BaseNode {
       this.hasStart && this.hasStop
         ? (this.simulation.time > this.stop ? this.stop : this.simulation.time) - this.start
         : this.hasStart
-        ? this.simulation.time > this.start
-          ? this.simulation.time - this.start
-          : 0
-        : this.hasStop
-        ? this.stop
-        : this.simulation.time
+          ? this.simulation.time > this.start
+            ? this.simulation.time - this.start
+            : 0
+          : this.hasStop
+            ? this.stop
+            : this.simulation.time
     ) as number;
   }
 

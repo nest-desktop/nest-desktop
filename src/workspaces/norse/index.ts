@@ -2,7 +2,7 @@
 
 import { defineViewStore } from "@/stores/defineViewStore";
 
-import { IWorkspaceProps } from "../";
+import type { IWorkspaceProps } from "../";
 import { norseTorchCompletions } from "./codemirror/norseTorchCompletion";
 import iconSet from "./components/iconSet";
 import route from "./routes";
@@ -64,7 +64,7 @@ export const norse: IWorkspaceProps = {
     "norse-accent": "#e6007e",
     "norse-green": "#0F9959",
     "norse-logo": "#000080",
-    norse: "#e6007e",
+    "norse": "#e6007e",
   },
   title: "Norse",
   views: {},

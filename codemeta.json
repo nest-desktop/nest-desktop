@@ -15,7 +15,7 @@
     }
   ],
   "codeRepository": "git+https://github.com/nest-desktop/nest-desktop",
-  "dateModified": "2025-05-09",
+  "dateModified": "2025-10-16",
   "description": "NEST Desktop is a web-based GUI for the simulation of spiking neuronal networks.",
   "downloadUrl": "https://files.pythonhosted.org/packages/42/c2/b20022cd38b01dd9c6e58c85edd32fe94fd44b0d2ee9459e78b7fadc66e0/nest_desktop-4.1.0.tar.gz",
   "issueTracker": "https://github.com/nest-desktop/nest-desktop/issues",
@@ -25,5 +25,5 @@
   "operatingSystem": "Web Browser (all platforms)",
   "programmingLanguage": "Typescript",
   "type": "SoftwareSourceCode",
-  "version": "4.1.0"
+  "version": "4.2.0"
 }

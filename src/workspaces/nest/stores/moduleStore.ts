@@ -1,14 +1,14 @@
 // moduleStore.ts
 
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import NESTModuleDialog from "../components/dialog/NESTModuleDialog.vue";
+import type { NESTModel } from "../types";
 import { fetchNESTMLModels, generateModels, useNESTMLServerStore } from "./backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./model/modelDBStore";
-import type { NESTModel } from "../types";
 
 export interface IModule {
   models: string[];

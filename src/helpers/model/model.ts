@@ -1,14 +1,14 @@
 // model.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
-import { TProject } from "@/types";
+import type { TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { IConfigProps } from "../common/config";
-import { IDoc } from "../common/database";
-import { IParamProps } from "../common/parameter";
+import type { IConfigProps } from "../common/config";
+import type { IDoc } from "../common/database";
+import type { IParamProps } from "../common/parameter";
 import { ModelParameter } from "./modelParameter";
 
 export interface IModelProps extends IDoc {

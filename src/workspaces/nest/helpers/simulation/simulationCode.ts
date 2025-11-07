@@ -1,12 +1,13 @@
 // simulationCode.ts
 
-import { ICodeProps } from "@/helpers/code/code";
+import type { AxiosResponse } from "axios";
+
+import type { IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { ICodeProps } from "@/helpers/code/code";
+import { SimulationCode } from "@/helpers/simulation/simulationCode";
 
 import nest from "../../stores/backends/nestSimulatorStore";
 import { NESTProject } from "../project/project";
-import { AxiosResponse } from "axios";
-import { IAxiosResponseData } from "@/stores/defineBackendStore";
-import { SimulationCode } from "@/helpers/simulation/simulationCode";
 
 export class NESTSimulationCode extends SimulationCode {
   constructor(project: NESTProject, simulationCodeProps: ICodeProps = {}) {

@@ -1,8 +1,8 @@
 // nodeParameter.ts
 
-import { TNodeParameterParent } from "@/types";
+import type { TNodeParameterParent } from "@/types";
 
-import { BaseParameter, IParamProps } from "../common/parameter";
+import { BaseParameter, type IParamProps } from "../common/parameter";
 import { ModelParameter } from "../model/modelParameter";
 
 export class NodeParameter extends BaseParameter {

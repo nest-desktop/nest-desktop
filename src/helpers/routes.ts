@@ -1,11 +1,11 @@
 // routes.ts
 
-import { RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
+import type { RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
 import { errorDialog } from "vuetify3-dialog";
 
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
-import { TModel, TModelRoute, TProject, TProjectRoute } from "@/types";
+import type { TModel, TModelRoute, TProject, TProjectRoute, TRoute } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -31,6 +31,7 @@ const loadModel = (modelId: string): void => {
   logger.trace("load model:", modelId);
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return;
   const modelStore = appStore.currentWorkspace.stores.modelStore;
   const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
 
@@ -49,6 +50,8 @@ const loadProject = (projectId?: string): void => {
   logger.trace("load project:", truncate(projectId));
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return;
+
   const projectStore = appStore.currentWorkspace.stores.projectStore;
   const projectDBStore = appStore.currentWorkspace.stores.projectDBStore;
 
@@ -67,6 +70,8 @@ export const modelBeforeEnter = (to: TModelRoute): void => {
   logger.trace("before enter:", to.path);
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return;
+
   const modelViewStore = appStore.currentWorkspace.views.model;
 
   let modelId: string = "";
@@ -81,15 +86,19 @@ export const modelBeforeEnter = (to: TModelRoute): void => {
 /**
  * Redirect to model route.
  * @param to model router
- * @returns model router
+ * @returns router
  */
-export const modelRedirect = (to: TModelRoute): TModelRoute => {
+export const modelRedirect = (to: TModelRoute): TRoute => {
   logger.trace("redirect to model:", to.params.modelId);
 
   const appStore = useAppStore();
-  const modelStore = appStore.currentWorkspace.stores.modelStore;
+  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
 
+  const modelStore = appStore.currentWorkspace.stores.modelStore;
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
+
+  if (!modelStore.state.modelId && appStore.currentWorkspace.stores.modelDBStore.state.models.length > 0)
+    modelStore.state.modelId = appStore.currentWorkspace.stores.modelDBStore.getRecentModelId();
 
   return modelStore.routeTo();
 };
@@ -103,6 +112,8 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
   logger.trace("mount model layout");
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return;
+
   const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
   const modelStore = appStore.currentWorkspace.stores.modelStore;
 
@@ -114,7 +125,7 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
       errorDialog({
         text: `Model "${props.route.params.modelId}" not found.`,
       });
-  }, 500);
+  }, 1000);
 };
 
 /**
@@ -126,6 +137,8 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
   logger.trace("mount project layout:", truncate(projectId));
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return;
+
   const projectDBStore = appStore.currentWorkspace.stores.projectDBStore;
   const projectStore = appStore.currentWorkspace.stores.projectStore;
 
@@ -141,7 +154,7 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
         if (answer) newProjectRoute(props.router);
       });
     }
-  }, 500);
+  }, 1000);
 };
 
 /**
@@ -166,6 +179,8 @@ export const projectBeforeEnter = (to: TProjectRoute): void => {
   logger.trace("before enter project route:", to.path);
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return;
+
   const projectViewStore = appStore.currentWorkspace.views.project;
   const path = to.path.split("/");
   projectViewStore.state.views.main = path[path.length - 1] || "edit";
@@ -175,12 +190,14 @@ export const projectBeforeEnter = (to: TProjectRoute): void => {
 
 /**
  * Create a new project.
- * @returns project route
+ * @returns route
  */
-export const projectNew = (): TProjectRoute => {
+export const projectNew = (): TRoute => {
   logger.trace("create a new project");
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+
   const projectStore = appStore.currentWorkspace.stores.projectStore;
   projectStore.newProject();
 
@@ -190,13 +207,15 @@ export const projectNew = (): TProjectRoute => {
 /**
  * Redirect to project route.
  * @param to project route
- * @returns project route
+ * @returns route
  */
-export const projectRedirect = (to: TProjectRoute): TProjectRoute => {
+export const projectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to project:", truncate(to.params.projectId));
   logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
+  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+
   const projectStore = appStore.currentWorkspace.stores.projectStore;
 
   if (to.params.projectId) loadProject(to.params.projectId);

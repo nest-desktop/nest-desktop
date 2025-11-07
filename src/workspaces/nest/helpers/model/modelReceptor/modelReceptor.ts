@@ -1,11 +1,11 @@
 // modelReceptor.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "@/helpers/common/base";
-import { IModelProps } from "@/helpers/model/model";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
-import { IParamProps } from "@/helpers/common/parameter";
+import { type IModelProps } from "@/helpers/model/model";
+import { type INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { type IParamProps } from "@/helpers/common/parameter";
 
 import { NESTModel } from "../model";
 import { NESTModelReceptorParameter } from "./modelReceptorParameter";

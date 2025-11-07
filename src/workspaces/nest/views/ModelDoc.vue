@@ -3,7 +3,8 @@
     <iframe
       :key="modelId"
       :src="`https://nest-simulator.readthedocs.io/en/latest/models/${modelId}.html#models-${parseKebabCase(
-        modelId as string)}--page-root`"
+        modelId as string,
+      )}--page-root`"
       frameborder="0"
       height="100%"
       width="100%"

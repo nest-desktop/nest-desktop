@@ -26,7 +26,7 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="projectViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
+          :icon="projectViewStore.state.bottomCode.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
           value="code"
           variant="plain"
           @click.stop="projectViewStore.toggleBottomNav()"
@@ -46,10 +46,10 @@
   >
     <div class="resize-handle left" @mousedown="projectViewStore.resizeRightNav()" />
 
-    <div :key="projectStore.state.projectId">
+    <div :key="projectStore.state.projectId" style="height: 100%">
       <template v-if="projectViewStore.state.views.controller === 'network'">
         <slot name="network">
-          <NetworkSpecEditor :network="(project.network as BaseNetwork)">
+          <NetworkSpecEditor :network="project.network as BaseNetwork">
             <template #model>
               <slot name="model" />
             </template>
@@ -62,7 +62,7 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'kernel'">
         <slot name="simulationKernel">
-          <SimulationKernelEditor :simulation="(project.simulation as BaseSimulation)" />
+          <SimulationKernelEditor :simulation="project.simulation as BaseSimulation" />
         </slot>
       </template>
 
@@ -101,30 +101,15 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'activity'">
         <slot name="activityController">
-          <ActivityChartController :graph="(project.activityGraph.activityChartGraph as ActivityChartGraph)" />
+          <ActivityChartController :graph="project.activityGraph.activityChartGraph as ActivityChartGraph" />
         </slot>
       </template>
 
       <template v-else-if="projectViewStore.state.views.controller === 'stats'">
-        <ActivityStats :activities="(project.activities as Activities)" />
+        <ActivityStats :activities="project.activities as Activities" />
       </template>
     </div>
   </v-navigation-drawer>
-
-  <v-bottom-navigation
-    :active="projectViewStore.state.bottomNav.active"
-    :height="projectViewStore.state.bottomNav.height"
-    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    class="no-print"
-    location="bottom"
-    @transitionend="projectViewStore.dispatchWindowResize()"
-  >
-    <div class="resize-handle bottom" @mousedown="projectViewStore.resizeBottomNav()" />
-
-    <slot name="bottomCodeMirror">
-      <CodeMirror :code="project.code" />
-    </slot>
-  </v-bottom-navigation>
 </template>
 
 <script setup lang="ts">
@@ -135,7 +120,6 @@ import { computed, ref } from "vue";
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
 import CodeEditor from "../code/CodeEditor.vue";
-import CodeMirror from "../code/CodeMirror.vue";
 import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
@@ -212,30 +196,20 @@ const controllerItems: IControllerItem[] = [
   },
 ];
 
+//
+// Code editor
+//
+
 const extensions: Extension[] = [basicSetup, languageJSON()];
 
-if (darkMode()) {
-  extensions.push(oneDark);
-}
+if (darkMode()) extensions.push(oneDark);
 </script>
 
 <style scoped>
-.resize-handle {
-  position: fixed;
-  z-index: 10;
-}
-
 .left {
   cursor: ew-resize;
   height: 100%;
   width: 4px;
   left: 0;
-}
-
-.bottom {
-  cursor: ns-resize;
-  height: 4px;
-  width: 100%;
-  top: 0;
 }
 </style>

@@ -1,8 +1,8 @@
 // nestSimulatorStore.ts
 
-import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
+import { AxiosError, type AxiosPromise, type AxiosResponse } from "axios";
 
-import { defineBackendStore, IAxiosResponseData } from "@/stores/defineBackendStore";
+import { defineBackendStore, type IAxiosResponseData } from "@/stores/defineBackendStore";
 import { notifyError } from "@/helpers/common/notification";
 import { sortString } from "@/utils/array";
 

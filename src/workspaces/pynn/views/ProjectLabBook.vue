@@ -10,7 +10,7 @@
         <NodeViewer
           v-for="(node, index) in currentProject.network.nodes.stimulators"
           :key="index"
-          :node="(node as BaseNode)"
+          :node="node as BaseNode"
         />
       </v-col>
 
@@ -19,7 +19,7 @@
         <NodeViewer
           v-for="(node, index) in currentProject.network.nodes.neurons"
           :key="index"
-          :node="(node as BaseNode)"
+          :node="node as BaseNode"
         />
       </v-col>
 
@@ -28,7 +28,7 @@
         <NodeViewer
           v-for="(node, index) in currentProject.network.nodes.recorders"
           :key="index"
-          :node="(node as BaseNode)"
+          :node="node as BaseNode"
         />
       </v-col>
     </v-row>

@@ -2,7 +2,7 @@
 
 import { drag, select, transition } from "d3";
 
-import { TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
+import type { TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";
@@ -182,11 +182,8 @@ export class NodeGraphConnector extends BaseObj {
     connector
       .selectAll("path")
       .transition(t)
-      .attr(
-        "d",
-        (
-          n: TNode | TNodeGroup | any, // TODO: no any!
-        ) => drawPathMouse({ x: 0, y: 0 }, n.view.isFocused && !connectionDrag ? connectorEndPos : { x: 0, y: 0 }),
+      .attr("d", (n: TNode | TNodeGroup) =>
+        drawPathMouse({ x: 0, y: 0 }, n.view.isFocused && !connectionDrag ? connectorEndPos : { x: 0, y: 0 }),
       );
 
     connector

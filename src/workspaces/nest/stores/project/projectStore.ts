@@ -7,7 +7,6 @@ import { defineProjectStore } from "@/stores/project/defineProjectStore";
 import { NESTProject } from "../../helpers/project/project";
 import { useNESTProjectDBStore } from "./projectDBStore";
 
-// export const useNESTProjectStore = defineProjectStore<NESTProject>({
 export const useNESTProjectStore = defineProjectStore({
   workspace: "nest",
   Project: NESTProject,

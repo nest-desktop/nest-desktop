@@ -1,12 +1,12 @@
 // network.ts
 
 import { BaseNetwork } from "@/helpers/network/network";
-import { INodeGroupProps } from "@/helpers/node/nodeGroup";
-import { TNetworkProps, TNode, TNodeGroup } from "@/types";
+import type { INodeGroupProps } from "@/helpers/node/nodeGroup";
+import type { TNetworkProps, TNode, TNodeGroup } from "@/types";
 
-import { INESTConnectionProps, NESTConnection } from "../connection/connection";
-import { INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
-import { INESTNodeProps } from "../node/node";
+import { type INESTConnectionProps, NESTConnection } from "../connection/connection";
+import { type INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
+import { type INESTNodeProps } from "../node/node";
 import { NESTConnections } from "../connection/connections";
 import { NESTCopyModels } from "../model/copyModels";
 import { NESTModel } from "../model/model";
@@ -139,7 +139,7 @@ export class NESTNetwork extends BaseNetwork {
    * @returns a list of models
    */
   getNodeModelsByElementType(elementType: string): (NESTModel | NESTCopyModel)[] {
-    this.logger.debug("get node models by element type", elementType);
+    this.logger.trace("get node models by element type", elementType);
     return elementType === "copied"
       ? this.copyModels.filterByGeneralElementType("node")
       : this.project.modelDBStore.getModelsByElementType(elementType);

@@ -78,16 +78,18 @@ const updateSpecs = () => {
       script: currentModel.value.nestmlScript,
     })
     .then((response: AxiosResponse) => {
-      switch (response.status) {
-        case 200:
-          currentModel.value.updateParameters(response.data.params);
-          currentModel.value.updateStates(response.data.states);
-          modelStore.saveModel();
-          notifySuccess("Updated specifications from backend successfully.");
-          break;
-        case 400:
-          notifyError("Failed to get specs for model.");
-          break;
+      if (response) {
+        switch (response.status) {
+          case 200:
+            currentModel.value.updateParameters(response.data.params);
+            currentModel.value.updateStates(response.data.states);
+            modelStore.saveModel();
+            notifySuccess("Updated specifications from backend successfully.");
+            break;
+          case 400:
+            notifyError("Failed to get specs for model.");
+            break;
+        }
       }
     })
     .catch((error: AxiosError) => {

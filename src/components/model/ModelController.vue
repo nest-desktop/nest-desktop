@@ -27,7 +27,12 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="modelViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
+          :icon="
+            modelViewStore.state.bottomCode.active && modelStore.state.project
+              ? 'mdi:mdi-arrow-expand-down'
+              : 'mdi:mdi-arrow-expand-up'
+          "
+          :disabled="modelStore.state.project == null"
           value="code"
           variant="plain"
           @click.stop="modelViewStore.toggleBottomNav()"
@@ -50,16 +55,12 @@
 
       <v-list>
         <v-list-subheader>States</v-list-subheader>
-        <ParamViewer
-          v-for="(state, index) in modelStore.model.states"
-          :key="index"
-          :param="(state as TModelParameter)"
-        />
+        <ParamViewer v-for="(state, index) in modelStore.model.states" :key="index" :param="state as TModelParameter" />
       </v-list>
 
       <v-list>
         <v-list-subheader>Parameters</v-list-subheader>
-        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param="(param as TModelParameter)" />
+        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param="param as TModelParameter" />
       </v-list>
     </template>
 
@@ -103,7 +104,7 @@
         <ParamListItem
           v-for="(param, index) in modelParams"
           :key="index"
-          :param="(param as TModelParameter)"
+          :param="param as TModelParameter"
           @update:param-value="updateCode()"
         >
           <template #append>
@@ -130,26 +131,11 @@
     <template v-else-if="modelViewStore.state.views.controller === 'activity'">
       <slot name="activityController">
         <ActivityChartController
-          :graph="(modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph)"
+          :graph="modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph"
         />
       </slot>
     </template>
   </v-navigation-drawer>
-
-  <v-bottom-navigation
-    :active="modelViewStore.state.bottomNav.active"
-    :height="modelViewStore.state.bottomNav.height"
-    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
-    class="no-print"
-    location="bottom"
-    @transitionend="modelViewStore.dispatchWindowResize()"
-  >
-    <div class="resize-handle bottom" @mousedown="modelViewStore.resizeBottomNav()" />
-
-    <slot name="bottomCodeMirror">
-      <CodeMirror v-if="modelStore.state.project" :code="modelStore.state.project.code" />
-    </slot>
-  </v-bottom-navigation>
 </template>
 
 <script setup lang="ts">
@@ -159,7 +145,6 @@ import { computed } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import CodeEditor from "../code/CodeEditor.vue";
-import CodeMirror from "../code/CodeMirror.vue";
 import Menu from "../common/Menu.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
@@ -171,9 +156,6 @@ import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
-
-import { useNavStore } from "@/stores/navStore";
-const navStore = useNavStore();
 
 const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
 const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
@@ -255,22 +237,15 @@ const updateCode = () => {
 };
 
 //
-// CodeMirror
+// Code editor
 //
 
 const extensions: Extension[] = [basicSetup, languageJSON()];
 
-if (darkMode()) {
-  extensions.push(oneDark);
-}
+if (darkMode()) extensions.push(oneDark);
 </script>
 
 <style scoped>
-.resize-handle {
-  position: fixed;
-  z-index: 10;
-}
-
 .left {
   cursor: ew-resize;
   height: 100%;

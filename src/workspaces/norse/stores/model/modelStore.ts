@@ -4,7 +4,7 @@ import { computed } from "vue";
 
 import { defineModelStore } from "@/stores/model/defineModelStore";
 
-import { NorseModel } from "../../types";
+import type { NorseModel } from "../../types";
 import { NorseProject } from "../../helpers/project/project";
 import { useNorseModelDBStore } from "./modelDBStore";
 

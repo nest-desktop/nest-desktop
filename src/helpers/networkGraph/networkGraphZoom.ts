@@ -4,7 +4,7 @@ import { nextTick } from "vue";
 import { zoom } from "d3";
 
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { TZoomBehavior } from "@/types";
+import type { TZoomBehavior } from "@/types";
 
 export class NetworkGraphZoom {
   private _handler: TZoomBehavior;

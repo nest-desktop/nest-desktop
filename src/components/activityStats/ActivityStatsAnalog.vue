@@ -30,7 +30,7 @@
           {{ item.title }}
           <NodeRecordChip
             v-if="item.raw.groupId"
-            :node-record="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+            :node-record="activity.getNodeRecord(item.raw.groupId) as NodeRecord"
             style="position: absolute; right: 4px"
           />
         </template>
@@ -42,7 +42,7 @@
               <v-spacer />
               <NodeRecordChip
                 v-if="item.raw.groupId"
-                :node-record="(activity.getNodeRecord(item.raw.groupId) as NodeRecord)"
+                :node-record="activity.getNodeRecord(item.raw.groupId) as NodeRecord"
                 class="my-auto"
               />
             </v-row>

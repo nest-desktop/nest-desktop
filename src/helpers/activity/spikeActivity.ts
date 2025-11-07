@@ -1,8 +1,8 @@
 // spikeActivity.ts
 
-import { TProject } from "@/types";
+import type { TProject } from "@/types";
 
-import { Activity, IActivityProps, IEventProps } from "./activity";
+import { Activity, type IActivityProps, type IEventProps } from "./activity";
 
 export class SpikeActivity extends Activity {
   private _times: number[][] = [];

@@ -1,9 +1,9 @@
 // networkGraphWorkspace.ts
 
-import { UnwrapRef, nextTick, reactive } from "vue";
+import { type UnwrapRef, nextTick, reactive } from "vue";
 import { max, min, pointer, select, zoomIdentity } from "d3";
 
-import { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
+import type { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NetworkGraphDragline } from "./networkGraphDragline";
@@ -169,15 +169,15 @@ export class NetworkGraphWorkspace extends BaseObj {
         this.updateCursorPosition({ x: position[0], y: position[1] });
         if (this._state.dragLine) this._dragline.update(event);
       })
-      .on("contextmenu", (event: MouseEvent) => {
-        event.preventDefault();
+      .on("click", () => {
         this.reset();
         this.network?.state.unselectAll();
         this.update();
       })
-      .on("click", (event: MouseEvent) => {
-        // this.reset();
-        // this.network?.state.unselectAll();
+      .on("contextmenu", (event: MouseEvent) => {
+        event.preventDefault();
+        this.reset();
+        this.network?.state.unselectAll();
 
         const position: number[] = pointer(event, this._selector.node());
         this.updateCursorPosition({ x: position[0], y: position[1] });

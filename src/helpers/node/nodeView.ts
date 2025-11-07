@@ -1,8 +1,8 @@
 // nodeView.ts
 
-import { UnwrapRef, nextTick, reactive } from "vue";
+import { type UnwrapRef, nextTick, reactive } from "vue";
 
-import { TConnection, TNode } from "@/types";
+import type { TConnection, TNode } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeRecord } from "./nodeRecord";

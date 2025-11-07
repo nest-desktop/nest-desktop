@@ -1,9 +1,9 @@
 // copyModels.ts
 
 import { BaseObj } from "@/helpers/common/base";
-import { IParamProps } from "@/helpers/common/parameter";
+import type { IParamProps } from "@/helpers/common/parameter";
 
-import { INESTCopyModelProps, NESTCopyModel } from "./copyModel";
+import { type INESTCopyModelProps, NESTCopyModel } from "./copyModel";
 import { NESTNetwork } from "../network/network";
 
 export class NESTCopyModels extends BaseObj {
@@ -83,7 +83,9 @@ export class NESTCopyModels extends BaseObj {
       new: modelId + "_copied" + (this._models.length + 1),
       params: paramProps,
     };
-    return this.add(modelProps);
+    const copyModel = this.add(modelProps);
+    copyModel.init();
+    return copyModel;
   }
 
   /**

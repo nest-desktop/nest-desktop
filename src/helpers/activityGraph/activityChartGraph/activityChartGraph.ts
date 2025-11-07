@@ -2,19 +2,19 @@
 
 import * as PlotlyBasic from "plotly.js-cartesian-dist-min";
 import moment from "moment";
-import { UnwrapRef, nextTick, reactive } from "vue";
+import { type UnwrapRef, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
-import { TProject } from "@/types";
+import type { TProject } from "@/types";
 
-import { ActivityChartPanel, IActivityChartPanelProps } from "./activityChartPanel";
+import { ActivityChartPanel, type IActivityChartPanelProps } from "./activityChartPanel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
 import { BaseObj } from "../../common/base";
 import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
-import { IActivityChartPanelModelData } from "./activityChartPanelModel";
-import { IBaseActivityGraphProps } from "../activityGraph";
+import type { IActivityChartPanelModelData } from "./activityChartPanelModel";
+import type { IBaseActivityGraphProps } from "../activityGraph";
 import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
 import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";

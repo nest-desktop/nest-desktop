@@ -1,6 +1,6 @@
 // scatter.ts
 
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 
 export const scatter = (args: IActivityChartPanelModelData) => ({
   hoverinfo: "x",

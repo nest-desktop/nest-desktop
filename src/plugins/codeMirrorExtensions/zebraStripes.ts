@@ -1,7 +1,7 @@
 // zebraStripes.ts
 
-import { Extension, Facet, RangeSetBuilder } from "@codemirror/state";
-import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
+import { type Extension, Facet, RangeSetBuilder } from "@codemirror/state";
+import { Decoration, type DecorationSet, EditorView, ViewPlugin, ViewUpdate } from "@codemirror/view";
 
 const baseTheme = EditorView.baseTheme({
   "&light .cm-zebraStripe": { backgroundColor: "#d4fafa" },

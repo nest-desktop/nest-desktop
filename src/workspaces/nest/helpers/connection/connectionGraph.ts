@@ -4,7 +4,7 @@ import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
 import { ConnectionGraph } from "@/helpers/connectionGraph/connectionGraph";
-import { TDragBehavior, TNodeGroup, TSelection } from "@/types";
+import type { TDragBehavior, TNodeGroup, TSelection } from "@/types";
 import { drawPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
 
 import { NESTNetworkGraph } from "../network/networkGraph";
@@ -191,14 +191,14 @@ export class NESTConnectionGraph extends ConnectionGraph {
 
     const connections = select("g#connections").selectAll("g.connection");
     connections
-      .style("color", (c: NESTConnection | any) => {
+      .style("color", (c: NESTConnection) => {
         if (!c.source) return;
         return "var(--colorNode" + c.sourceIdx + ")";
       })
       .transition(t)
       .style("opacity", 1);
 
-    connections.each((connection: NESTConnection, idx: number, elements: any[]) => {
+    connections.each((connection: NESTConnection, idx: number, elements: HTMLElement[]) => {
       if (!connection.source) return;
       const elem: TSelection = select(elements[idx]);
 
@@ -254,7 +254,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
     const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
-      .data(this.network.connections.all, (c: NESTConnection | any) => c.uuid);
+      .data(this.network.connections.all, (c: NESTConnection) => c.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))

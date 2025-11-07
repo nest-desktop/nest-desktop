@@ -1,9 +1,9 @@
 // project.ts
 
-import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
-import { INorseNetworkProps, NorseNetwork } from "../network/network";
-import { INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
+import { type INorseNetworkProps, NorseNetwork } from "../network/network";
+import { type INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
 import { NorseNode } from "../node/node";
 import { NorseSimulationCode } from "../simulation/simulationCode";
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";

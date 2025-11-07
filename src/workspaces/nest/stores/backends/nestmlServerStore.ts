@@ -1,8 +1,8 @@
 // nestmlServerStore.ts
 
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, type AxiosResponse } from "axios";
 
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 import { closeLoading, openLoading } from "@/stores/appStore";
 import { defineBackendStore } from "@/stores/defineBackendStore";
 import { notifyError, notifySuccess } from "@/helpers/common/notification";
@@ -32,17 +32,19 @@ export const generateModels = (
     })
     .then((response: AxiosResponse) => {
       modelStore.state.stopwatch.build = Date.now() - buildtoc;
-      switch (response.status) {
-        case 200:
-          notifySuccess(
-            `Models (${response.data.status["INSTALLED"].join(",")}) are successfully generated in "${
-              module.name
-            }" module.`,
-          );
-          break;
-        case 400:
-          notifyError("Failed to generate model.");
-          break;
+      if (response) {
+        switch (response.status) {
+          case 200:
+            notifySuccess(
+              `Models (${response.data.status["INSTALLED"].join(",")}) are successfully generated in "${
+                module.name
+              }" module.`,
+            );
+            break;
+          case 400:
+            notifyError("Failed to generate model.");
+            break;
+        }
       }
     })
     .catch((error: AxiosError) => {

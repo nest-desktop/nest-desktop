@@ -1,12 +1,12 @@
 // nodes.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TActivityGraph, TNetwork, TNode, TNodeGroup } from "@/types";
+import type { TActivityGraph, TNetwork, TNode, TNodeGroup } from "@/types";
 
-import { BaseNode, INodeProps } from "./node";
+import { BaseNode, type INodeProps } from "./node";
 import { BaseObj } from "../common/base";
-import { INodeGroupProps, NodeGroup } from "./nodeGroup";
+import { type INodeGroupProps, NodeGroup } from "./nodeGroup";
 
 interface INodesState {
   annotations: Record<string, string>[];

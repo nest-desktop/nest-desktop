@@ -9,7 +9,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 import "./main.scss";
 
-import { IconSet, createVuetify } from "vuetify";
+import { type IconSet, createVuetify } from "vuetify";
 // Composables
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
@@ -20,16 +20,16 @@ import { custom } from "@/components/iconsets/custom";
 import { network } from "@/components/iconsets/network";
 
 const colors = {
-  blue: ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
-  orange: ["ff6633", "#FF7F0E", "#F28E2C"][0],
-  green: "#2CA02C",
-  red: "#D62728",
-  purple: "#9467BD",
-  brown: "#8C564B",
-  rosa: "#E377C2",
-  grey: "#7F7F7F",
-  yellow: "#BCBD22",
-  cyan: "#17BECF",
+  "blue": ["1281b3", "#1F77B4", "#4E79A7"][0], // currentColor, category10, tableau10
+  "orange": ["ff6633", "#FF7F0E", "#F28E2C"][0],
+  "green": "#2CA02C",
+  "red": "#D62728",
+  "purple": "#9467BD",
+  "brown": "#8C564B",
+  "rosa": "#E377C2",
+  "grey": "#7F7F7F",
+  "yellow": "#BCBD22",
+  "cyan": "#17BECF",
   "blue-lighten-1": "#AEC7E8",
   "orange-lighten-1": "#FFBB78",
   "green-lighten-1": "#98DF8A",

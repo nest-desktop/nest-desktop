@@ -1,6 +1,6 @@
 // index.ts
 
-import { RouteRecordRaw } from "vue-router";
+import { type RouteRecordRaw } from "vue-router";
 
 import { setCurrentWorkspace } from "@/stores/appStore";
 import { closeNav } from "@/stores/navStore";
@@ -9,7 +9,7 @@ import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
 
 export default {
-  path: "nest",
+  path: "nest/",
   name: "nestLayout",
   beforeEnter: () => setCurrentWorkspace("nest"),
   component: () => import("../layouts/MainLayout.vue"),

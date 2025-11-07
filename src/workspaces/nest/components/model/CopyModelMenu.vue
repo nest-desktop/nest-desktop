@@ -54,7 +54,7 @@ import { computed, reactive } from "vue";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 
 import ModelDocumentation from "../../views/ModelDoc.vue";
-import { NESTCopyModel } from "../../helpers/model/copyModel";
+import type { NESTCopyModel } from "../../helpers/model/copyModel";
 
 const props = defineProps<{ model: NESTCopyModel }>();
 const model = computed(() => props.model);

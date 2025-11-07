@@ -3,7 +3,7 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
+import type { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeGraphConnector } from "./nodeGraphConnector";
@@ -129,14 +129,14 @@ export class NodeGraph extends BaseObj {
     nodes
       .transition(t)
       .style("opacity", 1)
-      .style("color", (n: TNode | TNodeGroup | any) => "var(--colorNode" + n.idx + ")")
+      .style("color", (n: TNode | TNodeGroup) => "var(--colorNode" + n.idx + ")")
       .style("background-color", "rgb(var(--v-theme-background))")
-      .attr("transform", (n: TNode | TNodeGroup | any) => `translate(${n.view.position.x},${n.view.position.y})`);
+      .attr("transform", (n: TNode | TNodeGroup) => `translate(${n.view.position.x},${n.view.position.y})`);
 
     nodes
       .selectAll(".core")
       .transition(t)
-      .attr("transform", (n: TNode | TNodeGroup | any) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
+      .attr("transform", (n: TNode | TNodeGroup) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
   }
 
   /**
@@ -151,11 +151,11 @@ export class NodeGraph extends BaseObj {
     const nodes: TSelection = this._networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
-      .data(this.network.nodes.all, (n: TNode | TNodeGroup | any) => n.uuid);
+      .data(this.network.nodes.all, (n: TNode | TNodeGroup) => n.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: TNode | TNodeGroup | unknown) => this.drag(e, n as TNode))
+      .on("drag", (e: MouseEvent, n: TNode | TNodeGroup) => this.drag(e, n as TNode))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     nodes

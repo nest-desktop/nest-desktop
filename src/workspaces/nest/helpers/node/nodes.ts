@@ -1,9 +1,9 @@
 // nodes.ts
 
 import { BaseNodes } from "@/helpers/node/nodes";
-import { TNodeGroup } from "@/types";
+import type { TNodeGroup } from "@/types";
 
-import { INESTNodeProps, NESTNode } from "./node";
+import { type INESTNodeProps, NESTNode } from "./node";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { NESTNetwork } from "../network/network";
 

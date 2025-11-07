@@ -1,5 +1,5 @@
 <template>
-  <v-btn-group v-if="simulation" class="mx-2" density="compact" divided theme="dark">
+  <v-btn-group v-if="simulation" class="mx-2" density="compact" divided theme="dark" style="overflow-x: hidden">
     <v-btn :disabled :loading class="border-white" prepend-icon="mdi:mdi-play" title="Simulate" @click="simulate()">
       Simulate
     </v-btn>

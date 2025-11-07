@@ -21,8 +21,8 @@
           style="
             font-weight: bold;
             font-size: 132.316px;
-            font-family: 'Glacial Indifference';
-            -inkscape-font-specification: 'Glacial Indifference Bold';
+            font-family: &quot;Glacial Indifference&quot;;
+            -inkscape-font-specification: &quot;Glacial Indifference Bold&quot;;
             fill: #000080;
             stroke-width: 4.67878;
           "

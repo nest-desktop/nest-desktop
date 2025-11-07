@@ -1,6 +1,6 @@
 services:
   nest-desktop:
-    image: docker-registry.ebrains.eu/nest/nest-desktop:4.1
+    image: docker-registry.ebrains.eu/nest/nest-desktop:4.2
     ports:
       - "54286:54286"
 
@@ -10,19 +10,19 @@ services:
       NEST_CONTAINER_MODE: "nest-server"
     ports:
       - "52425:52425"
-    volumes:
-      - nestmlmodules:/tmp/nestmlmodules
+    # volumes:
+    #   - nestmlmodules:/tmp/nestmlmodules
 
-  nestml-server:
-    image: nest/nest-simulator:dev
-    environment:
-      NEST_CONTAINER_MODE: "nestml-server"
-      NESTML_SERVER_TIMEOUT: 90
-      NESTML_SERVER_WORKERS: 1
-    ports:
-      - "52426:52426"
-    volumes:
-      - nestmlmodules:/tmp/nestmlmodules
+  # nestml-server:
+  #   image: nest/nest-simulator:3.9
+  #   environment:
+  #     NEST_CONTAINER_MODE: "nestml-server"
+  #     NESTML_SERVER_TIMEOUT: 90
+  #     NESTML_SERVER_WORKERS: 1
+  #   ports:
+  #     - "52426:52426"
+  #   volumes:
+  #     - nestmlmodules:/tmp/nestmlmodules
 
-volumes:
-  nestmlmodules:
+# volumes:
+#   nestmlmodules:

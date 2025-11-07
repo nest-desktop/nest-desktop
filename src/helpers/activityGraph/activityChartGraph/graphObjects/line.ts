@@ -1,6 +1,6 @@
 // line.ts
 
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 
 export const line = (args: IActivityChartPanelModelData) => ({
   hoverinfo: "x+y",

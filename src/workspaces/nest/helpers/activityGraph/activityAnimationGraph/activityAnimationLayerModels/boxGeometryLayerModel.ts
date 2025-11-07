@@ -4,7 +4,7 @@ import { BoxGeometry, Mesh, MeshLambertMaterial, Vector3 } from "three";
 
 import { ActivityAnimationLayer } from "../activityAnimationLayer";
 import { ActivityAnimationLayerModel } from "../activityAnimationLayerModel";
-import { TMesh } from "@/types";
+import type { TMesh } from "@/types";
 
 export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
   constructor(layer: ActivityAnimationLayer) {

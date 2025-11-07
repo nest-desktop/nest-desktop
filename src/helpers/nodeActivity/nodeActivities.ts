@@ -1,6 +1,6 @@
 // recorderActivities.ts
 
-import { TNode, TProject } from "@/types";
+import type { TNode, TProject } from "@/types";
 
 import { Activities } from "../activity/activities";
 import { Activity } from "../activity/activity";

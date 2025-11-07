@@ -2,7 +2,6 @@
 
 import { CompletionContext } from "@codemirror/autocomplete";
 
-// Our list of completions (can be static, since the editor will do filtering based on context).
 const completions = [
   {
     apply: "nest.Connect(",
@@ -126,8 +125,7 @@ const completions = [
 
 export function nestCompletions(context: CompletionContext) {
   const before = context.matchBefore(/nest\.\w*/);
-  // If completion wasn't explicitly started and there
-  // is no word before the cursor, don't open completions.
+  // If completion wasn't explicitly started and there is no word before the cursor, don't open completions.
   if (!context.explicit && !before) return null;
   return {
     from: before ? before.from : context.pos,

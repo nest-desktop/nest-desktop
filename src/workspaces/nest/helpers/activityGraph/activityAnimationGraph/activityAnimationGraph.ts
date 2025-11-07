@@ -1,7 +1,7 @@
 // activityAnimationGraph.ts
 
-import { Group, Object3DEventMap } from "three";
-import { UnwrapRef, reactive } from "vue";
+import { Group, type Object3DEventMap } from "three";
+import { type UnwrapRef, reactive } from "vue";
 
 import { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
 
@@ -125,7 +125,7 @@ export class ActivityAnimationGraph {
    * Initialize animation scene.
    * @remarks It should be initialized in the vue component is mounted.
    */
-  initScene(ref: any): void {
+  initScene(ref: HTMLElement): void {
     this.destroyScene();
     this._scene = new ActivityAnimationScene(this, ref);
     this.updateScene();

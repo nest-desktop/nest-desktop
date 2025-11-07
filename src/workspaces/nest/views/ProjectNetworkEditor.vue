@@ -4,12 +4,12 @@
       <template #ContextMenuList="{ graph }">
         <ConnectionMenuList
           v-if="graph.state.contextMenu.connection"
-          :connection="(graph.state.contextMenu.connection as NESTConnection)"
+          :connection="graph.state.contextMenu.connection as NESTConnection"
         />
-        <NESTNodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as NESTNode)" />
+        <NESTNodeMenuList v-if="graph.state.contextMenu.node" :node="graph.state.contextMenu.node as NESTNode" />
         <NodeGroupMenuList
           v-if="graph.state.contextMenu.nodeGroup"
-          :node-group="(graph.state.contextMenu.nodeGroup as TNodeGroup)"
+          :node-group="graph.state.contextMenu.nodeGroup as TNodeGroup"
         />
       </template>
     </NetworkEditorToolbar>

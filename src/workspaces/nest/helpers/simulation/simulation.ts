@@ -2,7 +2,7 @@
 
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 
-import { INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
+import { type INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 import { NESTProject } from "../project/project";
 
 export interface INESTSimulationProps {

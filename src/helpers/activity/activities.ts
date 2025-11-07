@@ -1,11 +1,11 @@
 // activities.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { IResponseData } from "@/stores/defineBackendStore";
-import { TProject } from "@/types";
+import type { IResponseData } from "@/stores/defineBackendStore";
+import type { TProject } from "@/types";
 
-import { Activity, IActivityProps, IEventProps } from "./activity";
+import { Activity, type IActivityProps, type IEventProps } from "./activity";
 import { AnalogSignalActivity } from "./analogSignalActivity";
 import { BaseObj } from "../common/base";
 import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
@@ -21,7 +21,7 @@ interface IActivitiesState {
 }
 
 export class Activities extends BaseObj {
-  private _activities: Activity[];
+  private _activities: Activity[] = [];
   private _state: UnwrapRef<IActivitiesState>;
   public _project: TProject;
 
@@ -178,7 +178,7 @@ export class Activities extends BaseObj {
             (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         } else {
-          activityProps.nodeIds = activityProps.events?.senders.filter(
+          activityProps.nodeIds = activityProps.events?.senders?.filter(
             (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         }

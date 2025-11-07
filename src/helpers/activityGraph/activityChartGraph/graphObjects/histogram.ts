@@ -1,7 +1,7 @@
 // histogram.ts
 
 import { currentBackgroundColor } from "../../../common/theme";
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 
 export const histogram = (args: IActivityChartPanelModelData) => ({
   histfunc: "count",

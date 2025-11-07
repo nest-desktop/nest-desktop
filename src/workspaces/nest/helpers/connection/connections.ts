@@ -2,7 +2,7 @@
 
 import { BaseConnections } from "@/helpers/connection/connections";
 
-import { INESTConnectionProps, NESTConnection } from "./connection";
+import { type INESTConnectionProps, NESTConnection } from "./connection";
 import { NESTNetwork } from "../network/network";
 
 export class NESTConnections extends BaseConnections {

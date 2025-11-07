@@ -1,6 +1,6 @@
 // nodeGroup.ts
 
-import { TConnection, TNetwork, TNode, TNodeGroup, TNodes } from "@/types";
+import type { TConnection, TNetwork, TNode, TNodeGroup, TNodes } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeGroupView } from "./nodeGroupView";

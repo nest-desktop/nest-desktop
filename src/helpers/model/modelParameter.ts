@@ -1,8 +1,8 @@
 // modelParameter.ts
 
-import { TModel } from "@/types";
+import type { TModel } from "@/types";
 
-import { BaseParameter, IParamProps } from "../common/parameter";
+import { BaseParameter, type IParamProps } from "../common/parameter";
 
 export class ModelParameter extends BaseParameter {
   private _model: TModel;

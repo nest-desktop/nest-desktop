@@ -21,7 +21,7 @@ export interface IDoc {
   id?: string;
   updatedAt?: string;
   version?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface IRes {

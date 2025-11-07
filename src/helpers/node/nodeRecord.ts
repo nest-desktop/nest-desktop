@@ -1,13 +1,13 @@
 // nodeRecord.ts
 
 import * as d3 from "d3";
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TNode } from "@/types";
+import type { TNode } from "@/types";
 
 import { Activity } from "../activity/activity";
 import { BaseObj } from "../common/base";
-import { IModelStateProps } from "../model/model";
+import type { IModelStateProps } from "../model/model";
 import { max, min } from "../../utils/array";
 
 export interface INodeRecordProps extends IModelStateProps {

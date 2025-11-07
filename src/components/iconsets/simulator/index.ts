@@ -8,7 +8,7 @@ import type { IconSet, IconProps } from "vuetify";
 
 // import pynn from "./PyNNIcon.vue";
 
-const simulatorSvgNameToComponent: Record<string, any> = {
+const simulatorSvgNameToComponent: Record<string, unknown> = {
   nest,
   norse,
   // pynn,

@@ -1,6 +1,6 @@
 // plot.ts
 
-import { IActivityChartPanelModelData } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import { bar } from "./bar";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 import { histogram } from "./histogram";

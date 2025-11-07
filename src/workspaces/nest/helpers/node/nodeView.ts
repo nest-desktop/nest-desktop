@@ -1,6 +1,6 @@
 // nodeView.ts
 
-import { INodeViewProps, NodeView } from "@/helpers/node/nodeView";
+import { type INodeViewProps, NodeView } from "@/helpers/node/nodeView";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";

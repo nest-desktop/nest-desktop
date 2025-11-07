@@ -55,7 +55,7 @@
       v-for="(param, index) in synapse.filteredParams"
       :key="index"
       :color="synapse.connection.sourceNode.view.color"
-      :param="(param as NESTSynapseParameter)"
+      :param="param as NESTSynapseParameter"
     />
   </v-list>
 </template>

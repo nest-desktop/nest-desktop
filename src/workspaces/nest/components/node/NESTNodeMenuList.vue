@@ -1,5 +1,5 @@
 <template>
-  <NodeMenuList :node="(node as NESTNode)">
+  <NodeMenuList :node="node as NESTNode">
     <template #prependItem="{ node: nestNode }">
       <v-list-item v-if="!nestNode.model?.isRecorder">
         <!-- <template #prepend>

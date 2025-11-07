@@ -1,5 +1,5 @@
 <template>
-  <v-btn-group density="compact" theme="dark" variant="tonal">
+  <v-btn-group density="compact" theme="dark" variant="tonal" style="overflow-x: hidden">
     <!-- <v-btn
       :disabled="countBefore <= 0"
       @click="project.networkRevision.oldest()"

@@ -22,7 +22,7 @@
       <template v-if="node.records.length > 0" #chip="{ item }">
         <NodeRecordChip
           v-if="node.getNodeRecord(item.value)"
-          :node-record="(node.getNodeRecord(item.value) as NodeRecord)"
+          :node-record="node.getNodeRecord(item.value) as NodeRecord"
         />
       </template>
 
@@ -32,7 +32,7 @@
             <template #append>
               <NodeRecordChip
                 v-if="node.getNodeRecord(item.value)"
-                :node-record="(node.getNodeRecord(item.value) as NodeRecord)"
+                :node-record="node.getNodeRecord(item.value) as NodeRecord"
                 class="my-auto"
               />
             </template>

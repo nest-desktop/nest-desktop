@@ -14,12 +14,12 @@
           <slot name="ContextMenuList" :graph>
             <ConnectionMenuList
               v-if="graph.state.contextMenu.connection"
-              :connection="(graph.state.contextMenu.connection as TConnection)"
+              :connection="graph.state.contextMenu.connection as TConnection"
             />
-            <NodeMenuList v-if="graph.state.contextMenu.node" :node="(graph.state.contextMenu.node as TNode)" />
+            <NodeMenuList v-if="graph.state.contextMenu.node" :node="graph.state.contextMenu.node as TNode" />
             <NodeGroupMenuList
               v-if="graph.state.contextMenu.nodeGroup"
-              :node-group="(graph.state.contextMenu.nodeGroup as TNodeGroup)"
+              :node-group="graph.state.contextMenu.nodeGroup as TNodeGroup"
             />
           </slot>
         </ContextMenu>
@@ -85,7 +85,7 @@
         size="x-small"
         @click.stop="node.unselect()"
       >
-        <NodeAvatar :node="(node as TNode)" :size="32" />
+        <NodeAvatar :node="node as TNode" :size="32" />
       </v-btn>
 
       <v-spacer />

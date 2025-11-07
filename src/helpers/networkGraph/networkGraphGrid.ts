@@ -1,7 +1,8 @@
 // networkGraphGrid.ts
 
+import type { TSelection } from "@/types";
+
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { TSelection } from "@/types";
 
 interface INetworkGraphGridData {
   x1: number;

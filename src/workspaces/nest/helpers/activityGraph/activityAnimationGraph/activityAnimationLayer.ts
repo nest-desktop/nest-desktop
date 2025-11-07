@@ -1,9 +1,9 @@
 // activityAnimationLayer.ts
 
-import { GridHelper, Group, Object3DEventMap, Vector3 } from "three";
-import { UnwrapRef, reactive } from "vue";
+import { GridHelper, Group, type Object3DEventMap, Vector3 } from "three";
+import { type UnwrapRef, reactive } from "vue";
 
-import { IEventProps } from "@/helpers/activity/activity";
+import type { IEventProps } from "@/helpers/activity/activity";
 import { NodeRecord } from "@/helpers/node/nodeRecord";
 import { range } from "@/utils/array";
 
@@ -19,10 +19,11 @@ export interface IActivityAnimationLayerFrame {
 }
 
 interface IActivityAnimationLayerModel {
-  component: any;
+  component: ActivityAnimationLayerModel;
   title: string;
   value: string;
 }
+
 export interface IActivityAnimationLayerState {
   layout: { extent: number[][] };
   modelSelected?: IActivityAnimationLayerModel;

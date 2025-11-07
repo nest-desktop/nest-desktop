@@ -1,7 +1,7 @@
 // connectionParameter.ts
 
 import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
-import { IParamProps, IParamType } from "@/helpers/common/parameter";
+import type { IParamProps, IParamType } from "@/helpers/common/parameter";
 
 import { NESTConnection } from "./connection";
 

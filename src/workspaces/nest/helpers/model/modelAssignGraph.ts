@@ -1,9 +1,10 @@
 // modelAssignGraph.ts
 
-import { Selection, select } from "d3";
+import { select } from "d3";
 
 import { BaseObj } from "@/helpers/common/base";
-import { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
+import type { INetworkGraphWorkspaceState } from "@/helpers/networkGraph/networkGraphWorkspace";
+import type { TSelection } from "@/types";
 import { drawPathMouse } from "@/helpers/connectionGraph/connectionGraphPath";
 
 import { NESTConnection } from "../connection/connection";
@@ -36,7 +37,7 @@ export class NESTModelAssignGraph extends BaseObj {
 
     if (!this._networkGraph.selector) return;
 
-    const models: Selection<any, any, any, any> = this._networkGraph.selector
+    const models: TSelection = this._networkGraph.selector
       .select("g#modelAssigned")
       .selectAll("g.modelAssigned")
       .data(this._networkGraph.network.connections.filterWithWeightRecorder, (c: NESTConnection | unknown) =>
@@ -62,7 +63,7 @@ export class NESTModelAssignGraph extends BaseObj {
   updateConnection(connection: NESTConnection, idx: number, elements: SVGGElement[] | ArrayLike<SVGGElement>): void {
     this.logger.trace("update connection");
 
-    const elem: Selection<any, any, any, any> = select(elements[idx]);
+    const elem: TSelection = select(elements[idx]);
 
     elem.selectAll("*").remove();
 
@@ -97,9 +98,7 @@ export class NESTModelAssignGraph extends BaseObj {
     const selector = select("g#modelAssigned").selectAll("g.modelAssigned");
     selector.style("pointer-events", "none");
 
-    // @ts-expect-error Argument of type '(connection: Connection, idx: number, elements: any[]) => void' is not
-    // assignable to parameter of type 'ValueFn<BaseType, unknown, void>'.
-    selector.each((connection: Connection, idx: number, elements: any[]) => {
+    selector.each((connection: NESTConnection, idx: number, elements: HTMLElement[]) => {
       const elem = select(elements[idx]);
       const synapseModel = connection.synapse.copyModel as NESTCopyModel;
       const weightRecorder = synapseModel.weightRecorder as NESTNode;

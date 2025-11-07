@@ -3,7 +3,7 @@
 import { range } from "@/utils/array";
 import { round } from "@/utils/converter";
 
-import { BasePositions, IBasePositionsProps } from "./basePositions";
+import { BasePositions, type IBasePositionsProps } from "./basePositions";
 import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IGridPositionsProps extends IBasePositionsProps {
@@ -13,7 +13,8 @@ export interface IGridPositionsProps extends IBasePositionsProps {
 }
 
 export class GridPositions extends BasePositions {
-  // private readonly _name: string = "grid";
+  public readonly name: string = "grid";
+
   private _extent: number[] = [1, 1];
   private _center: number[] = [0, 0];
   private _shape: number[] = [1, 1];
@@ -45,10 +46,6 @@ export class GridPositions extends BasePositions {
   set extent(value: number[]) {
     this._extent = value;
   }
-
-  // get name(): string {
-  //   return this._name;
-  // }
 
   override set numDimensions(value: number) {
     this._numDimensions = value;

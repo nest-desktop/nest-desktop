@@ -1,14 +1,14 @@
 // node.ts
 
-import { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import type { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
-import { BaseModel, IModelStateProps, TElementType } from "../model/model";
+import { BaseModel, type IModelStateProps, type TElementType } from "../model/model";
 import { BaseNodes } from "./nodes";
 import { BaseObj } from "../common/base";
-import { IActivityProps } from "../activity/activity";
-import { INodeRecordProps, NodeRecord } from "./nodeRecord";
-import { INodeViewProps, NodeView } from "./nodeView";
-import { IParamProps } from "../common/parameter";
+import { type IActivityProps } from "../activity/activity";
+import { type INodeRecordProps, NodeRecord } from "./nodeRecord";
+import { type INodeViewProps, NodeView } from "./nodeView";
+import type { IParamProps } from "../common/parameter";
 import { ModelParameter } from "../model/modelParameter";
 import { NodeActivity } from "../nodeActivity/nodeActivity";
 import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";

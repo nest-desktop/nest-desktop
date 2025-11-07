@@ -1,9 +1,9 @@
 // simulationCode.ts
 
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
-import { ICodeProps } from "@/helpers/code/code";
-import { IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { ICodeProps } from "@/helpers/code/code";
+import type { IAxiosResponseData } from "@/stores/defineBackendStore";
 
 import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { NorseProject } from "../project/project";

@@ -6,7 +6,7 @@
       <v-btn class="mx-2" prepend-icon="mdi:mdi-plus" size="small">
         Add panel
         <v-menu :close-on-content-click="false" activator="parent">
-          <ActivityChartPanelMenuPopover :graph="(graph as ActivityChartGraph)" @changed="addPanel" />
+          <ActivityChartPanelMenuPopover :graph="graph as ActivityChartGraph" @changed="addPanel" />
         </v-menu>
       </v-btn>
 
@@ -28,7 +28,7 @@
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
     <div v-for="(panel, panelIdx) in graph.panels" :key="'panel' + panelIdx">
       <Card class="mx-1" color="primary">
-        <ActivityChartPanelToolbar :panel="(panel as ActivityChartPanel)" />
+        <ActivityChartPanelToolbar :panel="panel as ActivityChartPanel" />
 
         <v-card-text v-if="panel.state.visible" class="pa-0">
           <v-select
@@ -50,7 +50,7 @@
             <template #chip="{ item }">
               <NodeRecordChip
                 v-if="panel.model.getNodeRecord(item.value)"
-                :node-record="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                :node-record="panel.model.getNodeRecord(item.value) as NodeRecord"
               />
             </template>
 
@@ -65,7 +65,7 @@
                   <template #append>
                     <NodeRecordChip
                       v-if="panel.model.getNodeRecord(item.value)"
-                      :node-record="(panel.model.getNodeRecord(item.value) as NodeRecord)"
+                      :node-record="panel.model.getNodeRecord(item.value) as NodeRecord"
                       class="my-auto"
                     />
                   </template>
@@ -123,7 +123,7 @@
               v-for="(param, paramIdx) of panel.model.filteredParams"
               :key="paramIdx"
               :model-value="param.value"
-              :param="(param as ActivityChartPanelModelParameter)"
+              :param="param as ActivityChartPanelModelParameter"
               @update:model-value="graph.update()"
             >
               <template #append />

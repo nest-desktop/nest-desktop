@@ -6,10 +6,10 @@ import sliderIcon from "./SliderIcon.vue";
 
 import type { IconSet, IconProps } from "vuetify";
 
-const customSvgNameToComponent: Record<string, any> = {
+const customSvgNameToComponent: Record<string, unknown> = {
   "dice-multiple-outline": diceMultipleOutlineIcon,
   "dots-grid": dotsGridIcon,
-  slider: sliderIcon,
+  "slider": sliderIcon,
 };
 
 const custom: IconSet = {

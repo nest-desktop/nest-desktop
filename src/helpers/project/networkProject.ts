@@ -1,18 +1,18 @@
 // project.ts
 
 import { nextTick } from "vue";
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
-import { IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TNetwork, TSimulation, TSimulationCode } from "@/types";
+import type { IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { TNetwork, TSimulation, TSimulationCode } from "@/types";
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 
-import { BaseProject, IBaseProjectProps } from "./project";
-import { INetworkProps, BaseNetwork } from "../network/network";
+import { BaseProject, type IBaseProjectProps } from "./project";
+import { type INetworkProps, BaseNetwork } from "../network/network";
 import { NetworkRevision } from "../network/networkRevision";
 import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { upgradeProject } from "../upgrades/upgrades";
-import { BaseSimulation, ISimulationProps } from "../simulation/simulation";
+import { BaseSimulation, type ISimulationProps } from "../simulation/simulation";
 import { SimulationCode } from "../simulation/simulationCode";
 
 export interface INetworkProjectProps extends IBaseProjectProps {

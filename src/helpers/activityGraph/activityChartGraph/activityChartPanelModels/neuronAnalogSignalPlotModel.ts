@@ -2,7 +2,7 @@
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
-import { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
 import { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
 
 export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {

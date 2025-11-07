@@ -1,8 +1,8 @@
 // recorderAnalogSignalActivity.ts
 
-import { TNode } from "@/types";
+import type { TNode } from "@/types";
 
-import { IActivityProps } from "../activity/activity";
+import type { IActivityProps } from "../activity/activity";
 import { NodeActivity } from "./nodeActivity";
 import { NodeRecord } from "../node/nodeRecord";
 

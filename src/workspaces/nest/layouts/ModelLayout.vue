@@ -74,6 +74,7 @@
     <ModelController />
 
     <router-view :key="modelStore.state.modelId" name="model" />
+    <BottomCode v-if="modelStore.state.project" :code="modelStore.state.project.code" :store="modelViewStore" />
   </template>
 </template>
 
@@ -81,6 +82,7 @@
 import { computed, nextTick, onMounted, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
+import BottomCode from "@/components/code/BottomCode.vue";
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";
@@ -105,6 +107,7 @@ import { useNESTModuleStore } from "../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
 const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
+const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
 
 const projects: { id: string; name: string; icon: string }[] = [
   {

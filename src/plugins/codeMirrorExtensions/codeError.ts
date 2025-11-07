@@ -1,9 +1,9 @@
 // codeError.ts
 
-import { UnwrapRef } from "vue";
+import { type UnwrapRef } from "vue";
 
-import { Extension } from "@codemirror/state";
-import { DecorationSet, EditorView, Panel, ViewPlugin, ViewUpdate, showPanel } from "@codemirror/view";
+import type { Extension } from "@codemirror/state";
+import { type DecorationSet, EditorView, type Panel, ViewPlugin, ViewUpdate, showPanel } from "@codemirror/view";
 
 import { highlightLineDeco } from "./highlightLine";
 

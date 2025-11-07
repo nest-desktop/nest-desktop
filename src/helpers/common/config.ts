@@ -1,6 +1,6 @@
 // config.ts
 
-import { TValue } from "@/types";
+import type { TValue } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 
 export interface IConfigProps {
@@ -55,7 +55,7 @@ export class Config {
     return { ...item };
   }
 
-  async import(): Promise<Record<string, TValue>> {
+  async import(): Promise<string> {
     const path = this._workspace
       ? `assets/workspaces/${this._workspace}/config/${this._name}`
       : `assets/config/${this._name}`;

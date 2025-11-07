@@ -2,11 +2,11 @@
 
 import { v4 as uuidv4 } from "uuid";
 
-import { BaseModel, IModelProps, IModelStateProps, TElementType } from "@/helpers/model/model";
-import { IParamProps } from "@/helpers/common/parameter";
+import { BaseModel, type IModelProps, type IModelStateProps, type TElementType } from "@/helpers/model/model";
+import type { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
-import { INESTModelReceptorProps, NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { type INESTModelReceptorProps, NESTModelReceptor } from "./modelReceptor/modelReceptor";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 // import { loadText } from "@/utils/fetch";
 

@@ -1,8 +1,8 @@
 // connectionState.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TConnection } from "@/types";
+import type { TConnection } from "@/types";
 
 interface IConnectionState {
   showRule: boolean;

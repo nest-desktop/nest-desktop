@@ -1,6 +1,6 @@
 // modelRoutes.ts
 
-import { TModelRoute, TRoute } from "@/types";
+import type { TModelRoute, TRoute } from "@/types";
 import { modelBeforeEnter, modelRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
 
@@ -11,13 +11,17 @@ const nestModelRedirect = (to: TModelRoute): TRoute => {
 
   const appStore = useAppStore();
   const modelStore = useNESTModelStore();
-  const modelViewStore = appStore.currentWorkspace.views.model;
-  if (modelStore.model && !modelStore.model.isNeuron) {
-    if (modelViewStore.state.views.main === "explore") {
-      modelViewStore.state.views.main = "doc";
-    }
-    if (modelViewStore.state.views.controller === "code") {
-      modelViewStore.state.views.controller = "defaults";
+
+  if (appStore.currentWorkspace) {
+    const modelViewStore = appStore.currentWorkspace.views.model;
+
+    if (modelStore.model && !modelStore.model.isNeuron) {
+      if (modelViewStore.state.views.main === "explore") {
+        modelViewStore.state.views.main = "doc";
+      }
+      if (modelViewStore.state.views.controller === "code") {
+        modelViewStore.state.views.controller = "defaults";
+      }
     }
   }
 

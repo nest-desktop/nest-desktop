@@ -61,7 +61,7 @@ export const pynn: IWorkspaceProps = {
   theme: {
     "pynn-accent": "#e6007e",
     "pynn-logo": "#000080",
-    pynn: "#0F9959",
+    "pynn": "#0F9959",
   },
   title: "PyNN",
   views: {},

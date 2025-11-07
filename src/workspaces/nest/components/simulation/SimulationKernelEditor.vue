@@ -36,9 +36,11 @@
         />
 
         <ValueSlider
+          :key="simulation.kernel.rngSeed"
           v-bind="options.rngSeedSettings"
           v-model="simulation.kernel.rngSeed"
           :thumb-color="props.color"
+          :disabled="state.autoRNGSeed"
           class="mx-1 py-1"
         />
 
@@ -80,16 +82,12 @@ import { useNESTProjectStore } from "../../stores/project/projectStore";
 const projectStore = useNESTProjectStore();
 
 const props = defineProps({ color: { default: "primary", type: String } });
-
 const simulation = computed(() => projectStore.state.project?.simulation as NESTSimulation);
 
 const options = {
   autoRNGSeedSettings: {
     component: "checkbox",
     label: "randomize seed",
-    rules: [
-      (value: boolean) => !value || "It always generates new script code. Uncheck if you want to modify the script.",
-    ],
   },
   resolutionSettings: {
     id: "resolution",

@@ -1,6 +1,6 @@
 // defineBackendStore.ts
 
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from "axios";
+import axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse, type AxiosResponseHeaders } from "axios";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
@@ -8,7 +8,7 @@ import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
-import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
+import type { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 
 export interface IAxiosResponseData {
   data: IResponseData;
@@ -132,6 +132,8 @@ export function defineBackendStore(workspace: string, name: string, url: string,
         axiosInstance
           .get(baseURL)
           .then((response: AxiosResponse<IAxiosResponseData>) => {
+            if (!response) return baseURL;
+
             state.response = response;
             switch (response.status) {
               case 200:
@@ -141,6 +143,7 @@ export function defineBackendStore(workspace: string, name: string, url: string,
                 notifyError(`${baseURL} (${name} backend) ${response.statusText.toLowerCase()}.`);
                 break;
             }
+
             return baseURL;
           })
           .catch((error: AxiosError<IAxiosResponseData>) => {

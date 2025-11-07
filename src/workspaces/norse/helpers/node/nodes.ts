@@ -1,8 +1,8 @@
 // nodes.ts
 
 import { BaseNodes } from "@/helpers/node/nodes";
-import { INodeProps } from "@/helpers/node/node";
-import { TNode, TNodeGroup } from "@/types";
+import type { INodeProps } from "@/helpers/node/node";
+import type { TNode, TNodeGroup } from "@/types";
 
 import { NorseNetwork } from "../network/network";
 import { NorseNode } from "./node";

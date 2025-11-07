@@ -1,10 +1,10 @@
 // simulation.ts
 
-import { AxiosResponse } from "axios";
-import { UnwrapRef, reactive } from "vue";
+import type { AxiosResponse } from "axios";
+import { type UnwrapRef, reactive } from "vue";
 
-import { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
-import { TNetworkProject } from "@/types";
+import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import type { TNetworkProject } from "@/types";
 
 import { BaseObj } from "../common/base";
 
@@ -134,8 +134,9 @@ export class BaseSimulation extends BaseObj {
     return this.project.code
       .runSimulation()
       .then((response: AxiosResponse<IAxiosResponseData>) => {
-        let data: IResponseData;
+        if (!response) return response;
 
+        let data: IResponseData;
         switch (response.status) {
           case 200:
             data = response.data.data;
@@ -144,6 +145,7 @@ export class BaseSimulation extends BaseObj {
             this.state.biologicalTime = data.biological_time != null ? data.biological_time : this.time;
             break;
         }
+
         return response;
       })
       .finally(() => {

@@ -1,6 +1,6 @@
 // model.ts
 
-import { BaseModel, IModelProps, IModelStateProps } from "@/helpers/model/model";
+import { BaseModel, type IModelProps, type IModelStateProps } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 export interface INorseModelProps extends IModelProps {

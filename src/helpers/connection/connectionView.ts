@@ -1,8 +1,8 @@
 // connectionView.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
-import { TConnection } from "@/types";
+import type { TConnection } from "@/types";
 
 import { calcPathNode } from "../connectionGraph/connectionGraphPath";
 import { randomUniformInt } from "../../utils/random";

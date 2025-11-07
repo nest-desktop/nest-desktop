@@ -1,12 +1,11 @@
 // code.ts
 
-// @ts-expect-error Mustache has no default export.
 import Mustache from "mustache";
-import axios, { AxiosHeaders, AxiosResponse } from "axios";
-import { UnwrapRef, nextTick, reactive } from "vue";
+import axios, { AxiosHeaders, type AxiosResponse } from "axios";
+import { type UnwrapRef, nextTick, reactive } from "vue";
 
-import { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { TProject } from "@/types";
+import type { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
+import type { TProject } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { download } from "../../utils/download";
@@ -26,6 +25,7 @@ export interface ICodeProps {
 
 interface ICodeState {
   error: IAxiosErrorData;
+  locked: boolean;
   script: string;
   template?: string;
   templateFilename: string;
@@ -44,9 +44,10 @@ export class BaseCode extends BaseObj {
         lineNumber: -1,
         message: "",
       },
+      locked: false,
+      script: "",
       templateFilename: codeProps?.templateFilename || "code",
       template: "",
-      script: "",
     });
 
     if (this._state.templateFilename) this.loadTemplate();
@@ -140,6 +141,7 @@ export class BaseCode extends BaseObj {
    * Renders the script and generates the hash.
    */
   generate(): void {
+    if (this.state.locked) return;
     this.logger.trace("generate");
 
     if (this._state.template) {

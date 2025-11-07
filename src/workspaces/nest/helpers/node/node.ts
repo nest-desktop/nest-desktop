@@ -1,16 +1,16 @@
 // node.ts
 
-import { BaseParameter, IParamProps } from "@/helpers/common/parameter";
-import { IModelStateProps, TElementType } from "@/helpers/model/model";
+import { BaseParameter, type IParamProps } from "@/helpers/common/parameter";
+import type { IModelStateProps, TElementType } from "@/helpers/model/model";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { BaseNode, INodeProps } from "@/helpers/node/node";
+import { BaseNode, type INodeProps } from "@/helpers/node/node";
 import { NodeParameter } from "@/helpers/node/nodeParameter";
-import { INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
+import { type INodeRecordProps, NodeRecord } from "@/helpers/node/nodeRecord";
 import { onlyUnique, sortString } from "@/utils/array";
 
-import { INESTNodeCompartmentProps, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
-import { INESTNodeReceptorProps, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
-import { INESTNodeSpatialProps, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
+import { type INESTNodeCompartmentProps, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
+import { type INESTNodeReceptorProps, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
+import { type INESTNodeSpatialProps, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../model/model";

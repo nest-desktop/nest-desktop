@@ -1,7 +1,7 @@
 // synapseParameter.ts
 
-import { BaseParameter, IParamProps } from "@/helpers/common/parameter";
-import { TSynapse } from "@/types";
+import { BaseParameter, type IParamProps, type IParamType } from "@/helpers/common/parameter";
+import type { TSynapse } from "@/types";
 
 export class BaseSynapseParameter extends BaseParameter {
   public _synapse: TSynapse;
@@ -15,7 +15,7 @@ export class BaseSynapseParameter extends BaseParameter {
     return this._synapse;
   }
 
-  get types(): any[] {
+  get types(): IParamType[] {
     return this.config?.localStorage.types;
   }
 

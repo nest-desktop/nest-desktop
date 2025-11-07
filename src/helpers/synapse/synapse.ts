@@ -1,10 +1,10 @@
 // synapse.ts
 
-import { TConnection, TSynapseParameter } from "@/types";
+import type { TConnection, TSynapseParameter } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { BaseSynapseParameter } from "./synapseParameter";
-import { IParamProps } from "../common/parameter";
+import { type IParamProps } from "../common/parameter";
 
 export interface ISynapseProps {
   model?: string;

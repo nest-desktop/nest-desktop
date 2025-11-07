@@ -11,14 +11,14 @@
     <ArrayInput
       v-else-if="param.options.component === 'arrayInput'"
       v-bind="param.options"
-      v-model="(param.value as number[])"
+      v-model="param.value as number[]"
       @update:model-value="update"
     />
 
     <v-checkbox
       v-else-if="param.options.component === 'checkbox'"
       v-bind="param.options"
-      v-model="(param.value as boolean)"
+      v-model="param.value as boolean"
       :color="color"
       density="compact"
       hide-details
@@ -28,7 +28,7 @@
     <RangeSlider
       v-else-if="param.options.component === 'rangeSlider'"
       v-bind="param.options"
-      v-model="(param.value as number[])"
+      v-model="param.value as number[]"
       :thumb-color="color"
       @update:model-value="update"
     />
@@ -36,7 +36,7 @@
     <v-select
       v-else-if="param.options.component === 'select'"
       v-bind="param.options"
-      v-model="(param.value as string)"
+      v-model="param.value as string"
       :items="param.items"
       class="pa-1 pb-0"
       density="compact"
@@ -47,7 +47,7 @@
     <TickSlider
       v-else-if="param.options.component === 'tickSlider'"
       v-bind="param.options"
-      v-model="(param.value as number)"
+      v-model="param.value as number"
       :thumb-color="color"
       @update:model-value="update"
     />
@@ -55,7 +55,7 @@
     <ValueSlider
       v-else-if="param.options.component === 'valueSlider'"
       v-bind="param.options"
-      v-model="(param.value as number)"
+      v-model="param.value as number"
       :thumb-color="color"
       @update:model-value="update"
     />
@@ -109,7 +109,7 @@ import { TParameter } from "@/types";
 const emit = defineEmits(["update:paramValue"]);
 const props = defineProps({
   color: { type: String, default: "" },
-  param: { required: true },
+  param: { type: Object, required: true },
   showMenu: { type: Boolean, default: true },
 });
 const param = computed(() => props.param as TParameter);

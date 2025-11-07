@@ -1,9 +1,9 @@
 // insite.ts
 
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import { IActivityProps, IEventProps } from "@/helpers/activity/activity";
+import type { IActivityProps, IEventProps } from "@/helpers/activity/activity";
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { notifySuccess } from "@/helpers/common/notification";
 
@@ -303,8 +303,8 @@ export class Insite extends BaseObj {
           senders.length > 0
             ? 250
             : this._state.spikesRequestTimeout >= 5000
-            ? 5000
-            : this._state.spikesRequestTimeout + 250;
+              ? 5000
+              : this._state.spikesRequestTimeout + 250;
 
         if (senders == undefined || senders.length === 0) {
           setTimeout(() => this.getAllFirstSpikeActivity(), this._state.spikesRequestTimeout);

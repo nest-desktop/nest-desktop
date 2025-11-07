@@ -5,8 +5,8 @@ import { computed, nextTick } from "vue";
 import { defineModelStore } from "@/stores/model/defineModelStore";
 import { logger as mainLogger } from "@/utils/logger";
 
-import { IModule, useNESTModuleStore } from "../moduleStore";
-import { NESTModel, NESTNode, NESTSimulation } from "../../types";
+import { type IModule, useNESTModuleStore } from "../moduleStore";
+import type { NESTModel, NESTNode, NESTSimulation } from "../../types";
 import { NESTProject } from "../../helpers/project/project";
 import { useNESTModelDBStore } from "./modelDBStore";
 

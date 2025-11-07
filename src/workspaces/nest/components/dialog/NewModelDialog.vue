@@ -13,7 +13,7 @@
         </v-col>
 
         <v-col cols="6">
-          <NESTMLModelSelect :model="(model as NESTModel)" class="pt-1" @update:model-value="updateOnSelect" />
+          <NESTMLModelSelect :model="model as NESTModel" class="pt-1" @update:model-value="updateOnSelect" />
         </v-col>
       </v-row>
 

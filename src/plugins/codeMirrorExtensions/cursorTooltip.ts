@@ -37,11 +37,11 @@ function getCursorTooltips(state: EditorState): readonly Tooltip[] {
 
 const cursorTooltipBaseTheme = EditorView.baseTheme({
   ".cm-tooltip.cm-tooltip-cursor": {
-    backgroundColor: "#66b",
-    color: "white",
-    border: "none",
-    padding: "2px 7px",
-    borderRadius: "4px",
+    "backgroundColor": "#66b",
+    "color": "white",
+    "border": "none",
+    "padding": "2px 7px",
+    "borderRadius": "4px",
     "& .cm-tooltip-arrow:before": {
       borderTopColor: "#66b",
     },

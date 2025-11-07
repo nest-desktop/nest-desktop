@@ -131,7 +131,7 @@
         <ConnectionEditor
           v-for="(connection, index) in node.connections"
           :key="index"
-          :connection="(connection as TConnection)"
+          :connection="connection as TConnection"
         />
       </slot>
     </v-expansion-panels>

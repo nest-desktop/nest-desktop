@@ -4,7 +4,7 @@
  * router documentation: https://router.vuejs.org/guide/
  */
 
-import { RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router";
+import { type RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router";
 
 // Store
 import { useAppStore } from "@/stores/appStore";

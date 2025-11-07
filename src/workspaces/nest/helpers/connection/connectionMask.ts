@@ -12,16 +12,51 @@ enum EMaskType {
   rectangular = "rectangular",
 }
 
+interface IShape {
+  type: string;
+  xref: string;
+  yref: string;
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  opacity: number;
+  fillcolor: string;
+  line: {
+    color: string;
+  };
+}
+
+interface IGraph {
+  data: number[];
+  layout: {
+    xaxis: { range: [number, number] };
+    yaxis: { range: [number, number] };
+    shapes?: IShape[];
+  };
+  style: { position: string; width: string; height: string };
+}
+
+interface ISpecs {
+  inner_radius?: number;
+  lower_left?: [number, number];
+  major_axis?: number;
+  minor_axis?: number;
+  outer_radius?: number;
+  radius?: number;
+  upper_right?: [number, number];
+}
+
 export interface INESTConnectionMaskProps {
   masktype?: EMaskType;
-  specs: any;
+  specs: ISpecs;
 }
 
 export class NESTConnectionMask extends BaseObj {
   private _connection: NESTConnection;
-  private _graph: any;
+  private _graph: IGraph;
   private _masktype: EMaskType;
-  private _specs: any;
+  private _specs: ISpecs;
 
   constructor(connection: NESTConnection, maskProps?: INESTConnectionMaskProps) {
     super({
@@ -45,7 +80,7 @@ export class NESTConnectionMask extends BaseObj {
     return this._connection;
   }
 
-  get graph(): any {
+  get graph(): IGraph {
     return this._graph;
   }
 
@@ -61,7 +96,7 @@ export class NESTConnectionMask extends BaseObj {
     return this._masktype;
   }
 
-  get specs(): any {
+  get specs(): ISpecs {
     return this._specs;
   }
 
@@ -223,8 +258,8 @@ export class NESTConnectionMask extends BaseObj {
       this.unmask();
     } else {
       this._masktype = value;
-      this._specs = {};
-      this.config?.localStorage.data[value].specs.forEach((spec: { id: string; value: any }) => {
+      this._specs = {} as ISpecs;
+      this.config?.localStorage.data[value].specs.forEach((spec: { id: string; value: number | number[] }) => {
         this._specs[spec.id] = spec.value;
       });
     }
@@ -236,7 +271,7 @@ export class NESTConnectionMask extends BaseObj {
    * @return connection mask props
    */
   toJSON(): INESTConnectionMaskProps {
-    const maskProps: any = {
+    const maskProps: INESTConnectionMaskProps = {
       masktype: this._masktype,
       specs: this._specs,
     };

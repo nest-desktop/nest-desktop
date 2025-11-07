@@ -1,8 +1,8 @@
 // copyModelParameter.ts
 
-import { BaseParameter, IParamOptions, IParamProps } from "@/helpers/common/parameter";
+import { BaseParameter, type IParamOptions, type IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
-import { TModel } from "@/types";
+import type { TModel } from "@/types";
 
 import { NESTCopyModel } from "./copyModel";
 

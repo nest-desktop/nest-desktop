@@ -1,7 +1,7 @@
 // nodeReceptor.ts
 
-import { IParamProps, TParamValue } from "@/helpers/common/parameter";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import type { IParamProps, TParamValue } from "@/helpers/common/parameter";
+import type { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { NodeView } from "@/helpers/node/nodeView";
 
 import { NESTModelReceptor } from "../../model/modelReceptor/modelReceptor";

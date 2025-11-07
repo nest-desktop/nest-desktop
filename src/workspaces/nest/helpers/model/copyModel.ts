@@ -1,10 +1,10 @@
 // copyModel.ts
 
-import { UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
 import { BaseObj } from "@/helpers/common/base";
-import { BaseParameter, IParamProps, TParamValue } from "@/helpers/common/parameter";
-import { INodeRecordProps } from "@/helpers/node/nodeRecord";
+import { BaseParameter, type IParamProps, type TParamValue } from "@/helpers/common/parameter";
+import type { INodeRecordProps } from "@/helpers/node/nodeRecord";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
 import { NESTConnection } from "../connection/connection";
@@ -93,7 +93,7 @@ export class NESTCopyModel extends BaseObj {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0 && "weight_recorder" in this.params;
+    return this._paramsVisible.length > 0 || this.hasWeightRecorderParam;
   }
 
   get copyModels(): NESTCopyModels {
@@ -347,15 +347,14 @@ export class NESTCopyModel extends BaseObj {
     this.logger.trace("Add parameters");
 
     this.emptyParams();
-
     if (this.model) {
       this.model.paramsAll.forEach((modelParam: ModelParameter) => {
         if (paramsProps && paramsProps.length > 0) {
-          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
-          if (nodeParamProps) {
+          const modelParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
+          if (modelParamProps) {
             this.addParameter(
               {
-                ...nodeParamProps,
+                ...modelParamProps,
                 ...modelParam,
               },
               true,

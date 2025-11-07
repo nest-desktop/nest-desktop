@@ -72,7 +72,7 @@
 
     <v-list class="pt-0" density="compact" lines="two" nav>
       <v-list-subheader class="pa-0" inset style="margin-left: -28px">
-        <v-btn-toggle v-model="state.elementType" density="compact" style="height: 24px">
+        <v-btn-toggle v-model="state.elementType" density="compact" style="height: 24px; overflow-x: hidden">
           <v-btn
             v-for="elementType in elementTypes"
             :key="elementType"
@@ -84,7 +84,7 @@
         </v-btn-toggle>
       </v-list-subheader>
 
-      <v-virtual-scroll :items="models" :key="models.length">
+      <v-virtual-scroll :key="models.length" :items="models">
         <template #default="{ item }">
           <v-hover v-slot="{ isHovering, props }">
             <v-list-item
@@ -99,7 +99,7 @@
               <template #append>
                 <template v-if="item.state">
                   <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
-                  <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="(item as TModel)" />
+                  <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="item as TModel" />
                 </template>
               </template>
             </v-list-item>
