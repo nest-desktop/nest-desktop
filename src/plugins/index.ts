@@ -5,6 +5,7 @@
  */
 
 import type { App } from "vue";
+import { EditorView } from "codemirror";
 import { Vuetify3Dialog } from "vuetify3-dialog";
 
 import router from "@/router";
@@ -18,8 +19,8 @@ import { vuetify } from "./vuetify";
 import { loadFonts } from "./webfontloader";
 
 import "splitpanes/dist/splitpanes.css";
-import "@baklavajs/themes/dist/classic.css";
-// import '@baklavajs/themes/dist/syrup-dark.css';
+// import "@baklavajs/themes/dist/classic.css";
+import '@baklavajs/themes/dist/syrup-dark.css';
 import '@babsey/code-graph/style.css';
 
 export function registerPlugins(app: App) {
@@ -54,6 +55,6 @@ export function registerPlugins(app: App) {
 
   // Use codemirror
   app.use(codeMirror, {
-    extensions: [basicSetup],
+    extensions: [EditorView.lineWrapping, basicSetup],
   });
 }
