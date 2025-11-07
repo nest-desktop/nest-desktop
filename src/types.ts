@@ -6,7 +6,7 @@ import type { Store } from "pinia";
 
 import type { ActivityChartPanelModelParameter } from "./helpers/activityGraph/activityChartGraph/activityChartPanelModelParameter";
 import type { BaseActivityGraph } from "./helpers/activityGraph/activityGraph";
-import type { BaseCode } from "@/helpers/code/code";
+import type { BaseCode } from "@/helpers/code/codeHandler";
 import type { BaseConnection, IConnectionProps } from "./helpers/connection/connection";
 import type { BaseConnections } from "./helpers/connection/connections";
 import type { BaseModel, IModelProps } from "./helpers/model/model";
@@ -30,7 +30,7 @@ import type * as workspaces from "./workspaces/types";
 import type { INetworkProjectProps, NetworkProject } from "./helpers/project/networkProject";
 
 export type TActivityGraph = BaseActivityGraph | workspaces.TActivityGraph;
-export type TCode = BaseCode | TSimulationCode;
+// export type TCode = BaseCode | TSimulationCode;
 export type TConnection = BaseConnection | workspaces.TConnection;
 export type TConnectionProps = IConnectionProps | workspaces.TConnectionProps;
 export type TConnections = BaseConnections | workspaces.TConnections;
@@ -59,7 +59,7 @@ export type TProject = BaseProject | TNetworkProject;
 export type TProjectDB = BaseProjectDB | workspaces.TProjectDB;
 export type TProjectProps = IBaseProjectProps | INetworkProjectProps | workspaces.TProjectProps;
 export type TSimulation = BaseSimulation | workspaces.TSimulation;
-export type TSimulationCode = workspaces.TSimulationCode;
+// export type TSimulationCode = workspaces.TSimulationCode;
 export type TSimulationProps = ISimulationProps | workspaces.TSimulationProps;
 export type TSynapse = BaseSynapse | workspaces.TSynapse;
 export type TSynapseParameter = BaseSynapseParameter | workspaces.TSynapseParameter;
@@ -79,11 +79,3 @@ export type TZoomBehavior = ZoomBehavior<any, any>;
 export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
 
 export type TValue = any;
-
-export type TRoute = { path: string };
-export type TProjectRoute = {
-  params: { projectId: string };
-  path: string;
-  query?: { activityView?: string; graphView?: string };
-};
-export type TModelRoute = { params: { modelId: string }; path: string };
