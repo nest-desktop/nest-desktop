@@ -46,9 +46,9 @@ export class BaseSynapse extends BaseObj {
 
   get icon(): string {
     if (this.connection.view.connectRecorder() || this.weight === 0) {
-      return "network:synapse-recorder";
+      return "graph:synapse-recorder";
     } else {
-      return "network:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
+      return "graph:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
     }
   }
 

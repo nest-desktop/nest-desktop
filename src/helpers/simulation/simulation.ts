@@ -7,6 +7,8 @@ import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendSt
 import type { TNetworkProject } from "@/types";
 
 import { BaseObj } from "../common/base";
+import { IBackendStore } from "../code/codeHandler";
+import { SimulationHandler } from "./simulationHandler";
 
 export interface ISimulationProps {
   time?: number;
@@ -19,6 +21,7 @@ interface ISimulationState {
 }
 
 export class BaseSimulation extends BaseObj {
+  private _handler: SimulationHandler;
   private _state: UnwrapRef<ISimulationState>;
   private _time: number; // simulation time
 
@@ -34,6 +37,8 @@ export class BaseSimulation extends BaseObj {
     // Initialize time.
     this._time = simulationProps.time ? simulationProps.time : 1000;
 
+    this._handler = new SimulationHandler();
+
     // Initialize simulation state.
     this._state = reactive<ISimulationState>({
       biologicalTime: 0,
@@ -45,6 +50,10 @@ export class BaseSimulation extends BaseObj {
         stepSize: 1,
       },
     });
+  }
+
+  get handler(): SimulationHandler {
+    return this._handler;
   }
 
   get project(): TNetworkProject {
@@ -105,6 +114,10 @@ export class BaseSimulation extends BaseObj {
   //   }
   // }
 
+  registerBackend(backend: IBackendStore): void {
+    this.handler.backend = backend;
+  }
+
   /**
    * Reset simulation states.
    */
@@ -124,15 +137,15 @@ export class BaseSimulation extends BaseObj {
    * Start simulation.
    * @remarks It sends request to the backend to start the simulation.
    */
-  async start(): Promise<void | AxiosResponse<IAxiosResponseData>> {
+  async start(script: string): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("start");
 
     this.resetState();
     this.beforeSimulation();
 
     this._state.running = true;
-    return this.project.code
-      .runSimulation()
+    return this.handler
+      .run(script)
       .then((response: AxiosResponse<IAxiosResponseData>) => {
         if (!response) return response;
 
