@@ -52,7 +52,7 @@ const extensions: Extension[] = [
   basicSetup,
   languagePython(),
   autocompletion({ override: appStore.currentWorkspace.completionSources }),
-  codeError(code.value.state),
+  // codeError(code.value.state),
 ];
 
 if (darkMode()) {
