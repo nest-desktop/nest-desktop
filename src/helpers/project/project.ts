@@ -1,16 +1,18 @@
 // project.ts
 
-import type { TActivityGraph, TStore, TCode } from "@/types";
+import type { TActivityGraph, TStore } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
+import { useCodeGraph } from "@babsey/code-graph";
 
 import { Activities } from "../activity/activities";
 import { BaseActivityGraph, type IBaseActivityGraphProps } from "../activityGraph/activityGraph";
-import { BaseCode, type ICodeProps } from "../code/code";
 import { BaseObj } from "../common/base";
 import type { IDoc } from "../common/database";
 import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
+import { type ICodeProps, ProjectCode } from "./projectCode";
+import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -31,29 +33,35 @@ export class BaseProject extends BaseObj {
   private _updatedAt: string | undefined; // when is it updated in database
   public _activities: Activities | NodeActivities;
   public _activityGraph: TActivityGraph; // activity graph
-  public _code: TCode;
+  public _code: ProjectCode;
 
   constructor(projectProps: IBaseProjectProps = {}) {
     super();
 
-    // Database instance.
+    // Database instance
     this._doc = projectProps || {};
     this._id = projectProps.id || this.uuid;
     this._createdAt = projectProps.createdAt || new Date().toLocaleDateString();
     this._updatedAt = projectProps.updatedAt;
 
-    // Project metadata.
+    // Project metadata
     this._name = projectProps.name || "";
     this._description = projectProps.description || "";
     this._filename = projectProps.filename || "";
 
-    // Initialize model database.
+    // Initialize model database
     this.initModelStore();
 
-    // Construct components.
+    // State
     this._state = new ProjectState(this);
 
-    this._code = new this.Code(this, projectProps.code);
+    // Code graph
+    this._code = new ProjectCode(this);
+    const viewModel = useCodeGraph({ code: this._code });
+    registerNodeTypes(viewModel);
+    if (projectProps.code) viewModel.loadEditor(projectProps.code.editor);
+
+    // Activity
     this._activities = new this.Activities(this);
     this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
 
@@ -69,10 +77,6 @@ export class BaseProject extends BaseObj {
     return BaseActivityGraph;
   }
 
-  get Code() {
-    return BaseCode;
-  }
-
   get activities(): Activities {
     return this._activities;
   }
@@ -81,7 +85,7 @@ export class BaseProject extends BaseObj {
     return this._activityGraph;
   }
 
-  get code(): TCode {
+  get code(): ProjectCode {
     return this._code;
   }
 
@@ -166,7 +170,7 @@ export class BaseProject extends BaseObj {
 
     this.activities.checkRecorders();
 
-    this.generateCode();
+    // this.generateCode();
 
     // It resets panels of activity chart graph.
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
@@ -186,12 +190,12 @@ export class BaseProject extends BaseObj {
     this._state.checkChanges();
   }
 
-  /**
-   * Generate code.
-   */
-  generateCode(): void {
-    this.code.generate();
-  }
+  // /**
+  //  * Generate code.
+  //  */
+  // generateCode(): void {
+  //   this.code.generate();
+  // }
 
   /**
    * Initialize project.
@@ -200,7 +204,7 @@ export class BaseProject extends BaseObj {
     this.logger.trace("init");
 
     // Generate code.
-    this.generateCode();
+    // this.generateCode();
 
     // Initialize activities.
     this.activities.init();
@@ -236,6 +240,8 @@ export class BaseProject extends BaseObj {
       updatedAt: this._updatedAt,
       version: process.env.APP_VERSION as string,
     };
+
+    if (this.code.graph.nodes.length > 0) projectProps.code = this.code.toJSON();
 
     return projectProps;
   }
