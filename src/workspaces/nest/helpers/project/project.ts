@@ -1,12 +1,11 @@
 // project.ts
 
-import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { type INetworkProjectProps, NetworkProject } from "@/helpers/network/networkProject";
 
+import nestSimulator from "../../stores/backends/nestSimulatorStore";
+import { NESTActivityGraph } from "../activityGraph/activityGraph";
 import { type INESTNetworkProps, NESTNetwork } from "../network/network";
 import { type INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
-import { Insite } from "../insite/insite";
-import { NESTActivityGraph } from "../activityGraph/activityGraph";
-import { NESTSimulationCode } from "../simulation/simulationCode";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INESTProjectProps extends INetworkProjectProps {
@@ -15,20 +14,13 @@ export interface INESTProjectProps extends INetworkProjectProps {
 }
 
 export class NESTProject extends NetworkProject {
-  private _insite: Insite;
-
   constructor(projectProps: INESTProjectProps = {}) {
     super(projectProps);
-
-    this._insite = new Insite(this);
+    this.simulation.registerBackend(nestSimulator);
   }
 
   override get ActivityGraph() {
     return NESTActivityGraph;
-  }
-
-  override get Code() {
-    return NESTSimulationCode;
   }
 
   override get Network() {
@@ -41,14 +33,6 @@ export class NESTProject extends NetworkProject {
 
   override get activityGraph(): NESTActivityGraph {
     return this._activityGraph as NESTActivityGraph;
-  }
-
-  override get code(): NESTSimulationCode {
-    return this._code as NESTSimulationCode;
-  }
-
-  get insite(): Insite {
-    return this._insite;
   }
 
   override get network(): NESTNetwork {

@@ -1,21 +1,15 @@
 // project.ts
 
-import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { INetworkProjectProps, NetworkProject } from "@/helpers/network/networkProject";
 
-import { PyNNSimulationCode } from "../simulation/simulationCode";
+import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 
 export class PyNNProject extends NetworkProject {
   constructor(projectProps: INetworkProjectProps = {}) {
     super(projectProps);
-  }
 
-  override get Code() {
-    return PyNNSimulationCode;
-  }
-
-  override get code(): PyNNSimulationCode {
-    return this._code as PyNNSimulationCode;
+    this.simulation.registerBackend(pynnSimulator);
   }
 
   /**

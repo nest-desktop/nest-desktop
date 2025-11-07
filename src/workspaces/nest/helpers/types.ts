@@ -12,7 +12,7 @@ import { NESTNodes } from "./node/nodes";
 import { NESTProject } from "./project/project";
 import { NESTProjectDB } from "./project/projectDB";
 import { NESTSimulation } from "./simulation/simulation";
-import { NESTSimulationCode } from "./simulation/simulationCode";
+// import { NESTSimulationCode } from "./simulation/simulationHandler";
 import { NESTSynapse } from "./synapse/synapse";
 
 export default {
@@ -28,6 +28,6 @@ export default {
   project: NESTProject,
   projectDB: NESTProjectDB,
   simulation: NESTSimulation,
-  simulationCode: NESTSimulationCode,
+  // simulationCode: NESTSimulationCode,
   synapse: NESTSynapse,
 };

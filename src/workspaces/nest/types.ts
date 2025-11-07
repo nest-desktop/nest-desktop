@@ -17,5 +17,5 @@ export type { NESTModelDB } from "./helpers/model/modelDB";
 export type { NESTNetworkGraph } from "./helpers/network/networkGraph";
 export type { NESTNodes } from "./helpers/node/nodes";
 export type { NESTProjectDB } from "./helpers/project/projectDB";
-export type { NESTSimulationCode } from "./helpers/simulation/simulationCode";
+// export type { NESTSimulationCode } from "./helpers/simulation/simulationHandler";
 export type { NESTSynapseParameter } from "./helpers/synapse/synapseParameter";

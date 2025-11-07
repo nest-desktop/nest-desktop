@@ -1,11 +1,10 @@
 // project.ts
 
-import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { type INetworkProjectProps, NetworkProject } from "@/helpers/network/networkProject";
 
+import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { type INorseNetworkProps, NorseNetwork } from "../network/network";
 import { type INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
-import { NorseNode } from "../node/node";
-import { NorseSimulationCode } from "../simulation/simulationCode";
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 
 export interface INorseProjectProps extends INetworkProjectProps {
@@ -16,10 +15,8 @@ export interface INorseProjectProps extends INetworkProjectProps {
 export class NorseProject extends NetworkProject {
   constructor(projectProps: INorseProjectProps = {}) {
     super(projectProps);
-  }
 
-  override get Code() {
-    return NorseSimulationCode;
+    this.simulation.registerBackend(norseSimulator);
   }
 
   override get Network() {
@@ -30,26 +27,22 @@ export class NorseProject extends NetworkProject {
     return NorseSimulation;
   }
 
-  override get code(): NorseSimulationCode {
-    return this._code as NorseSimulationCode;
-  }
-
   override get network(): NorseNetwork {
     return this._network as NorseNetwork;
   }
 
   override get simulation(): NorseSimulation {
-    return this._simulation as NorseSimulation;
+    return this._simulation;
   }
 
-  /**
-   * Generate simulation code.
-   * @remarks It generates node codes.
-   */
-  override generateCode(): void {
-    this.network.nodes.nodeItems.forEach((node: NorseNode) => node.renderNodeCode());
-    this.code.generate();
-  }
+  // /**
+  //  * Generate simulation code.
+  //  * @remarks It generates node codes.
+  //  */
+  // override generateCode(): void {
+  //   this.network.nodes.nodeItems.forEach((node: NorseNode) => node.renderNodeCode());
+  //   this.code.generate();
+  // }
 
   /**
    * Initialize model store for Norse.

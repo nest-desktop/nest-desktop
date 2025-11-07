@@ -44,7 +44,7 @@ const navItems = [
     id: "nestCode",
     workspace: "nest",
     title: "Code",
-    to: { name: "nestCodeLayout" },
+    to: { name: "nestCodeGraphLayout" },
   },
 ];
 

@@ -22,9 +22,9 @@ export interface INESTNetworkProps {
 const _elementTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
   { icon: "mdi:mdi-select-group", id: "group", title: "group" },
-  { icon: "network:stimulator", id: "stimulator", title: "stimulator" },
-  { icon: "network:neuron-shape", id: "neuron", title: "neuron" },
-  { icon: "network:recorder", id: "recorder", title: "recorder" },
+  { icon: "graph:stimulator", id: "stimulator", title: "stimulator" },
+  { icon: "graph:neuron-shape", id: "neuron", title: "neuron" },
+  { icon: "graph:recorder", id: "recorder", title: "recorder" },
   { icon: "nest:copy-model", id: "model", title: "model" },
 ];
 

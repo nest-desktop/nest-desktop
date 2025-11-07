@@ -10,4 +10,4 @@ export type { NorseNodes } from "./helpers/node/nodes";
 export type { INorseProjectProps, NorseProject } from "./helpers/project/project";
 export type { NorseProjectDB } from "./helpers/project/projectDB";
 export type { INorseSimulationProps, NorseSimulation } from "./helpers/simulation/simulation";
-export type { NorseSimulationCode } from "./helpers/simulation/simulationCode";
+// export type { NorseSimulationCode } from "./helpers/simulation/simulationCode";
