@@ -1,8 +1,14 @@
 // defineBackendStore.ts
 
-import axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse, type AxiosResponseHeaders } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type AxiosResponseHeaders,
+} from "axios";
 import { defineStore } from "pinia";
-import { computed, reactive } from "vue";
+import { computed, ComputedRef, reactive, UnwrapRef } from "vue";
 
 import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
@@ -30,21 +36,43 @@ export interface IResponseData {
   activities?: IActivityProps[];
 }
 
+interface IBackendStoreState {
+  accessToken: string;
+  enabled: boolean;
+  error: AxiosError;
+  loadedFromAssets: boolean;
+  name: string;
+  response: AxiosResponse;
+  url: string;
+}
+
+export interface IBackendStore {
+  URL: typeof URL;
+  axiosInstance(): AxiosInstance;
+  check(): void;
+  defaults: ComputedRef<string>;
+  init(): void;
+  isOK: ComputedRef<boolean>;
+  isValid: ComputedRef<boolean>;
+  loadFromAssets(): Promise<void>;
+  ping(url?: string): void;
+  resetResponse(): void;
+  resetURL(): void;
+  state: UnwrapRef<IBackendStoreState>;
+  update(): void;
+  updateAccessToken(): void;
+  updateInstance(): void;
+  updateURL(): void;
+  versions: ComputedRef<string[][]>;
+}
+
 export function defineBackendStore(workspace: string, name: string, url: string, options?: Record<string, string>) {
   const logger = mainLogger.getSubLogger({ name: name + " backend store" });
 
   return defineStore(
     name + "-backend-store",
-    () => {
-      const state = reactive<{
-        accessToken: string;
-        enabled: boolean;
-        error: AxiosError;
-        loadedFromAssets: boolean;
-        name: string;
-        response: AxiosResponse;
-        url: string;
-      }>({
+    (): IBackendStore => {
+      const state = reactive<IBackendStoreState>({
         accessToken: "",
         enabled: false,
         error: {} as AxiosError,
