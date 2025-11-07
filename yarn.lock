@@ -852,9 +852,9 @@
     "@babel/helper-validator-identifier" "^7.28.5"
 
 "@babsey/code-graph@~0.3":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@babsey/code-graph/-/code-graph-0.3.0.tgz#e12011577d3901c4d336f8a10d4fe2d2b581ddb6"
-  integrity sha512-7H4hgWYAW4oju6ShyYQ0eeWl7mCa4oT1lgU2pw8Gk78M250WNTiioNkIpGYp/RBnK1//UKjJKIq2k3yyljwH2A==
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@babsey/code-graph/-/code-graph-0.3.1.tgz#55c2dee963207899a036efbde5d870df33b20f7a"
+  integrity sha512-u9HEOhg2riZD5FhB9lMew9fQc0oEKtb8LJOtSl+GKREWK96wt58gCOGaGEo6aMihQLqxmZM2iWf+hbJXqQFyoQ==
   dependencies:
     "@codemirror/lang-python" "~6.2"
     "@codemirror/theme-one-dark" "~6.1"
