@@ -71,7 +71,7 @@ const projectStore = computed(() => appStore.currentWorkspace.stores.projectStor
 const tabItems = [
   {
     icon: {
-      icon: "network:network",
+      icon: "graph:network",
     },
     id: "graphEditor",
     label: "Editor",

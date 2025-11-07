@@ -3,7 +3,7 @@
     <span class="label">
       <slot />
     </span>
-    <v-icon :color class="position-absolute icon-size" icon="network:recorder" />
+    <v-icon :color class="position-absolute icon-size" icon="graph:recorder" />
   </v-avatar>
 </template>
 

@@ -95,7 +95,7 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
         <slot name="codeEditor">
-          <CodeEditor :code="project.code" />
+          <CodeEditor v-model="project.code.script" />
         </slot>
       </template>
 
@@ -119,7 +119,7 @@ import { computed, ref } from "vue";
 
 import ActivityChartController from "../activityChart/ActivityChartController.vue";
 import ActivityStats from "../activityStats/ActivityStats.vue";
-import CodeEditor from "../code/CodeEditor.vue";
+import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
 import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 import { Activities } from "@/helpers/activity/activities";
@@ -138,6 +138,11 @@ const navStore = useNavStore();
 const projectStore = computed(() => appStore.currentWorkspace.stores.projectStore);
 const project = computed(() => projectStore.value.state.project);
 const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
+const codeViewModel = computed(() => project.value.code.viewModel);
+
+import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
+const codeGraphStore = useCodeGraphStore();
+const viewModel = computed(() => codeGraphStore.viewModel);
 
 const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
 
