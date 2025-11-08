@@ -1,6 +1,10 @@
 <template>
   <v-layout id="codeGraphLayout" full-height style="display: flex; flex-direction: column">
-    <NavBar />
+    <NavBar
+      :view-model
+      :editor-states="codeGraphStore.state.editorStates"
+      @click:remove="codeGraphStore.removeEditorState"
+    />
 
     <splitpanes
       :maximize-panes="false"
@@ -11,13 +15,22 @@
       <pane :size>
         <CodeGraphEditor :view-model>
           <template #sidebarCodeEditor="{ node }">
-            <CodeEditor v-model="node.script" :locked="node.lockCode" @update:locked="(v) => (node.lockCode = v)" />
+            <CodeEditor
+              v-model="node.script"
+              :locked="node.lockCode"
+              @update:locked="(v: boolean) => (node.lockCode = v)"
+            />
           </template>
         </CodeGraphEditor>
       </pane>
 
       <pane :size="100 - size">
-        <CodeEditor v-model="viewModel.code.script" />
+        <CodeEditor
+          v-if="viewModel.code"
+          v-model="viewModel.code.script"
+          :locked="viewModel.code.lockCode"
+          @update:locked="(v: boolean) => (viewModel.code.lockCode = v)"
+        />
       </pane>
     </splitpanes>
   </v-layout>
@@ -27,11 +40,11 @@
 import type { RouteLocationNormalizedGeneric } from "vue-router";
 import { onBeforeRouteUpdate } from "vue-router";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { CodeGraphEditor } from "@babsey/code-graph";
 import { Splitpanes, Pane } from "splitpanes";
 
+import { CodeGraphEditor, NavBar } from "@babsey/code-graph";
+
 import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
-import NavBar from "@/codeGraph/components/NavBar.vue";
 
 import { initCodeGraph, useCodeGraphStore } from "@/stores/graph/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
