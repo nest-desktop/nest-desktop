@@ -7,7 +7,7 @@ import { useAppStore } from "@/stores/appStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 
-const nestModelRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric=> {
+const nestModelRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   modelRedirect(to);
 
   const appStore = useAppStore();

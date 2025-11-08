@@ -239,7 +239,15 @@
     </ProjectController>
 
     <router-view :key="projectStore.state.projectId" name="project" />
-    <BottomCode :code="project.code" :store="projectViewStore" />
+
+    <BottomNav v-if="project.code" :store="projectViewStore">
+      <CodeEditor
+        v-model="project.code.script"
+        :locked="project.code.lockCode"
+        :error="project.simulation.handler.error"
+        @update:locked="(v: boolean) => (project.code.lockCode = v)"
+      />
+    </BottomNav>
   </template>
 </template>
 
@@ -247,7 +255,8 @@
 import { computed, onMounted, ref, watch } from "vue";
 
 import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
-import BottomCode from "@/components/code/BottomCode.vue";
+import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
+import BottomNav from "@/components/app/BottomNav.vue";
 import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
 import NodeEditor from "@/components/node/NodeEditor.vue";

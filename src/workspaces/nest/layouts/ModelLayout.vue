@@ -74,7 +74,15 @@
     <ModelController />
 
     <router-view :key="modelStore.state.modelId" name="model" />
-    <BottomCode v-if="modelStore.state.project" :code="modelStore.state.project.code" :store="modelViewStore" />
+
+    <BottomNav v-if="modelStore.state.project" :store="modelViewStore">
+      <CodeEditor
+        v-model="modelStore.state.project.code.script"
+        :locked="modelStore.state.project.code.lockCode"
+        :error="modelStore.state.project.simulation.handler.error"
+        @update:locked="(v: boolean) => (modelStore.state.project.code.lockCode = v)"
+      />
+    </BottomNav>
   </template>
 </template>
 
@@ -82,7 +90,8 @@
 import { computed, nextTick, onMounted, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import BottomCode from "@/components/code/BottomCode.vue";
+import BottomNav from "@/components/app/BottomNav.vue";
+import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
 import ModelBar from "@/components/model/ModelBar.vue";
 import ModelController from "@/components/model/ModelController.vue";
 import ModelNav from "@/components/model/ModelNav.vue";

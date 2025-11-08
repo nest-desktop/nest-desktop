@@ -4,6 +4,7 @@ import { type INetworkProjectProps, NetworkProject } from "@/helpers/network/net
 
 import nestSimulator from "../../stores/backends/nestSimulatorStore";
 import { NESTActivityGraph } from "../activityGraph/activityGraph";
+import { registerNESTNodeTypes } from "@/codeGraph/codeNodeTypes/nest";
 import { type INESTNetworkProps, NESTNetwork } from "../network/network";
 import { type INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
@@ -17,6 +18,7 @@ export class NESTProject extends NetworkProject {
   constructor(projectProps: INESTProjectProps = {}) {
     super(projectProps);
     this.simulation.registerBackend(nestSimulator);
+    registerNESTNodeTypes(this.viewModel);
   }
 
   override get ActivityGraph() {
