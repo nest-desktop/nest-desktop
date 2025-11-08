@@ -1,7 +1,7 @@
 <template>
   <div>
     <button v-if="copied" class="baklava-button"><Check /></button>
-    <button v-else @click="copy" class="baklava-button"><Copy /></button>
+    <button v-else class="baklava-button" @click="copy"><Copy /></button>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ import { Check, Copy } from "../icons";
 
 const { toClipboard } = useClipboard();
 
-const props = defineProps({ text: String });
+const props = defineProps<{ text: string }>();
 
 const text = toRef(props, "text");
 
