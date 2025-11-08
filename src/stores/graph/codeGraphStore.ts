@@ -5,9 +5,8 @@ import type { IEditorState } from "@baklavajs/core";
 import type { RouteLocationNormalizedGeneric } from "vue-router";
 import { defineStore } from "pinia";
 
-import { useCodeGraph } from "@babsey/code-graph";
+import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
-import { PythonCode } from "@/codeGraph/code";
 import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
 
 export const useCodeGraphStore = defineStore(
