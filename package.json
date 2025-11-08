@@ -26,7 +26,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@babsey/code-graph": "~0.3",
+    "@babsey/code-graph": "~0.4",
     "@codemirror/autocomplete": "~6.19",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.2",
