@@ -28,7 +28,7 @@
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
           :icon="
-            modelViewStore.state.bottomCode.active && modelStore.state.project
+            modelViewStore.state.bottomNav.active && modelStore.state.project
               ? 'mdi:mdi-arrow-expand-down'
               : 'mdi:mdi-arrow-expand-up'
           "

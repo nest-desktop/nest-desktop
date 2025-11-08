@@ -26,7 +26,7 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="projectViewStore.state.bottomCode.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
+          :icon="projectViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
           value="code"
           variant="plain"
           @click.stop="projectViewStore.toggleBottomNav()"
@@ -95,7 +95,13 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
         <slot name="codeEditor">
-          <CodeEditor v-model="project.code.script" />
+          <CodeEditor
+            v-if="project.code"
+            v-model="project.code.script"
+            :locked="project.code.lockCode"
+            :error="project.simulation.handler.error"
+            @update:locked="(v: boolean) => (project.code.lockCode = v)"
+          />
         </slot>
       </template>
 
@@ -138,11 +144,6 @@ const navStore = useNavStore();
 const projectStore = computed(() => appStore.currentWorkspace.stores.projectStore);
 const project = computed(() => projectStore.value.state.project);
 const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
-const codeViewModel = computed(() => project.value.code.viewModel);
-
-import { useCodeGraphStore } from "@/stores/graph/codeGraphStore";
-const codeGraphStore = useCodeGraphStore();
-const viewModel = computed(() => codeGraphStore.viewModel);
 
 const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
 
