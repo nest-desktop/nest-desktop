@@ -8,7 +8,6 @@ import { CodeHandler } from "../code/codeHandler";
 import { notifyError, notifySuccess } from "../common/notification";
 
 export class SimulationHandler extends CodeHandler {
-
   /**
    * Run simulation.
    */
@@ -17,7 +16,8 @@ export class SimulationHandler extends CodeHandler {
 
     this.resetErrorState();
 
-    return this.backend?.exec(script)
+    return this.backend
+      ?.exec(script)
       .then((response: AxiosResponse<IAxiosResponseData>) => {
         if (!response) return response;
 

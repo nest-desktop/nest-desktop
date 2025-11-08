@@ -3,7 +3,7 @@
 import type { TActivityGraph, TStore } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { useCodeGraph } from "@babsey/code-graph";
+import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
 
 import { Activities } from "../activity/activities";
 import { BaseActivityGraph, type IBaseActivityGraphProps } from "../activityGraph/activityGraph";
@@ -12,7 +12,7 @@ import type { IDoc } from "../common/database";
 import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
 import { type ICodeProps, ProjectCode } from "./projectCode";
-import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
+import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -22,6 +22,7 @@ export interface IBaseProjectProps extends IDoc {
 }
 
 export class BaseProject extends BaseObj {
+  private _code: ProjectCode;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc; // raw data of the database
@@ -31,9 +32,9 @@ export class BaseProject extends BaseObj {
   private _name: string; // project name
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
+  private _viewModel: ICodeGraphViewModel;
   public _activities: Activities | NodeActivities;
   public _activityGraph: TActivityGraph; // activity graph
-  public _code: ProjectCode;
 
   constructor(projectProps: IBaseProjectProps = {}) {
     super();
@@ -57,9 +58,9 @@ export class BaseProject extends BaseObj {
 
     // Code graph
     this._code = new ProjectCode(this);
-    const viewModel = useCodeGraph({ code: this._code });
-    registerNodeTypes(viewModel);
-    if (projectProps.code) viewModel.loadEditor(projectProps.code.editor);
+    this._viewModel = useCodeGraph({ code: this._code });
+    registerDefaultNodeTypes(this._viewModel);
+    if (projectProps.code) this._viewModel.loadEditor(projectProps.code.editor);
 
     // Activity
     this._activities = new this.Activities(this);
@@ -151,6 +152,10 @@ export class BaseProject extends BaseObj {
 
   set updatedAt(value: string) {
     this._updatedAt = value;
+  }
+
+  get viewModel(): ICodeGraphViewModel {
+    return this._viewModel;
   }
 
   /**

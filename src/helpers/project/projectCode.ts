@@ -1,8 +1,8 @@
 // projectCode.ts
 
 import type { IEditorState } from "@baklavajs/core";
+import { PythonCode } from "@babsey/code-graph";
 
-import { PythonCode } from "@/codeGraph/code";
 import { TProject } from "@/types";
 
 export interface ICodeProps {
