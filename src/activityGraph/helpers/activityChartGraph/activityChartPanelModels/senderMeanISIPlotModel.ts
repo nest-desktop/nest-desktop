@@ -6,7 +6,7 @@ import type { TParameter } from "@/types";
 import { ActivityChartPanel } from "../activityChartPanel";
 import type { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
 import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
-import type { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
+import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { plot } from "../graphObjects/plot";
 
 export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
