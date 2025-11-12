@@ -41,9 +41,9 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
-import { IModelProps } from "@/helpers/model/model";
-import { INetworkProjectProps } from "@/helpers/project/networkProject";
-import { TModel, TProject, TStore } from "@/types";
+import type { IModelProps } from "@/helpers/model/model";
+import type { INetworkProjectProps } from "@/helpers/project/networkProject";
+import type { TModel, TProject, TStore } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();

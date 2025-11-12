@@ -122,9 +122,10 @@
 import { computed, nextTick, onMounted, reactive, watch } from "vue";
 
 import ColorPicker from "../common/ColorPicker.vue";
-import NodeRecordChip from "../node/NodeRecordChip.vue";
-import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
+
+import NodeRecordChip from "@/networkGraph/components/node/NodeRecordChip.vue";
+import type { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
+import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 import { deviation, mean } from "@/utils/array";
 import { toFixed } from "@/utils/converter";
 

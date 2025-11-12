@@ -123,17 +123,18 @@ import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
 import { computed, ref } from "vue";
 
-import ActivityChartController from "../activityChart/ActivityChartController.vue";
-import ActivityStats from "../activityStats/ActivityStats.vue";
+import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
 import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
-import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
-import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
-import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { BaseNetwork } from "@/helpers/network/network";
-import { BaseSimulation } from "@/helpers/simulation/simulation";
+import NetworkSpecEditor from "@/networkGraph/components/network/NetworkSpecEditor.vue";
+import type { Activities } from "@/helpers/activity/activities";
+import type { ActivityChartGraph } from "@/activityGraph/helpers/activityChartGraph/activityChartGraph";
+import type { BaseNetwork } from "@/networkGraph/helpers/network/network";
+import type { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
+
+import ActivityStats from "../activityStats/ActivityStats.vue";
+import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

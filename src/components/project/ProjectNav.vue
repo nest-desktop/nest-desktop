@@ -152,7 +152,7 @@
 import { computed, ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import { TProject } from "@/types";
+import type { TProject } from "@/types";
 import { newProjectRoute } from "@/helpers/routes";
 
 import { truncate } from "@/utils/truncate";

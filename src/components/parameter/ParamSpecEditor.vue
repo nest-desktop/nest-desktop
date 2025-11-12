@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { BaseParameter } from "@/helpers/common/parameter";
+import type { BaseParameter } from "@/helpers/common/parameter";
 
 const props = defineProps<{ param: BaseParameter }>();
 const param = computed(() => props.param);

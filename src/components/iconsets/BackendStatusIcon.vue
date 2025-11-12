@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 
 defineProps<{ backendStore: TStore }>();
 </script>

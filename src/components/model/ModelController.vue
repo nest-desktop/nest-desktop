@@ -145,16 +145,17 @@ import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
 import { computed } from "vue";
 
+import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
 import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
-import ActivityChartController from "../activityChart/ActivityChartController.vue";
+import type { ActivityChartGraph } from "@/activityGraph/helpers/activityChartGraph/activityChartGraph";
+import type { TModelParameter, TNode } from "@/types";
+import type { TParamValue } from "@/helpers/common/parameter";
+import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
+import { darkMode } from "@/helpers/common/theme";
+
 import Menu from "../common/Menu.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
-import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { TModelParameter, TNode } from "@/types";
-import { TParamValue } from "@/helpers/common/parameter";
-import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
-import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

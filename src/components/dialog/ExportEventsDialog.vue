@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { TNode } from "@/types";
+import type { TNode } from "@/types";
 
 const props = defineProps<{ node?: TNode }>();
 const node = computed(() => props.node as TNode);

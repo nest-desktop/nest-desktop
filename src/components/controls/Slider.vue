@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { TValue } from "@/types";
+import type { TValue } from "@/types";
 
 import RangeSlider from "./RangeSlider.vue";
 import TickSlider from "./TickSlider.vue";
