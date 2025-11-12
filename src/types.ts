@@ -4,30 +4,39 @@ import type { Arc, DragBehavior, Selection, Transition, ZoomBehavior } from "d3"
 import type { Mesh, MeshBasicMaterial, MeshLambertMaterial } from "three";
 import type { Store } from "pinia";
 
-import type { ActivityChartPanelModelParameter } from "./helpers/activityGraph/activityChartGraph/activityChartPanelModelParameter";
-import type { BaseActivityGraph } from "./helpers/activityGraph/activityGraph";
-import type { BaseCode } from "@/helpers/code/codeHandler";
-import type { BaseConnection, IConnectionProps } from "./helpers/connection/connection";
-import type { BaseConnections } from "./helpers/connection/connections";
+import type {
+  BaseConnection,
+  BaseConnections,
+  BaseNetwork,
+  BaseNetworkGraph,
+  BaseNode,
+  BaseNodes,
+  BaseSynapse,
+  BaseSynapseParameter,
+  ConnectionParameter,
+  IConnectionProps,
+  INetworkProjectProps,
+  INetworkProps,
+  INodeProps,
+  ISynapseProps,
+  NetworkProject,
+  NodeRecord,
+  NodeGroup,
+  NodeParameter,
+} from "./networkGraph";
+
+import type { ActivityChartPanelModelParameter } from "./activityGraph/activityChartPanelModelParameter";
+import type { BaseActivityGraph } from "./activityGraph/helpers/activityGraph";
+
 import type { BaseModel, IModelProps } from "./helpers/model/model";
 import type { BaseModelDB } from "./helpers/model/modelDB";
-import type { BaseNetwork, INetworkProps } from "./helpers/network/network";
-import type { BaseNetworkGraph } from "./helpers/networkGraph/networkGraph";
-import type { BaseNode, INodeProps } from "./helpers/node/node";
-import type { BaseNodes } from "./helpers/node/nodes";
 import type { BaseParameter } from "./helpers/common/parameter";
 import type { BaseProject, IBaseProjectProps } from "./helpers/project/project";
 import type { BaseProjectDB } from "./helpers/project/projectDB";
 import type { BaseSimulation, ISimulationProps } from "./helpers/simulation/simulation";
-import type { BaseSynapse, ISynapseProps } from "./helpers/synapse/synapse";
-import type { BaseSynapseParameter } from "./helpers/synapse/synapseParameter";
-import type { ConnectionParameter } from "./helpers/connection/connectionParameter";
 import type { ModelParameter } from "./helpers/model/modelParameter";
-import type { NodeGroup } from "./helpers/node/nodeGroup";
-import type { NodeParameter } from "./helpers/node/nodeParameter";
 
 import type * as workspaces from "./workspaces/types";
-import type { INetworkProjectProps, NetworkProject } from "./helpers/project/networkProject";
 
 export type TActivityGraph = BaseActivityGraph | workspaces.TActivityGraph;
 // export type TCode = BaseCode | TSimulationCode;
@@ -47,6 +56,7 @@ export type TNodeGroup = NodeGroup;
 export type TNodeParameterParent = BaseNode | workspaces.TNodeParameterParent;
 export type TNodeParameterComponentProps = INodeProps | workspaces.TNodeParameterComponentProps;
 export type TNodeProps = INodeProps | workspaces.TNodeProps;
+export type TNodeRecord = NodeRecord;
 export type TNodes = BaseNodes | workspaces.TNodes;
 export type TParameter =
   | ActivityChartPanelModelParameter

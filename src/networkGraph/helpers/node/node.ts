@@ -2,7 +2,7 @@
 
 import type { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
-import type { BaseModel, IModelStateProps, TElementType } from "@/helpers/model/model";
+import type { AbstractModel, IModelStateProps, TElementType } from "@/helpers/model/model";
 import type { IActivityProps } from "@/helpers/activity/activity";
 import type { IParamProps } from "@/helpers/common/parameter";
 import type { ModelParameter } from "@/helpers/model/modelParameter";
@@ -27,7 +27,7 @@ export interface INodeProps {
   size?: number;
   view?: INodeViewProps;
 }
-// export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
+// export class BaseNode<TModel extends AbstractModel = AbstractModel> extends BaseObj {
 export class BaseNode extends BaseObj {
   private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;
   private _annotations: string[] = [];
@@ -176,11 +176,11 @@ export class BaseNode extends BaseObj {
     return this._view.label;
   }
 
-  get model(): BaseModel {
+  get model(): AbstractModel {
     if (this._model?.id !== this._modelId) {
       this._model = this.getModel(this._modelId);
     }
-    return this._model as BaseModel;
+    return this._model as AbstractModel;
   }
 
   get modelDBStore() {

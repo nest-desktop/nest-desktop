@@ -185,6 +185,9 @@ export const projectBeforeEnter = (to: RouteLocationNormalizedGeneric): void => 
   const path = to.path.split("/");
   projectViewStore.state.views.main = path[path.length - 1] || "edit";
 
+  if (to.query?.graphView) projectViewStore.state.views.graph = to.query.graphView;
+  if (to.query?.activityView) projectViewStore.state.views.activity = to.query.activityView;
+
   loadProject(to.params.projectId as string);
 };
 

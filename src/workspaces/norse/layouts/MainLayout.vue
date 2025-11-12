@@ -33,6 +33,13 @@ const navItems = [
     title: "Model",
     to: { name: "norseModelRoot" },
   },
+  {
+    icon: "mdi:mdi-sitemap-outline",
+    id: "norseCode",
+    workspace: "norse",
+    title: "Code",
+    to: { name: "norseCodeGraphLayout" },
+  },
 ];
 
 onMounted(() => {

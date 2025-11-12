@@ -1,8 +1,6 @@
 <template>
-  <v-container>
-    <NetworkGraphEditorToolbar />
-    <NetworkGraph :key="network.project.id" :network />
-  </v-container>
+  <NetworkGraphEditorToolbar />
+  <NetworkGraph :key="network.project.id" :network />
 </template>
 
 <script setup lang="ts">

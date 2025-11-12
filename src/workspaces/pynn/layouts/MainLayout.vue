@@ -33,6 +33,13 @@ const navItems = [
     title: "Model",
     to: { name: "pynnModelRoot" },
   },
+  {
+    icon: "mdi:mdi-sitemap-outline",
+    id: "pynnCode",
+    workspace: "pynn",
+    title: "Code",
+    to: { name: "pynnCodeGraphLayout" },
+  },
 ];
 
 onMounted(() => {

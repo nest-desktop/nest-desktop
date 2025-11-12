@@ -1,6 +1,6 @@
 // project.ts
 
-import { type INetworkProjectProps, NetworkProject } from "@/networkGraph/helpers/network/networkProject";
+import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
 
 import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { type INorseNetworkProps, NorseNetwork } from "../../networkGraph/helpers/network/network";

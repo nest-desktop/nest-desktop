@@ -6,13 +6,13 @@
 </template>
 
 <script setup lang="ts">
-import ProjectCodeGraphEditor from "@/codeGraph/ProjectCodeGraphEditor.vue";
-
 import NetworkGraphEditor from "@/networkGraph/NetworkGraphEditor.vue";
+import ProjectCodeGraphEditor from "@/codeGraph/ProjectCodeGraphEditor.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 const projectViewStore = appStore.currentWorkspace?.views.project;
+console.log(projectViewStore)
 
 import { currentProject } from "../stores/project/projectStore";
 </script>

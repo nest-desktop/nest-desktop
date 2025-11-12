@@ -2,8 +2,9 @@
 
 import { type RouteRecordRaw } from "vue-router";
 
-import { setCurrentWorkspace } from "@/stores/appStore";
+import codeGraphRoutes from "@/codeGraph/routes/codeGraphRoutes";
 import { closeNav } from "@/stores/navStore";
+import { setCurrentWorkspace } from "@/stores/appStore";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
@@ -31,6 +32,12 @@ export default {
       name: "norseProjectLayout",
       component: () => import("../layouts/ProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
+    },
+    {
+      path: "code/",
+      name: "norseCodeGraphLayout",
+      component: () => import("@/codeGraph/layouts/CodeGraphLayout.vue"),
+      children: codeGraphRoutes as RouteRecordRaw[],
     },
   ],
 };
