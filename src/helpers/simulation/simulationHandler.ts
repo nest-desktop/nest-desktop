@@ -4,7 +4,7 @@ import { AxiosError, type AxiosResponse } from "axios";
 
 import type { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
 
-import { CodeHandler } from "../code/codeHandler";
+import { CodeHandler } from "@/codeGraph/codeHandler";
 import { notifyError, notifySuccess } from "../common/notification";
 
 export class SimulationHandler extends CodeHandler {

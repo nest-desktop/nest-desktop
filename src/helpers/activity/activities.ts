@@ -5,12 +5,11 @@ import { type UnwrapRef, reactive } from "vue";
 import type { IResponseData } from "@/stores/defineBackendStore";
 import type { TProject } from "@/types";
 
-import { Activity, type IActivityProps, type IEventProps } from "./activity";
-import { AnalogSignalActivity } from "./analogSignalActivity";
+import type { Activity, IActivityProps, IEventProps } from "./activity";
+import type { AnalogSignalActivity } from "./analogSignalActivity";
+import type { NodeAnalogSignalActivity, NodeSpikeActivity } from "../nodeActivity";
+import type { SpikeActivity } from "./spikeActivity";
 import { BaseObj } from "../common/base";
-import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
-import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
-import { SpikeActivity } from "../activity/spikeActivity";
 
 interface IActivitiesState {
   activityStatsPanelId: number;

@@ -1,8 +1,8 @@
-// recorderSpikeActivity.ts
+// nodeSpikeActivity.ts
 
 import type { TNode } from "@/types";
 
-import type { IActivityProps, IEventProps } from "../activity/activity";
+import type { IActivityProps, IEventProps } from "../activity";
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeSpikeActivity extends NodeActivity {

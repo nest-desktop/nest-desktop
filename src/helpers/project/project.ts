@@ -1,18 +1,19 @@
 // project.ts
 
+import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
+
 import type { TActivityGraph, TStore } from "@/types";
 import { truncate } from "@/utils/truncate";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
+import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
+import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
+import { type ICodeProps, ProjectCode } from "@/codeGraph/projectCode";
 
 import { Activities } from "../activity/activities";
-import { BaseActivityGraph, type IBaseActivityGraphProps } from "../activityGraph/activityGraph";
 import { BaseObj } from "../common/base";
 import type { IDoc } from "../common/database";
 import { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
-import { type ICodeProps, ProjectCode } from "./projectCode";
-import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;

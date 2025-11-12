@@ -4,10 +4,10 @@ import type { AxiosResponse } from "axios";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import type { IBackendStore } from "@/codeGraph/codeHandler";
 import type { TNetworkProject } from "@/types";
 
 import { BaseObj } from "../common/base";
-import { IBackendStore } from "../code/codeHandler";
 import { SimulationHandler } from "./simulationHandler";
 
 export interface ISimulationProps {
