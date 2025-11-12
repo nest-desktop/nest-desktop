@@ -1,11 +1,11 @@
 // project.ts
 
-import { type INetworkProjectProps, NetworkProject } from "@/helpers/network/networkProject";
+import { type INetworkProjectProps, NetworkProject } from "@/networkGraph/helpers/network/networkProject";
 
 import nestSimulator from "../../stores/backends/nestSimulatorStore";
-import { NESTActivityGraph } from "../activityGraph/activityGraph";
+import { NESTActivityGraph } from "../../activityGraph/helpers/activityGraph";
 import { registerNESTNodeTypes } from "@/codeGraph/codeNodeTypes/nest";
-import { type INESTNetworkProps, NESTNetwork } from "../network/network";
+import { type INESTNetworkProps, NESTNetwork } from "../../networkGraph/helpers/network/network";
 import { type INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 

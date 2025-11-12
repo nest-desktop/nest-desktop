@@ -1,12 +1,12 @@
 // types.ts
 
-import { NorseConnection } from "./connection/connection";
-import { NorseConnections } from "./connection/connections";
+import { NorseConnection } from "../networkGraph/helpers/connection/connection";
+import { NorseConnections } from "../networkGraph/helpers/connection/connections";
 import { NorseModel } from "./model/model";
 import { NorseModelDB } from "./model/modelDB";
-import { NorseNetwork } from "./network/network";
-import { NorseNode } from "./node/node";
-import { NorseNodes } from "./node/nodes";
+import { NorseNetwork } from "../networkGraph/helpers/network/network";
+import { NorseNode } from "../networkGraph/helpers/node/node";
+import { NorseNodes } from "../networkGraph/helpers/node/nodes";
 import { NorseProject } from "./project/project";
 import { NorseProjectDB } from "./project/projectDB";
 import { NorseSimulation } from "./simulation/simulation";

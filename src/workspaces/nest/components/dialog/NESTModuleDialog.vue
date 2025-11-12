@@ -56,7 +56,7 @@
 import { computed, nextTick, reactive } from "vue";
 
 import NESTModuleSelect from "../module/NESTModuleSelect.vue";
-import { NESTModel } from "../../types";
+import type { NESTModel } from "../../types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
+import ActivityChartGraph from "@/activityGraph/components/activityChart/ActivityChartGraph.vue";
 
 import { currentProject } from "../stores/project/projectStore";
 </script>

@@ -1,6 +1,6 @@
 // project.ts
 
-import { INetworkProjectProps, NetworkProject } from "@/helpers/network/networkProject";
+import { INetworkProjectProps, NetworkProject } from "@/networkGraph/helpers/network/networkProject";
 
 import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";

@@ -99,7 +99,7 @@ import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vu
 import { mountModelLayout } from "@/helpers/routes";
 
 import NewModelDialog from "../components/dialog/NewModelDialog.vue";
-import { NESTModel } from "../types";
+import type { NESTModel } from "../types";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useRoute, useRouter } from "vue-router";

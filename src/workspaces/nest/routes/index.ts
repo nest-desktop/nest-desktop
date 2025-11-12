@@ -7,7 +7,7 @@ import { closeNav } from "@/stores/navStore";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
-import codeGraphRoutes from "@/router/codeGraphRoutes";
+import codeGraphRoutes from "@/codeGraph/routes/codeGraphRoutes";
 
 export default {
   path: "nest/",
@@ -36,7 +36,7 @@ export default {
     {
       path: "code/",
       name: "nestCodeGraphLayout",
-      component: () => import("@/layouts/CodeGraphLayout.vue"),
+      component: () => import("@/codeGraph/layouts/CodeGraphLayout.vue"),
       children: codeGraphRoutes as RouteRecordRaw[],
     },
   ],

@@ -60,7 +60,7 @@ import BackendSettings from "@/components/BackendSettings.vue";
 import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 
 import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
 const norseSimulatorStore: TStore = useNorseSimulatorStore();

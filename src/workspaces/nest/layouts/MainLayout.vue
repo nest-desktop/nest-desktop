@@ -10,7 +10,7 @@
 import { onMounted } from "vue";
 
 import AppNavigation from "@/components/app/AppNavigation.vue";
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
 import { getParamFromURL } from "@/utils/paramQuery";
 
 import nestSimulator from "../stores/backends/nestSimulatorStore";

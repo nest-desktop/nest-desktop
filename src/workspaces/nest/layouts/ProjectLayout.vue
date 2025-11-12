@@ -254,31 +254,29 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 
-import ActivityChartController from "@/components/activityChart/ActivityChartController.vue";
+import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
 import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
 import BottomNav from "@/components/app/BottomNav.vue";
-import ConnectionEditor from "@/components/connection/ConnectionEditor.vue";
+import ConnectionEditor from "@/networkGraph/components/connection/ConnectionEditor.vue";
 import Menu from "@/components/common/Menu.vue";
-import NodeEditor from "@/components/node/NodeEditor.vue";
-import NodeGroupEditor from "@/components/node/NodeGroupEditor.vue";
-import NodeModelSelect from "@/components/node/NodeModelSelect.vue";
+import NodeEditor from "@/networkGraph/components/node/NodeEditor.vue";
+import NodeGroupEditor from "@/networkGraph/components/node/NodeGroupEditor.vue";
+import NodeModelSelect from "@/networkGraph/components/node/NodeModelSelect.vue";
 import ProjectBar from "@/components/project/ProjectBar.vue";
 import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 import ValueSlider from "@/components/controls/ValueSlider.vue";
-import { TNodeGroup } from "@/types";
+import type { TNodeGroup } from "@/types";
 import { mountProjectLayout } from "@/helpers/routes";
 
-import ActivityAnimationController from "../components/activityAnimation/ActivityAnimationController.vue";
-import ActivityAnimationControllerLayer from "../components/activityAnimation/ActivityAnimationControllerLayer.vue";
-import CopyModelEditor from "../components/model/CopyModelEditor.vue";
-import NESTNodeMenuList from "../components/node/NESTNodeMenuList.vue";
-import NodePosition from "../components/node/NodePosition.vue";
+import ActivityAnimationController from "../activityGraph/components/activityAnimation/ActivityAnimationController.vue";
+import ActivityAnimationControllerLayer from "../activityGraph/components/activityAnimation/ActivityAnimationControllerLayer.vue";
+import CopyModelEditor from "../networkGraph/components/model/CopyModelEditor.vue";
+import NESTNodeMenuList from "../networkGraph/components/node/NESTNodeMenuList.vue";
+import NodePosition from "../networkGraph/components/node/NodePosition.vue";
 import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
-import SynapseSpecEditor from "../components/synapse/SynapseSpecEditor.vue";
-import { NESTNode } from "../helpers/node/node";
-import { NESTNodeSpatial } from "../helpers/node/nodeSpatial/nodeSpatial";
-import { NESTProject, NESTSynapse } from "../types";
+import SynapseSpecEditor from "../networkGraph/components/synapse/SynapseSpecEditor.vue";
+import type { NESTNode, NESTNodeSpatial, NESTProject, NESTSynapse } from "../types";
 import { openNESTModuleDialog } from "../stores/moduleStore";
 
 import { useRoute, useRouter } from "vue-router";

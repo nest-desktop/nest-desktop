@@ -5,16 +5,16 @@
  */
 
 import type { App } from "vue";
-import type { RouteRecordRaw } from "vue-router";
+import type { CompletionSource } from "@codemirror/autocomplete";
 import type { IconSet } from "vuetify";
+import type { RouteRecordRaw } from "vue-router";
 
+import router from "@/router";
+import type { TStore } from "@/types";
 import { Config } from "@/helpers/common/config";
 import { addIconSet, addTheme } from "@/plugins/vuetify";
-import router from "@/router";
-import { useAppStore } from "@/stores/appStore";
-import type { TStore } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
-import type { CompletionSource } from "@codemirror/autocomplete";
+import { useAppStore } from "@/stores/appStore";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
@@ -44,6 +44,10 @@ export const workspaces: Record<string, IWorkspaceProps> = {
   // elephant,
 };
 
+/**
+ * Register workspaces.
+ * @param app app instance
+ */
 export function registerWorkspaces(app: App) {
   Object.values(workspaces).forEach(registerWorkspace);
 
@@ -55,6 +59,7 @@ export function registerWorkspaces(app: App) {
 /**
  * Register all workspaces
  * @remarks add iconSets, themes and routes
+ * @param workspaceProps workspace props
  */
 function registerWorkspace(workspaceProps: IWorkspaceProps): void {
   // Add icon set for vuetify.
@@ -70,6 +75,8 @@ function registerWorkspace(workspaceProps: IWorkspaceProps): void {
 /**
  * Initialize enabled workspace.
  * @remarks add iconSets, themes and routes
+ * @param app App instance
+ * @param workspaceId workspace ID
  */
 function initEnabledWorkspace(app: App, workspaceId: string): void {
   app.use({
