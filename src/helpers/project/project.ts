@@ -3,19 +3,18 @@
 import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
 
 import type { TActivityGraph, TStore } from "@/types";
-import { truncate } from "@/utils/truncate";
-import { useModelDBStore } from "@/stores/model/modelDBStore";
-import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
 import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
+import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
+import { truncate } from "@/utils/truncate";
 import { type ICodeProps, ProjectCode } from "@/codeGraph/projectCode";
+import { useModelDBStore } from "@/stores/model/modelDBStore";
 
 import type { IDoc } from "../common/database";
+import type { NodeActivities } from "../nodeActivity/nodeActivities";
 import { Activities } from "../activity/activities";
 import { BaseObj } from "../common/base";
-import type { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
 import { upgradeProject } from "../upgrades/upgrades";
-import { nextTick } from "vue";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
