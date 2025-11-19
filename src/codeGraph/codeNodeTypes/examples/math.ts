@@ -28,6 +28,6 @@ export default defineCodeNode({
       case "Subtract":
         return "{{  inputs.number1 }} - {{  inputs.number2 }}";
     }
-    return ""
+    return "";
   },
 });

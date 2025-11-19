@@ -45,6 +45,6 @@ export default defineDynamicCodeNode({
       case "Sine":
         return "sin({{  inputs.number1 }})";
     }
-    return ""
+    return "";
   },
 });
