@@ -106,9 +106,8 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
 
       const appStore = useAppStore();
       const projectViewStore = appStore.currentWorkspace.views.project;
-      if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore") {
+      if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore")
         startSimulation();
-      }
     };
 
     /**
