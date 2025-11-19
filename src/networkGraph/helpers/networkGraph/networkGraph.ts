@@ -65,6 +65,18 @@ export class BaseNetworkGraph extends BaseObj {
     return this._connectionGraph;
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
+        color: node.view.state.color,
+        idx: node.idx,
+        model: node.modelId,
+        size: node.size,
+      })),
+      connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
+    };
+  }
+
   get network(): TNetwork {
     return this._network;
     // const projectStore = useProjectStore();
@@ -217,20 +229,5 @@ export class BaseNetworkGraph extends BaseObj {
     this._connectionGraph.update();
     this._nodeGraph.update();
     this._nodeGroupGraph.update();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
-        color: node.view.state.color,
-        idx: node.idx,
-        model: node.modelId,
-        size: node.size,
-      })),
-      connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
-    });
   }
 }

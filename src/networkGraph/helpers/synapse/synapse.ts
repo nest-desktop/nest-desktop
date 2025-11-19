@@ -6,13 +6,14 @@ import { BaseObj } from "@/helpers/common/base";
 import { type IParamProps } from "@/helpers/common/parameter";
 
 import { BaseSynapseParameter } from "./synapseParameter";
+import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 
 export interface ISynapseProps {
   model?: string;
   params?: IParamProps[];
 }
 
-export class BaseSynapse extends BaseObj {
+export class BaseSynapse extends CodeNodeMask {
   // private readonly _name = "Synapse";
   public _modelId: string = "static";
   public _params: Record<string, TSynapseParameter> = {};
@@ -218,9 +219,5 @@ export class BaseSynapse extends BaseObj {
    */
   update(): void {
     this.updateHash();
-  }
-
-  updateHash(): void {
-    this._updateHash(this.toJSON());
   }
 }

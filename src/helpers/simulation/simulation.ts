@@ -7,8 +7,8 @@ import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendSt
 import type { IBackendStore } from "@/codeGraph/codeHandler";
 import type { TNetworkProject } from "@/types";
 
-import { BaseObj } from "../common/base";
 import { SimulationHandler } from "./simulationHandler";
+import { CodeNodeMask } from "../../codeGraph/codeNodeMask";
 
 export interface ISimulationProps {
   time?: number;
@@ -20,7 +20,7 @@ interface ISimulationState {
   timeInfo: Record<string, number>;
 }
 
-export class BaseSimulation extends BaseObj {
+export class BaseSimulation extends CodeNodeMask {
   private _handler: SimulationHandler;
   private _state: UnwrapRef<ISimulationState>;
   private _time: number; // simulation time
@@ -68,15 +68,13 @@ export class BaseSimulation extends BaseObj {
     return this._time;
   }
 
-  set time(value: number) {
-    this._time = value;
-    this.changes();
-  }
-
   get timeFixed(): string {
-    return this._time.toFixed(1);
+    return this.time.toFixed(1);
   }
 
+  /**
+   * before Simulation.
+   */
   beforeSimulation(): void {}
 
   /**
@@ -114,6 +112,15 @@ export class BaseSimulation extends BaseObj {
   //   }
   // }
 
+  /**
+   * Register code node.
+   */
+  registerCodeNode(): void {}
+
+  /**
+   * Register backend
+   * @param backend Backend store
+   */
   registerBackend(backend: IBackendStore): void {
     this.handler.backend = backend;
   }
@@ -170,20 +177,11 @@ export class BaseSimulation extends BaseObj {
    * Serialize for JSON.
    * @return simulation props
    */
-  toJSON(): ISimulationProps {
+  override toJSON(): ISimulationProps {
     const simulationProps: ISimulationProps = {
-      time: this._time,
+      time: this.time,
     };
 
     return simulationProps;
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      time: this._time,
-    });
   }
 }

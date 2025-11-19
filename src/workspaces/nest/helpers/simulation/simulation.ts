@@ -1,6 +1,9 @@
 // simulation.ts
 
+import type { CodeNodeInterface } from "@babsey/code-graph";
+
 import { BaseSimulation } from "@/helpers/simulation/simulation";
+import { getNESTSimulateNode } from "@/codeGraph/codeNodeTypes/nest/nestSimulate";
 
 import { type INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
 import { NESTProject } from "../project/project";
@@ -17,6 +20,7 @@ export class NESTSimulation extends BaseSimulation {
 
   constructor(project: NESTProject, simulationProps: INESTSimulationProps = {}) {
     super(project, simulationProps);
+    this.props = simulationProps;
     this._modules = simulationProps.modules || [];
     this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
   }
@@ -37,10 +41,26 @@ export class NESTSimulation extends BaseSimulation {
     return this._project as NESTProject;
   }
 
+  get time(): CodeNodeInterface | undefined {
+    return this.intf?.t;
+  }
+
   override beforeSimulation(): void {
     this.logger.trace("before simulation");
 
     this.generateSeed();
+  }
+
+  /**
+   * Initialize simulation.
+   */
+  override init(): void {
+    this.logger.trace("init");
+
+    this.kernel.init();
+
+    this.registerCodeNode();
+    this.updateHash();
   }
 
   /**
@@ -50,10 +70,15 @@ export class NESTSimulation extends BaseSimulation {
   generateSeed(): void {
     this.logger.trace("generate seed");
 
-    if (this._kernel.config?.localStorage.autoRNGSeed) {
-      this._kernel.rngSeed = Math.round(Math.random() * 1000);
-      this.changes();
-    }
+    if (this.kernel.config?.localStorage.autoRNGSeed) this.kernel.rngSeed.value = Math.round(Math.random() * 1000);
+  }
+
+  /**
+   * Register code node.
+   */
+  override registerCodeNode(): void {
+    this.codeNode = getNESTSimulateNode(this.project.viewModel.editor.graph);
+    this.codeNode.mask = this;
   }
 
   /**
@@ -62,20 +87,12 @@ export class NESTSimulation extends BaseSimulation {
    */
   override toJSON(): INESTSimulationProps {
     const simulationProps: INESTSimulationProps = {
-      kernel: this._kernel.toJSON(),
-      time: this.time,
+      kernel: this.kernel.toJSON(),
+      time: this.time?.value,
     };
-    if (this._modules.length > 0) simulationProps.modules = this._modules;
-    return simulationProps;
-  }
 
-  /**
-   * Update hash.
-   */
-  override updateHash(): void {
-    this._updateHash({
-      kernel: this._kernel.toJSON(),
-      time: this.time,
-    });
+    if (this.modules.length > 0) simulationProps.modules = this.modules;
+
+    return simulationProps;
   }
 }

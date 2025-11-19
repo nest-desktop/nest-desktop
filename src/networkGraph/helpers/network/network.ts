@@ -83,6 +83,13 @@ export class BaseNetwork extends BaseObj {
   //   return useNetworkGraph()
   // }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
+      connections: this.connections.all.map((connection: TConnection) => connection.hash),
+    };
+  }
+
   get isEmpty(): boolean {
     return this.nodes.all.length === 0 && this.connections.all.length === 0;
   }
@@ -300,16 +307,6 @@ export class BaseNetwork extends BaseObj {
     this.connections.update(networkProps.connections);
 
     this.init();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-      connections: this.connections.all.map((connection: TConnection) => connection.hash),
-    });
   }
 
   /**

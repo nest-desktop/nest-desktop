@@ -73,6 +73,14 @@ export class NESTNetwork extends BaseNetwork {
     return this._copyModels;
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
+      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
+      connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
+    };
+  }
+
   override get project(): NESTProject {
     return this._project as NESTProject;
   }
@@ -186,16 +194,5 @@ export class NESTNetwork extends BaseNetwork {
     this.connections.update(networkProps.connections);
 
     this.init();
-  }
-
-  /**
-   * Update hash.
-   */
-  override updateHash(): void {
-    this._updateHash({
-      models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
-      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-      connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
-    });
   }
 }

@@ -76,6 +76,13 @@ export class NodeView extends BaseObj {
     this.node.network.clean();
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      color: this.color,
+      position: this._state.position,
+    };
+  }
+
   /**
    * Check if this node is focused.
    */
@@ -241,16 +248,6 @@ export class NodeView extends BaseObj {
     if (this._state.color) nodeViewProps.color = this._state.color;
 
     return nodeViewProps;
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      color: this.color,
-      position: this._state.position,
-    });
   }
 
   /**

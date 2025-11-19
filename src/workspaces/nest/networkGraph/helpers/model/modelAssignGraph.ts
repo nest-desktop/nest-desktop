@@ -3,7 +3,7 @@
 import { select } from "d3";
 
 import { BaseObj } from "@/helpers/common/base";
-import type { INetworkGraphWorkspaceState } from "@/networkGraph/components/networkGraph/networkGraphWorkspace";
+import type { INetworkGraphWorkspaceState } from "@/networkGraph/helpers/networkGraph/networkGraphWorkspace";
 import type { TSelection } from "@/types";
 import { drawPathMouse } from "@/networkGraph/helpers/connectionGraph/connectionGraphPath";
 

@@ -157,15 +157,6 @@ export class NodeGroupView extends BaseObj {
   }
 
   /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      color: this.color,
-    });
-  }
-
-  /**
    * Update element for node color.
    */
   updateStyle(): void {

@@ -201,15 +201,4 @@ export class NESTCopyModels extends BaseObj {
   update(modelsProps: INESTCopyModelProps[] = []): void {
     modelsProps.forEach((modelProps: INESTCopyModelProps) => this.add(modelProps));
   }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      models: this._models.map(
-        (model: NESTCopyModel) => model.toJSON(), //TODO node.hash
-      ),
-    });
-  }
 }

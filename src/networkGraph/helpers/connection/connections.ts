@@ -51,6 +51,12 @@ export class BaseConnections extends BaseObj {
     return this.connections.filter((connection: TConnection) => !connection.view.connectRecorder());
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      connections: this.connections.map((connection: TConnection) => connection.hash),
+    };
+  }
+
   /**
    * Get length of connection list.
    */
@@ -197,14 +203,5 @@ export class BaseConnections extends BaseObj {
 
     this.clean();
     this.updateHash();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      connections: this.connections.map((connection: TConnection) => connection.hash),
-    });
   }
 }

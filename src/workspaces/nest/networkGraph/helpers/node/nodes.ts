@@ -4,7 +4,7 @@ import { BaseNodes } from "@/networkGraph/helpers/node/nodes";
 import type { TNodeGroup } from "@/types";
 
 import { type INESTNodeProps, NESTNode } from "./node";
-import { NESTActivityGraph } from "../../../helpers/activityGraph/activityGraph";
+import { NESTActivityGraph } from "../../../activityGraph/helpers/activityGraph";
 import { NESTNetwork } from "../network/network";
 
 export class NESTNodes extends BaseNodes {
@@ -89,6 +89,19 @@ export class NESTNodes extends BaseNodes {
    */
   cleanWeightRecorders(): void {
     this.weightRecorders.forEach((node: NESTNode) => node.clean());
+  }
+
+  /**
+   * Initialize nodes.
+   * @remarks Do not use it in the constructor.
+   */
+  override init(): void {
+    this.logger.trace("init");
+
+    // this.registerCodeNodes("nest.Create");
+
+    this.nodeItems.forEach((node: NESTNode) => node.init());
+    this.updateRecords();
   }
 
   /**

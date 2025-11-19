@@ -10,6 +10,7 @@ import { ConnectionParameter } from "./connectionParameter";
 import { ConnectionRule, type IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
+import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 
 export interface IConnectionProps {
   params?: IParamProps[];
@@ -19,10 +20,7 @@ export interface IConnectionProps {
   target: number;
 }
 
-export class BaseConnection extends BaseObj {
-  // private readonly _name = "Connection";
-
-  private _idx: number; // generative
+export class BaseConnection extends CodeNodeMask {
   private _params: Record<string, ConnectionParameter> = {};
   private _paramsVisible: string[] = [];
   private _rule: ConnectionRule;
@@ -77,6 +75,25 @@ export class BaseConnection extends BaseObj {
 
   get hasSomeVisibleParams(): boolean {
     return this._paramsVisible.length > 0;
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    const hashProps: {
+      idx: number;
+      params: IParamProps[];
+      synapse: string;
+      sourceModelId?: string;
+      targetModelId?: string;
+    } = {
+      idx: this.idx,
+      params: this.paramsAll.map((param: ConnectionParameter) => param.toJSON()),
+      synapse: this.synapse.hash,
+    };
+
+    if (this.source.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
+    if (this.target.isNode) hashProps.targetModelId = this.targetNode.modelId;
+
+    return hashProps;
   }
 
   get idx(): number {
@@ -230,10 +247,7 @@ export class BaseConnection extends BaseObj {
   /**
    * Clean this component.
    */
-  clean(): void {
-    const connections = this.connections.all as TConnection[];
-    this._idx = connections.indexOf(this);
-  }
+  clean(): void {}
 
   /**
    * Empty parameters
@@ -377,27 +391,5 @@ export class BaseConnection extends BaseObj {
   update(): void {
     this.clean();
     this.updateHash();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    const hashProps: {
-      idx: number;
-      params: IParamProps[];
-      synapse: string;
-      sourceModelId?: string;
-      targetModelId?: string;
-    } = {
-      idx: this.idx,
-      params: this.paramsAll.map((param: ConnectionParameter) => param.toJSON()),
-      synapse: this.synapse.hash,
-    };
-
-    if (this.source.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
-    if (this.target.isNode) hashProps.targetModelId = this.targetNode.modelId;
-
-    this._updateHash(hashProps);
   }
 }

@@ -200,13 +200,6 @@ export class NESTModelReceptor extends BaseObj {
   }
 
   /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash(this.toJSON());
-  }
-
-  /**
    * Update a parameter.
    */
   updateParameter(paramProps: IParamProps): void {

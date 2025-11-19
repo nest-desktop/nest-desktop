@@ -1,6 +1,7 @@
 // project.ts
 
 import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { registerNorseNodeTypes } from "@/codeGraph/codeNodeTypes/norse";
 
 import norseSimulator from "../../stores/backends/norseSimulatorStore";
 import { type INorseNetworkProps, NorseNetwork } from "../../networkGraph/helpers/network/network";
@@ -17,6 +18,7 @@ export class NorseProject extends NetworkProject {
     super(projectProps);
 
     this.simulation.registerBackend(norseSimulator);
+    registerNorseNodeTypes(this.viewModel);
   }
 
   override get Network() {

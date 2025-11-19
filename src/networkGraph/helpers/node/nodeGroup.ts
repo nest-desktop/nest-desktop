@@ -340,12 +340,4 @@ export class NodeGroup extends BaseObj {
     this.view.updateCentroid();
     this.updateHash();
   }
-
-  /**
-   * Update hash.
-   */
-
-  updateHash(): void {
-    this._updateHash(this.toJSON());
-  }
 }

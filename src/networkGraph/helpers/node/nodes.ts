@@ -1,6 +1,8 @@
 // nodes.ts
 
-import { type UnwrapRef, reactive } from "vue";
+import { type UnwrapRef, nextTick, reactive } from "vue";
+
+import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import type { TActivityGraph, TNetwork, TNode, TNodeGroup } from "@/types";
 import { BaseObj } from "@/helpers/common/base";
@@ -66,6 +68,12 @@ export class BaseNodes extends BaseObj {
    */
   get hasSomeSpikeRecorder(): boolean {
     return this.nodeItems.some((node: TNode) => node.model?.isSpikeRecorder);
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    return {
+      nodes: this.nodeItems.map((node: TNode) => node.hash),
+    };
   }
 
   /**
@@ -177,8 +185,8 @@ export class BaseNodes extends BaseObj {
    * Add node component.
    * @param nodeProps node props
    */
-  addNode(nodeProps: INodeProps): TNode {
-    this.logger.trace("add node:", nodeProps.model);
+  addNode(nodeProps?: INodeProps): TNode {
+    this.logger.trace("add node:", nodeProps?.model);
 
     const node = new this.Node(this, nodeProps);
     this._nodes.push(node);
@@ -257,6 +265,31 @@ export class BaseNodes extends BaseObj {
 
     this.nodeItems.forEach((node: TNode) => node.init());
     this.updateRecords();
+  }
+
+  /**
+   * Register code node.
+   */
+  registerCodeNode(codeNode: AbstractCodeNode, node?: TNode): void {
+    this.logger.debug("register code node", codeNode.shortId);
+
+    if (!node) node = new this.Node(this, { model: codeNode.inputs.model.value });
+    node.registerCodeNode(codeNode);
+    node.init();
+  }
+
+  /**
+   * Register code nodes.
+   * @param type code node type
+   */
+  registerCodeNodes(type: string): void {
+    this.logger.trace("register code nodes", type);
+
+    const graph = this.network.project.viewModel?.editor.graph;
+    if (!graph) return;
+
+    const codeNodes = graph.getNodesByType(type);
+    codeNodes.forEach((codeNode: AbstractCodeNode) => this.registerCodeNode(codeNode));
   }
 
   /**
@@ -416,15 +449,6 @@ export class BaseNodes extends BaseObj {
         });
       });
     }
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      nodes: this.nodeItems.map((node: TNode) => node.hash),
-    });
   }
 
   /**

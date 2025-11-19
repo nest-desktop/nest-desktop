@@ -1,13 +1,14 @@
 // node.ts
 
+import type { AbstractCodeNode } from "@babsey/code-graph"
 import type { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
-import type { AbstractModel, IModelStateProps, TElementType } from "@/helpers/model/model";
+import type { BaseModel, IModelStateProps, TElementType } from "@/helpers/model/model";
 import type { IActivityProps } from "@/helpers/activity/activity";
 import type { IParamProps } from "@/helpers/common/parameter";
 import type { ModelParameter } from "@/helpers/model/modelParameter";
 import type { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
-import { BaseObj } from "@/helpers/common/base";
+import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { notifyInfo } from "@/helpers/common/notification";
@@ -27,8 +28,8 @@ export interface INodeProps {
   size?: number;
   view?: INodeViewProps;
 }
-// export class BaseNode<TModel extends AbstractModel = AbstractModel> extends BaseObj {
-export class BaseNode extends BaseObj {
+// export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
+export class BaseNode extends CodeNodeMask {
   private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;
   private _annotations: string[] = [];
   private _props: INodeProps; // raw data of props
@@ -124,6 +125,16 @@ export class BaseNode extends BaseObj {
     return this._paramsVisible.length > 0;
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      idx: this.idx,
+      model: this._modelId,
+      params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
+      recordables: this._recordables.map((recordable: NodeRecord) => recordable.uuid),
+      size: this._size,
+    };
+  }
+
   get idx(): number {
     return this._nodes.all.indexOf(this);
   }
@@ -176,11 +187,11 @@ export class BaseNode extends BaseObj {
     return this._view.label;
   }
 
-  get model(): AbstractModel {
+  get model(): BaseModel {
     if (this._model?.id !== this._modelId) {
       this._model = this.getModel(this._modelId);
     }
-    return this._model as AbstractModel;
+    return this._model as BaseModel;
   }
 
   get modelDBStore() {
@@ -503,7 +514,7 @@ export class BaseNode extends BaseObj {
    * @remarks Do not call it in the constructor.
    */
   init(): void {
-    this.logger.trace("init");
+    this.logger.trace("init", this.modelId);
 
     this.loadModel(this.props.params);
     if (this.model.isRecorder) this.updateRecorder();
@@ -575,6 +586,17 @@ export class BaseNode extends BaseObj {
 
     this.update();
     this.nodes.network.changes({ preventSimulation: true, cleanPanels: recorderModelChanged });
+  }
+
+  /**
+   * Register code node.
+   * @param codeNode code node
+   */
+  registerCodeNode(codeNode?: AbstractCodeNode): void {
+    // if (!codeNode) codeNode = getNESTCreateNode(this.idx);
+    this.codeNode = codeNode;
+
+    this.codeNode.mask = this;
   }
 
   /**
@@ -693,19 +715,6 @@ export class BaseNode extends BaseObj {
     this.clean();
 
     this.updateHash();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      idx: this.idx,
-      model: this._modelId,
-      params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
-      recordables: this._recordables.map((recordable: NodeRecord) => recordable.uuid),
-      size: this._size,
-    });
   }
 
   /**

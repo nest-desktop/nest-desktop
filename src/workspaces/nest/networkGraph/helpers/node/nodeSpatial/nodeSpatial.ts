@@ -94,11 +94,4 @@ export class NESTNodeSpatial extends BaseObj {
   updatePositionParams(positionProps: IBasePositionsProps | IGridPositionsProps): void {
     this._positions?.update(positionProps);
   }
-
-  /**
-   * Update hash of the spatial node.
-   */
-  updateHash(): void {
-    this._updateHash(this.toJSON());
-  }
 }
