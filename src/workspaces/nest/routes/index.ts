@@ -1,12 +1,13 @@
 // index.ts
 
-import { type RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 
 import { setCurrentWorkspace } from "@/stores/appStore";
 import { closeNav } from "@/stores/navStore";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
+import codeGraphRoutes from "@/codeGraph/routes/codeGraphRoutes";
 
 export default {
   path: "nest/",
@@ -31,6 +32,12 @@ export default {
       name: "nestProjectLayout",
       component: () => import("../layouts/ProjectLayout.vue"),
       children: projectRoutes as RouteRecordRaw[],
+    },
+    {
+      path: "code/",
+      name: "nestCodeGraphLayout",
+      component: () => import("@/codeGraph/layouts/CodeGraphLayout.vue"),
+      children: codeGraphRoutes as RouteRecordRaw[],
     },
   ],
 };

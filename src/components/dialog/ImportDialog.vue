@@ -184,11 +184,14 @@ import axios, { AxiosResponse } from "axios";
 
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
-import { INESTCopyModelProps } from "@/workspaces/nest/helpers/model/copyModel";
-import { INodeGroupProps } from "@/helpers/node/nodeGroup";
-import { INodeProps } from "@/helpers/node/node";
-import { TModelProps, TNetworkProps, TProjectProps } from "@/types";
-import { isNESTNetworkProps } from "@/workspaces/nest/helpers/network/network";
+
+// TODO: No imports from workspaces!
+import type { INESTCopyModelProps } from "@/workspaces/nest/helpers/model/copyModel";
+
+import type { INodeGroupProps } from "@/networkGraph/helpers/node/nodeGroup";
+import type { INodeProps } from "@/networkGraph/helpers/node/node";
+import type { TModelProps, TNetworkProps, TProjectProps } from "@/types";
+import { isNESTNetworkProps } from "@/workspaces/nest/networkGraph/helpers/network/network";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -258,7 +261,7 @@ const state = reactive<{
 
 const groups = [
   {
-    icon: "network:network",
+    icon: "graph:network",
     title: "project repo",
     value: "projects",
   },

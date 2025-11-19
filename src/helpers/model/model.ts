@@ -92,6 +92,14 @@ export class BaseModel extends BaseObj {
     return this._favorite;
   }
 
+  get hashObject(): Record<string, unknown> {
+    return {
+      label: this.state.label,
+      states: this.states,
+      params: this.paramsAll.map((param: ModelParameter) => param.hash),
+    };
+  }
+
   get id(): string {
     return this._id;
   }
@@ -305,17 +313,6 @@ export class BaseModel extends BaseObj {
     if (modelProps.params) this.updateParameters(modelProps.params);
 
     this.updateHash();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      label: this.state.label,
-      states: this.states,
-      params: this.paramsAll.map((param: ModelParameter) => param.hash),
-    });
   }
 
   /**

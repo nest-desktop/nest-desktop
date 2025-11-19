@@ -59,9 +59,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import NetworkHistory from "../network/NetworkHistory.vue";
-import SimulationButton from "../simulation/SimulationButton.vue";
+import NetworkHistory from "@/networkGraph/components/network/NetworkHistory.vue";
 import { truncate } from "@/utils/truncate";
+
+import SimulationButton from "../simulation/SimulationButton.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -71,13 +72,13 @@ const projectStore = computed(() => appStore.currentWorkspace.stores.projectStor
 const tabItems = [
   {
     icon: {
-      icon: "network:network",
+      icon: "graph:network",
     },
-    id: "networkEditor",
+    id: "graphEditor",
     label: "Editor",
-    title: "Network editor",
+    title: "Graph editor",
     to: {
-      name: "NetworkEditor",
+      name: "GraphEditor",
     },
   },
   {

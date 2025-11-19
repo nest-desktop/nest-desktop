@@ -1,11 +1,11 @@
 // routes.ts
 
-import type { RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
+import type { RouteLocationNormalizedGeneric, RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
 import { errorDialog } from "vuetify3-dialog";
 
 import { useAppStore } from "@/stores/appStore";
 import { useNavStore } from "@/stores/navStore";
-import type { TModel, TModelRoute, TProject, TProjectRoute, TRoute } from "@/types";
+import type { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
@@ -66,7 +66,7 @@ const loadProject = (projectId?: string): void => {
  * Before enter model route.
  * @param to model route
  */
-export const modelBeforeEnter = (to: TModelRoute): void => {
+export const modelBeforeEnter = (to: RouteLocationNormalizedGeneric): void => {
   logger.trace("before enter:", to.path);
 
   const appStore = useAppStore();
@@ -75,7 +75,7 @@ export const modelBeforeEnter = (to: TModelRoute): void => {
   const modelViewStore = appStore.currentWorkspace.views.model;
 
   let modelId: string = "";
-  if (to.params.modelId) modelId = to.params.modelId;
+  if (to.params.modelId) modelId = to.params.modelId as string;
 
   const path = to.path.split("/");
   modelViewStore.state.views.main = path[path.length - 1] || "edit";
@@ -88,11 +88,11 @@ export const modelBeforeEnter = (to: TModelRoute): void => {
  * @param to model router
  * @returns router
  */
-export const modelRedirect = (to: TModelRoute): TRoute => {
+export const modelRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("redirect to model:", to.params.modelId);
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
 
   const modelStore = appStore.currentWorkspace.stores.modelStore;
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
@@ -175,7 +175,7 @@ export const newProjectRoute = (router: Router) => {
  * Before enter project route.
  * @param to project route
  */
-export const projectBeforeEnter = (to: TProjectRoute): void => {
+export const projectBeforeEnter = (to: RouteLocationNormalizedGeneric): void => {
   logger.trace("before enter project route:", to.path);
 
   const appStore = useAppStore();
@@ -185,18 +185,21 @@ export const projectBeforeEnter = (to: TProjectRoute): void => {
   const path = to.path.split("/");
   projectViewStore.state.views.main = path[path.length - 1] || "edit";
 
-  loadProject(to.params.projectId);
+  if (to.query?.graphView) projectViewStore.state.views.graph = to.query.graphView;
+  if (to.query?.activityView) projectViewStore.state.views.activity = to.query.activityView;
+
+  loadProject(to.params.projectId as string);
 };
 
 /**
  * Create a new project.
  * @returns route
  */
-export const projectNew = (): TRoute => {
+export const projectNew = (): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("create a new project");
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
 
   const projectStore = appStore.currentWorkspace.stores.projectStore;
   projectStore.newProject();
@@ -209,16 +212,16 @@ export const projectNew = (): TRoute => {
  * @param to project route
  * @returns route
  */
-export const projectRedirect = (to: TProjectRoute): TRoute => {
-  logger.trace("redirect to project:", truncate(to.params.projectId));
+export const projectRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
+  logger.trace("redirect to project:", truncate(to.params.projectId as string));
   logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
 
   const projectStore = appStore.currentWorkspace.stores.projectStore;
 
-  if (to.params.projectId) loadProject(to.params.projectId);
+  if (to.params.projectId) loadProject(to.params.projectId as string);
 
   return projectStore.routeTo();
 };

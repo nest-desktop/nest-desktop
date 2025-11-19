@@ -1,6 +1,6 @@
 <template>
   <v-slider
-    v-model="value"
+    v-model="model"
     :step="props.step"
     append-icon="mdi:mdi-plus"
     class="mx-1 py-1 value-slider"
@@ -12,11 +12,10 @@
     track-size="2"
     @click:append="increment()"
     @click:prepend="decrement()"
-    @update:model-value="emitUpdate()"
   >
     <template #append>
       <v-text-field
-        :model-value="value"
+        :model-value="model"
         :label="props.id"
         :step="props.step"
         :suffix="props.unit"
@@ -25,45 +24,22 @@
         style="width: 80px"
         type="number"
         variant="underlined"
-        @blur="emitUpdate()"
-        @keyup.enter="emitUpdate()"
-        @update:model-value="onUpdate"
+        @update:model-value="(value: string) => (model = Number(value))"
       />
     </template>
   </v-slider>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
-const emit = defineEmits(["update:modelValue"]);
+const model = defineModel({ required: true, type: Number });
 const props = defineProps({
   id: { default: "", type: String },
-  modelValue: { default: 0, type: Number },
   step: { default: 1, type: Number },
   unit: { default: "", type: String },
 });
 
-const value = ref(props.modelValue);
-
-const decrement = () => {
-  value.value -= props.step;
-  emitUpdate();
-};
-
-const emitUpdate = () => {
-  if (props.modelValue === value.value) return;
-  emit("update:modelValue", value.value);
-};
-
-const increment = () => {
-  value.value += props.step;
-  emitUpdate();
-};
-
-const onUpdate = (val: string) => {
-  value.value = parseFloat(val);
-};
+const decrement = () => (model.value -= props.step);
+const increment = () => (model.value += props.step);
 </script>
 
 <style lang="scss">

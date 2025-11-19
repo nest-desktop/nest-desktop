@@ -5,12 +5,11 @@ import { type UnwrapRef, reactive } from "vue";
 import type { IResponseData } from "@/stores/defineBackendStore";
 import type { TProject } from "@/types";
 
-import { Activity, type IActivityProps, type IEventProps } from "./activity";
-import { AnalogSignalActivity } from "./analogSignalActivity";
+import type { Activity, IActivityProps, IEventProps } from "./activity";
+import type { AnalogSignalActivity } from "./analogSignalActivity";
+import type { NodeAnalogSignalActivity, NodeSpikeActivity } from "../nodeActivity";
+import type { SpikeActivity } from "./spikeActivity";
 import { BaseObj } from "../common/base";
-import { NodeAnalogSignalActivity } from "../nodeActivity/nodeAnalogSignalActivity";
-import { NodeSpikeActivity } from "../nodeActivity/nodeSpikeActivity";
-import { SpikeActivity } from "../activity/spikeActivity";
 
 interface IActivitiesState {
   activityStatsPanelId: number;
@@ -58,6 +57,12 @@ export class Activities extends BaseObj {
     ) as AnalogSignalActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
     return activities;
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    return {
+      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
+    };
   }
 
   get project(): TProject {
@@ -201,14 +206,5 @@ export class Activities extends BaseObj {
 
     // Trigger activity changes.
     this.changes();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
-    });
   }
 }

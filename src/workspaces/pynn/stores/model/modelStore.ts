@@ -4,7 +4,7 @@ import { computed } from "vue";
 
 import { defineModelStore } from "@/stores/model/defineModelStore";
 
-import { PyNNModel } from "../../types";
+import type { PyNNModel } from "../../types";
 import { PyNNProject } from "../../helpers/project/project";
 import { usePyNNModelDBStore } from "./modelDBStore";
 

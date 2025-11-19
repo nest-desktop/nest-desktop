@@ -1,12 +1,11 @@
-// recorderActivities.ts
+// nodeActivities.ts
 
 import type { TNode, TProject } from "@/types";
 
-import { Activities } from "../activity/activities";
-import { Activity } from "../activity/activity";
-import { NodeActivity } from "./nodeActivity";
-import { NodeAnalogSignalActivity } from "./nodeAnalogSignalActivity";
-import { NodeSpikeActivity } from "./nodeSpikeActivity";
+import type { NodeActivity } from "./nodeActivity";
+import type { NodeAnalogSignalActivity } from "./nodeAnalogSignalActivity";
+import type { NodeSpikeActivity } from "./nodeSpikeActivity";
+import { Activities, type Activity } from "../activity";
 
 export class NodeActivities extends Activities {
   constructor(project: TProject) {

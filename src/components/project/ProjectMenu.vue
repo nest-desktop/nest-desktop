@@ -5,9 +5,10 @@
 <script setup lang="ts">
 import { computed, nextTick } from "vue";
 
-import Menu from "../common/Menu.vue";
-import { TProject, TProjectProps } from "@/types";
+import type { TProject, TProjectProps } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
+
+import Menu from "../common/Menu.vue";
 
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();

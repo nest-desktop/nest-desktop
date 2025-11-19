@@ -4,24 +4,22 @@ import { nextTick } from "vue";
 import type { AxiosResponse } from "axios";
 
 import type { IAxiosResponseData } from "@/stores/defineBackendStore";
-import type { TNetwork, TSimulation, TSimulationCode } from "@/types";
+import type { TNetwork, TSimulation } from "@/types";
+import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
+import { BaseSimulation, type ISimulationProps } from "@/helpers/simulation/simulation";
+import { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 
-import { BaseProject, type IBaseProjectProps } from "./project";
-import { type INetworkProps, BaseNetwork } from "../network/network";
-import { NetworkRevision } from "../network/networkRevision";
-import { NodeActivities } from "../nodeActivity/nodeActivities";
-import { upgradeProject } from "../upgrades/upgrades";
-import { BaseSimulation, type ISimulationProps } from "../simulation/simulation";
-import { SimulationCode } from "../simulation/simulationCode";
+import { type INetworkProps, BaseNetwork } from "../../networkGraph/helpers/network/network";
+import { NetworkRevision } from "../../networkGraph/helpers/network/networkRevision";
 
 export interface INetworkProjectProps extends IBaseProjectProps {
   network?: INetworkProps;
   simulation?: ISimulationProps;
 }
 
-// export class NetworkProject<TNode extends BaseNode<BaseModel>> extends BaseProject {
-export class NetworkProject extends BaseProject {
+// export class NetworkProject<TNode extends BaseNode<AbstractModel>> extends AbstractProject{
+export abstract class NetworkProject extends BaseProject {
   private _networkRevision: NetworkRevision; // network history
   public _network: BaseNetwork; // network of neurons and devices
   public _simulation: TSimulation; // settings for the simulation
@@ -31,9 +29,6 @@ export class NetworkProject extends BaseProject {
 
     // Initialize model database.
     this.initModelStore();
-
-    // Upgrade project props.
-    projectProps = upgradeProject(projectProps);
 
     // Construct components.
     this._network = new this.Network(this, projectProps.network);
@@ -49,10 +44,6 @@ export class NetworkProject extends BaseProject {
     return NodeActivities;
   }
 
-  override get Code() {
-    return SimulationCode;
-  }
-
   get Network() {
     return BaseNetwork;
   }
@@ -65,16 +56,22 @@ export class NetworkProject extends BaseProject {
     return this._activities as NodeActivities;
   }
 
-  override get code(): TSimulationCode {
-    return this._code as TSimulationCode;
-  }
-
   get baseNetwork(): BaseNetwork {
     return this._network;
   }
 
   get baseSimulation(): BaseSimulation {
     return this._simulation;
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    return {
+      description: this.description,
+      id: this.id,
+      name: this.name,
+      network: this._network.hash,
+      simulation: this._simulation.hash,
+    };
   }
 
   get network(): TNetwork {
@@ -109,7 +106,7 @@ export class NetworkProject extends BaseProject {
 
     this.activities.checkRecorders();
 
-    this.generateCode();
+    // this.generateCode();
 
     this.networkRevision.commit();
 
@@ -130,7 +127,7 @@ export class NetworkProject extends BaseProject {
     this.network.clean();
 
     // Generate simulation code.
-    this.generateCode();
+    // this.generateCode();
 
     const appStore = useAppStore();
     const projectViewStore = appStore.currentWorkspace.views.project;
@@ -152,6 +149,9 @@ export class NetworkProject extends BaseProject {
   override init(): void {
     this.logger.trace("init");
 
+    // Initialize code.
+    this.code.init();
+
     // Initialize network.
     this.network.init();
 
@@ -160,9 +160,6 @@ export class NetworkProject extends BaseProject {
 
     // Initialize simulation.
     this.simulation.init();
-
-    // Generate code.
-    this.generateCode();
 
     // Initialize activities.
     this.activities.init();
@@ -192,8 +189,8 @@ export class NetworkProject extends BaseProject {
     if (!projectViewStore.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
 
     const simtoc = Date.now();
-    this._simulation
-      .start()
+    this.simulation
+      .start(this.code.script)
       .then((response: AxiosResponse<IAxiosResponseData>) => {
         this.state.state.stopwatch.simulation = Date.now() - simtoc;
 
@@ -226,30 +223,11 @@ export class NetworkProject extends BaseProject {
    * @return project props
    */
   override toJSON(): INetworkProjectProps {
-    const projectProps: INetworkProjectProps = {
-      activityGraph: this.activityGraph.toJSON(),
-      createdAt: this.createdAt,
-      description: this.description,
-      id: this.id,
-      name: this.name,
-      network: this.network.toJSON(),
-      simulation: this.simulation.toJSON(),
-      updatedAt: this.updatedAt,
-      version: process.env.APP_VERSION as string,
-    };
-    return projectProps;
-  }
+    const projectProps = super.toJSON();
 
-  /**
-   * Update hash.
-   */
-  override updateHash(): void {
-    this._updateHash({
-      description: this.description,
-      id: this.id,
-      name: this.name,
-      network: this._network.hash,
-      simulation: this._simulation.hash,
-    });
+    projectProps.network = this.network.toJSON();
+    projectProps.simulation = this.simulation.toJSON();
+
+    return projectProps;
   }
 }

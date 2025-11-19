@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { TSimulation } from "@/types";
+import type { TSimulation } from "@/types";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

@@ -1,8 +1,12 @@
 // simulationKernel.ts
 
-import { BaseObj } from "@/helpers/common/base";
+import type { CodeNodeInterface } from "@babsey/code-graph";
 
-import { NESTSimulation } from "./simulation";
+import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
+import { getNESTSetKernelStatusParameterNode } from "@/codeGraph/codeNodeTypes/nest/nestSetKernelStatus";
+import type { IParamProps } from "@/codeGraph/codeNodeTypes/nest/nestParameters";
+
+import type { NESTSimulation } from "./simulation";
 
 export interface INESTSimulationKernelProps {
   resolution?: number;
@@ -10,53 +14,51 @@ export interface INESTSimulationKernelProps {
   rngSeed?: number;
 }
 
-export class NESTSimulationKernel extends BaseObj {
-  private _localNumThreads: number; // number of threads
-  private _resolution: number; // time resolution of simulation steps
+export class NESTSimulationKernel extends CodeNodeMask {
   private _simulation: NESTSimulation; // parent
-  private _rngSeed: number; // seed for random renerator
 
-  constructor(simulation: NESTSimulation, kernelProps: INESTSimulationKernelProps = {}) {
+  constructor(simulation: NESTSimulation, kernelProps?: Record<string, IParamProps>) {
     super({
       config: { name: "NESTSimulationKernel", simulator: "nest" },
     });
 
     this._simulation = simulation;
-
-    this._resolution = kernelProps.resolution || 0.1;
-    this._localNumThreads = kernelProps.localNumThreads || 1;
-    this._rngSeed = kernelProps.rngSeed || 1;
+    this.props.value = kernelProps;
   }
 
-  get localNumThreads(): number {
-    return this._localNumThreads;
+  get localNumThreads(): CodeNodeInterface | undefined {
+    return this.intf?.local_num_threads;
   }
 
-  set localNumThreads(value: number) {
-    this._localNumThreads = value;
-    this._simulation.changes();
+  get rngSeed(): CodeNodeInterface | undefined {
+    return this.intf?.rng_seed;
   }
 
-  get rngSeed(): number {
-    return this._rngSeed;
-  }
-
-  set rngSeed(value: number) {
-    this._rngSeed = value;
-    this._simulation.changes();
-  }
-
-  get resolution(): number {
-    return this._resolution;
-  }
-
-  set resolution(value: number) {
-    this._resolution = value;
-    this._simulation.changes();
+  get resolution(): CodeNodeInterface | undefined {
+    return this.intf?.resolution;
   }
 
   get simulation(): NESTSimulation {
     return this._simulation;
+  }
+
+  /**
+   * Initialize simulation kernel.
+   */
+  init(): void {
+    this.registerCodeNode();
+    this.updateHash();
+  }
+
+  /**
+   * Register code node.
+   */
+  override registerCodeNode(): void {
+    this.codeNode = getNESTSetKernelStatusParameterNode(
+      this.simulation.project.viewModel.editor.graph,
+      this.props.value,
+    );
+    this.codeNode.mask = this;
   }
 
   /**
@@ -65,9 +67,9 @@ export class NESTSimulationKernel extends BaseObj {
    */
   toJSON(): INESTSimulationKernelProps {
     return {
-      localNumThreads: this._localNumThreads,
-      resolution: this._resolution,
-      rngSeed: this._rngSeed,
+      localNumThreads: this.localNumThreads?.value,
+      resolution: this.resolution?.value,
+      rngSeed: this.rngSeed?.value,
     };
   }
 }

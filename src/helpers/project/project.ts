@@ -1,16 +1,20 @@
 // project.ts
 
-import type { TActivityGraph, TStore, TCode } from "@/types";
+import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
+
+import type { TActivityGraph, TStore } from "@/types";
+import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
+import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
 import { truncate } from "@/utils/truncate";
+import { type ICodeProps, ProjectCode } from "@/codeGraph/projectCode";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 
-import { Activities } from "../activity/activities";
-import { BaseActivityGraph, type IBaseActivityGraphProps } from "../activityGraph/activityGraph";
-import { BaseCode, type ICodeProps } from "../code/code";
-import { BaseObj } from "../common/base";
 import type { IDoc } from "../common/database";
-import { NodeActivities } from "../nodeActivity/nodeActivities";
+import type { NodeActivities } from "../nodeActivity/nodeActivities";
+import { Activities } from "../activity/activities";
+import { BaseObj } from "../common/base";
 import { ProjectState } from "./projectState";
+import { upgradeProject } from "../upgrades/upgrades";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -20,6 +24,7 @@ export interface IBaseProjectProps extends IDoc {
 }
 
 export class BaseProject extends BaseObj {
+  private _code: ProjectCode;
   private _createdAt: string; // when is it created in database
   private _description: string; // description about the project
   private _doc; // raw data of the database
@@ -29,31 +34,39 @@ export class BaseProject extends BaseObj {
   private _name: string; // project name
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
+  private _viewModel: ICodeGraphViewModel;
   public _activities: Activities | NodeActivities;
   public _activityGraph: TActivityGraph; // activity graph
-  public _code: TCode;
 
   constructor(projectProps: IBaseProjectProps = {}) {
     super();
 
-    // Database instance.
+    // Upgrade project props.
+    projectProps = upgradeProject(projectProps);
+
+    // Database instance
     this._doc = projectProps || {};
     this._id = projectProps.id || this.uuid;
     this._createdAt = projectProps.createdAt || new Date().toLocaleDateString();
     this._updatedAt = projectProps.updatedAt;
 
-    // Project metadata.
+    // Project metadata
     this._name = projectProps.name || "";
     this._description = projectProps.description || "";
     this._filename = projectProps.filename || "";
 
-    // Initialize model database.
+    // Initialize model database
     this.initModelStore();
 
-    // Construct components.
+    // State
     this._state = new ProjectState(this);
 
-    this._code = new this.Code(this, projectProps.code);
+    // Code graph
+    this._code = new ProjectCode(this);
+    this._viewModel = useCodeGraph({ code: this._code });
+    registerDefaultNodeTypes(this.viewModel);
+
+    // Activity
     this._activities = new this.Activities(this);
     this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
 
@@ -69,10 +82,6 @@ export class BaseProject extends BaseObj {
     return BaseActivityGraph;
   }
 
-  get Code() {
-    return BaseCode;
-  }
-
   get activities(): Activities {
     return this._activities;
   }
@@ -81,7 +90,7 @@ export class BaseProject extends BaseObj {
     return this._activityGraph;
   }
 
-  get code(): TCode {
+  get code(): ProjectCode {
     return this._code;
   }
 
@@ -107,6 +116,14 @@ export class BaseProject extends BaseObj {
 
   get filename(): string {
     return this._filename;
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    return {
+      description: this._description,
+      id: this._id,
+      name: this._name,
+    };
   }
 
   get id(): string {
@@ -149,6 +166,10 @@ export class BaseProject extends BaseObj {
     this._updatedAt = value;
   }
 
+  get viewModel(): ICodeGraphViewModel {
+    return this._viewModel;
+  }
+
   /**
    * Observer for network changes
    *
@@ -166,7 +187,7 @@ export class BaseProject extends BaseObj {
 
     this.activities.checkRecorders();
 
-    this.generateCode();
+    // this.generateCode();
 
     // It resets panels of activity chart graph.
     if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
@@ -186,21 +207,21 @@ export class BaseProject extends BaseObj {
     this._state.checkChanges();
   }
 
-  /**
-   * Generate code.
-   */
-  generateCode(): void {
-    this.code.generate();
-  }
+  // /**
+  //  * Generate code.
+  //  */
+  // generateCode(): void {
+  //   this.code.generate();
+  // }
 
   /**
    * Initialize project.
    */
   init(): void {
-    this.logger.trace("init");
+    this.logger.debug("init");
 
-    // Generate code.
-    this.generateCode();
+    // Initialize code.
+    this.code.init();
 
     // Initialize activities.
     this.activities.init();
@@ -237,17 +258,8 @@ export class BaseProject extends BaseObj {
       version: process.env.APP_VERSION as string,
     };
 
-    return projectProps;
-  }
+    if (this.code.graph.nodes.length > 0) projectProps.code = this.code.toJSON();
 
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      description: this._description,
-      id: this._id,
-      name: this._name,
-    });
+    return projectProps;
   }
 }

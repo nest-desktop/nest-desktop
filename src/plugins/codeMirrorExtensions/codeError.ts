@@ -2,16 +2,13 @@
 
 import { type UnwrapRef } from "vue";
 
+import { IAxiosErrorData } from "@/stores/defineBackendStore";
 import type { Extension } from "@codemirror/state";
 import { type DecorationSet, EditorView, type Panel, ViewPlugin, ViewUpdate, showPanel } from "@codemirror/view";
 
 import { highlightLineDeco } from "./highlightLine";
 
-interface IErrorState {
-  error: { message: string; lineNumber: number };
-}
-
-export function codeError(state: UnwrapRef<IErrorState>): Extension {
+export function codeError(error: UnwrapRef<IAxiosErrorData>): Extension {
   const errorLine = ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;
@@ -19,16 +16,16 @@ export function codeError(state: UnwrapRef<IErrorState>): Extension {
 
       constructor(view: EditorView) {
         this.view = view;
-        this.decorations = highlightLineDeco(this.view, state.error.lineNumber, "cm-errorLine");
+        this.decorations = highlightLineDeco(this.view, error.lineNumber, "cm-errorLine");
       }
 
       update(update: ViewUpdate) {
         if (update.docChanged || update.viewportChanged) {
-          state.error.lineNumber = -1;
-          state.error.message = "";
+          error.lineNumber = -1;
+          error.message = "";
         }
 
-        this.decorations = highlightLineDeco(this.view, state.error.lineNumber, "cm-errorLine");
+        this.decorations = highlightLineDeco(this.view, error.lineNumber, "cm-errorLine");
       }
     },
     {
@@ -38,11 +35,11 @@ export function codeError(state: UnwrapRef<IErrorState>): Extension {
 
   function showErrorMessage(): Panel {
     const dom = document.createElement("div");
-    dom.textContent = state.error.message;
+    dom.textContent = error.message;
     return {
       dom,
       update() {
-        dom.textContent = state.error.message;
+        dom.textContent = error.message;
       },
     };
   }

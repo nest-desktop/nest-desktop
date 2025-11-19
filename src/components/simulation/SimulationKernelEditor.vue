@@ -18,9 +18,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+import type { TSimulation } from "@/types";
+
 import Card from "../common/Card.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
-import { TSimulation } from "@/types";
 
 const props = defineProps<{
   color?: string;

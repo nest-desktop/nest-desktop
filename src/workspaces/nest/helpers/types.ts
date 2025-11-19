@@ -1,19 +1,19 @@
 // types.ts
 
 import { NESTActivityGraph } from "./activityGraph/activityGraph";
-import { NESTConnection } from "./connection/connection";
+import { NESTConnection } from "../networkGraph/helpers/connection/connection";
 import { NESTModel } from "./model/model";
 import { NESTModelDB } from "./model/modelDB";
-import { NESTNetwork } from "./network/network";
-import { NESTNetworkGraph } from "./network/networkGraph";
-import { NESTNode } from "./node/node";
-import { NESTNodeParameter } from "./node/nodeParameter";
-import { NESTNodes } from "./node/nodes";
+import { NESTNetwork } from "../networkGraph/helpers/network/network";
+import { NESTNetworkGraph } from "../networkGraph/helpers/network/networkGraph";
+import { NESTNode } from "../networkGraph/helpers/node/node";
+import { NESTNodeParameter } from "../networkGraph/helpers/node/nodeParameter";
+import { NESTNodes } from "../networkGraph/helpers/node/nodes";
 import { NESTProject } from "./project/project";
 import { NESTProjectDB } from "./project/projectDB";
 import { NESTSimulation } from "./simulation/simulation";
-import { NESTSimulationCode } from "./simulation/simulationCode";
-import { NESTSynapse } from "./synapse/synapse";
+// import { NESTSimulationCode } from "./simulation/simulationHandler";
+import { NESTSynapse } from "../networkGraph/helpers/synapse/synapse";
 
 export default {
   activityGraph: NESTActivityGraph,
@@ -28,6 +28,6 @@ export default {
   project: NESTProject,
   projectDB: NESTProjectDB,
   simulation: NESTSimulation,
-  simulationCode: NESTSimulationCode,
+  // simulationCode: NESTSimulationCode,
   synapse: NESTSynapse,
 };

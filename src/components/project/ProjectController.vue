@@ -26,7 +26,7 @@
     <template #append>
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
-          :icon="projectViewStore.state.bottomCode.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
+          :icon="projectViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
           value="code"
           variant="plain"
           @click.stop="projectViewStore.toggleBottomNav()"
@@ -95,7 +95,13 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'code'">
         <slot name="codeEditor">
-          <CodeEditor :code="project.code" />
+          <CodeEditor
+            v-if="project.code"
+            v-model="project.code.script"
+            :error="project.simulation.handler.error"
+            :locked="project.code.lockCode"
+            @update:locked="(v: boolean) => (project.code.lockCode = v)"
+          />
         </slot>
       </template>
 
@@ -117,17 +123,18 @@ import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
 import { computed, ref } from "vue";
 
-import ActivityChartController from "../activityChart/ActivityChartController.vue";
-import ActivityStats from "../activityStats/ActivityStats.vue";
-import CodeEditor from "../code/CodeEditor.vue";
-import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
-import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
-import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { BaseNetwork } from "@/helpers/network/network";
-import { BaseSimulation } from "@/helpers/simulation/simulation";
+import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
+import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
+import NetworkSpecEditor from "@/networkGraph/components/network/NetworkSpecEditor.vue";
+import type { Activities } from "@/helpers/activity/activities";
+import type { ActivityChartGraph } from "@/activityGraph/helpers/activityChartGraph/activityChartGraph";
+import type { BaseNetwork } from "@/networkGraph/helpers/network/network";
+import type { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
+
+import ActivityStats from "../activityStats/ActivityStats.vue";
+import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
@@ -159,7 +166,7 @@ const controllerItems: IControllerItem[] = [
   {
     id: "network",
     icon: {
-      icon: "network:network",
+      icon: "graph:network",
     },
     title: "Edit network",
   },

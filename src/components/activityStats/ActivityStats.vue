@@ -55,16 +55,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from "vue";
+import { computed, nextTick, reactive } from "vue";
+
+import NodeAvatar from "@/networkGraph/components/node/avatar/NodeAvatar.vue";
+import type { NodeActivities, NodeAnalogSignalActivity, NodeSpikeActivity } from "@/helpers/nodeActivity";
+import type { TNode } from "@/types";
 
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
-import NodeAvatar from "../node/avatar/NodeAvatar.vue";
-import { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
-import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
-import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import { TNode } from "@/types";
-import { nextTick } from "vue";
 
 const props = defineProps<{ activities: NodeActivities }>();
 const activities = computed(() => props.activities);

@@ -28,11 +28,9 @@
       <v-row align="center" class="my-1" justify="center" no-gutters>
         <v-btn
           :icon="
-            modelViewStore.state.bottomCode.active && modelStore.state.project
-              ? 'mdi:mdi-arrow-expand-down'
-              : 'mdi:mdi-arrow-expand-up'
+            modelViewStore.state.bottomNav.active && project ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'
           "
-          :disabled="modelStore.state.project == null"
+          :disabled="project == null"
           value="code"
           variant="plain"
           @click.stop="modelViewStore.toggleBottomNav()"
@@ -75,7 +73,7 @@
         <v-card
           :key="index"
           flat
-          v-for="(neuron, index) in modelStore.state.project.network.nodes
+          v-for="(neuron, index) in project.network.nodes
             .neurons"
         >
           <v-list :key="neuron.modelId" v-if="neuron.paramsVisible.length > 0">
@@ -124,15 +122,19 @@
 
     <template v-if="modelViewStore.state.views.controller === 'code'">
       <slot name="codeEditor">
-        <CodeEditor v-if="modelStore.state.project" :code="modelStore.state.project.code" />
+        <CodeEditor
+          v-if="project.code"
+          v-model="project.code.script"
+          :locked="project.code.lockCode"
+          :error="project.simulation.handler.error"
+          @update:locked="(v: boolean) => (project.code.lockCode = v)"
+        />
       </slot>
     </template>
 
     <template v-else-if="modelViewStore.state.views.controller === 'activity'">
       <slot name="activityController">
-        <ActivityChartController
-          :graph="modelStore.state.project.activityGraph.activityChartGraph as ActivityChartGraph"
-        />
+        <ActivityChartController :graph="project.activityGraph.activityChartGraph as ActivityChartGraph" />
       </slot>
     </template>
   </v-navigation-drawer>
@@ -143,22 +145,24 @@ import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
 import { computed } from "vue";
 
-import ActivityChartController from "../activityChart/ActivityChartController.vue";
-import CodeEditor from "../code/CodeEditor.vue";
+import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
+import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
+import type { ActivityChartGraph } from "@/activityGraph/helpers/activityChartGraph/activityChartGraph";
+import type { TModelParameter, TNode } from "@/types";
+import type { TParamValue } from "@/helpers/common/parameter";
+import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
+import { darkMode } from "@/helpers/common/theme";
+
 import Menu from "../common/Menu.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import ParamViewer from "../parameter/ParamViewer.vue";
-import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { TModelParameter, TNode } from "@/types";
-import { TParamValue } from "@/helpers/common/parameter";
-import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
-import { darkMode } from "@/helpers/common/theme";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
 const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
+const project = computed(() => modelStore.value.state.project);
 
 const modelParams = computed(() => modelStore.value.model.paramsAll);
 
@@ -226,14 +230,14 @@ const resetAllParamValues = () => {
 };
 
 const updateCode = () => {
-  const neurons = modelStore.value.state.project.network.nodes.neurons;
+  const neurons = project.value.network.nodes.neurons;
   neurons.forEach((neuron: TNode) => {
     const modelParams = modelStore.value.model.params;
     neuron.paramsVisible.forEach((paramKey: string) => {
       neuron.params[paramKey].state.value = modelParams[paramKey].value;
     });
   });
-  modelStore.value.state.project.changes();
+  project.value.changes();
 };
 
 //

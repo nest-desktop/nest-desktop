@@ -4,9 +4,11 @@ import type { AxiosResponse } from "axios";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
+import type { IBackendStore } from "@/codeGraph/codeHandler";
 import type { TNetworkProject } from "@/types";
 
-import { BaseObj } from "../common/base";
+import { SimulationHandler } from "./simulationHandler";
+import { CodeNodeMask } from "../../codeGraph/codeNodeMask";
 
 export interface ISimulationProps {
   time?: number;
@@ -18,7 +20,8 @@ interface ISimulationState {
   timeInfo: Record<string, number>;
 }
 
-export class BaseSimulation extends BaseObj {
+export class BaseSimulation extends CodeNodeMask {
+  private _handler: SimulationHandler;
   private _state: UnwrapRef<ISimulationState>;
   private _time: number; // simulation time
 
@@ -34,6 +37,8 @@ export class BaseSimulation extends BaseObj {
     // Initialize time.
     this._time = simulationProps.time ? simulationProps.time : 1000;
 
+    this._handler = new SimulationHandler();
+
     // Initialize simulation state.
     this._state = reactive<ISimulationState>({
       biologicalTime: 0,
@@ -45,6 +50,10 @@ export class BaseSimulation extends BaseObj {
         stepSize: 1,
       },
     });
+  }
+
+  get handler(): SimulationHandler {
+    return this._handler;
   }
 
   get project(): TNetworkProject {
@@ -59,15 +68,13 @@ export class BaseSimulation extends BaseObj {
     return this._time;
   }
 
-  set time(value: number) {
-    this._time = value;
-    this.changes();
-  }
-
   get timeFixed(): string {
-    return this._time.toFixed(1);
+    return this.time.toFixed(1);
   }
 
+  /**
+   * before Simulation.
+   */
   beforeSimulation(): void {}
 
   /**
@@ -106,6 +113,19 @@ export class BaseSimulation extends BaseObj {
   // }
 
   /**
+   * Register code node.
+   */
+  registerCodeNode(): void {}
+
+  /**
+   * Register backend
+   * @param backend Backend store
+   */
+  registerBackend(backend: IBackendStore): void {
+    this.handler.backend = backend;
+  }
+
+  /**
    * Reset simulation states.
    */
   resetState(): void {
@@ -124,15 +144,15 @@ export class BaseSimulation extends BaseObj {
    * Start simulation.
    * @remarks It sends request to the backend to start the simulation.
    */
-  async start(): Promise<void | AxiosResponse<IAxiosResponseData>> {
+  async start(script: string): Promise<void | AxiosResponse<IAxiosResponseData>> {
     this.logger.trace("start");
 
     this.resetState();
     this.beforeSimulation();
 
     this._state.running = true;
-    return this.project.code
-      .runSimulation()
+    return this.handler
+      .run(script)
       .then((response: AxiosResponse<IAxiosResponseData>) => {
         if (!response) return response;
 
@@ -157,20 +177,11 @@ export class BaseSimulation extends BaseObj {
    * Serialize for JSON.
    * @return simulation props
    */
-  toJSON(): ISimulationProps {
+  override toJSON(): ISimulationProps {
     const simulationProps: ISimulationProps = {
-      time: this._time,
+      time: this.time,
     };
 
     return simulationProps;
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      time: this._time,
-    });
   }
 }

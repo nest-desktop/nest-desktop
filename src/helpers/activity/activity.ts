@@ -2,11 +2,12 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
+// TODO: Mo imports from activity graph!
+import type { ActivityChartGraph } from "@/activityGraph/helpers/activityChartGraph/activityChartGraph";
 import type { TProject } from "@/types";
+import { download } from "@/utils/download";
 
-import { ActivityChartGraph } from "../activityGraph/activityChartGraph/activityChartGraph";
 import { BaseObj } from "../common/base";
-import { download } from "../../utils/download";
 
 export interface IActivityProps {
   events?: IEventProps;
@@ -280,12 +281,5 @@ export class Activity extends BaseObj {
     });
 
     if (updated) this.updateHash();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash(this.toJSON());
   }
 }

@@ -1,30 +1,45 @@
 // appStore.ts
 
 import { defineStore } from "pinia";
-import { computed, reactive } from "vue";
+import { computed, ComputedRef, reactive, UnwrapRef } from "vue";
 import type { ThemeInstance } from "vuetify";
 
-import { workspaces } from "@/workspaces";
+import { IWorkspaceProps, workspaces } from "@/workspaces";
+
+interface IAppStoreState {
+  autoUpdate: boolean;
+  currentWorkspace: string;
+  devMode: boolean;
+  filterTag: string;
+  initialized: boolean;
+  loading: boolean;
+  loadingText: string;
+  logsOpen: boolean;
+  requestLogs: { date: string; htmlContent: string; level: string }[];
+  workspacesEnabled: string[];
+  theme: string;
+  themeIcon: string;
+}
+
+interface IAppStore {
+  clearLogs: () => void;
+  currentWorkspace: ComputedRef<IWorkspaceProps | undefined>;
+  darkMode: ComputedRef<boolean>;
+  hasWorkspace: ComputedRef<boolean>;
+  init: (theme: ThemeInstance) => void;
+  resetWorkspace: () => void;
+  workspaceItems: ComputedRef<(IWorkspaceProps | undefined)[]>;
+  state: UnwrapRef<IAppStoreState>;
+  toggleTheme: () => void;
+  updateTheme: () => void;
+}
 
 export const useAppStore = defineStore(
   "app-store",
-  () => {
+  (): IAppStore => {
     let themeInstance: ThemeInstance;
 
-    const state = reactive<{
-      autoUpdate: boolean;
-      currentWorkspace: string;
-      devMode: boolean;
-      filterTag: string;
-      initialized: boolean;
-      loading: boolean;
-      loadingText: string;
-      logsOpen: boolean;
-      requestLogs: { date: string; htmlContent: string; level: string }[];
-      workspacesEnabled: string[];
-      theme: string;
-      themeIcon: string;
-    }>({
+    const state = reactive<IAppStoreState>({
       autoUpdate: false,
       currentWorkspace: "nest",
       devMode: false,
@@ -55,7 +70,7 @@ export const useAppStore = defineStore(
       return workspaceIds.includes(state.currentWorkspace);
     });
 
-    const init = (theme: ThemeInstance) => {
+    const init = (theme: ThemeInstance): void => {
       themeInstance = theme;
 
       const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -65,7 +80,7 @@ export const useAppStore = defineStore(
     };
 
     const resetWorkspace = (): void => {
-      state.currentWorkspace = Object.keys(workspaces)[0];
+      state.currentWorkspace = Object.keys(workspaces)[0] as string;
     };
 
     const workspaceItems = computed(() =>
@@ -74,7 +89,7 @@ export const useAppStore = defineStore(
 
     const toggleTheme = (): void => {
       const themes = ["light", "dark", "auto"];
-      state.theme = themes[(themes.indexOf(state.theme) + 1) % 3];
+      state.theme = themes[(themes.indexOf(state.theme) + 1) % 3] as string;
       updateTheme();
     };
 

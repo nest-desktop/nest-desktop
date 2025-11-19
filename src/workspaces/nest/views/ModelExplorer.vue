@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import ActivityChartGraph from "@/components/activityChart/ActivityChartGraph.vue";
+import ActivityChartGraph from "@/activityGraph/components/activityChart/ActivityChartGraph.vue";
 
 import { currentModel, currentProject, useNESTModelStore } from "../stores/model/modelStore";
 const modelStore = useNESTModelStore();

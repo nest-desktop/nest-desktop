@@ -45,6 +45,7 @@ export const norse: IWorkspaceProps = {
         workspace: "norse",
         views: {
           controller: "",
+          graph: "network",
           main: "edit",
         },
       })(),

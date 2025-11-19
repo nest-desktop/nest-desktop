@@ -1,10 +1,12 @@
-// recorderAnalogSignalActivity.ts
+// nodeAnalogSignalActivity.ts
 
 import type { TNode } from "@/types";
 
-import type { IActivityProps } from "../activity/activity";
+// TODO: No imports from network graph!
+import { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
+
+import type { IActivityProps } from "../activity";
 import { NodeActivity } from "./nodeActivity";
-import { NodeRecord } from "../node/nodeRecord";
 
 export class NodeAnalogSignalActivity extends NodeActivity {
   constructor(recorder: TNode, activityProps: IActivityProps = {}) {

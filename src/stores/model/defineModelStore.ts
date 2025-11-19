@@ -2,11 +2,12 @@
 
 import { defineStore } from "pinia";
 import { computed, nextTick, reactive } from "vue";
+import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 
 import router from "@/router";
-import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
+import type { Class, TNetwork, TSimulation, TStore } from "@/types";
 import type { TElementType } from "@/helpers/model/model";
-import type { Class, TNetwork, TRoute, TSimulation, TStore } from "@/types";
+import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -136,7 +137,7 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
      * Redirect to route path of current model.
      * @returns route
      */
-    const routeTo = (): TRoute => {
+    const routeTo = (): RouteLocationNormalizedLoadedGeneric => {
       const appStore = useAppStore();
 
       let routerMainView = "edit";
@@ -147,7 +148,7 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
 
       return {
         path: "/" + props.workspace + "/model/" + state.modelId + "/" + routerMainView,
-      };
+      } as RouteLocationNormalizedLoadedGeneric;
     };
 
     /**

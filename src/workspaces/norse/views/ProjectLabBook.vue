@@ -36,10 +36,10 @@
 </template>
 
 <script setup lang="ts">
-import NetworkGraph from "@/components/network/NetworkGraph.vue";
-import NodeViewer from "@/components/node/NodeViewer.vue";
+import NetworkGraph from "@/networkGraph/components/NetworkGraph.vue";
+import NodeViewer from "@/networkGraph/components/node/NodeViewer.vue";
 
-import { NorseNode } from "../helpers/node/node";
+import type { NorseNode } from "../types";
 
 import { currentProject } from "../stores/project/projectStore";
 </script>

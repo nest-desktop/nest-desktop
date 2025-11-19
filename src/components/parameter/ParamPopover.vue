@@ -18,8 +18,9 @@
 </template>
 
 <script setup lang="ts">
+import type { TParameter } from "@/types";
+
 import ParameterSpecEditor from "./ParamSpecEditor.vue";
-import { TParameter } from "@/types";
 
 defineProps<{ param: TParameter }>();
 </script>

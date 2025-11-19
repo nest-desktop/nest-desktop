@@ -20,7 +20,7 @@ const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
 
 const navItems = [
   {
-    icon: "network:network",
+    icon: "graph:network",
     id: "pynnProject",
     workspace: "pynn",
     title: "Project",
@@ -32,6 +32,13 @@ const navItems = [
     workspace: "pynn",
     title: "Model",
     to: { name: "pynnModelRoot" },
+  },
+  {
+    icon: "mdi:mdi-sitemap-outline",
+    id: "pynnCode",
+    workspace: "pynn",
+    title: "Code",
+    to: { name: "pynnCodeGraphLayout" },
   },
 ];
 

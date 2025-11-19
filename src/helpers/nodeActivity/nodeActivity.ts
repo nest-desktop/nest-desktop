@@ -1,10 +1,11 @@
 // nodeActivity.ts
 
-// import { NodeRecord } from "@/helpers/node/nodeRecord";
+// import { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 import type { TNetworkProject, TNode } from "@/types";
 
-import { Activity, type IActivityProps } from "../activity/activity";
 import { sum } from "@/utils/array";
+
+import { Activity, type IActivityProps } from "../activity";
 
 export class NodeActivity extends Activity {
   private _recorder: TNode; // parent

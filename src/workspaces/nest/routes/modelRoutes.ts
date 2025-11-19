@@ -1,12 +1,13 @@
 // modelRoutes.ts
 
-import type { TModelRoute, TRoute } from "@/types";
+import type { RouteLocationNormalizedGeneric, RouteLocationNormalizedLoadedGeneric } from "vue-router";
+
 import { modelBeforeEnter, modelRedirect } from "@/helpers/routes";
 import { useAppStore } from "@/stores/appStore";
 
 import { useNESTModelStore } from "../stores/model/modelStore";
 
-const nestModelRedirect = (to: TModelRoute): TRoute => {
+const nestModelRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   modelRedirect(to);
 
   const appStore = useAppStore();

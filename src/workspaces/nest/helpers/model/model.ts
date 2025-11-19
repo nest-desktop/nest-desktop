@@ -6,7 +6,10 @@ import { BaseModel, type IModelProps, type IModelStateProps, type TElementType }
 import type { IParamProps } from "@/helpers/common/parameter";
 import { ModelParameter } from "@/helpers/model/modelParameter";
 
-import { type INESTModelReceptorProps, NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import {
+  type INESTModelReceptorProps,
+  NESTModelReceptor,
+} from "../../networkGraph/helpers/model/modelReceptor/modelReceptor";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 // import { loadText } from "@/utils/fetch";
 

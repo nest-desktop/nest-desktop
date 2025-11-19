@@ -14,7 +14,7 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
     props.workspace + "-" + props.name + "-view",
     () => {
       const state = reactive<{
-        bottomCode: {
+        bottomNav: {
           height: number;
           active: boolean;
         };
@@ -29,7 +29,7 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
         };
         views: Record<string, string>;
       }>({
-        bottomCode: {
+        bottomNav: {
           height: 200,
           active: false,
         },
@@ -54,7 +54,7 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
        * @param e MouseEvent from which the y position is taken
        */
       const handleBottomNavMouseMove = (e: MouseEvent) => {
-        state.bottomCode.height = window.innerHeight - e.clientY;
+        state.bottomNav.height = window.innerHeight - e.clientY;
       };
 
       /**
@@ -115,7 +115,7 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
        * Toggle bottom navigation.
        */
       const toggleBottomNav = () => {
-        state.bottomCode.active = !state.bottomCode.active;
+        state.bottomNav.active = !state.bottomNav.active;
       };
 
       /**
@@ -143,7 +143,7 @@ export const defineViewStore = (props: { name: string; workspace: string; views:
     {
       persist: [
         {
-          pick: ["state.bottomCode", "state.controller", "state.views"],
+          pick: ["state.bottomNav", "state.controller", "state.views"],
           storage: sessionStorage,
         },
         {

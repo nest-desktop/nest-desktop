@@ -5,9 +5,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import Menu from "../common/Menu.vue";
-import { TModel } from "@/types";
+import type { TModel } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
+
+import Menu from "../common/Menu.vue";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();

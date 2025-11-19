@@ -8,6 +8,7 @@ import { upgradeProject_32_to_33 } from "./upgrade_32_to_33";
 import { upgradeProject_33_to_40 } from "./upgrade_33_to_40";
 import { upgradeProject_40_to_41 } from "./upgrade_40_to_41";
 import { upgradeProject_41_to_42 } from "./upgrade_41_to_42";
+import { upgradeProject_42_to_50 } from "./upgrade_42_to_50";
 
 const currentVersion = process.env.APP_VERSION as string;
 
@@ -18,6 +19,7 @@ const projectUpgrades = [
   upgradeProject_33_to_40,
   upgradeProject_40_to_41,
   upgradeProject_41_to_42,
+  upgradeProject_42_to_50,
 ];
 
 /**

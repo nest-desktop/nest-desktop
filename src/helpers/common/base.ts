@@ -10,16 +10,18 @@ import { truncate } from "@/utils/truncate";
 
 import { Config } from "./config";
 
-export class BaseObj {
+export interface IBaseObjProps {
+  config?: { name?: string; simulator?: string };
+  logger?: { settings?: ISettingsParam<ILogObj> };
+}
+
+export abstract class BaseObj {
   private _config?: Config;
   private _hash: string = "";
   private _logger: Logger<ILogObj>;
   private _uuid: string;
 
-  constructor(props?: {
-    config?: { name?: string; simulator?: string };
-    logger?: { settings?: ISettingsParam<ILogObj> };
-  }) {
+  constructor(props?: IBaseObjProps) {
     this._uuid = uuidv4();
     this._logger = mainLogger.getSubLogger({
       name: `[${truncate(this._uuid)}] ${this.constructor.name}`,
@@ -41,6 +43,10 @@ export class BaseObj {
     return this._hash;
   }
 
+  get hashObject(): Record<string, unknown> {
+    return this.toJSON();
+  }
+
   get logger(): Logger<ILogObj> {
     return this._logger;
   }
@@ -53,13 +59,17 @@ export class BaseObj {
     return truncate(this._uuid);
   }
 
+  toJSON(): Record<string, unknown> | unknown {
+    return {};
+  }
+
   /**
    * Update hash.
    */
-  _updateHash(object: object): void {
+  updateHash(): void {
     this._logger.trace("update hash");
 
-    this._hash = truncate(sha1(object));
+    this._hash = truncate(sha1(this.hashObject));
     this.updateLoggerName("#" + this.hash);
   }
 
