@@ -98,8 +98,8 @@
           <CodeEditor
             v-if="project.code"
             v-model="project.code.script"
-            :locked="project.code.lockCode"
             :error="project.simulation.handler.error"
+            :locked="project.code.lockCode"
             @update:locked="(v: boolean) => (project.code.lockCode = v)"
           />
         </slot>

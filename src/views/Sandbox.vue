@@ -27,7 +27,6 @@ import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
 import SandboxDataTable from "@/components/sandbox/SandboxDataTable.vue";
 import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
 import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
-import SandboxSlider from "@/components/sandbox/SandboxSlider.vue";
 import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
 
 const props = defineProps({
@@ -45,7 +44,6 @@ const components: Record<string, object> = {
   dataTable: SandboxDataTable,
   importJSON: SandboxImportJSON,
   itemGroup: SandboxItemGroup,
-  slider: SandboxSlider,
   tabs: SandboxTabs,
 };
 
