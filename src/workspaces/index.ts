@@ -8,6 +8,7 @@ import type { App } from "vue";
 import type { CompletionSource } from "@codemirror/autocomplete";
 import type { IconSet } from "vuetify";
 import type { RouteRecordRaw } from "vue-router";
+import type { CodeGraph } from "@babsey/code-graph";
 
 import router from "@/router";
 import type { TStore } from "@/types";
@@ -18,6 +19,7 @@ import { useAppStore } from "@/stores/appStore";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
+import type { IBaseProjectProps } from "@/helpers/project/project";
 // import { pynn } from "./pynn";
 
 const logger = mainLogger.getSubLogger({ name: "workspace index" });
@@ -30,6 +32,7 @@ export interface IWorkspaceProps {
   iconSet: IconSet;
   id: string;
   init: () => void;
+  loadGraphByProject?: (graph: CodeGraph, projectProps: IBaseProjectProps) => void;
   route: RouteRecordRaw;
   stores: Record<string, TStore>;
   theme: Record<string, string>;

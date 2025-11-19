@@ -128,7 +128,7 @@
       </template>
     </ProjectBar>
 
-    <ProjectController>
+    <ProjectController :key="project.id">
       <template #activityController>
         <ActivityChartController
           v-if="projectViewStore.state.views.activity === 'abstract'"
@@ -252,7 +252,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
 import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
@@ -317,7 +317,30 @@ const getPopItems = (node: NESTNode) => [
   },
 ];
 
-onMounted(() => mountProjectLayout({ route, router }));
+onMounted(() => {
+  mountProjectLayout({ route, router });
+
+  if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
+  project.value.viewModel.engine?.start();
+  project.value.viewModel.engine?.runOnce(null);
+});
+
+onBeforeUnmount(() => {
+  if (project.value.viewModel.unsubscribe) project.value.viewModel.unsubscribe();
+  project.value.viewModel.engine?.stop();
+});
+
+watch(
+  () => project.value,
+  (newValue, oldValue) => {
+    oldValue.viewModel.unsubscribe();
+    oldValue.viewModel.engine?.stop();
+
+    newValue.viewModel.subscribe();
+    newValue.viewModel.engine?.start();
+    setTimeout(() => newValue.viewModel.engine?.runOnce(null), 1);
+  },
+);
 
 watch(
   () => route.query?.graphView,

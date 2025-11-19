@@ -19,28 +19,32 @@
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1" title="Simulation kernel">
+    <Card v-if="simulation.kernel.intf" :color="props.color" class="ma-1" title="Simulation kernel">
       <v-card-text>
         <TickSlider
+          v-if="simulation.kernel.localNumThreads"
           v-bind="options.threadSettings"
-          v-model="simulation.kernel.localNumThreads"
+          v-model="simulation.kernel.localNumThreads.value"
+          :disabled="simulation.kernel.localNumThreads.connectionCount > 0"
           :thumb-color="props.color"
           class="mx-1 py-1"
         />
 
         <TickSlider
+          v-if="simulation.kernel.resolution"
           v-bind="options.resolutionSettings"
-          v-model="simulation.kernel.resolution"
+          v-model="simulation.kernel.resolution.value"
+          :disabled="simulation.kernel.resolution.connectionCount > 0"
           :thumb-color="props.color"
           class="mx-1 py-1"
         />
 
         <ValueSlider
-          :key="simulation.kernel.rngSeed"
+          v-if="simulation.kernel.rngSeed"
           v-bind="options.rngSeedSettings"
-          v-model="simulation.kernel.rngSeed"
+          v-model="simulation.kernel.rngSeed.value"
+          :disabled="simulation.kernel.rngSeed.connectionCount > 0 || state.autoRNGSeed"
           :thumb-color="props.color"
-          :disabled="state.autoRNGSeed"
           class="mx-1 py-1"
         />
 
@@ -55,11 +59,13 @@
       </v-card-text>
     </Card>
 
-    <Card :color="props.color" class="ma-1" title="Simulation">
-      <v-card-text class="py-0">
+    <Card v-if="simulation.intf" :color="props.color" class="ma-1" title="Simulation">
+      <v-card-text>
         <ValueSlider
+          v-if="simulation.time"
           v-bind="options.simulationTimeSettings"
-          v-model="simulation.time"
+          v-model="simulation.time.value"
+          :disabled="simulation.time.connectionCount > 0"
           :thumb-color="props.color"
           class="mx-1 py-2"
         />

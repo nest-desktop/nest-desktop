@@ -57,7 +57,7 @@ import NetworkGraphContent from "@/networkGraph/components/NetworkGraphContent.v
 import { mountNetworkGraph, unmountNetworkGraph } from "@/networkGraph/useNetworkGraph";
 
 import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
-import type { NESTNetwork } from "../../types";
+import type { NESTNetwork } from "../../../types";
 
 const props = defineProps<{ network: NESTNetwork }>();
 const network = computed(() => props.network as NESTNetwork);

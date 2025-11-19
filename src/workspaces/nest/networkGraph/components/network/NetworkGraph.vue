@@ -56,8 +56,8 @@ import { Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 import NetworkGraphContent from "@/components/network/NetworkGraphContent.vue";
 import { mountNetworkGraph, unmountNetworkGraph } from "@/networkGraph/components/helpers/useNetworkGraph";
 
-import { NESTNetworkGraph } from "../../networkGraph/helpers/network/networkGraph";
-import { NESTNetwork } from "../../types";
+import { NESTNetworkGraph } from "../../helpers/network/networkGraph";
+import { NESTNetwork } from "../../../types";
 
 const props = defineProps<{ network: NESTNetwork }>();
 const network = computed(() => props.network as NESTNetwork);

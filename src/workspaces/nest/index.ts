@@ -3,6 +3,8 @@
 import { defineViewStore } from "@/stores/defineViewStore";
 import { logger as mainLogger } from "@/utils/logger";
 
+export * from "./networkGraph";
+
 import type { IWorkspaceProps } from "../";
 import {
   nestCompletions,
@@ -13,6 +15,7 @@ import {
 import nestIconSet from "./components/iconSet";
 import route from "./routes";
 // import { insiteAccessInit } from "./stores/backends/insiteAccessStore";
+import { loadGraphByNESTProject } from "./helpers/migration";
 import { nestSimulatorInit } from "./stores/backends/nestSimulatorStore";
 import { nestmlServerInit } from "./stores/backends/nestmlServerStore";
 import { useNESTModelDBStore } from "./stores/model/modelDBStore";
@@ -89,6 +92,7 @@ export const nest: IWorkspaceProps = {
       })(),
     };
   },
+  loadGraphByProject: loadGraphByNESTProject,
   route,
   stores: {},
   theme: {

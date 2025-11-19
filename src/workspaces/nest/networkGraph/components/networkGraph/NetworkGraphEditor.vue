@@ -23,7 +23,7 @@ import NodeGroupMenuList from "@/networkGraph/components/node/NodeGroupMenuList.
 import type { TNodeGroup } from "@/types";
 
 import NESTNodeMenuList from "../node/NESTNodeMenuList.vue";
-import type { NESTNetwork, NESTNode, NESTConnection } from "../../types";
+import type { NESTNetwork, NESTNode, NESTConnection } from "../../../types";
 
 import NESTNetworkGraph from "./NetworkGraph.vue";
 

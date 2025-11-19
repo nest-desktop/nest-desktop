@@ -74,15 +74,42 @@ import ProjectController from "@/components/project/ProjectController.vue";
 import ProjectNav from "@/components/project/ProjectNav.vue";
 import { mountProjectLayout } from "@/helpers/routes";
 
+import type { PyNNProject } from "../types";
+
 const router = useRouter();
 const route = useRoute();
 
 import { usePyNNProjectStore } from "../stores/project/projectStore";
+import { onBeforeUnmount } from "vue";
 const projectStore = usePyNNProjectStore();
 
+const project = computed(() => projectStore.state.project as PyNNProject);
 const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
 
-onMounted(() => mountProjectLayout({ route, router }));
+onMounted(() => {
+  mountProjectLayout({ route, router });
+
+  if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
+  project.value.viewModel.engine?.start();
+  project.value.viewModel.engine?.runOnce(null);
+});
+
+onBeforeUnmount(() => {
+  if (project.value.viewModel.unsubscribe) project.value.viewModel.unsubscribe();
+  project.value.viewModel.engine?.stop();
+});
+
+watch(
+  () => project.value,
+  (newValue, oldValue) => {
+    oldValue.viewModel.unsubscribe();
+    oldValue.viewModel.engine?.stop();
+
+    newValue.viewModel.subscribe();
+    newValue.viewModel.engine?.start();
+    setTimeout(() => newValue.viewModel.engine?.runOnce(null), 1);
+  },
+);
 
 watch(
   () => route.query?.graphView,
