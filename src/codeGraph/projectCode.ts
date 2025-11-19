@@ -22,6 +22,10 @@ export class ProjectCode extends PythonCode {
     return this._project;
   }
 
+  init(): void {
+    if (this.project.doc.code?.editor) this.viewModel.loadEditor(this.project.doc.code.editor);
+  }
+
   toJSON(): ICodeProps {
     return {
       editor: this.viewModel.editor.save(),
