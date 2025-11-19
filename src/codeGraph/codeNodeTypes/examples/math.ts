@@ -12,6 +12,7 @@ import {
 
 export default defineCodeNode({
   type: "math",
+  variableName: "result",
   inputs: {
     operation: () => new SelectInterface("Operation", "Add", ["Add", "Subtract"]).setPort(false),
     number1: () => new NumberInterface("Number", 1),
@@ -27,5 +28,6 @@ export default defineCodeNode({
       case "Subtract":
         return "{{  inputs.number1 }} - {{  inputs.number2 }}";
     }
+    return ""
   },
 });

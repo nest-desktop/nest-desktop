@@ -13,13 +13,14 @@ import {
 export default defineDynamicCodeNode({
   type: "dynamicMath",
   title: "dynamic math",
+  variableName: "result",
   inputs: {
     operation: () => new SelectInterface("Operation", "Addition", ["Addition", "Subtraction", "Sine"]).setPort(false),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface("").use(setType, numberType),
   },
-  onUpdate({ operation }) {
+  onUpdate({ operation }: { operation: string }) {
     if (operation === "Sine") {
       return {
         inputs: {
@@ -44,5 +45,6 @@ export default defineDynamicCodeNode({
       case "Sine":
         return "sin({{  inputs.number1 }})";
     }
+    return ""
   },
 });

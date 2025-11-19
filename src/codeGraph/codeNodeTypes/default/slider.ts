@@ -6,6 +6,7 @@ import { CodeNodeOutputInterface, SliderInterface, defineCodeNode, numberType } 
 
 export default defineCodeNode({
   type: "slider",
+  variableName: "s",
   inputs: {
     slider: () => new SliderInterface("slider", 0.5, 0, 1).use(setType, numberType),
   },

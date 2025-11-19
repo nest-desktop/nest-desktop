@@ -6,6 +6,7 @@ import { CodeNodeOutputInterface, CheckboxInterface, defineCodeNode, booleanType
 
 export default defineCodeNode({
   type: "boolean",
+  variableName: "b",
   inputs: {
     boolean: () => new CheckboxInterface("boolean", false).use(setType, booleanType),
   },

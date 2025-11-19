@@ -16,7 +16,7 @@ import {
 export default defineCodeNode({
   type: "myFunction",
   title: "my function",
-  variableName: "a",
+  variableName: "f",
   inputs: {
     checkbox: () => new CheckboxInterface("checkbox", true).setOptional(true),
     integer: () => new IntegerInterface("integer", 1).setOptional(true),
@@ -31,7 +31,4 @@ export default defineCodeNode({
     out: () => new CodeNodeOutputInterface(),
     custom: () => new CodeNodeOutputInterface(".custom", ".custom").setOptional(true),
   },
-  // codeTemplate() {
-  //   return `myFunction(${formatInputs(this.codeNodeInputs).join(', ')})`
-  // },
 });

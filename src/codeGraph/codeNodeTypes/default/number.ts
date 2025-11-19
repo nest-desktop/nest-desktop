@@ -6,6 +6,7 @@ import { CodeNodeOutputInterface, NumberInterface, defineCodeNode, numberType } 
 
 export default defineCodeNode({
   type: "number",
+  variableName: "n",
   inputs: {
     number: () => new NumberInterface("number", 0).use(setType, numberType),
   },
