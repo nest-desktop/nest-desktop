@@ -9,11 +9,13 @@ import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
 import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
 import { type ICodeProps, ProjectCode } from "@/codeGraph/projectCode";
 
+import type { IDoc } from "../common/database";
 import { Activities } from "../activity/activities";
 import { BaseObj } from "../common/base";
-import type { IDoc } from "../common/database";
-import { NodeActivities } from "../nodeActivity/nodeActivities";
+import type { NodeActivities } from "../nodeActivity/nodeActivities";
 import { ProjectState } from "./projectState";
+import { upgradeProject } from "../upgrades/upgrades";
+import { nextTick } from "vue";
 
 export interface IBaseProjectProps extends IDoc {
   activityGraph?: IBaseActivityGraphProps;
@@ -40,6 +42,9 @@ export class BaseProject extends BaseObj {
   constructor(projectProps: IBaseProjectProps = {}) {
     super();
 
+    // Upgrade project props.
+    projectProps = upgradeProject(projectProps);
+
     // Database instance
     this._doc = projectProps || {};
     this._id = projectProps.id || this.uuid;
@@ -60,8 +65,7 @@ export class BaseProject extends BaseObj {
     // Code graph
     this._code = new ProjectCode(this);
     this._viewModel = useCodeGraph({ code: this._code });
-    registerDefaultNodeTypes(this._viewModel);
-    if (projectProps.code) this._viewModel.loadEditor(projectProps.code.editor);
+    registerDefaultNodeTypes(this.viewModel);
 
     // Activity
     this._activities = new this.Activities(this);
@@ -113,6 +117,14 @@ export class BaseProject extends BaseObj {
 
   get filename(): string {
     return this._filename;
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    return {
+      description: this._description,
+      id: this._id,
+      name: this._name,
+    };
   }
 
   get id(): string {
@@ -207,10 +219,10 @@ export class BaseProject extends BaseObj {
    * Initialize project.
    */
   init(): void {
-    this.logger.trace("init");
+    this.logger.debug("init");
 
-    // Generate code.
-    // this.generateCode();
+    // Initialize code.
+    this.code.init();
 
     // Initialize activities.
     this.activities.init();
@@ -250,16 +262,5 @@ export class BaseProject extends BaseObj {
     if (this.code.graph.nodes.length > 0) projectProps.code = this.code.toJSON();
 
     return projectProps;
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      description: this._description,
-      id: this._id,
-      name: this._name,
-    });
   }
 }

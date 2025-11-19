@@ -9,7 +9,6 @@ import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
 import { BaseSimulation, type ISimulationProps } from "@/helpers/simulation/simulation";
 import { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
-import { upgradeProject } from "@/helpers/upgrades/upgrades";
 
 import { type INetworkProps, BaseNetwork } from "../../networkGraph/helpers/network/network";
 import { NetworkRevision } from "../../networkGraph/helpers/network/networkRevision";
@@ -30,9 +29,6 @@ export abstract class NetworkProject extends BaseProject {
 
     // Initialize model database.
     this.initModelStore();
-
-    // Upgrade project props.
-    projectProps = upgradeProject(projectProps);
 
     // Construct components.
     this._network = new this.Network(this, projectProps.network);
@@ -66,6 +62,16 @@ export abstract class NetworkProject extends BaseProject {
 
   get baseSimulation(): BaseSimulation {
     return this._simulation;
+  }
+
+  override get hashObject(): Record<string, unknown> {
+    return {
+      description: this.description,
+      id: this.id,
+      name: this.name,
+      network: this._network.hash,
+      simulation: this._simulation.hash,
+    };
   }
 
   get network(): TNetwork {
@@ -143,6 +149,9 @@ export abstract class NetworkProject extends BaseProject {
   override init(): void {
     this.logger.trace("init");
 
+    // Initialize code.
+    this.code.init();
+
     // Initialize network.
     this.network.init();
 
@@ -151,9 +160,6 @@ export abstract class NetworkProject extends BaseProject {
 
     // Initialize simulation.
     this.simulation.init();
-
-    // Generate code.
-    // this.generateCode();
 
     // Initialize activities.
     this.activities.init();
@@ -223,18 +229,5 @@ export abstract class NetworkProject extends BaseProject {
     projectProps.simulation = this.simulation.toJSON();
 
     return projectProps;
-  }
-
-  /**
-   * Update hash.
-   */
-  override updateHash(): void {
-    this._updateHash({
-      description: this.description,
-      id: this.id,
-      name: this.name,
-      network: this._network.hash,
-      simulation: this._simulation.hash,
-    });
   }
 }

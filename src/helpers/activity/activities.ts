@@ -59,6 +59,12 @@ export class Activities extends BaseObj {
     return activities;
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
+    };
+  }
+
   get project(): TProject {
     return this._project;
   }
@@ -200,14 +206,5 @@ export class Activities extends BaseObj {
 
     // Trigger activity changes.
     this.changes();
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
-    });
   }
 }

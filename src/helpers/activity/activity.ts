@@ -282,11 +282,4 @@ export class Activity extends BaseObj {
 
     if (updated) this.updateHash();
   }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash(this.toJSON());
-  }
 }

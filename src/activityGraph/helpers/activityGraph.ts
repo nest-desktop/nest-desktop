@@ -27,6 +27,12 @@ export class BaseActivityGraph extends BaseObj {
     return this._activityChartGraph;
   }
 
+  override get hashObject(): Record<string, unknown> {
+    return {
+      activities: this.project.activities.hash,
+    };
+  }
+
   get project(): TProject {
     return this._project;
   }
@@ -65,15 +71,5 @@ export class BaseActivityGraph extends BaseObj {
 
     this.updateHash();
     this.logger.trace("update");
-  }
-
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._updateHash({
-      activities: this.project.activities.hash,
-      code: this.project.code.hash,
-    });
   }
 }
