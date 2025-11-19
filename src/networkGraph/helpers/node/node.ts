@@ -1,6 +1,6 @@
 // node.ts
 
-import type { AbstractCodeNode } from "@babsey/code-graph"
+import type { AbstractCodeNode } from "@babsey/code-graph";
 import type { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 
 import type { BaseModel, IModelStateProps, TElementType } from "@/helpers/model/model";

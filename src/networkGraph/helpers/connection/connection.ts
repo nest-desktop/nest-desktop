@@ -2,15 +2,14 @@
 
 import type { IConfigProps } from "@/helpers/common/config";
 import type { IParamProps } from "@/helpers/common/parameter";
-import type { TConnection, TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import type { TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
+import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 
 import { BaseSynapse, type ISynapseProps } from "../synapse/synapse";
 import { ConnectionParameter } from "./connectionParameter";
 import { ConnectionRule, type IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
-import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 
 export interface IConnectionProps {
   params?: IParamProps[];

@@ -1,6 +1,6 @@
 // nodes.ts
 
-import { type UnwrapRef, nextTick, reactive } from "vue";
+import { type UnwrapRef, reactive } from "vue";
 
 import type { AbstractCodeNode } from "@babsey/code-graph";
 

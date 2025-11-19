@@ -2,11 +2,10 @@
 
 import type { TConnection, TSynapseParameter } from "@/types";
 
-import { BaseObj } from "@/helpers/common/base";
+import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 import { type IParamProps } from "@/helpers/common/parameter";
 
 import { BaseSynapseParameter } from "./synapseParameter";
-import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
 
 export interface ISynapseProps {
   model?: string;
