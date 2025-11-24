@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@babsey/code-graph": "~0.5",
-    "@codemirror/autocomplete": "~6.19",
+    "@codemirror/autocomplete": "~6.20",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.2",
     "@codemirror/lang-yaml": "~6.1",
@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@babel/types": "~7.28",
-    "@tsconfig/node-lts": "~22.0",
+    "@tsconfig/node-lts": "~24.0",
     "@types/d3": "~7.4",
     "@types/js-yaml": "~4.0",
     "@types/mustache": "~4.2",
@@ -89,7 +89,7 @@
     "electron-builder": "~26.0",
     "electron-devtools-installer": "~4.0",
     "eslint": "~9.39",
-    "eslint-plugin-vue": "~10.5",
+    "eslint-plugin-vue": "~10.6",
     "js-yaml": "~4.1",
     "prettier": "~3.6",
     "register-service-worker": "~1.7",
