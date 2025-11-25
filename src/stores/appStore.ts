@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { computed, ComputedRef, reactive, UnwrapRef } from "vue";
 import type { ThemeInstance } from "vuetify";
 
-import { IWorkspaceProps, workspaces } from "@/workspaces";
+import { type IWorkspaceProps, workspaces } from "@/workspaces";
 
 interface IAppStoreState {
   autoUpdate: boolean;

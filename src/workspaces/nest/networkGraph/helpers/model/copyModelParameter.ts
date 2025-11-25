@@ -1,7 +1,7 @@
 // copyModelParameter.ts
 
-import { BaseParameter, type IParamOptions, type IParamProps } from "@/helpers/common/parameter";
-import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseParameter, type IParamOptions, type IParamState } from "@/helpers/common";
+import { ModelParameter } from "@/helpers/model";
 import type { TModel } from "@/types";
 
 import { NESTCopyModel } from "./copyModel";
@@ -9,8 +9,9 @@ import { NESTCopyModel } from "./copyModel";
 export class NESTCopyModelParameter extends BaseParameter {
   private _copyModel: NESTCopyModel;
 
-  constructor(model: NESTCopyModel, paramProps: IParamProps) {
-    super(paramProps);
+  constructor(model: NESTCopyModel) {
+    super();
+
     this._copyModel = model;
   }
 
@@ -62,7 +63,7 @@ export class NESTCopyModelParameter extends BaseParameter {
   /**
    * Get model parameter.
    */
-  override get modelParam(): ModelParameter {
+  override get modelParam(): ModelParameter | undefined {
     return this.model.params[this.id];
   }
 
@@ -80,11 +81,11 @@ export class NESTCopyModelParameter extends BaseParameter {
   }
 
   /**
-   * Serialize for JSON.
-   * @return model parameter object
+   * Save model parameter to state.
+   * @return model parameter state
    */
-  override toJSON(): IParamProps {
-    const paramProps: IParamProps = {
+  override save(): IParamState {
+    const paramState: IParamState = {
       id: this.id,
       // component: this.component,
       // label: this.label,
@@ -94,16 +95,16 @@ export class NESTCopyModelParameter extends BaseParameter {
     };
 
     // if (this.component === "valueSlider") {
-    //   paramProps.min = this.min;
-    //   paramProps.max = this.max;
-    //   paramProps.step = this.step;
+    //   paramState.min = this.min;
+    //   paramState.max = this.max;
+    //   paramState.step = this.step;
     // } else if (this.component === "tickSlider") {
-    //   paramProps.ticks = this.ticks;
+    //   paramState.ticks = this.ticks;
     // }
 
     // // Add rules for validation if existed.
-    // if (this.rules.length > 0) paramProps.rules = this.rules;
+    // if (this.rules.length > 0) paramState.rules = this.rules;
 
-    return paramProps;
+    return paramState;
   }
 }

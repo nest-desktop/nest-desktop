@@ -25,9 +25,9 @@
       <v-card>
         <v-card-text>
           <v-checkbox
-            v-for="(param, index) in connection.paramsAll"
+            v-for="(param, index) in connection.params.paramsAll"
             :key="index"
-            v-model="connection.paramsVisible"
+            v-model="connection.params.paramsVisible"
             :color="connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"
@@ -46,10 +46,11 @@
     <Menu :items class="rounded-circle" />
   </v-btn-group>
 
-  <v-list v-if="connection.paramsVisible.length > 0" density="compact">
+  <v-list v-if="connection.params.paramsVisible.length > 0" density="compact">
     <ParamListItem
-      v-for="(param, index) in connection.filteredParams"
+      v-for="(param, index) in connection.params.filteredParams"
       :key="index"
+      v-model="param.value"
       :color="connection.sourceNode.view.color"
       :param="param as ConnectionParameter"
     />

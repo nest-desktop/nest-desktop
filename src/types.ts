@@ -14,11 +14,11 @@ import type {
   BaseSynapse,
   BaseSynapseParameter,
   ConnectionParameter,
-  IConnectionProps,
-  INetworkProjectProps,
-  INetworkProps,
-  INodeProps,
-  ISynapseProps,
+  IConnectionState,
+  INetworkProjectState,
+  INetworkState,
+  INodeState,
+  ISynapseState,
   NetworkProject,
   NodeRecord,
   NodeGroup,
@@ -28,12 +28,12 @@ import type {
 import type { ActivityChartPanelModelParameter } from "./activityGraph/activityChartPanelModelParameter";
 import type { BaseActivityGraph } from "./activityGraph/helpers/activityGraph";
 
-import type { BaseModel, IModelProps } from "./helpers/model/model";
+import type { BaseModel, IModelState } from "./helpers/model/model";
 import type { BaseModelDB } from "./helpers/model/modelDB";
 import type { BaseParameter } from "./helpers/common/parameter";
-import type { BaseProject, IBaseProjectProps } from "./helpers/project/project";
+import type { BaseProject, IBaseProjectState } from "./helpers/project/project";
 import type { BaseProjectDB } from "./helpers/project/projectDB";
-import type { BaseSimulation, ISimulationProps } from "./helpers/simulation/simulation";
+import type { BaseSimulation, ISimulationState } from "./helpers/simulation/simulation";
 import type { ModelParameter } from "./helpers/model/modelParameter";
 
 import type * as workspaces from "./workspaces/types";
@@ -41,21 +41,21 @@ import type * as workspaces from "./workspaces/types";
 export type TActivityGraph = BaseActivityGraph | workspaces.TActivityGraph;
 // export type TCode = BaseCode | TSimulationCode;
 export type TConnection = BaseConnection | workspaces.TConnection;
-export type TConnectionProps = IConnectionProps | workspaces.TConnectionProps;
+export type TConnectionState = IConnectionState | workspaces.TConnectionState;
 export type TConnections = BaseConnections | workspaces.TConnections;
 export type TModel = BaseModel | workspaces.TModel;
 export type TModelParameter = ModelParameter | workspaces.TModelParameter;
 export type TModelDB = BaseModelDB | workspaces.TModelDB;
-export type TModelProps = IModelProps | workspaces.TModelProps;
+export type TModelState = IModelState | workspaces.TModelState;
 export type TNetwork = BaseNetwork | workspaces.TNetwork;
 export type TNetworkGraph = BaseNetworkGraph | workspaces.TNetworkGraph;
 export type TNetworkProject = NetworkProject | workspaces.TNetworkProject;
-export type TNetworkProps = INetworkProps | workspaces.TNetworkProps;
+export type TNetworkState = INetworkState | workspaces.TNetworkState;
 export type TNode = BaseNode | workspaces.TNode;
 export type TNodeGroup = NodeGroup;
 export type TNodeParameterParent = BaseNode | workspaces.TNodeParameterParent;
-export type TNodeParameterComponentProps = INodeProps | workspaces.TNodeParameterComponentProps;
-export type TNodeProps = INodeProps | workspaces.TNodeProps;
+export type TNodeParameterComponentState = INodeState | workspaces.TNodeParameterComponentState;
+export type TNodeState = INodeState | workspaces.TNodeState;
 export type TNodeRecord = NodeRecord;
 export type TNodes = BaseNodes | workspaces.TNodes;
 export type TParameter =
@@ -67,13 +67,13 @@ export type TParameter =
   | TSynapseParameter;
 export type TProject = BaseProject | TNetworkProject;
 export type TProjectDB = BaseProjectDB | workspaces.TProjectDB;
-export type TProjectProps = IBaseProjectProps | INetworkProjectProps | workspaces.TProjectProps;
+export type TProjectState = IBaseProjectState | INetworkProjectState | workspaces.TProjectState;
 export type TSimulation = BaseSimulation | workspaces.TSimulation;
 // export type TSimulationCode = workspaces.TSimulationCode;
-export type TSimulationProps = ISimulationProps | workspaces.TSimulationProps;
+export type TSimulationState = ISimulationState | workspaces.TSimulationState;
 export type TSynapse = BaseSynapse | workspaces.TSynapse;
 export type TSynapseParameter = BaseSynapseParameter | workspaces.TSynapseParameter;
-export type TSynapseProps = ISynapseProps | workspaces.TSynapseProps;
+export type TSynapseState = ISynapseState | workspaces.TSynapseState;
 
 // Pinia
 export type Class<T> = new (...props: any) => T;

@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-const model = defineModel({ required: true, type: Number });
+const model = defineModel<number>({ required: true });
 const props = defineProps({
   id: { default: "", type: String },
   step: { default: 1, type: Number },

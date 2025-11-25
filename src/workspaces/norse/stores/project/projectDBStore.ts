@@ -2,7 +2,7 @@
 
 import { defineProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
-import { type INorseProjectProps, NorseProject } from "../../helpers/project/project";
+import { type INorseProjectState, NorseProject } from "../../helpers/project/project";
 import { NorseProjectDB } from "../../helpers/project/projectDB";
 
 const projectAssets = [
@@ -13,7 +13,7 @@ const projectAssets = [
   "step-current-input",
 ];
 
-export const useNorseProjectDBStore = defineProjectDBStore<NorseProject, INorseProjectProps>({
+export const useNorseProjectDBStore = defineProjectDBStore<NorseProject, INorseProjectState>({
   // export const useNorseProjectDBStore = defineProjectDBStore({
   Project: NorseProject,
   ProjectDB: NorseProjectDB,

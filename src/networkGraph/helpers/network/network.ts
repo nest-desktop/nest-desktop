@@ -1,19 +1,15 @@
 // network.ts
 
-import type { TConnection, TConnections, TModel, TNode, TNodeGroup, TNodes, TProject } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import type { Class, TConnection, TConnections, TModel, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 
-import type { IConnectionProps } from "../connection/connection";
-import type { INodeGroupProps } from "../node/nodeGroup";
-import type { INodeProps } from "../node/node";
-import type { INodeViewProps } from "../node/nodeView";
-import { BaseConnections } from "../connection/connections";
-import { BaseNodes } from "../node/nodes";
+import { BaseConnections, type IConnectionState } from "../connection";
+import { BaseNodes, type INodeState, type INodeViewState } from "../node";
 import { NetworkState } from "./networkState";
 
-export interface INetworkProps {
-  nodes?: (INodeProps | INodeGroupProps)[];
-  connections?: IConnectionProps[];
+export interface INetworkState extends IBaseState {
+  nodes?: INodeState[];
+  connections?: IConnectionState[];
 }
 
 const _elementTypes: { icon: string; id: string; title: string }[] = [
@@ -24,7 +20,7 @@ const _elementTypes: { icon: string; id: string; title: string }[] = [
   { icon: "graph:recorder", id: "recorder", title: "recorder" },
 ];
 
-export class BaseNetwork extends BaseObj {
+export class BaseNetwork<T extends INetworkState = INetworkState> extends BaseObj<T> {
   private _state: NetworkState; // network state
 
   public _connections: TConnections;
@@ -37,23 +33,21 @@ export class BaseNetwork extends BaseObj {
     stimulator: "dc_generator",
   };
 
-  constructor(project: TProject, networkProps: INetworkProps = {}) {
-    super({
-      config: { name: "Network" },
-    });
+  constructor(project: TProject) {
+    super({ config: { name: "Network" } });
 
     this._project = project;
     this._state = new NetworkState(this);
 
-    this._nodes = new this.Nodes(this, networkProps.nodes || []);
-    this._connections = new this.Connections(this, networkProps.connections || []);
+    this._nodes = new this.Nodes(this);
+    this._connections = new this.Connections(this);
   }
 
-  get Connections() {
+  get Connections(): Class<BaseConnections> {
     return BaseConnections;
   }
 
-  get Nodes() {
+  get Nodes(): Class<BaseNodes> {
     return BaseNodes;
   }
 
@@ -61,11 +55,11 @@ export class BaseNetwork extends BaseObj {
     return this.config?.localStorage.color.cycle;
   }
 
-  set colors(value: string[]) {
-    const color: { cycle: string[]; scheme: string } = this.config?.localStorage.color;
-    color.cycle = value;
-    this.config?.localStorage.update({ color });
-  }
+  // set colors(value: string[]) {
+  //   const color: { cycle: string[]; scheme: string } = this.config?.localStorage.color;
+  //   color.cycle = value;
+  //   this.config?.localStorage.update({ color });
+  // }
 
   get connections(): TConnections {
     return this._connections;
@@ -83,7 +77,7 @@ export class BaseNetwork extends BaseObj {
   //   return useNetworkGraph()
   // }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
       connections: this.connections.all.map((connection: TConnection) => connection.hash),
@@ -145,17 +139,18 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Connect node components by user interaction.
-   * @param sourceIdx node index
-   * @param targetIdx node index
+   * @param sourceNodeId ID of source code node
+   * @param targetNodeId ID of target code node
+   *
    * @remarks When it connects to a recorder, it initializes activity graph.
    */
-  connectNodes(sourceIdx: number, targetIdx: number): void {
+  connectNodes(sourceNodeId: string, targetNodeId: string): void {
     this.logger.trace("connect nodes");
 
     // Add connection.
     const connection: TConnection | undefined = this.connections.addConnection({
-      source: sourceIdx,
-      target: targetIdx,
+      sourceNodeId,
+      targetNodeId,
     });
 
     // Initialize connection.
@@ -164,12 +159,12 @@ export class BaseNetwork extends BaseObj {
     // Correct connections with recorder.
     if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
-    // Update synaptic weight label.
-    if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
-      connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
+    // // Update synaptic weight label.
+    // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
+    //   connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
 
-    // Update recorder and clean activity panels.
-    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+    // // Update recorder and clean activity panels.
+    // if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
     // Trigger network change.
     this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
@@ -180,7 +175,7 @@ export class BaseNetwork extends BaseObj {
    * @param model model name of default models
    * @param view node view props
    */
-  createNode(model?: string, view?: INodeViewProps): void {
+  createNode(model?: string, view?: INodeViewState): void {
     this.logger.trace("create node");
 
     // Add node.
@@ -198,7 +193,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Delete connection component from the network.
-   * @param connection connection object
+   * @param connection connection instance
    * @remarks It update recorder and emits network changes.
    */
   deleteConnection(connection: TConnection): void {
@@ -218,7 +213,7 @@ export class BaseNetwork extends BaseObj {
 
   /**
    * Delete node component from the network.
-   * @param node node or node group object
+   * @param node node or node group instance
    * @remarks It emits network changes.
    */
   deleteNode(node: TNode | TNodeGroup): void {
@@ -266,7 +261,7 @@ export class BaseNetwork extends BaseObj {
    */
   getNodeColor(idx: number): string {
     const colors: string[] = this.config?.localStorage.color.cycle;
-    return colors[idx % colors.length];
+    return colors[idx % colors.length] ?? "black";
   }
 
   /**
@@ -284,29 +279,29 @@ export class BaseNetwork extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return network props
+   * Load network from state.
+   * @param networkState network state
    */
-  toJSON(): INetworkProps {
-    return {
-      connections: this.connections.toJSON(),
-      nodes: this.nodes.toJSON(),
-    };
-  }
-
-  /**
-   * Update network component.
-   * @param networkProps network props
-   */
-  update(networkProps: INetworkProps): void {
-    this.logger.trace("update");
+  load(networkState: INetworkState): void {
+    this.logger.trace("load");
 
     this.clear();
 
-    this.nodes.update(networkProps.nodes);
-    this.connections.update(networkProps.connections);
+    this.nodes.load(networkState.nodes);
+    this.connections.load(networkState.connections);
 
     this.init();
+  }
+
+  /**
+   * Save network to state.
+   * @return network state
+   */
+  override save(): INetworkState {
+    return {
+      connections: this.connections.save(),
+      nodes: this.nodes.save(),
+    };
   }
 
   /**

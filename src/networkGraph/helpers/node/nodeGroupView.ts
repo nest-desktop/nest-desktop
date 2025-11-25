@@ -3,17 +3,17 @@
 import { polygonCentroid } from "d3";
 import { type UnwrapRef, reactive } from "vue";
 
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 import { type TNodeGroup } from "@/types";
 
 import { polygonGenerator } from "../nodeGraph/nodeGroupGraph";
 
-export interface INodeGroupViewProps {
+export interface INodeGroupViewState extends IBaseState {
   color?: string;
   visible?: boolean;
 }
 
-interface INodeGroupViewState {
+interface INodeGroupViewRefState {
   centroid: { x: number; y: number };
   color?: string;
   expansionPanelIdx: number | null;
@@ -25,19 +25,19 @@ interface INodeGroupViewState {
 
 export class NodeGroupView extends BaseObj {
   public _nodeGroup: TNodeGroup; // parent
-  private _state: UnwrapRef<INodeGroupViewState>;
+  private _state: UnwrapRef<INodeGroupViewRefState>;
 
   constructor(
     nodeGroup: TNodeGroup,
-    viewProps: INodeGroupViewProps = {
+    viewState: INodeGroupViewState = {
       visible: true,
     },
   ) {
     super();
 
     this._nodeGroup = nodeGroup;
-    this._state = reactive<INodeGroupViewState>({
-      ...viewProps,
+    this._state = reactive<INodeGroupViewRefState>({
+      ...viewState,
       expansionPanelIdx: null,
       centroid: { x: 0, y: 0 },
       label: "",
@@ -109,7 +109,7 @@ export class NodeGroupView extends BaseObj {
     return this._state.centroid;
   }
 
-  get state(): UnwrapRef<INodeGroupViewState> {
+  get state(): UnwrapRef<INodeGroupViewRefState> {
     return this._state;
   }
 
@@ -133,15 +133,15 @@ export class NodeGroupView extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return node view object
+   * Save node group view to state.
+   * @return node view state
    */
-  toJSON(): INodeGroupViewProps {
-    const nodeGroupViewProps: INodeGroupViewProps = {};
+  override save(): INodeGroupViewState {
+    const nodeGroupViewState: INodeGroupViewState = {};
 
-    if (this._state.color) nodeGroupViewProps.color = this._state.color;
+    if (this._state.color) nodeGroupViewState.color = this._state.color;
 
-    return nodeGroupViewProps;
+    return nodeGroupViewState;
   }
 
   /**

@@ -9,14 +9,18 @@
         </div>
         <v-spacer />
         <div class="my-auto" title="Population size">
-          {{ node.size }}
+          {{ node.size.value }}
         </div>
       </v-row>
     </v-card-title>
 
     <v-card-text class="pa-0">
-      <v-list v-if="node.paramsVisible.length > 0">
-        <ParamViewer v-for="(paramId, index) in node.paramsVisible" :key="index" :param="node.params[paramId]" />
+      <v-list v-if="node.params.paramsVisible.length > 0">
+        <ParamViewer
+          v-for="(paramId, index) in node.params.paramsVisible"
+          :key="index"
+          :param="node.params.params[paramId]"
+        />
       </v-list>
     </v-card-text>
 

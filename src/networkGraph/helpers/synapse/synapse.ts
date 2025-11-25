@@ -1,128 +1,70 @@
 // synapse.ts
 
-import type { TConnection, TSynapseParameter } from "@/types";
+import type { TConnection, TModel, TSynapseParameter } from "@/types";
 
-import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
-import { type IParamProps } from "@/helpers/common/parameter";
+import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
+import type { IBaseState, IParamState } from "@/helpers/common";
 
-import { BaseSynapseParameter } from "./synapseParameter";
+import { SynapseParameters } from "./synapseParameters";
+import { BaseModel, ModelParameter } from "@/helpers/model";
 
-export interface ISynapseProps {
+export interface ISynapseState extends IBaseState {
   model?: string;
-  params?: IParamProps[];
+  params?: Record<string, IParamState>;
 }
 
-export class BaseSynapse extends CodeNodeMask {
-  // private readonly _name = "Synapse";
+export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNodeMask<T> {
+  public _model: TModel | undefined;
   public _modelId: string = "static";
-  public _params: Record<string, TSynapseParameter> = {};
-  public _paramsVisible: string[] = [];
-  private _props: ISynapseProps; // raw data of props
+  public _params: SynapseParameters;
 
   public _connection: TConnection; // parent
 
-  constructor(connection: TConnection, synapseProps?: ISynapseProps) {
+  constructor(connection: TConnection) {
     super();
 
     this._connection = connection;
-    this._props = synapseProps;
-
-    this._modelId = synapseProps?.model || "static";
+    this._params = new SynapseParameters(this);
   }
 
   get connection(): TConnection {
     return this._connection;
   }
 
-  /**
-   * Returns all visible parameters.
-   */
-  get filteredParams(): TSynapseParameter[] {
-    return this.paramsVisible.map((paramId) => this.params[paramId]);
-  }
-
-  get hasSomeVisibleParams(): boolean {
-    return this.paramsVisible.length > 0;
-  }
-
   get icon(): string {
-    if (this.connection.view.connectRecorder() || this.weight === 0) {
+    if (this.connection.view.connectRecorder() || this.params.weight === 0) {
       return "graph:synapse-recorder";
     } else {
-      return "graph:synapse-" + (this.weight > 0 ? "excitatory" : "inhibitory");
+      return "graph:synapse-" + (this.params.weight > 0 ? "excitatory" : "inhibitory");
     }
   }
 
-  /**
-   * Check if synapse parameter can be spatial.
-   */
-  get isSpatial(): boolean {
-    return false;
+  get model(): BaseModel {
+    if (this._model?.id !== this._modelId) this._model = this.getModel(this._modelId);
+    return this._model as BaseModel;
+  }
+
+  get modelDBStore() {
+    return this.connection.connections.network.project.modelDBStore;
   }
 
   get modelId(): string {
     return this._modelId;
   }
 
-  // get name(): string {
-  //   return this._name;
-  // }
-
-  get paramsAll(): TSynapseParameter[] {
-    return Object.values(this._params);
+  get modelParams(): Record<string, ModelParameter> {
+    return this.model.params;
   }
 
-  get params(): Record<string, TSynapseParameter> {
+  // Get models of the same element type.
+  get models(): BaseModel[] {
+    const elementType: string = this.model?.elementType;
+    const models: BaseModel[] = this.modelDBStore.getModelsByElementType(elementType) as BaseModel[];
+    return models;
+  }
+
+  get params(): SynapseParameters {
     return this._params;
-  }
-
-  get paramsVisible(): string[] {
-    return this._paramsVisible;
-  }
-
-  set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
-    this.changes({ preventSimulation: true });
-  }
-
-  get props(): ISynapseProps {
-    return this._props;
-  }
-
-  get weight(): number {
-    const weight: TSynapseParameter = this.params.weight;
-    return weight ? (weight.value as number) : 1;
-  }
-
-  set weight(value: number) {
-    this.params.weight.state.value = value;
-    this.changes({ checkSynWeights: true });
-  }
-
-  get weightColor(): string {
-    if (this.connection.view.connectRecorder() || this.weight === 0) {
-      return "grey";
-    } else {
-      return this.weight > 0 ? "blue" : "red";
-    }
-  }
-
-  get weightLabel(): string {
-    return this.weight === 0 ? "" : this.weight > 0 ? "excitatory" : "inhibitory";
-  }
-
-  set weightLabel(value: string) {
-    this.weight = (value === "inhibitory" ? -1 : 1) * Math.abs(this.weight as number);
-    this.params.weight.visible = this.weight != 1;
-  }
-
-  /**
-   * Add parameter component.
-   * @param paramProps- synapse parameter props
-   */
-  addParameter(paramProps: IParamProps): void {
-    // this._logger.trace("add parameter:", param)
-    this._params[paramProps.id] = new BaseSynapseParameter(this, paramProps);
   }
 
   /**
@@ -139,18 +81,13 @@ export class BaseSynapse extends CodeNodeMask {
   }
 
   /**
-   * Empty parameters
+   * Get model.
+   * @param modelId model ID
    */
-  emptyParams(): void {
-    this._params = {};
-    this._paramsVisible = [];
-  }
+  getModel(modelId: string): TModel | undefined {
+    // this.logger.trace("get model:", modelId);
 
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    this._paramsVisible = [];
+    return this.modelDBStore.findModel(modelId);
   }
 
   /**
@@ -163,22 +100,12 @@ export class BaseSynapse extends CodeNodeMask {
   }
 
   /**
-   * Initialize synapse parameters.
-   */
-  initParameters(paramsProps?: IParamProps[]): void {
-    this.logger.trace("init parameters");
-
-    this.emptyParams();
-    if (paramsProps) paramsProps.forEach((param: IParamProps) => this.addParameter(param));
-  }
-
-  /**
    * Inverse synaptic weight.
    */
   inverseWeight(): void {
     this.logger.trace("inverse weight");
 
-    const weight: TSynapseParameter = this._params.weight;
+    const weight: TSynapseParameter = this.params.params.weight;
     if (typeof weight.value === "number") {
       weight.visible = true;
       weight.state.value = -1 * weight.value;
@@ -187,30 +114,55 @@ export class BaseSynapse extends CodeNodeMask {
   }
 
   /**
-   * Reset synapse parameter values.
+   * Load synapse from state.
+   * @param synapseState synapse state
+   */
+  load(synapseState: ISynapseState): void {
+    if (synapseState.model) this.loadModel(synapseState.model);
+    if (synapseState.params) this.params.load(synapseState.params);
+  }
+
+  /**
+   * Load model.
+   * @param modelId model ID
+   */
+  loadModel(modelId: string): void {
+    this.logger.trace("load model:", modelId);
+
+    this._modelId = modelId;
+    this._model = this.getModel(modelId);
+  }
+
+  /**
+   * Observer for model changes.
+   * @remarks It emits synapse changes.
+   */
+  modelChanges(): void {
+    this.params.load();
+    this.connection.network.clean();
+    this.changes({ preventSimulation: true });
+  }
+
+  registerCodeNode(): void {}
+
+  /**
+   * Reset synapse.
    */
   reset(): void {
-    this.filteredParams.forEach((param: TSynapseParameter) => param.reset());
+    this.params.resetParams();
   }
 
   /**
-   * Sets all params to visible.
+   * Save synapse to state.
+   * @return synapse state
    */
-  showAllParams(): void {
-    Object.values(this.params).forEach((param: TSynapseParameter) => (param.visible = true));
-  }
+  override save(): ISynapseState {
+    const synapseState: ISynapseState = {};
 
-  /**
-   * Serialize for JSON.
-   * @return synapse props
-   */
-  toJSON(): ISynapseProps {
-    const synapseProps: ISynapseProps = {};
+    if (this.modelId !== "static") synapseState.model = this.modelId;
+    if (this.params.filteredParams.length > 0) synapseState.params = this.params.save();
 
-    if (this.filteredParams.length > 0)
-      synapseProps.params = this.filteredParams.map((param: TSynapseParameter) => param.toJSON());
-
-    return synapseProps;
+    return synapseState;
   }
 
   /**

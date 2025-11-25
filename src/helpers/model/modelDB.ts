@@ -1,8 +1,8 @@
 // modelDB.ts
 
-import type { TModel, TModelProps } from "@/types";
+import type { TModel, TModelState } from "@/types";
 
-import { DatabaseService, type IDoc, type IRes } from "../common/database";
+import { DatabaseService, type IDoc, type IRes } from "../common";
 
 export class BaseModelDB extends DatabaseService {
   constructor(name: string = "MODEL_STORE") {
@@ -11,13 +11,13 @@ export class BaseModelDB extends DatabaseService {
 
   /**
    * Create a model in the database.
-   * @param model model object
-   * @returns Promise of model props
+   * @param model model instance
+   * @returns Promise of model state
    */
-  async createModel(model: TModel): Promise<TModelProps | void> {
+  async createModel(model: TModel): Promise<TModelState | void> {
     this.logger.trace("create model", model.id);
 
-    const data = model.toJSON();
+    const data = model.save();
     return this.create(data as IDoc).then((res: IRes) => {
       if (res.ok) {
         model.doc._id = res.id;
@@ -29,13 +29,13 @@ export class BaseModelDB extends DatabaseService {
   /**
    * Create multiple models in the database.
    */
-  async createModels(modelsProps: TModelProps[]): Promise<TModelProps[]> {
+  async createModels(modelStates: TModelState[]): Promise<TModelState[]> {
     this.logger.trace("add models");
 
-    const models: Promise<TModelProps>[] = modelsProps.map(
-      (modelProps: TModelProps) =>
-        new Promise<TModelProps>((resolve) => {
-          this.create(modelProps as IDoc).then(() => resolve(modelProps));
+    const models: Promise<TModelState>[] = modelStates.map(
+      (modelState: TModelState) =>
+        new Promise<TModelState>((resolve) => {
+          this.create(modelState as IDoc).then(() => resolve(modelState));
         }),
     );
     return Promise.all(models);
@@ -43,11 +43,11 @@ export class BaseModelDB extends DatabaseService {
 
   /**
    * Delete a model in the database.
-   * @param model model object
-   * @returns Promise of model props
+   * @param model model instance
+   * @returns Promise of model state
    */
 
-  async deleteModel(model: TModel): Promise<TModelProps> {
+  async deleteModel(model: TModel): Promise<TModelState> {
     this.logger.trace("delete model:", model.id);
 
     return this.delete(model.docId || model.id);
@@ -55,22 +55,22 @@ export class BaseModelDB extends DatabaseService {
 
   /**
    * Delete multiple models.
-   * @param models model objects
+   * @param models model instances
    * @returns Promise of model docs
    */
-  async deleteModels(models: (TModel | TModelProps)[]): Promise<IDoc[]> {
+  async deleteModels(models: (TModel | TModelState)[]): Promise<IDoc[]> {
     this.logger.trace("delete models");
 
-    const modelDocIds: string[] = models.map((model: TModel | TModelProps) => model.docId || model.id);
+    const modelDocIds: string[] = models.map((model: TModel | TModelState) => model.docId || model.id);
     return this.deleteBulk(modelDocIds);
   }
 
   /**
-   * Import model object to the database.
-   * @param model model object
-   * @returns Promise of model props
+   * Import model to the database.
+   * @param model model instance
+   * @returns Promise of model state
    */
-  async importModel(model: TModel): Promise<TModelProps | void> {
+  async importModel(model: TModel): Promise<TModelState | void> {
     this.logger.trace("import model:", model.id);
 
     return model.docId ? this.updateModel(model) : this.createModel(model);
@@ -78,14 +78,14 @@ export class BaseModelDB extends DatabaseService {
 
   /**
    * Update a model in the database.
-   * @param model model object
-   * @returns Promise of model props
+   * @param model model instance
+   * @returns Promise of model state
    */
-  async updateModel(model: TModel): Promise<TModelProps | void> {
+  async updateModel(model: TModel): Promise<TModelState | void> {
     if (!model.docId) return;
     this.logger.trace("update model:", model.id);
 
-    const data = model.toJSON();
+    const data = model.save();
     return this.update(model.docId, data as IDoc).then((res: IRes) => {
       if (res.ok) {
         model.doc._id = res.id;

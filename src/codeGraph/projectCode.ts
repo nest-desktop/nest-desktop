@@ -5,7 +5,7 @@ import { PythonCode } from "@babsey/code-graph";
 
 import type { TProject } from "@/types";
 
-export interface ICodeProps {
+export interface IProjectCodeState {
   editor: IEditorState;
 }
 
@@ -22,11 +22,19 @@ export class ProjectCode extends PythonCode {
     return this._project;
   }
 
-  init(): void {
-    if (this.project.doc.code?.editor) this.viewModel.loadEditor(this.project.doc.code.editor);
+  /**
+   * Load project code  from state
+   * @param state code state
+   */
+  load(state: IProjectCodeState) {
+    this.viewModel.loadEditor(state.editor);
   }
 
-  toJSON(): ICodeProps {
+  /**
+   * Save project code to state.
+   * @returns project code state.
+   */
+  override save(): IProjectCodeState {
     return {
       editor: this.viewModel.editor.save(),
     };

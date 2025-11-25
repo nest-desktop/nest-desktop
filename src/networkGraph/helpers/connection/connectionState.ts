@@ -10,14 +10,12 @@ interface IConnectionState {
 
 export class ConnectionState {
   private _connection: TConnection; // parent
-  private _state: UnwrapRef<IConnectionState>;
+  private _state: UnwrapRef<IConnectionState> = reactive<IConnectionState>({
+    showRule: false,
+  });
 
   constructor(connection: TConnection) {
     this._connection = connection;
-
-    this._state = reactive<IConnectionState>({
-      showRule: false,
-    });
   }
 
   get connection(): TConnection {

@@ -18,7 +18,7 @@
           <v-checkbox
             v-for="(param, index) in synapse.model.paramsAll"
             :key="index"
-            v-model="synapse.paramsVisible"
+            v-model="synapse.params.paramsVisible"
             :color="synapse.connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"
@@ -50,10 +50,11 @@
     </v-menu>
   </v-btn-group>
 
-  <v-list v-if="synapse.paramsVisible.length > 0" density="compact">
+  <v-list v-if="synapse.params.paramsVisible.length > 0" density="compact">
     <ParamListItem
-      v-for="(param, index) in synapse.filteredParams"
+      v-for="(param, index) in synapse.params.filteredParams"
       :key="index"
+      v-model="param.value"
       :color="synapse.connection.sourceNode.view.color"
       :param="param as NESTSynapseParameter"
     />
@@ -67,7 +68,7 @@ import ParamListItem from "@/components/parameter/ParamListItem.vue";
 import type { TModel } from "@/types";
 
 import SynapseModelSelect from "./SynapseModelSelect.vue";
-import type { NESTSynapse, NESTSynapseParameter } from "../../types";
+import type { NESTSynapse, NESTSynapseParameter } from "../../../types";
 
 const props = defineProps<{ synapse: NESTSynapse }>();
 const synapse = computed(() => props.synapse);

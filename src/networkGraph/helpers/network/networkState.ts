@@ -42,18 +42,17 @@ export class NetworkState {
     },
   };
   private _network: TNetwork; // parent
-  private _state: UnwrapRef<INetworkState>;
+  private _state: UnwrapRef<INetworkState> = reactive<INetworkState>({
+    displayIdx: {
+      connections: [],
+      models: [],
+      nodes: [],
+    },
+    elementTypeIdx: 0,
+  });
 
   constructor(network: TNetwork) {
     this._network = network;
-    this._state = reactive<INetworkState>({
-      displayIdx: {
-        connections: [],
-        models: [],
-        nodes: [],
-      },
-      elementTypeIdx: 0,
-    });
   }
 
   get elementTypeIdx(): number {

@@ -3,7 +3,7 @@
 import type { TValue } from "@/types";
 import { loadJSON } from "@/utils/fetch";
 
-export interface IConfigProps {
+export interface IConfigState {
   name: string;
   workspace?: string;
 }
@@ -12,9 +12,9 @@ export class Config {
   private _name?: string;
   private _workspace?: string;
 
-  constructor(configProps: IConfigProps) {
-    this._name = configProps.name;
-    this._workspace = configProps.workspace;
+  constructor(configState: IConfigState) {
+    this._name = configState.name;
+    this._workspace = configState.workspace;
 
     if (this._name != undefined && !this.isValid) this.upgrade();
   }
@@ -47,7 +47,7 @@ export class Config {
 
   set localStorage(value: TValue) {
     value.version = process.env.APP_VERSION as string; // Update version of config in localStorage.
-    const dataJSON = JSON.stringify(value); // Convert object to string.
+    const dataJSON = JSON.stringify(value); // Convert value instance to string.
     localStorage.setItem(this.configItemName, dataJSON); // Save item in localsStorage.
   }
 

@@ -1,47 +1,54 @@
 // synapseParameter.ts
 
-import { BaseParameter, type IParamProps, type IParamType } from "@/helpers/common/parameter";
-import type { TSynapse } from "@/types";
+import { BaseParameter, type IParamState, type IParamType } from "@/helpers/common";
+import type { SynapseParameters } from "./synapseParameters";
+import type { ModelParameter } from "@/helpers/model";
+import { BaseSynapse } from "./synapse";
 
 export class BaseSynapseParameter extends BaseParameter {
-  public _synapse: TSynapse;
+  public _synapseParams: SynapseParameters;
 
-  constructor(synapse: TSynapse, paramProps: IParamProps) {
-    super(paramProps);
-    this._synapse = synapse;
+  constructor(synapseParams: SynapseParameters) {
+    super();
+
+    this._synapseParams = synapseParams;
   }
 
-  get synapse(): TSynapse {
-    return this._synapse;
+  override get modelParam(): ModelParameter | undefined {
+    return this.synapse.model.params[this.id];
+  }
+
+  get synapse(): BaseSynapse {
+    return this.synapseParams.synapse;
+  }
+
+  get synapseParams(): SynapseParameters {
+    return this._synapseParams;
   }
 
   get types(): IParamType[] {
     return this.config?.localStorage.types;
   }
 
-  get parent(): TSynapse {
-    return this.synapse;
-  }
-
   /**
-   * Serialize for JSON.
-   * @return synapse parameter props
+   * Save synapse parameter to state.
+   * @return synapse parameter state
    */
-  override toJSON(): IParamProps {
-    const paramProps: IParamProps = {
+  override save(): IParamState {
+    const paramState: IParamState = {
       id: this.id,
       value: this.value,
     };
 
     // Add the value factors if existed.
-    if (this.factors.length > 0) paramProps.factors = this.factors;
+    if (this.factors.length > 0) paramState.factors = this.factors;
 
     // Add the rules for validation if existed.
-    if (this.rules.length > 0) paramProps.rules = this.rules;
+    if (this.rules.length > 0) paramState.rules = this.rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) paramProps.type = this.typeToJSON();
+    if (!this.isConstant) paramState.type = this.saveType();
 
-    return paramProps;
+    return paramState;
   }
 }

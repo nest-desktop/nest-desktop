@@ -2,43 +2,33 @@
 
 import type { CodeNodeInterface } from "@babsey/code-graph";
 
+import type { IBaseState } from "@/helpers/common";
 import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { getNESTSimulateNode } from "@/codeGraph/codeNodeTypes/nest/nestSimulate";
 
-import { type INESTSimulationKernelProps, NESTSimulationKernel } from "./simulationKernel";
+import { type INESTSimulationKernelState, NESTSimulationKernel } from "./simulationKernel";
 import { NESTProject } from "../project/project";
 
-export interface INESTSimulationProps {
-  kernel?: INESTSimulationKernelProps;
+export interface INESTSimulationState extends IBaseState {
+  kernel?: INESTSimulationKernelState;
   time?: number;
   modules?: string[];
 }
 
-export class NESTSimulation extends BaseSimulation {
+export class NESTSimulation extends BaseSimulation<INESTSimulationState> {
   private _kernel: NESTSimulationKernel; // simulation kernel
-  private _modules: string[];
 
-  constructor(project: NESTProject, simulationProps: INESTSimulationProps = {}) {
-    super(project, simulationProps);
-    this.props = simulationProps;
-    this._modules = simulationProps.modules || [];
-    this._kernel = new NESTSimulationKernel(this, simulationProps.kernel);
+  constructor(project: NESTProject) {
+    super(project);
+    this._kernel = new NESTSimulationKernel(this);
   }
 
   get kernel(): NESTSimulationKernel {
     return this._kernel;
   }
 
-  get modules(): string[] {
-    return this._modules;
-  }
-
-  set modules(value: string[]) {
-    this._modules = value;
-  }
-
   override get project(): NESTProject {
-    return this._project as NESTProject;
+    return this.codeNode?.code?.project ?? (this._project as NESTProject);
   }
 
   get time(): CodeNodeInterface | undefined {
@@ -82,17 +72,15 @@ export class NESTSimulation extends BaseSimulation {
   }
 
   /**
-   * Serialize for JSON.
-   * @return simulation object
+   * Save simulation state.
+   * @return simulation state
    */
-  override toJSON(): INESTSimulationProps {
-    const simulationProps: INESTSimulationProps = {
-      kernel: this.kernel.toJSON(),
+  override save(): INESTSimulationState {
+    const simulationState: INESTSimulationState = {
+      kernel: this.kernel.save(),
       time: this.time?.value,
     };
 
-    if (this.modules.length > 0) simulationProps.modules = this.modules;
-
-    return simulationProps;
+    return simulationState;
   }
 }

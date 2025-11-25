@@ -1,14 +1,14 @@
 // nodeCompartmentParameter.ts
 
-import type { IParamProps } from "@/helpers/common/parameter";
+import type { IParamState } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/networkGraph/helpers/node/nodeParameter";
 
 import { NESTModelCompartmentParameter } from "../../../../helpers/model/modelCompartmentParameter";
 import { NESTNodeCompartment } from "./nodeCompartment";
 
 export class NESTNodeCompartmentParameter extends NodeParameter {
-  constructor(nodeCompartment: NESTNodeCompartment, paramProps: IParamProps) {
-    super(nodeCompartment, paramProps);
+  constructor(nodeCompartment: NESTNodeCompartment, paramState: IParamState) {
+    super(nodeCompartment, paramState);
   }
 
   /**

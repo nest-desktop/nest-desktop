@@ -2,41 +2,41 @@
 
 const validateVersion = (version: string) => /^3\.3(\.\d+)?(\w+)?$/.test(version);
 
-function upgradeParams(props: any): void {
-  if (!props.params) return;
+function upgradeParams(state: any): void {
+  if (!state.params) return;
 
-  props.params = props.params.filter((paramProps: any) => ("visible" in paramProps ? paramProps.visible : true));
+  state.params = state.params.filter((paramState: any) => ("visible" in paramState ? paramState.visible : true));
 
-  if (props.params.length === 0) {
-    delete props.params;
+  if (state.params.length === 0) {
+    delete state.params;
     return;
   }
 
-  props.params = props.params.map((paramProps: any) => {
-    const newParamProps: any = {
-      id: paramProps.id,
+  state.params = state.params.map((paramState: any) => {
+    const newParamState: any = {
+      id: paramState.id,
     };
 
-    if (paramProps.specs) {
-      newParamProps.specs = paramProps.specs;
+    if (paramState.specs) {
+      newParamState.specs = paramState.specs;
     } else {
-      newParamProps.value = paramProps.value;
+      newParamState.value = paramState.value;
     }
 
-    return newParamProps;
+    return newParamState;
   });
 }
 
-export function upgradeProject_33_to_40(projectProps: any): any {
-  if (!validateVersion(projectProps.version)) return projectProps;
+export function upgradeProject_33_to_40(projectState: any): any {
+  if (!validateVersion(projectState.version)) return projectState;
 
-  if (projectProps.activityGraph) {
-    projectProps.activityGraph.color = "record";
-    projectProps.activityGraph.panels.forEach((panelProps: any) => {
-      if (!panelProps.model.records) return;
+  if (projectState.activityGraph) {
+    projectState.activityGraph.color = "record";
+    projectState.activityGraph.panels.forEach((panelState: any) => {
+      if (!panelState.model.records) return;
 
-      panelProps.model.records = panelProps.model.records.map((recordProps: any) => {
-        const groupId = recordProps.groupId;
+      panelState.model.records = panelState.model.records.map((recordState: any) => {
+        const groupId = recordState.groupId;
         const groupIdSplitted = groupId.split(".");
         groupIdSplitted.reverse();
         return groupIdSplitted.join(".");
@@ -44,17 +44,17 @@ export function upgradeProject_33_to_40(projectProps: any): any {
     });
   }
 
-  projectProps.network.nodes.forEach((nodeProps: any) => upgradeParams(nodeProps));
+  projectState.network.nodes.forEach((nodeState: any) => upgradeParams(nodeState));
 
-  projectProps.network.connections.forEach((connectionProps: any) => {
-    upgradeParams(connectionProps);
-    if (connectionProps.synapse) upgradeParams(connectionProps.synapse);
+  projectState.network.connections.forEach((connectionState: any) => {
+    upgradeParams(connectionState);
+    if (connectionState.synapse) upgradeParams(connectionState.synapse);
   });
 
-  if (projectProps.network.models) {
-    projectProps.network.models.forEach((modelProps: any) => upgradeParams(modelProps));
+  if (projectState.network.models) {
+    projectState.network.models.forEach((modelState: any) => upgradeParams(modelState));
   }
 
-  projectProps.version = "4.0";
-  return projectProps;
+  projectState.version = "4.0";
+  return projectState;
 }

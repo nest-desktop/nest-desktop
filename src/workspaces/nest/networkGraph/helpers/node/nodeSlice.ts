@@ -1,11 +1,11 @@
 // nodeSlice.ts
 
 import { BaseObj } from "@/helpers/common/base";
-import type { IParamProps } from "@/helpers/common/parameter";
-import { NodeParameter } from "@/networkGraph/helpers/node/nodeParameter";
+import type { IParamState } from "@/helpers/common/parameter";
+import type { NodeParameter } from "@/networkGraph/helpers/node/nodeParameter";
 import type { TNodeGroup } from "@/types";
 
-import { NESTNode } from "./node";
+import type { NESTNode } from "./node";
 
 export class NESTNodeSlice extends BaseObj {
   // private readonly _name = "NESTNodeSlice";
@@ -13,14 +13,12 @@ export class NESTNodeSlice extends BaseObj {
   private _params: Record<string, NodeParameter> = {};
   private _visible: boolean = false;
 
-  constructor(node: NESTNode | TNodeGroup, paramsProps: IParamProps[] = []) {
+  constructor(node: NESTNode | TNodeGroup) {
     super({
       config: { name: "NESTNodeSlice", simulator: "nest" },
     });
 
     this._node = node;
-    this.initParameters(paramsProps);
-    this._visible = paramsProps.length > 0;
   }
 
   /**
@@ -73,33 +71,32 @@ export class NESTNodeSlice extends BaseObj {
   }
 
   /**
-   * Initialize parameters.
+   * Load node slice from states.
+   * @param paramStates param states
    */
-  initParameters(paramsProps: IParamProps[] = []): void {
+  load(paramStates: IParamState[] = []): void {
     this._params = {};
-    this.config?.localStorage.params.forEach((param: IParamProps) => {
-      if (paramsProps.length > 0) {
-        const paramProps: IParamProps | undefined = paramsProps.find(
-          (paramProps: IParamProps) => paramProps.id === param.id,
+    this.config?.localStorage.params.forEach((param: IParamState) => {
+      if (paramStates.length > 0) {
+        const paramState: IParamState | undefined = paramStates.find(
+          (paramState: IParamState) => paramState.id === param.id,
         );
-        if (paramProps) {
-          param.value = paramProps.value;
+        if (paramState) {
+          param.value = paramState.value;
           param.disabled = false;
         }
       }
       this._params[param.id] = new NodeParameter(this.nodeItem, param);
     });
-  }
 
-  toggleVisible(): void {
-    this._visible = !this._visible;
+    this._visible = paramStates.length > 0;
   }
 
   /**
-   * Serialize for JSON.
-   * @return param props of node slice
+   * Save node slice to state.
+   * @return param states
    */
-  toJSON(): IParamProps[] {
+  override save(): IParamState[] {
     return Object.values(this._params)
       .filter((param: NodeParameter) => !param.disabled)
       .map((param: NodeParameter) => {
@@ -108,6 +105,10 @@ export class NESTNodeSlice extends BaseObj {
           value: param.value,
         };
       });
+  }
+
+  toggleVisible(): void {
+    this._visible = !this._visible;
   }
 
   /**

@@ -4,13 +4,13 @@ import { max } from "@/utils/array";
 import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { histogram } from "../graphObjects/histogram";
 
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "interSpikeIntervalHistogram";
     this.label = "inter-spike interval";
@@ -29,12 +29,12 @@ export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add data of ISI for histogram panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

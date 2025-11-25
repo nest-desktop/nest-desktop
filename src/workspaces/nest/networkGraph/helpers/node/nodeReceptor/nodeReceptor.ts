@@ -1,19 +1,19 @@
 // nodeReceptor.ts
 
-import type { IParamProps, TParamValue } from "@/helpers/common/parameter";
-import type { INodeRecordProps } from "@/networkGraph/helpers/node/nodeRecord";
+import type { IParamState, TParamValue } from "@/helpers/common/parameter";
+import type { INodeRecordState } from "@/networkGraph/helpers/node/nodeRecord";
 import { NodeView } from "@/networkGraph/helpers/node/nodeView";
 
-import { NESTModelReceptor } from "../../../../helpers/model/modelReceptor/modelReceptor";
-import { NESTModelReceptorParameter } from "../../../../helpers/model/modelReceptor/modelReceptorParameter";
+import { NESTModelReceptor } from "../../model/modelReceptor/modelReceptor";
+import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { NESTNode } from "../node";
 import { NESTNodeCompartment } from "../nodeCompartment/nodeCompartment";
 import { NESTNodeReceptorParameter } from "./nodeReceptorParameter";
 
-export interface INESTNodeReceptorProps {
+export interface INESTNodeReceptorState {
   compIdx: number;
   id: string;
-  params?: IParamProps[];
+  params?: IParamState[];
   type?: string;
 }
 
@@ -28,17 +28,9 @@ export class NESTNodeReceptor {
   private _params: Record<string, NESTNodeReceptorParameter> = {};
   private _paramsVisible: string[] = [];
 
-  constructor(node: NESTNode, nodeReceptorProps: INESTNodeReceptorProps) {
+  constructor(node: NESTNode) {
     this._node = node;
-
-    this._id = nodeReceptorProps.id;
     this._idx = this._node.receptors.length;
-
-    if (-1 < nodeReceptorProps.compIdx && nodeReceptorProps.compIdx < this._node.compartments.length) {
-      this._compartment = this._node.compartments[nodeReceptorProps.compIdx];
-    }
-
-    this.initParameters(nodeReceptorProps);
   }
 
   get compartment(): NESTNodeCompartment | undefined {
@@ -104,14 +96,14 @@ export class NESTNodeReceptor {
     this.changes();
   }
 
-  get recordables(): INodeRecordProps[] {
+  get recordables(): INodeRecordState[] {
     if (this.model == undefined) {
       return [];
     }
-    const recordables = this.model.recordables.map((recordable: INodeRecordProps) => ({
+    const recordables = this.model.recordables.map((recordable: INodeRecordState) => ({
       ...recordable,
     }));
-    recordables.forEach((recordable: INodeRecordProps) => (recordable.id += this._idx));
+    recordables.forEach((recordable: INodeRecordState) => (recordable.id += this._idx));
     return recordables;
   }
 
@@ -129,10 +121,10 @@ export class NESTNodeReceptor {
 
   /**
    * Add a parameter component.
-   * @param parammProps parameter props
+   * @param parammState parameter state
    */
-  addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new NESTNodeReceptorParameter(this, paramProps);
+  addParameter(paramState: IParamState): void {
+    this._params[paramState.id] = new NESTNodeReceptorParameter(this, paramState);
   }
 
   /**
@@ -172,27 +164,37 @@ export class NESTNodeReceptor {
 
   /**
    * Initialize the parameter components.
-   * @param receptor node receptor object
+   * @param receptor node receptor instance
    */
-  initParameters(receptorProps: INESTNodeReceptorProps): void {
+  initParameters(receptorState: INESTNodeReceptorState): void {
     // Update parameters from model or node receptor
     this._params = {};
     const model = this.node.model;
-    if (model && receptorProps.id) {
-      const modelReceptor = model.receptors[receptorProps.id];
+    if (model && receptorState.id) {
+      const modelReceptor = model.receptors[receptorState.id];
       if (modelReceptor) {
         Object.values(modelReceptor.params).forEach((modelReceptorParam: NESTModelReceptorParameter) => {
-          if (receptorProps && receptorProps.params) {
-            const receptorParam = receptorProps.params.find((p: IParamProps) => p.id === modelReceptorParam.id);
-            this.addParameter(receptorParam || modelReceptorParam.toJSON());
+          if (receptorState && receptorState.params) {
+            const receptorParam = receptorState.params.find((p: IParamState) => p.id === modelReceptorParam.id);
+            this.addParameter(receptorParam || modelReceptorParam.save());
           } else {
-            this.addParameter(modelReceptorParam.toJSON());
+            this.addParameter(modelReceptorParam.save());
           }
         });
       }
-    } else if (receptorProps.params) {
-      receptorProps.params.forEach((paramProps: IParamProps) => this.addParameter(paramProps));
+    } else if (receptorState.params) {
+      receptorState.params.forEach((paramState: IParamState) => this.addParameter(paramState));
     }
+  }
+
+  load(nodeReceptorState: INESTNodeReceptorState): void {
+    this._id = nodeReceptorState.id;
+
+    if (-1 < nodeReceptorState.compIdx && nodeReceptorState.compIdx < this._node.compartments.length) {
+      this._compartment = this._node.compartments[nodeReceptorState.compIdx];
+    }
+
+    this.initParameters(nodeReceptorState);
   }
 
   /**
@@ -227,14 +229,14 @@ export class NESTNodeReceptor {
   }
 
   /**
-   * Serialize for JSON.
-   * @return node object
+   * Save node receptor to state.
+   * @return node receptor state
    */
-  toJSON(): INESTNodeReceptorProps {
+  save(): INESTNodeReceptorState {
     return {
       compIdx: this._compartment ? this._compartment.idx : -1,
       id: this.id,
-      params: this.filteredParams.map((paramProps: NESTNodeReceptorParameter) => paramProps.toJSON()),
+      params: this.filteredParams.map((param: NESTNodeReceptorParameter) => param.save()),
     };
   }
 }

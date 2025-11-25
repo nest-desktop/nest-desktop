@@ -16,7 +16,7 @@
     </v-chip>
 
     <v-chip v-if="nodeSpatial.positions.name === 'free'" class="mx-1" label size="x-small" title="size">
-      {{ nodeSpatial.node.size }}
+      {{ nodeSpatial.node.size.value }}
     </v-chip>
 
     <v-chip v-if="nodeSpatial.positions.edgeWrap" class="mx-1" label size="x-small" title="edge wrap">

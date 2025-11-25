@@ -3,14 +3,14 @@
 import { type UnwrapRef, nextTick, reactive } from "vue";
 
 import type { TConnection, TNode } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 
 import { NodeRecord } from "./nodeRecord";
 
 import { useNetworkGraph } from "@/networkGraph/useNetworkGraph";
 const networkGraph = useNetworkGraph();
 
-export interface INodeViewProps {
+export interface INodeViewState extends IBaseState {
   color?: string;
   elementType?: string;
   position: { x: number; y: number };
@@ -18,7 +18,7 @@ export interface INodeViewProps {
   visible?: boolean;
 }
 
-interface INodeViewState {
+interface INodeViewRefState {
   color?: string;
   expansionPanels: number[];
   label?: string;
@@ -31,11 +31,11 @@ interface INodeViewState {
 
 export class NodeView extends BaseObj {
   public _node: TNode; // parent
-  private _state: UnwrapRef<INodeViewState>;
+  private _state: UnwrapRef<INodeViewRefState>;
 
   constructor(
     node: TNode,
-    viewProps: INodeViewProps = {
+    viewState: INodeViewState = {
       position: { x: 0, y: 0 },
       visible: true,
     },
@@ -43,43 +43,44 @@ export class NodeView extends BaseObj {
     super();
 
     this._node = node;
-    this._state = reactive<INodeViewState>({
+    this._state = reactive<INodeViewRefState>({
       expansionPanels: [0],
       label: "",
       positions: [],
-      showSize: this.node.size > 1,
+      showSize: this.node.size?.value > 1,
       synWeights: "",
-      ...viewProps,
+      ...viewState,
     });
   }
 
   get color(): string {
-    if (this._state.color) {
-      return this._state.color;
-    } else if (this.node.model?.isRecorder) {
-      const connections: TConnection[] = this.node.network.connections.all.filter(
-        (connection: TConnection) => connection.sourceIdx === this.node.idx || connection.targetIdx === this.node.idx,
-      );
-      if (connections.length === 1 && connections[0].sourceIdx !== connections[0].targetIdx) {
-        const connection: TConnection = connections[0];
-        const node: TNode = connection.sourceIdx === this.node.idx ? connection.targetNode : connection.sourceNode;
-        return node.view.color;
-      }
+    if (this.state.color) {
+      return this.state.color;
+      // } else if (this.node.model?.isRecorder) {
+      //   const connections: TConnection[] = this.node.network.connections.all.filter(
+      //     (connection: TConnection) => connection.source?.idx === this.node.idx || connection.target?.idx === this.node.idx,
+      //   );
+      //   if (connections.length === 1 && connections[0].source?.idx !== connections[0].target?.idx) {
+      //     const connection: TConnection = connections[0];
+      //     const node: TNode = connection.source?.idx === this.node.idx ? connection.targetNode : connection.sourceNode;
+      //     return node.view.color;
+      //   }
     }
     return this.node.network.getNodeColor(this.node.idx);
   }
 
   set color(value: string) {
-    this._state.color = value === "none" || value === "" ? undefined : value;
+    this.state.color = value === "none" || value === "" ? undefined : value;
 
-    this.node.network.updateStyle();
+    // this.node.network.updateStyle();
+    this.updateStyle();
     this.node.network.clean();
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       color: this.color,
-      position: this._state.position,
+      position: this.state.position,
     };
   }
 
@@ -91,7 +92,7 @@ export class NodeView extends BaseObj {
   }
 
   get label(): string {
-    if (this._state.label) return this._state.label;
+    if (this.state.label) return this.state.label;
 
     let nodes: TNode[];
     let idx: number;
@@ -150,7 +151,7 @@ export class NodeView extends BaseObj {
     return this._state.position;
   }
 
-  get state(): UnwrapRef<INodeViewState> {
+  get state(): UnwrapRef<INodeViewRefState> {
     return this._state;
   }
 
@@ -159,22 +160,24 @@ export class NodeView extends BaseObj {
   }
 
   set showSize(value: boolean) {
-    this._state.showSize = value;
-    this._node.changes({ preventSimulation: true });
+    this.state.showSize = value;
+    this.node.codeNode.inputs.size.setHidden(!value);
+    this.node.codeNode.code.engine.runOnce(null);
+    this.node.changes({ preventSimulation: true });
   }
 
   /**
    * Get term based on synapse weight.
    */
   get synWeights(): string {
-    return this._state.synWeights || "excitatory";
+    return this.state.synWeights || "excitatory";
   }
 
   set synWeights(value: string) {
-    this._state.synWeights = value;
-    this._node.connections.forEach((connection: TConnection) => {
+    this.state.synWeights = value;
+    this.node.connections.forEach((connection: TConnection) => {
       connection.synapse.params.weight.value =
-        (this._state.synWeights === "inhibitory" ? -1 : 1) * Math.abs(connection.synapse.params.weight.value as number);
+        (this.state.synWeights === "inhibitory" ? -1 : 1) * Math.abs(connection.synapse.params.weight.value as number);
       connection.synapse.params.weight.visible = true;
     });
   }
@@ -194,7 +197,7 @@ export class NodeView extends BaseObj {
       if (weights.every((weight: number) => weight > 0)) synWeights = "excitatory";
       if (weights.every((weight: number) => weight < 0)) synWeights = "inhibitory";
     }
-    this._state.synWeights = synWeights;
+    this.state.synWeights = synWeights;
 
     nextTick(() => networkGraph.value?.render());
   }
@@ -214,10 +217,27 @@ export class NodeView extends BaseObj {
   }
 
   /**
-   * Focus this node.
+   * Focus node.
    */
   focus(): void {
     this.node.nodes.state.focusedNode = this.node as TNode;
+  }
+
+  /**
+   * Initialize node view.
+   */
+  init(): void {
+    this.state.showSize = !this.node.codeNode.inputs.size.hidden;
+  }
+
+  /**
+   * Load node view from state
+   * @param nodeViewState node view state
+   */
+  load(nodeViewState: INodeViewState): void {
+    if (nodeViewState.position) this.state.position = nodeViewState.position;
+    if (nodeViewState.synWeights) this.state.synWeights = nodeViewState.synWeights;
+    if (nodeViewState.color) this.state.color = nodeViewState.color;
   }
 
   /**
@@ -236,18 +256,18 @@ export class NodeView extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return node view object
+   * Save node view to state.
+   * @return node view state
    */
-  toJSON(): INodeViewProps {
-    const nodeViewProps: INodeViewProps = {
-      position: this._state.position,
+  override save(): INodeViewState {
+    const nodeViewState: INodeViewState = {
+      position: this.state.position,
     };
 
-    if (this._state.synWeights) nodeViewProps.synWeights = this._state.synWeights;
-    if (this._state.color) nodeViewProps.color = this._state.color;
+    if (this.state.synWeights) nodeViewState.synWeights = this.state.synWeights;
+    if (this.state.color) nodeViewState.color = this.state.color;
 
-    return nodeViewProps;
+    return nodeViewState;
   }
 
   /**
@@ -255,6 +275,6 @@ export class NodeView extends BaseObj {
    */
   updateStyle(): void {
     const root = document.documentElement;
-    root.style.setProperty("--colorNode" + this._node.idx, this.color);
+    root.style.setProperty("--colorNode" + this.node.idx, this.color);
   }
 }

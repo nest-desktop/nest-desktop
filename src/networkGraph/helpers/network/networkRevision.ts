@@ -1,34 +1,31 @@
 // networkRevision.ts
 
-// import { nextTick } from "vue";
-
 import type { TNode, TProject } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/helpers/common";
 
-import type { INetworkProps } from "./network";
-import type { INodeProps } from "../node/node";
+import type { INetworkState } from "./network";
+import type { INodeState } from "../node";
 
-interface INetworkRevisionProps extends INetworkProps {
+interface INetworkRevisionState extends INetworkState {
   codeHash?: string;
 }
 
-export class NetworkRevision extends BaseObj {
+export class NetworkRevision extends BaseObj<INetworkRevisionState> {
   private _project: TProject;
-  private _revisions: INetworkRevisionProps[] = [];
+  private _revisions: INetworkRevisionState[] = [];
   private _revisionIdx = -1;
 
   constructor(project: TProject) {
     super();
 
     this._project = project;
-    this.clear();
   }
 
   get revisionIdx(): number {
     return this._revisionIdx;
   }
 
-  get revisions(): INetworkRevisionProps[] {
+  get revisions(): INetworkRevisionState[] {
     return this._revisions;
   }
 
@@ -36,7 +33,7 @@ export class NetworkRevision extends BaseObj {
    * Load network from the history list.
    * @remarks It generates code.
    */
-  load(): INetworkRevisionProps {
+  load(): INetworkRevisionState {
     this.logger.trace("checkout network");
 
     // Update revision idx.
@@ -73,13 +70,13 @@ export class NetworkRevision extends BaseObj {
       this._revisions = this._revisions.slice(this._revisions.length - maxRevisions);
 
     // Get last network of the revisions.
-    const lastNetwork: INetworkRevisionProps =
+    const lastNetwork: INetworkRevisionState =
       this._revisions.length > 0 ? this._revisions[this._revisions.length - 1] : {};
 
-    const currentNetwork: INetworkRevisionProps =
+    const currentNetwork: INetworkRevisionState =
       this._revisions.length > 0 && lastNetwork.codeHash === codeHash
-        ? (this._revisions.pop() as INetworkRevisionProps)
-        : this._project.network.toJSON();
+        ? (this._revisions.pop() as INetworkRevisionState)
+        : this._project.network.save();
 
     // Copy code hash to current network.
     currentNetwork.codeHash = codeHash;
@@ -87,8 +84,8 @@ export class NetworkRevision extends BaseObj {
     if (withActivity && (currentNetwork.nodes != null || currentNetwork.nodes != undefined)) {
       // Add activity to recorder nodes only if hashes is matched.
       this._project.network.nodes.recorders.forEach((node: TNode) => {
-        const nodes = currentNetwork.nodes as INodeProps[];
-        if (nodes) nodes[node.idx].activity = node.activity?.toJSON();
+        const nodes = currentNetwork.nodes as INodeState[];
+        if (nodes) nodes[node.idx].activity = node.activity?.save();
       });
     }
 

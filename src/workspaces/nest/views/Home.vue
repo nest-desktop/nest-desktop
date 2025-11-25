@@ -181,7 +181,7 @@ import BackendSettings from "@/components/BackendSettings.vue";
 import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
-import { IModelProps } from "@/stores/model/defineModelStore";
+import { IModelState } from "@/stores/model/defineModelStore";
 
 import NESTModuleSelect from "../components/module/NESTModuleSelect.vue";
 import nestSimulator from "../stores/backends/nestSimulatorStore";
@@ -203,8 +203,10 @@ const state = reactive<{
 const customModels = computed(() => state.selectedModule?.models);
 
 const models = computed(() => {
-  const models = appStore.currentWorkspace.stores.modelStore.state.models;
-  return state.modelSearch ? models.filter((model: IModelProps) => model.id.includes(state.modelSearch)) : models;
+  const modelStates = appStore.currentWorkspace.stores.modelStore.state.models;
+  return state.modelSearch
+    ? modelStates.filter((modelState: IModelState) => modelState.id.includes(state.modelSearch))
+    : modelStates;
 });
 
 const refItems = [

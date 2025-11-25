@@ -1,8 +1,8 @@
 // randomParameter.ts
 
-import { BaseObj } from "./base";
+import { BaseObj, type IBaseState } from "./base";
 
-interface IParameterRandomProps {
+interface IParameterRandomState extends IBaseState {
   distribution: string;
   specs: {
     [key: string]: number;
@@ -16,7 +16,7 @@ export class ParameterRandom extends BaseObj {
     [key: string]: number | string;
   };
 
-  constructor(randomProps: IParameterRandomProps) {
+  constructor(randomState: IParameterRandomState) {
     super();
 
     this._defaults = {
@@ -25,8 +25,8 @@ export class ParameterRandom extends BaseObj {
       normal: { mean: 0, std: 1 },
       uniform: { min: 0, max: 1 },
     };
-    this._distribution = randomProps.distribution || "uniform";
-    this._specs = randomProps.specs || this._defaults[randomProps.distribution];
+    this._distribution = randomState.distribution || "uniform";
+    this._specs = randomState.specs || this._defaults[randomState.distribution];
   }
 
   get defaults(): Record<string, Record<string, number>> {
@@ -44,10 +44,10 @@ export class ParameterRandom extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return random parameter object
+   * Save random parameter to state.
+   * @return random parameter state
    */
-  toJSON(): IParameterRandomProps {
+  override save(): IParameterRandomState {
     const specs: Record<string, number> = {};
     Object.keys(this._defaults[this._distribution]).map((param: string) => {
       if (param in this._specs) specs[param] = parseFloat(this._specs[param] as string);

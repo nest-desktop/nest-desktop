@@ -1,14 +1,14 @@
 // nodes.ts
 
 import { BaseNodes } from "@/networkGraph/helpers/node/nodes";
-import type { INodeProps } from "@/networkGraph/helpers/node/node";
+import type { INodeState } from "@/networkGraph/helpers/node/node";
 import type { TNode, TNodeGroup } from "@/types";
 
 import { NorseNetwork } from "../network/network";
 import { NorseNode } from "./node";
 
 export class NorseNodes extends BaseNodes {
-  constructor(network: NorseNetwork, nodes?: INodeProps[]) {
+  constructor(network: NorseNetwork, nodes?: INodeState[]) {
     super(network, nodes);
   }
 

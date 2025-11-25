@@ -2,17 +2,17 @@
 
 const validateVersion = (version: string) => /^3\.1(\.\d+)?(\w+)?$/.test(version);
 
-export function upgradeProject_31_to_32(projectProps: any): any {
-  if (!validateVersion(projectProps.version)) return projectProps;
+export function upgradeProject_31_to_32(projectState: any): any {
+  if (!validateVersion(projectState.version)) return projectState;
 
-  if (projectProps.activityGraph && projectProps.activityGraph.panels) {
-    projectProps.activityGraph = {
+  if (projectState.activityGraph && projectState.activityGraph.panels) {
+    projectState.activityGraph = {
       chart: {
-        panels: projectProps.activityGraph.panels,
+        panels: projectState.activityGraph.panels,
       },
     };
   }
 
-  projectProps.version = "3.2";
-  return projectProps;
+  projectState.version = "3.2";
+  return projectState;
 }

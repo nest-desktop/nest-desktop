@@ -1,21 +1,21 @@
 // project.ts
 
-import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { type INetworkProjectState, NetworkProject } from "@/helpers/project/networkProject";
 import { registerNorseNodeTypes } from "@/codeGraph/codeNodeTypes/norse";
 
 import norseSimulator from "../../stores/backends/norseSimulatorStore";
-import { type INorseNetworkProps, NorseNetwork } from "../../networkGraph/helpers/network/network";
-import { type INorseSimulationProps, NorseSimulation } from "../simulation/simulation";
+import { type INorseNetworkState, NorseNetwork } from "../../networkGraph/helpers/network/network";
+import { type INorseSimulationState, NorseSimulation } from "../simulation/simulation";
 import { useNorseModelDBStore } from "../../stores/model/modelDBStore";
 
-export interface INorseProjectProps extends INetworkProjectProps {
-  network?: INorseNetworkProps;
-  simulation?: INorseSimulationProps;
+export interface INorseProjectState extends INetworkProjectState {
+  network?: INorseNetworkState;
+  simulation?: INorseSimulationState;
 }
 
 export class NorseProject extends NetworkProject {
-  constructor(projectProps: INorseProjectProps = {}) {
-    super(projectProps);
+  constructor(projectState: INorseProjectState = {}) {
+    super(projectState);
 
     this.simulation.registerBackend(norseSimulator);
     registerNorseNodeTypes(this.viewModel);

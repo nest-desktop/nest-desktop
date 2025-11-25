@@ -4,13 +4,13 @@ import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 import { max, min } from "@/utils/array";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
 import { histogram } from "../graphObjects/histogram";
 
 export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "analogSignalHistogram";
     this.panel.xAxis = 2;
@@ -25,7 +25,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**

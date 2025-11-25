@@ -1,6 +1,6 @@
 // activityGraph.ts
 
-import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
+import { BaseActivityGraph, type IBaseActivityGraphState } from "@/activityGraph/helpers/activityGraph";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph/activityAnimationGraph";
 import type { NESTProject } from "../../helpers/project/project";
@@ -8,8 +8,8 @@ import type { NESTProject } from "../../helpers/project/project";
 export class NESTActivityGraph extends BaseActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;
 
-  constructor(project: NESTProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super(project, activityGraphProps);
+  constructor(project: NESTProject, activityGraphState?: IBaseActivityGraphState) {
+    super(project, activityGraphState);
 
     this._activityAnimationGraph = new ActivityAnimationGraph(project);
   }

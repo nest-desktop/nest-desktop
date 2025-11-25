@@ -74,21 +74,11 @@
 
         <v-window v-model="tab">
           <v-window-item reverse-transition="no-transition" transition="no-transition" value="doc">
-            <codemirror
-              :extensions="extensions"
-              :model-value="projectDoc"
-              disabled
-              style="font-size: 0.75rem; width: 100%"
-            />
+            <codemirror :extensions :model-value="projectDoc" disabled style="font-size: 0.75rem; width: 100%" />
           </v-window-item>
 
           <v-window-item reverse-transition="no-transition" transition="no-transition" value="json">
-            <codemirror
-              :extensions="extensions"
-              :model-value="projectJSON"
-              disabled
-              style="font-size: 0.75rem; width: 100%"
-            />
+            <codemirror :extensions :model-value="projectState" disabled style="font-size: 0.75rem; width: 100%" />
           </v-window-item>
         </v-window>
       </template>
@@ -147,8 +137,7 @@ const project = computed(() => projectStore.value.state.project);
 const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
 
 const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
-
-const projectJSON = computed(() => JSON.stringify(project.value.toJSON(), null, 2));
+const projectState = computed(() => JSON.stringify(project.value.save(), null, 2));
 
 const tab = ref("doc");
 

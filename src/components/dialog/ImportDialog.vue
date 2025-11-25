@@ -52,7 +52,7 @@
           @update:model-value="updateURLFromGithub"
         />
 
-        <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" variant="outlined" @click="fetchProps()" />
+        <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" variant="outlined" @click="fetchState()" />
       </template>
 
       <template v-else-if="state.source === 'drive'">
@@ -86,7 +86,7 @@
           title="Please enter the project's URL"
         >
           <template #append>
-            <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" @click="fetchProps()" />
+            <v-btn flat prepend-icon="mdi:mdi-download" text="fetch" @click="fetchState()" />
           </template>
         </v-text-field>
       </template>
@@ -186,20 +186,20 @@ import { BaseModelDB } from "@/helpers/model/modelDB";
 import { BaseProjectDB } from "@/helpers/project/projectDB";
 
 // TODO: No imports from workspaces!
-import type { INESTCopyModelProps } from "@/workspaces/nest/helpers/model/copyModel";
+import type { INESTCopyModelState } from "@/workspaces/nest/helpers/model/copyModel";
 
-import type { INodeGroupProps } from "@/networkGraph/helpers/node/nodeGroup";
-import type { INodeProps } from "@/networkGraph/helpers/node/node";
-import type { TModelProps, TNetworkProps, TProjectProps } from "@/types";
-import { isNESTNetworkProps } from "@/workspaces/nest/networkGraph/helpers/network/network";
+import type { INodeGroupState } from "@/networkGraph/helpers/node/nodeGroup";
+import type { INodeState } from "@/networkGraph/helpers/node/node";
+import type { TModelState, TNetworkState, TProjectState } from "@/types";
+import { isNESTNetworkState } from "@/workspaces/nest/networkGraph/helpers/network/network";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-interface IImportProps {
+interface IImportState {
   group: string;
   name: string;
-  props: TModelProps | TProjectProps;
+  props: TModelState | TProjectState;
   valid: boolean | undefined;
 }
 
@@ -226,8 +226,8 @@ const state = reactive<{
   githubSelectedTree: IGithubTree;
   githubTag: string;
   githubTrees: IGithubTree[];
-  items: IImportProps[];
-  selected: TModelProps | TProjectProps[];
+  items: IImportState[];
+  selected: TModelState | TProjectState[];
   source: string;
   url: string;
 }>({
@@ -253,7 +253,7 @@ const state = reactive<{
     //   props: { label: "foo bar" },
     //   valid: true,
     // },
-  ] as IImportProps[],
+  ] as IImportState[],
   selected: [],
   source: "",
   url: "",
@@ -306,11 +306,11 @@ const githubRawURL = (group?: string) =>
 /**
  * Add and validate props.
  */
-const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProjectProps)[]) => {
+const addState = (dataRaw: (TModelState | TProjectState) | (TModelState | TProjectState)[]) => {
   if (dataRaw == undefined) return;
 
-  const dataProps: (TModelProps | TProjectProps)[] = Array.isArray(dataRaw) ? dataRaw : [dataRaw];
-  dataProps.forEach((props: TModelProps | TProjectProps) => {
+  const dataState: (TModelState | TProjectState)[] = Array.isArray(dataRaw) ? dataRaw : [dataRaw];
+  dataState.forEach((props: TModelState | TProjectState) => {
     let valid = false;
 
     const group = "elementType" in props ? "model" : "network" in props ? "project" : undefined;
@@ -318,46 +318,46 @@ const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProje
     if (group === undefined) return;
 
     const modelIds: string[] = [];
-    let projectProps: TProjectProps;
-    let modelProps: TModelProps;
+    let projectState: TProjectState;
+    let modelState: TModelState;
     let name: string = "";
-    let networkProps: TNetworkProps;
+    let networkState: TNetworkState;
 
     switch (group) {
       case "model":
-        modelProps = props as TModelProps;
-        name = modelProps.label || "";
-        valid = modelDBStore.value.validateModel(modelProps);
+        modelState = props as TModelState;
+        name = modelState.label || "";
+        valid = modelDBStore.value.validateModel(modelState);
         break;
       case "project":
-        projectProps = props as TProjectProps;
-        name = projectProps.name || "";
-        valid = projectDBStore.value.validateProject(projectProps);
+        projectState = props as TProjectState;
+        name = projectState.name || "";
+        valid = projectDBStore.value.validateProject(projectState);
 
-        networkProps = projectProps.network as TNetworkProps;
+        networkState = projectState.network as TNetworkState;
 
         // Get model Ids from copied models if not installed in NEST Desktop.
-        if (networkProps && isNESTNetworkProps(networkProps)) {
-          networkProps.models?.forEach((modelProps: INESTCopyModelProps) => {
-            if (!modelProps.existing) return;
+        if (networkState && isNESTNetworkState(networkState)) {
+          networkState.models?.forEach((modelState: INESTCopyModelState) => {
+            if (!modelState.existing) return;
 
-            if (!modelDBStore.value.hasModel(modelProps.existing) && !modelIds.includes(modelProps.existing)) {
-              modelIds.push(modelProps.existing);
+            if (!modelDBStore.value.hasModel(modelState.existing) && !modelIds.includes(modelState.existing)) {
+              modelIds.push(modelState.existing);
             }
           });
         }
 
         // Get model Ids from node models if not installed in NEST Desktop.
-        networkProps.nodes?.forEach((nodeProps: INodeProps | INodeGroupProps) => {
-          if (!("model" in nodeProps)) return;
+        networkState.nodes?.forEach((nodeState: INodeState | INodeGroupState) => {
+          if (!("model" in nodeState)) return;
 
-          const nodeItemProps = nodeProps as INodeProps;
+          const nodeItemState = nodeState as INodeState;
           if (
-            nodeItemProps.model &&
-            !modelDBStore.value.hasModel(nodeItemProps.model) &&
-            !modelIds.includes(nodeItemProps.model)
+            nodeItemState.model &&
+            !modelDBStore.value.hasModel(nodeItemState.model) &&
+            !modelIds.includes(nodeItemState.model)
           ) {
-            modelIds.push(nodeItemProps.model);
+            modelIds.push(nodeItemState.model);
           }
         });
 
@@ -388,19 +388,19 @@ const addProps = (dataRaw: (TModelProps | TProjectProps) | (TModelProps | TProje
  * Get model from github.
  */
 const getModelFromGithub = (path: string, modelId: string) => {
-  axios.get(githubRawURL("models") + path).then((response: AxiosResponse<TModelProps | TModelProps[]>) => {
+  axios.get(githubRawURL("models") + path).then((response: AxiosResponse<TModelState | TModelState[]>) => {
     if (!response.data) return;
 
-    const modelsProps: TModelProps[] = Array.isArray(response.data) ? response.data : [response.data];
+    const modelsState: TModelState[] = Array.isArray(response.data) ? response.data : [response.data];
 
-    const modelProps = modelsProps.find((modelProps: TModelProps) => modelProps.id === modelId);
-    if (!modelProps) return;
-    const valid = modelDBStore.value.validateModel(modelProps);
+    const modelState = modelsState.find((modelState: TModelState) => modelState.id === modelId);
+    if (!modelState) return;
+    const valid = modelDBStore.value.validateModel(modelState);
 
     state.items.push({
       group: "model",
-      name: modelProps.label || "",
-      props: modelProps,
+      name: modelState.label || "",
+      props: modelState,
       valid,
     });
   });
@@ -442,19 +442,19 @@ const fetchFromOldDatabase = () => {
   const modelDB = new BaseModelDB("MODEL_STORE");
   const projectDB = new BaseProjectDB("PROJECT_STORE");
 
-  modelDB.list("updatedAt", true).then((modelsProps: TModelProps[]) =>
-    modelsProps.forEach((modelProps: TModelProps) => {
-      delete modelProps._id;
-      delete modelProps._rev;
-      addProps(modelProps);
+  modelDB.list("updatedAt", true).then((modelsState: TModelState[]) =>
+    modelsState.forEach((modelState: TModelState) => {
+      delete modelState._id;
+      delete modelState._rev;
+      addState(modelState);
     }),
   );
 
-  projectDB.list("updatedAt", true).then((projectsProps: TProjectProps[]) =>
-    projectsProps.forEach((projectProps: TProjectProps) => {
-      delete projectProps._id;
-      delete projectProps._rev;
-      addProps(projectProps);
+  projectDB.list("updatedAt", true).then((projectsState: TProjectState[]) =>
+    projectsState.forEach((projectState: TProjectState) => {
+      delete projectState._id;
+      delete projectState._rev;
+      addState(projectState);
     }),
   );
 };
@@ -462,12 +462,12 @@ const fetchFromOldDatabase = () => {
 /**
  * Fetch props from URL.
  */
-const fetchProps = (url?: string) => {
+const fetchState = (url?: string) => {
   if (state.url.length === 0) return;
   axios
     .get(url || state.url)
-    .then((response: AxiosResponse<TModelProps | TProjectProps | (TProjectProps | TModelProps)[]>) =>
-      addProps(response.data),
+    .then((response: AxiosResponse<TModelState | TProjectState | (TProjectState | TModelState)[]>) =>
+      addState(response.data),
     );
 };
 
@@ -483,20 +483,20 @@ const importSelected = () => {
  * Import selected models.
  */
 const importSelectedModels = () => {
-  const modelsProps: TModelProps[] = state.selected
-    .filter((data: IImportProps) => data.group === "model")
-    .map((data: IImportProps) => data.props) as TModelProps[];
-  modelDBStore.value.importModels(modelsProps);
+  const modelsState: TModelState[] = state.selected
+    .filter((data: IImportState) => data.group === "model")
+    .map((data: IImportState) => data.props) as TModelState[];
+  modelDBStore.value.importModels(modelsState);
 };
 
 /**
  * Import selected projects.
  */
 const importSelectedProjects = () => {
-  const projectsProps: TProjectProps[] = state.selected
-    .filter((data: IImportProps) => data.group === "project")
-    .map((data: IImportProps) => data.props) as TProjectProps[];
-  projectDBStore.value.importProjects(projectsProps);
+  const projectsState: TProjectState[] = state.selected
+    .filter((data: IImportState) => data.group === "project")
+    .map((data: IImportState) => data.props) as TProjectState[];
+  projectDBStore.value.importProjects(projectsState);
 };
 
 /**
@@ -509,7 +509,7 @@ const loadProjectsFromDrive = (files: File | File[]) => {
   const fileReader = new FileReader();
   fileReader.readAsText(file);
   fileReader.addEventListener("load", (event: ProgressEvent<FileReader>) =>
-    addProps(JSON.parse(event.target?.result as string)),
+    addState(JSON.parse(event.target?.result as string)),
   );
 };
 

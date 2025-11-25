@@ -14,7 +14,7 @@ import { notifyError, notifySuccess } from "@/helpers/common/notification";
 import { getBoolean } from "@/utils/boolean";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
-import type { IActivityProps, IEventProps } from "@/helpers/activity/activity";
+import type { IActivityState, IEventState } from "@/helpers/activity/activity";
 
 export interface IAxiosResponseData {
   data: IResponseData;
@@ -30,10 +30,10 @@ export interface IAxiosErrorData {
 }
 
 export interface IResponseData {
-  events: IEventProps[];
+  events: IEventState[];
   biological_time: number;
   positions?: Record<string, number[]>;
-  activities?: IActivityProps[];
+  activities?: IActivityState[];
 }
 
 interface IBackendStoreState {

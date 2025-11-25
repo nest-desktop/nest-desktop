@@ -1,11 +1,11 @@
 // nodeGroup.ts
 
 import type { TConnection, TNetwork, TNode, TNodeGroup, TNodes } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 
 import { NodeGroupView } from "./nodeGroupView";
 
-export interface INodeGroupProps {
+export interface INodeGroupState extends IBaseState {
   nodes: number[];
 }
 
@@ -14,10 +14,10 @@ export class NodeGroup extends BaseObj {
   private _nodes: (TNode | TNodeGroup)[] = [];
   private _view: NodeGroupView;
 
-  constructor(parent: TNodes, nodeGroupProps: INodeGroupProps) {
+  constructor(parent: TNodes, nodeGroupState: INodeGroupState) {
     super();
     this._parent = parent;
-    nodeGroupProps.nodes.forEach((idx: number) => this.addNode(idx));
+    nodeGroupState.nodes.forEach((idx: number) => this.addNode(idx));
 
     this._view = new NodeGroupView(this);
 
@@ -37,7 +37,7 @@ export class NodeGroup extends BaseObj {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
+    return this.network.connections.all.filter((connection: TConnection) => connection.source?.idx === this.idx);
   }
 
   get connectionsWithin(): TConnection[] {
@@ -46,7 +46,7 @@ export class NodeGroup extends BaseObj {
 
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        nodeIndices.includes(connection.sourceIdx) && nodeIndices.includes(connection.targetIdx),
+        nodeIndices.includes(connection.source?.idx) && nodeIndices.includes(connection.target?.idx),
     );
   }
 
@@ -178,7 +178,7 @@ export class NodeGroup extends BaseObj {
 
   get sourceNodes(): TNode[] {
     return this.network.connections.all
-      .filter((connection: TConnection) => connection.targetIdx === this.idx)
+      .filter((connection: TConnection) => connection.target?.idx === this.idx)
       .map((connection: TConnection) => connection.sourceNode);
   }
 
@@ -188,7 +188,7 @@ export class NodeGroup extends BaseObj {
 
   get targetNodes(): TNode[] {
     return this.network.connections.all
-      .filter((connection: TConnection) => connection.sourceIdx === this.idx)
+      .filter((connection: TConnection) => connection.source?.idx === this.idx)
       .map((connection: TConnection) => connection.targetNode);
   }
 
@@ -241,7 +241,7 @@ export class NodeGroup extends BaseObj {
     const indicesNew = nodeEntries.map((idx: [number, number]) => idx[1]);
 
     const nodeGroup = this.network.nodes.addNodeGroup({
-      ...this.toJSON(),
+      ...this.save(),
       nodes: indicesNew,
     });
 
@@ -253,10 +253,10 @@ export class NodeGroup extends BaseObj {
       nodeIndices[this.idx] = nodeGroup.idx;
 
       this.connectionsWithin.forEach((connection: TConnection) => {
-        const connectionProps = connection.toJSON();
-        connectionProps.source = nodeIndices[connectionProps.source];
-        connectionProps.target = nodeIndices[connectionProps.target];
-        const clonedConnection = this.network.connections.addConnection(connectionProps);
+        const connectionState = connection.save();
+        connectionState.source = nodeIndices[connectionState.source];
+        connectionState.target = nodeIndices[connectionState.target];
+        const clonedConnection = this.network.connections.addConnection(connectionState);
 
         clonedConnection.init();
       });
@@ -289,10 +289,20 @@ export class NodeGroup extends BaseObj {
 
   /**
    * Remove node item or group
-   * @param node node object
+   * @param node node instance
    */
   removeNode(node: TNode | TNodeGroup): void {
     this._nodes = this._nodes.filter((n: TNode | TNodeGroup) => n !== node);
+  }
+
+  /**
+   * Save node group to state.
+   * @return node group state
+   */
+  override save(): INodeGroupState {
+    return {
+      nodes: this.nodes.map((node: TNode | TNodeGroup) => node.idx),
+    };
   }
 
   /**
@@ -307,16 +317,6 @@ export class NodeGroup extends BaseObj {
    */
   selectForConnection(): void {
     this._parent.network.connections.state.selectedNode = this;
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return node group props
-   */
-  toJSON(): INodeGroupProps {
-    return {
-      nodes: this.nodes.map((node: TNode | TNodeGroup) => node.idx),
-    };
   }
 
   /**

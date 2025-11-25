@@ -2,7 +2,7 @@
 
 import { NESTNodeSpatial } from "./nodeSpatial";
 
-export interface IBasePositionsProps {
+export interface IBasePositionsState {
   edgeWrap?: boolean;
   numDimensions?: number;
   pos?: number[][];
@@ -14,9 +14,8 @@ export class BasePositions {
   private _pos: number[][] = [];
   private _spatial: NESTNodeSpatial;
 
-  constructor(spatial: NESTNodeSpatial, positionProps?: IBasePositionsProps) {
+  constructor(spatial: NESTNodeSpatial) {
     this._spatial = spatial;
-    this.update(positionProps);
   }
 
   get center(): number[] {
@@ -87,20 +86,24 @@ export class BasePositions {
   }
 
   /**
-   * Serialize for JSON.
-   * @return positions props
+   * Load positions from state
+   * @param state positions state
    */
-  toJSON(): IBasePositionsProps {
+  load(state?: IBasePositionsState) {
+    if (state?.pos) this._pos = state.pos;
+    if (state?.numDimensions) this._numDimensions = state.numDimensions;
+    if (state?.edgeWrap) this._edgeWrap = state.edgeWrap;
+  }
+
+  /**
+   * Save positions to state.
+   * @return positions state
+   */
+  save(): IBasePositionsState {
     return {
       edgeWrap: this._edgeWrap,
       numDimensions: this._numDimensions,
       pos: this._pos,
     };
-  }
-
-  update(positionProps?: IBasePositionsProps) {
-    if (positionProps?.pos) this._pos = positionProps.pos;
-    if (positionProps?.numDimensions) this._numDimensions = positionProps.numDimensions;
-    if (positionProps?.edgeWrap) this._edgeWrap = positionProps.edgeWrap;
   }
 }

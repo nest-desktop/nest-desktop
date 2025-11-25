@@ -120,12 +120,13 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
       if (state.project) {
         state.projectId = state.project.id;
         state.project.state.state.editMode = true;
+        state.project.init();
       }
     };
 
     /**
      * Reload the project in the list.
-     * @param project project object
+     * @param project project instance
      */
     const reloadProject = (project: TProject): void => {
       logger.trace("reload project:", project.shortId);

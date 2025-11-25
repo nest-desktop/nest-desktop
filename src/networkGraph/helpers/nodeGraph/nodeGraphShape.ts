@@ -91,7 +91,7 @@ export class NodeGraphShape extends BaseObj {
   /**
    * Draw node shape.
    * @param selector
-   * @param node node object
+   * @param node node instance
    */
   drawShape(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.trace("draw shape");
@@ -134,7 +134,7 @@ export class NodeGraphShape extends BaseObj {
   /**
    * Initialize a node shape.
    * @param selector
-   * @param node node object
+   * @param node node instance
    */
   init(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.silly("init");
@@ -192,7 +192,7 @@ export class NodeGraphShape extends BaseObj {
 
       elem
         .select(".shape")
-        .style("stroke-width", (node.size > 1 ? 1.5 : 1) * this._networkGraph.config?.localStorage.strokeWidth)
+        .style("stroke-width", (node.size.value > 1 ? 1.5 : 1) * this._networkGraph.config?.localStorage.strokeWidth)
         .style("opacity", node.isGroup ? 0.12 : node.view.opacity ? 1 : 0.6);
 
       elem

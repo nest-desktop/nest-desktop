@@ -2,25 +2,25 @@
 
 import { v4 as uuidv4 } from "uuid";
 
-import { BaseModel, type IModelProps, type IModelStateProps, type TElementType } from "@/helpers/model/model";
-import type { IParamProps } from "@/helpers/common/parameter";
-import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseModel, type IModelState, type IModelRecordState, type TElementType } from "@/helpers/model/model";
+import type { IParamState } from "@/helpers/common";
+import { ModelParameter } from "@/helpers/model";
 
 import {
-  type INESTModelReceptorProps,
+  type INESTModelReceptorState,
   NESTModelReceptor,
 } from "../../networkGraph/helpers/model/modelReceptor/modelReceptor";
 import { NESTModelCompartmentParameter } from "./modelCompartmentParameter";
 // import { loadText } from "@/utils/fetch";
 
-export interface INESTModelProps extends IModelProps {
-  compartmentParams?: IParamProps[];
-  receptors?: INESTModelReceptorProps[];
+export interface INESTModelState extends IModelState {
+  compartmentParams?: IParamState[];
+  receptors?: INESTModelReceptorState[];
   nestmlScript?: string;
   templateName?: string;
 }
 
-export class NESTModel extends BaseModel {
+export class NESTModel extends BaseModel<INESTModelState> {
   private _compartmentParams: Record<string, NESTModelCompartmentParameter> = {}; // model compartmental parameters
   private _compartmentParamsVisible: string[] = [];
   private _custom: boolean = false;
@@ -28,12 +28,12 @@ export class NESTModel extends BaseModel {
   private _receptors: Record<string, NESTModelReceptor> = {}; // receptor parameters
   private _templateName: string = "iaf_psc_alpha_neuron";
 
-  constructor(modelProps: INESTModelProps = {}) {
-    super(modelProps, { name: "NESTModel", workspace: "nest" });
+  constructor(modelState: INESTModelState = {}) {
+    super(modelState, { name: "NESTModel", workspace: "nest" });
 
-    if (modelProps.nestmlScript) this._nestmlScript = modelProps.nestmlScript;
-    if (modelProps.templateName) this._templateName = modelProps.templateName;
-    if (modelProps.custom) this._custom = modelProps.custom;
+    if (modelState.nestmlScript) this._nestmlScript = modelState.nestmlScript;
+    if (modelState.templateName) this._templateName = modelState.templateName;
+    if (modelState.custom) this._custom = modelState.custom;
   }
 
   get compartmentParams(): Record<string, NESTModelCompartmentParameter> {
@@ -97,9 +97,9 @@ export class NESTModel extends BaseModel {
 
   /**
    * Add a compartment parameter to the model specifications.
-   * @param param parameter props
+   * @param param parameter state
    */
-  addCompartmentParameter(param: IParamProps): void {
+  addCompartmentParameter(param: IParamState): void {
     this._compartmentParams[param.id] = new NESTModelCompartmentParameter(this, param);
   }
 
@@ -118,6 +118,41 @@ export class NESTModel extends BaseModel {
    */
   getCompartmentParameter(paramId: string): NESTModelCompartmentParameter {
     return this._compartmentParams[paramId];
+  }
+
+  /**
+   * Load model from state.
+   * @param model NEST model state
+   */
+  override load(modelState: INESTModelState): void {
+    this.logger.trace("update", modelState.id);
+
+    // Update the model ID.
+    this.id = modelState.id || uuidv4();
+
+    // Update the model recordables or states.
+    if (modelState.recordables) {
+      this.updateRecordStates(modelState.recordables);
+    } else if (modelState.states) {
+      this.updateRecordStates(modelState.states);
+    }
+
+    // Update the model parameters.
+    if (modelState.params) {
+      this.updateParameters(modelState.params);
+    }
+
+    // Update the model compartment parameters.
+    if (modelState.compartmentParams) {
+      this.updateCompartmentParameters(modelState.compartmentParams);
+    }
+
+    // Update the model receptors.
+    if (modelState.receptors) {
+      this.updateReceptors(modelState.receptors);
+    }
+
+    this.updateHash();
   }
 
   /**
@@ -144,103 +179,68 @@ export class NESTModel extends BaseModel {
   }
 
   /**
-   * Serialize for JSON.
-   * @return NEST model props
+   * Save model to state.
+   * @return NEST model state
    */
-  override toJSON(): INESTModelProps {
-    const modelProps: INESTModelProps = {
+  override save(): INESTModelState {
+    const modelState: INESTModelState = {
       elementType: this.elementType,
       id: this.id,
       label: this.state.label,
-      params: Object.values(this.params).map((param: ModelParameter) => param.toJSON()),
+      params: Object.values(this.params).map((param: ModelParameter) => param.save()),
       version: process.env.APP_VERSION,
     };
 
-    if (this.abbreviation) modelProps.abbreviation = this.abbreviation;
-    if (this.custom) modelProps.custom = this.custom;
+    if (this.abbreviation) modelState.abbreviation = this.abbreviation;
+    if (this.custom) modelState.custom = this.custom;
 
     // Add the states if provided.
-    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state);
+    if (this.states.length > 0) modelState.states = this.states.map((state: IModelRecordState) => state);
 
     // Add the compartment parameters if provided.
     if (this._compartmentParamsVisible.length > 0)
-      modelProps.compartmentParams = Object.values(this._compartmentParams).map(
-        (param: NESTModelCompartmentParameter) => param.toJSON(),
+      modelState.compartmentParams = Object.values(this._compartmentParams).map(
+        (param: NESTModelCompartmentParameter) => param.save(),
       );
 
     // Add the receptors if provided.
     if (Object.keys(this._receptors).length > 0)
-      modelProps.receptors = Object.values(this._receptors).map((receptor: NESTModelReceptor) => receptor.toJSON());
+      modelState.receptors = Object.values(this._receptors).map((receptor: NESTModelReceptor) => receptor.save());
 
     // Add NESTML script if provided.
-    if (this._nestmlScript) modelProps.nestmlScript = this._nestmlScript;
-    if (this._templateName) modelProps.templateName = this._templateName;
+    if (this._nestmlScript) modelState.nestmlScript = this._nestmlScript;
+    if (this._templateName) modelState.templateName = this._templateName;
 
-    return modelProps;
-  }
-
-  /**
-   * Update  a parameter.
-   * @param model NEST model props
-   */
-  override update(modelProps: INESTModelProps): void {
-    this.logger.trace("update", modelProps.id);
-
-    // Update the model ID.
-    this.id = modelProps.id || uuidv4();
-
-    // Update the model recordables or states.
-    if (modelProps.recordables) {
-      this.updateStates(modelProps.recordables);
-    } else if (modelProps.states) {
-      this.updateStates(modelProps.states);
-    }
-
-    // Update the model parameters.
-    if (modelProps.params) {
-      this.updateParameters(modelProps.params);
-    }
-
-    // Update the model compartment parameters.
-    if (modelProps.compartmentParams) {
-      this.updateCompartmentParameters(modelProps.compartmentParams);
-    }
-
-    // Update the model receptors.
-    if (modelProps.receptors) {
-      this.updateReceptors(modelProps.receptors);
-    }
-
-    this.updateHash();
+    return modelState;
   }
 
   /**
    * Update model compartment parameters.
-   * @param compartmentParamsProps compartmental model props
+   * @param compartmentParamStates compartmental model states
    */
-  updateCompartmentParameters(compartmentParamsProps: IParamProps[]): void {
+  updateCompartmentParameters(compartmentParamStates: IParamState[]): void {
     this._compartmentParams = {};
-    Object.values(compartmentParamsProps).forEach((paramProps: IParamProps) => {
-      this.addCompartmentParameter(paramProps);
+    Object.values(compartmentParamStates).forEach((paramState: IParamState) => {
+      this.addCompartmentParameter(paramState);
     });
   }
 
   /**
    * Update the compartment parameter.
-   * @param paramProps parameter props
+   * @param paramState parameter state
    */
-  updateCompartmentParameter(paramProps: IParamProps): void {
-    this._compartmentParams[paramProps.id] = new NESTModelCompartmentParameter(this, paramProps);
+  updateCompartmentParameter(paramState: IParamState): void {
+    this._compartmentParams[paramState.id] = new NESTModelCompartmentParameter(this, paramState);
   }
 
   /**
    * Update the model receptors.
-   * @param receptorsProps model props
+   * @param receptorStates model states
    */
-  updateReceptors(receptorsProps: INESTModelReceptorProps[]): void {
+  updateReceptors(receptorStates: INESTModelReceptorState[]): void {
     this._receptors = {};
-    Object.values(receptorsProps).forEach((receptorProps: INESTModelReceptorProps) => {
-      this._receptors[receptorProps.id] = new NESTModelReceptor(this, receptorProps);
+    Object.values(receptorStates).forEach((receptorState: INESTModelReceptorState) => {
+      this._receptors[receptorState.id] = new NESTModelReceptor(this, receptorState);
     });
   }
 }

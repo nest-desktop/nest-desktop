@@ -1,20 +1,20 @@
 // simulation.ts
 
-import { BaseSimulation, type ISimulationProps } from "@/helpers/simulation/simulation";
+import { BaseSimulation, type ISimulationState } from "@/helpers/simulation/simulation";
 
 import { NorseProject } from "../project/project";
 
-export interface INorseSimulationProps extends ISimulationProps {
+export interface INorseSimulationState extends ISimulationState {
   seed?: number;
 }
 
 export class NorseSimulation extends BaseSimulation {
   private _seed: number;
 
-  constructor(project: NorseProject, simulationProps: INorseSimulationProps = {}) {
-    super(project, simulationProps);
+  constructor(project: NorseProject, simulationState: INorseSimulationState = {}) {
+    super(project, simulationState);
 
-    this._seed = simulationProps.seed || 0;
+    this._seed = simulationState.seed || 0;
   }
 
   get seed(): number {

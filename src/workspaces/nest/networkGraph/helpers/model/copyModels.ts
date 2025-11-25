@@ -1,20 +1,18 @@
 // copyModels.ts
 
-import { BaseObj } from "@/helpers/common/base";
-import type { IParamProps } from "@/helpers/common/parameter";
+import { BaseObj, type IParamState } from "@/helpers/common";
 
-import { type INESTCopyModelProps, NESTCopyModel } from "./copyModel";
+import { type INESTCopyModelState, NESTCopyModel } from "./copyModel";
 import { NESTNetwork } from "../network/network";
 
 export class NESTCopyModels extends BaseObj {
   private _models: NESTCopyModel[] = [];
   private _network: NESTNetwork; // parent
 
-  constructor(network: NESTNetwork, copyModelsProps: INESTCopyModelProps[] = []) {
+  constructor(network: NESTNetwork) {
     super();
 
     this._network = network;
-    this.update(copyModelsProps);
   }
 
   get all(): NESTCopyModel[] {
@@ -63,10 +61,11 @@ export class NESTCopyModels extends BaseObj {
    * Copy and add a model component to the network based on given model data.
    * @data Data of the model which should be copied and added
    */
-  add(modelProps: INESTCopyModelProps): NESTCopyModel {
+  add(modelState: INESTCopyModelState): NESTCopyModel {
     this.logger.trace("Add model");
 
-    const model = new NESTCopyModel(this, modelProps);
+    const model = new NESTCopyModel(this);
+    model.load(modelState);
     this._models.push(model);
     return model;
   }
@@ -75,15 +74,15 @@ export class NESTCopyModels extends BaseObj {
    * Copy and add a model component to the network based on a given model ID.
    * @param modelId ID of the model which should be copied adn added
    */
-  copy(modelId: string, paramProps?: IParamProps[]): NESTCopyModel {
+  copy(modelId: string, paramState?: IParamState[]): NESTCopyModel {
     this.logger.trace("Copy model");
 
-    const modelProps: INESTCopyModelProps = {
+    const modelState: INESTCopyModelState = {
       existing: modelId,
       new: modelId + "_copied" + (this._models.length + 1),
-      params: paramProps,
+      params: paramState,
     };
-    const copyModel = this.add(modelProps);
+    const copyModel = this.add(modelState);
     copyModel.init();
     return copyModel;
   }
@@ -151,6 +150,14 @@ export class NESTCopyModels extends BaseObj {
   }
 
   /**
+   * Load copied model from state.
+   * @param modelStates model states
+   */
+  load(modelStates: INESTCopyModelState[]): void {
+    modelStates.forEach((modelState: INESTCopyModelState) => this.add(modelState));
+  }
+
+  /**
    * Remove model from the list.
    *
    */
@@ -159,6 +166,14 @@ export class NESTCopyModels extends BaseObj {
 
     // Remove model from the model list.
     this._models.splice(model.idx, 1);
+  }
+
+  /**
+   * save copy models to states.
+   * @return copy model states
+   */
+  override save(): INESTCopyModelState[] {
+    return this._models.map((model: NESTCopyModel) => model.save());
   }
 
   /**
@@ -174,7 +189,7 @@ export class NESTCopyModels extends BaseObj {
     //   );
     //   return models.includes(model);
     // } else
-    if (elementTypeIdx > 0) {
+    if (elementTypeIdx > 0 && this._network.elementTypes[elementTypeIdx]) {
       // element type view
       return this._network.elementTypes[elementTypeIdx].id === model.elementType;
     } else if (this._network.state.state.displayIdx.nodes.length > 0) {
@@ -184,21 +199,5 @@ export class NESTCopyModels extends BaseObj {
       // all view
       return true;
     }
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return network props
-   */
-  toJSON(): INESTCopyModelProps[] {
-    return this._models.map((model: NESTCopyModel) => model.toJSON());
-  }
-
-  /**
-   * Update copied model component.
-   * @param model props
-   */
-  update(modelsProps: INESTCopyModelProps[] = []): void {
-    modelsProps.forEach((modelProps: INESTCopyModelProps) => this.add(modelProps));
   }
 }

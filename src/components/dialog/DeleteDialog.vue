@@ -41,23 +41,23 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
-import type { IModelProps } from "@/helpers/model/model";
-import type { INetworkProjectProps } from "@/helpers/project/networkProject";
+import type { IModelState } from "@/helpers/model/model";
+import type { INetworkProjectState } from "@/helpers/project/networkProject";
 import type { TModel, TProject, TStore } from "@/types";
 
 // import { useAppStore } from "@/stores/appStore";
 // const appStore = useAppStore();
 
-interface IDeleteProps {
+interface IDeleteState {
   group: string;
   name: string;
-  props: IModelProps | INetworkProjectProps;
+  props: IModelState | INetworkProjectState;
 }
 
 const props = defineProps<{ store: TStore }>();
 const store = computed(() => props.store);
 
-const state = reactive<{ items: IDeleteProps[]; selected: IDeleteProps[] }>({
+const state = reactive<{ items: IDeleteState[]; selected: IDeleteState[] }>({
   items: [],
   selected: [],
 });
@@ -75,13 +75,13 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
  */
 const deleteSelected = () => {
   if (store.value.state.projects) {
-    const projectProps = state.selected.filter((item) => item.group === "project").map((project) => project.props);
-    store.value.deleteProjects(projectProps);
+    const projectState = state.selected.filter((item) => item.group === "project").map((project) => project.props);
+    store.value.deleteProjects(projectState);
   }
 
   if (store.value.state.models) {
-    const modelProps = state.selected.filter((item) => item.group === "model").map((model) => model.props);
-    store.value.deleteModels(modelProps);
+    const modelState = state.selected.filter((item) => item.group === "model").map((model) => model.props);
+    store.value.deleteModels(modelState);
   }
 
   state.selected = [];
@@ -95,11 +95,11 @@ const update = (): void => {
   state.items = [];
 
   if (store.value.state.projects) {
-    store.value.state.projects.forEach((project: TProject | INetworkProjectProps) => {
+    store.value.state.projects.forEach((project: TProject | INetworkProjectState) => {
       state.items.push({
         group: "project",
         name: project.name as string,
-        props: project.doc ? project.toJSON() : project,
+        props: project.doc ? project.save() : project,
       });
     });
   }
@@ -109,7 +109,7 @@ const update = (): void => {
       state.items.push({
         group: "model",
         name: model.state.label as string,
-        props: model.toJSON(),
+        props: model.save(),
       });
     });
   }

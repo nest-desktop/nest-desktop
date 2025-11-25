@@ -1,22 +1,19 @@
 // network.ts
 
-import { BaseNetwork } from "@/networkGraph/helpers/network/network";
-import type { INodeGroupProps } from "@/networkGraph/helpers/node/nodeGroup";
-import type { TNetworkProps, TNode, TNodeGroup } from "@/types";
+import { BaseNetwork, INetworkState } from "@/networkGraph/helpers/network/network";
+import type { Class, TNetworkState, TNode, TNodeGroup } from "@/types";
+import type { IBaseState } from "@/helpers/common";
 
-import { type INESTConnectionProps, NESTConnection } from "../connection/connection";
-import { type INESTCopyModelProps, NESTCopyModel } from "../model/copyModel";
-import { type INESTNodeProps } from "../node/node";
+import type { NESTConnection } from "../connection/connection";
+import type { INESTCopyModelState, NESTCopyModel } from "../model/copyModel";
+import type { NESTModel } from "../../../helpers/model/model";
+import type { NESTProject } from "../../../helpers/project/project";
 import { NESTConnections } from "../connection/connections";
 import { NESTCopyModels } from "../model/copyModels";
-import { NESTModel } from "../../../helpers/model/model";
 import { NESTNodes } from "../node/nodes";
-import { NESTProject } from "../../../helpers/project/project";
 
-export interface INESTNetworkProps {
-  models?: INESTCopyModelProps[];
-  nodes?: (INESTNodeProps | INodeGroupProps)[];
-  connections?: INESTConnectionProps[];
+export interface INESTNetworkState extends INetworkState {
+  models?: INESTCopyModelState[];
 }
 
 const _elementTypes: { icon: string; id: string; title: string }[] = [
@@ -29,24 +26,24 @@ const _elementTypes: { icon: string; id: string; title: string }[] = [
 ];
 
 // https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
-export function isNESTNetworkProps(networkProps: TNetworkProps): networkProps is INESTNetworkProps {
-  return (networkProps as INESTNetworkProps).models != undefined;
+export function isNESTNetworkState(networkState: TNetworkState): networkState is INESTNetworkState {
+  return (networkState as INESTNetworkState).models != undefined;
 }
 
-export class NESTNetwork extends BaseNetwork {
+export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
   private _copyModels: NESTCopyModels; // for nest.CopyModel
 
-  constructor(project: NESTProject, networkProps: INESTNetworkProps = {}) {
-    super(project, networkProps);
+  constructor(project: NESTProject) {
+    super(project);
 
-    this._copyModels = new NESTCopyModels(this, networkProps.models);
+    this._copyModels = new NESTCopyModels(this);
   }
 
-  override get Connections() {
+  override get Connections(): Class<NESTConnections> {
     return NESTConnections;
   }
 
-  override get Nodes() {
+  override get Nodes(): Class<NESTNodes> {
     return NESTNodes;
   }
 
@@ -73,7 +70,7 @@ export class NESTNetwork extends BaseNetwork {
     return this._copyModels;
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
       nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
@@ -169,30 +166,30 @@ export class NESTNetwork extends BaseNetwork {
   }
 
   /**
-   * Serialize for JSON.
-   * @return network props
-   */
-  override toJSON(): INESTNetworkProps {
-    return {
-      connections: this.connections.toJSON(),
-      models: this.copyModels.toJSON(),
-      nodes: this.nodes.toJSON(),
-    };
-  }
-
-  /**
    * Update network component.
-   * @param network network props
+   * @param network network state
    */
-  override update(networkProps: INESTNetworkProps): void {
+  override load(networkState: INESTNetworkState): void {
     this.logger.trace("update");
 
     this.clear();
 
-    this.copyModels.update(networkProps.models);
-    this.nodes.update(networkProps.nodes);
-    this.connections.update(networkProps.connections);
+    if (networkState.models) this.copyModels.load(networkState.models);
+    this.nodes.load(networkState.nodes);
+    this.connections.load(networkState.connections);
 
     this.init();
+  }
+
+  /**
+   * Save nest network to state.
+   * @return nest network state
+   */
+  override save(): INESTNetworkState {
+    return {
+      connections: this.connections.save(),
+      models: this.copyModels.save(),
+      nodes: this.nodes.save(),
+    };
   }
 }

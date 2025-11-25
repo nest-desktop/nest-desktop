@@ -9,7 +9,7 @@ import type { TModel, TProject } from "@/types";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 
-import { confirmDialog } from "./common/confirmDialog";
+import { confirmDialog } from "./common";
 
 const logger = mainLogger.getSubLogger({ name: "route" });
 
@@ -105,7 +105,7 @@ export const modelRedirect = (to: RouteLocationNormalizedGeneric): RouteLocation
 
 /**
  * Mount model layout.
- * @param props
+ * @param props route props
  */
 export const mountModelLayout = (props: { router: Router; route: RouteLocationNormalizedLoadedGeneric }): void => {
   const modelId = props.route.params.modelId as string;
@@ -159,7 +159,7 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
 
 /**
  * Route to create a new project.
- * @param router Router object
+ * @param router Router instance
  */
 export const newProjectRoute = (router: Router) => {
   logger.trace("new project route");

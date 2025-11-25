@@ -43,18 +43,18 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
-import type { IModelProps } from "@/helpers/model/model";
-import type { INetworkProjectProps } from "@/helpers/project/networkProject";
+import type { IModelState } from "@/helpers/model/model";
+import type { INetworkProjectState } from "@/helpers/project/networkProject";
 import type { TModel, TProject } from "@/types";
 import { download } from "@/utils/download";
 
 import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-interface IExportProps {
+interface IExportState {
   group?: string;
   name: string;
-  props: IModelProps | INetworkProjectProps;
+  props: IModelState | INetworkProjectState;
 }
 
 const props = defineProps({
@@ -73,7 +73,7 @@ const props = defineProps({
 const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
 const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
 
-const state = reactive<{ items: IExportProps[]; selected: IExportProps[] }>({
+const state = reactive<{ items: IExportState[]; selected: IExportState[] }>({
   items: [],
   selected: [],
 });
@@ -90,7 +90,7 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
  * Export selected.
  */
 const exportSelected = () => {
-  download(JSON.stringify(state.selected.map((selected: IExportProps) => selected.props)));
+  download(JSON.stringify(state.selected.map((selected: IExportState) => selected.props)));
   state.selected = [];
 };
 
@@ -103,9 +103,9 @@ const update = (): void => {
 
   if (props.model) {
     modelDBStore.value.state.models.forEach((model: TModel) => {
-      const item: IExportProps = {
+      const item: IExportState = {
         name: model.state.label,
-        props: model.toJSON(),
+        props: model.save(),
       };
 
       if (props.project) {
@@ -117,10 +117,10 @@ const update = (): void => {
   }
 
   if (props.project) {
-    projectDBStore.value.state.projects.forEach((project: TProject | INetworkProjectProps) => {
-      const item: IExportProps = {
+    projectDBStore.value.state.projects.forEach((project: TProject | INetworkProjectState) => {
+      const item: IExportState = {
         name: project.name as string,
-        props: project.doc ? project.toJSON() : project,
+        props: project.doc ? project.save() : project,
       };
 
       if (props.model) {

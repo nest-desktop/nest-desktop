@@ -1,37 +1,27 @@
 // nodeSpatial.ts
 
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common/base";
 
 import { FreePositions } from "./freePositions";
-import { GridPositions, type IGridPositionsProps } from "./gridPositions";
-import type { IBasePositionsProps } from "./basePositions";
-import { NESTNode } from "../node";
+import { GridPositions, type IGridPositionsState } from "./gridPositions";
+import type { IBasePositionsState } from "./basePositions";
+import type { NESTNode } from "../node";
 
-export interface INESTNodeSpatialProps {
+export interface INESTNodeSpatialState extends IBaseState {
   positions?: string;
-  specs?: IBasePositionsProps | IGridPositionsProps;
+  specs?: IBasePositionsState | IGridPositionsState;
 }
 
-export class NESTNodeSpatial extends BaseObj {
+export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
   private _node: NESTNode;
   private _positions: FreePositions | GridPositions | undefined;
 
-  constructor(node: NESTNode, nodeSpatialProps?: INESTNodeSpatialProps) {
+  constructor(node: NESTNode) {
     super({
       config: { name: "NESTNodeSpatial", simulator: "nest" },
     });
-    this._node = node;
 
-    if (nodeSpatialProps) {
-      switch (nodeSpatialProps.positions) {
-        case "free":
-          this._positions = new FreePositions(this, nodeSpatialProps.specs);
-          break;
-        case "grid":
-          this._positions = new GridPositions(this, nodeSpatialProps.specs);
-          break;
-      }
-    }
+    this._node = node;
   }
 
   get code(): string {
@@ -57,41 +47,44 @@ export class NESTNodeSpatial extends BaseObj {
     return this._positions;
   }
 
-  /**
-   * Initialize spatial node.
-   */
-  init(nodeSpatialProps: INESTNodeSpatialProps): void {
-    switch (nodeSpatialProps.positions) {
-      case "free":
-        this._positions = new FreePositions(this, nodeSpatialProps.specs);
-        break;
-      case "grid":
-        this._positions = new GridPositions(this, nodeSpatialProps.specs);
-        break;
-      default:
-        this._positions = undefined;
-        break;
-    }
-  }
-
   changes(): void {
     this._node.changes();
   }
 
   /**
-   * Serialize for JSON.
-   * @return spatial object
+   * Load spatial node from state.
+   * @param state spatial node state
    */
-  toJSON(): INESTNodeSpatialProps {
-    const nodeSpatialProps: INESTNodeSpatialProps = {};
-    if (this._positions != undefined) {
-      nodeSpatialProps.positions = this._positions.name;
-      nodeSpatialProps.specs = this._positions.toJSON();
+  load(state: INESTNodeSpatialState): void {
+    switch (state.positions) {
+      case "free":
+        this._positions = new FreePositions(this);
+        break;
+      case "grid":
+        this._positions = new GridPositions(this);
+        break;
+      default:
+        this._positions = undefined;
+        break;
     }
-    return nodeSpatialProps;
+
+    this.positions?.load(state.specs);
   }
 
-  updatePositionParams(positionProps: IBasePositionsProps | IGridPositionsProps): void {
-    this._positions?.update(positionProps);
+  /**
+   * Save spatial node to state.
+   * @return spatial node state
+   */
+  override save(): INESTNodeSpatialState {
+    const state: INESTNodeSpatialState = {};
+    if (this.positions) {
+      state.positions = this.positions.name;
+      state.specs = this.positions.save();
+    }
+    return state;
+  }
+
+  updatePositionParams(positionState: IBasePositionsState | IGridPositionsState): void {
+    this._positions?.load(positionState);
   }
 }

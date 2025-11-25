@@ -73,12 +73,12 @@ export class ActivityAnimationLayerModel extends BaseObj {
   }
 
   /**
-   * Reset graph objects.
+   * Reset graph instances.
    */
   resetObjects(): void {
     if (this._graphGroup == undefined) return;
 
-    const scale: number = this._layer.state.object.size;
+    const scale: number = this._layer.state.instance.size;
     this._graphGroup.children.forEach((child: Object3D<Object3DEventMap>) => {
       const mesh = child as TMesh;
 
@@ -91,7 +91,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
   }
 
   /**
-   * Update mesh objects.
+   * Update mesh instances.
    */
   updateMesh(
     mesh: TMesh,
@@ -116,7 +116,7 @@ export class ActivityAnimationLayerModel extends BaseObj {
   }
 
   /**
-   * Update graph objects.
+   * Update graph instances.
    */
   updateObjects(frame: IActivityAnimationLayerFrame, trailIdx?: number): void {
     this.logger.trace("update objects");

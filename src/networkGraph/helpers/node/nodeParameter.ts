@@ -1,55 +1,64 @@
 // nodeParameter.ts
 
+import type { AbstractCodeNode } from "@babsey/code-graph";
+
 import type { TNodeParameterParent } from "@/types";
 
-import { BaseParameter, type IParamProps } from "@/helpers/common/parameter";
-import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseParameter, type IParamState } from "@/helpers/common";
+import { ModelParameter } from "@/helpers/model";
+
+import { NodeParameters } from "./nodeParameters";
 
 export class NodeParameter extends BaseParameter {
-  public _node: TNodeParameterParent;
+  public _nodeParams: NodeParameters;
 
-  constructor(node: TNodeParameterParent, paramProps: IParamProps) {
-    super(paramProps);
-    this._node = node;
+  constructor(nodeParams: NodeParameters) {
+    super();
+
+    this._nodeParams = nodeParams;
+  }
+
+  get codeNode(): AbstractCodeNode | undefined {
+    return this.nodeParams.codeNode;
   }
 
   /**
    * Get model parameter.
    */
-  override get modelParam(): ModelParameter {
-    return this.node.model.params[this.id];
+  override get modelParam(): ModelParameter | undefined {
+    return this.nodeParams.node.model.params[this.id];
+  }
+
+  get nodeParams(): NodeParameters {
+    return this._nodeParams;
   }
 
   get node(): TNodeParameterParent {
-    return this._node;
-  }
-
-  override get parent(): TNodeParameterParent {
-    return this.node;
+    return this.nodeParams.node;
   }
 
   /**
-   * Serialize for JSON.
-   * @return parameter props
+   * SAve node parameter to state.
+   * @return parameter state
    */
-  override toJSON(): IParamProps {
-    const paramProps: IParamProps = {
+  override save(): IParamState {
+    const paramState: IParamState = {
       id: this.id,
       value: this.value,
     };
 
     // Add label if existed.
-    if (this.label) paramProps.label = this.label;
+    if (this.label) paramState.label = this.label;
 
     // Add value factors if existed.
-    if (this.factors.length > 0) paramProps.factors = this.factors;
+    if (this.factors.length > 0) paramState.factors = this.factors;
 
     // Add rules for validation if existed.
-    if (this.rules.length > 0) paramProps.rules = this.rules;
+    if (this.rules.length > 0) paramState.rules = this.rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) paramProps.type = this.typeToJSON();
+    if (!this.isConstant) paramState.type = this.saveType();
 
-    return paramProps;
+    return paramState;
   }
 }

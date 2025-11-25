@@ -7,9 +7,9 @@ import { v4 as uuidv4 } from "uuid";
 import { sortString } from "@/utils/array";
 import { truncate } from "@/utils/truncate";
 
-import { BaseObj } from "./base";
+import { BaseObj, IBaseState } from "./base";
 
-export interface IDoc {
+export interface IDoc extends IBaseState {
   _deleted?: boolean;
   _id?: string;
   _rev?: string;

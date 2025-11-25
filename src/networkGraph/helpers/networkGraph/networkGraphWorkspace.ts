@@ -48,9 +48,7 @@ export class NetworkGraphWorkspace extends BaseObj {
   private _zoom: NetworkGraphZoom;
 
   constructor(networkGraph: TNetworkGraph) {
-    super({
-      config: { name: "NetworkGraphWorkspace" },
-    });
+    super({ config: { name: "NetworkGraphWorkspace" } });
 
     this._selector = select("g#networkWorkspace");
     this._handler = select("rect#workspaceHandler");

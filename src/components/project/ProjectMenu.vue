@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { computed, nextTick } from "vue";
 
-import type { TProject, TProjectProps } from "@/types";
+import type { TProject, TProjectState } from "@/types";
 import { confirmDialog } from "@/helpers/common/confirmDialog";
 
 import Menu from "../common/Menu.vue";
@@ -18,7 +18,7 @@ import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const props = defineProps<{
-  project: TProject | TProjectProps;
+  project: TProject | TProjectState;
 }>();
 
 const project = computed(() => props.project);

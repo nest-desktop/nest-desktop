@@ -7,16 +7,16 @@ import { ConnectionGraph } from "@/networkGraph/helpers/connectionGraph/connecti
 import type { TDragBehavior, TNodeGroup, TSelection } from "@/types";
 import { drawPathNode } from "@/networkGraph/helpers/connectionGraph/connectionGraphPath";
 
-import { NESTNetworkGraph } from "../network/networkGraph";
-import { NESTNetwork } from "../network/network";
-import { NESTCopyModel } from "../model/copyModel";
-import { NESTConnection } from "./connection";
-import { NESTNode } from "../node/node";
+import type { NESTNetworkGraph } from "../network/networkGraph";
+import type { NESTNetwork } from "../network/network";
+import type { NESTCopyModel } from "../model/copyModel";
+import type { NESTConnection } from "./connection";
+import type { NESTNode } from "../node/node";
 
 export class NESTConnectionGraph extends ConnectionGraph {
-  constructor(networkGraph: NESTNetworkGraph) {
-    super(networkGraph);
-  }
+  // constructor(networkGraph: NESTNetworkGraph) {
+  //   super(networkGraph);
+  // }
 
   get network(): NESTNetwork {
     return this.networkGraph.network as NESTNetwork;
@@ -29,7 +29,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
   /**
    * Drag connection graph by moving its node graphs.
    * @param event mouse event
-   * @param connection connection object
+   * @param connection connection instance
    */
   drag(event: MouseEvent, connection: NESTConnection): void {
     if (this.state.dragLine || !connection) return;
@@ -68,7 +68,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
 
   /**
    * Initialize a connection graph.
-   * @param connection connection object
+   * @param connection connection instance
    * @param idx index of the element
    * @param elements SVG elements
    */
@@ -134,7 +134,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
           if (copyModel === undefined) {
             copyModel = this.network.copyModels.copy(
               connection.synapse.modelId,
-              // connection.synapse.toJSON().params,
+              // connection.synapse.save().params,
             );
             connection.synapse.loadModel([
               { id: "weight_recorder", value: this.network.connections.state.selectedNode.view.label },
@@ -193,7 +193,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
     connections
       .style("color", (c: NESTConnection) => {
         if (!c.source) return;
-        return "var(--colorNode" + c.sourceIdx + ")";
+        return "var(--colorNode" + c.source?.idx + ")";
       })
       .transition(t)
       .style("opacity", 1);
@@ -233,7 +233,7 @@ export class NESTConnectionGraph extends ConnectionGraph {
         .attr("dy", connection.view.toRight ? 3 : -5)
         .attr("fill", "currentColor")
         .classed("toLeft", !connection.view.toRight)
-        .text(connection.synapse.paramsVisible.includes("weight") ? connection.synapse.weight : "");
+        .text(connection.synapse.params.paramsVisible.includes("weight") ? connection.synapse.params.weight : "");
 
       // .style("font-family", "Roboto")
       // .style("font-size", "0.7em", "important")

@@ -4,7 +4,6 @@ import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
 import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
 import { useAppStore } from "@/stores/appStore";
-import { INodeProps } from "@/networkGraph";
 
 const validateVersion = (version: string) => /^4\.2(\.\d+)?(\w+)?$/.test(version);
 
@@ -13,33 +12,51 @@ const renameKernelParam: Record<string, string> = {
   rngSeed: "rng_seed",
 };
 
-export function upgradeProject_42_to_50(projectProps: any): any {
+export function upgradeProject_42_to_50(projectState: any): any {
   const appStore = useAppStore();
 
-  if (!validateVersion(projectProps.version)) return projectProps;
+  if (!validateVersion(projectState.version)) return projectState;
 
   // Kernel
-  const kernelProps = projectProps.simulation.kernel;
-  projectProps.simulation.kernel = Object.fromEntries(
-    Object.entries(kernelProps).map(([k, v]) => [
+  const kernelState = projectState.simulation.kernel;
+  projectState.simulation.kernel = Object.fromEntries(
+    Object.entries(kernelState).map(([k, v]) => [
       renameKernelParam[k] ?? k,
       { value: v, id: renameKernelParam[k] ?? k },
     ]),
   );
 
-  // Params
-  projectProps.network.nodes
-    .filter((nodeProps: any) => nodeProps.params)
-    .forEach((nodeProps: any) => (nodeProps.params = Object.fromEntries(nodeProps.params.map((p) => [p.id, p]))));
+  // Node params
+  projectState.network.nodes
+    .filter((nodeState: any) => nodeState.params)
+    .forEach((nodeState: any) => (nodeState.params = Object.fromEntries(nodeState.params.map((p: any) => [p.id, p]))));
+
+  // Connection params
+  projectState.network.connections
+    .filter((connectionState: any) => connectionState.params)
+    .forEach(
+      (connectionState: any) =>
+        (connectionState.params = Object.fromEntries(connectionState.params.map((p: any) => [p.id, p]))),
+    );
+
+  // Synapse params
+  projectState.network.connections
+    .filter((connectionState: any) => connectionState.synapse?.params)
+    .forEach(
+      (connectionState: any) =>
+        (connectionState.synapse.params = Object.fromEntries(
+          connectionState.synapse.params.map((p: any) => [p.id, p]),
+        )),
+    );
 
   if (appStore.currentWorkspace?.loadGraphByProject) {
     const viewModel = new useCodeGraph({ code: new PythonCode() });
     registerNodeTypes(viewModel);
 
-    appStore.currentWorkspace.loadGraphByProject(viewModel.editor.graph, projectProps);
-    projectProps.code = { editor: viewModel.editor.save() };
+    appStore.currentWorkspace.loadGraphByProject(viewModel.editor.graph, projectState);
+    projectState.code = { editor: viewModel.editor.save() };
   }
 
-  projectProps.version = "5.0";
-  return projectProps;
+  projectState.version = "5.0";
+  return projectState;
 }

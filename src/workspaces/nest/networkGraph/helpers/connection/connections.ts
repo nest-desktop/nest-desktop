@@ -1,72 +1,71 @@
 // connections.ts
 
-import { BaseConnections } from "@/networkGraph/helpers/connection/connections";
+import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import { type INESTConnectionProps, NESTConnection } from "./connection";
-import { NESTNetwork } from "../network/network";
+import { BaseConnections } from "@/networkGraph/helpers/connection/connections";
+import type { Class } from "@/types";
+
+import { NESTConnection } from "./connection";
+import type { NESTNetwork } from "../network/network";
 
 export class NESTConnections extends BaseConnections {
-  constructor(network: NESTNetwork, connectionsProps: INESTConnectionProps[] = []) {
-    super(network, connectionsProps);
-  }
-
-  override get Connection() {
+  override get Connection(): Class<NESTConnection> {
     return NESTConnection;
   }
 
-  override get all(): NESTConnection[] {
-    return this._connections as NESTConnection[];
-  }
-
-  override get connections(): NESTConnection[] {
-    return this._connections as NESTConnection[];
+  get codeNodes(): AbstractCodeNode[] {
+    return (
+      this.network.project.code?.graph?.nodes.filter(
+        (codeNode: AbstractCodeNode) => codeNode.type === "nest.Connect",
+      ) ?? []
+    );
   }
 
   /**
    * filter connection list containing weight recorder.
    */
   get filterWithWeightRecorder(): NESTConnection[] {
-    return this.all.filter((connection: NESTConnection) => connection.synapse.recordedByWeightRecorder);
+    return this.connections.filter((connection: NESTConnection) => connection.synapse.recordedByWeightRecorder);
   }
 
   override get network(): NESTNetwork {
     return this._network as NESTNetwork;
   }
 
-  /**
-   * Add connection component to the network.
-   * @param connectionProps connection props
-   * @returns connection object
-   */
-  override addConnection(connectionProps: INESTConnectionProps): NESTConnection {
-    this.logger.trace("add");
+  // /**
+  //  * Add connection component to the network.
+  //  * @param connectionState connection state
+  //  * @returns connection instance
+  //  */
+  // override addConnection(connectionState: INESTConnectionState): NESTConnection {
+  //   this.logger.trace("add");
 
-    const connection: NESTConnection = new this.Connection(this, connectionProps);
-    connection.updateHash();
-    this.connections.push(connection);
-    return connection;
-  }
+  //   const connection: NESTConnection = new this.Connection(this);
+  //   connection.load(connectionState);
+  //   connection.init();
+  //   return connection;
+  // }
 
   /**
-   * Clean nodes and connection components.
+   * Clean nodes and connection instances.
    */
   override clean(): void {
     this.logger.trace("clean");
 
-    this.all.forEach((connection: NESTConnection) => connection.clean());
+    this.connections.forEach((connection: NESTConnection) => connection.clean());
 
-    this.all.forEach((connection: NESTConnection) => {
-      if (connection.source.isNode) connection.sourceSlice.update();
-      if (connection.target.isNode) connection.targetSlice.update();
-    });
+    // this.connections.forEach((connection: NESTConnection) => {
+    //   if (connection.source.isNode) connection.sourceSlice.update();
+    //   if (connection.target.isNode) connection.targetSlice.update();
+    // });
   }
 
   /**
-   * Find connection by synapse model id.
-   * @param modelId string
-   * @returns connection object
+   * Find connection by synapse model ID.
+   * @param modelId synapse model ID
+   * @returns connection instance
    */
   getBySynapseModelId(modelId: string): NESTConnection | undefined {
-    return this.all.find((connection: NESTConnection) => connection.synapse.modelId === modelId);
+    return this.connections.find((connection: NESTConnection) => connection.synapse.modelId === modelId);
   }
 }

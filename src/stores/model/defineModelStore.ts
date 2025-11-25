@@ -7,7 +7,7 @@ import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 import router from "@/router";
 import type { Class, TNetwork, TSimulation, TStore } from "@/types";
 import type { TElementType } from "@/helpers/model/model";
-import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
+import { BaseProject, type IBaseProjectState } from "@/helpers/project/project";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
@@ -15,7 +15,7 @@ import { truncate } from "@/utils/truncate";
 import { useAppStore } from "../appStore";
 import { useModelDBStore } from "./modelDBStore";
 
-export interface IModelProps {
+export interface IModelState {
   id: string;
   label: string;
   elementType: string;
@@ -23,7 +23,7 @@ export interface IModelProps {
 
 interface IModelStoreState<TProject extends BaseProject = BaseProject> {
   modelId: string;
-  models: IModelProps[];
+  models: IModelState[];
   project: TProject | null;
   projectId: string;
   projectFilename?: string;
@@ -68,14 +68,14 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
     /**
      * Find model from the list.
      * @param modelId model Id
-     * @returns model object
+     * @returns model instance
      */
-    const findModel = (modelId: string) => state.models.find((model: IModelProps) => model.id === modelId);
+    const findModel = (modelId: string) => state.models.find((model: IModelState) => model.id === modelId);
 
     /**
      * Get model from the db list.
      * @param modelId model Id
-     * @returns model object
+     * @returns model instance
      */
     const getModel = (modelId: string) => {
       const modelDBStore = props.useModelDBStore();
@@ -113,9 +113,9 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
       logger.trace("load project from assets:", state.projectId);
 
       loadJSON(`assets/workspaces/${props.workspace}/projects/${state.projectId}.json`).then(
-        (projectProps: IBaseProjectProps) => {
-          projectProps.filename = state.projectId;
-          model.value.project = new props.Project(projectProps);
+        (projectState: IBaseProjectState) => {
+          projectState.filename = state.projectId;
+          model.value.project = new props.Project(projectState);
           updateProject();
         },
       );

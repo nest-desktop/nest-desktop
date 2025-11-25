@@ -1,20 +1,19 @@
 // model.ts
 
-import { BaseModel, IModelProps, IModelStateProps } from "@/helpers/model/model";
-import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseModel, type IModelState, type IModelRecordState, type ModelParameter } from "@/helpers/model";
 
-export interface IPyNNModelProps extends IModelProps {
+export interface IPyNNModelState extends IModelState {
   codeTemplate?: string;
 }
 
 export class PyNNModel extends BaseModel {
   private _codeTemplate: string = "";
 
-  constructor(modelProps: IPyNNModelProps) {
-    super(modelProps, { name: "PyNNModel", workspace: "pynn" });
+  constructor(modelState: IPyNNModelState) {
+    super(modelState, { name: "PyNNModel", workspace: "pynn" });
 
-    if (modelProps.codeTemplate) {
-      this._codeTemplate = modelProps.codeTemplate;
+    if (modelState.codeTemplate) {
+      this._codeTemplate = modelState.codeTemplate;
     }
   }
 
@@ -27,23 +26,23 @@ export class PyNNModel extends BaseModel {
   }
 
   /**
-   * Serialize to JSON.
-   * @returns pynn model props
+   * Save pynn model to state.
+   * @returns pynn model state
    */
-  override toJSON(): IPyNNModelProps {
-    const modelProps: IPyNNModelProps = {
+  override save(): IPyNNModelState {
+    const modelState: IPyNNModelState = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
       label: this.state.label,
-      params: Object.values(this.params).map((param: ModelParameter) => param.toJSON()),
+      params: Object.values(this.params).map((param: ModelParameter) => param.save()),
       version: process.env.APP_VERSION,
     };
 
     // Add the states if provided.
-    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state.id);
-    if (this.codeTemplate) modelProps.codeTemplate = this.codeTemplate;
+    if (this.states.length > 0) modelState.states = this.states.map((state: IModelRecordState) => state.id);
+    if (this.codeTemplate) modelState.codeTemplate = this.codeTemplate;
 
-    return modelProps;
+    return modelState;
   }
 }

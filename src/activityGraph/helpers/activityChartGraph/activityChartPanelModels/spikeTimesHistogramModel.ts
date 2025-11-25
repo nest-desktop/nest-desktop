@@ -4,13 +4,13 @@ import type { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity
 import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { histogram } from "../graphObjects/histogram";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "spikeTimesHistogram";
     this.panel.xAxis = 1;
@@ -26,12 +26,12 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add data of spike times for histogram panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

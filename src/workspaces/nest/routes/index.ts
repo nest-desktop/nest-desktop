@@ -2,12 +2,12 @@
 
 import type { RouteRecordRaw } from "vue-router";
 
-import { setCurrentWorkspace } from "@/stores/appStore";
 import { closeNav } from "@/stores/navStore";
+import { defineCodeGraphRoute } from "@/codeGraph/routes/codeGraphRoutes";
+import { setCurrentWorkspace } from "@/stores/appStore";
 
 import modelRoutes from "./modelRoutes";
 import projectRoutes from "./projectRoutes";
-import codeGraphRoutes from "@/codeGraph/routes/codeGraphRoutes";
 
 export default {
   path: "nest/",
@@ -37,7 +37,7 @@ export default {
       path: "code/",
       name: "nestCodeGraphLayout",
       component: () => import("@/codeGraph/layouts/CodeGraphLayout.vue"),
-      children: codeGraphRoutes as RouteRecordRaw[],
+      children: defineCodeGraphRoute("nest") as RouteRecordRaw[],
     },
   ],
 };

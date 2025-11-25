@@ -4,13 +4,13 @@ import { type UnwrapRef, reactive } from "vue";
 
 import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import type { TActivityGraph, TNetwork, TNode, TNodeGroup } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import type { Class, TActivityGraph, TNetwork, TNode, TNodeGroup } from "@/types";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 
-import { BaseNode, type INodeProps } from "./node";
-import { type INodeGroupProps, NodeGroup } from "./nodeGroup";
+import { BaseNode, type INodeState } from "./node";
+import { type INodeGroupState, NodeGroup } from "./nodeGroup";
 
-interface INodesState {
+interface INodesRefState {
   annotations: Record<string, string>[];
   contextMenu: boolean;
   focusedNode: TNode | TNodeGroup | null;
@@ -18,42 +18,42 @@ interface INodesState {
 }
 
 export class BaseNodes extends BaseObj {
-  private _state: UnwrapRef<INodesState>; //reactive state
-  public _nodes: (TNode | TNodeGroup)[] = [];
-  public _network: TNetwork; // parent
-
-  constructor(network: TNetwork, nodesProps?: (INodeProps | INodeGroupProps)[]) {
-    super();
-
-    this._network = network;
-
-    this._state = reactive<INodesState>({
+  private _state: UnwrapRef<INodesRefState> =reactive<INodesRefState>({
       annotations: [],
       contextMenu: false,
       focusedNode: null,
       selectedNodes: [] as (TNode | TNodeGroup)[],
-    });
+    }); //reactive state
+  // public _nodes: (TNode | TNodeGroup)[] = [];
+  public _network: TNetwork; // parent
 
-    this.update(nodesProps);
+  constructor(network: TNetwork) {
+    super();
+
+    this._network = network;
   }
 
-  get Node() {
+  get Node(): Class<BaseNode> {
     return BaseNode;
   }
 
   get all(): (TNodeGroup | BaseNode)[] {
-    return this._nodes;
+    return this.nodes;
   }
 
   get annotations(): Record<string, string>[] {
-    return this._state.annotations;
+    return this.state.annotations;
+  }
+
+  get codeNodes(): AbstractCodeNode[] {
+    return [];
   }
 
   /**
    * Check if it has any selected nodes (n > 1).
    */
   get hasAnySelectedNodes(): boolean {
-    return this._state.selectedNodes.length > 1;
+    return this.state.selectedNodes.length > 1;
   }
 
   /**
@@ -70,7 +70,7 @@ export class BaseNodes extends BaseObj {
     return this.nodeItems.some((node: TNode) => node.model?.isSpikeRecorder);
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       nodes: this.nodeItems.map((node: TNode) => node.hash),
     };
@@ -80,7 +80,7 @@ export class BaseNodes extends BaseObj {
    * Get length of nodes list.
    */
   get length(): number {
-    return this._nodes.length;
+    return this.nodes.length;
   }
 
   get network(): TNetwork {
@@ -95,15 +95,15 @@ export class BaseNodes extends BaseObj {
   }
 
   get nodeGroups(): TNodeGroup[] {
-    return this._nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+    return this.nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
   }
 
   get nodeItems(): TNode[] {
-    return this._nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+    return this.nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
   }
 
   get nodes(): (TNode | TNodeGroup)[] {
-    return this._nodes;
+    return this.codeNodes.map((codeNode: AbstractCodeNode) => codeNode.mask);
   }
 
   /**
@@ -131,7 +131,7 @@ export class BaseNodes extends BaseObj {
    * Get selected node groups.
    */
   get selectedNodeGroups(): TNodeGroup[] {
-    const selectedNodes = this._state.selectedNodes as (TNode | TNodeGroup)[];
+    const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
     return selectedNodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
   }
 
@@ -139,11 +139,11 @@ export class BaseNodes extends BaseObj {
    * Get selected nodes.
    */
   get selectedNodeItems(): TNode[] {
-    const selectedNodes = this._state.selectedNodes as (TNode | TNodeGroup)[];
+    const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
     return selectedNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
   }
 
-  get state(): UnwrapRef<INodesState> {
+  get state(): UnwrapRef<INodesRefState> {
     return this._state;
   }
 
@@ -183,27 +183,24 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Add node component.
-   * @param nodeProps node props
    */
-  addNode(nodeProps?: INodeProps): TNode {
-    this.logger.trace("add node:", nodeProps?.model);
+  addNode(nodeState?: INodeState): TNode {
+    this.logger.trace("add node");
 
-    const node = new this.Node(this, nodeProps);
-    this._nodes.push(node);
-
-    node.updateHash();
+    const node = new this.Node(this);
+    if (nodeState) node.load(nodeState);
     return node;
   }
 
   /**
    * Add node group component.
-   * @param nodeGroupProps node group props
+   * @param nodeGroupState node group state
    */
-  addNodeGroup(nodeGroupProps: INodeGroupProps): TNodeGroup {
+  addNodeGroup(nodeGroupState: INodeGroupState): TNodeGroup {
     this.logger.trace("add node group");
 
-    const nodeGroup = new NodeGroup(this, nodeGroupProps);
-    this._nodes.push(nodeGroup);
+    const nodeGroup = new NodeGroup(this, nodeGroupState);
+    // this._nodes.push(nodeGroup);
 
     nodeGroup.updateHash();
     return nodeGroup;
@@ -234,7 +231,7 @@ export class BaseNodes extends BaseObj {
    */
   clear(): void {
     this.resetState();
-    this._nodes = [];
+    // this._nodes = [];
   }
 
   /**
@@ -253,7 +250,7 @@ export class BaseNodes extends BaseObj {
     const nodes = this._state.selectedNodes.map((node) => node.idx);
     const nodeGroup = this.addNodeGroup({ nodes });
     this.selectNode(nodeGroup);
-    this._network.changes({ preventSimulation: true });
+    this.network.changes({ preventSimulation: true });
   }
 
   /**
@@ -268,12 +265,33 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
+   * Load nodes from state.
+   * @param nodeStates node states
+   */
+  load(nodeStates?: INodeState[]): void {
+    this.logger.trace("update");
+
+    if (nodeStates)
+      nodeStates.forEach((nodeState: INodeState | INodeGroupState) => {
+        if ("nodes" in nodeState) {
+          this.addNodeGroup(nodeState as INodeGroupState);
+        } else {
+          this.addNode(nodeState as INodeState);
+        }
+      });
+
+    this.clean();
+    this.updateHash();
+  }
+
+  /**
    * Register code node.
    */
   registerCodeNode(codeNode: AbstractCodeNode, node?: TNode): void {
-    this.logger.debug("register code node", codeNode.shortId);
+    this.logger.trace("register code node:", codeNode.shortId);
 
-    if (!node) node = new this.Node(this, { model: codeNode.inputs.model.value });
+    if (!node) node = this.addNode({ model: codeNode.inputs.model.value });
+
     node.registerCodeNode(codeNode);
     node.init();
   }
@@ -283,7 +301,7 @@ export class BaseNodes extends BaseObj {
    * @param type code node type
    */
   registerCodeNodes(type: string): void {
-    this.logger.trace("register code nodes", type);
+    this.logger.trace("register code nodes: ", type);
 
     const graph = this.network.project.viewModel?.editor.graph;
     if (!graph) return;
@@ -294,20 +312,22 @@ export class BaseNodes extends BaseObj {
 
   /**
    * Remove node component from the network.
-   * @param node node object
+   * @param node node instance
    */
   remove(node: TNode | TNodeGroup): void {
     this.logger.trace("remove node");
 
-    this._network.state.unselectAll();
+    this.network.state.unselectAll();
+
+    node.codeNode?.remove();
 
     // Remove node from the node list.
-    this._nodes.splice(node.idx, 1);
+    // this._nodes.splice(node.idx, 1);
   }
 
   /**
    * Remove node in the node groups.
-   * @param node node object
+   * @param node node instance
    */
   removeNodeInNodeGroups(node: TNode | TNodeGroup): void {
     this.resetState();
@@ -321,32 +341,40 @@ export class BaseNodes extends BaseObj {
   resetState(): void {}
 
   /**
+   * Save nodes to state.
+   * @return node states
+   */
+  override save(): (INodeState | INodeGroupState)[] {
+    return this.nodes.map((node: TNode | TNodeGroup) => node.save());
+  }
+
+  /**
    * Select node.
-   * @param node node or node group object
+   * @param node node or node group instance
    */
   selectNode(node: TNode | TNodeGroup) {
-    this._state.selectedNodes.push(node);
-    this._state.selectedNodes.sort();
+    this.state.selectedNodes.push(node);
+    this.state.selectedNodes.sort();
   }
 
   /**
    * Show node in list.
    */
   showNode(node: TNode | TNodeGroup): boolean {
-    const elementTypeIdx = this._network.state.elementTypeIdx;
+    const elementTypeIdx = this.network.state.elementTypeIdx;
 
-    if (this._state.selectedNodes.length > 0) {
+    if (this.state.selectedNodes.length > 0) {
       // selected node
       return (
         this.selectedNodeGroups.some((nodeGrp: TNodeGroup) => nodeGrp.nodes.includes(node)) ||
-        this._state.selectedNodes.includes(node)
+        this.state.selectedNodes.includes(node)
       );
     } else if (elementTypeIdx > 0) {
       // element type
-      return this._network.elementTypes[elementTypeIdx].id === node.elementType;
-    } else if (this._network.state.state.displayIdx.nodes.length > 0) {
+      return this.network.elementTypes[elementTypeIdx].id === node.elementType;
+    } else if (this.network.state.state.displayIdx.nodes.length > 0) {
       // custom
-      return this._network.state.state.displayIdx.nodes.includes(node.idx);
+      return this.network.state.state.displayIdx.nodes.includes(node.idx);
     } else {
       // all
       return true;
@@ -354,21 +382,13 @@ export class BaseNodes extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return list of node props
-   */
-  toJSON(): (INodeGroupProps | INodeProps)[] {
-    return this.nodes.map((node: TNode | TNodeGroup) => node.toJSON());
-  }
-
-  /**
    * Toggle node selection
-   * @param node node or node group object
+   * @param node node or node group instance
    */
   toggleNodeSelection(node: TNode | TNodeGroup) {
-    this._network.state.state.elementTypeIdx = 0;
+    this.network.state.state.elementTypeIdx = 0;
 
-    if (this._state.selectedNodes.includes(node)) {
+    if (this.state.selectedNodes.includes(node)) {
       this.unselectNode(node);
     } else {
       this.selectNode(node);
@@ -379,51 +399,30 @@ export class BaseNodes extends BaseObj {
    * Unfocus node.
    */
   unfocusNode(): void {
-    this._state.focusedNode = null;
+    this.state.focusedNode = null;
   }
 
   /**
    * Unselect node.
-   * @param node node or node group object
+   * @param node node or node group instance
    */
   unselectNode(node: TNode | TNodeGroup) {
-    const index = this._state.selectedNodes.indexOf(node);
-    this._state.selectedNodes.splice(index, 1);
+    const index = this.state.selectedNodes.indexOf(node);
+    this.state.selectedNodes.splice(index, 1);
   }
 
   /**
    * Unselect node.
    */
   unselectNodes(): void {
-    this._state.selectedNodes = [];
-  }
-
-  /**
-   * Update network component.
-   *
-   * @param networkProps network props
-   */
-  update(nodesProps?: (INodeProps | INodeGroupProps)[]): void {
-    this.logger.trace("update");
-
-    if (nodesProps)
-      nodesProps.forEach((nodeProps: INodeProps | INodeGroupProps) => {
-        if ("nodes" in nodeProps) {
-          this.addNodeGroup(nodeProps as INodeGroupProps);
-        } else {
-          this.addNode(nodeProps as INodeProps);
-        }
-      });
-
-    this.clean();
-    this.updateHash();
+    this.state.selectedNodes = [];
   }
 
   /**
    * Update annotations.
    */
   updateAnnotations(): void {
-    this._state.annotations = [];
+    this.state.annotations = [];
 
     const nodeAnnotationsDict: Record<string, string[]> = {};
     this.nodeItems
@@ -443,7 +442,7 @@ export class BaseNodes extends BaseObj {
       Object.keys(nodeAnnotationsDict).forEach((userDictKey: string) => {
         const nodes = nodeAnnotationsDict[userDictKey];
         const nodesStr = nodes.length === 1 ? nodes[0] : "(" + nodes.join("+") + ")";
-        this._state.annotations.push({
+        this.state.annotations.push({
           key: userDictKey,
           value: nodesStr,
         });

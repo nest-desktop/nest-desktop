@@ -49,14 +49,14 @@
                     hide-details
                     label="population size"
                   >
-                    <template #append> n: {{ node.size }} </template>
+                    <template #append> n: {{ node.size.value }} </template>
                   </v-checkbox>
 
                   <template v-if="node.modelParams">
                     <v-checkbox
                       v-for="(param, index) in node.model.paramsAll"
                       :key="index"
-                      v-model="node.paramsVisible"
+                      v-model="node.params.paramsVisible"
                       :color="node.view.color"
                       :label="param.label"
                       :value="param.id"
@@ -72,8 +72,8 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn text="show all" title="show all parameters" @click.stop="() => node.showAllParams()" />
-                  <v-btn text="hide all" title="show no parameters" @click.stop="() => node.hideAllParams()" />
+                  <v-btn text="show all" title="show all parameters" @click.stop="() => node.params.showAllParams()" />
+                  <v-btn text="hide all" title="show no parameters" @click.stop="() => node.params.hideAllParams()" />
                   <v-spacer />
                   <v-btn text="close" @click.stop="state.menu = false" />
                 </v-card-actions>
@@ -94,7 +94,7 @@
               <v-list-item class="param pl-0 pr-1">
                 <ValueSlider
                   id="n"
-                  v-model="node.size"
+                  v-model="node.size.value"
                   :thumb-color="node.view.color"
                   input-label="n"
                   label="population size"
@@ -115,12 +115,13 @@
           </v-list>
 
           <v-list class="py-0">
-            <template v-for="(paramId, index) in node.paramsVisible">
+            <template v-for="(paramId, index) in node.params.paramsVisible">
               <ParamListItem
-                v-if="node.paramsVisible.length > 0"
+                v-if="node.params.paramsVisible.length > 0 && node.params.params[paramId]"
                 :key="index"
+                v-model="node.params.codeNode.inputs[paramId].value"
                 :color="node.view.color"
-                :param="node.params[paramId]"
+                :param="node.params.params[paramId]"
               />
             </template>
           </v-list>

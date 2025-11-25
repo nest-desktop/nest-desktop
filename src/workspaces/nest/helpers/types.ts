@@ -7,7 +7,7 @@ import { NESTModelDB } from "./model/modelDB";
 import { NESTNetwork } from "../networkGraph/helpers/network/network";
 import { NESTNetworkGraph } from "../networkGraph/helpers/network/networkGraph";
 import { NESTNode } from "../networkGraph/helpers/node/node";
-import { NESTNodeParameter } from "../networkGraph/helpers/node/nodeParameter";
+import { NESTNodeParameter } from "../networkGraph/helpers/node/nodeParameters";
 import { NESTNodes } from "../networkGraph/helpers/node/nodes";
 import { NESTProject } from "./project/project";
 import { NESTProjectDB } from "./project/projectDB";

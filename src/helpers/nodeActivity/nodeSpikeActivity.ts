@@ -2,14 +2,14 @@
 
 import type { TNode } from "@/types";
 
-import type { IActivityProps, IEventProps } from "../activity";
+import type { IActivityState, IEventState } from "../activity";
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeSpikeActivity extends NodeActivity {
   private _times: number[][] = [];
 
-  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
-    super(recorder, activityProps);
+  constructor(recorder: TNode, activityState: IActivityState = {}) {
+    super(recorder, activityState);
   }
 
   /**
@@ -73,24 +73,24 @@ export class NodeSpikeActivity extends NodeActivity {
   /**
    * Post-update spike activity.
    */
-  override postUpdate(activityProps: IActivityProps): void {
-    if (activityProps.events == undefined) return;
+  override postUpdate(activityState: IActivityState): void {
+    if (activityState.events == undefined) return;
 
-    this.updateTimes(activityProps.events);
+    this.updateTimes(activityState.events);
   }
 
   /**
    * Update times for ISI or CV(ISI).
    */
-  updateTimes(eventProps: IEventProps = {}): void {
+  updateTimes(eventState: IEventState = {}): void {
     if (
-      eventProps.senders == undefined ||
-      eventProps.times == undefined ||
-      eventProps.senders.length === 0 ||
-      eventProps.times.length === 0
+      eventState.senders == undefined ||
+      eventState.times == undefined ||
+      eventState.senders.length === 0 ||
+      eventState.times.length === 0
     )
       return;
 
-    eventProps.senders.forEach((sender: number, idx: number) => this._times[sender].push(this.events.times[idx]));
+    eventState.senders.forEach((sender: number, idx: number) => this._times[sender].push(this.events.times[idx]));
   }
 }

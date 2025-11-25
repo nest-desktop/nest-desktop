@@ -2,11 +2,11 @@
 
 import type { TProject } from "@/types";
 
-import { Activity, type IActivityProps } from "./activity";
+import { Activity, type IActivityState } from "./activity";
 
 export class AnalogSignalActivity extends Activity {
-  constructor(project: TProject, activityProps: IActivityProps = {}) {
-    super(project, activityProps);
+  constructor(project: TProject, activityState: IActivityState = {}) {
+    super(project, activityState);
   }
 
   /**

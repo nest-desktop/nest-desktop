@@ -3,7 +3,7 @@
 import type { AxiosResponse } from "axios";
 
 import { AnalogSignalActivity } from "@/helpers/activity/analogSignalActivity";
-import type { IActivityProps, IEventProps } from "@/helpers/activity/activity";
+import type { IActivityState, IEventState } from "@/helpers/activity/activity";
 import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
 import { notifySuccess } from "@/helpers/common/notification";
 
@@ -11,7 +11,7 @@ import insiteAccess from "../../stores/backends/insiteAccessStore";
 import { NESTProject } from "../project/project";
 import { BaseObj } from "@/helpers/common/base";
 
-interface IInsiteActivityProps extends IActivityProps {
+interface IInsiteActivityState extends IActivityState {
   times: number[];
 }
 
@@ -149,7 +149,7 @@ export class Insite extends BaseObj {
   getActivities(): void {
     this._state.on = true;
 
-    // const buttonProps = [
+    // const buttonState = [
     //   {
     //     text: "terminate", // cancel, stop, end, kill, disconnect, unplug
     //     onClick: () => {
@@ -161,7 +161,7 @@ export class Insite extends BaseObj {
 
     // this._project.state.showSnackbar(
     //   "Getting activities from Insite regularly.",
-    //   buttonProps,
+    //   buttonState,
     //   true
     // );
 
@@ -184,7 +184,7 @@ export class Insite extends BaseObj {
    * @remarks
    * It initializes getting analog signal activities from Insite.
    *
-   * @param positions object
+   * @param positions instance
    */
   getAnalogSignalActivities(positions: Record<number, number[]> | undefined): void {
     if (!this._state.on) return;
@@ -198,8 +198,8 @@ export class Insite extends BaseObj {
         return;
       }
 
-      const activities: IActivityProps[] = response.data.map((data: IInsiteMultimeterResponseData) => {
-        const events: IEventProps = {
+      const activities: IActivityState[] = response.data.map((data: IInsiteMultimeterResponseData) => {
+        const events: IEventState = {
           times: [],
           senders: [],
         };
@@ -225,7 +225,7 @@ export class Insite extends BaseObj {
       });
 
       // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment. TODO: check in the future
-      activities.sort((a: IActivityProps, b: IActivityProps) =>
+      activities.sort((a: IActivityState, b: IActivityState) =>
         a.recorderUnitId && b.recorderUnitId ? a.recorderUnitId - b.recorderUnitId : 0,
       );
 
@@ -260,7 +260,7 @@ export class Insite extends BaseObj {
 
         const times: number[] = this.repeat(response.data);
         const senders: number[] = this.tile(response.data);
-        const activityProps: IInsiteActivityProps = {
+        const activityState: IInsiteActivityState = {
           events: {
             times, // x
             senders,
@@ -268,10 +268,10 @@ export class Insite extends BaseObj {
           nodeIds: response.data.nodeIds, // from insite
           times: response.data.simulationTimes, // from insite
         };
-        if (activityProps && activityProps.events) {
-          activityProps.events[attribute] = response.data.values;
+        if (activityState && activityState.events) {
+          activityState.events[attribute] = response.data.values;
         }
-        activity.update(activityProps);
+        activity.update(activityState);
 
         // Recursive call after 250ms.
         setTimeout(() => {
@@ -380,7 +380,7 @@ export class Insite extends BaseObj {
         return;
       }
 
-      const activities: IActivityProps[] = response.data.map((data: IInsiteSpikeRecorderResponseData) => {
+      const activities: IActivityState[] = response.data.map((data: IInsiteSpikeRecorderResponseData) => {
         const nodePositions: number[][] = [];
         if (positions && Object.keys(positions).length > 0) {
           data.nodeIds.forEach((nodeId: number) => {
@@ -399,7 +399,7 @@ export class Insite extends BaseObj {
 
       // Sort activities by recorder unit IDs, as Insite does not provide a sorting at the moment.
       // TODO: check in the future
-      activities.sort((a: IActivityProps, b: IActivityProps) =>
+      activities.sort((a: IActivityState, b: IActivityState) =>
         a.recorderUnitId && b.recorderUnitId ? a.recorderUnitId - b.recorderUnitId : 0,
       );
 

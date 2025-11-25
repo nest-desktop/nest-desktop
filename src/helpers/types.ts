@@ -2,7 +2,7 @@
 
 import { Activity } from "./activity/activity";
 import { BaseActivityGraph } from "./activityGraph/activityGraph";
-import { BaseCode } from "../codeGraph/codeHandler";
+import { BaseCode } from "../codeGraph/helpers/codeHandler";
 import { BaseConnection } from "../networkGraph/helpers/connection/connection";
 import { BaseConnections } from "../networkGraph/helpers/connection/connections";
 import { BaseModel } from "./model/model";

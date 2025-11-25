@@ -1,8 +1,9 @@
 <template>
   <v-layout id="codeGraphLayout" full-height style="display: flex; flex-direction: column">
     <NavBar
-      :view-model
       :editor-states="codeGraphStore.state.editorStates"
+      :routes
+      :view-model
       @click:remove="codeGraphStore.removeEditorState"
     />
 
@@ -50,20 +51,31 @@ import { initCodeGraph, useCodeGraphStore } from "../stores/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
 const viewModel = computed(() => codeGraphStore.viewModel);
 
+import { useAppStore } from "@/stores/appStore";
+const appStore = useAppStore();
+
+const currentWorkspace = computed(() => appStore.state.currentWorkspace);
+
+const routes = { edit: currentWorkspace.value + "CodeGraphEdit", new: currentWorkspace.value + "CodeGraphNew" };
+
 const size = ref(70);
 const resize = () => (size.value = size.value == 100 ? 70 : 100);
 
 onMounted(() => {
+  viewModel.value.subscribe();
   codeGraphStore.subscribe();
+
+  viewModel.value.engine.start();
 });
 
 onBeforeUnmount(() => {
+  viewModel.value.engine.stop();
+
+  viewModel.value.unsubscribe();
   codeGraphStore.unsubscribe();
 });
 
-onBeforeRouteUpdate((to: RouteLocationNormalizedGeneric) => {
-  initCodeGraph(to);
-});
+onBeforeRouteUpdate((to: RouteLocationNormalizedGeneric) => initCodeGraph(to));
 </script>
 
 <style lang="scss">

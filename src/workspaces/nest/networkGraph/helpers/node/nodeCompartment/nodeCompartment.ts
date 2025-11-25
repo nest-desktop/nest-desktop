@@ -1,40 +1,35 @@
 // nodeCompartment.ts
 
-import type { IParamProps, TParamValue } from "@/helpers/common/parameter";
-import type { INodeRecordProps } from "@/networkGraph/helpers/node/nodeRecord";
+import type { IParamState, TParamValue } from "@/helpers/common/parameter";
+import type { INodeRecordState } from "@/networkGraph/helpers/node/nodeRecord";
 import { NodeView } from "@/networkGraph/helpers/node/nodeView";
 
 import { NESTModel } from "../../../../helpers/model/model";
 import { NESTModelCompartmentParameter } from "../../../../helpers/model/modelCompartmentParameter";
 import { NESTNode } from "../node";
-import { type INESTNodeReceptorProps, NESTNodeReceptor } from "../nodeReceptor/nodeReceptor";
+import { type INESTNodeReceptorState, NESTNodeReceptor } from "../nodeReceptor/nodeReceptor";
 import { NESTNodeCompartmentParameter } from "./nodeCompartmentParameter";
 
-export interface INESTNodeCompartmentProps {
+export interface INESTNodeCompartmentState {
   parentIdx: number;
-  params?: IParamProps[];
+  params?: IParamState[];
   label?: string;
 }
 
 export class NESTNodeCompartment {
   // private readonly _name = "NodeCompartment";
 
-  private _idx: number = 0; // generative
+  private _idx: number = -1; // generative
   private _hash: string = "";
   private _label: string | undefined;
   private _node: NESTNode; // parent
   private _params: Record<string, NESTNodeCompartmentParameter> = {};
   private _paramsVisible: string[] = [];
-  private _parentIdx: number;
+  private _parentIdx: number = -1;
 
-  constructor(node: NESTNode, nodeCompartmentProps: INESTNodeCompartmentProps) {
+  constructor(node: NESTNode) {
     this._node = node;
     this._idx = this._node.compartments.length;
-
-    this._parentIdx = nodeCompartmentProps.parentIdx;
-    this._label = nodeCompartmentProps.label;
-
-    this.initParameters(nodeCompartmentProps);
   }
 
   get filteredParams(): NESTNodeCompartmentParameter[] {
@@ -136,11 +131,11 @@ export class NESTNodeCompartment {
     return this.node.receptors.filter((receptor: NESTNodeReceptor) => receptor.compartment === this);
   }
 
-  get recordables(): INodeRecordProps[] {
-    const recordables = this._node.model.recordables.map((recordable: INodeRecordProps) => ({
+  get recordables(): INodeRecordState[] {
+    const recordables = this._node.model.recordables.map((recordable: INodeRecordState) => ({
       ...recordable,
     }));
-    recordables.forEach((recordable: INodeRecordProps) => (recordable.id += this._idx));
+    recordables.forEach((recordable: INodeRecordState) => (recordable.id += this._idx));
     return recordables;
   }
 
@@ -159,17 +154,17 @@ export class NESTNodeCompartment {
   /**
    * Add a receptor to the node compartment.
    */
-  addReceptor(receptorProps: INESTNodeReceptorProps): void {
-    receptorProps.compIdx = this._idx;
-    this._node.addReceptor(receptorProps);
+  addReceptor(receptorState: INESTNodeReceptorState): void {
+    receptorState.compIdx = this._idx;
+    this._node.addReceptor(receptorState);
   }
 
   /**
    * Add a parameter component.
-   * @param param - parameter object
+   * @param param - parameter instance
    */
-  addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new NESTNodeCompartmentParameter(this, paramProps);
+  addParameter(paramState: IParamState): void {
+    this._params[paramState.id] = new NESTNodeCompartmentParameter(this, paramState);
   }
 
   /**
@@ -218,24 +213,35 @@ export class NESTNodeCompartment {
 
   /**
    * Initialize the parameter components.
-   * @param compProps - node compartment props
+   * @param compState - node compartment state
    */
-  initParameters(compProps?: INESTNodeCompartmentProps): void {
+  initParameters(compState?: INESTNodeCompartmentState): void {
     // Update parameters from model or node compartment
     this._params = {};
     const model = this.model;
     if (model) {
       Object.values(model.compartmentParams).forEach((modelParam: NESTModelCompartmentParameter) => {
-        if (compProps && "params" in compProps) {
-          const compartmentParam = compProps?.params?.find((p: IParamProps) => p.id === modelParam.id);
-          this.addParameter(compartmentParam || modelParam.toJSON());
+        if (compState && "params" in compState) {
+          const compartmentParam = compState?.params?.find((p: IParamState) => p.id === modelParam.id);
+          this.addParameter(compartmentParam || modelParam.save());
         } else {
-          this.addParameter(modelParam.toJSON());
+          this.addParameter(modelParam.save());
         }
       });
     } else {
-      compProps?.params?.forEach((paramProps: IParamProps) => this.addParameter(paramProps));
+      compState?.params?.forEach((paramState: IParamState) => this.addParameter(paramState));
     }
+  }
+
+  /**
+   * Load node compartment from state
+   * @param state node compartment staste
+   */
+  load(state: INESTNodeCompartmentState): void {
+    this._parentIdx = state.parentIdx;
+    this._label = state.label;
+
+    this.initParameters(state);
   }
 
   /**
@@ -262,24 +268,24 @@ export class NESTNodeCompartment {
   }
 
   /**
+   * Save node compartment to state.
+   * @return node compartment state
+   */
+  save(): INESTNodeCompartmentState {
+    const nodeCompartmentState: INESTNodeCompartmentState = {
+      parentIdx: this._parentIdx,
+      params: this.filteredParams.map((param: NESTNodeCompartmentParameter) => param.save()),
+    };
+
+    if (this._label) nodeCompartmentState.label = this._label;
+
+    return nodeCompartmentState;
+  }
+
+  /**
    * Sets all params to visible.
    */
   showAllParams(): void {
     this.paramsAll.forEach((param: NESTNodeCompartmentParameter) => (param.visible = true));
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return node props
-   */
-  toJSON(): INESTNodeCompartmentProps {
-    const nodeCompartmentProps: INESTNodeCompartmentProps = {
-      parentIdx: this._parentIdx,
-      params: this.filteredParams.map((param: NESTNodeCompartmentParameter) => param.toJSON()),
-    };
-
-    if (this._label) nodeCompartmentProps.label = this._label;
-
-    return nodeCompartmentProps;
   }
 }

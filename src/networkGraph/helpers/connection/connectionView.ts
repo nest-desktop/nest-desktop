@@ -16,14 +16,12 @@ export class ConnectionView {
   private _colorExcitation = "#595289"; // '#467ab3';
   private _colorInhibition = "#AF143C"; // '#b34846';
   private _connection: TConnection; // parent
-  private _state: UnwrapRef<IConnectionViewState>;
+  private _state: UnwrapRef<IConnectionViewState> = reactive<IConnectionViewState>({
+      xAxisRotation: randomUniformInt(0, 90),
+    });
 
   constructor(connection: TConnection) {
     this._connection = connection;
-
-    this._state = reactive<IConnectionViewState>({
-      xAxisRotation: randomUniformInt(0, 90),
-    });
   }
 
   get centerPosition(): { x: number; y: number } {

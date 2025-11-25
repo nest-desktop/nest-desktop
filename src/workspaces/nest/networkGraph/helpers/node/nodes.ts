@@ -1,23 +1,24 @@
 // nodes.ts
 
-import { BaseNodes } from "@/networkGraph/helpers/node/nodes";
-import type { TNodeGroup } from "@/types";
+import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import { type INESTNodeProps, NESTNode } from "./node";
-import { NESTActivityGraph } from "../../../activityGraph/helpers/activityGraph";
-import { NESTNetwork } from "../network/network";
+import { BaseNodes } from "@/networkGraph/helpers/node/nodes";
+import type { Class, TNodeGroup } from "@/types";
+
+import { NESTNode } from "./node";
+import type { NESTActivityGraph } from "../../../activityGraph/helpers/activityGraph";
+import type { NESTNetwork } from "../network/network";
 
 export class NESTNodes extends BaseNodes {
-  constructor(network: NESTNetwork, nodesProps?: INESTNodeProps[]) {
-    super(network, nodesProps);
-  }
-
-  override get Node() {
+  override get Node(): Class<NESTNode> {
     return NESTNode;
   }
 
-  override get all() {
-    return this._nodes as (TNodeGroup | NESTNode)[];
+  get codeNodes(): AbstractCodeNode[] {
+    return (
+      this._network.project.code.graph?.nodes.filter((codeNode: AbstractCodeNode) => codeNode.type === "nest.Create") ??
+      []
+    );
   }
 
   /**
@@ -54,10 +55,6 @@ export class NESTNodes extends BaseNodes {
     return this.nodeItems.filter((node: NESTNode) => node.model.isNeuron) as NESTNode[];
   }
 
-  override get nodes(): (TNodeGroup | NESTNode)[] {
-    return this._nodes as (TNodeGroup | NESTNode)[];
-  }
-
   override get nodeItems(): NESTNode[] {
     return this.nodes.filter((node: TNodeGroup | NESTNode) => node.isNode) as NESTNode[];
   }
@@ -89,19 +86,6 @@ export class NESTNodes extends BaseNodes {
    */
   cleanWeightRecorders(): void {
     this.weightRecorders.forEach((node: NESTNode) => node.clean());
-  }
-
-  /**
-   * Initialize nodes.
-   * @remarks Do not use it in the constructor.
-   */
-  override init(): void {
-    this.logger.trace("init");
-
-    // this.registerCodeNodes("nest.Create");
-
-    this.nodeItems.forEach((node: NESTNode) => node.init());
-    this.updateRecords();
   }
 
   /**

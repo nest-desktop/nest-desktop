@@ -4,7 +4,7 @@ import { type UnwrapRef, reactive } from "vue";
 
 import type { TProject } from "@/types";
 
-export interface IProjectState {
+export interface IProjectRefState {
   changes: boolean;
   editMode: boolean;
   stopwatch: {
@@ -14,14 +14,14 @@ export interface IProjectState {
 }
 
 export class ProjectState {
-  private _state: UnwrapRef<IProjectState>;
+  private _state: UnwrapRef<IProjectRefState>;
   private _project: TProject;
   private _selected: boolean = false;
 
   constructor(project: TProject) {
     this._project = project;
 
-    this._state = reactive<IProjectState>({
+    this._state = reactive<IProjectRefState>({
       changes: false,
       editMode: false,
       stopwatch: {
@@ -47,7 +47,7 @@ export class ProjectState {
     this._selected = value;
   }
 
-  get state(): UnwrapRef<IProjectState> {
+  get state(): UnwrapRef<IProjectRefState> {
     return this._state;
   }
 

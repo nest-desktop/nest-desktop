@@ -1,22 +1,22 @@
 // network.ts
 
-import { BaseNetwork, type INetworkProps } from "@/networkGraph/helpers/network/network";
-import type { INodeGroupProps } from "@/networkGraph/helpers/node/nodeGroup";
-import type { INodeProps } from "@/networkGraph/helpers/node/node";
+import { BaseNetwork, type INetworkState } from "@/networkGraph/helpers/network/network";
+import type { INodeGroupState } from "@/networkGraph/helpers/node/nodeGroup";
+import type { INodeState } from "@/networkGraph/helpers/node/node";
 
-import type { INorseConnectionProps } from "../connection/connection";
+import type { INorseConnectionState } from "../connection/connection";
 import { NorseConnections } from "../connection/connections";
 import { NorseNodes } from "../node/nodes";
 import { NorseProject } from "../../../helpers/project/project";
 
-export interface INorseNetworkProps extends INetworkProps {
-  nodes?: (INodeGroupProps | INodeProps)[];
-  connections?: INorseConnectionProps[];
+export interface INorseNetworkState extends INetworkState {
+  nodes?: (INodeGroupState | INodeState)[];
+  connections?: INorseConnectionState[];
 }
 
 export class NorseNetwork extends BaseNetwork {
-  constructor(project: NorseProject, networkProps: INorseNetworkProps = {}) {
-    super(project, networkProps);
+  constructor(project: NorseProject, networkState: INorseNetworkState = {}) {
+    super(project, networkState);
 
     this.defaultModels = {
       neuron: "LIF",

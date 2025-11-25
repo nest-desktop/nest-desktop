@@ -4,10 +4,9 @@ import { AxiosHeaders, AxiosPromise } from "axios";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
+import { BaseObj } from "@/helpers/common";
 
-import { BaseObj } from "../helpers/common/base";
-
-export interface IResponseProps {
+export interface IResponseState {
   data: object | string;
   config: object;
   headers: AxiosHeaders;

@@ -3,11 +3,11 @@
 import { BaseConnections } from "@/networkGraph/helpers/connection/connections";
 
 import { NorseNetwork } from "../network/network";
-import { type INorseConnectionProps, NorseConnection } from "./connection";
+import { type INorseConnectionState, NorseConnection } from "./connection";
 
 export class NorseConnections extends BaseConnections {
-  constructor(network: NorseNetwork, connectionsProps: INorseConnectionProps[] = []) {
-    super(network, connectionsProps);
+  constructor(network: NorseNetwork, connectionStates: INorseConnectionState[] = []) {
+    super(network, connectionStates);
   }
 
   override get Connection() {

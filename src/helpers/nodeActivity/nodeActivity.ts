@@ -5,16 +5,16 @@ import type { TNetworkProject, TNode } from "@/types";
 
 import { sum } from "@/utils/array";
 
-import { Activity, type IActivityProps } from "../activity";
+import { Activity, type IActivityState } from "../activity";
 
 export class NodeActivity extends Activity {
   private _recorder: TNode; // parent
 
-  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
-    super(recorder.network.project, activityProps);
+  constructor(recorder: TNode, activityState: IActivityState = {}) {
+    super(recorder.network.project, activityState);
 
     this._recorder = recorder;
-    this.init(activityProps);
+    this.init(activityState);
   }
 
   override get traceColor(): string {
@@ -49,7 +49,7 @@ export class NodeActivity extends Activity {
   }
 
   override get nodeSize(): number {
-    return sum(this.recorder.nodes.nodeItems.map((node: TNode) => node.size));
+    return sum(this.recorder.nodes.nodeItems.map((node: TNode) => node.size.value));
   }
 
   override get project(): TNetworkProject {

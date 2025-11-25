@@ -1,20 +1,20 @@
 // connection.ts
 
-import { BaseConnection, type IConnectionProps } from "@/networkGraph/helpers/connection/connection";
+import { BaseConnection, type IConnectionState } from "@/networkGraph/helpers/connection/connection";
 
 import { NorseConnections } from "./connections";
 
-export interface INorseConnectionProps extends IConnectionProps {
+export interface INorseConnectionState extends IConnectionState {
   bias?: boolean;
 }
 
 export class NorseConnection extends BaseConnection {
   private _bias: boolean;
 
-  constructor(connections: NorseConnections, connectionProps: INorseConnectionProps) {
-    super(connections, connectionProps);
+  constructor(connections: NorseConnections, connectionState: INorseConnectionState) {
+    super(connections, connectionState);
 
-    this._bias = connectionProps.bias || false;
+    this._bias = connectionState.bias || false;
   }
 
   get bias(): boolean {

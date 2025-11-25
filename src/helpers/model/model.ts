@@ -5,30 +5,28 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { TProject } from "@/types";
 
-import { BaseObj } from "../common/base";
-import type { IConfigProps } from "../common/config";
-import type { IDoc } from "../common/database";
-import type { IParamProps } from "../common/parameter";
+import { type IConfigState, type IDoc, type IParamState, BaseObj, type IBaseState } from "../common";
 import { ModelParameter } from "./modelParameter";
 
-export interface IModelProps extends IDoc {
-  id?: string;
+export interface IModelState extends IDoc {
+  custom?: boolean;
   abbreviation?: string;
   elementType?: TElementType;
   favorite?: boolean;
+  id?: string;
   label?: string;
-  params?: IParamProps[];
-  recordables?: (IModelStateProps | string)[];
-  states?: (IModelStateProps | string)[];
+  params?: IParamState[];
+  recordables?: (IModelRecordState | string)[];
+  states?: (IModelRecordState | string)[];
 }
 
-export interface IModelStateProps {
+export interface IModelRecordState {
   id: string;
   label?: string;
   unit?: string;
 }
 
-interface IBaseModelState {
+interface IBaseModelRefState {
   custom: boolean;
   label: string;
   paramsVisible: string[];
@@ -36,43 +34,41 @@ interface IBaseModelState {
 
 export type TElementType = "neuron" | "recorder" | "stimulator" | "synapse";
 
-export class BaseModel extends BaseObj {
+export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
   private _abbreviation: string;
-  private _doc: IModelProps; // doc data of the database
+  private _doc: IModelState; // doc data of the database
   private _elementType: TElementType; // element type of the model
   private _favorite: boolean = false;
   private _id: string; // model id
   private _params: Record<string, ModelParameter> = {}; // model parameters
   private _project: TProject | undefined;
-  private _state: UnwrapRef<IBaseModelState>;
-  private _states: IModelStateProps[] = [];
+  private _state: UnwrapRef<IBaseModelRefState>;
+  private _states: IModelRecordState[] = [];
 
-  constructor(modelProps: IModelProps = {}, configProps?: IConfigProps) {
-    super({
-      config: { name: "Model", ...configProps },
-    });
+  constructor(modelState: IModelState = {}, configState?: IConfigState) {
+    super({ config: { name: "Model", ...configState } });
 
-    this._doc = modelProps;
-    this._id = modelProps.id || uuidv4().slice(0, 6);
-    this._elementType = modelProps.elementType || "neuron";
+    this._doc = modelState;
+    this._id = modelState.id || uuidv4().slice(0, 6);
+    this._elementType = modelState.elementType || "neuron";
 
-    this._abbreviation = modelProps.abbreviation || "";
-    this._favorite = modelProps.favorite || false;
+    this._abbreviation = modelState.abbreviation || "";
+    this._favorite = modelState.favorite || false;
 
-    this._state = reactive<IBaseModelState>({
-      custom: modelProps.custom ?? false,
-      label: modelProps.label || "",
+    this._state = reactive<IBaseModelRefState>({
+      custom: modelState.custom ?? false,
+      label: modelState.label || "",
       paramsVisible: [],
     });
 
-    this.update(modelProps);
+    this.load(modelState);
   }
 
   get abbreviation(): string {
     return this._abbreviation;
   }
 
-  get doc(): IModelProps {
+  get doc(): IModelState {
     return this._doc;
   }
 
@@ -92,7 +88,7 @@ export class BaseModel extends BaseObj {
     return this._favorite;
   }
 
-  get hashObject(): Record<string, unknown> {
+  get hashObject(): IBaseState {
     return {
       label: this.state.label,
       states: this.states,
@@ -182,15 +178,15 @@ export class BaseModel extends BaseObj {
     this._project = value;
   }
 
-  get recordables(): IModelStateProps[] {
+  get recordables(): IModelRecordState[] {
     return this._states;
   }
 
-  get state(): UnwrapRef<IBaseModelState> {
+  get state(): UnwrapRef<IBaseModelRefState> {
     return this._state;
   }
 
-  get states(): IModelStateProps[] {
+  get states(): IModelRecordState[] {
     return this._states;
   }
 
@@ -200,10 +196,12 @@ export class BaseModel extends BaseObj {
 
   /**
    * Add a parameter to the model specifications.
-   * @param paramProps parameter props
+   * @param paramState parameter state
    */
-  addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new ModelParameter(this, paramProps);
+  addParameter(paramState: IParamState): void {
+    const param = new ModelParameter(this);
+    param.load(paramState);
+    this._params[paramState.id] = param;
   }
 
   /**
@@ -225,7 +223,7 @@ export class BaseModel extends BaseObj {
    * Get the parameter of the model.
    * @param paramId ID of the searched parameter
    */
-  getParameter(paramId: string): ModelParameter {
+  getParameter(paramId: string): ModelParameter | undefined {
     return this._params[paramId];
   }
 
@@ -240,6 +238,29 @@ export class BaseModel extends BaseObj {
   changes(): void {}
 
   /**
+   * Load model from state.
+   * @param modelState model state
+   */
+  load(modelState: IModelState): void {
+    this.logger.trace("update:", modelState.id);
+
+    // Update the model ID.
+    this._id = modelState.id || uuidv4();
+
+    // Update the model recordables or states.
+    if (modelState.recordables) {
+      this.updateRecordStates(modelState.recordables);
+    } else if (modelState.states) {
+      this.updateRecordStates(modelState.states);
+    }
+
+    // Update the model parameters.
+    if (modelState.params) this.updateParameters(modelState.params);
+
+    this.updateHash();
+  }
+
+  /**
    * Create new parameter.
    * @param paramId ID of the parameter
    * @param value parameter value
@@ -247,7 +268,7 @@ export class BaseModel extends BaseObj {
   newParameter(paramId: string, value: number | number[]): void {
     this.logger.trace("new parameter:", paramId);
 
-    const paramProps: IParamProps = {
+    const paramState: IParamState = {
       component: "valueSlider",
       id: paramId,
       label: paramId,
@@ -256,9 +277,9 @@ export class BaseModel extends BaseObj {
       step: 1,
       value,
     };
-    if (Array.isArray(value)) paramProps.component = "arrayInput";
+    if (Array.isArray(value)) paramState.component = "arrayInput";
 
-    this.addParameter(paramProps);
+    this.addParameter(paramState);
     // this._params.sort();
   }
 
@@ -271,70 +292,47 @@ export class BaseModel extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return model props
+   * Save model to state.
+   * @return model state
    */
-  toJSON(): IModelProps {
-    const modelProps: IModelProps = {
+  override save(): IModelState {
+    const modelState: IModelState = {
       abbreviation: this._abbreviation,
       elementType: this._elementType,
       id: this._id,
       label: this.state.label,
-      params: Object.values(this._params).map((param: ModelParameter) => param.toJSON()),
+      params: Object.values(this._params).map((param: ModelParameter) => param.save()),
       version: process.env.APP_VERSION,
     };
 
-    if (this._favorite) modelProps.favorite = true;
+    if (this._favorite) modelState.favorite = true;
 
     // Add model states if provided.
-    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps | string) => state);
+    if (this.states.length > 0) modelState.states = this.states.map((state: IModelRecordState | string) => state);
 
-    return modelProps;
-  }
-
-  /**
-   * Update model.
-   * @param modelProps model props
-   */
-  update(modelProps: IModelProps): void {
-    this.logger.trace("update:", modelProps.id);
-
-    // Update the model ID.
-    this._id = modelProps.id || uuidv4();
-
-    // Update the model recordables or states.
-    if (modelProps.recordables) {
-      this.updateStates(modelProps.recordables);
-    } else if (modelProps.states) {
-      this.updateStates(modelProps.states);
-    }
-
-    // Update the model parameters.
-    if (modelProps.params) this.updateParameters(modelProps.params);
-
-    this.updateHash();
+    return modelState;
   }
 
   /**
    * Update the model parameters.
-   * @param modelParams parameter props
+   * @param modelParams model parameter states
    */
-  updateParameters(modelParamsProps: IParamProps[]): void {
+  updateParameters(modelParamStates: IParamState[]): void {
     this.logger.trace("update model parameters");
 
     this._params = {};
-    modelParamsProps.forEach((modelParamProps: IParamProps) => this.addParameter(modelParamProps));
+    modelParamStates.forEach((modelParamState: IParamState) => this.addParameter(modelParamState));
   }
 
   /**
-   * Update model states.
-   * @param statesProps list of model state props or string
+   * Update model record states.
+   * @param recordStates record states
    */
-  updateStates(statesProps: (IModelStateProps | string)[]): void {
-    this._states = statesProps.map((stateProps: IModelStateProps | string) =>
-      stateProps instanceof Object
-        ? stateProps
-        : this.config?.localStorage.states.find((state: IModelStateProps) => state.id === stateProps),
+  updateRecordStates(recordStates: (IModelRecordState | string)[]): void {
+    this._states = recordStates.map((recordState: IModelRecordState | string) =>
+      recordState instanceof Object
+        ? recordState
+        : this.config?.localStorage.states.find((state: IModelRecordState) => state.id === recordState),
     );
   }
 }

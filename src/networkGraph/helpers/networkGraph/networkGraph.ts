@@ -5,7 +5,7 @@ import { type Ref, type UnwrapRef, nextTick, reactive, watch } from "vue";
 
 import type { TConnection, TNetwork, TNode, TNodeGroup, TSelection } from "@/types";
 import { BaseNode } from "@/networkGraph/helpers/node/node";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 import { debounce } from "@/utils/events";
 
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
@@ -28,7 +28,16 @@ export class BaseNetworkGraph extends BaseObj {
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: TSelection;
-  private _state: UnwrapRef<IBaseNetworkGraphState>;
+  private _state: UnwrapRef<IBaseNetworkGraphState> = reactive<IBaseNetworkGraphState>({
+    contextMenu: {
+      connection: null,
+      modelValue: false,
+      node: null,
+      nodeGroup: null,
+      target: [0, 0], // "cursor" for v-menu doesn't work.
+    },
+    hash: "",
+  });
   private _workspace: NetworkGraphWorkspace;
   public _connectionGraph: ConnectionGraph;
   public _nodeGraph: NodeGraph;
@@ -47,17 +56,6 @@ export class BaseNetworkGraph extends BaseObj {
     this._nodeGraph = new NodeGraph(this);
     this._nodeGroupGraph = new NodeGroupGraph(this);
 
-    this._state = reactive<IBaseNetworkGraphState>({
-      contextMenu: {
-        connection: null,
-        modelValue: false,
-        node: null,
-        nodeGroup: null,
-        target: [0, 0], // "cursor" for v-menu doesn't work.
-      },
-      hash: "",
-    });
-
     this._resizeObserver = new ResizeObserver(debounce(() => this._workspace.updateTransform()));
   }
 
@@ -65,13 +63,13 @@ export class BaseNetworkGraph extends BaseObj {
     return this._connectionGraph;
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
         color: node.view.state.color,
         idx: node.idx,
         model: node.modelId,
-        size: node.size,
+        size: node.size.value,
       })),
       connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
     };
@@ -177,7 +175,7 @@ export class BaseNetworkGraph extends BaseObj {
   /**
    * Open contect menu
    * @param target position of mouse
-   * @param props Object data
+   * @param props network props
    */
   openContextMenu(
     target: [number, number],

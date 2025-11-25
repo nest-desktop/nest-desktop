@@ -1,47 +1,49 @@
 // connections.ts
 
 import { type UnwrapRef, reactive } from "vue";
+import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import type { TConnection, TNetwork, TNode, TNodeGroup } from "@/types";
+import type { Class, TConnection, TNetwork, TNode, TNodeGroup } from "@/types";
 
-import { BaseConnection, type IConnectionProps } from "./connection";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseConnection, type IConnectionState } from "./connection";
+import { BaseObj, IBaseState } from "@/helpers/common/base";
 
-interface IConnectionsState {
+interface IConnectionsRefState {
   focusedConnection: TConnection | null;
   selectedConnection: TConnection | null;
   selectedNode: TNode | TNodeGroup | null;
 }
 
 export class BaseConnections extends BaseObj {
-  private _state: UnwrapRef<IConnectionsState>; // reactive state
-  public _connections: TConnection[] = [];
+  private _state: UnwrapRef<IConnectionsRefState> = reactive<IConnectionsRefState>({
+    focusedConnection: null,
+    selectedConnection: null,
+    selectedNode: null,
+  });
   public _network: TNetwork; // parent
 
-  constructor(network: TNetwork, connectionsProps: IConnectionProps[] = []) {
+  constructor(network: TNetwork) {
     super();
 
     this._network = network;
-
-    this._state = reactive<IConnectionsState>({
-      focusedConnection: null,
-      selectedConnection: null,
-      selectedNode: null,
-    });
-
-    this.update(connectionsProps);
   }
 
-  get Connection() {
+  get Connection(): Class<BaseConnection> {
     return BaseConnection;
   }
 
   get all(): TConnection[] {
-    return this._connections as TConnection[];
+    return this.connections as TConnection[];
+  }
+
+  get codeNodes(): AbstractCodeNode[] {
+    return [];
   }
 
   get connections(): TConnection[] {
-    return this._connections as TConnection[];
+    return this.codeNodes
+      .filter((codeNode: AbstractCodeNode) => codeNode.mask)
+      .map((codeNode: AbstractCodeNode) => codeNode.mask);
   }
 
   /**
@@ -51,7 +53,7 @@ export class BaseConnections extends BaseObj {
     return this.connections.filter((connection: TConnection) => !connection.view.connectRecorder());
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       connections: this.connections.map((connection: TConnection) => connection.hash),
     };
@@ -61,7 +63,7 @@ export class BaseConnections extends BaseObj {
    * Get length of connection list.
    */
   get length(): number {
-    return this._connections.length;
+    return this.connections.length;
   }
 
   get network(): TNetwork {
@@ -72,7 +74,7 @@ export class BaseConnections extends BaseObj {
     return this.connections.some;
   }
 
-  get state(): UnwrapRef<IConnectionsState> {
+  get state(): UnwrapRef<IConnectionsRefState> {
     return this._state;
   }
 
@@ -84,17 +86,14 @@ export class BaseConnections extends BaseObj {
 
   /**
    * Add connection component to the network.
-   * @param connectionProps connection props
-   * @returns connection object
+   * @param connectionState connection state
+   * @returns connection instance
    */
-  addConnection(connectionProps: IConnectionProps): TConnection {
+  addConnection(connectionState: IConnectionState): TConnection {
     this.logger.trace("add");
 
-    const connection: TConnection = new this.Connection(this, connectionProps);
-    this._connections.push(connection);
-
-    this.clean();
-
+    const connection = new this.Connection(this);
+    if (connectionState) connection.load(connectionState);
     return connection;
   }
 
@@ -114,7 +113,6 @@ export class BaseConnections extends BaseObj {
     this.logger.trace("clear");
 
     this.resetState();
-    this._connections = [];
   }
 
   /**
@@ -124,40 +122,47 @@ export class BaseConnections extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this._connections.forEach((connection: TConnection) => connection.init());
+    this.connections.forEach((connection: TConnection) => connection.init());
+  }
+
+  /**
+   * Load connections from state.
+   * @param connectionStates connections states
+   */
+  load(connectionStates?: IConnectionState[]): void {
+    this.logger.trace("update");
+
+    if (connectionStates)
+      connectionStates.forEach((connectionState: IConnectionState) => this.addConnection(connectionState));
+
+    this.clean();
+    this.updateHash();
   }
 
   /**
    * Remove connection component from the network.
-   * @param connection connection object
+   * @param connection connection instance
    */
   remove(connection: TConnection): void {
     this.logger.trace("remove");
 
     this.resetState();
 
-    // Remove connection from the connection list.
-    this._connections.splice(connection.idx, 1);
+    connection.codeNode?.remove();
 
     this.clean();
   }
 
   /**
    * Remove connections by the node.
-   * @param node node object
+   * @param node node instance
    */
   removeByNode(node: TNode | TNodeGroup): void {
     this.resetState();
 
-    this._connections = this.connections.filter(
-      (connection: TConnection) => connection.source !== node && connection.target !== node,
-    );
-
-    // Update source and target idx in connections
-    this.connections.forEach((connection: TConnection) => {
-      if (connection.sourceIdx > node.idx) connection.sourceIdx -= 1;
-      if (connection.targetIdx > node.idx) connection.targetIdx -= 1;
-    });
+    this.connections
+      .filter((connection: TConnection) => connection.source === node && connection.target === node)
+      .forEach((connection: TConnection) => connection.remove());
 
     this.clean();
   }
@@ -166,42 +171,28 @@ export class BaseConnections extends BaseObj {
    * Reset all states.
    */
   resetState(): void {
-    this._state.focusedConnection = null;
-    this._state.selectedConnection = null;
+    this.state.focusedConnection = null;
+    this.state.selectedConnection = null;
   }
 
   /**
-   * Serialize for JSON.
-   * @return connection props
+   * Save connection to state.
+   * @return connection state
    */
-  toJSON(): IConnectionProps[] {
-    return this.connections.map((connection: TConnection) => connection.toJSON());
+  override save(): IConnectionState[] {
+    return this.connections.map((connection: TConnection) => connection.save());
   }
 
   unfocusConnection(): void {
-    this._state.focusedConnection = null;
+    this.state.focusedConnection = null;
   }
 
   unselectConnection(): void {
-    this._state.selectedConnection = null;
+    this.state.selectedConnection = null;
   }
 
   unselectAll(): void {
-    this._state.selectedConnection = null;
-    this._state.selectedNode = null;
-  }
-
-  /**
-   * Update connections.
-   * @param connectionsProps connection props
-   */
-  update(connectionsProps?: IConnectionProps[]): void {
-    this.logger.trace("update");
-
-    if (connectionsProps)
-      connectionsProps.forEach((connectionProps: IConnectionProps) => this.addConnection(connectionProps));
-
-    this.clean();
-    this.updateHash();
+    this.state.selectedConnection = null;
+    this.state.selectedNode = null;
   }
 }

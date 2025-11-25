@@ -25,31 +25,31 @@ const projectUpgrades = [
 /**
  * Upgrades project to be compatible with the latest release.
  * It also checks if projects are valid and corrects some problems.
- * @param projectProps project props which should be transformed
- * @returns project props
+ * @param projectState project state which should be transformed
+ * @returns project state
  */
 
-export function upgradeProject(projectProps: any): any {
-  if (Object.keys(projectProps).length === 0) {
+export function upgradeProject(projectState: any): any {
+  if (Object.keys(projectState).length === 0) {
     return {};
   }
 
-  if (!("version" in projectProps)) return projectProps;
+  if (!("version" in projectState)) return projectState;
 
-  const oldVersion = projectProps.version;
+  const oldVersion = projectState.version;
 
   for (const upgrade of projectUpgrades) {
-    projectProps = upgrade(projectProps);
+    projectState = upgrade(projectState);
 
-    if (currentVersion.startsWith(projectProps.version)) break;
+    if (currentVersion.startsWith(projectState.version)) break;
   }
 
-  if (oldVersion != projectProps.version) {
-    const projectId = projectProps.id;
+  if (oldVersion != projectState.version) {
+    const projectId = projectState.id;
     if (projectId) {
-      console.log(`Upgrade project (${truncate(projectProps.id)}): ${oldVersion} -> ${projectProps.version}`);
+      console.log(`Upgrade project (${truncate(projectState.id)}): ${oldVersion} -> ${projectState.version}`);
     }
   }
 
-  return projectProps;
+  return projectState;
 }

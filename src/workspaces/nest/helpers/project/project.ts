@@ -1,22 +1,23 @@
 // project.ts
 
 import { registerNESTNodeTypes } from "@/codeGraph/codeNodeTypes/nest";
-import { type INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { type INetworkProjectState, NetworkProject } from "@/helpers/project/networkProject";
 
 import nestSimulator from "../../stores/backends/nestSimulatorStore";
 import { NESTActivityGraph } from "../../activityGraph/helpers/activityGraph";
-import { type INESTNetworkProps, NESTNetwork } from "../../networkGraph/helpers/network/network";
-import { type INESTSimulationProps, NESTSimulation } from "../simulation/simulation";
+import { type INESTNetworkState, NESTNetwork } from "../../networkGraph/helpers/network/network";
+import { type INESTSimulationState, NESTSimulation } from "../simulation/simulation";
 import { useNESTModelDBStore } from "../../stores/model/modelDBStore";
 
-export interface INESTProjectProps extends INetworkProjectProps {
-  network?: INESTNetworkProps;
-  simulation?: INESTSimulationProps;
+export interface INESTProjectState extends INetworkProjectState {
+  network?: INESTNetworkState;
+  simulation?: INESTSimulationState;
 }
 
-export class NESTProject extends NetworkProject {
-  constructor(projectProps: INESTProjectProps = {}) {
-    super(projectProps);
+export class NESTProject extends NetworkProject<INESTProjectState> {
+  constructor(projectState: INESTProjectState = {}) {
+    super(projectState);
+
     this.simulation.registerBackend(nestSimulator);
     registerNESTNodeTypes(this.viewModel);
   }

@@ -2,22 +2,20 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-import { BaseObj } from "@/helpers/common/base";
-import { type IModelProps } from "@/helpers/model/model";
-import { type INodeRecordProps } from "@/networkGraph/helpers/node/nodeRecord";
-import { type IParamProps } from "@/helpers/common/parameter";
+import { BaseObj, type IBaseState, type IParamState } from "@/helpers/common";
+import { type INodeRecordState } from "@/networkGraph/helpers/node/nodeRecord";
 
-import { NESTModel } from "../../../../helpers/model/model";
 import { NESTModelReceptorParameter } from "./modelReceptorParameter";
+import type { NESTModel } from "@/workspaces/nest/types";
 
-export interface INESTModelReceptorProps {
+export interface INESTModelReceptorState extends IBaseState {
   id: string;
   label: string;
-  params?: IParamProps[];
+  params?: IParamState[];
   recordables?: string[];
 }
 
-interface INESTModelReceptorState {
+interface INESTModelReceptorRefState {
   paramsVisible: string[];
 }
 
@@ -28,23 +26,22 @@ export class NESTModelReceptor extends BaseObj {
   private _label: string;
   private _model: NESTModel; // parent
   private _params: Record<string, NESTModelReceptorParameter> = {};
-  private _state: UnwrapRef<INESTModelReceptorState>;
-  private _recordables: INodeRecordProps[] = []; // recordables for multimeter
+  private _state: UnwrapRef<INESTModelReceptorRefState>;
+  private _recordables: INodeRecordState[] = []; // recordables for multimeter
 
-  constructor(model: NESTModel, modelReceptorProps: INESTModelReceptorProps) {
+  constructor(model: NESTModel, modelReceptorState: INESTModelReceptorState) {
     super();
 
     this._model = model;
 
-    this._id = modelReceptorProps.id;
-    this._label = modelReceptorProps.label;
+    this._id = modelReceptorState.id;
+    this._label = modelReceptorState.label;
 
-    this._state = reactive<INESTModelReceptorState>({
+    this._state = reactive<INESTModelReceptorRefState>({
       paramsVisible: [],
     });
 
-    this.initParameters(modelReceptorProps);
-    this.updateRecordables(modelReceptorProps);
+    this.load(modelReceptorState);
   }
 
   get filteredParams(): NESTModelReceptorParameter[] {
@@ -88,20 +85,20 @@ export class NESTModelReceptor extends BaseObj {
     this.changes();
   }
 
-  get recordables(): INodeRecordProps[] {
+  get recordables(): INodeRecordState[] {
     return this._recordables;
   }
 
-  get state(): UnwrapRef<INESTModelReceptorState> {
+  get state(): UnwrapRef<INESTModelReceptorRefState> {
     return this._state;
   }
 
   /**
-   * Add a parameter component.
-   * @param param - parameter object
+   * Add a parameter instance.
+   * @param paramState parameter instance
    */
-  addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new NESTModelReceptorParameter(this, paramProps);
+  addParameter(paramState: IParamState): void {
+    this._params[paramState.id] = new NESTModelReceptorParameter(this, paramState);
   }
 
   /**
@@ -119,16 +116,16 @@ export class NESTModelReceptor extends BaseObj {
   clean(): void {}
 
   /**
-   * Get parameter component.
+   * Get parameter instance.
    * @param paramId parameter ID
-   * @return parameter component
+   * @return parameter instance
    */
   getParameter(paramId: string): NESTModelReceptorParameter | undefined {
     return this._params[paramId];
   }
 
   /**
-   * Check if a model receptor has a parameter component.
+   * Check if a model receptor has a parameter instance.
    * @param paramId parameter ID
    */
   hasParameter(paramId: string): boolean {
@@ -145,16 +142,25 @@ export class NESTModelReceptor extends BaseObj {
   /**
    * Init model parameters.
    */
-  initParameters(modelReceptorProps: INESTModelReceptorProps): void {
-    if (modelReceptorProps.params) {
-      modelReceptorProps.params.forEach((paramProps: IParamProps) => {
-        if (this.getParameter(paramProps.id)) {
-          this.updateParameter(paramProps);
+  initParameters(modelReceptorState: INESTModelReceptorState): void {
+    if (modelReceptorState.params) {
+      modelReceptorState.params.forEach((paramState: IParamState) => {
+        if (this.getParameter(paramState.id)) {
+          this.updateParameter(paramState);
         } else {
-          this.addParameter(paramProps);
+          this.addParameter(paramState);
         }
       });
     }
+  }
+
+  /**
+   * Load model receptor from state.
+   * @param modelReceptorState model receptor state
+   */
+  load(modelReceptorState: INESTModelReceptorState): void {
+    this.initParameters(modelReceptorState);
+    this.updateRecordables(modelReceptorState);
   }
 
   /**
@@ -182,37 +188,37 @@ export class NESTModelReceptor extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return receptor props
+   * Save NEST model receptor to state.
+   * @return NEST model receptor state
    */
-  toJSON(): INESTModelReceptorProps {
-    const receptorProps: INESTModelReceptorProps = {
+  override save(): INESTModelReceptorState {
+    const receptorState: INESTModelReceptorState = {
       id: this._id,
       label: this._label,
-      params: this.filteredParams.map((param: NESTModelReceptorParameter) => param.toJSON()),
+      params: this.filteredParams.map((param: NESTModelReceptorParameter) => param.save()),
     };
 
     // Add recordables if provided.
     if (this._recordables.length > 0)
-      receptorProps.recordables = this._recordables.map((recordable: INodeRecordProps) => recordable.id);
+      receptorState.recordables = this._recordables.map((recordable: INodeRecordState) => recordable.id);
 
-    return receptorProps;
+    return receptorState;
   }
 
   /**
    * Update a parameter.
    */
-  updateParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id].init(paramProps);
+  updateParameter(paramState: IParamState): void {
+    this._params[paramState.id].init(paramState);
   }
 
   /**
    * Update the recordables from the config.
    */
-  updateRecordables(modelProps: IModelProps): void {
-    if (modelProps.recordables)
-      this._recordables = this._model.config?.localStorage.recordables.filter((recordable: INodeRecordProps) =>
-        modelProps?.recordables?.includes(recordable.id),
+  updateRecordables(modelState: INESTModelReceptorState): void {
+    if (modelState.recordables)
+      this._recordables = this._model.config?.localStorage.recordables.filter((recordable: INodeRecordState) =>
+        modelState?.recordables?.includes(recordable.id),
       );
   }
 }

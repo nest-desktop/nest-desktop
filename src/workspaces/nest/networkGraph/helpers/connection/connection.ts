@@ -1,45 +1,43 @@
 // connection.ts
 
-import { BaseConnection, type IConnectionProps } from "@/networkGraph/helpers/connection/connection";
-import { ConnectionParameter } from "@/networkGraph/helpers/connection/connectionParameter";
-import type { IParamProps } from "@/helpers/common/parameter";
-import type { TNodeGroup } from "@/types";
+import { BaseConnection, type IConnectionState } from "@/networkGraph/helpers/connection/connection";
+import type { IParamState } from "@/helpers/common/parameter";
+import type { Class, TNodeGroup } from "@/types";
 
-import { type INESTConnectionMaskProps, NESTConnectionMask } from "./connectionMask";
-import { type INESTSynapseProps, NESTSynapse } from "../synapse/synapse";
+import { type INESTConnectionMaskState, NESTConnectionMask } from "./connectionMask";
+import { type INESTSynapseState, NESTSynapse } from "../synapse/synapse";
 import { NESTConnections } from "./connections";
-import { NESTCopyModel } from "../../../helpers/model/copyModel";
+import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../../../helpers/model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
-import { NESTNodeSlice } from "../node/nodeSlice";
-import { NESTSynapseParameter } from "../synapse/synapseParameter";
+// import { NESTNodeSlice } from "../node/nodeSlice";
 
-export interface INESTConnectionProps extends IConnectionProps {
-  sourceSlice?: IParamProps[];
-  targetSlice?: IParamProps[];
-  mask?: INESTConnectionMaskProps;
-  synapse?: INESTSynapseProps;
+export interface INESTConnectionState extends IConnectionState {
+  sourceSlice?: IParamState[];
+  targetSlice?: IParamState[];
+  mask?: INESTConnectionMaskState;
+  synapse?: INESTSynapseState;
 }
 
 export class NESTConnection extends BaseConnection {
   private _mask: NESTConnectionMask;
-  private _sourceSlice: NESTNodeSlice;
-  private _targetSlice: NESTNodeSlice;
+  // private _sourceSlice: NESTNodeSlice;
+  // private _targetSlice: NESTNodeSlice;
 
-  constructor(connections: NESTConnections, connectionProps: INESTConnectionProps) {
-    super(connections, connectionProps, {
+  constructor(connections: NESTConnections) {
+    super(connections, {
       name: "NESTConnection",
       workspace: "nest",
     });
 
-    this._sourceSlice = new NESTNodeSlice(this.source, []);
-    this._targetSlice = new NESTNodeSlice(this.target, connectionProps.targetSlice);
+    // this._sourceSlice = new NESTNodeSlice(this.source);
+    // this._targetSlice = new NESTNodeSlice(this.target);
 
-    this._mask = new NESTConnectionMask(this, connectionProps.mask);
+    this._mask = new NESTConnectionMask(this);
   }
 
-  override get Synapse() {
+  override get Synapse(): Class<NESTSynapse> {
     return NESTSynapse;
   }
 
@@ -66,33 +64,33 @@ export class NESTConnection extends BaseConnection {
     return this.connections.network;
   }
 
-  override get source(): NESTNode | TNodeGroup {
-    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode | TNodeGroup;
-  }
+  // override get source(): NESTNode | TNodeGroup {
+  //   return this.connections.network.nodes.all[this.source?.idx] as NESTNode | TNodeGroup;
+  // }
 
-  override get sourceNode(): NESTNode {
-    return this.connections.network.nodes.all[this.sourceIdx] as NESTNode;
-  }
+  // override get sourceNode(): NESTNode {
+  //   return this.connections.network.nodes.all[this.source?.idx] as NESTNode;
+  // }
 
-  get sourceSlice(): NESTNodeSlice {
-    return this._sourceSlice;
-  }
+  // get sourceSlice(): NESTNodeSlice {
+  //   return this._sourceSlice;
+  // }
 
   override get synapse(): NESTSynapse {
     return this._synapse as NESTSynapse;
   }
 
-  override get target(): NESTNode | TNodeGroup {
-    return this.connections.network.nodes.all[this.targetIdx] as NESTNode | TNodeGroup;
-  }
+  // override get target(): NESTNode | TNodeGroup {
+  //   return this.connections.network.nodes.all[this.target?.idx] as NESTNode | TNodeGroup;
+  // }
 
-  override get targetNode(): NESTNode {
-    return this.connections.network.nodes.all[this.targetIdx] as NESTNode;
-  }
+  // override get targetNode(): NESTNode {
+  //   return this.connections.network.nodes.all[this.target?.idx] as NESTNode;
+  // }
 
-  get targetSlice(): NESTNodeSlice {
-    return this._targetSlice;
-  }
+  // get targetSlice(): NESTNodeSlice {
+  //   return this._targetSlice;
+  // }
 
   /**
    * Set defaults.
@@ -101,44 +99,38 @@ export class NESTConnection extends BaseConnection {
     this.logger.trace("reset");
 
     this.rule.reset();
-    this.initParameters();
+    this.params.init();
     this.synapse.modelId = "static_synapse";
     this._mask.unmask();
   }
 
+  // /**
+  //  * Resets all parameters to their default.
+  //  */
+  // override resetParams(): void {
+  //   // Reset connection parameter.
+  //   this.paramsAll.forEach((param: ConnectionParameter) => param.reset());
+
+  //   // Reset synapse parameter.
+  //   this.synapse.paramsAll.forEach((param: NESTSynapseParameter) => param.reset());
+  // }
+
   /**
-   * Resets all parameters to their default.
+   * Save connection to state.
+   * @return connection state
    */
-  override resetParams(): void {
-    // Reset connection parameter.
-    this.paramsAll.forEach((param: ConnectionParameter) => param.reset());
+  override save(): INESTConnectionState {
+    const connectionState: INESTConnectionState = super.save();
 
-    // Reset synapse parameter.
-    this.synapse.paramsAll.forEach((param: NESTSynapseParameter) => param.reset());
-  }
+    if (this.rule.value !== "all_to_all") connectionState.rule = this.rule.value;
 
-  /**
-   * Serialize for JSON.
-   * @return connection props
-   */
-  override toJSON(): INESTConnectionProps {
-    const connectionProps: INESTConnectionProps = {
-      source: this.sourceIdx,
-      target: this.targetIdx,
-    };
+    if (this.synapse.modelId !== "static_synapse" || this.synapse.params.paramsVisible.length > 0)
+      connectionState.synapse = this.synapse.save();
 
-    if (this.rule.value !== "all_to_all") connectionProps.rule = this.rule.value;
+    // if (this.sourceSlice.visible) connectionState.sourceSlice = this.sourceSlice.save();
+    // if (this.targetSlice.visible) connectionState.targetSlice = this.targetSlice.save();
+    if (this.mask.hasMask) connectionState.mask = this.mask.save();
 
-    if (this.paramsVisible.length > 0)
-      connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
-
-    if (this.synapse.modelId !== "static_synapse" || this.synapse.paramsVisible.length > 0)
-      connectionProps.synapse = this._synapse.toJSON();
-
-    if (this._sourceSlice.visible) connectionProps.sourceSlice = this._sourceSlice.toJSON();
-    if (this._targetSlice.visible) connectionProps.targetSlice = this._targetSlice.toJSON();
-    if (this._mask.hasMask) connectionProps.mask = this._mask.toJSON();
-
-    return connectionProps;
+    return connectionState;
   }
 }

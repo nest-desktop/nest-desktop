@@ -194,7 +194,7 @@
                 <ValueSlider
                   v-else
                   id="n"
-                  v-model="node.size"
+                  v-model="node.size.value"
                   :thumb-color="node.view.color"
                   input-label="n"
                   label="population size"
@@ -307,7 +307,7 @@ const getPopItems = (node: NESTNode) => [
       icon: "mdi:mdi-reload",
       class: "mdi-flip-h",
     },
-    onClick: () => (node.size = 1),
+    onClick: () => (node.size.value = 1),
     title: "Set default size",
   },
   {
@@ -320,9 +320,9 @@ const getPopItems = (node: NESTNode) => [
 onMounted(() => {
   mountProjectLayout({ route, router });
 
-  if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
-  project.value.viewModel.engine?.start();
-  project.value.viewModel.engine?.runOnce(null);
+  if (project.value.viewModel?.subscribe) project.value.viewModel.subscribe();
+  project.value.viewModel?.engine?.start();
+  project.value.viewModel?.engine?.runOnce(null);
 });
 
 onBeforeUnmount(() => {

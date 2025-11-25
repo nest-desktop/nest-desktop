@@ -1,22 +1,12 @@
 // nodeView.ts
 
-import { type INodeViewProps, NodeView } from "@/networkGraph/helpers/node/nodeView";
+import { NodeView } from "@/networkGraph/helpers/node/nodeView";
 
 import { NESTConnection } from "../connection/connection";
-import { NESTCopyModel } from "../../../helpers/model/copyModel";
+import { NESTCopyModel } from "../model/copyModel";
 import { NESTNode } from "./node";
 
 export class NESTNodeView extends NodeView {
-  constructor(
-    node: NESTNode,
-    viewProps: INodeViewProps = {
-      position: { x: 0, y: 0 },
-      visible: true,
-    },
-  ) {
-    super(node, viewProps);
-  }
-
   override get color(): string {
     if (this.state.color) {
       return this.state.color;
@@ -29,12 +19,12 @@ export class NESTNodeView extends NodeView {
     } else if (this.node.model.isRecorder) {
       const connections: NESTConnection[] = this.node.network.connections.all.filter(
         (connection: NESTConnection) =>
-          connection.sourceIdx === this._node.idx || connection.targetIdx === this._node.idx,
+          connection.source?.idx === this._node.idx || connection.target?.idx === this._node.idx,
       );
-      if (connections.length === 1 && connections[0].sourceIdx !== connections[0].targetIdx) {
+      if (connections.length === 1 && connections[0].source?.idx !== connections[0].target?.idx) {
         const connection: NESTConnection = connections[0];
         const node: NESTNode = (
-          connection.sourceIdx === this.node.idx ? connection.target : connection.source
+          connection.source?.idx === this.node.idx ? connection.target : connection.source
         ) as NESTNode;
         return node.view.color;
       }

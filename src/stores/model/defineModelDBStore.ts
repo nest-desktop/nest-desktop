@@ -6,7 +6,7 @@ import { type UnwrapRef, reactive } from "vue";
 import type { IDoc } from "@/helpers/common/database";
 import { BaseModel, type TElementType } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
-import type { Class, TModelDB, TModelProps } from "@/types";
+import type { Class, TModelDB, TModelState } from "@/types";
 import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
@@ -43,7 +43,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
 
     /**
      * Add model to the list.
-     * @param model model object
+     * @param model model instance
      */
     const _addToList = (model: TModel | BaseModel): void => {
       state.models.unshift(model);
@@ -51,20 +51,20 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
 
     /**
      * Add this new model to the list.
-     * @param modelProps model props
+     * @param modelState model state
      * @remarks It pushes new model to the first line of the list.
      */
-    const addModel = (modelProps?: TModelProps): TModel => {
-      logger.trace("add model:", modelProps?.id);
+    const addModel = (modelState?: TModelState): TModel => {
+      logger.trace("add model:", modelState?.id);
 
-      const model = new props.Model(modelProps) as TModel;
+      const model = new props.Model(modelState) as TModel;
       _addToList(model);
       return model;
     };
 
     /**
-     * Delete model object from the database and then list model.
-     * @param model model object
+     * Delete model instance from the database and then list model.
+     * @param model model instance
      * @returns Promise from PouchDB
      */
     const deleteModel = async (model: TModel | BaseModel): Promise<void> => {
@@ -75,27 +75,27 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
 
     /**
      * Clone this current model and add it to the list.
-     * @param model model object
+     * @param model model instance
      * @remarks It pushes new model to the first line of the list.
      */
     const duplicateModel = (model: TModel | BaseModel): TModel => {
       logger.trace("duplicate model", truncate(model.id));
 
-      const modelDoc = model.toJSON();
-      modelDoc.id += "_duplicated";
-      const modelCloned = addModel(modelDoc);
+      const modelState = model.save();
+      modelState.id += "_duplicated";
+      const modelCloned = addModel(modelState);
       modelCloned.custom = true;
       return modelCloned as TModel;
     };
 
     /**
      * Export model from the list.
-     * @param model model object
+     * @param model model instance
      */
-    const exportModel = (model: TModel | BaseModel | TModelProps): void => {
+    const exportModel = (model: TModel | BaseModel | TModelState): void => {
       logger.trace("export model:", truncate(model.id));
 
-      // if (model.doc && withActivities) model.activities = model.activities.toJSON();
+      // if (model.doc && withActivities) model.activities = model.activities.save();
 
       download(JSON.stringify(model), "model");
     };
@@ -103,7 +103,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     /**
      * Find model from the list.
      * @param modelId model ID
-     * @returns model object or undefined
+     * @returns model instance or undefined
      */
     const findModel = (modelId: string): TModel | undefined => {
       logger.trace("find model:", modelId);
@@ -145,30 +145,30 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
 
     /**
      * Import models the update list.
-     * @param modelProps model props
+     * @param modelState model state
      */
-    const importModels = (modelsProps: TModelProps[]): void => {
+    const importModels = (modelStates: TModelState[]): void => {
       logger.trace("import models");
 
-      modelsProps.forEach((modelProps: TModelProps) => {
-        delete modelProps._id;
-        delete modelProps._rev;
+      modelStates.forEach((modelState: TModelState) => {
+        delete modelState._id;
+        delete modelState._rev;
       });
 
-      db.createModels(modelsProps).then(() => updateList());
+      db.createModels(modelStates).then(() => updateList());
     };
 
     /**
      * Import multiple models from assets and add them to the database.
      */
-    const importModelsFromAssets = async (): Promise<TModelProps[]> => {
+    const importModelsFromAssets = async (): Promise<TModelState[]> => {
       logger.trace("import models from assets");
 
-      let promises: Promise<TModelProps>[] = [];
+      let promises: Promise<TModelState>[] = [];
       if (props.modelAssets) {
         promises = props.modelAssets.map(async (file: string) => {
-          return loadJSON(`assets/workspaces/${props.workspace}/models/${file}.json`).then((modelProps: TModelProps) =>
-            db.create(modelProps as IDoc),
+          return loadJSON(`assets/workspaces/${props.workspace}/models/${file}.json`).then((modelState: TModelState) =>
+            db.create(modelState as IDoc),
           );
         });
       }
@@ -193,13 +193,13 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     };
 
     /**
-     * Create a new custom model.
-     * @param modelProps model props
+     * Create a new custom model instance.
+     * @param modelState model state
      */
-    const newModel = (modelProps?: TModelProps): TModel => {
+    const newModel = (modelState?: TModelState): TModel => {
       logger.trace("new model");
 
-      const model = addModel(modelProps);
+      const model = addModel(modelState);
       model.state.custom = true;
       return model as TModel;
     };
@@ -214,10 +214,10 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     };
 
     /**
-     * Save model object to the database.
-     * @param model model object
+     * Save model instance to the database.
+     * @param model model instance
      */
-    const saveModel = async (model: TModel | BaseModel): Promise<TModelProps | void> => {
+    const saveModel = async (model: TModel | BaseModel): Promise<TModelState | void> => {
       logger.trace("save model:", truncate(model.id));
 
       return db.importModel(model).then(() => {
@@ -233,8 +233,8 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
       logger.trace("update list");
 
       state.models = [];
-      db.list("id", true).then((modelsProps: TModelProps[]) => {
-        modelsProps.forEach((modelProps: TModelProps) => addModel(modelProps));
+      db.list("id", true).then((modelStates: TModelState[]) => {
+        modelStates.forEach((modelState: TModelState) => addModel(modelState));
 
         setTimeout(() => {
           state.initialized = true;
@@ -243,11 +243,11 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     };
 
     /**
-     * Validate model props.
+     * Validate model state.
      */
-    const validateModel = (modelProps: TModelProps): boolean => {
+    const validateModel = (modelState: TModelState): boolean => {
       try {
-        new props.Model(modelProps);
+        new props.Model(modelState);
         return true;
       } catch {
         return false;

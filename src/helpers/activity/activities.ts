@@ -5,13 +5,14 @@ import { type UnwrapRef, reactive } from "vue";
 import type { IResponseData } from "@/stores/defineBackendStore";
 import type { TProject } from "@/types";
 
-import type { Activity, IActivityProps, IEventProps } from "./activity";
+import { BaseObj, type IBaseState } from "../common";
+
+import type { Activity, IActivityState, IEventState } from "./activity";
 import type { AnalogSignalActivity } from "./analogSignalActivity";
 import type { NodeAnalogSignalActivity, NodeSpikeActivity } from "../nodeActivity";
 import type { SpikeActivity } from "./spikeActivity";
-import { BaseObj } from "../common/base";
 
-interface IActivitiesState {
+interface IActivitiesRefState {
   activityStatsPanelId: number;
   hasSomeAnalogRecorders: boolean;
   hasSomeEvents: boolean;
@@ -21,14 +22,14 @@ interface IActivitiesState {
 
 export class Activities extends BaseObj {
   private _activities: Activity[] = [];
-  private _state: UnwrapRef<IActivitiesState>;
+  private _state: UnwrapRef<IActivitiesRefState>;
   public _project: TProject;
 
   constructor(project: TProject) {
     super();
 
     this._project = project;
-    this._state = reactive<IActivitiesState>({
+    this._state = reactive<IActivitiesRefState>({
       activityStatsPanelId: 0,
       hasSomeAnalogRecorders: false,
       hasSomeEvents: false,
@@ -59,7 +60,7 @@ export class Activities extends BaseObj {
     return activities;
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       activities: this._project.activities.all.map((activity: Activity) => activity.hash),
     };
@@ -80,7 +81,7 @@ export class Activities extends BaseObj {
     return activities;
   }
 
-  get state(): UnwrapRef<IActivitiesState> {
+  get state(): UnwrapRef<IActivitiesRefState> {
     return this._state;
   }
 
@@ -154,55 +155,59 @@ export class Activities extends BaseObj {
     // this.changes();
   }
 
-  toJSON(): IActivityProps[] {
-    return this.all.map((activity: Activity) => activity.toJSON());
+  /**
+   * Save activities to states
+   * @returns
+   */
+  override save(): IActivityState[] {
+    return this.all.map((activity: Activity) => activity.save());
   }
 
   /**
    * Update activities in recorder nodes after executing code.
    */
-  update(data: IActivityProps[] | IResponseData): void {
+  update(state: IActivityState[] | IResponseData): void {
     this.logger.trace("update");
 
-    let activitiesProps: IActivityProps[] = [];
+    let activitiesState: IActivityState[] = [];
 
-    if ("events" in data) {
-      activitiesProps = data.events.map((eventProps: IEventProps) => ({
-        events: eventProps,
+    if ("events" in state) {
+      activitiesState = state.events.map((eventState: IEventState) => ({
+        events: eventState,
       }));
-    } else if ("activities" in data) {
-      activitiesProps = data.activities as IActivityProps[];
+    } else if ("activities" in state) {
+      activitiesState = state.activities as IActivityState[];
     } else {
-      activitiesProps = data;
+      activitiesState = state;
     }
 
-    activitiesProps.forEach((activityProps: IActivityProps) => {
-      if (!activityProps.nodeIds) {
-        if (activityProps.events && activityProps.events.ports) {
-          activityProps.nodeIds = activityProps.events.ports.filter(
+    activitiesState.forEach((activityState: IActivityState) => {
+      if (!activityState.nodeIds) {
+        if (activityState.events && activityState.events.ports) {
+          activityState.nodeIds = activityState.events.ports.filter(
             (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         } else {
-          activityProps.nodeIds = activityProps.events?.senders?.filter(
+          activityState.nodeIds = activityState.events?.senders?.filter(
             (value: number, index: number, self: number[]) => self.indexOf(value) === index,
           );
         }
       }
-      activityProps.nodeIds?.sort((a: number, b: number) => a - b);
+      activityState.nodeIds?.sort((a: number, b: number) => a - b);
     });
 
     // Get node positions.
-    if ("positions" in data) {
-      const positions = data.positions as Record<string, number[]>;
+    if ("positions" in state) {
+      const positions = state.positions as Record<string, number[]>;
 
-      activitiesProps.forEach(
-        (activityProps: IActivityProps) =>
-          (activityProps.nodePositions = activityProps.nodeIds?.map((nodeId: number) => positions[nodeId] as number[])),
+      activitiesState.forEach(
+        (activityState: IActivityState) =>
+          (activityState.nodePositions = activityState.nodeIds?.map((nodeId: number) => positions[nodeId] as number[])),
       );
     }
 
     // Initialize recorded activities.
-    this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesProps[idx]));
+    this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesState[idx]));
 
     // Trigger activity changes.
     this.changes();

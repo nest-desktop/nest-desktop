@@ -33,7 +33,7 @@ export class ConnectionGraph extends BaseObj {
   /**
    * Drag connection graph by moving its node graphs.
    * @param event mouse event
-   * @param connection connection object
+   * @param connection connection instance
    */
   drag(event: MouseEvent, connection: TConnection): void {
     if (this.state.dragLine || !connection) return;
@@ -72,7 +72,7 @@ export class ConnectionGraph extends BaseObj {
 
   /**
    * Initialize a connection graph.
-   * @param connection connection object
+   * @param connection connection instance
    * @param idx index of the element
    * @param elements SVG elements
    */
@@ -168,7 +168,7 @@ export class ConnectionGraph extends BaseObj {
     connections
       .style("color", (c: TConnection) => {
         if (!c.source) return;
-        return "var(--colorNode" + c.sourceIdx + ")";
+        return "var(--colorNode" + c.source?.idx + ")";
       })
       .transition(t)
       .style("opacity", 1);
@@ -208,7 +208,7 @@ export class ConnectionGraph extends BaseObj {
         .attr("dy", connection.view.toRight ? 3 : -5)
         .attr("fill", "currentColor")
         .classed("toLeft", !connection.view.toRight)
-        .text(connection.synapse.paramsVisible.includes("weight") ? connection.synapse.weight : "");
+        .text(connection.synapse.params.paramsVisible.includes("weight") ? connection.synapse.params.weight : "");
 
       // .style("font-family", "Roboto")
       // .style("font-size", "0.7em", "important")

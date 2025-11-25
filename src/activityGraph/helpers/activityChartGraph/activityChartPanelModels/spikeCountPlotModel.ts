@@ -7,13 +7,13 @@ import { deviation, max, mean, min } from "@/utils/array";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { line } from "../graphObjects/line";
 
 export class SpikeCountPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "spikeCountPlot";
     this.label = "Spike count";
@@ -67,7 +67,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
@@ -110,7 +110,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
   /**
    * Add data of spike times for histogram panel.
    * TODO: Improve checks (div-0-error, ...).
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

@@ -2,13 +2,13 @@
 
 import type { TModel } from "@/types";
 
-import { BaseParameter, type IParamProps } from "../common/parameter";
+import { BaseParameter, type IParamState } from "../common";
 
 export class ModelParameter extends BaseParameter {
   private _model: TModel;
 
-  constructor(model: TModel, paramProps: IParamProps) {
-    super(paramProps);
+  constructor(model: TModel) {
+    super();
     this._model = model;
   }
 
@@ -19,7 +19,7 @@ export class ModelParameter extends BaseParameter {
   /**
    * Get model parameter.
    */
-  override get modelParam(): ModelParameter {
+  override get modelParam(): ModelParameter | undefined {
     return this.model.params[this.id];
   }
 
@@ -28,33 +28,33 @@ export class ModelParameter extends BaseParameter {
   }
 
   /**
-   * Serialize for JSON.
-   * @return parameter object
+   * Save model parameter to state.
+   * @return parameter state
    */
-  override toJSON(): IParamProps {
-    const paramProps: IParamProps = {
+  override save(): IParamState {
+    const paramState: IParamState = {
       id: this.id,
       label: this.label,
       value: this.value,
       // visible: this.visible as boolean,
     };
 
-    if (this.unit) paramProps.unit = this.unit;
+    if (this.unit) paramState.unit = this.unit;
 
     if (this.component) {
-      paramProps.component = this.component;
+      paramState.component = this.component;
       if (this.component === "valueSlider") {
-        paramProps.min = this.min;
-        paramProps.max = this.max;
-        paramProps.step = this.step;
+        paramState.min = this.min;
+        paramState.max = this.max;
+        paramState.step = this.step;
       } else if (this.component === "tickSlider") {
-        paramProps.ticks = this.ticks;
+        paramState.ticks = this.ticks;
       }
     }
 
     // Add rules for validation if existed.
-    if (this.rules.length > 0) paramProps.rules = this.rules;
+    if (this.rules.length > 0) paramState.rules = this.rules;
 
-    return paramProps;
+    return paramState;
   }
 }

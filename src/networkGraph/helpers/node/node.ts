@@ -1,60 +1,54 @@
 // node.ts
 
-import type { AbstractCodeNode } from "@babsey/code-graph";
-import type { TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 
-import type { BaseModel, IModelStateProps, TElementType } from "@/helpers/model/model";
-import type { IActivityProps } from "@/helpers/activity/activity";
-import type { IParamProps } from "@/helpers/common/parameter";
-import type { ModelParameter } from "@/helpers/model/modelParameter";
-import type { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
-import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
-import { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
-import { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import { notifyInfo } from "@/helpers/common/notification";
+import type { Class, TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import { CodeNodeMask } from "@/codeGraph";
+
+import type { BaseModel, IModelRecordState, ModelParameter, TElementType } from "@/helpers/model";
+import type { IActivityState } from "@/helpers/activity";
+import { NodeAnalogSignalActivity, NodeSpikeActivity, type NodeActivity } from "@/helpers/nodeActivity";
+import { notifyInfo, type IBaseState, type IParamState } from "@/helpers/common";
 import { onlyUnique, sortString } from "@/utils/array";
 
 import { BaseNodes } from "./nodes";
-import { NodeParameter } from "./nodeParameter";
-import { type INodeRecordProps, NodeRecord } from "./nodeRecord";
-import { type INodeViewProps, NodeView } from "./nodeView";
+import { NodeParameters } from "./nodeParameters";
+import { NodeRecord, type INodeRecordState } from "./nodeRecord";
+import { NodeView, type INodeViewState } from "./nodeView";
 
-export interface INodeProps {
-  activity?: IActivityProps;
+export interface INodeState extends IBaseState {
+  activity?: IActivityState;
   annotations?: string[];
   model?: string;
-  params?: IParamProps[];
-  records?: INodeRecordProps[];
+  params?: Record<string, IParamState>;
+  records?: INodeRecordState[];
   size?: number;
-  view?: INodeViewProps;
+  view?: INodeViewState;
 }
 // export class BaseNode<TModel extends BaseModel = BaseModel> extends BaseObj {
-export class BaseNode extends CodeNodeMask {
+export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T> {
   private _activity?: NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined;
   private _annotations: string[] = [];
-  private _props: INodeProps; // raw data of props
-  private _params: Record<string, NodeParameter> = {};
-  private _paramsVisible: string[] = [];
+  private _params: NodeParameters;
   private _recordables: NodeRecord[] = [];
   private _records: NodeRecord[] = [];
-  private _size: number;
+  private _size: number = 1;
   private _view: NodeView;
   public _model: TModel | undefined;
-  public _modelId: string;
+  public _modelId: string = "";
   public _nodes: BaseNodes; // parent
 
-  constructor(nodes: TNodes, nodeProps: INodeProps = {}) {
+  constructor(nodes: BaseNodes) {
     super({ config: { name: "Node" } });
 
     this._nodes = nodes;
-    this._props = nodeProps;
 
-    this._modelId = nodeProps.model || "";
+    this._params = new this.NodeParameters(this);
+    this._view = new NodeView(this);
+  }
 
-    this._size = nodeProps.size || 1;
-    this._annotations = nodeProps.annotations || [];
-
-    this._view = new NodeView(this, nodeProps.view);
+  get NodeParameters(): Class<NodeParameters> {
+    return NodeParameters;
   }
 
   get activity(): NodeSpikeActivity | NodeAnalogSignalActivity | NodeActivity | undefined {
@@ -80,32 +74,32 @@ export class BaseNode extends CodeNodeMask {
   }
 
   get connections(): TConnection[] {
-    return this.network.connections.all.filter((connection: TConnection) => connection.sourceIdx === this.idx);
+    return this.network.connections.all.filter((connection: TConnection) => connection.source?.idx === this.idx);
   }
 
   get connectionsNeurons(): TConnection[] {
     return this.network.connections.all.filter(
       (connection: TConnection) =>
-        (connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron) ||
-        (connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron),
+        (connection.source?.idx === this.idx && connection.targetNode.model.isNeuron) ||
+        (connection.target?.idx === this.idx && connection.sourceNode.model.isNeuron),
     );
   }
 
   get connectionsNeuronSources(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isNeuron,
+      (connection: TConnection) => connection.target?.idx === this.idx && connection.sourceNode.model.isNeuron,
     );
   }
 
   get connectionsNeuronTargets(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
+      (connection: TConnection) => connection.source?.idx === this.idx && connection.targetNode.model.isNeuron,
     );
   }
 
   get connectionsStimulatorSources(): TConnection[] {
     return this.network.connections.all.filter(
-      (connection: TConnection) => connection.targetIdx === this.idx && connection.sourceNode.model.isStimulator,
+      (connection: TConnection) => connection.target?.idx === this.idx && connection.sourceNode.model.isStimulator,
     );
   }
 
@@ -113,23 +107,15 @@ export class BaseNode extends CodeNodeMask {
     return this.model?.elementType;
   }
 
-  get filteredParams(): NodeParameter[] {
-    return this._paramsVisible.map((paramId) => this._params[paramId]);
-  }
-
   get firstTargetNodeSize(): number {
     return this.targetNodes.length > 0 ? this.targetNodes[0].size : 0;
   }
 
-  get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0;
-  }
-
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       idx: this.idx,
       model: this._modelId,
-      params: this.paramsAll.map((param: NodeParameter) => param.toJSON()),
+      params: this.params.hash,
       recordables: this._recordables.map((recordable: NodeRecord) => recordable.uuid),
       size: this._size,
     };
@@ -188,9 +174,7 @@ export class BaseNode extends CodeNodeMask {
   }
 
   get model(): BaseModel {
-    if (this._model?.id !== this._modelId) {
-      this._model = this.getModel(this._modelId);
-    }
+    if (this._model?.id !== this._modelId) this._model = this.getModel(this._modelId);
     return this._model as BaseModel;
   }
 
@@ -206,9 +190,7 @@ export class BaseNode extends CodeNodeMask {
    * Set model ID.
    */
   set modelId(value: string) {
-    this._modelId = value;
-
-    this.loadModel();
+    this.loadModel(value);
     this.modelChanges();
   }
 
@@ -216,7 +198,7 @@ export class BaseNode extends CodeNodeMask {
     return this.model.params;
   }
 
-  get modelStates(): IModelStateProps[] {
+  get modelStates(): IModelRecordState[] {
     return this.model.states;
   }
 
@@ -242,30 +224,11 @@ export class BaseNode extends CodeNodeMask {
   }
 
   get nodeIdx(): number {
-    return this._nodes.nodes.indexOf(this);
+    return this._nodes.all.indexOf(this);
   }
 
-  get params(): Record<string, NodeParameter> {
+  get params(): NodeParameters {
     return this._params;
-  }
-
-  set params(values: Record<string, NodeParameter>) {
-    Object.values(values).forEach((value: NodeParameter) => {
-      this._params[value.id] = new NodeParameter(this, value);
-    });
-  }
-
-  get paramsAll(): NodeParameter[] {
-    return Object.values(this._params);
-  }
-
-  get paramsVisible(): string[] {
-    return this._paramsVisible;
-  }
-
-  set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
-    this.changes({ preventSimulation: true });
   }
 
   get parentNodes(): TNodes {
@@ -274,10 +237,6 @@ export class BaseNode extends CodeNodeMask {
 
   get project(): TProject {
     return this._nodes.network.project as TProject;
-  }
-
-  get props(): INodeProps {
-    return this._props;
   }
 
   get recordables(): NodeRecord[] {
@@ -309,17 +268,17 @@ export class BaseNode extends CodeNodeMask {
     return this._nodes.showNode(this);
   }
 
-  get size(): number {
-    return this._size;
+  get size(): CodeNodeInterface | undefined {
+    return this.intf?.size;
   }
 
-  /**
-   * Set network size.
-   */
-  set size(value: number) {
-    this._size = value;
-    this.changes();
-  }
+  // /**
+  //  * Set network size.
+  //  */
+  // set size(value: number) {
+  //   this._size = value;
+  //   this.changes();
+  // }
 
   get sizeVisible(): boolean {
     return this._view.state.showSize;
@@ -327,13 +286,13 @@ export class BaseNode extends CodeNodeMask {
 
   get sourceNodes(): TNode[] {
     return this.network.connections.all
-      .filter((connection: TConnection) => connection.targetIdx === this.idx)
+      .filter((connection: TConnection) => connection.target?.idx === this.idx)
       .map((connection: TConnection) => connection.sourceNode);
   }
 
   get targetNodes(): TNode[] {
     return this.network.connections.all
-      .filter((connection: TConnection) => connection.sourceIdx === this.idx)
+      .filter((connection: TConnection) => connection.source?.idx === this.idx)
       .map((connection: TConnection) => connection.targetNode);
   }
 
@@ -354,26 +313,14 @@ export class BaseNode extends CodeNodeMask {
   }
 
   /**
-   * Add parameter component.
-   * @param paramProps parameter props
-   * @param visible boolean
-   */
-  addParameter(paramProps: IParamProps, visible: boolean = false): void {
-    this.logger.trace("add parameter", paramProps.id);
-
-    this._params[paramProps.id] = new NodeParameter(this, paramProps);
-    if (visible) this._paramsVisible.push(paramProps.id);
-  }
-
-  /**
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  changes(props = {}): void {
+  changes(state = {}): void {
     this.logger.trace("changes");
 
     this.update();
-    this.nodes.network.changes(props);
+    this.nodes.network.changes(state);
   }
 
   /**
@@ -390,17 +337,17 @@ export class BaseNode extends CodeNodeMask {
   clone(): TNode {
     this.logger.trace("clone");
 
-    const nodeProps = this.toJSON();
+    const nodeState = this.save();
 
-    if (nodeProps.view) {
-      const position = { ...nodeProps.view.position };
+    if (nodeState.view) {
+      const position = { ...nodeState.view.position };
       position.y += 72;
-      nodeProps.view.position = position;
-      nodeProps.view.color = undefined;
+      nodeState.view.position = position;
+      nodeState.view.color = undefined;
     }
 
     // Add node.
-    const node = this.nodes.addNode({ ...nodeProps });
+    const node = this.nodes.addNode({ ...nodeState });
 
     // Initialize node.
     node.init();
@@ -435,26 +382,18 @@ export class BaseNode extends CodeNodeMask {
 
   /**
    * Create activity for the recorder.
-   * @param activityProps activity props
+   * @param activityState activity state
    */
-  createActivity(activityProps?: IActivityProps): void {
+  createActivity(activityState?: IActivityState): void {
     this.logger.trace("create activity");
 
     if (!this.model.isRecorder) return;
 
     if (this.model.isSpikeRecorder) {
-      this._activity = new NodeSpikeActivity(this, activityProps);
+      this._activity = new NodeSpikeActivity(this, activityState);
     } else if (this.model.isAnalogRecorder) {
-      this._activity = new NodeAnalogSignalActivity(this, activityProps);
+      this._activity = new NodeAnalogSignalActivity(this, activityState);
     }
-  }
-
-  /**
-   * Empty parameters
-   */
-  emptyParams(): void {
-    this._params = {};
-    this._paramsVisible = [];
   }
 
   /**
@@ -468,45 +407,12 @@ export class BaseNode extends CodeNodeMask {
   }
 
   /**
-   * Get parameter component.
-   * @param paramId parameter ID
-   * @return parameter component
-   */
-  getParameter(paramId: string): NodeParameter {
-    return this._params[paramId];
-  }
-
-  /**
    * Get node record.
    * @param groupId string
-   * @returns node record object
+   * @returns node record instance
    */
   getNodeRecord(groupId: string): NodeRecord | undefined {
     return this._records.find((record: NodeRecord) => record.groupId === groupId);
-  }
-
-  /**
-   * Check if node has parameter component.
-   * @param paramId parameter ID
-   */
-  hasParameter(paramId: string): boolean {
-    return Object.keys(this._params).some((paramKey: string) => paramKey === paramId);
-  }
-
-  /**
-   * Check if node has params.
-   * @param nodeProps node props
-   */
-  hasParameters(nodeProps: INodeProps): boolean {
-    return "params" in nodeProps;
-  }
-
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(emitChanges: boolean = true): void {
-    this.paramsVisible = [];
-    if (emitChanges) this.changes();
   }
 
   /**
@@ -516,51 +422,34 @@ export class BaseNode extends CodeNodeMask {
   init(): void {
     this.logger.trace("init", this.modelId);
 
-    this.loadModel(this.props.params);
-    if (this.model.isRecorder) this.updateRecorder();
+    this.view.init();
+    this.params.init();
+
+    // if (this.model.isRecorder) this.updateRecorder();
     this.update();
   }
 
   /**
-   * Init parameter components.
-   * @param paramsProps list of parameter props
+   * Load node from state.
+   * @param nodeState node state
    */
-  initParameters(paramsProps?: IParamProps[]): void {
-    this.logger.trace("init parameters");
+  load(nodeState: INodeState): void {
+    this.logger.trace("load", nodeState);
 
-    this.emptyParams();
-    if (this._model) {
-      this._model.paramsAll.forEach((modelParam: ModelParameter) => {
-        if (paramsProps && paramsProps.length > 0) {
-          const nodeParamProps = paramsProps.find((paramProps: IParamProps) => paramProps.id === modelParam.id);
-          if (nodeParamProps) {
-            this.addParameter(
-              {
-                ...nodeParamProps,
-                ...modelParam,
-              },
-              true,
-            );
-          } else {
-            this.addParameter(modelParam);
-          }
-        } else {
-          this.addParameter(modelParam);
-        }
-      });
-    } else if (paramsProps) {
-      paramsProps.forEach((param: IParamProps) => this.addParameter(param, true));
-    }
+    if (nodeState.model) this.loadModel(nodeState.model);
+    this.params.load(nodeState.params);
+    if (nodeState.view) this.view.load(nodeState.view);
   }
 
   /**
    * Load model.
+   * @param modelId model ID
    */
-  loadModel(paramsProps?: IParamProps[]): void {
-    this.logger.trace("load model:", this._modelId);
+  loadModel(modelId: string): void {
+    this.logger.trace("load model:", modelId);
 
-    this._model = this.getModel(this._modelId);
-    this.initParameters(paramsProps);
+    this._modelId = modelId;
+    this._model = this.getModel(modelId);
   }
 
   /**
@@ -593,9 +482,9 @@ export class BaseNode extends CodeNodeMask {
    * @param codeNode code node
    */
   registerCodeNode(codeNode?: AbstractCodeNode): void {
-    // if (!codeNode) codeNode = getNESTCreateNode(this.idx);
-    this.codeNode = codeNode;
+    this.logger.trace("register code node");
 
+    this.codeNode = codeNode;
     this.codeNode.mask = this;
   }
 
@@ -638,13 +527,26 @@ export class BaseNode extends CodeNodeMask {
   }
 
   /**
-   * Reset value in parameter components.
-   * @remarks It emits node changes.
+   * Save node to state.
+   * @return node state
    */
-  resetParams(): void {
-    this.logger.trace("reset parameters");
+  override save(): INodeState {
+    const nodeState: INodeState = {
+      model: this._modelId,
+      view: this._view.save(),
+    };
 
-    this.paramsAll.forEach((param: NodeParameter) => param.reset());
+    if (this.size?.value > 1) nodeState.size = this.size.value;
+
+    nodeState.params = this.params.save();
+
+    // Add annotations if provided.
+    // if (this._annotations.length > 0) nodeState.annotations = this._annotations;
+
+    // Add records if this model is multimeter.
+    // if (this.model.isMultimeter) nodeState.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.save());
+
+    return nodeState;
   }
 
   /**
@@ -659,39 +561,6 @@ export class BaseNode extends CodeNodeMask {
    */
   selectForConnection(): void {
     this._nodes.network.connections.state.selectedNode = this;
-  }
-
-  /**
-   * Sets all params to visible.
-   * @param emitChanges option to emit changes.
-   */
-  showAllParams(emitChanges: boolean = true): void {
-    this.paramsVisible = Object.keys(this._params);
-    if (emitChanges) this.changes();
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return node props
-   */
-  toJSON(): INodeProps {
-    const nodeProps: INodeProps = {
-      model: this._modelId,
-      view: this._view.toJSON(),
-    };
-
-    if (this._size > 1) nodeProps.size = this._size;
-
-    if (this.filteredParams.length > 0)
-      nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
-
-    // Add annotations if provided.
-    if (this._annotations.length > 0) nodeProps.annotations = this._annotations;
-
-    // Add records if this model is multimeter.
-    if (this.model.isMultimeter) nodeProps.records = this._records.map((nodeRecord: NodeRecord) => nodeRecord.toJSON());
-
-    return nodeProps;
   }
 
   /**
@@ -714,6 +583,7 @@ export class BaseNode extends CodeNodeMask {
   update(): void {
     this.clean();
 
+    this.view.updateStyle();
     this.updateHash();
   }
 
@@ -736,22 +606,22 @@ export class BaseNode extends CodeNodeMask {
   updateRecordables(): void {
     this.logger.trace("update recordables");
 
-    let modelStatesProps: IModelStateProps[] = [];
+    let modelRecordStates: IModelRecordState[] = [];
     if (!this.model.isAnalogRecorder || this.connections.length == 0) return;
 
     // Get model states from target nodes.
     const targetsModelStates = this.targetNodes.map((node: TNode) => [...node.modelStates].flat());
     if (targetsModelStates.length > 0) {
-      const modelStatesPooled: IModelStateProps[] = targetsModelStates.flat();
-      modelStatesProps = modelStatesPooled
-        .filter((modelStateProps: IModelStateProps) => modelStateProps)
+      const modelStatesPooled: IModelRecordState[] = targetsModelStates.flat();
+      modelRecordStates = modelStatesPooled
+        .filter((modelRecordState: IModelRecordState) => modelRecordState)
         .filter(onlyUnique);
-      modelStatesProps.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
+      modelRecordStates.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
     }
 
     // Convert model states to node records.
-    this.recordables = modelStatesProps.map(
-      (modelStateProps: IModelStateProps) => new NodeRecord(this, modelStateProps),
+    this.recordables = modelRecordStates.map(
+      (modelRecordState: IModelRecordState) => new NodeRecord(this, modelRecordState),
     );
 
     this.updateRecordsColor();
@@ -780,9 +650,9 @@ export class BaseNode extends CodeNodeMask {
     this.logger.trace("update records");
 
     // Initialize selected records.
-    if (this._props.records != null) {
+    if (this.props.value && this.props.value.records != null) {
       // Load record from stored nodes.
-      const recordIds = this._props.records.map((recordProps: INodeRecordProps) => recordProps.id);
+      const recordIds = this.props.value.records.map((recordState: INodeRecordState) => recordState.id);
       this.records = [...this.recordables.filter((record: NodeRecord) => recordIds.includes(record.id))];
     } else if (this.records.length > 0) {
       const recordIds = this.recordables.map((record: NodeRecord) => record.id);

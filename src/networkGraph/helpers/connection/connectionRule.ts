@@ -1,6 +1,6 @@
 // connectionRule.ts
 
-import type { IParamProps } from "@/helpers/common/parameter";
+import type { IParamState } from "@/helpers/common/parameter";
 import type { TConnection } from "@/types";
 
 enum Rule {
@@ -16,16 +16,15 @@ enum Rule {
 export interface IConnectionRuleConfig {
   value: string;
   label: string;
-  params: IParamProps[];
+  params: IParamState[];
 }
 
 export class ConnectionRule {
   private _connection: TConnection; // parent
-  private _value: string;
+  private _value: string = "all_to_all";
 
-  constructor(connection: TConnection, rule?: string) {
+  constructor(connection: TConnection) {
     this._connection = connection;
-    this._value = rule || "all_to_all";
   }
 
   get connection(): TConnection {
@@ -38,8 +37,19 @@ export class ConnectionRule {
 
   set value(value: string) {
     this._value = value;
-    this.connection.initParameters();
+    this.connection.params.load();
     this.connection.changes();
+  }
+
+  /**
+   * Get all parameter of the rule.
+   */
+  getRuleConfig(): IConnectionRuleConfig {
+    return this.connection.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this._value);
+  }
+
+  load(value: Rule) {
+    this._value = value;
   }
 
   /**

@@ -3,10 +3,10 @@
 import { range } from "@/utils/array";
 import { round } from "@/utils/converter";
 
-import { BasePositions, type IBasePositionsProps } from "./basePositions";
-import { NESTNodeSpatial } from "./nodeSpatial";
+import { BasePositions, type IBasePositionsState } from "./basePositions";
+// import type { NESTNodeSpatial } from "./nodeSpatial";
 
-export interface IGridPositionsProps extends IBasePositionsProps {
+export interface IGridPositionsState extends IBasePositionsState {
   center?: number[];
   extent?: number[];
   shape?: number[];
@@ -19,10 +19,9 @@ export class GridPositions extends BasePositions {
   private _center: number[] = [0, 0];
   private _shape: number[] = [1, 1];
 
-  constructor(spatial: NESTNodeSpatial, positionProps?: IGridPositionsProps) {
-    super(spatial, positionProps);
-    this.update(positionProps);
-  }
+  // constructor(spatial: NESTNodeSpatial) {
+  //   super(spatial);
+  // }
 
   override get center(): number[] {
     return this._center;
@@ -78,6 +77,17 @@ export class GridPositions extends BasePositions {
     });
   }
 
+  /**
+   * Load grid positions from state.
+   * @param state grid positions state
+   */
+  override load(state?: IGridPositionsState) {
+    if (state?.numDimensions) this.numDimensions = state.numDimensions;
+    if (state?.center) this.center = state.center;
+    if (state?.extent) this.extent = state.extent;
+    if (state?.shape) this.shape = state.shape;
+  }
+
   range(min: number, max: number, size: number): number[] {
     const step: number = (max - min) / size / 2;
     const rangeData: number[] = range(min, max, step);
@@ -85,10 +95,10 @@ export class GridPositions extends BasePositions {
   }
 
   /**
-   * Serialize for JSON.
-   * @return grid positions props
+   * Save grid positions to state.
+   * @return grid positions state
    */
-  override toJSON(): IGridPositionsProps {
+  override save(): IGridPositionsState {
     return {
       center: this._center,
       edgeWrap: this.edgeWrap,
@@ -96,12 +106,5 @@ export class GridPositions extends BasePositions {
       numDimensions: this.numDimensions,
       shape: this._shape,
     };
-  }
-
-  override update(positionProps?: IGridPositionsProps) {
-    if (positionProps?.numDimensions) this.numDimensions = positionProps.numDimensions;
-    if (positionProps?.center) this.center = positionProps.center;
-    if (positionProps?.extent) this.extent = positionProps.extent;
-    if (positionProps?.shape) this.shape = positionProps.shape;
   }
 }

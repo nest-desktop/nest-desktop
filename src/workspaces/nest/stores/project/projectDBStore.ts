@@ -2,7 +2,7 @@
 
 import { defineProjectDBStore } from "@/stores/project/defineProjectDBStore";
 
-import { type INESTProjectProps, NESTProject } from "../../helpers/project/project";
+import { type INESTProjectState, NESTProject } from "../../helpers/project/project";
 import { NESTProjectDB } from "../../helpers/project/projectDB";
 
 const projectAssets = [
@@ -13,7 +13,7 @@ const projectAssets = [
   "step-current-response",
 ];
 
-export const useNESTProjectDBStore = defineProjectDBStore<NESTProject, INESTProjectProps>({
+export const useNESTProjectDBStore = defineProjectDBStore<NESTProject, INESTProjectState>({
   // export const useNESTProjectDBStore = defineProjectDBStore({
   Project: NESTProject,
   ProjectDB: NESTProjectDB,

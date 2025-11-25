@@ -5,18 +5,18 @@ import type { TNode } from "@/types";
 // TODO: No imports from network graph!
 import { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 
-import type { IActivityProps } from "../activity";
+import type { IActivityState } from "../activity";
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeAnalogSignalActivity extends NodeActivity {
-  constructor(recorder: TNode, activityProps: IActivityProps = {}) {
-    super(recorder, activityProps);
+  constructor(recorder: TNode, activityState: IActivityState = {}) {
+    super(recorder, activityState);
   }
 
   /**
    * Get node record.
    * @param groupId string
-   * @returns node record object
+   * @returns node record instance
    */
   getNodeRecord(groupId: string): NodeRecord | undefined {
     if (this.recorder.records.length === 0) return;

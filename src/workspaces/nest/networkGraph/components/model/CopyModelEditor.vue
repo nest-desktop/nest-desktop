@@ -161,12 +161,12 @@ const elementTypes = [
   { title: "stimulator", value: "stimulator" },
 ];
 
-const select = (props: Record<string, unknown>, callback?: () => void) => {
-  if (["neuron", "recorder", "stimulator"].includes(props.value as string)) {
-    state.elementType = props.value as string;
+const select = (itemProps: Record<string, unknown>, callback?: () => void) => {
+  if (["neuron", "recorder", "stimulator"].includes(itemProps.value as string)) {
+    state.elementType = itemProps.value as string;
     state.items = model.value.network.project.modelDBStore.getModelsByElementType(state.elementType) as NESTModel[];
   } else {
-    model.value.existingModelId = props.value as string;
+    model.value.existingModelId = itemProps.value as string;
   }
 
   if (callback) {

@@ -4,51 +4,51 @@ import { nextTick } from "vue";
 import type { AxiosResponse } from "axios";
 
 import type { IAxiosResponseData } from "@/stores/defineBackendStore";
-import type { TNetwork, TSimulation } from "@/types";
-import { BaseProject, type IBaseProjectProps } from "@/helpers/project/project";
-import { BaseSimulation, type ISimulationProps } from "@/helpers/simulation/simulation";
-import { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
+import type { Class, TNetwork, TSimulation } from "@/types";
 import { closeLoading, openLoading, useAppStore } from "@/stores/appStore";
 
-import { type INetworkProps, BaseNetwork } from "../../networkGraph/helpers/network/network";
-import { NetworkRevision } from "../../networkGraph/helpers/network/networkRevision";
+import { BaseProject, type IProjectState } from "./project";
+import { BaseSimulation, type ISimulationState } from "../simulation";
+import { NodeActivities } from "../nodeActivity";
 
-export interface INetworkProjectProps extends IBaseProjectProps {
-  network?: INetworkProps;
-  simulation?: ISimulationProps;
+import { type INetworkState, BaseNetwork } from "../../networkGraph/helpers/network/network";
+import { NetworkRevision } from "../../networkGraph/helpers/network/networkRevision";
+import { IBaseState } from "../common";
+import { Activities } from "../activity";
+
+export interface INetworkProjectState extends IProjectState {
+  network?: INetworkState;
+  simulation?: ISimulationState;
 }
 
 // export class NetworkProject<TNode extends BaseNode<AbstractModel>> extends AbstractProject{
-export abstract class NetworkProject extends BaseProject {
+export abstract class NetworkProject<T extends INetworkProjectState = INetworkProjectState> extends BaseProject<T> {
   private _networkRevision: NetworkRevision; // network history
   public _network: BaseNetwork; // network of neurons and devices
   public _simulation: TSimulation; // settings for the simulation
 
-  constructor(projectProps: INetworkProjectProps = {}) {
-    super(projectProps);
+  constructor() {
+    super();
 
     // Initialize model database.
     this.initModelStore();
 
     // Construct components.
-    this._network = new this.Network(this, projectProps.network);
+    this._network = new this.Network(this);
     this._networkRevision = new NetworkRevision(this);
 
-    this._simulation = new this.Simulation(this, projectProps.simulation);
-
-    // Initialize components.
-    nextTick(() => this.init());
+    this._simulation = new this.Simulation(this);
   }
 
-  override get Activities() {
+  override get Activities(): Class<Activities> {
     return NodeActivities;
   }
 
-  get Network() {
+  get Network(): Class<BaseNetwork> {
     return BaseNetwork;
   }
 
-  get Simulation() {
+  get Simulation(): Class<BaseSimulation> {
     return BaseSimulation;
   }
 
@@ -64,7 +64,7 @@ export abstract class NetworkProject extends BaseProject {
     return this._simulation;
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       description: this.description,
       id: this.id,
@@ -122,16 +122,16 @@ export abstract class NetworkProject extends BaseProject {
   checkoutNetwork(): void {
     this.logger.trace("checkout network");
 
-    const networkProps = this._networkRevision.load();
-    this.network.update(networkProps);
+    const networkState = this._networkRevision.load();
+    this.network.load(networkState);
     this.network.clean();
 
     // Generate simulation code.
     // this.generateCode();
 
     const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (projectViewStore.state.simulationEvents.onCheckout) {
+    const projectViewStore = appStore.currentWorkspace?.views.project;
+    if (projectViewStore?.state.simulationEvents.onCheckout) {
       // Run simulation.
       nextTick(() => this.startSimulation());
     } else {
@@ -149,28 +149,35 @@ export abstract class NetworkProject extends BaseProject {
   override init(): void {
     this.logger.trace("init");
 
-    // Initialize code.
-    this.code.init();
+    // // Initialize network.
+    // this.network.init();
 
-    // Initialize network.
-    this.network.init();
+    // // Initialize network history.
+    // this.networkRevision.init();
 
-    // Initialize network history.
-    this.networkRevision.init();
+    // // Initialize simulation.
+    // this.simulation.init();
 
-    // Initialize simulation.
-    this.simulation.init();
+    // // Initialize activities.
+    // this.activities.init();
 
-    // Initialize activities.
-    this.activities.init();
-
-    // Initialize activity graph.
-    this.activityGraph.init();
+    // // Initialize activity graph.
+    // this.activityGraph.init();
 
     this.updateHash();
     this.doc.hash = this.hash;
 
     this.clean();
+  }
+
+  /**
+   * Load network project from state.
+   * @param projectState network project state
+   */
+  override load(projectState: INetworkProjectState): void {
+    this.logger.trace("load");
+
+    super.load(projectState);
   }
 
   /**
@@ -185,8 +192,8 @@ export abstract class NetworkProject extends BaseProject {
     this.activities.reset();
 
     const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (!projectViewStore.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
+    const projectViewStore = appStore.currentWorkspace?.views.project;
+    if (!projectViewStore?.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
 
     const simtoc = Date.now();
     this.simulation
@@ -214,20 +221,22 @@ export abstract class NetworkProject extends BaseProject {
    */
   startSimulationOnChange(): void {
     const appStore = useAppStore();
-    const projectViewStore = appStore.currentWorkspace.views.project;
-    if (projectViewStore.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
+    const projectViewStore = appStore.currentWorkspace?.views.project;
+    if (projectViewStore?.state.simulationEvents.onChange) nextTick(() => this.startSimulation());
   }
 
   /**
-   * Serialize for JSON.
-   * @return project props
+   * Save network project to state.
+   * @return network project state
    */
-  override toJSON(): INetworkProjectProps {
-    const projectProps = super.toJSON();
+  override save(): INetworkProjectState {
+    this.logger.trace("save");
 
-    projectProps.network = this.network.toJSON();
-    projectProps.simulation = this.simulation.toJSON();
+    const projectState = super.save();
 
-    return projectProps;
+    projectState.network = this.network.save();
+    projectState.simulation = this.simulation.save();
+
+    return projectState;
   }
 }

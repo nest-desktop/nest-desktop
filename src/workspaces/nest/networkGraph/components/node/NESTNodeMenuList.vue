@@ -36,7 +36,7 @@
 
 import NodeMenuList from "@/networkGraph/components/node/NodeMenuList.vue";
 
-import type { NESTNode } from "../../types";
+import type { NESTNode } from "@/workspaces/nest/types";
 
 import { useNetworkGraph } from "@/networkGraph/useNetworkGraph";
 const networkGraph = useNetworkGraph();

@@ -7,48 +7,48 @@ import type { ActivityChartGraph } from "@/activityGraph/helpers/activityChartGr
 import type { TProject } from "@/types";
 import { download } from "@/utils/download";
 
-import { BaseObj } from "../common/base";
+import { BaseObj, type IBaseState } from "../common/base";
 
-export interface IActivityProps {
-  events?: IEventProps;
+export interface IActivityState extends IBaseState {
+  events?: IEventState;
   nodeIds?: number[];
   nodePositions?: number[][];
   recorderUnitId?: number;
 }
 
-interface IActivityState {
+interface IActivityRefState {
   activeNodeId: number | undefined;
   fromTime: number;
   selected: number[];
 }
 
-export interface IEventProps {
+export interface IEventState {
   [key: string]: number[];
 }
 
-export class Activity extends BaseObj {
-  private _events: IEventProps = {};
+export class Activity extends BaseObj<IActivityState> {
+  private _events: IEventState = {};
   private _idx: number = 0; // generative
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
   private _project: TProject;
   private _recorderUnitId: number = -1;
-  private _state: UnwrapRef<IActivityState>;
+  private _state: UnwrapRef<IActivityRefState>;
 
-  constructor(project: TProject, activityProps: IActivityProps = {}) {
+  constructor(project: TProject, activityState: IActivityState = {}) {
     super({
       config: { name: "Activity" },
     });
 
     this._project = project;
-    this._state = reactive<IActivityState>({
+    this._state = reactive<IActivityRefState>({
       activeNodeId: undefined,
       fromTime: 0,
       // records: [] as NodeRecord[],
       selected: [],
     });
 
-    this.init(activityProps);
+    this.init(activityState);
   }
 
   get chartGraph(): ActivityChartGraph {
@@ -59,11 +59,11 @@ export class Activity extends BaseObj {
     return this.config?.localStorage.color.cycle;
   }
 
-  get events(): IEventProps {
+  get events(): IEventState {
     return this._events;
   }
 
-  set events(value: IEventProps) {
+  set events(value: IEventState) {
     this._events = value;
   }
 
@@ -130,7 +130,7 @@ export class Activity extends BaseObj {
     this._recorderUnitId = value;
   }
 
-  get state(): UnwrapRef<IActivityState> {
+  get state(): UnwrapRef<IActivityRefState> {
     return this._state;
   }
 
@@ -154,7 +154,7 @@ export class Activity extends BaseObj {
   export(): void {
     this.logger.trace("export activity");
 
-    download(JSON.stringify(this.toJSON()), "activity");
+    download(JSON.stringify(this.save()), "activity");
   }
 
   /**
@@ -192,19 +192,19 @@ export class Activity extends BaseObj {
 
   /**
    * Initialize activity.
-   * @param activityProps activity props
+   * @param activityState activity state
    * @remarks Overwrites events.
    */
-  init(activityProps: IActivityProps = {}): void {
+  init(activityState: IActivityState = {}): void {
     this.logger.trace("init");
 
     this.reset();
-    this.events = activityProps.events || { senders: [], times: [] };
-    this.nodeIds = activityProps.nodeIds || [];
+    this.events = activityState.events || { senders: [], times: [] };
+    this.nodeIds = activityState.nodeIds || [];
     this._state.selected = this.nodeIds.slice(0, 11);
 
-    this.nodePositions = activityProps.nodePositions || [];
-    this.recorderUnitId = activityProps.recorderUnitId || -1;
+    this.nodePositions = activityState.nodePositions || [];
+    this.recorderUnitId = activityState.recorderUnitId || -1;
     this.updateHash();
     this.postInit();
   }
@@ -216,10 +216,10 @@ export class Activity extends BaseObj {
 
   /**
    * Call after update call.
-   * @param _activityProps activity props
+   * @param activityState activity state
    */
-  postUpdate(activityProps: IActivityProps): void {
-    this.logger.trace("Postupdate: ", activityProps);
+  postUpdate(activityState: IActivityState): void {
+    this.logger.trace("Postupdate: ", activityState);
   }
 
   /**
@@ -235,10 +235,10 @@ export class Activity extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return activity object
+   * Save activity to state.
+   * @return activity state
    */
-  toJSON(): IActivityProps {
+  override save(): IActivityState {
     return {
       events: this._events,
       nodeIds: this._nodeIds,
@@ -248,16 +248,16 @@ export class Activity extends BaseObj {
 
   /**
    * Update activity.
-   * @param activityProps activity props
+   * @param activityState activity state
    * @remarks Extends events.
    */
-  update(activityProps: IActivityProps): void {
+  update(activityState: IActivityState): void {
     this.logger.trace("update");
 
-    if (activityProps.events == undefined) return;
+    if (activityState.events == undefined) return;
 
-    this.updateEvents(activityProps.events);
-    this.postUpdate(activityProps);
+    this.updateEvents(activityState.events);
+    this.postUpdate(activityState);
   }
 
   /**

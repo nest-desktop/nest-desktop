@@ -2,16 +2,17 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IParamProps, TParamValue } from "@/helpers/common/parameter";
+import type { IParamState, TParamValue } from "@/helpers/common/parameter";
 import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 import type { TNode } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common/base";
 import { currentBackgroundColor } from "@/helpers/common/theme";
 
-import type { Activity } from "../../activity/activity";
+import type { Activity } from "@/helpers/activity/activity";
+import type { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
+import type { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
+
 import type { ActivityChartPanel } from "./activityChartPanel";
-import type { NodeActivity } from "../../nodeActivity/nodeActivity";
-import type { NodeAnalogSignalActivity } from "../../nodeActivity/nodeAnalogSignalActivity";
 import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";
 
 export interface IActivityChartPanelModelData {
@@ -59,14 +60,14 @@ export interface IActivityChartPanelModelData {
   yaxis?: string;
 }
 
-export interface IActivityChartPanelModelProps {
+export interface IActivityChartPanelModelState extends IBaseState {
   id?: string;
   markerSize?: number;
   params?: Record<string, TParamValue>;
   records?: string[];
 }
 
-interface IActivityChartPanelModelState {
+interface IActivityChartPanelModelRefState {
   height: number;
   histogram: {
     end: number;
@@ -93,16 +94,15 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   private _label: string = "";
   private _panel: ActivityChartPanel; // parent
   private _params: Record<string, ActivityChartPanelModelParameter> = {};
-  private _props: IActivityChartPanelModelProps;
-  private _state: UnwrapRef<IActivityChartPanelModelState>;
+  private _state: UnwrapRef<IActivityChartPanelModelRefState>;
 
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
     super();
-    this._props = modelProps;
+    this.props.value = modelState;
 
     this._id = "activityChart";
     this._panel = panel;
-    this._state = reactive<IActivityChartPanelModelState>({
+    this._state = reactive<IActivityChartPanelModelRefState>({
       height: 1,
       histogram: {
         end: -1e100,
@@ -203,10 +203,6 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this.changes();
   }
 
-  get props(): IActivityChartPanelModelProps {
-    return this._props;
-  }
-
   get records(): NodeRecord[] {
     return this._state.records as NodeRecord[];
   }
@@ -215,13 +211,13 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     return this.records.filter((record: NodeRecord) => this._state.recordsVisible.includes(record.groupId));
   }
 
-  get state(): UnwrapRef<IActivityChartPanelModelState> {
+  get state(): UnwrapRef<IActivityChartPanelModelRefState> {
     return this._state;
   }
 
   /**
    * Add data of this activity graph panel.
-   * @param _activity activity object
+   * @param _activity activity instance
    *
    * @remarks
    * It requires activity data.
@@ -231,8 +227,8 @@ export abstract class ActivityChartPanelModel extends BaseObj {
     this.logger.trace("Add data:", activity);
   }
 
-  addParameter(paramProps: IParamProps) {
-    this._params[paramProps.id] = new ActivityChartPanelModelParameter(this, paramProps);
+  addParameter(paramState: IParamState) {
+    this._params[paramState.id] = new ActivityChartPanelModelParameter(this, paramState);
   }
 
   /**
@@ -264,7 +260,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   /**
    * Get activity from the project.
    * @param idx index of activity
-   * @returns activity object
+   * @returns activity instance
    */
   getActivity(idx: number): Activity {
     return this._panel.graph.project.activities.all[idx];
@@ -273,7 +269,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
   /**
    * Get node record.
    * @param groupId string
-   * @returns node record object
+   * @returns node record instance
    */
   getNodeRecord(groupId: string): NodeRecord | undefined {
     return this.records.find((nodeRecord: NodeRecord) => nodeRecord.groupId === groupId);
@@ -289,21 +285,21 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Initialize params for controller.
-   * @param paramsProps parameter props
+   * @param paramStates parameter states
    */
-  initParams(paramsProps: IParamProps[]): void {
-    paramsProps.forEach((paramProps: IParamProps) => {
-      this.addParameter(paramProps);
-      if (paramProps.visible != false) this.params[paramProps.id].visible = true;
+  initParams(paramStates: IParamState[]): void {
+    paramStates.forEach((paramState: IParamState) => {
+      this.addParameter(paramState);
+      if (paramState.visible != false) this.params[paramState.id].visible = true;
     });
   }
 
   /**
-   * Serialize for JSON.
-   * @return activity chart panel model props
+   * Save panel models of activity chart to state.
+   * @return activity chart panel model state
    */
-  toJSON(): IActivityChartPanelModelProps {
-    const modelProps: IActivityChartPanelModelProps = {
+  override save(): IActivityChartPanelModelState {
+    const modelState: IActivityChartPanelModelState = {
       id: this._id,
     };
 
@@ -312,13 +308,13 @@ export abstract class ActivityChartPanelModel extends BaseObj {
       this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
         params[param.id] = param.value;
       });
-      modelProps.params = params;
+      modelState.params = params;
     }
 
     if (0 < this._state.recordsVisible.length && this._state.recordsVisible.length < this.state.records.length)
-      modelProps.records = this._state.recordsVisible;
+      modelState.records = this._state.recordsVisible;
 
-    return modelProps;
+    return modelState;
   }
 
   /**
@@ -348,7 +344,7 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update active marker.
-   * @param _record node record object
+   * @param _record node record instance
    */
   updateActiveMarker(record?: NodeRecord): void {
     this.logger.trace("update activity marker:", record);
@@ -404,11 +400,11 @@ export abstract class ActivityChartPanelModel extends BaseObj {
 
   /**
    * Update params for controller.
-   * @param paramsProps parameter props
+   * @param paramStates parameter states
    */
-  updateParams(paramsProps: Record<string, TParamValue> = {}): void {
+  updateParams(paramStates: Record<string, TParamValue> = {}): void {
     this.paramsAll.forEach((param: ActivityChartPanelModelParameter) => {
-      if (param.id in paramsProps) param.state.value = paramsProps[param.id];
+      if (param.id in paramStates) param.state.value = paramStates[param.id];
     });
   }
 

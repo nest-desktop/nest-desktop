@@ -4,43 +4,38 @@ import type { AxiosResponse } from "axios";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { IAxiosResponseData, IResponseData } from "@/stores/defineBackendStore";
-import type { IBackendStore } from "@/codeGraph/codeHandler";
+import { type IBackendStore, CodeNodeMask } from "@/codeGraph";
 import type { TNetworkProject } from "@/types";
 
 import { SimulationHandler } from "./simulationHandler";
-import { CodeNodeMask } from "../../codeGraph/codeNodeMask";
+import type { IBaseState } from "../common";
 
-export interface ISimulationProps {
+export interface ISimulationState extends IBaseState {
   time?: number;
 }
 
-interface ISimulationState {
+interface ISimulationRefState {
   biologicalTime: number;
   running: boolean;
   timeInfo: Record<string, number>;
 }
 
-export class BaseSimulation extends CodeNodeMask {
+export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
   private _handler: SimulationHandler;
-  private _state: UnwrapRef<ISimulationState>;
-  private _time: number; // simulation time
+  private _state: UnwrapRef<ISimulationRefState>;
+  private _time: number = 1000; // simulation time
 
   public _project: TNetworkProject; // parent
 
-  constructor(project: TNetworkProject, simulationProps: ISimulationProps = {}) {
-    super({
-      config: { name: "Simulation" },
-    });
+  constructor(project: TNetworkProject) {
+    super({ config: { name: "Simulation" } });
 
     this._project = project;
-
-    // Initialize time.
-    this._time = simulationProps.time ? simulationProps.time : 1000;
 
     this._handler = new SimulationHandler();
 
     // Initialize simulation state.
-    this._state = reactive<ISimulationState>({
+    this._state = reactive<ISimulationRefState>({
       biologicalTime: 0,
       running: false,
       timeInfo: {
@@ -57,7 +52,7 @@ export class BaseSimulation extends CodeNodeMask {
   }
 
   get project(): TNetworkProject {
-    return this._project;
+    return this.codeNode?.code?.project ?? this._project;
   }
 
   get state(): UnwrapRef<ISimulationState> {
@@ -174,14 +169,12 @@ export class BaseSimulation extends CodeNodeMask {
   }
 
   /**
-   * Serialize for JSON.
-   * @return simulation props
+   * Save simulation to state.
+   * @return simulation state
    */
-  override toJSON(): ISimulationProps {
-    const simulationProps: ISimulationProps = {
+  override save(): ISimulationState {
+    return {
       time: this.time,
     };
-
-    return simulationProps;
   }
 }

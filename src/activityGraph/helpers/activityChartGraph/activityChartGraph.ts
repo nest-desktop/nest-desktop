@@ -7,15 +7,15 @@ import { createDialog } from "vuetify3-dialog";
 
 import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
 import type { TProject } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common/base";
 import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
 
-import { ActivityChartPanel, type IActivityChartPanelProps } from "./activityChartPanel";
+import { ActivityChartPanel, type IActivityChartPanelState } from "./activityChartPanel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
 import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import type { IActivityChartPanelModelData } from "./activityChartPanelModel";
-import type { IBaseActivityGraphProps } from "../activityGraph";
+import type { IBaseActivityGraphState } from "../activityGraph";
 import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
 import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";
@@ -27,7 +27,7 @@ import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimes
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
 
-export interface IActivityChartPanelModelProps {
+export interface IActivityChartPanelModelState extends IBaseState {
   activityType: string;
   component: object;
   id: string;
@@ -41,7 +41,7 @@ interface IActivityChartGraphState {
   traceColor: string;
 }
 
-const models: IActivityChartPanelModelProps[] = [
+const models: IActivityChartPanelModelState[] = [
   {
     activityType: "analog",
     component: AnalogSignalPlotModel,
@@ -118,15 +118,14 @@ export class ActivityChartGraph extends BaseObj {
   private _plotConfig: PlotlyBasic.Partial<PlotlyBasic.Config> = {};
   private _plotData: PlotlyBasic.Data[] = [];
   private _plotLayout: PlotlyBasic.Partial<PlotlyBasic.Layout> = {};
-  private _models: IActivityChartPanelModelProps[] = models;
+  private _models: IActivityChartPanelModelState[] = models;
   private _panels: ActivityChartPanel[] = [];
   private _project: TProject;
-  private _props: IBaseActivityGraphProps | undefined;
   private _state: UnwrapRef<IActivityChartGraphState>;
 
-  constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
+  constructor(project: TProject, activityGraphState?: IBaseActivityGraphState) {
     super();
-    this._props = activityGraphProps;
+    this.props.value = activityGraphState;
 
     this._project = project;
     this._plotConfig = {
@@ -183,7 +182,7 @@ export class ActivityChartGraph extends BaseObj {
 
     this._state = reactive<IActivityChartGraphState>({
       initialized: false,
-      traceColor: activityGraphProps?.color || "record",
+      traceColor: activityGraphState?.color || "record",
     });
   }
 
@@ -196,16 +195,16 @@ export class ActivityChartGraph extends BaseObj {
     return this._project.simulation.state.biologicalTime;
   }
 
-  get models(): IActivityChartPanelModelProps[] {
+  get models(): IActivityChartPanelModelState[] {
     return this._models;
   }
 
-  get modelsAnalog(): IActivityChartPanelModelProps[] {
-    return this._models.filter((model: IActivityChartPanelModelProps) => model.activityType === "analog");
+  get modelsAnalog(): IActivityChartPanelModelState[] {
+    return this._models.filter((model: IActivityChartPanelModelState) => model.activityType === "analog");
   }
 
-  get modelsSpike(): IActivityChartPanelModelProps[] {
-    return this._models.filter((model: IActivityChartPanelModelProps) => model.activityType === "spike");
+  get modelsSpike(): IActivityChartPanelModelState[] {
+    return this._models.filter((model: IActivityChartPanelModelState) => model.activityType === "spike");
   }
 
   get panels(): ActivityChartPanel[] {
@@ -239,36 +238,32 @@ export class ActivityChartGraph extends BaseObj {
     return this._project;
   }
 
-  get props(): IBaseActivityGraphProps | undefined {
-    return this._props;
-  }
-
   get state(): UnwrapRef<IActivityChartGraphState> {
     return this._state;
   }
 
   /**
    * Add panel.
-   * @param panelProps panel props
+   * @param panelState panel state
    */
   addPanel(
-    panelProps: IActivityChartPanelProps = {
+    panelState: IActivityChartPanelState = {
       model: { id: "spikeTimesRasterPlot" },
     },
   ): void {
-    this.logger.trace("add panel:", panelProps.model?.id);
+    this.logger.trace("add panel:", panelState.model?.id);
 
-    this._panels.push(new ActivityChartPanel(this, panelProps));
+    this._panels.push(new ActivityChartPanel(this, panelState));
   }
 
   /**
    * Add panels.
    */
-  addPanels(panelsProps: IActivityChartPanelProps[]): void {
+  addPanels(panelStates: IActivityChartPanelState[]): void {
     this.logger.trace("add panels");
 
-    if (panelsProps.length > 0) {
-      panelsProps.forEach((panelProps: IActivityChartPanelProps) => this.addPanel(panelProps));
+    if (panelStates.length > 0) {
+      panelStates.forEach((panelState: IActivityChartPanelState) => this.addPanel(panelState));
     }
   }
 
@@ -356,7 +351,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Gather data for the chart graph.
-   * @param panel panel object
+   * @param panel panel instance
    */
   gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
@@ -452,7 +447,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Remove panel.
-   * @param panel panel object
+   * @param panel panel instance
    */
   removePanel(panel: ActivityChartPanel): void {
     this._panels = this._panels.filter((p: ActivityChartPanel) => p !== panel);
@@ -511,11 +506,11 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return list of activity chart panel props
+   * Save activity chart graph to state
+   * @return activity chart graph state
    */
-  toJSON(): IActivityChartPanelProps[] {
-    return this._panels.map((panel: ActivityChartPanel) => panel.toJSON());
+  override save(): IActivityChartPanelState[] {
+    return this._panels.map((panel: ActivityChartPanel) => panel.save());
   }
 
   /**

@@ -72,7 +72,7 @@ export class NESTModelAssignGraph extends BaseObj {
     elem
       .append("path")
       .attr("class", "color")
-      .attr("marker-end", `url(#assigned-${connection.synapse.copyModel.weightRecorder.idx})`)
+      .attr("marker-end", `url(#assigned-${connection.synapse.copyModel?.weightRecorder?.idx})`)
       .style("fill", "none")
       .style("stroke", "currentColor")
       .style("pointer-events", "none")
@@ -104,7 +104,7 @@ export class NESTModelAssignGraph extends BaseObj {
       const weightRecorder = synapseModel.weightRecorder as NESTNode;
 
       if (weightRecorder) {
-        elem.attr("color", connection.synapse.copyModel.weightRecorder.view.color);
+        elem.attr("color", connection.synapse.copyModel?.weightRecorder?.view.color ?? "black");
 
         elem
           .selectAll("path")

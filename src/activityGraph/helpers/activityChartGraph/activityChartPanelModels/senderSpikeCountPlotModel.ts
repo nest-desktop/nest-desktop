@@ -5,13 +5,13 @@ import type { TParameter } from "@/types";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { plot } from "../graphObjects/plot";
 
 export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "senderSpikeCountPlot";
     this.label = "spike count in each sender";
@@ -53,12 +53,12 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add data of spike count in each sender for histogram panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

@@ -38,11 +38,11 @@ export const useCodeGraphStore = defineStore(
     };
 
     const newGraph = () => {
-      // console.log("create new graph")
       viewModel.newGraph();
 
       const editorId = saveEditor();
-      return { name: "edit", params: { editorId } };
+      // TODO: change route name for all workspaces.
+      return { name: "nestCodeGraphEdit", params: { editorId } };
     };
 
     const removeEditorState = (editorId: string) => {
@@ -50,7 +50,6 @@ export const useCodeGraphStore = defineStore(
     };
 
     const saveEditor = () => {
-      // console.log('save editor', viewModel.editor.graph.shortId)
       state.editorStates[viewModel.editor.graph.id] = viewModel.editor.save();
       return viewModel.editor.graph.id;
     };
@@ -74,15 +73,15 @@ export const useCodeGraphStore = defineStore(
 );
 
 export const initCodeGraph = (to: RouteLocationNormalizedGeneric): boolean => {
-  if (!["new", "edit"].includes(to.name as string)) return true;
+  const routeName = to.name as string;
+  if (!routeName.includes("CodeGraphNew") && !routeName.includes("CodeGraphEdit")) return true;
 
   const codeGraphStore = useCodeGraphStore();
 
-  switch (to.name) {
-    case "new":
-      return codeGraphStore.newGraph();
-    case "edit":
-      return codeGraphStore.loadEditor(to.params.editorId as string);
+  if (routeName.includes("CodeGraphNew")) {
+    return codeGraphStore.newGraph();
+  } else if (routeName.includes("CodeGraphEdit")) {
+    return codeGraphStore.loadEditor(to.params.editorId as string);
   }
 
   return true;

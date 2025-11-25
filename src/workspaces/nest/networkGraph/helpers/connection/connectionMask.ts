@@ -1,8 +1,8 @@
 // connectionMask.ts
 
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common";
 
-import { NESTConnection } from "./connection";
+import type { NESTConnection } from "./connection";
 
 enum EMaskType {
   circular = "circular",
@@ -47,7 +47,7 @@ interface ISpecs {
   upper_right?: [number, number];
 }
 
-export interface INESTConnectionMaskProps {
+export interface INESTConnectionMaskState extends IBaseState {
   masktype?: EMaskType;
   specs: ISpecs;
 }
@@ -55,10 +55,10 @@ export interface INESTConnectionMaskProps {
 export class NESTConnectionMask extends BaseObj {
   private _connection: NESTConnection;
   private _graph: IGraph;
-  private _masktype: EMaskType;
-  private _specs: ISpecs;
+  private _masktype: EMaskType = EMaskType.none;
+  private _specs: ISpecs = {};
 
-  constructor(connection: NESTConnection, maskProps?: INESTConnectionMaskProps) {
+  constructor(connection: NESTConnection) {
     super({
       config: { name: "NESTConnectionMask", simulator: "nest" },
     });
@@ -72,8 +72,6 @@ export class NESTConnectionMask extends BaseObj {
       },
       style: { position: "relative", width: "100%", height: "100%" },
     };
-    this._masktype = maskProps?.masktype || EMaskType.none;
-    this._specs = maskProps?.specs || {};
   }
 
   get connection(): NESTConnection {
@@ -250,6 +248,18 @@ export class NESTConnectionMask extends BaseObj {
   }
 
   /**
+   * Save connection mask to state.
+   * @return connection mask state
+   */
+  override save(): INESTConnectionMaskState {
+    const maskState: INESTConnectionMaskState = {
+      masktype: this._masktype,
+      specs: this._specs,
+    };
+    return maskState;
+  }
+
+  /**
    * Select a mask type.
    * @param value mask type
    */
@@ -264,18 +274,6 @@ export class NESTConnectionMask extends BaseObj {
       });
     }
     this.draw();
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return connection mask props
-   */
-  toJSON(): INESTConnectionMaskProps {
-    const maskProps: INESTConnectionMaskProps = {
-      masktype: this._masktype,
-      specs: this._specs,
-    };
-    return maskProps;
   }
 
   /**

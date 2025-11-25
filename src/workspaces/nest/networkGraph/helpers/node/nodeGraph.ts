@@ -2,17 +2,12 @@
 
 import { select } from "d3";
 
-import type { TNetworkGraph } from "@/types";
 import { NodeGraph } from "@/networkGraph/helpers/nodeGraph/nodeGraph";
 
 import { NESTNetwork } from "../network/network";
 import { NESTNetworkGraph } from "../network/networkGraph";
 
 export class NESTNodeGraph extends NodeGraph {
-  constructor(networkGraph: TNetworkGraph) {
-    super(networkGraph);
-  }
-
   get network(): NESTNetwork {
     return this.networkGraph.network as NESTNetwork;
   }

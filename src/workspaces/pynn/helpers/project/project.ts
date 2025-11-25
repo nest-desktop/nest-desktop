@@ -1,13 +1,13 @@
 // project.ts
 
-import { INetworkProjectProps, NetworkProject } from "@/helpers/project/networkProject";
+import { INetworkProjectState, NetworkProject } from "@/helpers/project/networkProject";
 
 import pynnSimulator from "../../stores/backends/pynnSimulatorStore";
 import { usePyNNModelDBStore } from "../../stores/model/modelDBStore";
 
 export class PyNNProject extends NetworkProject {
-  constructor(projectProps: INetworkProjectProps = {}) {
-    super(projectProps);
+  constructor(projectState: INetworkProjectState = {}) {
+    super(projectState);
 
     this.simulation.registerBackend(pynnSimulator);
   }

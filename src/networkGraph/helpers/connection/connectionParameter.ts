@@ -1,25 +1,26 @@
 // connectionParameter.ts
 
-import type { TConnection } from "@/types";
-import { BaseParameter, type IParamProps, type IParamType } from "@/helpers/common/parameter";
+import { BaseParameter, type IParamState, type IParamType } from "@/helpers/common";
 
 import type { IConnectionRuleConfig } from "./connectionRule";
+import { ConnectionParameters } from "./connectionParameters";
 
 export class ConnectionParameter extends BaseParameter {
-  public _connection: TConnection;
+  public _connectionParams: ConnectionParameters;
 
-  constructor(connection: TConnection, paramProps: IParamProps) {
-    super(paramProps);
-    this._connection = connection;
+  constructor(connectionParams: ConnectionParameters) {
+    super();
+
+    this._connectionParams = connectionParams;
   }
 
-  get connection(): TConnection {
-    return this._connection as TConnection;
+  get connectionParams(): ConnectionParameters {
+    return this._connectionParams as ConnectionParameters;
   }
 
-  override get parent(): TConnection {
-    return this.connection;
-  }
+  // override get parent(): TConnection {
+  //   return this.connection;
+  // }
 
   get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;
@@ -32,8 +33,8 @@ export class ConnectionParameter extends BaseParameter {
   override reset(): void {
     this.typeId = "constant";
 
-    const ruleConfig: IConnectionRuleConfig = this.connection.getRuleConfig();
-    const p = ruleConfig.params.find((p: IParamProps) => p.id === this.id);
+    const ruleConfig: IConnectionRuleConfig = this.connectionParams.connection.rule.getRuleConfig();
+    const p = ruleConfig.params.find((p: IParamState) => p.id === this.id);
 
     if (p?.value) {
       this.state.value = p.value;

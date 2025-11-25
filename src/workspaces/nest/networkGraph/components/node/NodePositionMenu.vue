@@ -33,7 +33,7 @@
         <span v-if="nodeSpatial.positions.name === 'free'">
           <ValueSlider
             id="n"
-            v-model="nodeSpatial.node.size"
+            v-model="nodeSpatial.node.size.value"
             :thumb-color="nodeSpatial.node.view.color"
             input-label="n"
             label="population size"
@@ -142,7 +142,7 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 
 import ValueSlider from "@/components/controls/ValueSlider.vue";
 import { NESTNodeSpatial } from "../../networkGraph/helpers/node/nodeSpatial/nodeSpatial";
-import { IParamProps } from "@/helpers/common/parameter";
+import { IParamState } from "@/helpers/common/parameter";
 
 const props = defineProps<{ nodeSpatial: NESTNodeSpatial }>();
 const nodeSpatial = computed(() => props.nodeSpatial);
@@ -152,7 +152,7 @@ const state = reactive<{
   numDimensions: boolean;
   positions: { title: string; value: string }[];
   selectedPositions: string;
-  sizeOptions: IParamProps;
+  sizeOptions: IParamState;
 }>({
   menuOpen: false,
   numDimensions: false,

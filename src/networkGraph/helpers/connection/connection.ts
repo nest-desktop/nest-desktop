@@ -1,59 +1,50 @@
 // connection.ts
 
-import type { IConfigProps } from "@/helpers/common/config";
-import type { IParamProps } from "@/helpers/common/parameter";
-import type { TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
-import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
+import type { IBaseState, IConfigState, IParamState } from "@/helpers/common";
+import type { Class, TConnections, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
+import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
 
-import { BaseSynapse, type ISynapseProps } from "../synapse/synapse";
-import { ConnectionParameter } from "./connectionParameter";
-import { ConnectionRule, type IConnectionRuleConfig } from "./connectionRule";
+import { BaseSynapse, type ISynapseState } from "../synapse/synapse";
+import { ConnectionRule } from "./connectionRule";
 import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
+import { ConnectionParameters } from "./connectionParameters";
 
-export interface IConnectionProps {
-  params?: IParamProps[];
+export interface IConnectionState extends IBaseState {
+  params?: Record<string, IParamState>;
   rule?: string;
-  source: number;
-  synapse?: ISynapseProps;
-  target: number;
+  sourceNodeId: string;
+  synapse?: ISynapseState;
+  targetNodeId: string;
 }
 
-export class BaseConnection extends CodeNodeMask {
-  private _params: Record<string, ConnectionParameter> = {};
-  private _paramsVisible: string[] = [];
+export class BaseConnection<T extends IConnectionState = IConnectionState> extends CodeNodeMask<T> {
+  private _params: ConnectionParameters;
   private _rule: ConnectionRule;
-  private _source: TNode | TNodeGroup;
-  private _sourceIdx: number; // Node index
+  private _source: TNode | TNodeGroup | undefined;
   private _state: ConnectionState;
-  private _target: TNode | TNodeGroup;
-  private _targetIdx: number; // Node index
+  private _target: TNode | TNodeGroup | undefined;
   private _view: ConnectionView;
 
   public _connections: TConnections; // parent
   public _synapse: TSynapse;
 
-  constructor(connections: TConnections, connectionProps: IConnectionProps, configProps?: IConfigProps) {
+  constructor(connections: TConnections, configState?: IConfigState) {
     super({
-      config: { name: "Connection", ...configProps },
+      config: { name: "Connection", ...configState },
     });
 
     this._connections = connections;
-    this._idx = this.connections.all.length;
 
     this._state = new ConnectionState(this);
     this._view = new ConnectionView(this);
 
-    this.sourceIdx = connectionProps.source;
-    this.targetIdx = connectionProps.target;
-
-    this._rule = new ConnectionRule(this, connectionProps.rule);
-    this.initParameters(connectionProps.params);
-
-    this._synapse = new this.Synapse(this, connectionProps.synapse);
+    this._rule = new ConnectionRule(this);
+    this._params = new ConnectionParameters(this);
+    this._synapse = new this.Synapse(this);
   }
 
-  get Synapse() {
+  get Synapse(): Class<BaseSynapse> {
     return BaseSynapse;
   }
 
@@ -61,38 +52,27 @@ export class BaseConnection extends CodeNodeMask {
     return this._connections;
   }
 
-  /**
-   * Returns all visible parameters.
-   */
-  get filteredParams(): ConnectionParameter[] {
-    return this._paramsVisible.map((paramId: string) => this._params[paramId]);
-  }
-
   get hasConnSpec(): boolean {
     return this._rule.value !== "all_to_all";
   }
 
-  get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0;
-  }
-
-  override get hashObject(): Record<string, unknown> {
-    const hashProps: {
+  override get hashObject(): IBaseState {
+    const hashState: {
       idx: number;
-      params: IParamProps[];
+      params: Record<string, IParamState>;
       synapse: string;
       sourceModelId?: string;
       targetModelId?: string;
     } = {
       idx: this.idx,
-      params: this.paramsAll.map((param: ConnectionParameter) => param.toJSON()),
+      params: this.params.save(),
       synapse: this.synapse.hash,
     };
 
-    if (this.source.isNode) hashProps.sourceModelId = this.sourceNode.modelId;
-    if (this.target.isNode) hashProps.targetModelId = this.targetNode.modelId;
+    if (this.source?.isNode) hashState.sourceModelId = this.sourceNode.modelId;
+    if (this.target?.isNode) hashState.targetModelId = this.targetNode.modelId;
 
-    return hashProps;
+    return hashState;
   }
 
   get idx(): number {
@@ -118,25 +98,12 @@ export class BaseConnection extends CodeNodeMask {
     return this.connections.network;
   }
 
-  get params(): Record<string, ConnectionParameter> {
+  get params(): ConnectionParameters {
     return this._params;
   }
 
-  get paramsAll(): ConnectionParameter[] {
-    return Object.values(this._params);
-  }
-
-  get paramsVisible(): string[] {
-    return this._paramsVisible;
-  }
-
-  set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
-    this.changes({ preventSimulation: true });
-  }
-
   get parent(): TConnections {
-    return this._connections;
+    return this.connections;
   }
 
   get recorder(): TNode {
@@ -147,33 +114,17 @@ export class BaseConnection extends CodeNodeMask {
     return this._rule;
   }
 
-  get source(): TNode | TNodeGroup {
+  get source(): TNode | TNodeGroup | undefined {
     return this._source;
   }
 
-  set source(value: TNode | TNodeGroup) {
-    this._source = value;
-    this._sourceIdx = value.idx;
-  }
-
-  get sourceIdx(): number {
-    return this._sourceIdx;
-  }
-
-  set sourceIdx(value: number) {
-    if (value === -1) return;
-    this._sourceIdx = value;
-    this._source = this.connections.network.nodes.all[this._sourceIdx];
-  }
+  // get sourceIdx(): number {
+  //   return this.source ? this.connections.network.nodes.all.indexOf(this.source) : -1;
+  // }
 
   get sourceNode(): TNode {
     return this.source as TNode;
   }
-
-  // set sourceNode(node: TNode) {
-  //   this._source = node;
-  //   this._sourceIdx = node.idx;
-  // }
 
   get sourceNodeGroup(): TNodeGroup {
     return this.source as TNodeGroup;
@@ -187,24 +138,13 @@ export class BaseConnection extends CodeNodeMask {
     return this._synapse;
   }
 
-  get target(): TNode | TNodeGroup {
+  get target(): TNode | TNodeGroup | undefined {
     return this._target;
   }
 
-  set target(value: TNode) {
-    this._target = value;
-    this._targetIdx = value.idx;
-  }
-
-  get targetIdx(): number {
-    return this._targetIdx;
-  }
-
-  set targetIdx(value: number) {
-    if (value === -1) return;
-    this._targetIdx = value;
-    this._target = this.network.nodes.all[this._targetIdx];
-  }
+  // get targetIdx(): number {
+  //   return this.target ? this.connections.network.nodes.all.indexOf(this.target) : -1;
+  // }
 
   get targetNode(): TNode {
     return this.target as TNode;
@@ -220,14 +160,6 @@ export class BaseConnection extends CodeNodeMask {
 
   get view(): ConnectionView {
     return this._view;
-  }
-
-  /**
-   * Add connection parameter.
-   * @param paramProps parameter props
-   */
-  addParameter(paramProps: IParamProps): void {
-    this._params[paramProps.id] = new ConnectionParameter(this, paramProps);
   }
 
   /**
@@ -249,23 +181,6 @@ export class BaseConnection extends CodeNodeMask {
   clean(): void {}
 
   /**
-   * Empty parameters
-   */
-  emptyParams(): void {
-    this._params = {};
-    this._paramsVisible = [];
-  }
-
-  // /**
-  //  * Sets all params to invisible.
-  //  */
-  // hideAllParams(): void {
-  //   Object.values(this._params).forEach(
-  //     (param: ConnectionParameter) => (param.visible = false)
-  //   );
-  // }
-
-  /**
    * Initialize connection.
    * @remarks Do not use it in the constructor.
    */
@@ -277,34 +192,34 @@ export class BaseConnection extends CodeNodeMask {
   }
 
   /**
-   * Init parameter components.
-   * @param paramsProps list of parameter props
+   * Load connection from state.
+   * @param connectionState connection state
    */
-  initParameters(paramsProps: IParamProps[] = []): void {
-    this.logger.trace("init parameters");
+  load(connectionState: IConnectionState): void {
+    this._source = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.sourceNodeId);
+    this._target = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.targetNodeId);
 
-    this.emptyParams();
-    const ruleConfig: IConnectionRuleConfig = this.getRuleConfig();
-    ruleConfig.params.forEach((param: IParamProps) => {
-      if (paramsProps != null) {
-        const paramProps: IParamProps | undefined = paramsProps.find(
-          (paramProps: IParamProps) => paramProps.id === param.id,
-        );
-        if (paramProps != null) {
-          param.value = paramProps.value;
-          if (paramProps.type != null) param.type = paramProps.type;
-        }
-        if (param && param.visible !== false) this._paramsVisible.push(param.id);
-      }
-      this.addParameter(param);
-    });
+    if (connectionState.params) this.params.load(connectionState.params);
+    if (connectionState.rule) this.rule.value = connectionState.rule;
+    if (connectionState.synapse) this.synapse.load(connectionState.synapse);
   }
 
   /**
-   * Get all parameter of the rule.
+   * Set defaults.
+   * @remarks It emits connection changes.
    */
-  getRuleConfig(): IConnectionRuleConfig {
-    return this.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this._rule.value);
+  reset(): void {
+    this.logger.trace("reset");
+
+    this._rule.reset();
+    this.params.resetParams();
+  }
+
+  /**
+   * Delete connection from the network.
+   */
+  remove(): void {
+    this.network.deleteConnection(this);
   }
 
   /**
@@ -314,11 +229,11 @@ export class BaseConnection extends CodeNodeMask {
   reverse(): void {
     this.logger.trace("reverse");
 
-    const targetIdx = this.targetIdx;
-    const sourceIdx = this.sourceIdx;
+    const target = this.target;
+    const source = this.source;
 
-    this.sourceIdx = targetIdx;
-    this.targetIdx = sourceIdx;
+    this.source = target;
+    this.target = source;
 
     // Check syn weights.
     this.sourceNode.view.checkSynWeights();
@@ -331,32 +246,6 @@ export class BaseConnection extends CodeNodeMask {
     this.changes({ preventSimulation: true });
   }
 
-  /**
-   * Set defaults.
-   * @remarks It emits connection changes.
-   */
-  reset(): void {
-    this.logger.trace("reset");
-
-    this._rule.reset();
-    this.resetParams();
-  }
-
-  /**
-   * Resets all parameters to their default.
-   */
-  resetParams(): void {
-    // Reset connection parameter.
-    this.paramsAll.forEach((param: ConnectionParameter) => param.reset());
-  }
-
-  /**
-   * Delete connection from the network.
-   */
-  remove(): void {
-    this.network.deleteConnection(this);
-  }
-
   // /**
   //  * Sets all params to visible.
   //  */
@@ -367,21 +256,19 @@ export class BaseConnection extends CodeNodeMask {
   // }
 
   /**
-   * Serialize for JSON.
-   * @return connection props
+   * Save connection to state.
+   * @return connection state
    */
-  toJSON(): IConnectionProps {
-    const connectionProps: IConnectionProps = {
-      source: this._sourceIdx,
-      target: this._targetIdx,
+  override save(): IConnectionState {
+    const connectionState: IConnectionState = {
+      sourceNodeId: this.source?.codeNode?.id ?? -1,
+      targetNodeId: this.target?.codeNode?.id ?? -1,
     };
 
-    if (this._rule.value !== "all_to_all") connectionProps.rule = this._rule.value;
+    if (this.params.paramsVisible.length > 0) connectionState.params = this.params.save();
+    if (this.synapse.params.paramsVisible.length > 0) connectionState.synapse = this.synapse.save();
 
-    if (this._paramsVisible.length > 0)
-      connectionProps.params = this.filteredParams.map((param: ConnectionParameter) => param.toJSON());
-
-    return connectionProps;
+    return connectionState;
   }
 
   /**

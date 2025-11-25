@@ -2,58 +2,45 @@
 
 import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
 
-import type { TActivityGraph, TStore } from "@/types";
-import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
-import { registerDefaultNodeTypes } from "@/codeGraph/codeNodeTypes";
+import type { Class, TActivityGraph, TStore } from "@/types";
+import { BaseActivityGraph, type IBaseActivityGraphState } from "@/activityGraph/helpers/activityGraph";
 import { truncate } from "@/utils/truncate";
-import { type ICodeProps, ProjectCode } from "@/codeGraph/projectCode";
+import { type IProjectCodeState, ProjectCode, registerDefaultNodeTypes } from "@/codeGraph";
 import { useModelDBStore } from "@/stores/model/modelDBStore";
 
-import type { IDoc } from "../common/database";
-import type { NodeActivities } from "../nodeActivity/nodeActivities";
-import { Activities } from "../activity/activities";
-import { BaseObj } from "../common/base";
+import type { NodeActivities } from "../nodeActivity";
+import { Activities } from "../activity";
+import { BaseObj, type IBaseState, type IDoc } from "../common";
 import { ProjectState } from "./projectState";
-import { upgradeProject } from "../upgrades/upgrades";
 
-export interface IBaseProjectProps extends IDoc {
-  activityGraph?: IBaseActivityGraphProps;
-  code?: ICodeProps;
+export interface IProjectState extends IDoc {
+  activityGraph?: IBaseActivityGraphState;
+  code?: IProjectCodeState;
   description?: string;
   name?: string;
 }
 
-export class BaseProject extends BaseObj {
+export class BaseProject<T extends IProjectState = IProjectState> extends BaseObj<T> {
   private _code: ProjectCode;
   private _createdAt: string; // when is it created in database
-  private _description: string; // description about the project
-  private _doc; // raw data of the database
-  private _filename: string;
+  private _description: string = ""; // description about the project
+  private _doc: IDoc = { hash: "" }; // raw data of the database
+  private _filename: string = "";
   private _id: string; // id of the project
   private _modelDBStore: TStore;
-  private _name: string; // project name
+  private _name: string = ""; // project name
   private _state: ProjectState;
   private _updatedAt: string | undefined; // when is it updated in database
   private _viewModel: ICodeGraphViewModel;
   public _activities: Activities | NodeActivities;
   public _activityGraph: TActivityGraph; // activity graph
 
-  constructor(projectProps: IBaseProjectProps = {}) {
+  constructor() {
     super();
 
-    // Upgrade project props.
-    projectProps = upgradeProject(projectProps);
-
     // Database instance
-    this._doc = projectProps || {};
-    this._id = projectProps.id || this.uuid;
-    this._createdAt = projectProps.createdAt || new Date().toLocaleDateString();
-    this._updatedAt = projectProps.updatedAt;
-
-    // Project metadata
-    this._name = projectProps.name || "";
-    this._description = projectProps.description || "";
-    this._filename = projectProps.filename || "";
+    this._id = this.uuid;
+    this._createdAt = new Date().toLocaleDateString();
 
     // Initialize model database
     this.initModelStore();
@@ -61,24 +48,21 @@ export class BaseProject extends BaseObj {
     // State
     this._state = new ProjectState(this);
 
-    // Code graph
+    // Code
     this._code = new ProjectCode(this);
     this._viewModel = useCodeGraph({ code: this._code });
     registerDefaultNodeTypes(this.viewModel);
 
     // Activity
     this._activities = new this.Activities(this);
-    this._activityGraph = new this.ActivityGraph(this, projectProps.activityGraph);
-
-    // Initialize components.
-    // nextTick(() => this.init());
+    this._activityGraph = new this.ActivityGraph(this);
   }
 
-  get Activities() {
+  get Activities(): Class<Activities> {
     return Activities;
   }
 
-  get ActivityGraph() {
+  get ActivityGraph(): Class<BaseActivityGraph> {
     return BaseActivityGraph;
   }
 
@@ -118,7 +102,7 @@ export class BaseProject extends BaseObj {
     return this._filename;
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       description: this._description,
       id: this._id,
@@ -178,7 +162,7 @@ export class BaseProject extends BaseObj {
    * It generates codes in the code editor.
    * It commits the network in the network history.
    */
-  changes(props: { resetPanels?: boolean } = {}): void {
+  changes(state: { resetPanels?: boolean } = {}): void {
     this.updateHash();
 
     this.state.checkChanges();
@@ -190,7 +174,7 @@ export class BaseProject extends BaseObj {
     // this.generateCode();
 
     // It resets panels of activity chart graph.
-    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
+    if (state.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
   }
 
   /**
@@ -218,10 +202,7 @@ export class BaseProject extends BaseObj {
    * Initialize project.
    */
   init(): void {
-    this.logger.debug("init");
-
-    // Initialize code.
-    this.code.init();
+    this.logger.trace("init");
 
     // Initialize activities.
     this.activities.init();
@@ -236,6 +217,29 @@ export class BaseProject extends BaseObj {
   }
 
   /**
+   * Load project from state.
+   * @param projectState project state
+   */
+  load(projectState: IProjectState): void {
+    this.logger.trace("load");
+
+    // Database instance
+    this._doc = projectState;
+
+    if (projectState.id) this._id = projectState.id;
+    if (projectState.createdAt) this._createdAt = projectState.createdAt;
+    if (projectState.updatedAt) this._updatedAt = projectState.updatedAt;
+
+    // Project metadata
+    if (projectState.name) this._name = projectState.name;
+    if (projectState.description) this._description = projectState.description;
+    if (projectState.filename) this._filename = projectState.filename;
+
+    // Load code.
+    if (projectState.code) this.code.load(projectState.code);
+  }
+
+  /**
    * Initialize model store.
    * @remarks It will be overridden by simulator components.
    */
@@ -244,12 +248,14 @@ export class BaseProject extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return project props
+   * Save project to state.
+   * @return project state
    */
-  toJSON(): IBaseProjectProps {
-    const projectProps: IBaseProjectProps = {
-      activityGraph: this.activityGraph.toJSON(),
+  override save(): IProjectState {
+    this.logger.trace("save");
+
+    const projectState: IProjectState = {
+      activityGraph: this.activityGraph.save(),
       createdAt: this._createdAt,
       description: this._description,
       id: this._id,
@@ -258,8 +264,8 @@ export class BaseProject extends BaseObj {
       version: process.env.APP_VERSION as string,
     };
 
-    if (this.code.graph.nodes.length > 0) projectProps.code = this.code.toJSON();
+    if (this.code.graph.nodes.length > 0) projectState.code = this.code.save();
 
-    return projectProps;
+    return projectState;
   }
 }

@@ -2,32 +2,32 @@
 
 import { openLoading } from "@/stores/appStore";
 import type { TProject } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/helpers/common/base";
 
 import { ActivityChartGraph } from "./activityChartGraph/activityChartGraph";
-import { type IActivityChartPanelProps } from "./activityChartGraph/activityChartPanel";
+import { type IActivityChartPanelState } from "./activityChartGraph/activityChartPanel";
 
-export interface IBaseActivityGraphProps {
+export interface IBaseActivityGraphState extends IBaseState {
   color: string;
-  panels: IActivityChartPanelProps[];
+  panels: IActivityChartPanelState[];
 }
 
 export class BaseActivityGraph extends BaseObj {
   private _project: TProject;
   private _activityChartGraph: ActivityChartGraph;
 
-  constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
+  constructor(project: TProject, activityGraphState?: IBaseActivityGraphState) {
     super();
 
     this._project = project;
-    this._activityChartGraph = new ActivityChartGraph(project, activityGraphProps);
+    this._activityChartGraph = new ActivityChartGraph(project, activityGraphState);
   }
 
   get activityChartGraph(): ActivityChartGraph {
     return this._activityChartGraph;
   }
 
-  override get hashObject(): Record<string, unknown> {
+  override get hashObject(): IBaseState {
     return {
       activities: this.project.activities.hash,
     };
@@ -50,13 +50,13 @@ export class BaseActivityGraph extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return activity graph props
+   * Save activity graph to state
+   * @return activity graph state
    */
-  toJSON(): IBaseActivityGraphProps {
+  override save(): IBaseActivityGraphState {
     return {
       color: this._activityChartGraph.state.traceColor,
-      panels: this._activityChartGraph ? this._activityChartGraph.toJSON() : [],
+      panels: this._activityChartGraph ? this._activityChartGraph.save() : [],
     };
   }
 

@@ -1,14 +1,13 @@
 // nodeReceptorParameters.ts
 
-import type { IParamProps } from "@/helpers/common/parameter";
 import { NodeParameter } from "@/networkGraph/helpers/node/nodeParameter";
 
-import { NESTModelReceptorParameter } from "../../../../helpers/model/modelReceptor/modelReceptorParameter";
+import { NESTModelReceptorParameter } from "../../model/modelReceptor/modelReceptorParameter";
 import { NESTNodeReceptor } from "./nodeReceptor";
 
 export class NESTNodeReceptorParameter extends NodeParameter {
-  constructor(nodeReceptor: NESTNodeReceptor, paramProps: IParamProps) {
-    super(nodeReceptor, paramProps);
+  constructor(nodeReceptor: NESTNodeReceptor) {
+    super(nodeReceptor);
   }
 
   /**

@@ -1,51 +1,48 @@
 // node.ts
 
-import { BaseParameter, type IParamProps } from "@/helpers/common/parameter";
-import type { IModelStateProps, TElementType } from "@/helpers/model/model";
-import { ModelParameter } from "@/helpers/model/modelParameter";
-import { BaseNode, type INodeProps } from "@/networkGraph/helpers/node/node";
-import { NodeParameter } from "@/networkGraph/helpers/node/nodeParameter";
-import { type INodeRecordProps, NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
+import type { AbstractCodeNode } from "@babsey/code-graph";
+
+import type { Class } from "@/types";
+import { BaseParameter } from "@/helpers/common";
+import type { IModelRecordState, TElementType } from "@/helpers/model/model";
+import { BaseNode, type INodeState } from "@/networkGraph/helpers/node/node";
+import { type INodeRecordState, NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 import { onlyUnique, sortString } from "@/utils/array";
 
-import { type INESTNodeCompartmentProps, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
-import { type INESTNodeReceptorProps, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
-import { type INESTNodeSpatialProps, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
+import { type INESTNodeCompartmentState, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
+import { type INESTNodeReceptorState, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
+import { type INESTNodeSpatialState, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
 import { NESTConnection } from "../connection/connection";
-import { NESTCopyModel } from "../../../helpers/model/copyModel";
+import { NESTCopyModel } from "../../helpers/model/copyModel";
 import { NESTModel } from "../../../helpers/model/model";
 import { NESTNetwork } from "../network/network";
 import { NESTNodes } from "./nodes";
+import { getNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
+import { NESTNodeParameters } from "./nodeParameters";
 
-export interface INESTNodeProps extends INodeProps {
-  compartments?: INESTNodeCompartmentProps[];
-  receptors?: INESTNodeReceptorProps[];
-  records?: INodeRecordProps[];
-  spatial?: INESTNodeSpatialProps;
+export interface INESTNodeState extends INodeState {
+  compartments?: INESTNodeCompartmentState[];
+  receptors?: INESTNodeReceptorState[];
+  records?: INodeRecordState[];
+  spatial?: INESTNodeSpatialState;
 }
 
 // export class NESTNode extends BaseNode<NESTModel> {
-export class NESTNode extends BaseNode {
+export class NESTNode extends BaseNode<INESTNodeState> {
   private _compartments: NESTNodeCompartment[] = [];
   private _copyModel: NESTCopyModel | undefined;
   private _positions: number[][] = [];
   private _receptors: NESTNodeReceptor[] = [];
   private _spatial: NESTNodeSpatial;
 
-  constructor(nodes: NESTNodes, nodeProps: INESTNodeProps = {}) {
-    super(nodes, nodeProps);
+  constructor(nodes: NESTNodes) {
+    super(nodes);
 
-    this._spatial = new NESTNodeSpatial(this, nodeProps.spatial);
+    this._spatial = new NESTNodeSpatial(this);
+  }
 
-    this.reset();
-
-    if (nodeProps.compartments) {
-      this.addCompartments(nodeProps.compartments);
-    }
-
-    if (nodeProps.receptors) {
-      this.addReceptors(nodeProps.receptors);
-    }
+  override get NodeParameters(): Class<NESTNodeParameters> {
+    return NESTNodeParameters;
   }
 
   get assignedModels(): NESTCopyModel[] {
@@ -62,7 +59,7 @@ export class NESTNode extends BaseNode {
     return this._compartments.map((compartment: NESTNodeCompartment) => compartment.idx);
   }
 
-  get compartmentRecordables(): INodeRecordProps[] {
+  get compartmentRecordables(): INodeRecordState[] {
     const recordables = [...this._compartments.map((comp: NESTNodeCompartment) => comp.recordables)];
     return recordables.flat();
   }
@@ -71,19 +68,17 @@ export class NESTNode extends BaseNode {
     return this._compartments;
   }
 
-  override get connections(): NESTConnection[] {
-    return this.network.connections.all.filter((connection: NESTConnection) => connection.sourceIdx === this.idx);
-  }
+  // override get connections(): NESTConnection[] {
+  //   return super.connections as NESTConnection[];
+  // }
 
-  override get connectionsNeuronTargets(): NESTConnection[] {
-    return this.network.connections.all.filter(
-      (connection: NESTConnection) => connection.sourceIdx === this.idx && connection.targetNode.model.isNeuron,
-    );
-  }
+  // override get connectionsNeuronTargets(): NESTConnection[] {
+  //   return super.connectionsNeuronTargets as NESTConnection[]
+  // }
 
-  override get elementType(): TElementType {
-    return this.model?.elementType;
-  }
+  // override get elementType(): TElementType {
+  //   return this.model?.elementType;
+  // }
 
   get hasCompartments(): boolean {
     return this._compartments.length > 0;
@@ -93,16 +88,12 @@ export class NESTNode extends BaseNode {
     return this._receptors.length > 0;
   }
 
-  override get hasSomeVisibleParams(): boolean {
-    return this.paramsVisible.length > 0 || this.modelId === "multimeter";
-  }
-
   override get idx(): number {
     return this._nodes.all.indexOf(this);
   }
 
   override get isSpatial(): boolean {
-    return this._spatial.hasPositions;
+    return this.spatial.hasPositions;
   }
 
   override get model(): NESTModel {
@@ -118,26 +109,6 @@ export class NESTNode extends BaseNode {
 
   get copyModel(): NESTCopyModel | undefined {
     return this._copyModel;
-  }
-
-  // override get modelId(): string {
-  //   return this._modelId;
-  // }
-
-  // /**
-  //  * Set model ID.
-  //  */
-  // override set modelId(value: string) {
-  //   this._modelId = value;
-
-  //   this.loadModel();
-
-  //   this.updateRecordables();
-  //   this.modelChanges();
-  // }
-
-  override get modelParams(): Record<string, ModelParameter> {
-    return this.model.params;
   }
 
   // Get models of the same element type.
@@ -164,7 +135,7 @@ export class NESTNode extends BaseNode {
     return this._positions;
   }
 
-  get receptorRecordables(): INodeRecordProps[] {
+  get receptorRecordables(): INodeRecordState[] {
     const recordables = [...this._receptors.map((receptor: NESTNodeReceptor) => receptor.recordables)];
     return recordables.flat();
   }
@@ -181,50 +152,53 @@ export class NESTNode extends BaseNode {
     return this._spatial;
   }
 
-  override get targetNodes(): NESTNode[] {
-    return this.network.connections.all
-      .filter((connection: NESTConnection) => connection.sourceIdx === this.idx)
-      .map((connection: NESTConnection) => connection.targetNode);
-  }
+  // override get targetNodes(): NESTNode[] {
+  //   return this.network.connections.all
+  //     .filter((connection: NESTConnection) => connection.source?.idx === this.idx)
+  //     .map((connection: NESTConnection) => connection.targetNode);
+  // }
 
   /**
    * Add compartment component.
-   * @param compartmentProps node compartment props
+   * @param compartmentState node compartment state
    */
-  addCompartment(compartmentProps: INESTNodeCompartmentProps): void {
-    const compartment = new NESTNodeCompartment(this, compartmentProps);
+  addCompartment(compartmentState: INESTNodeCompartmentState): void {
+    const compartment = new NESTNodeCompartment(this);
+    compartment.load(compartmentState);
     this._compartments.push(compartment);
     compartment.clean();
   }
 
   /**
    * Add compartments for the node.
-   * @param compartmentsProps list of node compartment props
+   * @param compartmentStates list of node compartment state
    */
-  addCompartments(compartmentsProps: INESTNodeCompartmentProps[]): void {
+  addCompartments(compartmentStates: INESTNodeCompartmentState[]): void {
     this.logger.trace("add compartments");
 
     this._compartments = [];
-    compartmentsProps.forEach((compartmentProps: INESTNodeCompartmentProps) => this.addCompartment(compartmentProps));
+    compartmentStates.forEach((compartmentState: INESTNodeCompartmentState) => this.addCompartment(compartmentState));
   }
 
   /**
    * Add receptor component.
-   * @param receptorProps receptor props
+   * @param receptorState receptor state
    */
-  addReceptor(receptorProps: INESTNodeReceptorProps): void {
-    this._receptors.push(new NESTNodeReceptor(this, receptorProps));
+  addReceptor(receptorState: INESTNodeReceptorState): void {
+    const receptor = new NESTNodeReceptor(this);
+    receptor.load(receptorState);
+    this._receptors.push(receptor);
   }
 
   /**
    * Add receptors for the node.
-   * @param receptorsProps list of receptor props
+   * @param receptorStates list of receptor state
    */
-  addReceptors(receptorsProps: INESTNodeReceptorProps[]): void {
+  addReceptors(receptorStates: INESTNodeReceptorState[]): void {
     this.logger.trace("add receptors");
 
     this._receptors = [];
-    receptorsProps.forEach((receptorProps: INESTNodeReceptorProps) => this.addReceptor(receptorProps));
+    receptorStates.forEach((receptorState: INESTNodeReceptorState) => this.addReceptor(receptorState));
   }
 
   /**
@@ -241,8 +215,8 @@ export class NESTNode extends BaseNode {
    * Sets all params to invisible.
    * @param emitChanges trigger emit changes.
    */
-  override hideAllParams(emitChanges: boolean = true): void {
-    this.paramsVisible = [];
+  hideAllParams(emitChanges: boolean = true): void {
+    this.params.hideAllParams();
 
     if (this.modelId === "cm_default") {
       this.compartments.forEach((comp: NESTNodeCompartment) => comp.hideAllParams());
@@ -253,22 +227,45 @@ export class NESTNode extends BaseNode {
   }
 
   /**
-   * Load model.
-   * @param paramsProps list of param props
-   * @remarks It adds parameters.
+   * Load NEST node from state.
+   * @param nodeState node state
    */
-  override loadModel(paramsProps?: IParamProps[]): void {
-    this.logger.trace("load model:", this.modelId);
+  override load(nodeState: INESTNodeState): void {
+    this.logger.trace("load");
+    super.load(nodeState);
 
-    if (this.network.copyModels && this.network.copyModels.findByModelId(this._modelId)) {
-      this._copyModel = this.network.copyModels.getModel(this._modelId);
+    if (nodeState.spatial) this.spatial.load(nodeState.spatial);
+    if (nodeState.compartments) this.addCompartments(nodeState.compartments);
+    if (nodeState.receptors) this.addReceptors(nodeState.receptors);
+  }
+
+  /**
+   * Load model.
+   * @param modelId model ID
+   */
+  override loadModel(modelId: string): void {
+    this.logger.trace("load nest model:", modelId);
+
+    this._modelId = modelId;
+
+    if (this.network.copyModels && this.network.copyModels.findByModelId(modelId)) {
+      this._copyModel = this.network.copyModels.getModel(modelId);
       this._model = this.getModel(this._copyModel.existingModelId);
     } else {
       this._copyModel = undefined;
-      this._model = this.getModel(this._modelId);
+      this._model = this.getModel(modelId);
     }
+  }
 
-    this.initParameters(paramsProps);
+  /**
+   * Register code node.
+   * @param codeNode code node
+   */
+  override registerCodeNode(codeNode?: AbstractCodeNode): void {
+    if (!codeNode) codeNode = getNESTCreateNode(this.nodes.network.project.code.graph, this.idx);
+
+    this.codeNode = codeNode;
+    this.codeNode.mask = this;
   }
 
   /**
@@ -305,10 +302,10 @@ export class NESTNode extends BaseNode {
    * Reset value in parameter components.
    * @remarks It emits node changes.
    */
-  override resetParams(emitChanges: boolean = true): void {
+  resetAllParams(emitChanges: boolean = true): void {
     this.logger.trace("reset parameters");
 
-    this.paramsAll.forEach((param: NodeParameter) => param.reset());
+    this.params.resetParams();
 
     if (this.modelId === "cm_default") {
       this.compartments.forEach((comp: NESTNodeCompartment) => comp.resetParameters());
@@ -319,10 +316,42 @@ export class NESTNode extends BaseNode {
   }
 
   /**
+   * Save nest node to state.
+   * @return nest node state
+   */
+  override save(): INESTNodeState {
+    const nodeState: INESTNodeState = {
+      model: this.modelId,
+      view: this.view.save(),
+    };
+
+    if (this.size > 1) nodeState.size = this.size;
+
+    nodeState.params = this.params.save();
+
+    // Add annotations if provided.
+    if (this.annotations.length > 0) nodeState.annotations = this.annotations;
+
+    // Add records if this model is multimeter.
+    if (this.model.isMultimeter) nodeState.records = this.records.map((record: NodeRecord) => record.save());
+
+    // Add positions if this node is spatial.
+    if (this._spatial.hasPositions) nodeState.spatial = this._spatial.save();
+
+    if (this._compartments.length > 0)
+      nodeState.compartments = this._compartments.map((compartment: NESTNodeCompartment) => compartment.save());
+
+    if (this._receptors.length > 0)
+      nodeState.receptors = this._receptors.map((receptor: NESTNodeReceptor) => receptor.save());
+
+    return nodeState;
+  }
+
+  /**
    * Sets all params to visible.
    */
-  override showAllParams(emitChanges: boolean = true): void {
-    this.paramsVisible = Object.keys(this.params);
+  showAllParams(emitChanges: boolean = true): void {
+    this.params.showAllParams();
 
     if (this.modelId === "cm_default") {
       this.compartments.forEach((comp: NESTNodeCompartment) => comp.showAllParams());
@@ -345,44 +374,11 @@ export class NESTNode extends BaseNode {
   }
 
   /**
-   * Serialize for JSON.
-   * @return node props
-   */
-  override toJSON(): INESTNodeProps {
-    const nodeProps: INESTNodeProps = {
-      model: this.modelId,
-      view: this.view.toJSON(),
-    };
-
-    if (this.size > 1) nodeProps.size = this.size;
-
-    if (this.filteredParams.length > 0)
-      nodeProps.params = this.filteredParams.map((param: NodeParameter) => param.toJSON());
-
-    // Add annotations if provided.
-    if (this.annotations.length > 0) nodeProps.annotations = this.annotations;
-
-    // Add records if this model is multimeter.
-    if (this.model.isMultimeter) nodeProps.records = this.records.map((record: NodeRecord) => record.toJSON());
-
-    // Add positions if this node is spatial.
-    if (this._spatial.hasPositions) nodeProps.spatial = this._spatial.toJSON();
-
-    if (this._compartments.length > 0)
-      nodeProps.compartments = this._compartments.map((compartment: NESTNodeCompartment) => compartment.toJSON());
-
-    if (this._receptors.length > 0)
-      nodeProps.receptors = this._receptors.map((receptor: NESTNodeReceptor) => receptor.toJSON());
-
-    return nodeProps;
-  }
-
-  /**
    * Update recordables.
    */
   override updateRecordables(): void {
     this.logger.trace("update recordables");
-    let modelStatesProps: IModelStateProps[] = [];
+    let modelRecordStates: IModelRecordState[] = [];
     if (!this.model.isAnalogRecorder) return;
 
     // Get model states from target nodes.
@@ -396,30 +392,30 @@ export class NESTNode extends BaseNode {
       });
 
       if (targetsModelStates.length > 0) {
-        const modelStatesPooled: IModelStateProps[] = targetsModelStates.flat();
-        modelStatesProps = modelStatesPooled
-          .filter((modelStateProps: IModelStateProps) => modelStateProps)
+        const modelStatesPooled: IModelRecordState[] = targetsModelStates.flat();
+        modelRecordStates = modelStatesPooled
+          .filter((modelRecordState: IModelRecordState) => modelRecordState)
           .filter(onlyUnique);
 
         if (this.modelId === "voltmeter") {
-          modelStatesProps = modelStatesProps.filter((recordProps: INodeRecordProps) =>
-            ["V_m", "v"].includes(recordProps.id),
+          modelRecordStates = modelRecordStates.filter((recordState: INodeRecordState) =>
+            ["V_m", "v"].includes(recordState.id),
           );
         }
 
-        modelStatesProps.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
+        modelRecordStates.sort((a: { id: string }, b: { id: string }) => sortString(a.id, b.id));
       }
     } else if (this.modelId === "weight_recorder") {
-      const modelStateProps = this.model.config?.localStorage.states.find(
-        (modelStateProps: IModelStateProps) => modelStateProps.id === "weights",
+      const modelRecordState = this.model.config?.localStorage.states.find(
+        (modelRecordState: IModelRecordState) => modelRecordState.id === "weights",
       );
 
-      modelStatesProps.push(modelStateProps);
+      modelRecordStates.push(modelRecordState);
     }
 
     // Convert model states to node records.
-    this.recordables = modelStatesProps.map(
-      (modelStateProps: IModelStateProps) => new NodeRecord(this, modelStateProps),
+    this.recordables = modelRecordStates.map(
+      (modelRecordState: IModelRecordState) => new NodeRecord(this, modelRecordState),
     );
 
     this.updateRecordsColor();
@@ -427,10 +423,10 @@ export class NESTNode extends BaseNode {
 
   // /**
   //  * Update receptor component.
-  //  * @param receptorOld - node receptor object
-  //  * @param receptorNew - receptor object
+  //  * @param receptorOld - node receptor instance
+  //  * @param receptorNew - receptor instance
   //  */
-  // updateReceptor(receptorOld: NodeReceptor, receptorNew: INodeReceptorProps): void {
+  // updateReceptor(receptorOld: NodeReceptor, receptorNew: INodeReceptorState): void {
   //   receptorNew.compIdx = receptorOld.compartment.idx;
   //   const receptorIdx = this._receptors.indexOf(receptorOld);
   //   this._receptors[receptorIdx] = new NodeReceptor(this, receptorNew);

@@ -19,7 +19,7 @@ import { useAppStore } from "@/stores/appStore";
 
 import { nest } from "./nest";
 import { norse } from "./norse";
-import type { IBaseProjectProps } from "@/helpers/project/project";
+import type { IBaseProjectState } from "@/helpers/project/project";
 // import { pynn } from "./pynn";
 
 const logger = mainLogger.getSubLogger({ name: "workspace index" });
@@ -32,7 +32,7 @@ export interface IWorkspaceProps {
   iconSet: IconSet;
   id: string;
   init: () => void;
-  loadGraphByProject?: (graph: CodeGraph, projectProps: IBaseProjectProps) => void;
+  loadGraphByProject?: (graph: CodeGraph, projectState: IBaseProjectState) => void;
   route: RouteRecordRaw;
   stores: Record<string, TStore>;
   theme: Record<string, string>;
@@ -62,17 +62,17 @@ export function registerWorkspaces(app: App) {
 /**
  * Register all workspaces
  * @remarks add iconSets, themes and routes
- * @param workspaceProps workspace props
+ * @param workspaceState workspace state
  */
-function registerWorkspace(workspaceProps: IWorkspaceProps): void {
+function registerWorkspace(workspaceState: IWorkspaceProps): void {
   // Add icon set for vuetify.
-  addIconSet(Object.fromEntries([[workspaceProps.id, workspaceProps.iconSet]]));
+  addIconSet(Object.fromEntries([[workspaceState.id, workspaceState.iconSet]]));
 
   // Add theme to vuetify.
-  addTheme(workspaceProps.theme);
+  addTheme(workspaceState.theme);
 
   // Add route.
-  router.addRoute("appLayout", workspaceProps.route);
+  router.addRoute("appLayout", workspaceState.route);
 }
 
 /**
@@ -85,13 +85,13 @@ function initEnabledWorkspace(app: App, workspaceId: string): void {
   app.use({
     async install() {
       logger.trace("install", workspaceId);
-      const workspaceProps = workspaces[workspaceId];
+      const workspaceState = workspaces[workspaceId];
 
       // Load config files.
-      workspaceProps.configNames.forEach((name: string) => new Config({ name, workspace: workspaceProps.id }));
+      workspaceState.configNames.forEach((name: string) => new Config({ name, workspace: workspaceState.id }));
 
       // Initialize workspace.
-      workspaceProps.init();
+      workspaceState.init();
     },
   });
 }

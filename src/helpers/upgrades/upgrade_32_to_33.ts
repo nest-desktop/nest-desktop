@@ -10,22 +10,22 @@ const activityChartPanelModels: Record<string, string> = {
   spikeTimesHistogram: "spikeTimeHistogram",
 };
 
-export function upgradeProject_32_to_33(projectProps: any): any {
-  if (!validateVersion(projectProps.version)) return projectProps;
+export function upgradeProject_32_to_33(projectState: any): any {
+  if (!validateVersion(projectState.version)) return projectState;
 
   if (
-    projectProps.activityGraph &&
-    projectProps.activityGraph.chart &&
-    projectProps.activityGraph.chart.panels &&
-    projectProps.activityGraph.chart.panels.length > 0
+    projectState.activityGraph &&
+    projectState.activityGraph.chart &&
+    projectState.activityGraph.chart.panels &&
+    projectState.activityGraph.chart.panels.length > 0
   ) {
-    projectProps.activityGraph.chart.panels.forEach((panelProps: any) => {
-      if (panelProps.model.id in activityChartPanelModels) {
-        panelProps.model.id = activityChartPanelModels[panelProps.model.id];
+    projectState.activityGraph.chart.panels.forEach((panelState: any) => {
+      if (panelState.model.id in activityChartPanelModels) {
+        panelState.model.id = activityChartPanelModels[panelState.model.id];
       }
     });
   }
 
-  projectProps.version = "3.3";
-  return projectProps;
+  projectState.version = "3.3";
+  return projectState;
 }

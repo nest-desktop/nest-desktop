@@ -34,7 +34,7 @@ export class NodeGraphConnector extends BaseObj {
   /**
    * Call on dragging.
    * @param event mouse event
-   * @param node node or node group object
+   * @param node node or node group instance
    */
   drag(event: MouseEvent, node: TNode | TNodeGroup): void {
     node.selectForConnection();

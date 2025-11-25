@@ -33,7 +33,7 @@ export class NodeGraph extends BaseObj {
   /**
    * Drag node graph.
    * @param event mouse event
-   * @param node node object
+   * @param node node instance
    */
   drag(event: MouseEvent, node: TNode | TNodeGroup): void {
     this.logger.silly("drag");
@@ -64,7 +64,7 @@ export class NodeGraph extends BaseObj {
 
   /**
    * Init node element.
-   * @param node node or node group object
+   * @param node node or node group instance
    * @param idx index of the elements
    * @param elements SVG elements
    */

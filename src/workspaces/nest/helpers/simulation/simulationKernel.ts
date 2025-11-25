@@ -2,13 +2,13 @@
 
 import type { CodeNodeInterface } from "@babsey/code-graph";
 
-import { CodeNodeMask } from "@/codeGraph/codeNodeMask";
+import type { IBaseState } from "@/helpers/common";
+import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
 import { getNESTSetKernelStatusParameterNode } from "@/codeGraph/codeNodeTypes/nest/nestSetKernelStatus";
-import type { IParamProps } from "@/codeGraph/codeNodeTypes/nest/nestParameters";
 
 import type { NESTSimulation } from "./simulation";
 
-export interface INESTSimulationKernelProps {
+export interface INESTSimulationKernelState extends IBaseState {
   resolution?: number;
   localNumThreads?: number;
   rngSeed?: number;
@@ -17,13 +17,12 @@ export interface INESTSimulationKernelProps {
 export class NESTSimulationKernel extends CodeNodeMask {
   private _simulation: NESTSimulation; // parent
 
-  constructor(simulation: NESTSimulation, kernelProps?: Record<string, IParamProps>) {
+  constructor(simulation: NESTSimulation) {
     super({
       config: { name: "NESTSimulationKernel", simulator: "nest" },
     });
 
     this._simulation = simulation;
-    this.props.value = kernelProps;
   }
 
   get localNumThreads(): CodeNodeInterface | undefined {
@@ -54,18 +53,15 @@ export class NESTSimulationKernel extends CodeNodeMask {
    * Register code node.
    */
   override registerCodeNode(): void {
-    this.codeNode = getNESTSetKernelStatusParameterNode(
-      this.simulation.project.viewModel.editor.graph,
-      this.props.value,
-    );
+    this.codeNode = getNESTSetKernelStatusParameterNode(this.simulation.project.viewModel.editor.graph);
     this.codeNode.mask = this;
   }
 
   /**
-   * Serialize for JSON.
-   * @return simulation kernel props
+   * Save simulation kernel state.
+   * @return simulation kernel state
    */
-  toJSON(): INESTSimulationKernelProps {
+  override save(): INESTSimulationKernelState {
     return {
       localNumThreads: this.localNumThreads?.value,
       resolution: this.resolution?.value,

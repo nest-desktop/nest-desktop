@@ -3,17 +3,18 @@
 import * as d3 from "d3";
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IModelStateProps } from "@/helpers/model/model";
 import type { TNode } from "@/types";
-import { Activity } from "@/helpers/activity/activity";
-import { BaseObj } from "@/helpers/common/base";
+
+import type { IModelState } from "@/helpers/model";
+import { Activity } from "@/helpers/activity";
+import { BaseObj } from "@/helpers/common";
 import { max, min } from "@/utils/array";
 
-export interface INodeRecordProps extends IModelStateProps {
+export interface INodeRecordState extends IModelState {
   color?: string;
   recorderId?: string;
 }
-interface INodeRecordState {
+interface INodeRecordRefState {
   color: string;
   colorMap: {
     min: number;
@@ -24,17 +25,17 @@ interface INodeRecordState {
   traceColors: string[];
 }
 
-export class NodeRecord extends BaseObj {
+export class NodeRecord extends BaseObj<INodeRecordState> {
   // private _activity: Activity;
-  private _id: string;
-  private _label: string;
+  private _id: string = "";
+  private _label: string = "";
   private _node: TNode;
   private _nodeSize: number = 0;
   private _recorderId: string = "";
-  private _state: UnwrapRef<INodeRecordState>;
-  private _unit: string;
+  private _state: UnwrapRef<INodeRecordRefState>;
+  private _unit: string = "";
 
-  constructor(node: TNode, nodeRecordProps: INodeRecordProps) {
+  constructor(node: TNode) {
     super({
       config: { name: "NodeRecord" },
     });
@@ -42,12 +43,7 @@ export class NodeRecord extends BaseObj {
     this._node = node;
     // this._activity = node.activity;
 
-    this._id = nodeRecordProps.id || "";
-    this._recorderId = nodeRecordProps.recorderId || node.view.label;
-    this._label = nodeRecordProps.label || "";
-    this._unit = nodeRecordProps.unit || "";
-
-    this._state = reactive<INodeRecordState>({
+    this._state = reactive<INodeRecordRefState>({
       color: "",
       colorMap: {
         max: -55.0,
@@ -62,7 +58,7 @@ export class NodeRecord extends BaseObj {
   }
 
   get activity(): Activity {
-    return this._node.activity as Activity;
+    return this.node.activity as Activity;
   }
 
   get color(): string | string[] {
@@ -78,11 +74,11 @@ export class NodeRecord extends BaseObj {
   }
 
   get groupId(): string {
-    return this._recorderId + "." + this._id;
+    return this._recorderId + "." + this.id;
   }
 
   get hasEvent(): boolean {
-    return this._node.activity ? this._id in this._node.activity.events : false;
+    return this.node.activity ? this.id in this.node.activity.events : false;
   }
 
   get hasValues(): boolean {
@@ -122,7 +118,7 @@ export class NodeRecord extends BaseObj {
     return this._recorderId;
   }
 
-  get state(): UnwrapRef<INodeRecordState> {
+  get state(): UnwrapRef<INodeRecordRefState> {
     return this._state;
   }
 
@@ -149,7 +145,18 @@ export class NodeRecord extends BaseObj {
    */
   getColor(idx: number): string {
     const colors: string[] = this.config?.localStorage.color.cycle;
-    return colors[idx % colors.length];
+    return colors[idx % colors.length] ?? "black";
+  }
+
+  /**
+   * Load node record from state.
+   * @param state node record state
+   */
+  load(state: INodeRecordState): void {
+    if (state.id) this._id = state.id;
+    this._recorderId = state.recorderId || this.node.view.label;
+    if (state.label) this._label = state.label;
+    if (state.unit) this._unit = state.unit as string;
   }
 
   /**
@@ -161,11 +168,15 @@ export class NodeRecord extends BaseObj {
     return (value - min) / (max - min);
   }
 
-  toJSON(): INodeRecordProps {
+  /**
+   * Save node record to state.
+   * @returns node record state
+   */
+  override save(): INodeRecordState {
     return {
-      id: this._id,
-      color: this._state.color,
-      recorderId: this._recorderId,
+      id: this.id,
+      color: this.state.color,
+      recorderId: this.recorderId,
     };
   }
 
@@ -176,7 +187,7 @@ export class NodeRecord extends BaseObj {
     this.logger.trace("update");
 
     this._nodeSize = this.node.activity?.nodeIds.length || 0;
-    if (this._nodeSize != this.state.traceColors.length) this.updateTraceColors();
+    if (this.nodeSize != this.state.traceColors.length) this.updateTraceColors();
 
     this.updateColorMap();
   }
@@ -185,7 +196,7 @@ export class NodeRecord extends BaseObj {
    * Update color of the node record.
    */
   updateColor(): void {
-    this._state.color = this.node.view.color;
+    this.state.color = this.node.view.color;
   }
 
   /**
@@ -196,19 +207,19 @@ export class NodeRecord extends BaseObj {
     if (!this.hasEvent || !this.hasValues) return;
 
     const values = this.values;
-    this._state.colorMap.max = max(values);
-    this._state.colorMap.min = min(values);
+    this.state.colorMap.max = max(values);
+    this.state.colorMap.min = min(values);
   }
 
   updateTraceColors(): void {
-    this._state.traceColors.slice(0, this._nodeSize);
+    this.state.traceColors.slice(0, this.nodeSize);
 
-    if (this._nodeSize > this._state.traceColors.length) {
-      const arrayIdx = [...Array(this._nodeSize - this._state.traceColors.length).keys()];
-      this._state.traceColors = [
-        ...this._state.traceColors,
+    if (this.nodeSize > this.state.traceColors.length) {
+      const arrayIdx = [...Array(this.nodeSize - this.state.traceColors.length).keys()];
+      this.state.traceColors = [
+        ...this.state.traceColors,
         ...arrayIdx.map((idx) =>
-          this.nodeSize == 1 ? this._state.color : this.getColor(idx + this._state.traceColors.length),
+          this.nodeSize == 1 ? this.state.color : this.getColor(idx + this.state.traceColors.length),
         ),
       ];
     }

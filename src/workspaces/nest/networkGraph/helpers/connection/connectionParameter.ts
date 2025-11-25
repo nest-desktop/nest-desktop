@@ -1,24 +1,14 @@
 // connectionParameter.ts
 
 import { ConnectionParameter } from "@/networkGraph/helpers/connection/connectionParameter";
-import type { IParamProps, IParamType } from "@/helpers/common/parameter";
+// import type { ConnectionParameters } from "@/networkGraph/helpers/connection/connectionParameters";
+import type { IParamType } from "@/helpers/common";
 
-import { NESTConnection } from "./connection";
-
-const PyNNParamIds: Record<string, string> = {
-  N: "n",
-  indegree: "n",
-  outdegree: "n",
-  p: "p_connect",
-};
+import type { NESTConnection } from "./connection";
 
 export class NESTConnectionParameter extends ConnectionParameter {
-  constructor(connection: NESTConnection, paramProps: IParamProps) {
-    super(connection, paramProps);
-  }
-
-  override get connection(): NESTConnection {
-    return this._connection as NESTConnection;
+  get connection(): NESTConnection {
+    return this.connectionParams.connection as NESTConnection;
   }
 
   /**
@@ -32,9 +22,5 @@ export class NESTConnectionParameter extends ConnectionParameter {
   override get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;
     return !this.isSpatial ? types.filter((type: IParamType) => !type.id.startsWith("spatial")) : types;
-  }
-
-  PyNNParamId(): string {
-    return PyNNParamIds[this.id];
   }
 }

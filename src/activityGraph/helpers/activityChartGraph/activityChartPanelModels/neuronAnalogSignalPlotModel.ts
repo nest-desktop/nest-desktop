@@ -4,11 +4,11 @@ import type { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 
 export class NeuronAnalogSignalPlotModel extends AnalogSignalPlotModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "neuronAnalogSignalPlot";
     this.label = "neuron analog signals";

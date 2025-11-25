@@ -5,11 +5,11 @@ import type { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalog
 import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
-import { ActivityChartPanelModel, type IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import { ActivityChartPanelModel, type IActivityChartPanelModelState } from "../activityChartPanelModel";
 
 export class AnalogSignalPanelModel extends ActivityChartPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.activityType = "analog";
     this.id = "analogSignalPanelModel";
     this.label = "analog signals";
@@ -52,10 +52,10 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
    * Initialize visible records from analog activities.
    */
   initAnalogRecordsVisible(): void {
-    const recordsProps: string[] = this.props.records || [];
+    const recordStates: string[] = this.props.records || [];
     this.logger.trace("init visible analog records");
 
-    if (recordsProps && recordsProps.length > 0) this.state.recordsVisible = recordsProps;
+    if (recordStates && recordStates.length > 0) this.state.recordsVisible = recordStates;
     // else {
     //   this.state.recordsVisible = this.state.records.map((record: NodeRecord) => record.groupId);
     // }
@@ -85,7 +85,7 @@ export class AnalogSignalPanelModel extends ActivityChartPanelModel {
 
   /**
    * Remove record from the state.
-   * @param record node record objects
+   * @param record node record instances
    */
   removeRecord(record: NodeRecord): void {
     this.recordsVisible.splice(this.recordsVisible.indexOf(record), 1);

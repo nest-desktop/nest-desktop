@@ -52,7 +52,7 @@ export class NodeGroupGraph {
   /**
    * Drag connection graph by moving its node graphs.
    * @param event mouse event
-   * @param nodeGroup node group object
+   * @param nodeGroup node group instance
    */
   drag(event: MouseEvent, nodeGroup: TNodeGroup): void {
     // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.

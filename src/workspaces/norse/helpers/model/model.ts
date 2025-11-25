@@ -1,20 +1,19 @@
 // model.ts
 
-import { BaseModel, type IModelProps, type IModelStateProps } from "@/helpers/model/model";
-import { ModelParameter } from "@/helpers/model/modelParameter";
+import { BaseModel, ModelParameter, type IModelRecordState, type IModelState } from "@/helpers/model";
 
-export interface INorseModelProps extends IModelProps {
+export interface INorseModelState extends IModelState {
   codeTemplate?: string;
 }
 
 export class NorseModel extends BaseModel {
   private _codeTemplate: string = "";
 
-  constructor(modelProps: INorseModelProps) {
-    super(modelProps, { name: "NorseModel", workspace: "norse" });
+  constructor(modelState: INorseModelState) {
+    super(modelState, { name: "NorseModel", workspace: "norse" });
 
-    if (modelProps.codeTemplate) {
-      this._codeTemplate = modelProps.codeTemplate;
+    if (modelState.codeTemplate) {
+      this._codeTemplate = modelState.codeTemplate;
     }
   }
 
@@ -27,24 +26,24 @@ export class NorseModel extends BaseModel {
   }
 
   /**
-   * Serialize to JSON.
-   * @returns norse model props
+   * Save norse model to state.
+   * @returns norse model state
    */
-  override toJSON(): INorseModelProps {
-    const modelProps: INorseModelProps = {
+  override save(): INorseModelState {
+    const modelState: INorseModelState = {
       abbreviation: this.abbreviation,
       elementType: this.elementType,
       id: this.id,
       label: this.state.label,
-      params: Object.values(this.params).map((param: ModelParameter) => param.toJSON()),
+      params: Object.values(this.params).map((param: ModelParameter) => param.save()),
       version: process.env.APP_VERSION,
     };
 
     // Add the states if provided.
-    if (this.states.length > 0) modelProps.states = this.states.map((state: IModelStateProps) => state.id);
+    if (this.states.length > 0) modelState.states = this.states.map((state: IModelRecordState) => state.id);
 
-    if (this.codeTemplate) modelProps.codeTemplate = this.codeTemplate;
+    if (this.codeTemplate) modelState.codeTemplate = this.codeTemplate;
 
-    return modelProps;
+    return modelState;
   }
 }

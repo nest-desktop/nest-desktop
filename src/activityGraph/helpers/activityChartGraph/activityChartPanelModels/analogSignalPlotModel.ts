@@ -6,7 +6,7 @@ import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { line } from "../graphObjects/line";
 
 interface IDataPoints {
@@ -16,8 +16,8 @@ interface IDataPoints {
 }
 
 export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "analogSignalPlot";
     this.panel.xAxis = 1;
@@ -37,12 +37,12 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add active line for analog signals.
-   * @param record node record object
+   * @param record node record instance
    *
    * @remarks will be updated in `updateActiveMarker`.
    */
@@ -65,7 +65,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add average line for analog signals.
-   * @param record node record object
+   * @param record node record instance
    */
   addAverageLine(record: NodeRecord): void {
     if (!record.hasEvent || record.activity.state.selected?.length === 0) return;
@@ -124,7 +124,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add multiple lines data for analog signals.
-   * @param record node record object
+   * @param record node record instance
    */
   addMultipleLines(record: NodeRecord): void {
     if (!record.hasEvent || record.activity.state.selected?.length === 0) return;
@@ -155,7 +155,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Add single line data for analog signal.
-   * @param record node record object
+   * @param record node record instance
    */
   addSingleLine(record: NodeRecord): void {
     if (!record.hasEvent) return;
@@ -275,7 +275,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
   /**
    * Update active marker for analog signals.
-   * @param record node record object
+   * @param record node record instance
    */
   override updateActiveMarker(record?: NodeRecord): void {
     const plotData = this.data[this.data.length - 1];

@@ -1,12 +1,13 @@
 // parameter.ts
 
+import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { TParameter } from "@/types";
 import { truncate } from "@/utils/truncate";
 
-import { BaseObj } from "./base";
-import type { IConfigProps } from "./config";
+import { BaseObj, IBaseState } from "./base";
+import type { IConfigState } from "./config";
 
 export interface IParamOptions {
   component?: TParamComponent;
@@ -20,7 +21,7 @@ export interface IParamOptions {
   unit: string;
 }
 
-export interface IParamProps {
+export interface IParamState extends IBaseState {
   component?: TParamComponent;
   disabled?: boolean;
   factors?: string[];
@@ -43,7 +44,7 @@ export interface IParamProps {
   visible?: boolean;
 }
 
-interface IParamState {
+interface IParamRefState {
   disabled: boolean;
   random: boolean;
   value: TParamValue;
@@ -68,7 +69,7 @@ export type TParamComponent = "arrayInput" | "checkbox" | "rangeSlider" | "selec
 
 export type TParamValue = boolean | number | string | (number | string)[];
 
-export class BaseParameter extends BaseObj {
+export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<T> {
   private _factors: string[] = []; // not functional yet
   private _format: string = "";
   private _id: string = "";
@@ -78,31 +79,30 @@ export class BaseParameter extends BaseObj {
   private _min: number = 0;
   private _readonly: boolean = false;
   private _rules: string[][] = [];
-  private _props: IParamProps;
-  private _state: UnwrapRef<IParamState>;
+  private _state: UnwrapRef<IParamRefState>;
   private _step: number = 1;
   private _ticks: (number | string)[] = [];
   private _type: IParamType = { id: "constant" };
   private _unit: string = "";
   private _component: TParamComponent = "";
 
-  constructor(paramProps: IParamProps, configProps?: IConfigProps) {
+  constructor(configState?: IConfigState) {
     super({
-      config: { name: "Parameter", ...configProps },
+      config: { name: "Parameter", ...configState },
     });
 
-    this._props = paramProps;
-    this.init(paramProps);
+    // this.props.value = paramState;
+    // this.load(paramState);
 
-    this._state = reactive<IParamState>({
+    this._state = reactive<IParamRefState>({
       random: false,
-      disabled: paramProps.disabled != undefined ? paramProps.disabled : true,
-      value: paramProps.value || 0,
+      disabled: true,
+      value: 0,
     });
   }
 
-  get code(): string {
-    return this.toPythonCode();
+  get codeNode(): AbstractCodeNode | undefined {
+    return;
   }
 
   get component(): TParamComponent {
@@ -114,7 +114,7 @@ export class BaseParameter extends BaseObj {
   }
 
   get disabled(): boolean {
-    return this._state.disabled;
+    return this.state.disabled;
   }
 
   get format(): string {
@@ -123,6 +123,10 @@ export class BaseParameter extends BaseObj {
 
   get id(): string {
     return this._id;
+  }
+
+  get intf(): Record<string, CodeNodeInterface> | undefined {
+    return this.codeNode?.inputs[this.id];
   }
 
   /**
@@ -190,7 +194,7 @@ export class BaseParameter extends BaseObj {
     this._min = value;
   }
 
-  get modelParam(): BaseParameter {
+  get modelParam(): BaseParameter | undefined {
     return this;
   }
 
@@ -218,13 +222,9 @@ export class BaseParameter extends BaseObj {
     return options;
   }
 
-  get parent(): { changes: () => void; paramsVisible: string[] } {
-    return { changes: () => {}, paramsVisible: [] };
-  }
-
-  get props(): IParamProps {
-    return this._props;
-  }
+  // get parent(): { changes: () => void; paramsVisible: string[] } {
+  //   return { changes: () => {}, paramsVisible: [] };
+  // }
 
   get readonly(): boolean {
     return this._readonly;
@@ -242,7 +242,7 @@ export class BaseParameter extends BaseObj {
     }
   }
 
-  get state(): UnwrapRef<IParamState> {
+  get state(): UnwrapRef<IParamRefState> {
     return this._state;
   }
 
@@ -291,13 +291,13 @@ export class BaseParameter extends BaseObj {
   }
 
   get value(): TParamValue {
-    return this._state.value;
+    return this.intf?.value ?? this._state.value;
   }
 
   set value(value: TParamValue) {
     this._state.value = value;
     if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
-    this.changes();
+    // this.changes();
   }
 
   get valueFixed(): string {
@@ -318,69 +318,71 @@ export class BaseParameter extends BaseObj {
     }
   }
 
-  get visible(): boolean {
-    return this.parent.paramsVisible.includes(this.id);
-  }
+  // get visible(): boolean {
+  //   return this.parent.paramsVisible.includes(this.id);
+  // }
 
-  set visible(value: boolean) {
-    const isVisible = this.parent.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.parent.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
-    }
-  }
+  // set visible(value: boolean) {
+  //   const isVisible = this.parent.paramsVisible.includes(this.id);
+  //   if (value && !isVisible) {
+  //     this.parent.paramsVisible.push(this.id);
+  //   } else if (!value && isVisible) {
+  //     this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
+  //   }
+  // }
 
   /**
    * Copy parameter component
    */
   copy(): BaseParameter {
-    return new BaseParameter(this.toJSON());
+    const param = new BaseParameter();
+    param.load(this.save());
+    return param;
   }
 
   /**
    * Updates when parameter is changed.
    */
   changes(): void {
-    this.parent.changes();
+    // this.parent.changes();
   }
 
   /**
    * Hide this parameter.
    */
   hide(): void {
-    this.visible = false;
+    this.intf?.setHidden(true);
   }
 
   /**
-   * Init parameter
-   * @param paramProps parameter props
+   * Load parameter from state.
+   * @param paramState parameter state
    */
-  init(paramProps: IParamProps): void {
-    this._id = paramProps.id;
+  load(paramState: IParamState): void {
+    this._id = paramState.id;
 
     // optional param specifications
-    this._rules = paramProps.rules || [];
-    this._factors = paramProps.factors || [];
+    this._rules = paramState.rules || [];
+    this._factors = paramState.factors || [];
 
-    if (paramProps.type) {
-      const type = this.config?.localStorage.types.find((t: IParamType) => t.id === paramProps.type?.id);
-      if (type != null) this._type = { ...type, ...paramProps.type };
+    if (paramState.type) {
+      const type = this.config?.localStorage.types.find((t: IParamType) => t.id === paramState.type?.id);
+      if (type != null) this._type = { ...type, ...paramState.type };
     }
 
-    this._format = paramProps.format || "";
-    this._items = paramProps.items || [];
-    this._label = paramProps.label || "";
-    this._readonly = paramProps.readonly || false;
+    this._format = paramState.format || "";
+    this._items = paramState.items || [];
+    this._label = paramState.label || "";
+    this._readonly = paramState.readonly || false;
 
-    this._max = paramProps.max || 1;
-    this._min = paramProps.min || 0;
-    const value = Math.abs(paramProps.value as number);
+    this._max = paramState.max || 1;
+    this._min = paramState.min || 0;
+    const value = Math.abs(paramState.value as number);
     const step = value > 1 ? 0.1 : Math.ceil(value * 500) / 10000;
-    this._step = paramProps.step || step || 1;
-    this._ticks = paramProps.ticks || [];
-    this._unit = paramProps.unit || "";
-    this._component = paramProps.component || paramProps.input || "";
+    this._step = paramState.step || step || 1;
+    this._ticks = paramState.ticks || [];
+    this._unit = paramState.unit || "";
+    this._component = paramState.component || paramState.input || "";
   }
 
   /**
@@ -392,111 +394,32 @@ export class BaseParameter extends BaseObj {
   }
 
   /**
-   * Show this parameter.
+   * Save parameter to state.
+   * @return parameter state
    */
-  show(): void {
-    this.visible = true;
-  }
-
-  /**
-   * Converts a number into a string, but keeps up to `fractionDigits` many
-   * fraction digits of that number , i.e.  1 => '1.0', 1.23456 => '1.23456'.
-   * @param value number to be converted
-   * @param fractionDigits required fraction digits for the output string
-   * @returns converted number
-   */
-  toFixed(value: number | string, fractionDigits: number = 1): string {
-    const valueAsString = value.toString();
-    if (valueAsString.includes(".") && fractionDigits > 0) fractionDigits = valueAsString.split(".")[1].length;
-    return Number(value).toFixed(fractionDigits);
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return parameter props
-   */
-  toJSON(): IParamProps {
-    const paramProps: IParamProps = {
+  override save(): IParamState {
+    const paramState: IParamState = {
       id: this._id,
       value: this.value,
     };
 
     // Add value factors if existed.
-    if (this._factors.length > 0) paramProps.factors = this._factors;
+    if (this._factors.length > 0) paramState.factors = this._factors;
 
     // Add rules for validation if existed.
-    if (this._rules.length > 0) paramProps.rules = this._rules;
+    if (this._rules.length > 0) paramState.rules = this._rules;
 
     // Add param type if not constant.
-    if (!this.isConstant) paramProps.type = this.typeToJSON();
+    if (!this.isConstant) paramState.type = this.saveType();
 
-    return paramProps;
+    return paramState;
   }
 
   /**
-   * Generate the Python code for this parameter.
-   * @returns parameter as Python code
+   * Save parameter type for state.
+   * @return parameter type state
    */
-  toPythonCode(): string {
-    let value: string;
-    if (this.isConstant) {
-      // Constant value.
-      if (this._format === "integer") {
-        // Integer value
-        value = this.toFixed(this.value as number, 0);
-      } else if (this._format === "float") {
-        // Float value
-        value = this.toFixed(this.value as number);
-      } else if (typeof this.value === "string") {
-        // TODO: this condition should be checked if it is really possible.
-        // String value
-        value = this.value as string;
-      } else if (typeof this.value === "boolean") {
-        // Boolean value
-        value = this.value ? "True" : "False";
-      } else if (Array.isArray(this.value)) {
-        value = JSON.stringify(this.value.map((value) => value));
-      } else {
-        value = JSON.stringify(this.value);
-      }
-    } else if (this._type.id.startsWith("np")) {
-      const specs: string = this.specs
-        .filter((spec: IParamTypeSpec) => !(spec.optional && spec.value === spec.default))
-        .map((spec: IParamTypeSpec) => spec.value)
-        .join(", ");
-      value = `${this._type.id}(${specs})`;
-    } else if (this._type.id === "spatial.distance") {
-      // Distance-dependent linear function.
-      const specs: IParamTypeSpec[] = this.specs;
-      value = "";
-      value += specs[0].value !== 1 ? `${specs[0].value} * ` : "";
-      value += `nest.${this._type.id}`;
-      value += specs[1].value !== 0 ? ` + ${specs[1].value}` : "";
-    } else if (this._type.id.startsWith("spatial")) {
-      // Spatial distribution.
-      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
-      value = `nest.${this._type.id}(nest.spatial.distance, ${specs})`;
-    } else {
-      // Non-spatial distribution.
-      const specs: string = this.specs.map((spec: IParamTypeSpec) => spec.value).join(", ");
-      value = `nest.${this._type.id}(${specs})`;
-    }
-    return value;
-  }
-
-  /**
-   * Toggle disabled state.
-   */
-  toggleDisabled(): void {
-    this._state.disabled = !this._state.disabled;
-    this.changes();
-  }
-
-  /**
-   * Serialize parameter type for JSON.
-   * @return parameter type props
-   */
-  typeToJSON(): IParamType {
+  saveType(): IParamType {
     const paramType: IParamType = {
       id: this._type.id,
     };
@@ -508,5 +431,20 @@ export class BaseParameter extends BaseObj {
       }));
 
     return paramType;
+  }
+
+  /**
+   * Show this parameter.
+   */
+  show(): void {
+    this.intf?.setHidden(false);
+  }
+
+  /**
+   * Toggle disabled state.
+   */
+  toggleDisabled(): void {
+    this._state.disabled = !this._state.disabled;
+    // this.changes();
   }
 }

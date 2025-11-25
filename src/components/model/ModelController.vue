@@ -117,7 +117,7 @@
     </template>
 
     <template v-else-if="appStore.state.devMode && modelViewStore.state.views.controller === 'raw'">
-      <codemirror :extensions="extensions" :model-value="modelJSON" disabled style="font-size: 0.75rem; width: 100%" />
+      <codemirror :extensions="extensions" :model-value="modelState" disabled style="font-size: 0.75rem; width: 100%" />
     </template>
 
     <template v-if="modelViewStore.state.views.controller === 'code'">
@@ -166,7 +166,7 @@ const project = computed(() => modelStore.value.state.project);
 
 const modelParams = computed(() => modelStore.value.model.paramsAll);
 
-const modelJSON = computed(() => JSON.stringify(modelStore.value.model.toJSON(), null, 2));
+const modelState = computed(() => JSON.stringify(modelStore.value.model.save(), null, 2));
 
 interface IControllerItem {
   id: string;

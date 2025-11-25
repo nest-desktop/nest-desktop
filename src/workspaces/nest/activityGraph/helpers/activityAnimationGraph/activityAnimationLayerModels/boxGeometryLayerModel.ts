@@ -37,7 +37,7 @@ export class BoxGeometryLayerModel extends ActivityAnimationLayerModel {
   }
 
   /**
-   * Update mesh object.
+   * Update mesh instance.
    */
   override updateMesh(
     mesh: TMesh,
