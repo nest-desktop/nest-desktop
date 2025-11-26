@@ -15,6 +15,7 @@ export const useNESTSimulatorStore = defineBackendStore("nest", "nest", "http://
 const fetchModels = (): void => {
   const modelStore = useNESTModelStore();
   const nestSimulatorStore = useNESTSimulatorStore();
+  if (!nestSimulatorStore.state.enabled) return;
 
   nestSimulatorStore
     .axiosInstance()
@@ -53,6 +54,7 @@ const getElementType = (modelId: string): string => {
 
 const installModule = (moduleName?: string): void => {
   const nestSimulatorStore = useNESTSimulatorStore();
+  if (!nestSimulatorStore.state.enabled) return;
 
   nestSimulatorStore
     .axiosInstance()
@@ -93,6 +95,7 @@ export const nestSimulatorInit = () => {
 
 const resetKernel = (): void => {
   const nestSimulatorStore = useNESTSimulatorStore();
+  if (!nestSimulatorStore.state.enabled) return;
   nestSimulatorStore.axiosInstance().get("/api/ResetKernel").then(fetchModels);
 };
 
