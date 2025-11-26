@@ -365,7 +365,7 @@ export class NESTNode extends BaseNode<INESTNodeState> {
    */
   toggleSpatial(emitChanges: boolean = true): void {
     const term: string = this.size === 1 ? "grid" : "free";
-    this._spatial.init({
+    this._spatial.load({
       positions: this.spatial.hasPositions ? undefined : term,
     });
 

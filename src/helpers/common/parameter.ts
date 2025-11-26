@@ -8,6 +8,7 @@ import { truncate } from "@/utils/truncate";
 
 import { BaseObj, IBaseState } from "./base";
 import type { IConfigState } from "./config";
+import { BaseParameters } from "./parameters";
 
 export interface IParamOptions {
   component?: TParamComponent;
@@ -102,7 +103,7 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
   }
 
   get codeNode(): AbstractCodeNode | undefined {
-    return;
+    return this.parent.codeNode;
   }
 
   get component(): TParamComponent {
@@ -201,6 +202,8 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
   get options(): IParamOptions {
     const param = this.modelParam;
 
+    if (!param) return {};
+
     const options: IParamOptions = {
       component: param.component || "",
       defaultValue: param.value,
@@ -222,9 +225,9 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
     return options;
   }
 
-  // get parent(): { changes: () => void; paramsVisible: string[] } {
-  //   return { changes: () => {}, paramsVisible: [] };
-  // }
+  get parent(): BaseParameters {
+    return {} as BaseParameters;
+  }
 
   get readonly(): boolean {
     return this._readonly;
@@ -295,41 +298,47 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
   }
 
   set value(value: TParamValue) {
-    this._state.value = value;
-    if (this.props.handleOnUpdate) this.props.handleOnUpdate(this);
+    if (this.intf) {
+      this.intf.value = value;
+    } else {
+      this._state.value = value;
+    }
+    if (this.props?.value?.handleOnUpdate) this.props.value.handleOnUpdate(this);
     // this.changes();
   }
 
-  get valueFixed(): string {
-    if (Array.isArray(this.value)) {
-      return "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]";
-    } else if (typeof this.value === "number") {
-      return this.toFixed(this.value);
-    } else {
-      return this.value.toString();
-    }
-  }
-
-  get valueAsString(): string {
-    if (Array.isArray(this.value)) {
-      return JSON.stringify(this.value.map((value) => value));
-    } else {
-      return JSON.stringify(this.value);
-    }
-  }
-
-  // get visible(): boolean {
-  //   return this.parent.paramsVisible.includes(this.id);
-  // }
-
-  // set visible(value: boolean) {
-  //   const isVisible = this.parent.paramsVisible.includes(this.id);
-  //   if (value && !isVisible) {
-  //     this.parent.paramsVisible.push(this.id);
-  //   } else if (!value && isVisible) {
-  //     this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
+  // get valueFixed(): string {
+  //   if (Array.isArray(this.value)) {
+  //     return "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]";
+  //   } else if (typeof this.value === "number") {
+  //     return this.toFixed(this.value);
+  //   } else {
+  //     return this.value.toString();
   //   }
   // }
+
+  // get valueAsString(): string {
+  //   if (Array.isArray(this.value)) {
+  //     return JSON.stringify(this.value.map((value) => value));
+  //   } else {
+  //     return JSON.stringify(this.value);
+  //   }
+  // }
+
+  get visible(): boolean {
+    if (!this.parent) return true;
+    return this.parent.paramsVisible.includes(this.id);
+  }
+
+  set visible(value: boolean) {
+    if (!this.parent) return;
+    const isVisible = this.parent.paramsVisible.includes(this.id);
+    if (value && !isVisible) {
+      this.parent.paramsVisible.push(this.id);
+    } else if (!value && isVisible) {
+      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
+    }
+  }
 
   /**
    * Copy parameter component

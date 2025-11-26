@@ -18,9 +18,9 @@ export class ConnectionParameter extends BaseParameter {
     return this._connectionParams as ConnectionParameters;
   }
 
-  // override get parent(): TConnection {
-  //   return this.connection;
-  // }
+  override get parent(): ConnectionParameters {
+    return this.connectionParams;
+  }
 
   get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;

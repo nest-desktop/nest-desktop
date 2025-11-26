@@ -32,6 +32,7 @@
             <v-menu v-model="state.menu" :close-on-content-click="false">
               <template #activator="{ props: btnProps }">
                 <v-btn
+                  :disabled="node.params.keys.length === 0"
                   class="rounded-circle"
                   icon="mdi:mdi-order-bool-ascending-variant"
                   size="small"

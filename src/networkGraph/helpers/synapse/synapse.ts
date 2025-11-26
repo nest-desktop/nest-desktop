@@ -1,6 +1,6 @@
 // synapse.ts
 
-import type { TConnection, TModel, TSynapseParameter } from "@/types";
+import type { Class, TConnection, TModel, TSynapseParameter } from "@/types";
 
 import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
 import type { IBaseState, IParamState } from "@/helpers/common";
@@ -23,9 +23,13 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
 
   constructor(connection: TConnection) {
     super();
-
     this._connection = connection;
-    this._params = new SynapseParameters(this);
+
+    this._params = new this.Parameters(this);
+  }
+
+  get Parameters(): Class<SynapseParameters> {
+    return SynapseParameters;
   }
 
   get connection(): TConnection {
@@ -33,11 +37,16 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
   }
 
   get icon(): string {
-    if (this.connection.view.connectRecorder() || this.params.weight === 0) {
+    const weightValue = this.params.weightValue;
+    if (this.connection.view.connectRecorder() || weightValue === 0) {
       return "graph:synapse-recorder";
     } else {
-      return "graph:synapse-" + (this.params.weight > 0 ? "excitatory" : "inhibitory");
+      return "graph:synapse-" + (weightValue > 0 ? "excitatory" : "inhibitory");
     }
+  }
+
+  get isStatic(): boolean {
+    return this.modelId === "static";
   }
 
   get model(): BaseModel {
@@ -86,7 +95,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    * @param modelId model ID
    */
   getModel(modelId: string): TModel | undefined {
-    // this.logger.trace("get model:", modelId);
+    this.logger.debug("get model:", modelId);
 
     return this.modelDBStore.findModel(modelId);
   }
@@ -97,6 +106,8 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
   init(): void {
     this.logger.trace("init");
 
+    this.params.init();
+
     this.update();
   }
 
@@ -106,10 +117,10 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
   inverseWeight(): void {
     this.logger.trace("inverse weight");
 
-    const weight: TSynapseParameter = this.params.params.weight;
-    if (typeof weight.value === "number") {
-      weight.visible = true;
-      weight.state.value = -1 * weight.value;
+    const weightParam: TSynapseParameter = this.params.weight;
+    if (typeof weightParam.value === "number") {
+      weightParam.visible = true;
+      weightParam.value = -1 * weightParam.value;
       this.changes({ preventSimulation: true });
     }
   }
@@ -120,7 +131,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    */
   load(synapseState: ISynapseState): void {
     if (synapseState.model) this.loadModel(synapseState.model);
-    if (synapseState.params) this.params.load(synapseState.params);
+    this.params.load(synapseState.params);
   }
 
   /**
@@ -139,7 +150,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    * @remarks It emits synapse changes.
    */
   modelChanges(): void {
-    this.params.load();
+    this.params.load(this.model.params.save());
     this.connection.network.clean();
     this.changes({ preventSimulation: true });
   }

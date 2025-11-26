@@ -18,10 +18,6 @@ export class NodeParameter extends BaseParameter {
     this._nodeParams = nodeParams;
   }
 
-  get codeNode(): AbstractCodeNode | undefined {
-    return this.nodeParams.codeNode;
-  }
-
   /**
    * Get model parameter.
    */
@@ -35,6 +31,10 @@ export class NodeParameter extends BaseParameter {
 
   get node(): TNodeParameterParent {
     return this.nodeParams.node;
+  }
+
+  override get parent(): NodeParameters {
+    return this.nodeParams;
   }
 
   /**

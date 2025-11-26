@@ -18,6 +18,10 @@ export class BaseSynapseParameter extends BaseParameter {
     return this.synapse.model.params.get(this.id);
   }
 
+  override get parent(): SynapseParameters {
+    return this.synapseParams;
+  }
+
   get synapse(): BaseSynapse {
     return this.synapseParams.synapse;
   }

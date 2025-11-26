@@ -13,7 +13,7 @@
     <v-menu :close-on-content-click="false">
       <template #activator="{ props: btnProps }">
         <v-btn
-          :disabled="connection.params.length === 0"
+          :disabled="connection.params.keys.length === 0"
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-order-bool-ascending-variant"

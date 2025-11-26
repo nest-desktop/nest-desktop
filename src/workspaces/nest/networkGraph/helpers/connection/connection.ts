@@ -1,6 +1,9 @@
 // connection.ts
 
+import type { AbstractCodeNode } from "@babsey/code-graph";
+
 import { BaseConnection, type IConnectionState } from "@/networkGraph/helpers/connection/connection";
+import { getNESTConnectNode } from "@/codeGraph/codeNodeTypes/nest/nestConnect";
 import type { IParamState } from "@/helpers/common/parameter";
 import type { Class } from "@/types";
 
@@ -10,6 +13,7 @@ import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../../../helpers/model/model";
 import { NESTNetwork } from "../network/network";
+import type { NESTNode } from "../node/node";
 // import { NESTNodeSlice } from "../node/nodeSlice";
 
 export interface INESTConnectionState extends IConnectionState {
@@ -19,7 +23,7 @@ export interface INESTConnectionState extends IConnectionState {
   synapse?: INESTSynapseState;
 }
 
-export class NESTConnection extends BaseConnection {
+export class NESTConnection extends BaseConnection<INESTConnectionState> {
   private _mask: NESTConnectionMask;
   // private _sourceSlice: NESTNodeSlice;
   // private _targetSlice: NESTNodeSlice;
@@ -67,9 +71,9 @@ export class NESTConnection extends BaseConnection {
   //   return this.connections.network.nodes.all[this.source?.idx] as NESTNode | TNodeGroup;
   // }
 
-  // override get sourceNode(): NESTNode {
-  //   return this.connections.network.nodes.all[this.source?.idx] as NESTNode;
-  // }
+  get sourceNode(): NESTNode {
+    return this.source as NESTNode;
+  }
 
   // get sourceSlice(): NESTNodeSlice {
   //   return this._sourceSlice;
@@ -83,24 +87,45 @@ export class NESTConnection extends BaseConnection {
   //   return this.connections.network.nodes.all[this.target?.idx] as NESTNode | TNodeGroup;
   // }
 
-  // override get targetNode(): NESTNode {
-  //   return this.connections.network.nodes.all[this.target?.idx] as NESTNode;
-  // }
+  override get targetNode(): NESTNode {
+    return this.target as NESTNode;
+  }
 
   // get targetSlice(): NESTNodeSlice {
   //   return this._targetSlice;
   // }
 
   /**
-   * Set defaults.
+   * Load connection from state.
+   * @param connectionState connection state
+   */
+  override load(connectionState: IConnectionState): void {
+    super.load(connectionState);
+
+    this.synapse.load({ ...connectionState.synapse, model: "static_synapse" });
+  }
+
+  /**
+   * Register code node.
+   * @param codeNode code node
+   */
+  override registerCodeNode(codeNode?: AbstractCodeNode): void {
+    if (!codeNode) codeNode = getNESTConnectNode(this.connections.network.project.code.graph, this.idx);
+
+    this.codeNode = codeNode;
+    this.codeNode.mask = this;
+  }
+
+  /**
+   * Reset connection.
    */
   override reset(): void {
     this.logger.trace("reset");
 
     this.rule.reset();
     this.params.init();
-    this.synapse.modelId = "static_synapse";
-    this._mask.unmask();
+    this.synapse.load({ model: "static_synapse" });
+    this.mask.unmask();
   }
 
   /**

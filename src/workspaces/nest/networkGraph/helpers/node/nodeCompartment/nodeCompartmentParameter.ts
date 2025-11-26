@@ -26,18 +26,7 @@ export class NESTNodeCompartmentParameter extends BaseParameter {
     return this._nodeCompartmentParams as NESTNodeCompartment;
   }
 
-  get visible(): boolean {
-    return this.nodeCompartmentParams.paramsVisible.includes(this.id);
-  }
-
-  set visible(value: boolean) {
-    const isVisible = this.nodeCompartmentParams.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.nodeCompartmentParams.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.nodeCompartmentParams.paramsVisible = this.nodeCompartmentParams.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id,
-      );
-    }
+  override get parent(): NESTNodeCompartmentParameters {
+    return this.nodeCompartmentParams;
   }
 }

@@ -190,10 +190,12 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
   // }
 
   updateCodeNode(values: string[]): void {
+    if (!this.codeNode) return;
+
     Object.entries(this.paramInterfaces).forEach(([paramId, param]) => param.setHidden(!values.includes(paramId)));
 
     this._paramsVisible = Object.keys(this.codeNode.inputs).filter(
-      (paramId) => paramId !== "_code" && !this.codeNode.inputs[paramId].hidden,
+      (paramId) => this.hasParameter(paramId) && paramId !== "_code" && !this.codeNode.inputs[paramId].hidden,
     );
   }
 }

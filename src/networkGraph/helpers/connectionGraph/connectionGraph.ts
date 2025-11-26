@@ -208,7 +208,7 @@ export class ConnectionGraph extends BaseObj {
         .attr("dy", connection.view.toRight ? 3 : -5)
         .attr("fill", "currentColor")
         .classed("toLeft", !connection.view.toRight)
-        .text(connection.synapse.params.paramsVisible.includes("weight") ? connection.synapse.params.weight : "");
+        .text(connection.synapse?.params?.weight?.visible ? connection.synapse.params.weightValue : "");
 
       // .style("font-family", "Roboto")
       // .style("font-size", "0.7em", "important")

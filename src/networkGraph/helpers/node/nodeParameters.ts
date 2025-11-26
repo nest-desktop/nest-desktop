@@ -2,15 +2,16 @@
 
 import { BaseParameters, type IParamState } from "@/helpers/common";
 import type { ModelParameter } from "@/helpers/model";
-import type { Class, TNode, TNodeParameterParent } from "@/types";
+import type { Class } from "@/types";
 import type { ModelParameters } from "@/helpers/model/modelParameters";
 
 import { NodeParameter } from "./nodeParameter";
+import type { BaseNode } from "./node";
 
 export class NodeParameters extends BaseParameters {
-  public _node: TNodeParameterParent;
+  public _node: BaseNode;
 
-  constructor(node: TNode) {
+  constructor(node: BaseNode) {
     super();
 
     this._node = node;
@@ -24,13 +25,9 @@ export class NodeParameters extends BaseParameters {
     return this.node.model.params;
   }
 
-  get node(): TNode {
+  get node(): BaseNode {
     return this._node;
   }
-
-  // get parent(): TNode {
-  //   return this._node;
-  // }
 
   /**
    * Observer for parameter changes.
@@ -51,22 +48,23 @@ export class NodeParameters extends BaseParameters {
 
     this.emptyParams();
     if (this.node.model) {
-      this.node.model.params.values.forEach((modelParam: ModelParameter) => {
+      this.node.model.params.entries.forEach(([modelId, modelParam]: [string, ModelParameter]) => {
         if (paramStates && paramStates) {
-          const nodeParamState = paramStates[modelParam.id];
+          const nodeParamState = paramStates[modelId];
           if (nodeParamState) {
             this.addParameter(
               {
                 ...nodeParamState,
                 ...modelParam,
+                id: modelId,
               },
               true,
             );
           } else {
-            this.addParameter(modelParam);
+            this.addParameter({ ...modelParam, id: modelId });
           }
         } else {
-          this.addParameter(modelParam);
+          this.addParameter({ ...modelParam, id: modelId });
         }
       });
     } else if (paramStates) {

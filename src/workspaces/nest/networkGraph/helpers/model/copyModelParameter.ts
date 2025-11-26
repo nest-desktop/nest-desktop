@@ -1,7 +1,6 @@
 // copyModelParameter.ts
 
 import { BaseParameter, type IParamOptions, type IParamState } from "@/helpers/common";
-import type { ModelParameter } from "@/helpers/model";
 import type { TModel } from "@/types";
 
 import { NESTCopyModelParameters } from "./copyModelParameters";
@@ -21,6 +20,10 @@ export class NESTCopyModelParameter extends BaseParameter {
 
   get isWeightRecorder(): boolean {
     return this.id === "weight_recorder";
+  }
+
+  get model(): TModel {
+    return this.copyModelParams.copyModel.model as TModel;
   }
 
   override get options(): IParamOptions {
@@ -56,26 +59,8 @@ export class NESTCopyModelParameter extends BaseParameter {
     return options;
   }
 
-  get model(): TModel {
-    return this.copyModelParams.copyModel.model as TModel;
-  }
-
-  /**
-   * Get model parameter.
-   */
-  override get modelParam(): ModelParameter | undefined {
-    return this.model.params.get(this.id);
-  }
-
-  override set visible(value: boolean) {
-    const isVisible = this.copyModelParams.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.copyModelParams.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.copyModelParams.paramsVisible = this.copyModelParams.paramsVisible.filter(
-        (paramId: string) => paramId !== this.id,
-      );
-    }
+  override get parent(): NESTCopyModelParameters {
+    return this.copyModelParams;
   }
 
   /**

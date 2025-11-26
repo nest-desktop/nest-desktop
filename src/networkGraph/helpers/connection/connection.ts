@@ -27,7 +27,7 @@ export class BaseConnection<T extends IConnectionState = IConnectionState> exten
   private _view: ConnectionView;
 
   public _connections: TConnections; // parent
-  public _synapse: TSynapse;
+  public _synapse: BaseSynapse;
 
   constructor(connections: TConnections, configState?: IConfigState) {
     super({
@@ -187,7 +187,9 @@ export class BaseConnection<T extends IConnectionState = IConnectionState> exten
   init(): void {
     this.logger.trace("init");
 
+    // this.params.init();
     this.synapse.init();
+
     this.update();
   }
 
@@ -199,8 +201,8 @@ export class BaseConnection<T extends IConnectionState = IConnectionState> exten
     this._source = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.sourceNodeId);
     this._target = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.targetNodeId);
 
-    if (connectionState.params) this.params.load(connectionState.params);
     if (connectionState.rule) this.rule.value = connectionState.rule;
+    if (connectionState.params) this.params.load(connectionState.params);
     if (connectionState.synapse) this.synapse.load(connectionState.synapse);
   }
 

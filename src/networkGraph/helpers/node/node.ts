@@ -7,6 +7,7 @@ import { CodeNodeMask } from "@/codeGraph";
 
 import type { BaseModel, IModelRecordState, TElementType } from "@/helpers/model";
 import type { IActivityState } from "@/helpers/activity";
+import type { ModelParameters } from "@/helpers/model/modelParameters";
 import { NodeAnalogSignalActivity, NodeSpikeActivity, type NodeActivity } from "@/helpers/nodeActivity";
 import { notifyInfo, type IBaseState, type IParamState } from "@/helpers/common";
 import { onlyUnique, sortString } from "@/utils/array";
@@ -195,7 +196,7 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
   }
 
   get modelParams(): ModelParameters {
-    return this.model.params;
+    return this.model.params as ModelParameters;
   }
 
   get modelStates(): IModelRecordState[] {

@@ -1,6 +1,6 @@
 // synapse.ts
 
-import type { IParamState } from "@/helpers/common";
+import type { Class } from "@/types";
 import type { TElementType } from "@/helpers/model";
 import { BaseSynapse, type ISynapseState } from "@/networkGraph/helpers/synapse/synapse";
 
@@ -8,16 +8,25 @@ import type { NESTConnection } from "../connection/connection";
 import type { NESTCopyModel } from "../model/copyModel";
 import type { NESTNetwork } from "../network/network";
 import type { NESTNode } from "../node/node";
+import { NESTSynapseParameters } from "./synapseParameters";
 
 export interface INESTSynapseState extends ISynapseState {
   receptorIdx?: number;
-  model?: string;
-  params?: Record<string, IParamState>;
 }
 
 export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
   private _copyModel: NESTCopyModel | undefined;
   private _receptorIdx: number = 0;
+
+  constructor(connection: NESTConnection) {
+    super(connection);
+
+    this._modelId = "static_synapse";
+  }
+
+  override get Parameters(): Class<NESTSynapseParameters> {
+    return NESTSynapseParameters;
+  }
 
   get connection(): NESTConnection {
     return this._connection as NESTConnection;
@@ -85,6 +94,10 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
     return this.connection.connections.network as NESTNetwork;
   }
 
+  // override get params(): NESTSynapseParameters {
+  //   return super.params as NESTSynapseParameters;
+  // }
+
   get receptorIdx(): number {
     return this._receptorIdx;
   }
@@ -113,17 +126,6 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
     return this.connection.targetNode as NESTNode;
   }
 
-  // /**
-  //  * Get synapse model.
-  //  * @param modelId string
-  //  * @returns NEST model instance
-  //  */
-  // getModel(modelId: string): NESTModel {
-  //   this.logger.trace("get model:", modelId);
-
-  //   return this.modelDBStore.findModel(modelId) as NESTModel;
-  // }
-
   /**
    * Initialize synapse.
    * @remarks Do not call it in the constructor.
@@ -138,10 +140,11 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
    * Load synapse model.
    * @param modelId model ID
    */
-  override loadModel(modelId: string): void {
+  override loadModel(modelId: string = "static_synapse"): void {
     this.logger.trace("load model:", modelId);
 
-    if (this.network.copyModels && this.network.copyModels.findByModelId(modelId)) {
+    this._modelId = modelId;
+    if (this.network.copyModels?.findByModelId(modelId)) {
       this._copyModel = this.network.copyModels.getModel(modelId);
       this._model = this.getModel(this._copyModel.existingModelId);
     } else {

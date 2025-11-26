@@ -5,6 +5,7 @@
     <v-menu v-model="state.menu" :close-on-content-click="false">
       <template #activator="{ props: btnProps }">
         <v-btn
+          :disabled="synapse.params.keys.length === 0"
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-order-bool-ascending-variant"

@@ -108,11 +108,6 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
   // }
 
   /**
-   * Register code node.
-   */
-  registerCodeNode(): void {}
-
-  /**
    * Register backend
    * @param backend Backend store
    */
