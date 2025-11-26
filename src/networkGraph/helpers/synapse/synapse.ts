@@ -6,7 +6,8 @@ import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
 import type { IBaseState, IParamState } from "@/helpers/common";
 
 import { SynapseParameters } from "./synapseParameters";
-import { BaseModel, ModelParameter } from "@/helpers/model";
+import type { BaseModel } from "@/helpers/model";
+import type { ModelParameters } from "@/helpers/model/modelParameters";
 
 export interface ISynapseState extends IBaseState {
   model?: string;
@@ -52,7 +53,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
     return this._modelId;
   }
 
-  get modelParams(): Record<string, ModelParameter> {
+  get modelParams(): ModelParameters {
     return this.model.params;
   }
 

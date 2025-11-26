@@ -15,7 +15,7 @@ export class BaseSynapseParameter extends BaseParameter {
   }
 
   override get modelParam(): ModelParameter | undefined {
-    return this.synapse.model.params[this.id];
+    return this.synapse.model.params.get(this.id);
   }
 
   get synapse(): BaseSynapse {

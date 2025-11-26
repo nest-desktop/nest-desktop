@@ -181,7 +181,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     record.node.targetNodes
       .filter((node: TNode) => node.modelId.startsWith("iaf"))
       .forEach((node: TNode) => {
-        const Vth = node.getParameter("V_th").value as number;
+        const Vth = node.params.get("V_th").value as number;
 
         if (Vth)
           this.panel.layout.shapes.push({

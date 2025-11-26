@@ -11,6 +11,7 @@ import { download } from "@/utils/download";
 import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
+import { upgradeModel } from "@/helpers/upgrades";
 
 interface IModelDBStoreState<TModel extends BaseModel = BaseModel> {
   initialized: boolean;
@@ -54,8 +55,13 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * @param modelState model state
      * @remarks It pushes new model to the first line of the list.
      */
-    const addModel = (modelState?: TModelState): TModel => {
+    const addModel = (modelState: TModelState): TModel => {
       logger.trace("add model:", modelState?.id);
+
+      // Upgrade model state.
+      modelState = upgradeModel(modelState);
+
+      console.log(modelState.params);
 
       const model = new props.Model(modelState) as TModel;
       _addToList(model);

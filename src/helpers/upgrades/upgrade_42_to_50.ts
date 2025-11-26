@@ -12,6 +12,14 @@ const renameKernelParam: Record<string, string> = {
   rngSeed: "rng_seed",
 };
 
+export function upgradeModel_42_to_50(modelState: any): any {
+  // Model params
+  if (modelState.params) modelState.params = Object.fromEntries(modelState.params.map((p: any) => [p.id, p]));
+
+  modelState.version = "5.0";
+  return modelState;
+}
+
 export function upgradeProject_42_to_50(projectState: any): any {
   const appStore = useAppStore();
 

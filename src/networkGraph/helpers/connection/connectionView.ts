@@ -17,8 +17,8 @@ export class ConnectionView {
   private _colorInhibition = "#AF143C"; // '#b34846';
   private _connection: TConnection; // parent
   private _state: UnwrapRef<IConnectionViewState> = reactive<IConnectionViewState>({
-      xAxisRotation: randomUniformInt(0, 90),
-    });
+    xAxisRotation: randomUniformInt(0, 90),
+  });
 
   constructor(connection: TConnection) {
     this._connection = connection;

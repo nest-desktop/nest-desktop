@@ -1,37 +1,41 @@
 // nodeCompartmentParameter.ts
 
-import type { IParamState } from "@/helpers/common/parameter";
-import { NodeParameter } from "@/networkGraph/helpers/node/nodeParameter";
+import { BaseParameter } from "@/helpers/common";
 
 import { NESTModelCompartmentParameter } from "../../../../helpers/model/modelCompartmentParameter";
 import { NESTNodeCompartment } from "./nodeCompartment";
+import { NESTNodeCompartmentParameters } from "./nodeCompartmentParameters";
 
-export class NESTNodeCompartmentParameter extends NodeParameter {
-  constructor(nodeCompartment: NESTNodeCompartment, paramState: IParamState) {
-    super(nodeCompartment, paramState);
+export class NESTNodeCompartmentParameter extends BaseParameter {
+  private _nodeCompartmentParams: NESTNodeCompartmentParameters;
+
+  constructor(nodeCompartmentParams: NESTNodeCompartmentParameters) {
+    super();
+
+    this._nodeCompartmentParams = nodeCompartmentParams;
   }
 
   /**
    * Get model parameter.
    */
-  override get modelParam(): NESTModelCompartmentParameter {
-    return this.nodeCompartment.node.model.compartmentParams[this.id];
+  override get modelParam(): NESTModelCompartmentParameter | undefined {
+    return this.nodeCompartmentParams?.nodeCompartment?.model?.compartmentParams?.get(this.id);
   }
 
-  get nodeCompartment(): NESTNodeCompartment {
-    return this._node as NESTNodeCompartment;
+  get nodeCompartmentParams(): NESTNodeCompartmentParameters {
+    return this._nodeCompartmentParams as NESTNodeCompartment;
   }
 
   get visible(): boolean {
-    return this.nodeCompartment.node.paramsVisible.includes(this.id);
+    return this.nodeCompartmentParams.paramsVisible.includes(this.id);
   }
 
   set visible(value: boolean) {
-    const isVisible = this.nodeCompartment.node.paramsVisible.includes(this.id);
+    const isVisible = this.nodeCompartmentParams.paramsVisible.includes(this.id);
     if (value && !isVisible) {
-      this.nodeCompartment.node.paramsVisible.push(this.id);
+      this.nodeCompartmentParams.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.nodeCompartment.node.paramsVisible = this.nodeCompartment.node.paramsVisible.filter(
+      this.nodeCompartmentParams.paramsVisible = this.nodeCompartmentParams.paramsVisible.filter(
         (paramId: string) => paramId !== this.id,
       );
     }

@@ -3,23 +3,23 @@
 import { type UnwrapRef, reactive } from "vue";
 
 import { BaseObj, type IBaseState } from "@/helpers/common";
-import { BaseParameter, type IParamState, type TParamValue } from "@/helpers/common";
+import { BaseParameter, type IParamState } from "@/helpers/common";
 import type { INodeRecordState } from "@/networkGraph/helpers/node/nodeRecord";
-import { ModelParameter } from "@/helpers/model";
 
 import { NESTConnection } from "../connection/connection";
 import { NESTCopyModelParameter } from "./copyModelParameter";
 import { NESTCopyModels } from "./copyModels";
 import { NESTModel } from "../../../helpers/model/model";
 import { NESTModelCompartmentParameter } from "../../../helpers/model/modelCompartmentParameter";
-import { NESTModelReceptor } from "./modelReceptor/modelReceptor";
+import { NESTModelReceptor } from "../../../helpers/model/modelReceptor/modelReceptor";
 import { NESTNetwork } from "../network/network";
 import { NESTNode } from "../node/node";
+import { NESTCopyModelParameters } from "./copyModelParameters";
 
 export interface INESTCopyModelState extends IBaseState {
   existing: string;
   new: string;
-  params?: IParamState[];
+  params?: Record<string, IParamState>;
 }
 
 interface INESTCopyModelRefState {
@@ -30,8 +30,7 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
   private _existingModelId: string = "";
   private _copyModels: NESTCopyModels;
   private _newModelId: string = "";
-  private _params: Record<string, NESTCopyModelParameter> = {};
-  private _paramsVisible: string[] = [];
+  private _params: NESTCopyModelParameters;
   private _state: UnwrapRef<INESTCopyModelRefState> = reactive<INESTCopyModelRefState>({
     visible: true,
   });
@@ -40,6 +39,7 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
     super();
 
     this._copyModels = copyModels;
+    this._params = new NESTCopyModelParameters(this);
   }
 
   get abbreviation(): string {
@@ -81,16 +81,8 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
     if (renameNew) this.newModelId = value + "_copied" + (this.idx + 1);
     this._existingModelId = value;
 
-    this.initParameters();
+    this.params.init();
     this.changes();
-  }
-
-  get hasSomeVisibleParams(): boolean {
-    return this._paramsVisible.length > 0 || this.hasWeightRecorderParam;
-  }
-
-  get hasWeightRecorderParam(): boolean {
-    return "weight_recorder" in this.params;
   }
 
   get id(): string {
@@ -157,22 +149,11 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
    * Check if the model is a weight recorder.
    */
   get isWeightRecorder(): boolean {
-    return this._existingModelId === "weight_recorder";
+    return this.existingModelId === "weight_recorder";
   }
 
   get idx(): number {
-    return this._copyModels.all.indexOf(this);
-  }
-
-  get filteredParams(): NESTCopyModelParameter[] {
-    return this._paramsVisible.map((paramId) => this._params[paramId]);
-  }
-
-  /**
-   * Check if model has params.
-   */
-  get hasParameters(): boolean {
-    return Object.keys(this._params).length > 0;
+    return this.copyModels.all.indexOf(this);
   }
 
   get label(): string {
@@ -221,25 +202,8 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
     return this.network.nodes.nodeItems.filter((node: NESTNode) => node.modelId === this._newModelId);
   }
 
-  get params(): Record<string, NESTCopyModelParameter> {
+  get params(): NESTCopyModelParameters {
     return this._params;
-  }
-
-  set params(values: Record<string, NESTCopyModelParameter>) {
-    this._params = { ...this._params, ...values };
-  }
-
-  get paramsAll(): NESTCopyModelParameter[] {
-    return Object.values(this._params);
-  }
-
-  get paramsVisible(): string[] {
-    return this._paramsVisible;
-  }
-
-  set paramsVisible(values: string[]) {
-    this._paramsVisible = values;
-    this.changes();
   }
 
   get receptors(): Record<string, NESTModelReceptor> {
@@ -279,18 +243,6 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
   }
 
   /**
-   * Add model parameter component.
-   * @param paramState parameter state
-   */
-  addParameter(paramState: IParamState, visible: boolean = false): void {
-    this.logger.trace("add parameter", paramState.id);
-
-    this._params[paramState.id] = new NESTCopyModelParameter(this, paramState);
-
-    if (visible) this._paramsVisible.push(paramState.id);
-  }
-
-  /**
    * Observer for model changes.
    * @remarks It emits network changes.
    */
@@ -314,79 +266,62 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
   }
 
   /**
-   * Empty parameters
-   */
-  emptyParams(): void {
-    this._params = {};
-    this._paramsVisible = [];
-  }
-
-  /**
-   * Sets all params to invisible.
-   */
-  hideAllParams(): void {
-    this.paramsAll
-      .filter((param: NESTCopyModelParameter) => param.id !== "weight_recorder")
-      .forEach((param: NESTCopyModelParameter) => (param.visible = false));
-  }
-
-  /**
    * Initialize copy model.
    * @remarks Do not use it in the constructor.
    */
   init(): void {
-    if (this.props.value) this.initParameters(this.props.value.params);
+    this.params.init();
   }
 
-  /**
-   * Init parameter components.
-   * @param paramStates list of parameter state
-   */
-  initParameters(paramStates?: IParamState[]): void {
-    this.logger.trace("Add parameters");
+  // /**
+  //  * Init parameter components.
+  //  * @param paramStates list of parameter state
+  //  */
+  // initParameters(paramStates?: IParamState[]): void {
+  //   this.logger.trace("Add parameters");
 
-    this.emptyParams();
-    if (this.model) {
-      this.model.paramsAll.forEach((modelParam: ModelParameter) => {
-        if (paramStates && paramStates.length > 0) {
-          const modelParamState = paramStates.find((paramState: IParamState) => paramState.id === modelParam.id);
-          if (modelParamState) {
-            this.addParameter(
-              {
-                ...modelParamState,
-                ...modelParam,
-              },
-              true,
-            );
-          } else {
-            this.addParameter(modelParam);
-          }
-        } else {
-          this.addParameter(modelParam);
-        }
-      });
-    } else if (paramStates) {
-      paramStates.forEach((param: IParamState) => this.addParameter(param, true));
-    }
+  //   this.emptyParams();
+  //   if (this.model) {
+  //     this.model.params.values.forEach((modelParam: ModelParameter) => {
+  //       if (paramStates && paramStates.length > 0) {
+  //         const modelParamState = paramStates.find((paramState: IParamState) => paramState.id === modelParam.id);
+  //         if (modelParamState) {
+  //           this.addParameter(
+  //             {
+  //               ...modelParamState,
+  //               ...modelParam,
+  //             },
+  //             true,
+  //           );
+  //         } else {
+  //           this.addParameter(modelParam);
+  //         }
+  //       } else {
+  //         this.addParameter(modelParam);
+  //       }
+  //     });
+  //   } else if (paramStates) {
+  //     paramStates.forEach((param: IParamState) => this.addParameter(param, true));
+  //   }
 
-    if (this.isSynapse) {
-      const weightRecorders = this.network.nodes.weightRecorders.map((recorder: NESTNode) => recorder.view.label);
-      let weightRecorder: TParamValue = weightRecorders[weightRecorders.length - 1];
+  //   if (this.isSynapse) {
+  //     const weightRecorders = this.network.nodes.weightRecorders.map((recorder: NESTNode) => recorder.view.label);
+  //     let weightRecorder: TParamValue = weightRecorders[weightRecorders.length - 1];
 
-      if (paramStates) {
-        const weightRecorderParam = paramStates.find((paramState: IParamState) => paramState.id === "weight_recorder");
-        if (weightRecorderParam && weightRecorderParam.value) weightRecorder = weightRecorderParam.value;
-      }
+  //     if (paramStates) {
+  //       const weightRecorderParam = paramStates.find((paramState: IParamState) => paramState.id === "weight_recorder");
+  //       if (weightRecorderParam && weightRecorderParam.value) weightRecorder = weightRecorderParam.value;
+  //     }
 
-      this.addParameter({
-        id: "weight_recorder",
-        items: this.network.nodes.weightRecorders.map((recorder: NESTNode) => recorder.view.label),
-        component: "select",
-        label: "weight recorder",
-        value: weightRecorder || null,
-      });
-    }
-  }
+  //     this.addParameter({
+  //       id: "weight_recorder",
+  //       items: this.network.nodes.weightRecorders.map((recorder: NESTNode) => recorder.view.label),
+  //       component: "select",
+  //       label: "weight recorder",
+  //       value: weightRecorder || null,
+  //     });
+  //   }
+  // }
 
   isAssignedToWeightRecorder(node: NESTNode): boolean {
     const weightRecorderParam: BaseParameter = this.params.weight_recorder;
@@ -400,7 +335,7 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
   load(modelState: INESTCopyModelState): void {
     this._existingModelId = modelState.existing;
     this._newModelId = modelState.new;
-    this.props.value = modelState;
+    if (modelState.params) this.params.load(modelState.params);
   }
 
   /**
@@ -421,28 +356,17 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
   }
 
   /**
-   * Reset all parameters.
-   */
-  resetParams(): void {
-    this.paramsAll.forEach((param: NESTCopyModelParameter) => param.reset());
-  }
-
-  /**
    * Save copy model to state.
-   * @return model state
+   * @return copy model state
    */
   override save(): INESTCopyModelState {
-    return {
+    const state: INESTCopyModelState = {
       existing: this._existingModelId,
       new: this._newModelId,
-      params: this.filteredParams.map((param: NESTCopyModelParameter) => param.save()),
     };
-  }
 
-  /**
-   * Sets all params to visible.
-   */
-  showAllParams(): void {
-    this.paramsAll.forEach((param: NESTCopyModelParameter) => (param.visible = true));
+    if (this.params.hasSomeVisibleParams) state.params = this.params.save();
+
+    return state;
   }
 }

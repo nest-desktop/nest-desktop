@@ -265,8 +265,8 @@ export class BaseConnection<T extends IConnectionState = IConnectionState> exten
       targetNodeId: this.target?.codeNode?.id ?? -1,
     };
 
-    if (this.params.paramsVisible.length > 0) connectionState.params = this.params.save();
-    if (this.synapse.params.paramsVisible.length > 0) connectionState.synapse = this.synapse.save();
+    if (this.params.hasSomeVisibleParams) connectionState.params = this.params.save();
+    if (this.synapse.params.hasSomeVisibleParams) connectionState.synapse = this.synapse.save();
 
     return connectionState;
   }

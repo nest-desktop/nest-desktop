@@ -16,7 +16,7 @@
       <v-card>
         <v-card-text>
           <v-checkbox
-            v-for="(param, index) in synapse.model.paramsAll"
+            v-for="(param, index) in synapse.model.params.values"
             :key="index"
             v-model="synapse.params.paramsVisible"
             :color="synapse.connection.sourceNode.view.color"
@@ -50,7 +50,7 @@
     </v-menu>
   </v-btn-group>
 
-  <v-list v-if="synapse.params.paramsVisible.length > 0" density="compact">
+  <v-list v-if="synapse.params.hasSomeVisibleParams" density="compact">
     <ParamListItem
       v-for="(param, index) in synapse.params.filteredParams"
       :key="index"

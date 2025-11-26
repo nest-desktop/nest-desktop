@@ -54,7 +54,7 @@
 
                   <template v-if="node.modelParams">
                     <v-checkbox
-                      v-for="(param, index) in node.model.paramsAll"
+                      v-for="(param, index) in node.model.params.values"
                       :key="index"
                       v-model="node.params.paramsVisible"
                       :color="node.view.color"
@@ -117,11 +117,11 @@
           <v-list class="py-0">
             <template v-for="(paramId, index) in node.params.paramsVisible">
               <ParamListItem
-                v-if="node.params.paramsVisible.length > 0 && node.params.params[paramId]"
+                v-if="node.params.hasSomeVisibleParams && node.params.get(paramId)"
                 :key="index"
                 v-model="node.params.codeNode.inputs[paramId].value"
                 :color="node.view.color"
-                :param="node.params.params[paramId]"
+                :param="node.params.get(paramId)"
               />
             </template>
           </v-list>

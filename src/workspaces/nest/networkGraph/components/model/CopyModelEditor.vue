@@ -79,7 +79,7 @@
                 <v-card-text>
                   <template v-if="model.params">
                     <v-checkbox
-                      v-for="(param, index) in model.model.paramsAll"
+                      v-for="(param, index) in model.model?.params.values"
                       :key="index"
                       v-model="model.paramsVisible"
                       :label="param.label"

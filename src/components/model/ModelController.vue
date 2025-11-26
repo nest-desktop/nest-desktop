@@ -164,7 +164,7 @@ const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
 const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
 const project = computed(() => modelStore.value.state.project);
 
-const modelParams = computed(() => modelStore.value.model.paramsAll);
+const modelParams = computed(() => modelStore.value.model.values);
 
 const modelState = computed(() => JSON.stringify(modelStore.value.model.save(), null, 2));
 
@@ -234,7 +234,7 @@ const updateCode = () => {
   neurons.forEach((neuron: TNode) => {
     const modelParams = modelStore.value.model.params;
     neuron.paramsVisible.forEach((paramKey: string) => {
-      neuron.params[paramKey].state.value = modelParams[paramKey].value;
+      neuron.params[paramKey].state.value = modelParams.get(paramKey).value;
     });
   });
   project.value.changes();

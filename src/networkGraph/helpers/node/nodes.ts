@@ -18,12 +18,12 @@ interface INodesRefState {
 }
 
 export class BaseNodes extends BaseObj {
-  private _state: UnwrapRef<INodesRefState> =reactive<INodesRefState>({
-      annotations: [],
-      contextMenu: false,
-      focusedNode: null,
-      selectedNodes: [] as (TNode | TNodeGroup)[],
-    }); //reactive state
+  private _state: UnwrapRef<INodesRefState> = reactive<INodesRefState>({
+    annotations: [],
+    contextMenu: false,
+    focusedNode: null,
+    selectedNodes: [] as (TNode | TNodeGroup)[],
+  }); //reactive state
   // public _nodes: (TNode | TNodeGroup)[] = [];
   public _network: TNetwork; // parent
 

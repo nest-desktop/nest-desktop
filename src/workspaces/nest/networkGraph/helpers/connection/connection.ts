@@ -2,7 +2,7 @@
 
 import { BaseConnection, type IConnectionState } from "@/networkGraph/helpers/connection/connection";
 import type { IParamState } from "@/helpers/common/parameter";
-import type { Class, TNodeGroup } from "@/types";
+import type { Class } from "@/types";
 
 import { type INESTConnectionMaskState, NESTConnectionMask } from "./connectionMask";
 import { type INESTSynapseState, NESTSynapse } from "../synapse/synapse";
@@ -10,7 +10,6 @@ import { NESTConnections } from "./connections";
 import { NESTCopyModel } from "../model/copyModel";
 import { NESTModel } from "../../../helpers/model/model";
 import { NESTNetwork } from "../network/network";
-import { NESTNode } from "../node/node";
 // import { NESTNodeSlice } from "../node/nodeSlice";
 
 export interface INESTConnectionState extends IConnectionState {
@@ -104,17 +103,6 @@ export class NESTConnection extends BaseConnection {
     this._mask.unmask();
   }
 
-  // /**
-  //  * Resets all parameters to their default.
-  //  */
-  // override resetParams(): void {
-  //   // Reset connection parameter.
-  //   this.paramsAll.forEach((param: ConnectionParameter) => param.reset());
-
-  //   // Reset synapse parameter.
-  //   this.synapse.paramsAll.forEach((param: NESTSynapseParameter) => param.reset());
-  // }
-
   /**
    * Save connection to state.
    * @return connection state
@@ -124,7 +112,7 @@ export class NESTConnection extends BaseConnection {
 
     if (this.rule.value !== "all_to_all") connectionState.rule = this.rule.value;
 
-    if (this.synapse.modelId !== "static_synapse" || this.synapse.params.paramsVisible.length > 0)
+    if (this.synapse.modelId !== "static_synapse" || this.synapse.params.hasSomeVisibleParams)
       connectionState.synapse = this.synapse.save();
 
     // if (this.sourceSlice.visible) connectionState.sourceSlice = this.sourceSlice.save();

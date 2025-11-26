@@ -25,8 +25,12 @@
             {{ model.existingModelId }}
           </v-row>
         </v-list-item>
-        <template v-if="model.paramsVisible.length > 0">
-          <ParamViewer v-for="(paramId, index) in model.paramsVisible" :key="index" :param="model.params[paramId]" />
+        <template v-if="model.params.hasSomeVisibleParams">
+          <ParamViewer
+            v-for="(paramId, index) in model.params.paramsVisible"
+            :key="index"
+            :param="model.params.get(paramId)"
+          />
         </template>
       </v-list>
     </v-card-text>
@@ -37,7 +41,7 @@
 import Card from "@/components/common/Card.vue";
 import ParamViewer from "@/components/parameter/ParamViewer.vue";
 
-import type { NESTCopyModel } from "../../types";
+import type { NESTCopyModel } from "../../../types";
 
 defineProps<{ model: NESTCopyModel }>();
 </script>

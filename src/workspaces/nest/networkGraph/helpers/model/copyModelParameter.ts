@@ -1,22 +1,22 @@
 // copyModelParameter.ts
 
 import { BaseParameter, type IParamOptions, type IParamState } from "@/helpers/common";
-import { ModelParameter } from "@/helpers/model";
+import type { ModelParameter } from "@/helpers/model";
 import type { TModel } from "@/types";
 
-import { NESTCopyModel } from "./copyModel";
+import { NESTCopyModelParameters } from "./copyModelParameters";
 
 export class NESTCopyModelParameter extends BaseParameter {
-  private _copyModel: NESTCopyModel;
+  private _copyModelParams: NESTCopyModelParameters;
 
-  constructor(model: NESTCopyModel) {
+  constructor(modelParams: NESTCopyModelParameters) {
     super();
 
-    this._copyModel = model;
+    this._copyModelParams = modelParams;
   }
 
-  get copyModel(): NESTCopyModel {
-    return this._copyModel;
+  get copyModelParams(): NESTCopyModelParameters {
+    return this._copyModelParams;
   }
 
   get isWeightRecorder(): boolean {
@@ -57,26 +57,24 @@ export class NESTCopyModelParameter extends BaseParameter {
   }
 
   get model(): TModel {
-    return this._copyModel.model as TModel;
+    return this.copyModelParams.copyModel.model as TModel;
   }
 
   /**
    * Get model parameter.
    */
   override get modelParam(): ModelParameter | undefined {
-    return this.model.params[this.id];
-  }
-
-  override get parent(): NESTCopyModel {
-    return this.copyModel;
+    return this.model.params.get(this.id);
   }
 
   override set visible(value: boolean) {
-    const isVisible = this.parent.paramsVisible.includes(this.id);
+    const isVisible = this.copyModelParams.paramsVisible.includes(this.id);
     if (value && !isVisible) {
-      this.parent.paramsVisible.push(this.id);
+      this.copyModelParams.paramsVisible.push(this.id);
     } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
+      this.copyModelParams.paramsVisible = this.copyModelParams.paramsVisible.filter(
+        (paramId: string) => paramId !== this.id,
+      );
     }
   }
 

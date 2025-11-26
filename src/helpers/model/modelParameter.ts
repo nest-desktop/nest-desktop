@@ -1,30 +1,29 @@
 // modelParameter.ts
 
-import type { TModel } from "@/types";
-
 import { BaseParameter, type IParamState } from "../common";
+import { ModelParameters } from "./modelParameters";
 
 export class ModelParameter extends BaseParameter {
-  private _model: TModel;
+  private _modelParams: ModelParameters;
 
-  constructor(model: TModel) {
+  constructor(modelParams: ModelParameters) {
     super();
-    this._model = model;
+    this._modelParams = modelParams;
   }
 
-  get model(): TModel {
-    return this._model;
+  get modelParams(): ModelParameters {
+    return this._modelParams;
   }
 
   /**
    * Get model parameter.
    */
   override get modelParam(): ModelParameter | undefined {
-    return this.model.params[this.id];
+    return this.modelParams.model.params.get(this.id);
   }
 
-  override get parent(): TModel {
-    return this.model;
+  override get parent(): ModelParameters {
+    return this.modelParams;
   }
 
   /**

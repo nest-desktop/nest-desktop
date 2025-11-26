@@ -4,7 +4,7 @@ import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import type { Class } from "@/types";
 import { BaseParameter } from "@/helpers/common";
-import type { IModelRecordState, TElementType } from "@/helpers/model/model";
+import type { IModelRecordState } from "@/helpers/model/model";
 import { BaseNode, type INodeState } from "@/networkGraph/helpers/node/node";
 import { type INodeRecordState, NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
 import { onlyUnique, sortString } from "@/utils/array";
@@ -12,7 +12,6 @@ import { onlyUnique, sortString } from "@/utils/array";
 import { type INESTNodeCompartmentState, NESTNodeCompartment } from "./nodeCompartment/nodeCompartment";
 import { type INESTNodeReceptorState, NESTNodeReceptor } from "./nodeReceptor/nodeReceptor";
 import { type INESTNodeSpatialState, NESTNodeSpatial } from "./nodeSpatial/nodeSpatial";
-import { NESTConnection } from "../connection/connection";
 import { NESTCopyModel } from "../../helpers/model/copyModel";
 import { NESTModel } from "../../../helpers/model/model";
 import { NESTNetwork } from "../network/network";
@@ -51,7 +50,7 @@ export class NESTNode extends BaseNode<INESTNodeState> {
     }
 
     return this.network.copyModels.filter((model: NESTCopyModel) =>
-      Object.values(model.params).some((param: BaseParameter) => param.value === this.view.label),
+      model.params.values.some((param: BaseParameter) => param.value === this.view.label),
     );
   }
 
@@ -327,7 +326,7 @@ export class NESTNode extends BaseNode<INESTNodeState> {
 
     if (this.size > 1) nodeState.size = this.size;
 
-    nodeState.params = this.params.save();
+    if (this.params.hasSomeVisibleParams) nodeState.params = this.params.save();
 
     // Add annotations if provided.
     if (this.annotations.length > 0) nodeState.annotations = this.annotations;

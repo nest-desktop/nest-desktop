@@ -8,9 +8,8 @@ import type { NESTSynapse } from "./synapse";
 import type { NESTCopyModelParameter } from "../model/copyModelParameter";
 
 export class NESTSynapseParameter extends BaseSynapseParameter {
-
   override get modelParam(): ModelParameter | NESTCopyModelParameter | undefined {
-    return this.synapse.model.params[this.id];
+    return this.synapse.model.params.get(this.id);
   }
 
   override get synapse(): NESTSynapse {

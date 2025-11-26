@@ -15,7 +15,7 @@
     </v-card-title>
 
     <v-card-text class="pa-0">
-      <v-list v-if="node.params.paramsVisible.length > 0">
+      <v-list v-if="node.params.hasSomeVisibleParams">
         <ParamViewer
           v-for="(paramId, index) in node.params.paramsVisible"
           :key="index"

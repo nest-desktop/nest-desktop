@@ -5,7 +5,7 @@ import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 import type { Class, TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 import { CodeNodeMask } from "@/codeGraph";
 
-import type { BaseModel, IModelRecordState, ModelParameter, TElementType } from "@/helpers/model";
+import type { BaseModel, IModelRecordState, TElementType } from "@/helpers/model";
 import type { IActivityState } from "@/helpers/activity";
 import { NodeAnalogSignalActivity, NodeSpikeActivity, type NodeActivity } from "@/helpers/nodeActivity";
 import { notifyInfo, type IBaseState, type IParamState } from "@/helpers/common";
@@ -194,7 +194,7 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
     this.modelChanges();
   }
 
-  get modelParams(): Record<string, ModelParameter> {
+  get modelParams(): ModelParameters {
     return this.model.params;
   }
 
@@ -538,7 +538,7 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
 
     if (this.size?.value > 1) nodeState.size = this.size.value;
 
-    nodeState.params = this.params.save();
+    if (this.params.hasSomeVisibleParams) nodeState.params = this.params.save();
 
     // Add annotations if provided.
     // if (this._annotations.length > 0) nodeState.annotations = this._annotations;

@@ -2,35 +2,32 @@
 
 import { BaseParameters, type IParamState } from "@/helpers/common";
 import type { ModelParameter } from "@/helpers/model";
-import type { Class, TNode, TNodeParameterParent } from "@/types";
+import type { Class } from "@/types";
 import type { ModelParameters } from "@/helpers/model/modelParameters";
 
-import { NodeParameter } from "./nodeParameter";
+import { NESTNodeReceptor } from "./nodeReceptor";
+import { NESTNodeReceptorParameter } from "./nodeReceptorParameter";
 
-export class NodeParameters extends BaseParameters {
-  public _node: TNodeParameterParent;
+export class NESTNodeReceptorParameters extends BaseParameters {
+  public _nodeReceptor: NESTNodeReceptor;
 
-  constructor(node: TNode) {
+  constructor(nodeReceptor: NESTNodeReceptor) {
     super();
 
-    this._node = node;
+    this._nodeReceptor = nodeReceptor;
   }
 
-  override get Parameter(): Class<NodeParameter> {
-    return NodeParameter;
+  override get Parameter(): Class<NESTNodeReceptorParameter> {
+    return NESTNodeReceptorParameter;
   }
 
   get modelParams(): ModelParameters {
-    return this.node.model.params;
+    return this.nodeReceptor.model.params;
   }
 
-  get node(): TNode {
-    return this._node;
+  get nodeReceptor(): NESTNodeReceptor {
+    return this._nodeReceptor;
   }
-
-  // get parent(): TNode {
-  //   return this._node;
-  // }
 
   /**
    * Observer for parameter changes.
@@ -39,19 +36,19 @@ export class NodeParameters extends BaseParameters {
   override changes(props = {}): void {
     this.logger.trace("changes");
 
-    this.node.changes(props);
+    this.nodeReceptor.changes(props);
   }
 
   /**
    * Load node parameters from state.
-   * @param paramStates node parameter states
+   * @param paramStates node receptor parameter states
    */
   override load(paramStates?: Record<string, IParamState>): void {
     this.logger.trace("load parameters");
 
     this.emptyParams();
-    if (this.node.model) {
-      this.node.model.params.values.forEach((modelParam: ModelParameter) => {
+    if (this.nodeReceptor.model) {
+      this.modelParams.values.forEach((modelParam: ModelParameter) => {
         if (paramStates && paramStates) {
           const nodeParamState = paramStates[modelParam.id];
           if (nodeParamState) {

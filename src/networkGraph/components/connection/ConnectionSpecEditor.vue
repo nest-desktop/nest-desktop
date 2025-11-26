@@ -13,7 +13,7 @@
     <v-menu :close-on-content-click="false">
       <template #activator="{ props: btnProps }">
         <v-btn
-          :disabled="Object.keys(connection.params).length === 0"
+          :disabled="connection.params.length === 0"
           class="rounded-circle"
           color="primary"
           icon="mdi:mdi-order-bool-ascending-variant"
@@ -25,7 +25,7 @@
       <v-card>
         <v-card-text>
           <v-checkbox
-            v-for="(param, index) in connection.params.paramsAll"
+            v-for="(param, index) in connection.params.values"
             :key="index"
             v-model="connection.params.paramsVisible"
             :color="connection.sourceNode.view.color"
@@ -46,7 +46,7 @@
     <Menu :items class="rounded-circle" />
   </v-btn-group>
 
-  <v-list v-if="connection.params.paramsVisible.length > 0" density="compact">
+  <v-list v-if="connection.params.hasSomeVisibleParams" density="compact">
     <ParamListItem
       v-for="(param, index) in connection.params.filteredParams"
       :key="index"

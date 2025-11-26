@@ -6,9 +6,8 @@ import { BaseSynapse, type ISynapseState } from "@/networkGraph/helpers/synapse/
 
 import type { NESTConnection } from "../connection/connection";
 import type { NESTCopyModel } from "../model/copyModel";
-// import type { NESTCopyModelParameter } from "../model/copyModelParameter";
-// import type { NESTModel } from "../model/model";
 import type { NESTNetwork } from "../network/network";
+import type { NESTNode } from "../node/node";
 
 export interface INESTSynapseState extends ISynapseState {
   receptorIdx?: number;
@@ -19,13 +18,6 @@ export interface INESTSynapseState extends ISynapseState {
 export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
   private _copyModel: NESTCopyModel | undefined;
   private _receptorIdx: number = 0;
-
-  // constructor(connection: NESTConnection) {
-  //   super(connection);
-
-  //   // this._modelId = synapseState?.model || "static_synapse";
-  //   // this._receptorIdx = synapseState?.receptorIdx || 0;
-  // }
 
   get connection(): NESTConnection {
     return this._connection as NESTConnection;
@@ -84,38 +76,6 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
     return this._copyModel;
   }
 
-  // get modelDBStore() {
-  //   return this.connection.connections.network.project.modelDBStore;
-  // }
-
-  // /**
-  //  * Get model ID.
-  //  */
-  // override get modelId(): string {
-  //   return this._modelId;
-  // }
-
-  // /**
-  //  * Set model ID.
-  //  */
-  // set modelId(value: string) {
-  //   this._modelId = value;
-
-  //   this.loadModel();
-  //   this.modelChanges();
-  // }
-
-  // get modelParams(): Record<string, ModelParameter | NESTCopyModelParameter> {
-  //   return this.model.params;
-  // }
-
-  // // Get models of the same element type.
-  // get models(): NESTModel[] {
-  //   const elementType: string = this.model?.elementType;
-  //   const models: NESTModel[] = this.modelDBStore.getModelsByElementType(elementType) as NESTModel[];
-  //   return models;
-  // }
-
   // Get all copied synapse models.
   get copyModels(): NESTCopyModel[] {
     return this.network.copyModels.synapseModels as NESTCopyModel[];
@@ -134,7 +94,7 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
   }
 
   get receptorIndices(): number[] {
-    return this.connection.targetNode.receptors?.map((_, idx: number) => idx);
+    return this.targetNode.receptors?.map((_, idx: number) => idx);
   }
 
   /**
@@ -142,30 +102,16 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
    */
   get recordedByWeightRecorder(): boolean {
     if (!this.copyModel) return false;
-    return this.copyModel.hasWeightRecorderParam;
+    return this.copyModel.params.hasWeightRecorderParam;
   }
-
-  // override get paramsAll(): NESTSynapseParameter[] {
-  //   return Object.values(this._params) as NESTSynapseParameter[];
-  // }
-
-  // override get params(): Record<string, NESTSynapseParameter> {
-  //   return this._params as Record<string, NESTSynapseParameter>;
-  // }
 
   get showReceptorType(): boolean {
-    return !this.connection.sourceNode.model.isRecorder && this.connection.targetNode.receptors.length > 0;
+    return !this.connection.sourceNode.model.isRecorder && this.targetNode.receptors.length > 0;
   }
 
-  // /**
-  //  * Add parameter component.
-  //  * @param paramState parameter state
-  //  */
-  // addParameter(paramState: IParamState, visible?: boolean): void {
-  //   // this._logger.trace("add parameter:", param)
-  //   this.params[paramState.id] = new NESTSynapseParameter(this, paramState);
-  //   if (visible) this._paramsVisible.push(paramState.id);
-  // }
+  get targetNode(): NESTNode {
+    return this.connection.targetNode as NESTNode;
+  }
 
   // /**
   //  * Get synapse model.
@@ -187,38 +133,6 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
 
     this.update();
   }
-
-  // /**
-  //  * Initialize synapse parameters.
-  //  */
-  // override initParameters(paramState?: Record<string, IParamState>): void {
-  //   this.logger.trace("init parameters");
-
-  //   this.emptyParams();
-
-  //   if (this._model) {
-  //     this._model.paramsAll.forEach((modelParam: ModelParameter) => {
-  //       if (paramState && paramState[modelParam.id]) {
-  //         const synapseParamState = paramState[modelParam.id];
-  //         if (synapseParamState) {
-  //           this.addParameter(
-  //             {
-  //               ...synapseParamState,
-  //               ...modelParam,
-  //             },
-  //             true,
-  //           );
-  //         } else {
-  //           this.addParameter(modelParam);
-  //         }
-  //       } else {
-  //         this.addParameter(modelParam);
-  //       }
-  //     });
-  //   } else if (paramState) {
-  //     paramState.forEach((param: IParamState) => this.addParameter(param, true));
-  //   }
-  // }
 
   /**
    * Load synapse model.
@@ -244,7 +158,7 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
     const synapseState: INESTSynapseState = {};
 
     if (this.modelId !== "static_synapse") synapseState.model = this.modelId;
-    if (this.params.filteredParams.length > 0) synapseState.params = this.params.save();
+    if (this.params.hasSomeVisibleParams) synapseState.params = this.params.save();
     if (this.receptorIdx !== 0) synapseState.receptorIdx = this.receptorIdx;
 
     return synapseState;

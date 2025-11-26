@@ -26,7 +26,7 @@ export class NodeParameter extends BaseParameter {
    * Get model parameter.
    */
   override get modelParam(): ModelParameter | undefined {
-    return this.nodeParams.node.model.params[this.id];
+    return this.nodeParams.node.model.params.get(this.id);
   }
 
   get nodeParams(): NodeParameters {
