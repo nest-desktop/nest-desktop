@@ -1,6 +1,6 @@
 // nodeParameter.ts
 
-import type { AbstractCodeNode } from "@babsey/code-graph";
+// import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import type { TNodeParameterParent } from "@/types";
 
