@@ -61,8 +61,6 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
       // Upgrade model state.
       modelState = upgradeModel(modelState);
 
-      console.log(modelState.params);
-
       const model = new props.Model(modelState) as TModel;
       _addToList(model);
       return model;
