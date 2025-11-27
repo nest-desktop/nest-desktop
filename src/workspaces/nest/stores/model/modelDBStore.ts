@@ -1,6 +1,8 @@
 // modelDBStore.ts
 
 import { defineModelDBStore } from "@/stores/model/defineModelDBStore";
+import { useAppStore } from "@/stores/appStore";
+import type { IParamState } from "@/helpers/common";
 
 import { NESTModel } from "../../helpers/model/model";
 import { NESTModelDB } from "../../helpers/model/modelDB";
@@ -29,3 +31,22 @@ export const useNESTModelDBStore = defineModelDBStore<NESTModel>({
   modelAssets,
   workspace: "nest",
 });
+
+export const getNESTModelParameterStates = (modelId: string) => {
+  const modelDBStore = useNESTModelDBStore();
+  const model = modelDBStore.findModel(modelId);
+
+  // default model params states
+  const defaultParamStates: Record<string, IParamState> = {};
+  if (model) {
+    model.params.keys.forEach((modelParamKey: string) => {
+      defaultParamStates[modelParamKey] = {
+        id: modelParamKey,
+        hidden: true,
+        value: model.params.get(modelParamKey).value,
+      };
+    });
+  }
+
+  return defaultParamStates;
+};

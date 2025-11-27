@@ -151,6 +151,8 @@ export class NESTSynapse extends BaseSynapse<INESTSynapseState> {
       this._copyModel = undefined;
       this._model = this.getModel(modelId);
     }
+
+    this.params.load(this.model.params.save());
   }
 
   /**

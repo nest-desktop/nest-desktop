@@ -59,6 +59,8 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
 
   set visibleParamIds(values: string[]) {
     this.values.forEach((param: TParameter) => (param.hidden = !values.includes(param.id)));
+
+    this.codeNode.code.engine.runOnce();
   }
 
   /**

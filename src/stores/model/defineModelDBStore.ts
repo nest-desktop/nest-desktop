@@ -280,22 +280,3 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     };
   });
 }
-
-export const getNESTModelParameterStates = (modelId: string) => {
-  const appStore = useAppStore();
-  const model = appStore.currentWorkspace?.stores.modelDBStore.findModel(modelId);
-
-  // default model params states
-  const defaultParamStates: Record<string, IParamState> = {};
-  if (model) {
-    model.params.keys.forEach((modelParamKey: string) => {
-      defaultParamStates[modelParamKey] = {
-        id: modelParamKey,
-        hidden: true,
-        value: model.params.get(modelParamKey).value,
-      };
-    });
-  }
-
-  return defaultParamStates;
-};

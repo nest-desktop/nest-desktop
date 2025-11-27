@@ -16,6 +16,7 @@ import { BaseNodes } from "./nodes";
 import { NodeParameters } from "./nodeParameters";
 import { NodeRecord, type INodeRecordState } from "./nodeRecord";
 import { NodeView, type INodeViewState } from "./nodeView";
+import { loadNESTCreateNode, updateNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
 
 export interface INodeState extends IBaseState {
   activity?: IActivityState;
@@ -187,13 +188,8 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
     return this._modelId;
   }
 
-  /**
-   * Set model ID.
-   */
   set modelId(value: string) {
     this.loadModel(value);
-    // this.params.load(this.model.params.save())
-
     this.modelChanges();
   }
 
@@ -319,11 +315,11 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
    * Observer for node changes.
    * @remarks It emits network changes.
    */
-  changes(state = {}): void {
+  changes(props = {}): void {
     this.logger.trace("changes");
 
     this.update();
-    this.nodes.network.changes(state);
+    this.nodes.network.changes(props);
   }
 
   /**
@@ -453,6 +449,7 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
 
     this._modelId = modelId;
     this._model = this.getModel(modelId);
+    this.params.load(this.model.params.save());
   }
 
   /**
@@ -464,6 +461,12 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
   modelChanges(): void {
     this.logger.trace("model change");
     let recorderModelChanged = false;
+
+    const engine = this.network.project.code.engine;
+    engine.pause();
+    updateNESTCreateNode(this.codeNode, this.save());
+    engine.resume();
+    engine.runOnce();
 
     if (this.model.isRecorder) {
       this.correctRecorderConnections(); // Correct connection from/to recorder.
@@ -564,6 +567,12 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
    */
   selectForConnection(): void {
     this._nodes.network.connections.state.selectedNode = this;
+  }
+
+  showAllParams(emitChanges: boolean = true): void {
+    this.params.showAll(false);
+
+    if (emitChanges) this.changes();
   }
 
   /**

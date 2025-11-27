@@ -47,17 +47,14 @@ export const updateProject = () => {
       if ("network" in project) {
         const neurons = project.network.nodes.neurons as NESTNode[];
         neurons.forEach((neuron: NESTNode) => {
-          neuron._modelId = modelStore.state.modelId;
-          neuron.loadModel();
+          neuron.loadModel(modelStore.state.modelId);
         });
       }
 
       nextTick(() => {
         if ("network" in project) {
           const neurons = project.network.nodes.neurons as NESTNode[];
-          neurons.forEach((neuron: NESTNode) => {
-            neuron.showAllParams(false);
-          });
+          neurons.forEach((neuron: NESTNode) => neuron.showAllParams(false));
           project.network.nodes.updateRecords();
         }
 

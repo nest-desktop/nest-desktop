@@ -21,3 +21,9 @@ import type { ProjectCode } from "./projectCode";
 
 defineProps<{ code: ProjectCode }>();
 </script>
+
+<style lang="scss">
+:root {
+  --baklava-node-color-background: rgba(27, 32, 44, 0.5);
+}
+</style>

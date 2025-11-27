@@ -209,8 +209,7 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
           if ("network" in project) {
             const network = project.network as TNetwork;
             network.nodes.neurons.forEach((neuron) => {
-              neuron._modelId = state.modelId;
-              neuron.loadModel(state.modelId);
+              neuron.modelId = state.modelId;
             });
           }
 

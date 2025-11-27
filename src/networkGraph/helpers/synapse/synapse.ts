@@ -8,6 +8,7 @@ import type { IBaseState, IParamState } from "@/helpers/common";
 import { SynapseParameters } from "./synapseParameters";
 import type { BaseModel } from "@/helpers/model";
 import type { ModelParameters } from "@/helpers/model/modelParameters";
+import { updateNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
 
 export interface ISynapseState extends IBaseState {
   model?: string;
@@ -60,6 +61,11 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
 
   get modelId(): string {
     return this._modelId;
+  }
+
+  set modelId(value: string) {
+    this.loadModel(value);
+    this.modelChanges();
   }
 
   get modelParams(): ModelParameters {
@@ -143,6 +149,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
 
     this._modelId = modelId;
     this._model = this.getModel(modelId);
+    this.params.load(this.model.params.save());
   }
 
   /**
@@ -150,7 +157,12 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    * @remarks It emits synapse changes.
    */
   modelChanges(): void {
-    this.params.load(this.model.params.save());
+    const engine = this.connection.network.project.code.engine;
+    engine.pause();
+    updateNESTCreateNode(this.codeNode, this.save());
+    engine.resume();
+    engine.runOnce();
+
     this.connection.network.clean();
     this.changes({ preventSimulation: true });
   }

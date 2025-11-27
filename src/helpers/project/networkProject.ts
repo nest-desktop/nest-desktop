@@ -110,8 +110,8 @@ export abstract class NetworkProject<T extends INetworkProjectState = INetworkPr
 
     this.networkRevision.commit();
 
-    if (props.cleanPanels) this._activityGraph.activityChartGraph.cleanPanels();
-    if (props.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
+    if (props.cleanPanels) this.activityGraph.activityChartGraph.cleanPanels();
+    if (props.resetPanels) this.activityGraph.activityChartGraph.resetPanels();
 
     if (!props.preventSimulation) this.startSimulationOnChange();
   }
@@ -122,7 +122,7 @@ export abstract class NetworkProject<T extends INetworkProjectState = INetworkPr
   checkoutNetwork(): void {
     this.logger.trace("checkout network");
 
-    const networkState = this._networkRevision.load();
+    const networkState = this.networkRevision.load();
     this.network.load(networkState);
     this.network.clean();
 

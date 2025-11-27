@@ -254,6 +254,8 @@ export class NESTNode extends BaseNode<INESTNodeState> {
       this._copyModel = undefined;
       this._model = this.getModel(modelId);
     }
+
+    this.params.load(this.model.params.save());
   }
 
   /**
@@ -349,12 +351,12 @@ export class NESTNode extends BaseNode<INESTNodeState> {
   /**
    * Sets all params to visible.
    */
-  showAllParams(emitChanges: boolean = true): void {
-    this.params.showAll();
+  override showAllParams(emitChanges: boolean = true): void {
+    this.params.showAll(false);
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.showAll());
-      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.showAll());
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.showAll(false));
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.showAll(false));
     }
 
     if (emitChanges) this.changes();
