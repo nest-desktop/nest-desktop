@@ -15,14 +15,14 @@
         <v-card-text>
           <v-list>
             <ParamViewer
-              v-for="(paramId, index) in connection.paramsVisible"
+              v-for="(paramId, index) in connection.params.visibleParamIds"
               :key="index"
-              :param="connection.params[paramId] as ConnectionParameter"
+              :param="connection.params.get(paramId) as ConnectionParameter"
             />
             <ParamViewer
-              v-for="(paramId, index) in connection.synapse.paramsVisible"
+              v-for="(paramId, index) in connection.synapse.params.visibleParamIds"
               :key="index"
-              :param="connection.synapse.params[paramId] as BaseSynapseParameter"
+              :param="connection.synapse.params.get(paramId) as BaseSynapseParameter"
             />
           </v-list>
         </v-card-text>

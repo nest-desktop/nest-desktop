@@ -48,7 +48,6 @@ export class ConnectionParameters extends BaseParameters {
           param.value = paramState.value;
           if (paramState.type != null) param.type = paramState.type;
         }
-        if (param && param.visible !== false) this._paramsVisible.push(param.id);
       }
       this.addParameter(param);
     });

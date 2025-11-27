@@ -43,7 +43,7 @@ const items: {
     icon: { icon: "mdi:mdi-reload", class: "mdi-flip-h" },
     id: "paramsReset",
     onClick: () => {
-      node.value.resetParams();
+      node.value.params.reset();
       networkGraph.value?.closeContextMenu();
     },
     title: "Reset all parameters",

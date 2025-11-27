@@ -215,11 +215,11 @@ export class NESTNode extends BaseNode<INESTNodeState> {
    * @param emitChanges trigger emit changes.
    */
   hideAllParams(emitChanges: boolean = true): void {
-    this.params.hideAllParams();
+    this.params.hideAll();
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) => comp.hideAllParams());
-      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.hideAllParams());
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.hideAll());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.hideAll());
     }
 
     if (emitChanges) this.changes();
@@ -304,11 +304,11 @@ export class NESTNode extends BaseNode<INESTNodeState> {
   resetAllParams(emitChanges: boolean = true): void {
     this.logger.trace("reset parameters");
 
-    this.params.resetParams();
+    this.params.reset();
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) => comp.resetParameters());
-      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.resetParameters());
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.reset());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.reset());
     }
 
     if (emitChanges) this.changes();
@@ -350,11 +350,11 @@ export class NESTNode extends BaseNode<INESTNodeState> {
    * Sets all params to visible.
    */
   showAllParams(emitChanges: boolean = true): void {
-    this.params.showAllParams();
+    this.params.showAll();
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) => comp.showAllParams());
-      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.showAllParams());
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.showAll());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.showAll());
     }
 
     if (emitChanges) this.changes();

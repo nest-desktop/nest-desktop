@@ -11,7 +11,6 @@ import { BaseParameter, type IParamState } from "./parameter";
 
 export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
   private _params: Record<string, TParameter> = {};
-  private _paramsVisible: string[] = [];
 
   constructor() {
     super();
@@ -26,11 +25,11 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
   }
 
   get filteredParams(): TParameter[] {
-    return this.paramsVisible.map((paramId) => this.params[paramId]);
+    return this.visibleParamIds.map((paramId: string) => this.params[paramId]);
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this.paramsVisible.length > 0;
+    return this.visibleParamIds.length > 0;
   }
 
   override get hashObject(): IBaseState {
@@ -50,17 +49,16 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
     return this._params;
   }
 
-  get paramsVisible(): string[] {
-    return this._paramsVisible;
-  }
-
-  set paramsVisible(values: string[]) {
-    this.updateCodeNode(values);
-    // this.changes({ preventSimulation: true });
-  }
-
   get values(): TParameter[] {
     return Object.values(this.params);
+  }
+
+  get visibleParamIds(): string[] {
+    return this.values.filter((param: TParameter) => !param.hidden).map((param: TParameter) => param.id);
+  }
+
+  set visibleParamIds(values: string[]) {
+    this.values.forEach((param: TParameter) => (param.hidden = !values.includes(param.id)));
   }
 
   /**
@@ -75,7 +73,7 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
     param.load(paramState);
     this.params[paramState.id] = param;
 
-    if (visible) this.paramsVisible.push(paramState.id);
+    if (visible) this.visibleParamIds.push(paramState.id);
   }
 
   /**
@@ -89,7 +87,6 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
    * Empty parameters
    */
   emptyParams(): void {
-    this._paramsVisible = [];
     this._params = {};
   }
 
@@ -113,16 +110,12 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
   /**
    * Sets all params to invisible.
    */
-  hideAllParams(emitChanges: boolean = true): void {
-    this._paramsVisible = [];
+  hideAll(emitChanges: boolean = true): void {
+    this.values.forEach((param: TParameter) => param.hide());
     if (emitChanges) this.changes();
   }
 
-  init(): void {
-    this._paramsVisible = Object.keys(this.codeNode.inputs).filter(
-      (paramId) => paramId !== "_code" && !this.codeNode.inputs[paramId].hidden,
-    );
-  }
+  init(): void {}
 
   /**
    * Load parameters from state.
@@ -156,7 +149,7 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
    * Reset value in parameter components.
    * @remarks It emits node changes.
    */
-  resetParams(): void {
+  reset(): void {
     this.logger.trace("reset parameters");
 
     this.values.forEach((param: TParameter) => param.reset());
@@ -175,27 +168,8 @@ export class BaseParameters extends CodeNodeMask<Record<string, IParamState>> {
    * Sets all params to visible.
    * @param emitChanges option to emit changes.
    */
-  showAllParams(emitChanges: boolean = true): void {
-    this._paramsVisible = this.keys;
+  showAll(emitChanges: boolean = true): void {
+    this.values.forEach((param: TParameter) => param.show());
     if (emitChanges) this.changes();
-  }
-
-  // updateParamsCodeNode(): void {
-  //   this.params.forEach((param: BaseParameter) => {
-  //     if (!param.intf) return;
-  //     param.intf[param.id].setHidden(!this._paramsVisible.includes(param.id));
-  //   });
-
-  //   this.codeNode?.code?.onUpdate();
-  // }
-
-  updateCodeNode(values: string[]): void {
-    if (!this.codeNode) return;
-
-    Object.entries(this.paramInterfaces).forEach(([paramId, param]) => param.setHidden(!values.includes(paramId)));
-
-    this._paramsVisible = Object.keys(this.codeNode.inputs).filter(
-      (paramId) => this.hasParameter(paramId) && paramId !== "_code" && !this.codeNode.inputs[paramId].hidden,
-    );
   }
 }

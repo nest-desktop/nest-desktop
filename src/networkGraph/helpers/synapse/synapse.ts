@@ -161,7 +161,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    * Reset synapse.
    */
   reset(): void {
-    this.params.resetParams();
+    this.params.reset();
   }
 
   /**

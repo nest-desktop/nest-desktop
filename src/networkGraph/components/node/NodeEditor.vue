@@ -53,11 +53,13 @@
                     <template #append> n: {{ node.size.value }} </template>
                   </v-checkbox>
 
+                  <v-divider />
+
                   <template v-if="node.modelParams">
                     <v-checkbox
                       v-for="(param, index) in node.model.params.values"
                       :key="index"
-                      v-model="node.params.paramsVisible"
+                      v-model="node.params.visibleParamIds"
                       :color="node.view.color"
                       :label="param.label"
                       :value="param.id"
@@ -73,8 +75,8 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn text="show all" title="show all parameters" @click.stop="() => node.params.showAllParams()" />
-                  <v-btn text="hide all" title="show no parameters" @click.stop="() => node.params.hideAllParams()" />
+                  <v-btn text="show all" title="show all parameters" @click.stop="() => node.params.showAll()" />
+                  <v-btn text="hide all" title="show no parameters" @click.stop="() => node.params.hideAll()" />
                   <v-spacer />
                   <v-btn text="close" @click.stop="state.menu = false" />
                 </v-card-actions>
@@ -116,7 +118,7 @@
           </v-list>
 
           <v-list class="py-0">
-            <template v-for="(paramId, index) in node.params.paramsVisible">
+            <template v-for="(paramId, index) in node.params.visibleParamIds">
               <ParamListItem
                 v-if="node.params.hasSomeVisibleParams && node.params.get(paramId)"
                 :key="index"

@@ -175,7 +175,7 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
   }
 
   get model(): BaseModel {
-    if (this._model?.id !== this._modelId) this._model = this.getModel(this._modelId);
+    if (this._model?.id !== this.modelId) this._model = this.getModel(this.modelId);
     return this._model as BaseModel;
   }
 
@@ -192,6 +192,8 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
    */
   set modelId(value: string) {
     this.loadModel(value);
+    // this.params.load(this.model.params.save())
+
     this.modelChanges();
   }
 
@@ -524,7 +526,7 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
   reset(): void {
     this.logger.trace("reset");
 
-    // this.resetParams();
+    // this.params.reset();
   }
 
   /**

@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IDoc } from "@/helpers/common/database";
+import type { IDoc, IParamState } from "@/helpers/common";
 import { BaseModel, type TElementType } from "@/helpers/model/model";
 import { BaseModelDB } from "@/helpers/model/modelDB";
 import type { Class, TModelDB, TModelState } from "@/types";
@@ -12,6 +12,8 @@ import { loadJSON } from "@/utils/fetch";
 import { logger as mainLogger } from "@/utils/logger";
 import { truncate } from "@/utils/truncate";
 import { upgradeModel } from "@/helpers/upgrades";
+
+import { useAppStore } from "../appStore";
 
 interface IModelDBStoreState<TModel extends BaseModel = BaseModel> {
   initialized: boolean;
@@ -278,3 +280,22 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     };
   });
 }
+
+export const getNESTModelParameterStates = (modelId: string) => {
+  const appStore = useAppStore();
+  const model = appStore.currentWorkspace?.stores.modelDBStore.findModel(modelId);
+
+  // default model params states
+  const defaultParamStates: Record<string, IParamState> = {};
+  if (model) {
+    model.params.keys.forEach((modelParamKey: string) => {
+      defaultParamStates[modelParamKey] = {
+        id: modelParamKey,
+        hidden: true,
+        value: model.params.get(modelParamKey).value,
+      };
+    });
+  }
+
+  return defaultParamStates;
+};

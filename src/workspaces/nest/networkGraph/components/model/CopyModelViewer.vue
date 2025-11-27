@@ -27,7 +27,7 @@
         </v-list-item>
         <template v-if="model.params.hasSomeVisibleParams">
           <ParamViewer
-            v-for="(paramId, index) in model.params.paramsVisible"
+            v-for="(paramId, index) in model.params.visibleParamIds"
             :key="index"
             :param="model.params.get(paramId)"
           />

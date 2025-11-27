@@ -2,6 +2,7 @@
 
 import type { Class } from "@/types";
 // import type { AbstractCodeNode } from "@babsey/code-graph";
+
 import { SynapseParameters } from "@/networkGraph/helpers/synapse/synapseParameters";
 // import { getNESTParameterNode } from "@/codeGraph/codeNodeTypes/nest/nestParameters";
 
@@ -22,12 +23,10 @@ export class NESTSynapseParameters extends SynapseParameters {
 
   //   if (!codeNode)
   //     codeNode = getNESTParameterNode(
-  //       this.synapse.connection.network.project.code.graph,
   //       this.synapse.connection.codeNode,
   //       "syn_spec",
   //     );
   //   this.codeNode = codeNode;
-
   //   this.codeNode.mask = this;
   // }
 }

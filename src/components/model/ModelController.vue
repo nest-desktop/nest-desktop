@@ -76,11 +76,11 @@
           v-for="(neuron, index) in project.network.nodes
             .neurons"
         >
-          <v-list :key="neuron.modelId" v-if="neuron.paramsVisible.length > 0">
+          <v-list :key="neuron.modelId" v-if="neuron.params.keys.length > 0">
             <ParamListItem
               :key="index"
               :param="neuron.params[paramId]"
-              v-for="(paramId, index) in neuron.paramsVisible"
+              v-for="(paramId, index) in neuron.params.visibleParamIds"
             >
               <template #append>
                 <Menu :items="paramMenuItems(param)" size="x-small" />
@@ -233,8 +233,8 @@ const updateCode = () => {
   const neurons = project.value.network.nodes.neurons;
   neurons.forEach((neuron: TNode) => {
     const modelParams = modelStore.value.model.params;
-    neuron.paramsVisible.forEach((paramKey: string) => {
-      neuron.params[paramKey].state.value = modelParams.get(paramKey).value;
+    neuron.params.visibleParamIds.forEach((paramId: string) => {
+      neuron.params.params[paramId].state.value = modelParams.get(paramId).value;
     });
   });
   project.value.changes();

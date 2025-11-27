@@ -81,7 +81,7 @@
                     <v-checkbox
                       v-for="(param, index) in model.model?.params.values"
                       :key="index"
-                      v-model="model.paramsVisible"
+                      v-model="model.params.visibleParamIds"
                       :label="param.label"
                       :value="param.id"
                       density="compact"
@@ -96,8 +96,8 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn text="all" @click.stop="() => model.showAllParams()" />
-                  <v-btn text="none" @click.stop="() => model.hideAllParams()" />
+                  <v-btn text="all" @click.stop="() => model.params.showAll()" />
+                  <v-btn text="none" @click.stop="() => model.params.hideAll()" />
                   <v-spacer />
                   <v-btn text="close" @click.stop="state.menu = false" />
                 </v-card-actions>
@@ -115,11 +115,11 @@
         <v-expansion-panel-text>
           <v-text-field v-model="model.newModelId" class="ma-1" density="compact" hide-details label="New label" />
 
-          <v-list v-if="model.paramsVisible.length > 0" class="py-0">
+          <v-list v-if="model.params.hasSomeVisibleParams" class="py-0">
             <ParamListItem
-              v-for="(paramId, index) in model.paramsVisible"
+              v-for="(paramId, index) in model.params.visibleParamIds"
               :key="index"
-              :param="model.params[paramId]"
+              :param="model.params.get(paramId)"
               :show-menu="paramId !== 'weight_recorder'"
             />
           </v-list>

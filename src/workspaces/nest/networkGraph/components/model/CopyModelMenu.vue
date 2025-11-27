@@ -79,7 +79,7 @@ const items = [
     },
     id: "resetParams",
     onClick: () => {
-      model.value.resetParams();
+      model.value.params.reset();
     },
     append: false,
     show: () => true,

@@ -182,16 +182,6 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
     return this.id;
   }
 
-  // /**
-  //  * Add a parameter to the model specifications.
-  //  * @param paramState parameter state
-  //  */
-  // addParameter(paramState: IParamState): void {
-  //   const param = new ModelParameter(this);
-  //   param.load(paramState);
-  //   this._params[paramState.id] = param;
-  // }
-
   /**
    * Clean the model.
    */
@@ -199,30 +189,6 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
     // this.params.clean()
     // this._idx = this._modelDBStore.state.models.indexOf(this);
   }
-
-  // /**
-  //  * Empty params.
-  //  */
-  // emptyParams(): void {
-  //   this._state.paramsVisible = [];
-  //   this._params = {};
-  // }
-
-  // /**
-  //  * Get the parameter of the model.
-  //  * @param paramId ID of the searched parameter
-  //  */
-  // getParameter(paramId: string): ModelParameter | undefined {
-  //   return this._params[paramId];
-  // }
-
-  // /**
-  //  * Check if the model has the parameter specified by the ID.
-  //  * @param paramId ID of the searched parameter
-  //  */
-  // hasParameter(paramId: string): boolean {
-  //   return paramId in this._params;
-  // }
 
   changes(props?: Record<string, unknown>): void {
     console.log(props);
@@ -251,37 +217,6 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
     this.updateHash();
   }
 
-  // /**
-  //  * Create new parameter.
-  //  * @param paramId ID of the parameter
-  //  * @param value parameter value
-  //  */
-  // newParameter(paramId: string, value: number | number[]): void {
-  //   this.logger.trace("new parameter:", paramId);
-
-  //   const paramState: IParamState = {
-  //     component: "valueSlider",
-  //     id: paramId,
-  //     label: paramId,
-  //     max: 100,
-  //     min: 0,
-  //     step: 1,
-  //     value,
-  //   };
-  //   if (Array.isArray(value)) paramState.component = "arrayInput";
-
-  //   this.addParameter(paramState);
-  //   // this._params.sort();
-  // }
-
-  // /**
-  //  * Remove a parameter.
-  //  * @param paramId parameter ID
-  //  */
-  // removeParameter(paramId: string): void {
-  //   delete this._params[paramId];
-  // }
-
   /**
    * Save model to state.
    * @return model state
@@ -303,17 +238,6 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
 
     return modelState;
   }
-
-  // /**
-  //  * Update the model parameters.
-  //  * @param modelParams model parameter states
-  //  */
-  // updateParameters(modelParamStates: IParamState[]): void {
-  //   this.logger.trace("update model parameters");
-
-  //   this._params = {};
-  //   modelParamStates.forEach((modelParamState: IParamState) => this.addParameter(modelParamState));
-  // }
 
   /**
    * Update model record states.

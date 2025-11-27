@@ -28,6 +28,7 @@ export interface IParamState extends IBaseState {
   factors?: string[];
   format?: string;
   handleOnUpdate?: (param: TParameter) => void;
+  hidden?: boolean;
   id: string;
   input?: TParamComponent; // backward compatible, now component
   inputLabel?: string;
@@ -42,11 +43,11 @@ export interface IParamState extends IBaseState {
   type?: IParamType;
   unit?: string;
   value?: TParamValue;
-  visible?: boolean;
 }
 
 interface IParamRefState {
   disabled: boolean;
+  hidden: boolean;
   random: boolean;
   value: TParamValue;
 }
@@ -92,11 +93,9 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
       config: { name: "Parameter", ...configState },
     });
 
-    // this.props.value = paramState;
-    // this.load(paramState);
-
     this._state = reactive<IParamRefState>({
       random: false,
+      hidden: true,
       disabled: true,
       value: 0,
     });
@@ -147,6 +146,15 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
 
   get factors(): string[] {
     return this._factors;
+  }
+
+  get hidden(): boolean {
+    return this.intf?.hidden ?? this.state.hidden;
+  }
+
+  set hidden(value: boolean) {
+    this.state.hidden = value;
+    if (this.intf) this.intf.setHidden(value);
   }
 
   get label(): string {
@@ -326,18 +334,7 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
   // }
 
   get visible(): boolean {
-    if (!this.parent) return true;
-    return this.parent.paramsVisible.includes(this.id);
-  }
-
-  set visible(value: boolean) {
-    if (!this.parent) return;
-    const isVisible = this.parent.paramsVisible.includes(this.id);
-    if (value && !isVisible) {
-      this.parent.paramsVisible.push(this.id);
-    } else if (!value && isVisible) {
-      this.parent.paramsVisible = this.parent.paramsVisible.filter((paramId: string) => paramId !== this.id);
-    }
+    return !this.hidden;
   }
 
   /**
@@ -360,7 +357,7 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
    * Hide this parameter.
    */
   hide(): void {
-    this.intf?.setHidden(true);
+    this.hidden = true;
   }
 
   /**
@@ -410,13 +407,14 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
     const paramState: IParamState = {
       id: this._id,
       value: this.value,
+      hidden: this.hidden,
     };
 
     // Add value factors if existed.
-    if (this._factors.length > 0) paramState.factors = this._factors;
+    if (this._factors.length > 0) paramState.factors = this.factors;
 
     // Add rules for validation if existed.
-    if (this._rules.length > 0) paramState.rules = this._rules;
+    if (this._rules.length > 0) paramState.rules = this.rules;
 
     // Add param type if not constant.
     if (!this.isConstant) paramState.type = this.saveType();
@@ -446,7 +444,7 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
    * Show this parameter.
    */
   show(): void {
-    this.intf?.setHidden(false);
+    this.hidden = false;
   }
 
   /**

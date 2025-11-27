@@ -19,7 +19,7 @@
           <v-checkbox
             v-for="(param, index) in synapse.model.params.values"
             :key="index"
-            v-model="synapse.params.paramsVisible"
+            v-model="synapse.params.visibleParamIds"
             :color="synapse.connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"

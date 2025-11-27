@@ -42,22 +42,10 @@ export class NodeParameter extends BaseParameter {
    * @return parameter state
    */
   override save(): IParamState {
-    const paramState: IParamState = {
-      id: this.id,
-      value: this.value,
-    };
+    const paramState = super.save();
 
     // Add label if existed.
     if (this.label) paramState.label = this.label;
-
-    // Add value factors if existed.
-    if (this.factors.length > 0) paramState.factors = this.factors;
-
-    // Add rules for validation if existed.
-    if (this.rules.length > 0) paramState.rules = this.rules;
-
-    // Add param type if not constant.
-    if (!this.isConstant) paramState.type = this.saveType();
 
     return paramState;
   }

@@ -177,7 +177,7 @@ export class NESTModel extends BaseModel<INESTModelState> {
     if (this.states.length > 0) modelState.states = this.states.map((state: IModelRecordState) => state);
 
     // Add the compartment parameters if provided.
-    if (this.compartmentParams.paramsVisible.length > 0) modelState.compartmentParams = this.compartmentParams.save();
+    if (this.compartmentParams.hasSomeVisibleParams) modelState.compartmentParams = this.compartmentParams.save();
 
     // Add the receptors if provided.
     if (Object.keys(this.receptors).length > 0)

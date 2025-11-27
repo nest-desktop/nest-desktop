@@ -213,8 +213,8 @@ export class BaseConnection<T extends IConnectionState = IConnectionState> exten
   reset(): void {
     this.logger.trace("reset");
 
-    this._rule.reset();
-    this.params.resetParams();
+    this.rule.reset();
+    this.params.reset();
   }
 
   /**
@@ -247,15 +247,6 @@ export class BaseConnection<T extends IConnectionState = IConnectionState> exten
     // Trigger connection change.
     this.changes({ preventSimulation: true });
   }
-
-  // /**
-  //  * Sets all params to visible.
-  //  */
-  // showAllParams(): void {
-  //   Object.values(this._params).forEach(
-  //     (param: ConnectionParameter) => (param.visible = true)
-  //   );
-  // }
 
   /**
    * Save connection to state.

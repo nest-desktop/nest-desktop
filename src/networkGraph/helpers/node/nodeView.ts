@@ -178,7 +178,7 @@ export class NodeView extends BaseObj {
     this.node.connections.forEach((connection: TConnection) => {
       connection.synapse.params.weight.value =
         (this.state.synWeights === "inhibitory" ? -1 : 1) * Math.abs(connection.synapse.params.weightValue);
-      connection.synapse.params.weight.visible = true;
+      connection.synapse.params.weight.hidden = false;
     });
   }
 
@@ -227,7 +227,7 @@ export class NodeView extends BaseObj {
    * Initialize node view.
    */
   init(): void {
-    this.state.showSize = !this.node.codeNode.inputs.size.hidden;
+    this.state.showSize = !this.node.codeNode?.inputs.size.hidden;
   }
 
   /**

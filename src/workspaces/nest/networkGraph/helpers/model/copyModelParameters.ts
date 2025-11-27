@@ -27,7 +27,7 @@ export class NESTCopyModelParameters extends BaseParameters {
   }
 
   get hasSomeVisibleParams(): boolean {
-    return this.paramsVisible.length > 0 || this.hasWeightRecorderParam;
+    return this.visibleParamIds.length > 0 || this.hasWeightRecorderParam;
   }
 
   get hasWeightRecorderParam(): boolean {

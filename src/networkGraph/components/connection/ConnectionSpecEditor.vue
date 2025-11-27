@@ -27,7 +27,7 @@
           <v-checkbox
             v-for="(param, index) in connection.params.values"
             :key="index"
-            v-model="connection.params.paramsVisible"
+            v-model="connection.params.visibleParamIds"
             :color="connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"
