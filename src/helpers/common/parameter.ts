@@ -311,6 +311,7 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
     } else {
       this._state.value = value;
     }
+
     if (this.props?.value?.handleOnUpdate) this.props.value.handleOnUpdate(this);
     // this.changes();
   }
@@ -370,6 +371,7 @@ export class BaseParameter<T extends IParamState = IParamState> extends BaseObj<
     // optional param specifications
     this._rules = paramState.rules || [];
     this._factors = paramState.factors || [];
+    this._state.value = paramState.value ?? 0;
 
     if (paramState.type) {
       const type = this.config?.localStorage.types.find((t: IParamType) => t.id === paramState.type?.id);

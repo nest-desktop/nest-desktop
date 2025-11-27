@@ -449,7 +449,8 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
 
     this._modelId = modelId;
     this._model = this.getModel(modelId);
-    this.params.load(this.model.params.save());
+    const modelParamState = this.model.params.save();
+    this.params.load(modelParamState);
   }
 
   /**
@@ -462,11 +463,13 @@ export class BaseNode<T extends INodeState = INodeState> extends CodeNodeMask<T>
     this.logger.trace("model change");
     let recorderModelChanged = false;
 
-    const engine = this.network.project.code.engine;
-    engine.pause();
-    updateNESTCreateNode(this.codeNode, this.save());
-    engine.resume();
-    engine.runOnce();
+    if (this.codeNode) {
+      const engine = this.codeNode.code.engine;
+      engine.pause();
+      updateNESTCreateNode(this.codeNode, this.save());
+      engine.resume();
+      engine.runOnce();
+    }
 
     if (this.model.isRecorder) {
       this.correctRecorderConnections(); // Correct connection from/to recorder.

@@ -9,6 +9,7 @@ import { SynapseParameters } from "./synapseParameters";
 import type { BaseModel } from "@/helpers/model";
 import type { ModelParameters } from "@/helpers/model/modelParameters";
 import { updateNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
+import { updateNESTConnectNode, updateNESTConnectSynapseNode } from "@/codeGraph/codeNodeTypes/nest/nestConnect";
 
 export interface ISynapseState extends IBaseState {
   model?: string;
@@ -157,11 +158,15 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    * @remarks It emits synapse changes.
    */
   modelChanges(): void {
-    const engine = this.connection.network.project.code.engine;
-    engine.pause();
-    updateNESTCreateNode(this.codeNode, this.save());
-    engine.resume();
-    engine.runOnce();
+    console.log(this.save())
+
+    if (this.codeNode) {
+      const engine = this.codeNode.code.engine;
+      engine.pause();
+      updateNESTConnectSynapseNode(this.codeNode, this.save());
+      engine.resume();
+      engine.runOnce();
+    }
 
     this.connection.network.clean();
     this.changes({ preventSimulation: true });

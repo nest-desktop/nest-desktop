@@ -1,7 +1,6 @@
 // modelDBStore.ts
 
 import { defineModelDBStore } from "@/stores/model/defineModelDBStore";
-import { useAppStore } from "@/stores/appStore";
 import type { IParamState } from "@/helpers/common";
 
 import { NESTModel } from "../../helpers/model/model";

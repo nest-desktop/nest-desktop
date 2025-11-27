@@ -255,7 +255,8 @@ export class NESTNode extends BaseNode<INESTNodeState> {
       this._model = this.getModel(modelId);
     }
 
-    this.params.load(this.model.params.save());
+    const modelParamState = this.model.params.save();
+    this.params.load(modelParamState);
   }
 
   /**
