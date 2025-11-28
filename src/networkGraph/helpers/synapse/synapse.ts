@@ -2,14 +2,13 @@
 
 import type { Class, TConnection, TModel, TSynapseParameter } from "@/types";
 
-import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
+import type { BaseModel } from "@/helpers/model";
 import type { IBaseState, IParamState } from "@/helpers/common";
+import type { ModelParameters } from "@/helpers/model/modelParameters";
+import { CodeNodeMask } from "@/codeGraph/helpers/codeNodeMask";
+import { updateNESTConnectSynapseNode } from "@/codeGraph/codeNodeTypes/nest/nestConnect";
 
 import { SynapseParameters } from "./synapseParameters";
-import type { BaseModel } from "@/helpers/model";
-import type { ModelParameters } from "@/helpers/model/modelParameters";
-import { updateNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
-import { updateNESTConnectNode, updateNESTConnectSynapseNode } from "@/codeGraph/codeNodeTypes/nest/nestConnect";
 
 export interface ISynapseState extends IBaseState {
   model?: string;
@@ -158,7 +157,7 @@ export class BaseSynapse<T extends ISynapseState = ISynapseState> extends CodeNo
    * @remarks It emits synapse changes.
    */
   modelChanges(): void {
-    console.log(this.save())
+    console.log(this.save());
 
     if (this.codeNode) {
       const engine = this.codeNode.code.engine;

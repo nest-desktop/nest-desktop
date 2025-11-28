@@ -2,21 +2,20 @@
 
 import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 
-import type { Class, TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
-import { CodeNodeMask } from "@/codeGraph";
-
 import type { BaseModel, IModelRecordState, TElementType } from "@/helpers/model";
+import type { Class, TConnection, TModel, TNetwork, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 import type { IActivityState } from "@/helpers/activity";
 import type { ModelParameters } from "@/helpers/model/modelParameters";
+import { CodeNodeMask } from "@/codeGraph";
 import { NodeAnalogSignalActivity, NodeSpikeActivity, type NodeActivity } from "@/helpers/nodeActivity";
 import { notifyInfo, type IBaseState, type IParamState } from "@/helpers/common";
 import { onlyUnique, sortString } from "@/utils/array";
+import { updateNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
 
 import { BaseNodes } from "./nodes";
 import { NodeParameters } from "./nodeParameters";
 import { NodeRecord, type INodeRecordState } from "./nodeRecord";
 import { NodeView, type INodeViewState } from "./nodeView";
-import { loadNESTCreateNode, updateNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
 
 export interface INodeState extends IBaseState {
   activity?: IActivityState;
