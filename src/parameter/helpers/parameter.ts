@@ -7,7 +7,7 @@ import { type UnwrapRef, reactive } from "vue";
 import { truncate } from "@/utils";
 import { BaseObj, type IBaseState } from "@/core";
 
-import { BaseParameters } from "./parameters";
+import type { BaseParameters } from "./parameters";
 
 export interface IParamOptions {
   component?: TParamComponent;

@@ -3,6 +3,7 @@
 // import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import { BaseParameter, type IParamState } from "@/parameter";
+
 import type { NodeParameters } from "./nodeParameters";
 
 export class NodeParameter<TParent extends NodeParameters = NodeParameters> extends BaseParameter<TParent> {

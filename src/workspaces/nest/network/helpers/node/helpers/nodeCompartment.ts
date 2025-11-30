@@ -4,7 +4,7 @@ import { INodeRecordState, NodeParameters, NodeView } from "@/network";
 import { BaseObj, type IBaseState } from "@/core";
 import type { IParamState } from "@/parameter";
 
-import type { INESTNodeReceptorState, NESTNodeReceptor } from "../nodeReceptor";
+import type { INESTNodeReceptorState, NESTNodeReceptor } from "./nodeReceptor";
 import type { NESTModel } from "../../../../model";
 import type { NESTNode } from "../node";
 
