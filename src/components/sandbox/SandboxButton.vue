@@ -76,14 +76,8 @@ const buttons: Record<string, string>[][] = [
 ];
 
 const update = (button: Record<string, string>) => {
-  if (button.color) {
-    state.color = button.color;
-  }
-  if (button.size) {
-    state.size = button.size;
-  }
-  if (button.variant) {
-    state.variant = button.variant;
-  }
+  if (button.color) state.color = button.color;
+  if (button.size) state.size = button.size;
+  if (button.variant) state.variant = button.variant;
 };
 </script>

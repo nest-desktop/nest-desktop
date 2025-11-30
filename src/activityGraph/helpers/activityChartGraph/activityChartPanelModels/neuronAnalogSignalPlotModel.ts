@@ -1,6 +1,6 @@
 // neuronAnalogSignalPlotModel.ts
 
-import type { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
+import type { NodeActivities } from "@/activity";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";

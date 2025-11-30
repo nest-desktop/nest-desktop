@@ -1,9 +1,9 @@
 // activityGraph.ts
 
-import { BaseActivityGraph, type IBaseActivityGraphState } from "@/activityGraph/helpers/activityGraph";
+import { BaseActivityGraph, type IBaseActivityGraphState } from "@/activityGraph";
 
-import { ActivityAnimationGraph } from "./activityAnimationGraph/activityAnimationGraph";
-import type { NESTProject } from "../../helpers/project/project";
+import { ActivityAnimationGraph } from "./activityAnimationGraph";
+import type { NESTProject } from "../../project";
 
 export class NESTActivityGraph extends BaseActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;

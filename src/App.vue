@@ -5,10 +5,10 @@
 <script setup lang="ts">
 import { nextTick, onMounted, reactive } from "vue";
 
-import { confirmDialog } from "./helpers/common/confirmDialog";
-import { logger as mainLogger } from "./utils/logger";
+import { confirmDialog } from "./core";
+import { logger as mainLogger } from "./utils";
 
-import { useAppStore } from "./stores/appStore";
+import { useAppStore } from "./app";
 const appStore = useAppStore();
 
 const logger = mainLogger.getSubLogger({ name: "app component" });

@@ -1,8 +1,8 @@
 // activityGraph.ts
 
-import { openLoading } from "@/stores/appStore";
+import { openLoading } from "@/app/appStore";
 import type { TProject } from "@/types";
-import { BaseObj, type IBaseState } from "@/helpers/common/base";
+import { BaseObj, type IBaseState } from "@/core";
 
 import { ActivityChartGraph } from "./activityChartGraph/activityChartGraph";
 import { type IActivityChartPanelState } from "./activityChartGraph/activityChartPanel";

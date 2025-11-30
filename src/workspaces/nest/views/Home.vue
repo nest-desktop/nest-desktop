@@ -177,17 +177,16 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue";
 
-import BackendSettings from "@/components/BackendSettings.vue";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
-import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
-import { IModelState } from "@/stores/model/defineModelStore";
+import type { IModelState } from "@/model";
+import { BackendSettings, BackendStatusIcon } from "@/backends";
+import { StoreList } from "@/components";
+import { useAppStore } from "@/app";
 
-import NESTModuleSelect from "../components/module/NESTModuleSelect.vue";
-import nestSimulator from "../stores/backends/nestSimulatorStore";
-import { IModule, openNESTModuleDialog } from "../stores/moduleStore";
+import nestSimulator from "../backends/nestSimulator";
+import { IModule, openNESTModuleDialog } from "../module";
+import { NESTModuleSelect } from "../module/components";
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
 const state = reactive<{

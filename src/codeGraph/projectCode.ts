@@ -3,13 +3,13 @@
 import type { IEditorState } from "@baklavajs/core";
 import { PythonCode } from "@babsey/code-graph";
 
-import type { TProject } from "@/types";
+import type { BaseProject } from "@/project";
 
 export interface IProjectCodeState {
   editor: IEditorState;
 }
 
-export class ProjectCode extends PythonCode {
+export class ProjectCode<TProject extends BaseProject = BaseProject> extends PythonCode {
   private _project: TProject;
 
   constructor(project: TProject) {

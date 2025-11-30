@@ -90,29 +90,25 @@
 import { computed, nextTick, onMounted, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import BottomNav from "@/components/app/BottomNav.vue";
-import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
-import ModelBar from "@/components/model/ModelBar.vue";
-import ModelController from "@/components/model/ModelController.vue";
-import ModelNav from "@/components/model/ModelNav.vue";
-import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vue";
-import { mountModelLayout } from "@/helpers/routes";
+import { BottomNav } from "@/nav/components";
+import { CodeEditor } from "@/codeGraph/components";
+import { ModelBar, ModelController, ModelNav, ModelSelectProjectMenu } from "@/model/components";
+import { mountModelLayout } from "@/model";
 
-import NewModelDialog from "../components/dialog/NewModelDialog.vue";
+import { NewModelDialog } from "../nestml/components";
 import type { NESTModel } from "../types";
-import { openNESTModuleDialog } from "../stores/moduleStore";
+import { openNESTModuleDialog, useNESTModuleStore } from "../module";
+import { updateProject, useNESTModelStore } from "../model";
 
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore } from "@/app";
 const appStore = useAppStore();
 
-import { updateProject, useNESTModelStore } from "../stores/model/modelStore";
 const modelStore = useNESTModelStore();
 
-import { useNESTModuleStore } from "../stores/moduleStore";
 const moduleStore = useNESTModuleStore();
 
 const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);

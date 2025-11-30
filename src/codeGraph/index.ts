@@ -8,4 +8,3 @@ export * as stores from "./stores";
 export * from "./helpers";
 
 export * from "./projectCode";
-export { default as ProjectCodeGraphEditor } from "./ProjectCodeGraphEditor.vue";

@@ -69,12 +69,11 @@
 </template>
 
 <script setup lang="ts">
-import BackendSettings from "@/components/BackendSettings.vue";
-import StoreList from "@/components/StoreList.vue";
+import { BackendSettings, BackendStatusIcon } from "@/backends";
+import { StoreList } from "@/components";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 
-import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
+import { usePyNNSimulatorStore } from "../backends/pynnSimulator";
 const pynnSimulatorStore = usePyNNSimulatorStore();
 
 const refItems = [

@@ -1,21 +1,16 @@
 <template>
-  <v-data-table
-    :headers="headers as IHeader[]"
-    :items="desserts"
-    item-value="name"
-    class="elevation-1 playground-data-table"
-  />
+  <v-data-table :headers="headers" :items="desserts" item-value="name" class="elevation-1 playground-data-table" />
 </template>
 
 <script setup lang="ts">
 interface IHeader {
   title: string;
   align: "start" | "end" | "center" | undefined;
-  sortable: boolean;
+  sortable?: boolean;
   key: string;
 }
 
-const headers = [
+const headers: IHeader[] = [
   {
     title: "Dessert (100g serving)",
     align: "start",

@@ -182,18 +182,17 @@
 import { computed, nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
-import { BaseModelDB } from "@/helpers/model/modelDB";
-import { BaseProjectDB } from "@/helpers/project/projectDB";
+import { BaseModelDB } from "@/model";
+import { BaseProjectDB } from "@/project";
 
 // TODO: No imports from workspaces!
-import type { INESTCopyModelState } from "@/workspaces/nest/helpers/model/copyModel";
+import { isNESTNetworkState, type INESTCopyModelState } from "@/workspaces/nest/network";
 
-import type { INodeGroupState } from "@/networkGraph/helpers/node/nodeGroup";
-import type { INodeState } from "@/networkGraph/helpers/node/node";
+import type { INodeGroupState } from "@/network";
+import type { INodeState } from "@/network";
 import type { TModelState, TNetworkState, TProjectState } from "@/types";
-import { isNESTNetworkState } from "@/workspaces/nest/networkGraph/helpers/network/network";
 
-import { useAppStore } from "@/stores/appStore";
+import { getCurrentDBStore, useAppStore } from "@/app";
 const appStore = useAppStore();
 
 interface IImportState {
@@ -216,8 +215,8 @@ const emit = defineEmits(["closeDialog"]);
 const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
 const currentWorkspace = computed(() => appStore.state.currentWorkspace);
-const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
-const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
+const modelDBStore = getCurrentDBStore("model");
+const projectDBStore = getCurrentDBStore("project");
 
 const state = reactive<{
   githubFiles: IGithubTree[];
@@ -327,12 +326,12 @@ const addState = (dataRaw: (TModelState | TProjectState) | (TModelState | TProje
       case "model":
         modelState = props as TModelState;
         name = modelState.label || "";
-        valid = modelDBStore.value.validateModel(modelState);
+        valid = modelDBStore.validateModel(modelState);
         break;
       case "project":
         projectState = props as TProjectState;
         name = projectState.name || "";
-        valid = projectDBStore.value.validateProject(projectState);
+        valid = projectDBStore.validateProject(projectState);
 
         networkState = projectState.network as TNetworkState;
 
@@ -341,7 +340,7 @@ const addState = (dataRaw: (TModelState | TProjectState) | (TModelState | TProje
           networkState.models?.forEach((modelState: INESTCopyModelState) => {
             if (!modelState.existing) return;
 
-            if (!modelDBStore.value.hasModel(modelState.existing) && !modelIds.includes(modelState.existing)) {
+            if (!modelDBStore.hasModel(modelState.existing) && !modelIds.includes(modelState.existing)) {
               modelIds.push(modelState.existing);
             }
           });
@@ -354,7 +353,7 @@ const addState = (dataRaw: (TModelState | TProjectState) | (TModelState | TProje
           const nodeItemState = nodeState as INodeState;
           if (
             nodeItemState.model &&
-            !modelDBStore.value.hasModel(nodeItemState.model) &&
+            !modelDBStore.hasModel(nodeItemState.model) &&
             !modelIds.includes(nodeItemState.model)
           ) {
             modelIds.push(nodeItemState.model);
@@ -395,7 +394,7 @@ const getModelFromGithub = (path: string, modelId: string) => {
 
     const modelState = modelsState.find((modelState: TModelState) => modelState.id === modelId);
     if (!modelState) return;
-    const valid = modelDBStore.value.validateModel(modelState);
+    const valid = modelDBStore.validateModel(modelState);
 
     state.items.push({
       group: "model",
@@ -486,7 +485,7 @@ const importSelectedModels = () => {
   const modelsState: TModelState[] = state.selected
     .filter((data: IImportState) => data.group === "model")
     .map((data: IImportState) => data.props) as TModelState[];
-  modelDBStore.value.importModels(modelsState);
+  modelDBStore.importModels(modelsState);
 };
 
 /**
@@ -496,7 +495,7 @@ const importSelectedProjects = () => {
   const projectsState: TProjectState[] = state.selected
     .filter((data: IImportState) => data.group === "project")
     .map((data: IImportState) => data.props) as TProjectState[];
-  projectDBStore.value.importProjects(projectsState);
+  projectDBStore.importProjects(projectsState);
 };
 
 /**

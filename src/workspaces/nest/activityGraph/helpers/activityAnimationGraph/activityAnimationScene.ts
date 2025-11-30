@@ -19,8 +19,8 @@ import {
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { type UnwrapRef, reactive } from "vue";
 
-import { darkMode } from "@/helpers/common/theme";
-import { useAppStore } from "@/stores/appStore";
+import { darkMode } from "@/theme";
+import { useAppStore } from "@/app";
 
 import type { ActivityAnimationGraph } from "./activityAnimationGraph";
 

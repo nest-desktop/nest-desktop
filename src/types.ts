@@ -8,38 +8,51 @@ import type {
   BaseConnection,
   BaseConnections,
   BaseNetwork,
-  BaseNetworkGraph,
   BaseNode,
   BaseNodes,
   BaseSynapse,
   BaseSynapseParameter,
   ConnectionParameter,
   IConnectionState,
-  INetworkProjectState,
   INetworkState,
   INodeState,
   ISynapseState,
-  NetworkProject,
-  NodeRecord,
   NodeGroup,
   NodeParameter,
-} from "./networkGraph";
+  NodeRecord,
+} from "./network";
 
-import type { ActivityChartPanelModelParameter } from "./activityGraph/activityChartPanelModelParameter";
-import type { BaseActivityGraph } from "./activityGraph/helpers/activityGraph";
+import { BaseNetworkGraph } from "./networkGraph";
 
-import type { BaseModel, IModelState } from "./helpers/model/model";
-import type { BaseModelDB } from "./helpers/model/modelDB";
-import type { BaseParameter } from "./helpers/common/parameter";
-import type { BaseProject, IBaseProjectState } from "./helpers/project/project";
-import type { BaseProjectDB } from "./helpers/project/projectDB";
-import type { BaseSimulation, ISimulationState } from "./helpers/simulation/simulation";
-import type { ModelParameter } from "./helpers/model/modelParameter";
+import type { ActivityChartPanelModelParameter, BaseActivityGraph } from "./activityGraph";
+
+import type { BaseModel, IModelState } from "./model";
+import type { BaseModelDB } from "./model";
+import type { BaseParameter } from "./parameter";
+import type { BaseProject, INetworkProjectState, IProjectState, NetworkProject } from "./project";
+import type { BaseProjectDB } from "./project";
+import type { BaseSimulation, ISimulationState } from "./simulation";
+import type { ModelParameter } from "./model";
 
 import type * as workspaces from "./workspaces/types";
 
+// Pinia
+export type Class<T> = new (...props: any) => T;
+export type TStore = Store<string, any>;
+
+// D3
+export type TArc = Arc<any, any>;
+export type TDragBehavior = DragBehavior<any, any, any>;
+export type TSelection = Selection<any, any, any, any>;
+export type TTransition = Transition<any, any, null, undefined>;
+export type TZoomBehavior = ZoomBehavior<any, any>;
+
+export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
+
+export type TValue = any;
+
+//
 export type TActivityGraph = BaseActivityGraph | workspaces.TActivityGraph;
-// export type TCode = BaseCode | TSimulationCode;
 export type TConnection = BaseConnection | workspaces.TConnection;
 export type TConnectionState = IConnectionState | workspaces.TConnectionState;
 export type TConnections = BaseConnections | workspaces.TConnections;
@@ -67,25 +80,9 @@ export type TParameter =
   | TSynapseParameter;
 export type TProject = BaseProject | TNetworkProject;
 export type TProjectDB = BaseProjectDB | workspaces.TProjectDB;
-export type TProjectState = IBaseProjectState | INetworkProjectState | workspaces.TProjectState;
+export type TProjectState = IProjectState | INetworkProjectState | workspaces.TProjectState;
 export type TSimulation = BaseSimulation | workspaces.TSimulation;
-// export type TSimulationCode = workspaces.TSimulationCode;
 export type TSimulationState = ISimulationState | workspaces.TSimulationState;
 export type TSynapse = BaseSynapse | workspaces.TSynapse;
 export type TSynapseParameter = BaseSynapseParameter | workspaces.TSynapseParameter;
 export type TSynapseState = ISynapseState | workspaces.TSynapseState;
-
-// Pinia
-export type Class<T> = new (...props: any) => T;
-export type TStore = Store<string, any>;
-
-// D3
-export type TArc = Arc<any, any>;
-export type TDragBehavior = DragBehavior<any, any, any>;
-export type TSelection = Selection<any, any, any, any>;
-export type TTransition = Transition<any, any, null, undefined>;
-export type TZoomBehavior = ZoomBehavior<any, any>;
-
-export type TMesh = Mesh<any, MeshBasicMaterial | MeshLambertMaterial, any>;
-
-export type TValue = any;

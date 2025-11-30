@@ -11,10 +11,8 @@
 </template>
 
 <script setup lang="ts">
-import ModelBar from "@/components/model/ModelBar.vue";
-import ModelController from "@/components/model/ModelController.vue";
-import ModelNav from "@/components/model/ModelNav.vue";
+import { ModelBar, ModelController, ModelNav } from "@/model/components";
 
-import { usePyNNModelStore } from "../stores/model/modelStore";
+import { usePyNNModelStore } from "../model";
 const modelStore = usePyNNModelStore();
 </script>

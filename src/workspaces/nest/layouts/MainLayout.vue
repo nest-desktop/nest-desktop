@@ -8,20 +8,18 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-
-import AppNavigation from "@/components/app/AppNavigation.vue";
-import type { TStore } from "@/types";
-import { getParamFromURL } from "@/utils/paramQuery";
-
-import nestSimulator from "../stores/backends/nestSimulatorStore";
-
 import { useRoute } from "vue-router";
+
+import type { TStore } from "@/types";
+import { AppNavigation } from "@/nav/components";
+import { getParamFromURL } from "@/utils";
+import { useAppStore } from "@/app";
+
+import nestSimulator from "../backends/nestSimulator";
+import { useNESTModuleStore } from "../module";
+
 const route = useRoute();
-
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
-
-import { useNESTModuleStore } from "../stores/moduleStore";
 const nestModuleStore = useNESTModuleStore();
 
 const navItems = [

@@ -1,7 +1,7 @@
 // analogSignalHistogramModel.ts
 
-import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
-import { max, min } from "@/utils/array";
+import type { NodeRecord } from "@/network";
+import { max, min } from "@/utils";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { IActivityChartPanelModelState } from "../activityChartPanelModel";

@@ -1,7 +1,7 @@
 <template>
-  <ProjectNav color="nest-project" />
+  <template v-if="projectStore.state.project && projectStore.props.workspace === 'nest'">
+    <ProjectNav color="nest-project" />
 
-  <template v-if="projectStore.state.projectId && projectStore.props.workspace === 'nest'">
     <ProjectBar color="nest-project">
       <template #graphEditor>
         <v-tab
@@ -178,18 +178,18 @@
 
       <template #nodes>
         <div v-for="(node, index) in project.network.nodes.all" :key="index">
-          <NodeEditor v-if="node.isNode" :node="node as NESTNode">
+          <NodeEditor v-if="node.isNode" :node>
             <template #nodeMenuContent>
-              <NESTNodeMenuList :node="node as NESTNode" />
+              <NESTNodeMenuList :node />
             </template>
 
             <template #nodeModelSelect="{ selectState }">
-              <NodeModelSelect :element-types :node="node as NESTNode" @open-menu="() => (selectState.menu = true)" />
+              <NodeModelSelect :element-types :node @open-menu="() => (selectState.menu = true)" />
             </template>
 
             <template #popItem>
               <v-list-item class="param pl-0 pr-1">
-                <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial as NESTNodeSpatial" />
+                <NodePosition v-if="node.isSpatial" :node-spatial="node.spatial" />
 
                 <ValueSlider
                   v-else
@@ -202,7 +202,7 @@
                 />
 
                 <template #append>
-                  <Menu :items="getPopItems(node as NESTNode)" size="x-small" />
+                  <Menu :items="getPopItems(node)" size="x-small" />
                 </template>
               </v-list-item>
             </template>
@@ -223,13 +223,13 @@
                 </template>
 
                 <template #synapseSpecEditor>
-                  <SynapseSpecEditor :synapse="connection.synapse as NESTSynapse" />
+                  <SynapseSpecEditor :synapse="connection.synapse" />
                 </template>
               </ConnectionEditor>
             </template>
           </NodeEditor>
 
-          <NodeGroupEditor v-if="node.isGroup" :node-group="node as TNodeGroup" />
+          <NodeGroupEditor v-if="node.isGroup" :node-group="node" />
         </div>
       </template>
 
@@ -254,42 +254,31 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-import ActivityChartController from "@/activityGraph/components/activityChart/ActivityChartController.vue";
-import CodeEditor from "@/codeGraph/components/CodeEditor.vue";
-import BottomNav from "@/components/app/BottomNav.vue";
-import ConnectionEditor from "@/networkGraph/components/connection/ConnectionEditor.vue";
-import Menu from "@/components/common/Menu.vue";
-import NodeEditor from "@/networkGraph/components/node/NodeEditor.vue";
-import NodeGroupEditor from "@/networkGraph/components/node/NodeGroupEditor.vue";
-import NodeModelSelect from "@/networkGraph/components/node/NodeModelSelect.vue";
-import ProjectBar from "@/components/project/ProjectBar.vue";
-import ProjectController from "@/components/project/ProjectController.vue";
-import ProjectNav from "@/components/project/ProjectNav.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
-import type { TNodeGroup } from "@/types";
-import { mountProjectLayout } from "@/helpers/routes";
+import { ActivityChartController } from "@/activityGraph/components";
+import { BottomNav } from "@/nav/components";
+import { CodeEditor } from "@/codeGraph/components";
+import { ConnectionEditor, NodeEditor, NodeGroupEditor, NodeModelSelect } from "@/network/components";
+import { Menu, ValueSlider } from "@/components";
+import { ProjectBar, ProjectController, ProjectNav } from "@/project/components";
+import { mountProjectLayout } from "@/project";
+import { useAppStore } from "@/app";
 
-import ActivityAnimationController from "../activityGraph/components/activityAnimation/ActivityAnimationController.vue";
-import ActivityAnimationControllerLayer from "../activityGraph/components/activityAnimation/ActivityAnimationControllerLayer.vue";
-import CopyModelEditor from "../networkGraph/components/model/CopyModelEditor.vue";
-import NESTNodeMenuList from "../networkGraph/components/node/NESTNodeMenuList.vue";
-import NodePosition from "../networkGraph/components/node/NodePosition.vue";
-import SimulationKernelEditor from "../components/simulation/SimulationKernelEditor.vue";
-import SynapseSpecEditor from "../networkGraph/components/synapse/SynapseSpecEditor.vue";
-import type { NESTNode, NESTNodeSpatial, NESTProject, NESTSynapse } from "../types";
-import { openNESTModuleDialog } from "../stores/moduleStore";
+import type { NESTNode } from "../types";
+import { ActivityAnimationController, ActivityAnimationControllerLayer } from "../activityGraph/components";
+import { CopyModelEditor, NESTNodeMenuList, NodePosition, SynapseSpecEditor } from "../network/components";
+import { SimulationKernelEditor } from "../simulation/components";
+import { openNESTModuleDialog } from "../module";
 
 import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { doCopyModel, useNESTProjectStore } from "../stores/project/projectStore";
+import { doCopyModel, useNESTProjectStore } from "../project/stores/projectStore";
 const projectStore = useNESTProjectStore();
 
-const project = computed(() => projectStore.state.project as NESTProject);
+const project = computed(() => projectStore.state.project);
 const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
 
 const model = ref("");

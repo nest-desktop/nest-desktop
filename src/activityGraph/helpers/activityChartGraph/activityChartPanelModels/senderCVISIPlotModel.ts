@@ -1,6 +1,6 @@
 // senderCVISIPlotModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 import type { TParameter } from "@/types";
 
 import type { ActivityChartPanel } from "../activityChartPanel";

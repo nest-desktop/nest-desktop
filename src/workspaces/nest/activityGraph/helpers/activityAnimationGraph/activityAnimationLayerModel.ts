@@ -2,10 +2,10 @@
 
 import { Group, Object3D, type Object3DEventMap } from "three";
 
-import { BaseObj } from "@/helpers/common/base";
+import type { TMesh } from "@/types";
+import { BaseObj } from "@/core";
 
 import type { ActivityAnimationLayer, IActivityAnimationLayerFrame } from "./activityAnimationLayer";
-import type { TMesh } from "@/types";
 
 export class ActivityAnimationLayerModel extends BaseObj {
   private _graphGroup: Group<Object3DEventMap>;

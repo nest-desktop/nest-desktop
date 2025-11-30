@@ -1,13 +1,13 @@
 // FICurvePlotModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { line } from "../graphObjects/line";
+import { line } from "../graphObjects";
 
-export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
+export class FICurvePlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
     super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";

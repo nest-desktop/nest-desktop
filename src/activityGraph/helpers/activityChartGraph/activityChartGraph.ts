@@ -5,10 +5,10 @@ import moment from "moment";
 import { type UnwrapRef, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
 import type { TProject } from "@/types";
-import { BaseObj, type IBaseState } from "@/helpers/common/base";
-import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
+import { BaseObj, type IBaseState } from "@/core";
+import { DownloadPlotDialog } from "@/activityGraph/components";
+import { currentBackgroundColor, currentColor } from "@/theme";
 
 import { ActivityChartPanel, type IActivityChartPanelState } from "./activityChartPanel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
@@ -27,7 +27,7 @@ import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimes
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
 
-export interface IActivityChartPanelModelState extends IBaseState {
+interface IActivityChartPanelModelState extends IBaseState {
   activityType: string;
   component: object;
   id: string;

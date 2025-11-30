@@ -1,24 +1,10 @@
 // activityChartPanelModelParameter.ts
 
-import { BaseParameter, type IParamState } from "@/helpers/common/parameter";
+import { BaseParameter, type IParamState } from "@/parameter";
 
-import { ActivityChartPanelModel } from "./activityChartPanelModel";
-
-export class ActivityChartPanelModelParameter extends BaseParameter {
-  public _activityChartPanelModel: ActivityChartPanelModel;
-
-  constructor(activityChartPanelModel: ActivityChartPanelModel) {
-    super();
-
-    this._activityChartPanelModel = activityChartPanelModel;
-  }
-
-  get activityChartPanelModel(): ActivityChartPanelModel {
-    return this._activityChartPanelModel;
-  }
-
-  override get parent(): ActivityChartPanelModel {
-    return this.activityChartPanelModel;
+export class ActivityChartPanelModelParameter<TParent = unknown> extends BaseParameter<TParent> {
+  get activityChartPanelModel(): TParent {
+    return this.parent;
   }
 
   /**

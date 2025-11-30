@@ -3,10 +3,9 @@
 import { GridHelper, Group, type Object3DEventMap, Vector3 } from "three";
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IEventState } from "@/helpers/activity/activity";
-import { NodeActivity } from "@/helpers/nodeActivity";
-import { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
-import { range } from "@/utils/array";
+import { type IEventState, NodeActivity } from "@/activity";
+import { NodeRecord } from "@/network";
+import { range } from "@/utils";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";

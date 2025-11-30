@@ -47,10 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+import { AppFooter } from "@/app/components";
 
-import AppFooter from "@/components/app/AppFooter.vue";
+import { useAppStore } from "@/app";
+const appStore = useAppStore();
 </script>
 
 <!-- <style lang="scss">

@@ -1,8 +1,7 @@
 // analogSignalPanelModel.ts
 
-import type { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
-import type { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
-import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
+import type { NodeActivity, NodeAnalogSignalActivity } from "@/activity";
+import type { NodeRecord } from "@/network";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import { ActivityChartPanelModel, type IActivityChartPanelModelState } from "../activityChartPanelModel";

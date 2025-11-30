@@ -69,17 +69,15 @@
 import { computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import ProjectBar from "@/components/project/ProjectBar.vue";
-import ProjectController from "@/components/project/ProjectController.vue";
-import ProjectNav from "@/components/project/ProjectNav.vue";
-import { mountProjectLayout } from "@/helpers/routes";
+import { ProjectBar, ProjectController, ProjectNav } from "@/project/components";
+import { mountProjectLayout } from "@/project";
 
 import type { PyNNProject } from "../types";
 
 const router = useRouter();
 const route = useRoute();
 
-import { usePyNNProjectStore } from "../stores/project/projectStore";
+import { usePyNNProjectStore } from "../project/stores/projectStore";
 import { onBeforeUnmount } from "vue";
 const projectStore = usePyNNProjectStore();
 

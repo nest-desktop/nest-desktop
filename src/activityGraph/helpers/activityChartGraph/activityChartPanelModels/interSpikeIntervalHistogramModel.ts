@@ -1,12 +1,12 @@
 // interSpikeIntervalHistogramModel.ts
 
-import { max } from "@/utils/array";
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
+import { max } from "@/utils";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { histogram } from "../graphObjects/histogram";
+import { histogram } from "../graphObjects";
 
 export class InterSpikeIntervalHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {

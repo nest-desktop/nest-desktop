@@ -51,7 +51,7 @@ import { initCodeGraph, useCodeGraphStore } from "../stores/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
 const viewModel = computed(() => codeGraphStore.viewModel);
 
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore } from "@/app";
 const appStore = useAppStore();
 
 const currentWorkspace = computed(() => appStore.state.currentWorkspace);

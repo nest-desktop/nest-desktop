@@ -9,13 +9,13 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import AppNavigation from "@/components/app/AppNavigation.vue";
+import { AppNavigation } from "@/nav/components";
+import { useAppStore } from "@/app";
 import { TStore } from "@/types";
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
+import { usePyNNSimulatorStore } from "../backends/pynnSimulator";
 const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
 
 const navItems = [

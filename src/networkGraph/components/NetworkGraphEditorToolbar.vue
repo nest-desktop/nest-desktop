@@ -90,7 +90,7 @@
 
       <v-spacer />
 
-      <v-chip v-if="graph && appStore.state.devMode" size="small" variant="text" @click="graph.updateHash()">
+      <v-chip v-if="graph && isDevMode()" size="small" variant="text" @click="graph.updateHash()">
         {{ graph.hash }}
       </v-chip>
 
@@ -140,20 +140,14 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 
-import ContextMenu from "@/components/common/ContextMenu.vue";
 import type { TConnection, TNode, TNodeGroup } from "@/types";
-import { confirmDialog } from "@/helpers/common/confirmDialog";
+import { ContextMenu } from "@/components";
+import { confirmDialog } from "@/core";
+import { ConnectionMenuList, NodeAvatar, NodeGroupMenuList, NodeMenuList } from "@/network/components";
+// import { downloadSVGImage } from "@/utils";
+import { isDevMode } from "@/app";
 
-import ConnectionMenuList from "./connection/ConnectionMenuList.vue";
-import NodeAvatar from "./node/avatar/NodeAvatar.vue";
-import NodeGroupMenuList from "./node/NodeGroupMenuList.vue";
-import NodeMenuList from "./node/NodeMenuList.vue";
-// import { downloadSVGImage } from "@/utils/download";
-
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
-
-import { useNetworkGraph } from "@/networkGraph/useNetworkGraph";
+import { useNetworkGraph } from "@/networkGraph";
 const graph = useNetworkGraph();
 
 const state = reactive<{

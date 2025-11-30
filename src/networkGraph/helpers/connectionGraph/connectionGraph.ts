@@ -3,14 +3,13 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import type { TConnection, TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import type { TConnection, TDragBehavior, TNode, TNodeGroup, TSelection } from "@/types";
+import { BaseObj } from "@/core";
 
-import { BaseNetworkGraph } from "../networkGraph/networkGraph";
-import type { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
+import { BaseNetworkGraph, type INetworkGraphWorkspaceState } from "../networkGraph";
 import { drawPathNode } from "./connectionGraphPath";
 
-export class ConnectionGraph extends BaseObj {
+export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph> extends BaseObj {
   public _networkGraph: TNetworkGraph;
 
   constructor(networkGraph: TNetworkGraph) {

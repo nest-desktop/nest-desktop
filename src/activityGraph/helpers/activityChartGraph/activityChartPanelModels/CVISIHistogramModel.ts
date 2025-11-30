@@ -1,11 +1,11 @@
 // CVISIHistogramModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 
 import { ActivityChartPanel } from "../activityChartPanel";
 import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { histogram } from "../graphObjects/histogram";
+import { histogram } from "../graphObjects";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {

@@ -8,11 +8,8 @@ import type { App } from "vue";
 import { EditorView } from "codemirror";
 import { Vuetify3Dialog } from "vuetify3-dialog";
 
-import router from "@/router";
-import { registerWorkspaces } from "@/workspaces";
-import pinia from "@/stores";
-
 // Plugins
+import pinia from "./pinia";
 import codeMirror, { basicSetup } from "./codemirror";
 import configs from "./configs";
 import { vuetify } from "./vuetify";
@@ -22,6 +19,8 @@ import "splitpanes/dist/splitpanes.css";
 // import "@baklavajs/themes/dist/classic.css";
 import "@baklavajs/themes/dist/syrup-dark.css";
 import "@babsey/code-graph/style.css";
+import { registerWorkspaces } from "@/workspaces/install";
+import router from "@/router";
 
 export function registerPlugins(app: App) {
   // Load fonts

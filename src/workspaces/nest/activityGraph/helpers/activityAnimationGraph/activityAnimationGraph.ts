@@ -3,9 +3,9 @@
 import { Group, type Object3DEventMap } from "three";
 import { type UnwrapRef, reactive } from "vue";
 
-import type { NodeActivity } from "@/helpers/nodeActivity";
+import type { NodeActivity } from "@/activity";
 
-import type { NESTProject } from "../../../helpers/project/project";
+import type { NESTProject } from "../../../project";
 import { ActivityAnimationLayer } from "./activityAnimationLayer";
 import { ActivityAnimationScene } from "./activityAnimationScene";
 

@@ -1,6 +1,6 @@
 // bar.ts
 
-import { currentBackgroundColor } from "@/helpers/common/theme";
+import { currentBackgroundColor } from "@/theme";
 
 import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 

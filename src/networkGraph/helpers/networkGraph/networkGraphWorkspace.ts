@@ -4,7 +4,7 @@ import { type UnwrapRef, nextTick, reactive } from "vue";
 import { max, min, pointer, select, zoomIdentity } from "d3";
 
 import type { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
 
 import { NetworkGraphDragline } from "./networkGraphDragline";
 import { NetworkGraphGrid } from "./networkGraphGrid";

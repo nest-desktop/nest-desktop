@@ -41,15 +41,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive } from "vue";
+import { onMounted, reactive } from "vue";
 
-import type { IModelState } from "@/helpers/model/model";
-import type { INetworkProjectState } from "@/helpers/project/networkProject";
+import type { IModelState } from "@/model";
+import type { INetworkProjectState } from "@/project";
 import type { TModel, TProject } from "@/types";
-import { download } from "@/utils/download";
+import { download } from "@/utils";
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+import { getCurrentDBStore } from "@/app";
 
 interface IExportState {
   group?: string;
@@ -70,8 +69,8 @@ const props = defineProps({
   },
 });
 
-const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
-const projectDBStore = computed(() => appStore.currentWorkspace.stores.projectDBStore);
+const modelDBStore = getCurrentDBStore("model");
+const projectDBStore = getCurrentDBStore("project");
 
 const state = reactive<{ items: IExportState[]; selected: IExportState[] }>({
   items: [],
@@ -102,7 +101,7 @@ const update = (): void => {
   state.items = [];
 
   if (props.model) {
-    modelDBStore.value.state.models.forEach((model: TModel) => {
+    modelDBStore.state.models.forEach((model: TModel) => {
       const item: IExportState = {
         name: model.state.label,
         props: model.save(),
@@ -117,7 +116,7 @@ const update = (): void => {
   }
 
   if (props.project) {
-    projectDBStore.value.state.projects.forEach((project: TProject | INetworkProjectState) => {
+    projectDBStore.state.projects.forEach((project: TProject | INetworkProjectState) => {
       const item: IExportState = {
         name: project.name as string,
         props: project.doc ? project.save() : project,
@@ -132,7 +131,5 @@ const update = (): void => {
   }
 };
 
-onMounted(() => {
-  update();
-});
+onMounted(() => update());
 </script>

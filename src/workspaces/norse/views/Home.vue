@@ -56,13 +56,12 @@
 </template>
 
 <script setup lang="ts">
-import BackendSettings from "@/components/BackendSettings.vue";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
+import { BackendSettings, BackendStatusIcon } from "@/backends";
 import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 import type { TStore } from "@/types";
 
-import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../backends/norseSimulator";
 const norseSimulatorStore: TStore = useNorseSimulatorStore();
 
 const refItems = [

@@ -2,15 +2,13 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IParamState, TParamValue } from "@/helpers/common/parameter";
-import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
+import type { IParamState, TParamValue } from "@/parameter";
+import type { NodeRecord } from "@/network";
 import type { TNode } from "@/types";
-import { BaseObj, type IBaseState } from "@/helpers/common/base";
-import { currentBackgroundColor } from "@/helpers/common/theme";
+import { BaseObj, type IBaseState } from "@/core";
+import { currentBackgroundColor } from "@/theme";
 
-import type { Activity } from "@/helpers/activity/activity";
-import type { NodeActivity } from "@/helpers/nodeActivity/nodeActivity";
-import type { NodeAnalogSignalActivity } from "@/helpers/nodeActivity/nodeAnalogSignalActivity";
+import type { Activity, NodeActivity, NodeAnalogSignalActivity } from "@/activity";
 
 import type { ActivityChartPanel } from "./activityChartPanel";
 import { ActivityChartPanelModelParameter } from "./activityChartPanelModelParameter";

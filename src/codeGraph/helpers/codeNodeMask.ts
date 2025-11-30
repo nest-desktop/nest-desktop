@@ -2,7 +2,7 @@
 
 import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 
-import { BaseObj, type IBaseObjProps } from "@/helpers/common";
+import { BaseObj, type IBaseObjProps } from "@/core";
 
 export abstract class CodeNodeMask<T = unknown | null> extends BaseObj<T> {
   public codeNode: AbstractCodeNode | undefined;

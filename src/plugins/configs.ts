@@ -1,4 +1,4 @@
-import { Config } from "@/helpers/common/config";
+import { Config } from "@/core/config";
 
 const _configNames = [
   "Activity",

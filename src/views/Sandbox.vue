@@ -19,19 +19,20 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
-import SandboxAlert from "@/components/sandbox/SandboxAlert.vue";
-import SandboxButton from "@/components/sandbox/SandboxButton.vue";
-import SandboxButtonToggle from "@/components/sandbox/SandboxButtonToggle.vue";
-import SandboxCard from "@/components/sandbox/SandboxCard.vue";
-import SandboxColorPicker from "@/components/sandbox/SandboxColorPicker.vue";
-import SandboxDataTable from "@/components/sandbox/SandboxDataTable.vue";
-import SandboxImportJSON from "@/components/sandbox/SandboxImportJSON.vue";
-import SandboxItemGroup from "@/components/sandbox/SandboxItemGroup.vue";
-import SandboxTabs from "@/components/sandbox/SandboxTabs.vue";
+import {
+  SandboxAlert,
+  SandboxButton,
+  SandboxButtonToggle,
+  SandboxCard,
+  SandboxColorPicker,
+  // SandboxConfig,
+  SandboxDataTable,
+  SandboxImportJSON,
+  SandboxItemGroup,
+  SandboxTabs,
+} from "@/components/sandbox";
 
-const props = defineProps({
-  component: { type: String, default: "alert" },
-});
+const props = defineProps({ component: { type: String, default: "alert" } });
 
 const currentComponent = ref("");
 

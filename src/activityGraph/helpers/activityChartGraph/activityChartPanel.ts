@@ -2,8 +2,8 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-import { sum } from "@/utils/array";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
+import { sum } from "@/utils";
 
 import type { ActivityChartGraph } from "./activityChartGraph";
 import type { ActivityChartPanelModel, IActivityChartPanelModelState } from "./activityChartPanelModel";

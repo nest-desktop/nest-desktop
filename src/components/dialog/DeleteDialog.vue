@@ -41,12 +41,9 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
-import type { IModelState } from "@/helpers/model/model";
-import type { INetworkProjectState } from "@/helpers/project/networkProject";
+import type { IModelState } from "@/model";
+import type { INetworkProjectState } from "@/project";
 import type { TModel, TProject, TStore } from "@/types";
-
-// import { useAppStore } from "@/stores/appStore";
-// const appStore = useAppStore();
 
 interface IDeleteState {
   group: string;

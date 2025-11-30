@@ -93,7 +93,7 @@ import ExportDialog from "./dialog/ExportDialog.vue";
 import ImportDialog from "./dialog/ImportDialog.vue";
 import { truncate } from "@/utils/truncate";
 
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore } from "@/app";
 const appStore = useAppStore();
 
 const stores = computed(() => appStore.currentWorkspace.stores);

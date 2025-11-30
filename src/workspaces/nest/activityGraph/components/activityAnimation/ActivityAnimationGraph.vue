@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-import type { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
+import type { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph";
 
 const props = defineProps<{ graph: ActivityAnimationGraph }>();
 const activityAnimationGraph = ref<HTMLDivElement>();

@@ -1,7 +1,6 @@
 // spikeTimesHistogramModel.ts
 
-import type { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { NodeSpikeActivity, SpikeActivity } from "@/activity";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { IActivityChartPanelModelState } from "../activityChartPanelModel";

@@ -1,9 +1,8 @@
 // spikeCountPlotModel.ts
 
-import type { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { NodeSpikeActivity, SpikeActivity } from "@/activity";
 import type { TParameter } from "@/types";
-import { deviation, max, mean, min } from "@/utils/array";
+import { deviation, max, mean, min } from "@/utils";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";

@@ -4,10 +4,10 @@ import { arc } from "d3";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { TArc, TModel, TNetwork, TSelection } from "@/types";
-import type { TElementType } from "@/helpers/model/model";
-import { BaseObj } from "@/helpers/common/base";
-import { darkMode } from "@/helpers/common/theme";
-import { useAppStore } from "@/stores/appStore";
+import type { TElementType } from "@/model";
+import { BaseObj } from "@/core";
+import { darkMode } from "@/theme";
+import { getCurrentStore } from "@/app";
 
 import type { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
@@ -284,8 +284,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   selectModel(modelId: string, elementType: TElementType): void {
     this.close();
 
-    const appStore = useAppStore();
-    const modelStore = appStore.currentWorkspace.stores.modelStore;
+    const modelStore = getCurrentStore("model");
 
     if (!this.network) return;
     modelStore.updateRecentAddedModels(modelId, elementType);
@@ -333,9 +332,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     const modelsPanel = panel.append("g").attr("class", "models").style("display", "none");
 
     if (this.network) {
-      const appStore = useAppStore();
-      const modelStore = appStore.currentWorkspace.stores.modelStore;
-
+      const modelStore = getCurrentStore("model");
       modelStore.state.recentAddedModels[elementType].forEach((modelId: string, modelIdx: number) => {
         const model = modelStore.getModel(modelId);
         if (model) this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model);

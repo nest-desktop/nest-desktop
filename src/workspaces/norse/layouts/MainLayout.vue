@@ -9,13 +9,13 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import AppNavigation from "@/components/app/AppNavigation.vue";
-import { TStore } from "@/types";
+import type { TStore } from "@/types";
+import { AppNavigation } from "@/nav/components";
+import { useAppStore } from "@/app";
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../backends/norseSimulator";
 const norseSimulatorStore: TStore = useNorseSimulatorStore();
 
 const navItems = [

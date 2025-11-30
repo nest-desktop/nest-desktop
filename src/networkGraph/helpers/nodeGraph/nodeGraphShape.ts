@@ -3,7 +3,7 @@
 import { select } from "d3";
 
 import type { TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;

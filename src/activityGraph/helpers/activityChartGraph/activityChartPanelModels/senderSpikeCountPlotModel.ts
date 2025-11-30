@@ -1,13 +1,13 @@
 // senderSpikeCountPlotModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 import type { TParameter } from "@/types";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
 import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { plot } from "../graphObjects/plot";
+import { plot } from "../graphObjects";
 
 export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
   constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {

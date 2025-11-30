@@ -3,15 +3,14 @@
 import { select } from "d3";
 import { type Ref, type UnwrapRef, nextTick, reactive, watch } from "vue";
 
-import type { TConnection, TNetwork, TNode, TNodeGroup, TSelection } from "@/types";
-import { BaseNode } from "@/networkGraph/helpers/node/node";
-import { BaseObj, type IBaseState } from "@/helpers/common";
-import { debounce } from "@/utils/events";
+import type { TConnection, TNode, TNodeGroup, TSelection } from "@/types";
+import { BaseNode, type BaseNetwork } from "@/network";
+import { BaseObj, type IBaseState } from "@/core";
+import { debounce } from "@/utils";
 
-import { ConnectionGraph } from "../connectionGraph/connectionGraph";
+import { ConnectionGraph } from "../connectionGraph";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { NodeGraph } from "../nodeGraph/nodeGraph";
-import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
+import { NodeGraph, NodeGroupGraph } from "../nodeGraph";
 
 interface IBaseNetworkGraphState {
   contextMenu: {
@@ -24,7 +23,7 @@ interface IBaseNetworkGraphState {
   hash: string;
 }
 
-export class BaseNetworkGraph extends BaseObj {
+export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extends BaseObj {
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: TSelection;

@@ -3,8 +3,8 @@
 import { AxiosHeaders, AxiosPromise } from "axios";
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IAxiosErrorData, IAxiosResponseData } from "@/stores/defineBackendStore";
-import { BaseObj } from "@/helpers/common";
+import type { IAxiosErrorData, IAxiosResponseData } from "@/backends";
+import { BaseObj } from "@/core";
 
 export interface IResponseState {
   data: object | string;

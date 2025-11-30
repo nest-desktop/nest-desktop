@@ -26,14 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import AppBar from "@/components/app/AppBar.vue";
-import AppRequestLogs from "@/components/app/AppRequestLogs.vue";
-
 import { useTheme } from "vuetify";
+
+import { AppBar, AppRequestLogs } from "@/app/components";
+import { useAppStore } from "@/app";
+
 const theme = useTheme();
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
-
 appStore.init(theme);
 </script>

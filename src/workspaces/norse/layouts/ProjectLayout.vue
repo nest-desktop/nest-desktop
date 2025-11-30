@@ -69,24 +69,21 @@
 import { computed, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import ProjectBar from "@/components/project/ProjectBar.vue";
-import ProjectController from "@/components/project/ProjectController.vue";
-import ProjectNav from "@/components/project/ProjectNav.vue";
-import { mountProjectLayout } from "@/helpers/routes";
+import { ProjectBar, ProjectController, ProjectNav } from "@/project/components";
+import { mountProjectLayout } from "@/project";
 
-import type { NorseProject } from "../types";
+import type { NorseProject } from "../project";
 
 const router = useRouter();
 const route = useRoute();
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+import { getCurrentViewStore } from "@/app/appStore";
 
-import { useNorseProjectStore } from "../stores/project/projectStore";
+import { useNorseProjectStore } from "../project/stores/projectStore";
 const projectStore = useNorseProjectStore();
 
 const project = computed(() => projectStore.state.project as NorseProject);
-const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
+const projectViewStore = getCurrentViewStore("project");
 
 onMounted(() => {
   mountProjectLayout({ route, router });
@@ -103,7 +100,7 @@ onBeforeUnmount(() => {
 
 watch(
   () => project.value,
-  (newValue, oldValue) => {
+  (newValue: NorseProject, oldValue: NorseProject) => {
     oldValue.viewModel.unsubscribe();
     oldValue.viewModel.engine?.stop();
 

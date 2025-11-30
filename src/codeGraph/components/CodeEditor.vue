@@ -11,9 +11,9 @@ import { CodeEditor } from "@babsey/code-graph";
 
 import type { IErrorState } from "@/plugins/codeMirrorExtensions/codeError";
 import { autocompletion, codeError, languagePython, oneDark } from "@/plugins/codemirror";
-import { darkMode } from "@/helpers/common/theme";
+import { darkMode } from "@/theme";
 
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore } from "@/app";
 const appStore = useAppStore();
 
 const props = defineProps<{ error?: UnwrapRef<IErrorState> }>();

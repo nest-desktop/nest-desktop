@@ -84,10 +84,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import Card from "@/components/common/Card.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
+import { Card, ValueSlider } from "@/components";
 
-import type { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph/activityAnimationGraph";
+import type { ActivityAnimationGraph } from "../../helpers/activityAnimationGraph";
 
 const props = defineProps<{ graph: ActivityAnimationGraph }>();
 const graph = computed(() => props.graph);

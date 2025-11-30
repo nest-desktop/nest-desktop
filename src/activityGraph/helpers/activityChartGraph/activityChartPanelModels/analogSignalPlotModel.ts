@@ -1,8 +1,8 @@
 // analogSignalPlotModel.ts
 
-import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
+import type { NodeRecord } from "@/network";
 import type { TNode } from "@/types";
-import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
+import { currentBackgroundColor, currentColor } from "@/theme";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPanelModel } from "./analogSignalPanelModel";

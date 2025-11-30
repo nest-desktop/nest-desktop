@@ -12,11 +12,7 @@ import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
 export const useCodeGraphStore = defineStore(
   "code-graph",
   () => {
-    const state: UnwrapRef<{
-      editorStates: Record<string, IEditorState>;
-    }> = reactive({
-      editorStates: {},
-    });
+    const state: UnwrapRef<{ editorStates: Record<string, IEditorState> }> = reactive({ editorStates: {} });
 
     const token = Symbol("CodeGraphStore");
 
@@ -45,28 +41,22 @@ export const useCodeGraphStore = defineStore(
       return { name: "nestCodeGraphEdit", params: { editorId } };
     };
 
-    const removeEditorState = (editorId: string) => {
-      delete state.editorStates[editorId];
-    };
+    const removeEditorState = (editorId: string) => delete state.editorStates[editorId];
 
     const saveEditor = () => {
       state.editorStates[viewModel.editor.graph.id] = viewModel.editor.save();
       return viewModel.editor.graph.id;
     };
 
-    const subscribe = () => {
-      viewModel.engine?.events.afterRun.subscribe(token, saveEditor);
-    };
+    const subscribe = () => viewModel.engine?.events.afterRun.subscribe(token, saveEditor);
 
-    const unsubscribe = () => {
-      viewModel.engine?.events.afterRun.unsubscribe(token);
-    };
+    const unsubscribe = () => viewModel.engine?.events.afterRun.unsubscribe(token);
 
     return { loadEditor, newGraph, removeEditorState, state, subscribe, unsubscribe, viewModel };
   },
   {
     persist: {
-      storage: sessionStorage, // localStorage
+      storage: localStorage, // localStorage, sessionStorage
       pick: ["state.editorStates"],
     },
   },

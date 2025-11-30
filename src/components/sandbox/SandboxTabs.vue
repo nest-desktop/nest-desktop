@@ -30,9 +30,5 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 
-const state = reactive<{
-  tab: string | null;
-}>({
-  tab: null,
-});
+const state = reactive<{ tab: string | null }>({ tab: null });
 </script>
