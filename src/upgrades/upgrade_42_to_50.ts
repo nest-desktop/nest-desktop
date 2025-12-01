@@ -2,8 +2,8 @@
 
 import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
-import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
 import { useAppStore } from "@/app";
+import { registerNESTNodeTypes } from "@/workspaces/nest/codeNodeTypes/nest";
 
 const validateVersion = (version: string) => /^4\.2(\.\d+)?(\w+)?$/.test(version);
 
@@ -58,8 +58,9 @@ export function upgradeProject_42_to_50(projectState: any): any {
     );
 
   if (appStore.currentWorkspace?.loadGraphByProject) {
-    const viewModel = new useCodeGraph({ code: new PythonCode() });
-    registerNodeTypes(viewModel);
+    const viewModel = new useCodeGraph({ code: new PythonCode() })
+
+    registerNESTNodeTypes(viewModel);
 
     appStore.currentWorkspace.loadGraphByProject(viewModel.editor.graph, projectState);
     projectState.code = { editor: viewModel.editor.save() };

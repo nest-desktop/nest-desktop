@@ -1,9 +1,9 @@
 // node.ts
 
-import { BaseNode } from "@/network/helpers/node/node";
+import { BaseNode } from "@/network/node";
 
-import { NorseConnection } from "../connection/connection";
-import { NorseModel } from "../../../model/model";
+import { NorseConnection } from "../connection";
+import { NorseModel } from "../../../model";
 import { NorseNodes } from "./nodes";
 
 // export class NorseNode extends BaseNode<NorseModel> {

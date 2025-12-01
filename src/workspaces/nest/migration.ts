@@ -4,11 +4,13 @@ import type { CodeGraph } from "@babsey/code-graph";
 
 import { INESTConnectionState, INESTNodeState, INESTProjectState } from "@/workspaces/nest/types";
 
-import { loadNESTResetKernelNode } from "@/codeGraph/codeNodeTypes/nest/nestResetKernel";
-import { loadNESTSetKernelStatusNode } from "@/codeGraph/codeNodeTypes/nest/nestSetKernelStatus";
-import { loadNESTSimulationNode } from "@/codeGraph/codeNodeTypes/nest/nestSimulate";
-import { loadNESTCreateNode } from "@/codeGraph/codeNodeTypes/nest/nestCreate";
-import { loadNESTConnectNode } from "@/codeGraph/codeNodeTypes/nest/nestConnect";
+import {
+  loadNESTResetKernelNode,
+  loadNESTSetKernelStatusNode,
+  loadNESTSimulationNode,
+  loadNESTCreateNode,
+  loadNESTConnectNode,
+} from "./codeNodeTypes/nest";
 
 export const loadGraphByNESTProject = (graph: CodeGraph, projectState: INESTProjectState): void => {
   loadNESTResetKernelNode(graph);

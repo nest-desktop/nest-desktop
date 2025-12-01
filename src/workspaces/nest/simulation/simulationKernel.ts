@@ -5,7 +5,7 @@ import type { CodeNodeInterface } from "@babsey/code-graph";
 import type { IBaseState } from "@/core";
 import { CodeNodeMask } from "@/codeGraph";
 
-import { getNESTSetKernelStatusParameterNode } from "@/codeGraph/codeNodeTypes/nest/nestSetKernelStatus";
+import { getNESTSetKernelStatusParameterNode } from "../codeNodeTypes/nest";
 
 import type { NESTSimulation } from "./simulation";
 

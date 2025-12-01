@@ -1,10 +1,10 @@
 // project.ts
 
-import { registerNESTNodeTypes } from "@/codeGraph/codeNodeTypes/nest";
 import { type INetworkProjectState, NetworkProject } from "@/project";
 
 import nestSimulator from "../backends/nestSimulator";
 import { NESTActivityGraph } from "../activityGraph";
+import { registerNESTNodeTypes } from "../codeNodeTypes/nest";
 import { type INESTNetworkState, NESTNetwork } from "../network";
 import { type INESTSimulationState, NESTSimulation } from "../simulation";
 import { useNESTModelDBStore } from "../model";

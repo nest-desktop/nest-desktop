@@ -15,7 +15,7 @@ export const useNESTProjectStore = defineProjectStore<NESTProject>({
 
 /**
  * Copy model.
- * @param modelId string
+ * @param modelId model ID
  */
 export const doCopyModel = (modelId: string): void => {
   const projectStore = useNESTProjectStore();

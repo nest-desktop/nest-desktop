@@ -1,10 +1,9 @@
 // nodes.ts
 
-import { BaseNodes } from "@/network/helpers/node/nodes";
-import type { INodeState } from "@/network/helpers/node/node";
+import { BaseNodes, type INodeState } from "@/network/node";
 import type { TNode, TNodeGroup } from "@/types";
 
-import { NorseNetwork } from "../network/network";
+import { NorseNetwork } from "../network";
 import { NorseNode } from "./node";
 
 export class NorseNodes extends BaseNodes {

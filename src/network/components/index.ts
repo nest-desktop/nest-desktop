@@ -1,6 +1,4 @@
-// components
+// components/network
 
-export * from "./connection";
-export * from "./network";
-export * from "./node";
-export * from "./synapse";
+export { default as NetworkHistory } from "./NetworkHistory.vue";
+export { default as NetworkSpecEditor } from "./NetworkSpecEditor.vue";

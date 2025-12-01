@@ -1,7 +1,7 @@
 // nest/network
 
-export * from "./helpers/connection";
-export * from "./helpers/copyModel";
+export * from "./connection";
+export * from "./copyModel";
 export * from "./network";
-export * from "./helpers/node";
-export * from "./helpers/synapse";
+export * from "./node";
+export * from "./synapse";

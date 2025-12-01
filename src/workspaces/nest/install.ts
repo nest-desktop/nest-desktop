@@ -19,6 +19,9 @@ import { initNESTSimulator } from "./backends";
 import { initNESTMLServer } from "./nestml/backends";
 import { useNESTModelDBStore, useNESTModelStore } from "./model/stores";
 import { useNESTProjectDBStore, useNESTProjectStore } from "./project/stores";
+import { registerNodeTypeModule } from "@/codeGraph";
+
+import { registerNESTNodeTypes } from "./codeNodeTypes/nest";
 
 const logger = mainLogger.getSubLogger({ name: "nest index" });
 

@@ -4,12 +4,12 @@ import { BaseNetwork, INetworkState } from "@/network";
 import type { Class, TNetworkState, TNode, TNodeGroup } from "@/types";
 import type { IBaseState } from "@/core";
 
-import type { NESTConnection } from "./helpers/connection";
+import type { NESTConnection } from "./connection";
 import type { NESTModel } from "../model";
 import type { NESTProject } from "../project";
-import { NESTConnections } from "./helpers/connection";
-import { NESTCopyModels, type INESTCopyModelState, type NESTCopyModel } from "./helpers/copyModel";
-import { NESTNodes } from "./helpers/node";
+import { NESTConnections } from "./connection";
+import { NESTCopyModels, type INESTCopyModelState, type NESTCopyModel } from "./copyModel";
+import { NESTNodes } from "./node";
 
 export interface INESTNetworkState extends INetworkState {
   models?: INESTCopyModelState[];
