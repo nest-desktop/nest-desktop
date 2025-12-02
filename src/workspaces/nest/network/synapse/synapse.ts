@@ -153,7 +153,7 @@ export class NESTSynapse extends BaseSynapse<NESTConnection, INESTSynapseState> 
     this.params.load(this.model.params.save());
   }
 
-    /**
+  /**
    * Observer for model changes.
    * @remarks It emits synapse changes.
    */

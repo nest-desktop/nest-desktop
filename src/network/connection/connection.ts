@@ -15,9 +15,11 @@ import type { BaseConnections } from "./connections";
 export interface IConnectionState extends IBaseState {
   params?: Record<string, IParamState>;
   rule?: string;
-  sourceNodeId: string;
+  sourceId?: string;
+  sourceIdx?: number;
   synapse?: ISynapseState;
-  targetNodeId: string;
+  targetId?: string;
+  targetIdx?: number;
 }
 
 export class BaseConnection<
@@ -63,24 +65,24 @@ export class BaseConnection<
     return this._rule.value !== "all_to_all";
   }
 
-  override get hashObject(): IBaseState {
-    const hashState: {
-      idx: number;
-      params: Record<string, IParamState>;
-      synapse: string;
-      sourceModelId?: string;
-      targetModelId?: string;
-    } = {
-      idx: this.idx,
-      params: this.params.save(),
-      synapse: this.synapse.hash,
-    };
+  // override get hashObject(): IBaseState {
+  //   const hashState: {
+  //     idx: number;
+  //     params: Record<string, IParamState>;
+  //     synapse: string;
+  //     sourceModelId?: string;
+  //     targetModelId?: string;
+  //   } = {
+  //     idx: this.idx,
+  //     params: this.params.save(),
+  //     synapse: this.synapse.hash,
+  //   };
 
-    if (this.source?.isNode) hashState.sourceModelId = this.sourceNode.modelId;
-    if (this.target?.isNode) hashState.targetModelId = this.targetNode.modelId;
+  //   if (this.source?.isNode) hashState.sourceModelId = this.sourceNode.modelId;
+  //   if (this.target?.isNode) hashState.targetModelId = this.targetNode.modelId;
 
-    return hashState;
-  }
+  //   return hashState;
+  // }
 
   get idx(): number {
     return this.connections.all.indexOf(this);
@@ -175,7 +177,7 @@ export class BaseConnection<
    */
   changes(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
     this.logger.trace("changes");
-    this.updateHash();
+    // this.updateHash();
 
     if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
 
@@ -205,8 +207,23 @@ export class BaseConnection<
    * @param connectionState connection state
    */
   load(connectionState: IConnectionState): void {
-    this._source = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.sourceNodeId);
-    this._target = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.targetNodeId);
+    console.log(connectionState);
+
+    let sourceNode;
+    if (connectionState.sourceId) {
+      sourceNode = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.sourceId);
+    } else if (connectionState.sourceIdx != undefined) {
+      sourceNode = this.connections.network.nodes.all[connectionState.sourceIdx];
+    }
+    if (sourceNode) this._source = sourceNode;
+
+    let targetNode;
+    if (connectionState.targetId) {
+      targetNode = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.targetId);
+    } else if (connectionState.targetIdx != undefined) {
+      targetNode = this.connections.network.nodes.all[connectionState.targetIdx];
+    }
+    if (targetNode) this._target = targetNode;
 
     if (connectionState.rule) this.rule.value = connectionState.rule;
     if (connectionState.params) this.params.load(connectionState.params);
@@ -241,8 +258,8 @@ export class BaseConnection<
     const target = this.target;
     const source = this.source;
 
-    this.source = target;
-    this.target = source;
+    this._source = target;
+    this._target = source;
 
     // Check syn weights.
     this.sourceNode.view.checkSynWeights();
@@ -261,8 +278,8 @@ export class BaseConnection<
    */
   override save(): IConnectionState {
     const connectionState: IConnectionState = {
-      sourceNodeId: this.source?.codeNode?.id ?? -1,
-      targetNodeId: this.target?.codeNode?.id ?? -1,
+      source: this.source?.codeNode?.id ?? -1,
+      target: this.target?.codeNode?.id ?? -1,
     };
 
     if (this.params.hasSomeVisibleParams) connectionState.params = this.params.save();
@@ -276,6 +293,6 @@ export class BaseConnection<
    */
   update(): void {
     this.clean();
-    this.updateHash();
+    // this.updateHash();
   }
 }

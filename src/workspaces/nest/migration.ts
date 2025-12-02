@@ -1,6 +1,6 @@
 // migration.ts
 
-import type { CodeGraph } from "@babsey/code-graph";
+import type { AbstractCodeNode, CodeGraph } from "@babsey/code-graph";
 
 import { INESTConnectionState, INESTNodeState, INESTProjectState } from "@/workspaces/nest/types";
 
@@ -15,16 +15,20 @@ import {
 export const loadGraphByNESTProject = (graph: CodeGraph, projectState: INESTProjectState): void => {
   loadNESTResetKernelNode(graph);
   if (projectState.simulation?.kernel) loadNESTSetKernelStatusNode(graph, projectState.simulation.kernel);
-  loadNESTSimulationNode(graph, projectState.simulation);
 
-  // TODO: Fill the gap with network load functions.
+  const createNodes = projectState.network?.nodes?.map((nodeState: INESTNodeState, idx: number) =>
+    loadNESTCreateNode(graph, nodeState, idx),
+  );
 
-  const nodes =
-    projectState.network?.nodes?.map((nodeState: INESTNodeState, idx: number) => {
-      return loadNESTCreateNode(graph, nodeState, idx);
-    }) ?? [];
+  const connectNodes = projectState.network?.connections?.map((connectionState: INESTConnectionState, idx: number) =>
+    loadNESTConnectNode(graph, connectionState, createNodes, idx),
+  );
 
-  projectState.network?.connections?.forEach((connectionState: INESTConnectionState, idx: number) => {
-    loadNESTConnectNode(graph, connectionState, nodes, idx);
-  });
+  const simulateNode = loadNESTSimulationNode(graph, projectState.simulation);
+
+  if (connectNodes)
+    connectNodes.forEach((codeNode: AbstractCodeNode) => {
+      if (!graph.hasConnection(codeNode.outputs._code, simulateNode.inputs._code))
+        graph.addConnection(codeNode.outputs._code, simulateNode.inputs._code);
+    });
 };

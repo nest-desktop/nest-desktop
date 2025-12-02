@@ -112,13 +112,13 @@
     </template>
 
     <template v-else-if="appStore.state.devMode && modelViewStore.state.views.controller === 'raw'">
-      <codemirror :extensions="extensions" :model-value="modelState" disabled style="font-size: 0.75rem; width: 100%" />
+      <Codemirror :extensions :model-value="modelState" disabled style="font-size: 0.75rem; width: 100%" />
     </template>
 
     <template v-if="modelViewStore.state.views.controller === 'code'">
       <slot name="codeEditor">
         <CodeEditor
-          v-if="project.code"
+          v-if="project?.code"
           v-model="project.code.script"
           :locked="project.code.lockCode"
           :error="project.simulation.handler.error"
@@ -129,7 +129,7 @@
 
     <template v-else-if="modelViewStore.state.views.controller === 'activity'">
       <slot name="activityController">
-        <ActivityChartController :graph="project.activityGraph.activityChartGraph as ActivityChartGraph" />
+        <ActivityChartController v-if="project.activityGraph" :graph="project.activityGraph.activityChartGraph" />
       </slot>
     </template>
   </v-navigation-drawer>
@@ -140,7 +140,6 @@ import { Codemirror } from "vue-codemirror";
 import { Extension } from "@codemirror/state";
 import { computed } from "vue";
 
-import type { ActivityChartGraph } from "@/activityGraph";
 import type { TModelParameter, TNode } from "@/types";
 import type { TParamValue } from "@/parameter";
 import { ActivityChartController } from "@/activityGraph/components";
@@ -155,11 +154,11 @@ const appStore = useAppStore();
 
 const modelStore = getCurrentStore("model");
 const modelViewStore = getCurrentViewStore("model");
-const project = computed(() => modelStore.value.state.project);
+const project = computed(() => modelStore.state.project);
 
-const modelParams = computed(() => modelStore.value.model.values);
+const modelParams = computed(() => modelStore.model.values);
 
-const modelState = computed(() => JSON.stringify(modelStore.value.model.save(), null, 2));
+const modelState = computed(() => JSON.stringify(modelStore.model.save(), null, 2));
 
 interface IControllerItem {
   id: string;
@@ -219,7 +218,7 @@ const resetAllParamValues = () => {
   modelParams.value.forEach((param: TModelParameter) => {
     param.value = param.props.value as TParamValue;
   });
-  modelStore.value.model.changes();
+  modelStore.model.changes();
 };
 
 const updateCode = () => {

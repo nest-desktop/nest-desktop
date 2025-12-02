@@ -34,7 +34,7 @@
               </v-row>
             </v-expansion-panel-title>
 
-            <v-expansion-panel-text :key="activities.hash" class="ma-0 pa-0">
+            <v-expansion-panel-text class="ma-0 pa-0">
               <ActivityStatsSpike v-if="activity.recorder.model.isSpikeRecorder" :activity :height="state.height" />
 
               <ActivityStatsAnalog

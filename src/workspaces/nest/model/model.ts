@@ -118,7 +118,7 @@ export class NESTModel extends BaseModel<INESTModelState> {
     // Update the model receptors.
     if (modelState.receptors) this.loadReceptors(modelState.receptors);
 
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**

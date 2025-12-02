@@ -4,12 +4,12 @@ import { type UnwrapRef, reactive } from "vue";
 
 import type { IResponseData } from "@/backends";
 
-import { BaseObj, type IBaseState } from "../../core";
+import { BaseObj } from "../../core";
 
 import type { Activity, IActivityState, IEventState } from "./activity";
 import type { AnalogSignalActivity } from "./analogSignalActivity";
 import type { BaseProject } from "../../project";
-import type { NodeAnalogSignalActivity, NodeSpikeActivity } from "../helpers/nodeActivity";
+import type { NodeAnalogSignalActivity, NodeSpikeActivity } from "../nodeActivity";
 import type { SpikeActivity } from "./spikeActivity";
 
 interface IActivitiesRefState {
@@ -60,11 +60,11 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
     return activities;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      activities: this._project.activities.all.map((activity: Activity) => activity.hash),
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     activities: this._project.activities.all.map((activity: Activity) => activity.hash),
+  //   };
+  // }
 
   get project(): TProject {
     return this._project;
@@ -96,7 +96,7 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
   changes(): void {
     // Check if project has activities.
     this.checkActivities();
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("changes");
 
     // Update activity graph.

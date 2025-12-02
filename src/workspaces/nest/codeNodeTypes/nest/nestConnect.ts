@@ -20,7 +20,6 @@ import {
   nestNodeCollectionType,
 } from "./interfaceTypes";
 import { type IParamState, updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
-import { getNESTSimulateNode } from "./nestSimulate";
 
 const ruleItems = [
   "all_to_all",
@@ -41,40 +40,20 @@ export const nestConnect = defineCodeNode({
     conn_spec: () => new SelectInterface("conn_spec", "all_to_all", ruleItems).setOptional(true),
     syn_spec: () => new TextInputInterface("syn_spec", "static_synapse").setOptional(true),
   },
+  // onPlaced() {
+  //   updateNESTNode(this);
+  // },
+  afterGraphLoaded() {
+    updateNESTNode(this);
+  },
   onConnected() {
-    if (!this.mask) return;
+    if (!this.code.project || !this.mask) return;
 
     const synParamNode = this.getConnectedNodeByInterface("syn_spec", "input");
     if (synParamNode) {
       this.mask.synapse.params.registerCodeNode(synParamNode);
       updateParameterInterfaces(this, "syn_spec", this.mask.synapse.params.save());
     }
-  },
-  afterGraphLoaded() {
-    // console.log("after graph loaded", this);
-
-    let connection = this.mask;
-
-    if (!connection) {
-      const source = this.getConnectedNodeByInterface("pre", "input");
-      const target = this.getConnectedNodeByInterface("post", "input");
-
-      const connectionState = {
-        sourceNodeId: source.id,
-        targetNodeId: target.id,
-      };
-
-      connection = this.code.project.network.connections.addConnection(connectionState);
-      connection.registerCodeNode(this);
-
-      const connSpecNode = this.getConnectedNodeByInterface("conn_spec", "input");
-      connection.params.registerCodeNode(connSpecNode);
-
-      const synSpecNode = this.getConnectedNodeByInterface("syn_spec", "input");
-      connection.synapse.params.registerCodeNode(synSpecNode);
-    }
-
-    connection.init();
   },
   // optional, add/remove parameter node when select specific rule.
   // update() {
@@ -190,13 +169,11 @@ export const loadNESTConnectNode = (
   updateNESTConnectNode(codeNode, connectionState);
 
   if (nodes) {
-    graph.addConnection(codeNode.inputs.pre, nodes[connectionState.source].outputs.out);
-    graph.addConnection(nodes[connectionState.target].outputs.out, codeNode.inputs.post);
+    const sourceNode = nodes[connectionState.sourceIdx];
+    if (sourceNode) graph.addConnection(codeNode.inputs.pre, sourceNode.outputs.out);
+    const targetNode = nodes[connectionState.targetIdx];
+    if (targetNode) graph.addConnection(targetNode.outputs.out, codeNode.inputs.post);
   }
-
-  const simulateNode = getNESTSimulateNode(graph);
-  if (!graph.hasConnection(codeNode.outputs._code, simulateNode.inputs._code))
-    graph.addConnection(codeNode.outputs._code, simulateNode.inputs._code);
 
   return codeNode;
 };
@@ -240,4 +217,29 @@ export const updateNESTConnectSynapseNode = (codeNode: AbstractCodeNode, synapse
 
     updateNESTParameterNode(codeNode, "syn_spec", { ...syn_spec, ...paramStates });
   }
+};
+
+const updateNESTNode = (codeNode: AbstractCodeNode) => {
+  // console.log("after graph loaded", this);
+  if (!codeNode.code.project) return;
+
+  let connection = codeNode.mask;
+
+  if (!connection) {
+    const source = codeNode.getConnectedNodeByInterface("pre", "input");
+    const target = codeNode.getConnectedNodeByInterface("post", "input");
+
+    if (!source || !target) return;
+
+    connection = codeNode.code.project.network.connections.addConnection(codeNode.state.props);
+    connection.registerCodeNode(codeNode);
+
+    const connSpecNode = codeNode.getConnectedNodeByInterface("conn_spec", "input");
+    connection.params.registerCodeNode(connSpecNode);
+
+    const synSpecNode = codeNode.getConnectedNodeByInterface("syn_spec", "input");
+    connection.synapse.params.registerCodeNode(synSpecNode);
+  }
+
+  connection.init();
 };

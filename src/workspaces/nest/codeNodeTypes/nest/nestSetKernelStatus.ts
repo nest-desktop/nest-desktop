@@ -45,7 +45,8 @@ export const nestSetKernelStatus = defineCodeNode({
     params: () => new CodeNodeInputInterface("params", ""),
   },
   afterGraphLoaded() {
-    if (this.code.project) this.code.project.simulation.kernel.registerCodeNode(this);
+    if (!this.code.project) return;
+    this.code.project.simulation.kernel.registerCodeNode(this);
   },
   onConnected() {
     updateParameterInterfaces(this, "params", defaultKernelState);

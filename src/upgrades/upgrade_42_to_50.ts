@@ -39,6 +39,12 @@ export function upgradeProject_42_to_50(projectState: any): any {
     .filter((nodeState: any) => nodeState.params)
     .forEach((nodeState: any) => (nodeState.params = Object.fromEntries(nodeState.params.map((p: any) => [p.id, p]))));
 
+  // Connection node idx.
+  projectState.network.connections.forEach((connectionState: any) => {
+    connectionState.sourceIdx = connectionState.source;
+    connectionState.targetIdx = connectionState.target;
+  });
+
   // Connection params
   projectState.network.connections
     .filter((connectionState: any) => connectionState.params)
@@ -58,7 +64,7 @@ export function upgradeProject_42_to_50(projectState: any): any {
     );
 
   if (appStore.currentWorkspace?.loadGraphByProject) {
-    const viewModel = new useCodeGraph({ code: new PythonCode() })
+    const viewModel = new useCodeGraph({ code: new PythonCode() });
 
     registerNESTNodeTypes(viewModel);
 

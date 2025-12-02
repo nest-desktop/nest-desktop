@@ -51,7 +51,7 @@ import { computed, onMounted, reactive, watch } from "vue";
 
 import { deviation, diff, mean, sum, toFixed } from "@/utils";
 
-import { NodeSpikeActivity } from "../../helpers/nodeActivity";
+import { NodeSpikeActivity } from "../../nodeActivity";
 
 const props = defineProps({
   activity: NodeSpikeActivity,

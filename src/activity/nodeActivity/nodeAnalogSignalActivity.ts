@@ -5,7 +5,7 @@ import type { TNode } from "@/types";
 // TODO: No imports from network graph!
 import { NodeRecord } from "@/network";
 
-import type { IActivityState } from "../..";
+import type { IActivityState } from "../helpers/activity";
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeAnalogSignalActivity extends NodeActivity {

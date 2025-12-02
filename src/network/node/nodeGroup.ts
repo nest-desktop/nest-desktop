@@ -21,7 +21,7 @@ export class NodeGroup extends BaseObj {
 
     this._view = new NodeGroupView(this);
 
-    this.updateHash();
+    // this.updateHash();
   }
 
   get all(): (NodeGroup | TNode)[] {
@@ -338,6 +338,6 @@ export class NodeGroup extends BaseObj {
    */
   update(): void {
     this.view.updateCentroid();
-    this.updateHash();
+    // this.updateHash();
   }
 }

@@ -4,7 +4,7 @@
 import type { TNetworkProject, TNode } from "@/types";
 import { sum } from "@/utils";
 
-import { Activity, type IActivityState } from "../activity";
+import { Activity, type IActivityState } from "../helpers/activity";
 
 export class NodeActivity extends Activity {
   private _recorder: TNode; // parent

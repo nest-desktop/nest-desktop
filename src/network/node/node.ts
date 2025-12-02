@@ -117,15 +117,15 @@ export class BaseNode<
     return this.targetNodes.length > 0 ? this.targetNodes[0].size : 0;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      idx: this.idx,
-      model: this.modelId,
-      params: this.params.hash,
-      recordables: this.recordables.map((recordable: NodeRecord) => recordable.uuid),
-      size: this.size,
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     idx: this.idx,
+  //     model: this.modelId,
+  //     params: this.params.hash,
+  //     recordables: this.recordables.map((recordable: NodeRecord) => recordable.uuid),
+  //     size: this.size,
+  //   };
+  // }
 
   get idx(): number {
     return this.nodes.all.indexOf(this);
@@ -135,7 +135,7 @@ export class BaseNode<
    * Check if it is an excitatory neuron.
    */
   get isExcitatoryNeuron(): boolean {
-    return this.model?.isNeuron && this._view.synWeights === "excitatory";
+    return this.model?.isNeuron && this.view.synWeights === "excitatory";
   }
 
   get isRecorded(): boolean {
@@ -150,7 +150,7 @@ export class BaseNode<
    * Check if it is an inhibitory neuron.
    */
   get isInhibitoryNeuron(): boolean {
-    return this.model?.isNeuron && this._view.synWeights === "inhibitory";
+    return this.model?.isNeuron && this.view.synWeights === "inhibitory";
   }
 
   get isNode(): boolean {
@@ -587,7 +587,7 @@ export class BaseNode<
     this.clean();
 
     this.view.updateStyle();
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**

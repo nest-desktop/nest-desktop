@@ -3,7 +3,7 @@
 import { BaseNode } from "@/network/node";
 
 import { NorseConnection } from "../connection";
-import { NorseModel } from "../../../model";
+import { NorseModel } from "../../model";
 import { NorseNodes } from "./nodes";
 
 // export class NorseNode extends BaseNode<NorseModel> {

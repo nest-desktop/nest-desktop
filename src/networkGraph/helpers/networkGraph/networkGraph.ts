@@ -5,7 +5,7 @@ import { type Ref, type UnwrapRef, nextTick, reactive, watch } from "vue";
 
 import type { TConnection, TNode, TNodeGroup, TSelection } from "@/types";
 import { BaseNode, type BaseNetwork } from "@/network";
-import { BaseObj, type IBaseState } from "@/core";
+import { BaseObj } from "@/core";
 import { debounce } from "@/utils";
 
 import { ConnectionGraph } from "../connectionGraph";
@@ -62,17 +62,17 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
     return this._connectionGraph;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
-        color: node.view.state.color,
-        idx: node.idx,
-        model: node.modelId,
-        size: node.size.value,
-      })),
-      connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     nodes: this.network.nodes.nodeItems.map((node: TNode) => ({
+  //       color: node.view.state.color,
+  //       idx: node.idx,
+  //       model: node.modelId,
+  //       size: node.size.value,
+  //     })),
+  //     connections: this.network.connections.all.map((connection: TConnection) => connection.idx),
+  //   };
+  // }
 
   get network(): TNetwork {
     return this._network;
@@ -152,21 +152,21 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   init(): void {
     this.logger.trace("init");
 
-    this._workspace?.init();
-    nextTick(() => this.update());
+    this.network.updateStyle();
+    this.workspace?.init();
+    this.update();
 
     watch(
       () => [
         this.network.nodes.state.focusedNode,
         this.network.connections.state.focusedConnection,
         this.network.connections.state.selectedNode,
-        this.hash,
       ],
       () => nextTick(() => this.render()),
     );
 
     watch(
-      () => [this.network.nodes.all.length, this.network.connections.all.length],
+      () => [this.network.nodes.length, this.network.connections.length],
       () => this.update(),
     );
   }
@@ -182,18 +182,18 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   ): void {
     this.logger.trace("open context menu");
 
-    if (this._state.contextMenu.modelValue) {
-      this._state.contextMenu.modelValue = false;
+    if (this.state.contextMenu.modelValue) {
+      this.state.contextMenu.modelValue = false;
       setTimeout(() => this.openContextMenu(target, props), 200);
       return;
     }
 
-    this._state.contextMenu.connection = (props.connection as TConnection) || null;
-    this._state.contextMenu.node = (props.node as TNode) || null;
-    this._state.contextMenu.nodeGroup = (props.nodeGroup as TNodeGroup) || null;
+    this.state.contextMenu.connection = (props.connection as TConnection) || null;
+    this.state.contextMenu.node = (props.node as TNode) || null;
+    this.state.contextMenu.nodeGroup = (props.nodeGroup as TNodeGroup) || null;
 
-    this._state.contextMenu.target = target;
-    this._state.contextMenu.modelValue = true;
+    this.state.contextMenu.target = target;
+    this.state.contextMenu.modelValue = true;
   }
 
   /**
@@ -202,16 +202,16 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   render(): void {
     this.logger.silly("render");
 
-    this._connectionGraph.render();
-    this._nodeGraph.render();
-    this._nodeGroupGraph.render();
+    this.connectionGraph.render();
+    this.nodeGraph.render();
+    this.nodeGroupGraph.render();
   }
 
   /**
    * Reset state of network graph.
    */
   resetState(): void {
-    this._state.contextMenu.modelValue = false;
+    this.state.contextMenu.modelValue = false;
   }
 
   /**
@@ -221,10 +221,10 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   update(): void {
     this.logger.trace("update");
 
-    this._workspace.update();
+    this.workspace.update();
 
-    this._connectionGraph.update();
-    this._nodeGraph.update();
-    this._nodeGroupGraph.update();
+    this.connectionGraph.update();
+    this.nodeGraph.update();
+    this.nodeGroupGraph.update();
   }
 }

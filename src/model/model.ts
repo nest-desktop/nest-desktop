@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { IParamState } from "@/parameter";
 import type { TProject } from "@/types";
-import { type IConfigState, type IDoc, BaseObj, type IBaseState } from "@/core";
+import { BaseObj, type IConfigState, type IDoc } from "@/core";
 
-import { ModelParameters } from "./modelParameters";
+import { ModelParameters } from "./helpers/modelParameters";
 
 export interface IModelState extends IDoc {
   custom?: boolean;
@@ -89,13 +89,13 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
     return this._favorite;
   }
 
-  get hashObject(): IBaseState {
-    return {
-      label: this.state.label,
-      states: this.states,
-      params: this.params.hash,
-    };
-  }
+  // get hashObject(): IBaseState {
+  //   return {
+  //     label: this.state.label,
+  //     states: this.states,
+  //     params: this.params.hash,
+  //   };
+  // }
 
   get id(): string {
     return this._id;
@@ -215,7 +215,7 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
     // Update the model parameters.
     if (modelState.params) this.params.load(modelState.params);
 
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**

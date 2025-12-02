@@ -22,8 +22,8 @@ import { computed, reactive, nextTick } from "vue";
 import { ColorPicker } from "@/components";
 import type { TNode, TNodeGroup } from "@/types";
 
-import { useNetworkGraph } from "@/networkGraph";
-const graph = useNetworkGraph();
+// import { useNetworkGraph } from "@/networkGraph";
+// const graph = useNetworkGraph();
 
 const props = defineProps<{ node?: TNode | TNodeGroup }>();
 const node = computed(() => props.node);
@@ -59,7 +59,7 @@ const nodeColorChange = () => {
   if (node.value?.isNode) nextTick(() => node.value?.nodes.updateRecordsColor());
 
   // Render network graph
-  graph.value?.updateHash();
+  // graph.value?.updateHash();
 };
 
 /**

@@ -125,7 +125,7 @@ import { ColorPicker } from "@/components";
 import { NodeRecordChip } from "@/network/components";
 import { deviation, mean, toFixed } from "@/utils";
 
-import type { NodeAnalogSignalActivity } from "../../helpers/nodeActivity";
+import type { NodeAnalogSignalActivity } from "../../nodeActivity";
 
 const props = defineProps<{ activity: NodeAnalogSignalActivity }>();
 const activity = computed(() => props.activity);

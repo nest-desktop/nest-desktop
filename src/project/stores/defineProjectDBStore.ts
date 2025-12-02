@@ -279,11 +279,12 @@ export function defineProjectDBStore<
       // Upgrade project state.
       const projectState = upgradeProject(project);
 
-      const newProject = new props.Project(projectState) as TProject;
+      const newProject = new props.Project(projectState);
       newProject.load(projectState);
       state.projects[projectIdx] = newProject;
 
-      nextTick(() => newProject.init());
+      newProject.init();
+      nextTick(() => newProject.code.engine.runOnce());
     };
 
     /**
@@ -335,7 +336,7 @@ export function defineProjectDBStore<
       logger.trace("save project:", project.shortId);
 
       db.importProject(project).then(() => {
-        project.doc.hash = project.hash;
+        // project.doc.hash = project.hash;
         project.state.checkChanges();
         // removeFromList(project);
         const projectIds = getProjectIds();

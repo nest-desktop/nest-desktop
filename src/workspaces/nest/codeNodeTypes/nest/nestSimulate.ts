@@ -23,7 +23,8 @@ export const nestSimulate = defineCodeNode({
     t: () => new IntegerInterface("time", 1000),
   },
   afterGraphLoaded() {
-    if (this.code.project) this.code.project.simulation.registerCodeNode(this);
+    if (!this.code.project) return;
+    this.code.project.simulation.registerCodeNode(this);
   },
 });
 

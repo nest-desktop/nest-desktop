@@ -1,6 +1,6 @@
 // model
 
-export * from "./helpers/model";
+export * from "./model";
 export * from "./helpers/modelParameter";
 export * from "./helpers/modelParameters";
 

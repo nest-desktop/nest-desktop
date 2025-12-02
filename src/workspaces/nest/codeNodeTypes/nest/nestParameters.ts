@@ -49,15 +49,17 @@ export const nestParameters = defineDynamicCodeNode({
     });
     return args.length > 0 ? `{\n\t${args.join(",\n\t")}\n}` : "{}";
   },
-
   afterGraphLoaded() {
     // console.log("after graph loaded", this);
+    if (!this.code.project) return;
 
     const params = this.state.props?.components ? new this.state.props.components() : new BaseParameters();
     params.registerCodeNode(this);
     params.init();
   },
   onUnconnected() {
+    if (!this.code.project) return;
+
     this.updateInputInterfaces();
   },
 });

@@ -36,42 +36,15 @@ export const nestCreate = defineCodeNode({
     positions: () =>
       new CodeNodeOutputInterface("positions", ".positions").use(displayInSidebar, true).setOptional(true),
   },
+  // onPlaced() {
+  //   updateNESTNode(this);
+  // },
   afterGraphLoaded() {
-    // console.log("after graph loaded", this);
-
-    let node = this.mask;
-
-    if (!node) {
-      const nodeState = {
-        model: this.inputs.model.value,
-      };
-
-      node = this.code.project.network.nodes.addNode(nodeState);
-      node.registerCodeNode(this);
-
-      const paramsNode = this.getConnectedNodeByInterface("params", "input");
-      node.params.registerCodeNode(paramsNode);
-    }
-
-    node.init();
-
-    // node.params.updateValues(paramState);
-
-    // const paramStates = this.mask?.paramsAll.map((param: NodeParameter) => param.save());
-    // const paramsNode = this.getConnectedNodeByInterface("params", "input");
-
-    // if (paramsNode) {
-    //   const paramsNodeInputKeys = Object.keys(paramsNode.inputs);
-
-    //   paramStates.forEach((paramState: IParamState) => {
-    //     paramState.hidden = !paramsNodeInputKeys.includes(paramState.id);
-    //     if (paramsNodeInputKeys.includes(paramState.id)) paramState.value = paramsNode.inputs[paramState.id].value;
-    //   });
-    // }
-
-    // if (paramStates) updateParamState(this, "params", paramStates);
+    updateNESTNode(this);
   },
   onConnected() {
+    if (!this.code.project) return;
+
     const paramsNode = this.getConnectedNodeByInterface("params", "input");
 
     if (paramsNode) {
@@ -193,7 +166,7 @@ export const loadNESTCreateNode = (graph: CodeGraph, nodeState: INESTNodeState, 
 // }
 
 export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INESTNodeState): void => {
-  if (nodeState) codeNode.state.props = nodeState;
+  codeNode.state.props = nodeState;
 
   const codeNodeState: Record<string, unknown> = { model: nodeState.model };
   if (nodeState.size) codeNodeState.size = nodeState.size;
@@ -221,6 +194,28 @@ export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INES
   }
 
   updateNESTParameterNode(codeNode, "params", paramStates);
+};
+
+const updateNESTNode = (codeNode: AbstractCodeNode) => {
+  if (!codeNode.code.project) return;
+  let node = codeNode.mask;
+
+  if (!node) {
+    node = codeNode.code.project.network.nodes.addNode({
+      model: codeNode.inputs.model.value,
+    });
+    node.registerCodeNode(codeNode);
+
+    const paramsNode = codeNode.getConnectedNodeByInterface("params", "input");
+    if (paramsNode) node.params.registerCodeNode(paramsNode);
+
+    const spatialNode = codeNode.getConnectedNodeByInterface("spatial", "input");
+    if (spatialNode) node.spatial.registerCodeNode(spatialNode);
+  }
+
+  if (codeNode.state.props?.view) node.view.load(codeNode.state.props.view);
+
+  node.init();
 };
 
 // export const updateNESTSpatialNode = (

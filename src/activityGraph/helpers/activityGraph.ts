@@ -27,11 +27,11 @@ export class BaseActivityGraph extends BaseObj {
     return this._activityChartGraph;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      activities: this.project.activities.hash,
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     activities: this.project.activities.hash,
+  //   };
+  // }
 
   get project(): TProject {
     return this._project;
@@ -41,7 +41,7 @@ export class BaseActivityGraph extends BaseObj {
    * Initialize activity graph.
    */
   init(): void {
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("init");
 
     this._activityChartGraph.init();
@@ -69,7 +69,7 @@ export class BaseActivityGraph extends BaseObj {
     openLoading("Activity visualizing...");
     this._activityChartGraph.update();
 
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("update");
   }
 }

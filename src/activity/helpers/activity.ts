@@ -2,7 +2,7 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-// TODO: Mo imports from activity graph!
+// TODO: No imports from activity graph!
 import type { ActivityChartGraph } from "@/activityGraph";
 import type { TProject } from "@/types";
 import { download } from "@/utils";
@@ -205,7 +205,7 @@ export class Activity extends BaseObj<IActivityState> {
 
     this.nodePositions = activityState.nodePositions || [];
     this.recorderUnitId = activityState.recorderUnitId || -1;
-    this.updateHash();
+    // this.updateHash();
     this.postInit();
   }
 
@@ -267,7 +267,7 @@ export class Activity extends BaseObj<IActivityState> {
     this.logger.trace("update events");
 
     if (events == undefined) return;
-    let updated = false;
+    // let updated = false;
 
     const eventKeys: string[] = Object.keys(events);
     if (eventKeys == undefined || eventKeys.length === 0) return;
@@ -276,10 +276,10 @@ export class Activity extends BaseObj<IActivityState> {
       const newEvents = events[eventKey] as number[];
       if (newEvents && this._events[eventKey]) {
         this._events[eventKey] = this._events[eventKey].concat(newEvents);
-        updated = true;
+        // updated = true;
       }
     });
 
-    if (updated) this.updateHash();
+    // if (updated) this.updateHash();
   }
 }

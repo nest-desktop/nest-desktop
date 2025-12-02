@@ -42,6 +42,10 @@ export class NESTCopyModels extends BaseObj {
     return this._models.length;
   }
 
+  get models(): NESTCopyModel[] {
+    return this._models;
+  }
+
   get modelsRecordedByWeightRecorder(): NESTCopyModel[] {
     return this._models.filter((model: NESTCopyModel) => model.hasWeightRecorderParam);
   }
@@ -67,7 +71,7 @@ export class NESTCopyModels extends BaseObj {
 
     const model = new NESTCopyModel(this);
     model.load(modelState);
-    this._models.push(model);
+    this.models.push(model);
     return model;
   }
 
@@ -101,27 +105,27 @@ export class NESTCopyModels extends BaseObj {
    */
   clear(): void {
     this._models = [];
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**
    * Filter models by element type.
    */
   filterByElementType(elementType: string = ""): NESTCopyModel[] {
-    if (elementType) return this._models;
-    return this._models.filter((model: NESTCopyModel) => model.elementType === elementType);
+    if (elementType) return this.models;
+    return this.models.filter((model: NESTCopyModel) => model.elementType === elementType);
   }
 
   /**
    * Filter models by general element type.
    */
   filterByGeneralElementType(elementType: string = ""): NESTCopyModel[] {
-    if (elementType) return this._models;
-    return this._models.filter((model: NESTCopyModel) => model.elementTypeGeneral === elementType);
+    if (elementType) return this.models;
+    return this.models.filter((model: NESTCopyModel) => model.elementTypeGeneral === elementType);
   }
 
   findByModelId(modelId: string): NESTCopyModel | undefined {
-    return this._models.find((model: NESTCopyModel) => model.id === modelId);
+    return this.models.find((model: NESTCopyModel) => model.id === modelId);
   }
 
   /**
@@ -136,7 +140,7 @@ export class NESTCopyModels extends BaseObj {
    * Check if the network has some node models.
    */
   hasModel(modelId: string): boolean {
-    return this._models.some((model: NESTCopyModel) => model.id === modelId);
+    return this.models.some((model: NESTCopyModel) => model.id === modelId);
   }
 
   /**
@@ -144,10 +148,10 @@ export class NESTCopyModels extends BaseObj {
    * @remarks Do not use it in the constructor.
    */
   init(): void {
-    this._models.forEach((model: NESTCopyModel) => model.init());
+    this.models.forEach((model: NESTCopyModel) => model.init());
 
     this.clean();
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**
@@ -166,7 +170,7 @@ export class NESTCopyModels extends BaseObj {
     this.logger.trace("Delete model");
 
     // Remove model from the model list.
-    this._models.splice(model.idx, 1);
+    this.models.splice(model.idx, 1);
   }
 
   /**
@@ -174,14 +178,14 @@ export class NESTCopyModels extends BaseObj {
    * @return copy model states
    */
   override save(): INESTCopyModelState[] {
-    return this._models.map((model: NESTCopyModel) => model.save());
+    return this.models.map((model: NESTCopyModel) => model.save());
   }
 
   /**
    * Show model in list.
    */
   showModel(model: NESTCopyModel): boolean {
-    const elementTypeIdx = this._network.state.elementTypeIdx;
+    const elementTypeIdx = this.network.state.elementTypeIdx;
 
     // if (this._network.nodes.state.selectedNodes.length > 0) {
     //   // selected view
@@ -190,12 +194,12 @@ export class NESTCopyModels extends BaseObj {
     //   );
     //   return models.includes(model);
     // } else
-    if (elementTypeIdx > 0 && this._network.elementTypes[elementTypeIdx]) {
+    if (elementTypeIdx > 0 && this.network.elementTypes[elementTypeIdx]) {
       // element type view
-      return this._network.elementTypes[elementTypeIdx].id === model.elementType;
-    } else if (this._network.state.state.displayIdx.nodes.length > 0) {
+      return this.network.elementTypes[elementTypeIdx].id === model.elementType;
+    } else if (this.network.state.state.displayIdx.nodes.length > 0) {
       // custom view
-      return this._network.state.state.displayIdx.nodes.includes(model.idx);
+      return this.network.state.state.displayIdx.nodes.includes(model.idx);
     } else {
       // all view
       return true;

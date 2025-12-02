@@ -2,7 +2,7 @@
 
 import type { TNode } from "@/types";
 
-import type { IActivityState, IEventState } from "../..";
+import type { IActivityState, IEventState } from "../helpers/activity";
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeSpikeActivity extends NodeActivity {

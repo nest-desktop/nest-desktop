@@ -98,7 +98,7 @@
             >
               <template #append>
                 <template v-if="item.state">
-                  <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" />
+                  <!-- <v-chip v-if="appStore.state.devMode" :text="item.hash" size="x-small" /> -->
                   <ModelMenu :color="isHovering ? 'primary' : 'transparent'" :model="item" />
                 </template>
               </template>
@@ -122,7 +122,7 @@ import { useAppStore } from "@/app";
 import { useNavStore } from "@/nav";
 
 import ModelMenu from "./ModelMenu.vue";
-import type { TElementType } from "../helpers/model";
+import type { TElementType } from "../model";
 
 // import { useRouter } from "vue-router";
 // const router = useRouter();

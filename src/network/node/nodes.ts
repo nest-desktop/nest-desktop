@@ -5,7 +5,7 @@ import { type UnwrapRef, reactive } from "vue";
 import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import type { Class, TActivityGraph, TNode, TNodeGroup } from "@/types";
-import { BaseObj, type IBaseState } from "@/core";
+import { BaseObj } from "@/core";
 
 import { BaseNode, type INodeState } from "./node";
 import { type INodeGroupState, NodeGroup } from "./nodeGroup";
@@ -70,11 +70,11 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     return this.nodeItems.some((node: TNode) => node.model?.isSpikeRecorder);
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      nodes: this.nodeItems.map((node: TNode) => node.hash),
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     nodes: this.nodeItems.map((node: TNode) => node.hash),
+  //   };
+  // }
 
   /**
    * Get length of nodes list.
@@ -202,7 +202,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     const nodeGroup = new NodeGroup(this, nodeGroupState);
     // this._nodes.push(nodeGroup);
 
-    nodeGroup.updateHash();
+    // nodeGroup.updateHash();
     return nodeGroup;
   }
 
@@ -281,7 +281,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
       });
 
     this.clean();
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**
@@ -478,6 +478,6 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    */
   updateStates(): void {
     this.updateAnnotations();
-    this.updateHash();
+    // this.updateHash();
   }
 }

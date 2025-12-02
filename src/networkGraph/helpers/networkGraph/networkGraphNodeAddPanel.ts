@@ -256,6 +256,12 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this.updateColor();
   }
 
+  /**
+   * Open model menu.
+   * @param event
+   * @param elementType
+   * @returns
+   */
   openModelMenu(event: MouseEvent, elementType: TElementType): void {
     if (!this.network) return;
 
@@ -281,6 +287,12 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this._state.modelValue = true;
   }
 
+  /**
+   * Select model.
+   * @param modelId
+   * @param elementType
+   * @returns
+   */
   selectModel(modelId: string, elementType: TElementType): void {
     this.close();
 
@@ -291,14 +303,18 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
     this._workspace.animationOff();
 
-    this.network.createNode(modelId, {
+    const node = this.network.createNode(modelId, {
       elementType,
-      position: Object.assign({}, this.position),
+      position: { ...this.position },
     });
+
+    node.view.updateStyle();
 
     this.updateModelMenu(elementType);
     this._workspace.networkGraph.update();
     this._workspace.networkGraph.workspace.updateTransform();
+
+    this._workspace.networkGraph.render();
   }
 
   /**

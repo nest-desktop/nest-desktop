@@ -90,8 +90,9 @@
 
       <v-spacer />
 
+      //
       <v-chip v-if="graph && isDevMode()" size="small" variant="text" @click="graph.updateHash()">
-        {{ graph.hash }}
+        // {{ graph.hash }} //
       </v-chip>
 
       <!--

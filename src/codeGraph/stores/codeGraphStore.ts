@@ -8,11 +8,15 @@ import { defineStore } from "pinia";
 import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
 import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
+import { useAppStore } from "@/app";
 
 export const useCodeGraphStore = defineStore(
   "code-graph",
   () => {
-    const state: UnwrapRef<{ editorStates: Record<string, IEditorState> }> = reactive({ editorStates: {} });
+    const state: UnwrapRef<{
+      editorStates: Record<string, IEditorState>;
+      currentEditorId: string;
+    }> = reactive({ editorStates: {}, currentEditorId: "" });
 
     const token = Symbol("CodeGraphStore");
 
@@ -26,6 +30,7 @@ export const useCodeGraphStore = defineStore(
       if (!editorId || !editorIds.includes(editorId)) return newGraph();
 
       const editorState = state.editorStates[editorId];
+      state.currentEditorId = editorId;
 
       // load editor from editor state
       if (editorState) viewModel.loadEditor(editorState);
@@ -37,8 +42,12 @@ export const useCodeGraphStore = defineStore(
       viewModel.newGraph();
 
       const editorId = saveEditor();
-      // TODO: change route name for all workspaces.
-      return { name: "nestCodeGraphEdit", params: { editorId } };
+      state.currentEditorId = editorId;
+
+      const appStore = useAppStore();
+      const workspace = appStore.currentWorkspace?.id ?? "nest";
+
+      return { name: workspace + "CodeGraphEdit", params: { editorId } };
     };
 
     const removeEditorState = (editorId: string) => delete state.editorStates[editorId];

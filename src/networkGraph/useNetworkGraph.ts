@@ -1,6 +1,6 @@
 // useNetworkGraph.ts
 
-import { type Ref, ref } from "vue";
+import { nextTick, type Ref, ref } from "vue";
 
 import type { TNetworkGraph } from "@/types";
 
@@ -10,7 +10,9 @@ export function mountNetworkGraph(networkGraph: TNetworkGraph) {
   networkGraphRef.value = networkGraph;
 
   networkGraph.resizeObserver.observe(networkGraph.selector?.node().parentNode);
-  networkGraph.init();
+  nextTick(() => networkGraph.init());
+
+  // nextTick(() => networkGraph.network.updateStyle())
 }
 
 export function unmountNetworkGraph() {

@@ -116,7 +116,6 @@ export const projectNew = (): RouteLocationNormalizedLoadedGeneric => {
  */
 export const projectRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("redirect to project:", truncate(to.params.projectId as string));
-  logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
   if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;

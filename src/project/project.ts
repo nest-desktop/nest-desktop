@@ -5,12 +5,12 @@ import { type ICodeGraphViewModel, useCodeGraph } from "@babsey/code-graph";
 import type { Class, TActivityGraph, TStore } from "@/types";
 import { Activities, type NodeActivities } from "@/activity";
 import { BaseActivityGraph, type IBaseActivityGraphState } from "@/activityGraph";
-import { BaseObj, type IBaseState, type IDoc } from "@/core";
+import { BaseObj, type IDoc } from "@/core";
 import { truncate } from "@/utils";
 import { type IProjectCodeState, ProjectCode, registerDefaultNodeTypes } from "@/codeGraph";
 import { useModelDBStore } from "@/model";
 
-import { ProjectState } from "./projectState";
+import { ProjectState } from "./helpers/projectState";
 
 export interface IProjectState extends IDoc {
   activityGraph?: IBaseActivityGraphState;
@@ -49,6 +49,8 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
 
     // Code
     this._code = new ProjectCode(this);
+
+    // Code view model
     this._viewModel = useCodeGraph({ code: this._code });
     registerDefaultNodeTypes(this.viewModel);
 
@@ -101,13 +103,13 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
     return this._filename;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      description: this._description,
-      id: this._id,
-      name: this._name,
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     description: this._description,
+  //     id: this._id,
+  //     name: this._name,
+  //   };
+  // }
 
   get id(): string {
     return this._id;
@@ -162,7 +164,7 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
    * It commits the network in the network history.
    */
   changes(state: { resetPanels?: boolean } = {}): void {
-    this.updateHash();
+    // this.updateHash();
 
     this.state.checkChanges();
 
@@ -185,7 +187,7 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
   clean(): void {
     this.logger.trace("clean");
 
-    this.updateHash();
+    // this.updateHash();
 
     this._state.checkChanges();
   }
@@ -209,8 +211,8 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
     // Initialize activity graph.
     this.activityGraph.init();
 
-    this.updateHash();
-    this.doc.hash = this.hash;
+    // this.updateHash();
+    // this.doc.hash = this.hash;
 
     this.clean();
   }

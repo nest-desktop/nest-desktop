@@ -51,7 +51,7 @@ export class NESTSimulation extends BaseSimulation<INESTSimulationState> {
     this.kernel.init();
 
     this.registerCodeNode();
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**

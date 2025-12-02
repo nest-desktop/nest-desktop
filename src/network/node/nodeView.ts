@@ -66,8 +66,7 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
   set color(value: string) {
     this.state.color = value === "none" || value === "" ? undefined : value;
 
-    // this.node.network.updateStyle();
-    this.updateStyle();
+    this.node.network.updateStyle();
     this.node.network.clean();
   }
 

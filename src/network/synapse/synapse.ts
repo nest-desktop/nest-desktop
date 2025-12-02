@@ -95,7 +95,7 @@ export class BaseSynapse<
   changes(props = {}): void {
     this.logger.trace("changes");
 
-    this.updateHash();
+    // this.updateHash();
     this.connection.changes({ checkSynWeights: true, ...props });
   }
 
@@ -104,7 +104,7 @@ export class BaseSynapse<
    * @param modelId model ID
    */
   getModel(modelId: string): TModel | undefined {
-    this.logger.debug("get model:", modelId);
+    this.logger.trace("get model:", modelId);
 
     return this.modelDBStore.findModel(modelId);
   }
@@ -191,6 +191,6 @@ export class BaseSynapse<
    * Update synapse.
    */
   update(): void {
-    this.updateHash();
+    // this.updateHash();
   }
 }

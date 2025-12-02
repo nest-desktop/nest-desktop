@@ -12,6 +12,7 @@ import { loadJSON, logger as mainLogger, truncate } from "@/utils";
 import { useAppStore } from "@/app";
 
 import { useModelDBStore } from "./modelDBStore";
+import { upgradeProject } from "@/upgrades";
 
 export interface IModelState {
   id: string;
@@ -112,9 +113,16 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
 
       loadJSON(`assets/workspaces/${props.workspace}/projects/${state.projectId}.json`).then(
         (projectState: IProjectState) => {
+          // Upgrade project state.
+          projectState = upgradeProject(projectState);
           projectState.filename = state.projectId;
-          model.value.project = new props.Project(projectState);
-          updateProject();
+
+          const project = new props.Project();
+          project.load(projectState);
+          model.value.state.project = project;
+
+          // updateProject();
+          // nextTick(() => project.init());
         },
       );
     };
@@ -201,11 +209,11 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
 
       if (model.value.project && model.value.project?.filename === state.projectId) {
         state.project = model.value.project;
-        const project = state.project as TProject;
+        const project = state.project;
 
         if (project) {
           if ("network" in project) {
-            const network = project.network as TNetwork;
+            const network = project.network;
             network.nodes.neurons.forEach((neuron) => {
               neuron.modelId = state.modelId;
             });

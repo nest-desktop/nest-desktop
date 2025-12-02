@@ -22,7 +22,7 @@ export class NESTActivityGraph extends BaseActivityGraph {
    * Initialize activity graph.
    */
   override init(): void {
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("init");
 
     this.activityChartGraph.init();
@@ -40,7 +40,7 @@ export class NESTActivityGraph extends BaseActivityGraph {
     this.activityChartGraph.update();
     this.activityAnimationGraph.update();
 
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("update");
   }
 }

@@ -1,21 +1,27 @@
 // network.ts
 
-import { BaseNetwork, INetworkState } from "@/network";
-import type { Class, TNetworkState, TNode, TNodeGroup } from "@/types";
-import type { IBaseState } from "@/core";
+import { BaseNetwork, INetworkState, INodeViewState } from "@/network";
+import type { Class, TNetworkState } from "@/types";
 
 import type { NESTConnection } from "./connection";
 import type { NESTModel } from "../model";
 import type { NESTProject } from "../project";
 import { NESTConnections } from "./connection";
 import { NESTCopyModels, type INESTCopyModelState, type NESTCopyModel } from "./copyModel";
-import { NESTNodes } from "./node";
+import { type NESTNode, NESTNodes } from "./node";
+import { loadNESTConnectNode, loadNESTCreateNode } from "../codeNodeTypes/nest";
 
 export interface INESTNetworkState extends INetworkState {
   models?: INESTCopyModelState[];
 }
 
-const _elementTypes: { icon: string; id: string; title: string }[] = [
+const defaultModels: Record<string, string> = {
+  neuron: "iaf_psc_alpha",
+  recorder: "voltmeter",
+  stimulator: "dc_generator",
+};
+
+const elementTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
   { icon: "mdi:mdi-select-group", id: "group", title: "group" },
   { icon: "graph:stimulator", id: "stimulator", title: "stimulator" },
@@ -51,7 +57,7 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
   }
 
   override get elementTypes() {
-    return _elementTypes;
+    return elementTypes;
   }
 
   override get isEmpty(): boolean {
@@ -69,13 +75,13 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
     return this._copyModels;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
-      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-      connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
+  //     nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
+  //     connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
+  //   };
+  // }
 
   override get project(): NESTProject {
     return this._project as NESTProject;
@@ -90,7 +96,7 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
    * @returns a list of synapse models
    */
   get synapseModels(): (NESTModel | NESTCopyModel)[] {
-    this.logger.debug("get synapse models by element type");
+    this.logger.trace("get synapse models by element type");
 
     return this.project.modelDBStore.getModelsByElementType("synapse");
   }
@@ -115,6 +121,66 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
     this.connections.clear();
     this.nodes.clear();
     this.copyModels.clear();
+  }
+
+  /**
+   * Connect node components by user interaction.
+   * @param sourceId ID of source node
+   * @param targetId ID of target node
+   *
+   * @remarks When it connects to a recorder, it initializes activity graph.
+   */
+  override connectNodes(sourceIdx: number, targetIdx: number): NESTConnection {
+    this.logger.trace("connect nodes");
+
+    // Add connection.
+    const codeNode = loadNESTConnectNode(
+      this.project.code.graph,
+      {
+        sourceIdx,
+        targetIdx,
+      },
+      this.nodes.codeNodes,
+    );
+
+    // Initialize connection.
+    // connection.init();
+
+    // Correct connections with recorder.
+    // if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
+
+    // // Update synaptic weight label.
+    // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
+    //   connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
+
+    // // Update recorder and clean activity panels.
+    // if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+
+    // Trigger network change.
+    // this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
+
+    return codeNode.mask;
+  }
+
+  /**
+   * Create node component by user interaction.
+   * @param model model name of default models
+   * @param viewState node view props
+   */
+  override createNode(model?: string, viewState?: INodeViewState): NESTNode {
+    this.logger.trace("create node");
+    console.log(viewState);
+
+    // Load create node.
+    const codeNode = loadNESTCreateNode(this.project.code.graph, {
+      model: model || defaultModels[viewState?.elementType || "neuron"],
+      view: viewState,
+    });
+
+    // Trigger network change.
+    // this.changes({ preventSimulation: true });
+
+    return codeNode.mask;
   }
 
   /**
@@ -160,8 +226,9 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
     this.connections.init();
     this.copyModels.init();
 
-    this.updateStyle();
-    this.updateHash();
+    // this.updateHash();
+
+    this.clean();
   }
 
   /**

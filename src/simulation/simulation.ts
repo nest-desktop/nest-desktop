@@ -76,7 +76,7 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
    * Triggers on simulation changes.
    */
   changes(props = {}): void {
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("changes");
 
     this.project.changes(props);
@@ -88,7 +88,7 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
   init(): void {
     this.logger.trace("init");
 
-    this.updateHash();
+    // this.updateHash();
   }
 
   // /**

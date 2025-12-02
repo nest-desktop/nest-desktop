@@ -117,7 +117,7 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
   render(): void {
     this.logger.silly("render");
 
-    this.updateStyle();
+    // this.updateStyle();
 
     this._nodeGraphConnector.render();
     this._nodeGraphShape.render();

@@ -5,13 +5,12 @@ import type { AxiosResponse } from "axios";
 
 import type { Class, TNetwork, TSimulation } from "@/types";
 import type { IAxiosResponseData } from "@/backends";
-import type { IBaseState } from "@/core";
 import { BaseSimulation, type ISimulationState } from "@/simulation";
 import { NodeActivities } from "@/activity";
 import { closeLoading, openLoading, getCurrentViewStore } from "@/app";
 import { type INetworkState, BaseNetwork, NetworkRevision } from "@/network";
 
-import { BaseProject, type IProjectState } from "./project";
+import { BaseProject, type IProjectState } from "../project";
 
 export interface INetworkProjectState extends IProjectState {
   network?: INetworkState;
@@ -63,15 +62,15 @@ export abstract class NetworkProject<
     return this._simulation;
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      description: this.description,
-      id: this.id,
-      name: this.name,
-      network: this._network.hash,
-      simulation: this._simulation.hash,
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     description: this.description,
+  //     id: this.id,
+  //     name: this.name,
+  //     network: this._network.hash,
+  //     simulation: this._simulation.hash,
+  //   };
+  // }
 
   get network(): TNetwork {
     return this._network;
@@ -97,7 +96,7 @@ export abstract class NetworkProject<
    * It commits the network in the network history.
    */
   override changes(props: { cleanPanels?: boolean; preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
-    this.updateHash();
+    // this.updateHash();
 
     this.state.checkChanges();
 
@@ -147,8 +146,8 @@ export abstract class NetworkProject<
   override init(): void {
     this.logger.trace("init");
 
-    // // Initialize network.
-    // this.network.init();
+    // Initialize network.
+    this.network.init();
 
     // // Initialize network history.
     // this.networkRevision.init();
@@ -156,14 +155,14 @@ export abstract class NetworkProject<
     // // Initialize simulation.
     // this.simulation.init();
 
-    // // Initialize activities.
-    // this.activities.init();
+    // Initialize activities.
+    this.activities.init();
 
     // // Initialize activity graph.
-    // this.activityGraph.init();
+    this.activityGraph.init();
 
-    this.updateHash();
-    this.doc.hash = this.hash;
+    // this.updateHash();
+    // this.doc.hash = this.hash;
 
     this.clean();
   }

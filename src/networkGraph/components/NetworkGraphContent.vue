@@ -8,15 +8,7 @@
           color: 'var(--colorNode' + connection.source?.idx + ')',
         }"
       >
-        <marker
-          :id="'syn-' + index"
-          :key="connection.hash"
-          markerHeight="8"
-          markerWidth="16"
-          orient="auto"
-          refX="12"
-          refY="4"
-        >
+        <marker :id="'syn-' + index" markerHeight="8" markerWidth="16" orient="auto" refX="12" refY="4">
           <path
             v-if="connection.view.markerEndLabel === 'generic'"
             d="M11,2L14,4L11,6"

@@ -4,7 +4,7 @@ import { type UnwrapRef, reactive } from "vue";
 import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import type { Class, TConnection, TNode, TNodeGroup } from "@/types";
-import { BaseObj, IBaseState } from "@/core";
+import { BaseObj } from "@/core";
 
 import { BaseConnection, type IConnectionState } from "./connection";
 import { BaseNetwork } from "../network";
@@ -54,11 +54,11 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
     return this.connections.filter((connection: TConnection) => !connection.view.connectRecorder());
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      connections: this.connections.map((connection: TConnection) => connection.hash),
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     connections: this.connections.map((connection: TConnection) => connection.hash),
+  //   };
+  // }
 
   /**
    * Get length of connection list.
@@ -137,7 +137,7 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
       connectionStates.forEach((connectionState: IConnectionState) => this.addConnection(connectionState));
 
     this.clean();
-    this.updateHash();
+    // this.updateHash();
   }
 
   /**

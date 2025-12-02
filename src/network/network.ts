@@ -3,17 +3,17 @@
 import type { Class, TConnection, TConnections, TModel, TNode, TNodeGroup, TNodes, TProject } from "@/types";
 import { BaseObj, type IBaseState } from "@/core";
 
-import { BaseConnections, type IConnectionState } from "../connection";
-import { BaseNodes, type INodeState, type INodeViewState } from "../node";
+import { BaseConnections, type IConnectionState } from "./connection";
+import { BaseNode, BaseNodes, type INodeState, type INodeViewState } from "./node";
 
-import { NetworkState } from "./networkState";
+import { NetworkState } from "./helpers/networkState";
 
 export interface INetworkState extends IBaseState {
   nodes?: INodeState[];
   connections?: IConnectionState[];
 }
 
-const _elementTypes: { icon: string; id: string; title: string }[] = [
+const elementTypes: { icon: string; id: string; title: string }[] = [
   { icon: "mdi:mdi-all-inclusive", id: "all", title: "all" },
   { icon: "mdi:mdi-select-group", id: "group", title: "group" },
   { icon: "graph:stimulator", id: "stimulator", title: "stimulator" },
@@ -27,12 +27,6 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
   public _connections: TConnections;
   public _nodes: TNodes;
   public _project: TProject; // parent
-
-  private _defaultModels: Record<string, string> = {
-    neuron: "iaf_psc_alpha",
-    recorder: "voltmeter",
-    stimulator: "dc_generator",
-  };
 
   constructor(project: TProject) {
     super({ config: { name: "Network" } });
@@ -66,24 +60,20 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     return this._connections;
   }
 
-  set defaultModels(value: Record<string, string>) {
-    this._defaultModels = value;
-  }
-
   get elementTypes() {
-    return _elementTypes;
+    return elementTypes;
   }
 
   // get graph(): TNetworkGraph {
   //   return useNetworkGraph()
   // }
 
-  override get hashObject(): IBaseState {
-    return {
-      nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-      connections: this.connections.all.map((connection: TConnection) => connection.hash),
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
+  //     connections: this.connections.all.map((connection: TConnection) => connection.hash),
+  //   };
+  // }
 
   get isEmpty(): boolean {
     return this.nodes.all.length === 0 && this.connections.all.length === 0;
@@ -112,8 +102,8 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
   changes(props = {}): void {
     this.logger.trace("changes");
 
-    this.updateStyle();
-    this.updateHash();
+    // this.updateStyle();
+    // this.updateHash();
 
     this.project.changes(props);
   }
@@ -140,18 +130,18 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
 
   /**
    * Connect node components by user interaction.
-   * @param sourceNodeId ID of source code node
-   * @param targetNodeId ID of target code node
+   * @param sourceId ID of source node
+   * @param targetId ID of target node
    *
    * @remarks When it connects to a recorder, it initializes activity graph.
    */
-  connectNodes(sourceNodeId: string, targetNodeId: string): void {
+  connectNodes(sourceIdx: number, targetIdx: number): void {
     this.logger.trace("connect nodes");
 
     // Add connection.
-    const connection: TConnection | undefined = this.connections.addConnection({
-      sourceNodeId,
-      targetNodeId,
+    const connection: TConnection = this.connections.addConnection({
+      sourceIdx,
+      targetIdx,
     });
 
     // Initialize connection.
@@ -176,20 +166,13 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
    * @param model model name of default models
    * @param view node view props
    */
-  createNode(model?: string, view?: INodeViewState): void {
+  createNode(model?: string, viewState?: INodeViewState): BaseNode {
     this.logger.trace("create node");
 
-    // Add node.
-    const node = this.nodes.addNode({
-      model: model || this._defaultModels[view?.elementType || "neuron"],
-      view,
+    return this.nodes.addNode({
+      model: model,
+      view: viewState,
     });
-
-    // Initialize node.
-    node.init();
-
-    // Trigger network change.
-    this.changes({ preventSimulation: true });
   }
 
   /**
@@ -275,8 +258,9 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     this.nodes.init();
     this.connections.init();
 
-    this.updateStyle();
-    this.updateHash();
+    // this.updateHash();
+
+    this.clean();
   }
 
   /**
@@ -311,6 +295,6 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
   updateStyle(): void {
     this.logger.trace("update node style");
 
-    this._nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
+    this.nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
   }
 }

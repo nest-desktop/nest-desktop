@@ -2,10 +2,10 @@
 
 import { BaseNetwork, type INetworkState, type INodeGroupState, type INodeState } from "@/network";
 
-import type { INorseConnectionState } from "../connection";
-import { NorseConnections } from "../connection";
-import { NorseNodes } from "../node";
-import { NorseProject } from "../../../project";
+import type { INorseConnectionState } from "./connection";
+import { NorseConnections } from "./connection";
+import { NorseNodes } from "./node";
+import { NorseProject } from "../project";
 
 export interface INorseNetworkState extends INetworkState {
   nodes?: (INodeGroupState | INodeState)[];

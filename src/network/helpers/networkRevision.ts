@@ -1,9 +1,10 @@
 // networkRevision.ts
 
+import { sha1 } from "object-hash";
 import type { TNode, TProject } from "@/types";
 import { BaseObj } from "@/core";
 
-import type { INetworkState } from "./network";
+import type { INetworkState } from "../network";
 import type { INodeState } from "../node";
 
 interface INetworkRevisionState extends INetworkState {
@@ -33,7 +34,7 @@ export class NetworkRevision extends BaseObj<INetworkRevisionState> {
    * Load network from the history list.
    * @remarks It generates code.
    */
-  load(): INetworkRevisionState {
+  load(): INetworkRevisionState | undefined {
     this.logger.trace("checkout network");
 
     // Update revision idx.
@@ -58,8 +59,8 @@ export class NetworkRevision extends BaseObj<INetworkRevisionState> {
     this.logger.trace("commit network");
     if (!("network" in this._project)) return;
 
-    const codeHash = this._project.code.hash;
-    // if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
+    const codeHash = sha1(this._project.network.save());
+    if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
 
     // Remove networks after the current.
     this._revisions = this._revisions.slice(0, this._revisionIdx + 1);

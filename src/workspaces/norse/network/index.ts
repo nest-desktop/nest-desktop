@@ -1,5 +1,5 @@
 // network
 
-export * from "./helpers/connection";
-export * from "./helpers/network";
-export * from "./helpers/node";
+export * from "./connection";
+export * from "./network";
+export * from "./node";

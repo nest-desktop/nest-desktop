@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-select
-      :key="node.hash"
       v-model="node.records"
       :items="node.recordables"
       base-color="primary"

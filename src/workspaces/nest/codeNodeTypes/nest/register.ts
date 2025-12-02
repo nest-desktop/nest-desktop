@@ -3,6 +3,8 @@
 import { type ICodeGraphViewModel } from "@babsey/code-graph";
 // import { registerNumpyNodeTypes } from "../numpy";
 
+import { registerCodeNodeModule } from "@/codeGraph";
+
 import { nestConnect } from "./nestConnect";
 import { nestCopyModel } from "./nestCopyModel";
 import { nestCreate } from "./nestCreate";
@@ -55,3 +57,5 @@ export const registerNESTNodeTypes = (viewModel: ICodeGraphViewModel) => {
   editor.registerNodeType(nestSpatialFree, { category });
   editor.registerNodeType(nestSpatialGrid, { category });
 };
+
+registerCodeNodeModule("nest", registerNESTNodeTypes);

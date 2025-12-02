@@ -1,5 +1,5 @@
 <template>
-  <template v-if="projectStore.state.project && projectStore.props.workspace === 'nest'">
+  <template v-if="project?.viewModel && projectStore.props.workspace === 'nest'">
     <ProjectNav color="nest-project" />
 
     <ProjectBar color="nest-project">

@@ -241,7 +241,7 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
       .attr("class", "connection")
       .attr("color", (c: TConnection) => c.sourceNode.view.color)
       .attr("idx", (c: TConnection) => c.idx)
-      .attr("hash", (c: TConnection) => c.hash)
+      // .attr("hash", (c: TConnection) => c.hash)
       .style("opacity", 0)
       .call(dragging, null)
       .each((c: TConnection, i: number, e) => this.init(c, i, e));

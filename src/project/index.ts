@@ -1,7 +1,7 @@
 // project
 
 export * from "./helpers/networkProject";
-export * from "./helpers/project";
+export * from "./project";
 export * from "./helpers/projectState";
 
 export * from "./routes";

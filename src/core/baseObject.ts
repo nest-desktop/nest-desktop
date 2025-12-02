@@ -1,7 +1,7 @@
 // baseObject.ts
 // https://tslog.js.org/#/
 
-import { sha1 } from "object-hash";
+// import { sha1 } from "object-hash";
 import { type ILogObj, type ISettingsParam, Logger } from "tslog";
 import { type Ref, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
@@ -21,7 +21,7 @@ export interface IBaseObjProps {
 
 export abstract class BaseObj<T = unknown | null> {
   private _config?: Config;
-  private _hash: string = "";
+  // private _hash: string = "";
   private _logger: Logger<ILogObj>;
   private _props: Ref<T | undefined> = ref();
   private _uuid: string;
@@ -29,7 +29,7 @@ export abstract class BaseObj<T = unknown | null> {
   constructor(props?: IBaseObjProps) {
     this._uuid = uuidv4();
     this._logger = mainLogger.getSubLogger({
-      name: `[${truncate(this._uuid)}] ${this.constructor.name}`,
+      name: `[${this.shortUuid}] ${this.constructor.name}`,
       ...props?.logger?.settings,
     });
 
@@ -44,13 +44,13 @@ export abstract class BaseObj<T = unknown | null> {
     return this._config;
   }
 
-  get hash(): string {
-    return this._hash;
-  }
+  // get hash(): string {
+  //   return this._hash;
+  // }
 
-  get hashObject(): IBaseState | IBaseState[] {
-    return this.save();
-  }
+  // get hashObject(): IBaseState | IBaseState[] {
+  //   return this.save();
+  // }
 
   get logger(): Logger<ILogObj> {
     return this._logger;
@@ -61,7 +61,7 @@ export abstract class BaseObj<T = unknown | null> {
   }
 
   get shortUuid(): string {
-    return truncate(this._uuid);
+    return truncate(this.uuid);
   }
 
   get uuid(): string {
@@ -73,24 +73,24 @@ export abstract class BaseObj<T = unknown | null> {
    * @returns state
    */
   save(): IBaseState | IBaseState[] {
-    return {};
+    return { uuid: this.uuid };
   }
 
-  /**
-   * Update hash.
-   */
-  updateHash(): void {
-    this._logger.trace("update hash");
+  // /**
+  //  * Update hash.
+  //  */
+  // updateHash(): void {
+  //   this._logger.trace("update hash");
 
-    this._hash = truncate(sha1(this.hashObject));
-    this.updateLoggerName("#" + this.hash);
-  }
+  //   // this._hash = truncate(sha1(this.hashObject));
+  //   this.updateLoggerName("#" + this.hash);
+  // }
 
-  /**
-   * Update logger name suffix.
-   * @param text string
-   */
-  updateLoggerName(text: string): void {
-    this._logger.settings.name = `[${truncate(this._uuid)}] ${this.constructor.name} ${text}`;
-  }
+  // /**
+  //  * Update logger name suffix.
+  //  * @param text string
+  //  */
+  // updateLoggerName(text: string): void {
+  //   this.logger.settings.name = `[${truncate(this.uuid)}] ${this.constructor.name} ${text}`;
+  // }
 }

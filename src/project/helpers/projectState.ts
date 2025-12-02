@@ -2,7 +2,7 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-import type { BaseProject } from "./project";
+import type { BaseProject } from "../project";
 
 export interface IProjectRefState {
   changes: boolean;
@@ -55,9 +55,9 @@ export class ProjectState<TProject extends BaseProject = BaseProject> {
    * Check the changes in project.
    */
   checkChanges(): void {
-    this._state.changes =
-      // this._project.id !== this._project.doc.id ||
-      this._project.hash !== this._project.doc.hash;
+    this._state.changes = false;
+    // this._project.id !== this._project.doc.id ||
+    // this._project.hash !== this._project.doc.hash;
   }
 
   /**

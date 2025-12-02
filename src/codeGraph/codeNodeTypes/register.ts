@@ -3,18 +3,32 @@
 import { type Ref, ref } from "vue";
 import { type ICodeGraphViewModel } from "@babsey/code-graph";
 
-type TNodeTypeModule = (viewModel: ICodeGraphViewModel) => void;
+import { registerDefaultNodeTypes } from "./default";
+import { registerExampleNodeTypes } from "./examples";
+import { registerNumpyNodeTypes } from "./numpy";
+import { registerElephantNodeTypes } from "./elephant";
+import { registerTorchNodeTypes } from "./torch";
+import { registerNeoNodeTypes } from "./neo";
 
-const nodeTypeModules: Ref<Record<string, TNodeTypeModule>> = ref({});
+type TCodeNodeModules = (viewModel: ICodeGraphViewModel) => void;
 
-export const registerNodeTypeModule = (moduleName: string, nodeTypes: TNodeTypeModule) => {
-  nodeTypeModules.value[moduleName] = nodeTypes;
+const codeNodeModules: Ref<Record<string, TCodeNodeModules>> = ref({
+  default: registerDefaultNodeTypes,
+  example: registerExampleNodeTypes,
+  numpy: registerNumpyNodeTypes,
+  elephant: registerElephantNodeTypes,
+  torch: registerTorchNodeTypes,
+  neo: registerNeoNodeTypes,
+});
+
+export const registerCodeNodeModule = (moduleName: string, nodeTypes: TNodeTypeModule) => {
+  codeNodeModules.value[moduleName] = nodeTypes;
 };
 
 export const registerNodeTypes = (viewModel: ICodeGraphViewModel, modules?: string[]) => {
-  if (!modules) modules = Object.keys(nodeTypeModules);
+  if (!modules) modules = Object.keys(codeNodeModules.value);
   modules.forEach((module: string) => {
-    const nodeTypeModule = nodeTypeModules.value[module];
+    const nodeTypeModule = codeNodeModules.value[module];
     if (nodeTypeModule) nodeTypeModule(viewModel);
   });
 };

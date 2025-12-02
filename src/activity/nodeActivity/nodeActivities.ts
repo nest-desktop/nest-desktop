@@ -2,11 +2,12 @@
 
 import type { TNode, TProject } from "@/types";
 
-import type { Activity } from "../activity";
+import type { Activity } from "../helpers/activity";
+import { Activities } from "../helpers/activities";
+
 import type { NodeActivity } from "./nodeActivity";
 import type { NodeAnalogSignalActivity } from "./nodeAnalogSignalActivity";
 import type { NodeSpikeActivity } from "./nodeSpikeActivity";
-import { Activities } from "../activities";
 
 export class NodeActivities extends Activities {
   constructor(project: TProject) {
