@@ -117,8 +117,6 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
   render(): void {
     this.logger.silly("render");
 
-    // this.updateStyle();
-
     this._nodeGraphConnector.render();
     this._nodeGraphShape.render();
 
@@ -130,7 +128,7 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
     nodes
       .transition(t)
       .style("opacity", 1)
-      .style("color", (n: TNode | TNodeGroup) => "var(--colorNode" + n.idx + ")")
+      .style("color", (n: TNode | TNodeGroup) => `var(--colorNode${n.idx})`)
       .style("background-color", "rgb(var(--v-theme-background))")
       .attr("transform", (n: TNode | TNodeGroup) => `translate(${n.view.position.x},${n.view.position.y})`);
 
@@ -164,7 +162,7 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
       .append("g")
       .attr("class", "node")
       .classed("nodeGroup", (n: TNode | TNodeGroup) => n.isGroup)
-      .style("color", (n: TNode | TNodeGroup) => "var(--colorNode" + n.idx + ")")
+      .style("color", (n: TNode | TNodeGroup) => `var(--colorNode${n.idx})`)
       .attr("idx", (n: TNode | TNodeGroup) => n.idx)
       .attr("weight", (n: TNode | TNodeGroup) => n.view.synWeights as string)
       .attr(
@@ -180,9 +178,4 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
 
     nextTick(() => this.render());
   }
-
-  /**
-   * Update style of the nodes.
-   */
-  updateStyle(): void {}
 }

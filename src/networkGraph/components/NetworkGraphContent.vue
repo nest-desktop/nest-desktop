@@ -5,7 +5,7 @@
         v-for="(connection, index) of graph.network.connections.all"
         :key="'defs' + index"
         :style="{
-          color: 'var(--colorNode' + connection.source?.idx + ')',
+          color: `var(--colorNode${connection.source?.idx})`,
         }"
       >
         <marker :id="'syn-' + index" markerHeight="8" markerWidth="16" orient="auto" refX="12" refY="4">

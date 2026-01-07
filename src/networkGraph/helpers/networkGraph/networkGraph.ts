@@ -152,7 +152,6 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   init(): void {
     this.logger.trace("init");
 
-    this.network.updateStyle();
     this.workspace?.init();
     this.update();
 
@@ -221,6 +220,7 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   update(): void {
     this.logger.trace("update");
 
+    this.network.updateStyle();
     this.workspace.update();
 
     this.connectionGraph.update();

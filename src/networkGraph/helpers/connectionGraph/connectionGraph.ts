@@ -167,7 +167,7 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
     connections
       .style("color", (c: TConnection) => {
         if (!c.source) return;
-        return "var(--colorNode" + c.source?.idx + ")";
+        return `var(--colorNode${c.source?.idx})`;
       })
       .transition(t)
       .style("opacity", 1);

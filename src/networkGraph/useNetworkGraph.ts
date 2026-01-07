@@ -11,8 +11,6 @@ export function mountNetworkGraph(networkGraph: TNetworkGraph) {
 
   networkGraph.resizeObserver.observe(networkGraph.selector?.node().parentNode);
   nextTick(() => networkGraph.init());
-
-  // nextTick(() => networkGraph.network.updateStyle())
 }
 
 export function unmountNetworkGraph() {
