@@ -207,8 +207,6 @@ export class BaseConnection<
    * @param connectionState connection state
    */
   load(connectionState: IConnectionState): void {
-    console.log(connectionState);
-
     let sourceNode;
     if (connectionState.sourceId) {
       sourceNode = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.sourceId);

@@ -103,7 +103,9 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
   }
 
   get nodes(): (TNode | TNodeGroup)[] {
-    return this.codeNodes.map((codeNode: AbstractCodeNode) => codeNode.mask);
+    return this.codeNodes
+      .filter((codeNode: AbstractCodeNode) => codeNode.mask)
+      .map((codeNode: AbstractCodeNode) => codeNode.mask);
   }
 
   /**

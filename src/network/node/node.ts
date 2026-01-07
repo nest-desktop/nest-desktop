@@ -432,7 +432,7 @@ export class BaseNode<
     this.logger.trace("load", nodeState);
 
     if (nodeState.model) this.loadModel(nodeState.model);
-    this.params.load(nodeState.params);
+    if (nodeState.params) this.params.load(nodeState.params);
     if (nodeState.view) this.view.load(nodeState.view);
   }
 
@@ -586,7 +586,7 @@ export class BaseNode<
   update(): void {
     this.clean();
 
-    this.view.updateStyle();
+    // this.view.updateStyle();
     // this.updateHash();
   }
 

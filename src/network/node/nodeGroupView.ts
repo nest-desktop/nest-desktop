@@ -160,6 +160,6 @@ export class NodeGroupView extends BaseObj {
    */
   updateStyle(): void {
     const root = document.documentElement;
-    root.style.setProperty("--colorNode" + this._nodeGroup.idx, this.color);
+    root.style.setProperty(`--colorNode${this.nodeGroup.idx}`, this.color);
   }
 }

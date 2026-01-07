@@ -136,7 +136,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
    * @remarks When it connects to a recorder, it initializes activity graph.
    */
   connectNodes(sourceIdx: number, targetIdx: number): void {
-    this.logger.trace("connect nodes");
+    this.logger.debug("connect nodes");
 
     // Add connection.
     const connection: TConnection = this.connections.addConnection({
@@ -259,6 +259,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     this.connections.init();
 
     // this.updateHash();
+    // this.updateStyle();
 
     this.clean();
   }
@@ -294,6 +295,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
    */
   updateStyle(): void {
     this.logger.trace("update node style");
+    if (this.nodes.all.length === 0) return
 
     this.nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
   }

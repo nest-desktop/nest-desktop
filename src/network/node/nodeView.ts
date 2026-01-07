@@ -14,7 +14,7 @@ const networkGraph = useNetworkGraph();
 export interface INodeViewState extends IBaseState {
   color?: string;
   elementType?: string;
-  position: { x: number; y: number };
+  position?: { x: number; y: number };
   synWeights?: string;
   visible?: boolean;
 }
@@ -47,6 +47,7 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
     this._state = reactive<INodeViewRefState>({
       expansionPanels: [0],
       label: "",
+      position: { x: 0, y: 0 },
       positions: [],
       showSize: this.node.size?.value > 1,
       synWeights: "",
@@ -70,12 +71,12 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
     this.node.network.clean();
   }
 
-  override get hashObject(): IBaseState {
-    return {
-      color: this.color,
-      position: this.state.position,
-    };
-  }
+  // override get hashObject(): IBaseState {
+  //   return {
+  //     color: this.color,
+  //     position: this.state.position,
+  //   };
+  // }
 
   /**
    * Check if this node is focused.
@@ -141,7 +142,7 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
   }
 
   get position(): { x: number; y: number } {
-    return this._state.position;
+    return this.state.position;
   }
 
   get state(): UnwrapRef<INodeViewRefState> {
@@ -268,6 +269,6 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
    */
   updateStyle(): void {
     const root = document.documentElement;
-    root.style.setProperty("--colorNode" + this.node.idx, this.color);
+    root.style.setProperty(`--colorNode${this.node.idx}`, this.color);
   }
 }
