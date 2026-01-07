@@ -54,6 +54,8 @@ export class NESTNetworkGraph extends BaseNetworkGraph<NESTNetwork> {
   override update(): void {
     this.logger.trace("update");
 
+    this.network.updateStyle();
+
     this.workspace.update();
 
     this.modelAssignGraph.update();

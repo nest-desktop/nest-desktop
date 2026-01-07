@@ -143,11 +143,11 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
       this.nodes.codeNodes,
     );
 
-    // Initialize connection.
-    // connection.init();
+    if (!codeNode.mask) codeNode.afterGraphLoaded();
+    const connection = codeNode.mask;
 
-    // Correct connections with recorder.
-    // if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
+    // // Correct connections with recorder.
+    if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
 
     // // Update synaptic weight label.
     // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
@@ -169,7 +169,6 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
    */
   override createNode(model?: string, viewState?: INodeViewState): NESTNode {
     this.logger.trace("create node");
-    console.log(viewState);
 
     // Load create node.
     const codeNode = loadNESTCreateNode(this.project.code.graph, {

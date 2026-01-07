@@ -12,7 +12,7 @@
               v-for="(model, index) of network.copyModels.synapseModels"
               :key="'defs' + index"
               :style="{
-                color: 'var(--colorNode' + model.weightRecorder.idx + ')',
+                color: `var(--colorNode${model.weightRecorder.idx})`,
               }"
             >
               <marker

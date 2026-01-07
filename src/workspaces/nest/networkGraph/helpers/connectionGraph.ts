@@ -189,7 +189,7 @@ export class NESTConnectionGraph extends ConnectionGraph<NESTNetworkGraph> {
     connections
       .style("color", (c: NESTConnection) => {
         if (!c.source) return;
-        return "var(--colorNode" + c.source?.idx + ")";
+        return `var(--colorNode${c.source?.idx})`;
       })
       .transition(t)
       .style("opacity", 1);

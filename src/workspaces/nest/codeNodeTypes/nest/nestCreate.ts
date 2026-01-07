@@ -36,10 +36,12 @@ export const nestCreate = defineCodeNode({
     positions: () =>
       new CodeNodeOutputInterface("positions", ".positions").use(displayInSidebar, true).setOptional(true),
   },
-  // onPlaced() {
-  //   updateNESTNode(this);
-  // },
+  onPlaced() {
+    if (this.graph.loading || !this.code.project) return;
+    updateNESTNode(this);
+  },
   afterGraphLoaded() {
+    if (!this.code.project) return;
     updateNESTNode(this);
   },
   onConnected() {
@@ -167,6 +169,7 @@ export const loadNESTCreateNode = (graph: CodeGraph, nodeState: INESTNodeState, 
 
 export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INESTNodeState): void => {
   codeNode.state.props = nodeState;
+  if (codeNode.mask) codeNode.mask.view.load(nodeState.view);
 
   const codeNodeState: Record<string, unknown> = { model: nodeState.model };
   if (nodeState.size) codeNodeState.size = nodeState.size;
@@ -205,13 +208,13 @@ const updateNESTNode = (codeNode: AbstractCodeNode) => {
       model: codeNode.inputs.model.value,
     });
     node.registerCodeNode(codeNode);
-
-    const paramsNode = codeNode.getConnectedNodeByInterface("params", "input");
-    if (paramsNode) node.params.registerCodeNode(paramsNode);
-
-    const spatialNode = codeNode.getConnectedNodeByInterface("spatial", "input");
-    if (spatialNode) node.spatial.registerCodeNode(spatialNode);
   }
+
+  const paramsNode = codeNode.getConnectedNodeByInterface("params", "input");
+  if (paramsNode) node.params.registerCodeNode(paramsNode);
+
+  const spatialNode = codeNode.getConnectedNodeByInterface("spatial", "input");
+  if (spatialNode) node.spatial.registerCodeNode(spatialNode);
 
   if (codeNode.state.props?.view) node.view.load(codeNode.state.props.view);
 

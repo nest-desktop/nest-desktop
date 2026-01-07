@@ -40,10 +40,8 @@ export const nestConnect = defineCodeNode({
     conn_spec: () => new SelectInterface("conn_spec", "all_to_all", ruleItems).setOptional(true),
     syn_spec: () => new TextInputInterface("syn_spec", "static_synapse").setOptional(true),
   },
-  // onPlaced() {
-  //   updateNESTNode(this);
-  // },
   afterGraphLoaded() {
+    if (!this.code.project) return;
     updateNESTNode(this);
   },
   onConnected() {
@@ -219,8 +217,8 @@ export const updateNESTConnectSynapseNode = (codeNode: AbstractCodeNode, synapse
   }
 };
 
-const updateNESTNode = (codeNode: AbstractCodeNode) => {
-  // console.log("after graph loaded", this);
+export const updateNESTNode = (codeNode: AbstractCodeNode) => {
+  // console.log("update nest node", codeNode);
   if (!codeNode.code.project) return;
 
   let connection = codeNode.mask;
