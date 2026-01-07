@@ -13,7 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { CodeGraphEditor } from "@babsey/code-graph";
+import { components } from "@babsey/code-graph";
+const { CodeGraphEditor } = components;
 
 import CodeEditor from "./CodeEditor.vue";
 

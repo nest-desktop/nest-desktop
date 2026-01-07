@@ -43,7 +43,8 @@ import { onBeforeRouteUpdate } from "vue-router";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { Splitpanes, Pane } from "splitpanes";
 
-import { CodeGraphEditor, NavBar } from "@babsey/code-graph";
+import { components } from "@babsey/code-graph";
+const { CodeGraphEditor, NavBar } = components;
 
 import CodeEditor from "../components/CodeEditor.vue";
 

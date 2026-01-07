@@ -7,7 +7,8 @@ import { Extension } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { computed, UnwrapRef } from "vue";
 
-import { CodeEditor } from "@babsey/code-graph";
+import { components } from "@babsey/code-graph";
+const { CodeEditor } = components;
 
 import type { IErrorState } from "@/plugins/codeMirrorExtensions/codeError";
 import { autocompletion, codeError, languagePython, oneDark } from "@/plugins/codemirror";
