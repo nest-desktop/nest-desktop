@@ -32,7 +32,9 @@ interface IBaseModelRefState {
   label: string;
 }
 
-export type TElementType = "neuron" | "recorder" | "stimulator" | "synapse";
+export type TNodeElementType = "neuron" | "recorder" | "stimulator";
+export type TSynapseElementType = "synapse";
+export type TElementType = TNodeElementType | TSynapseElementType;
 
 export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
   private _abbreviation: string;
@@ -152,7 +154,7 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
    * @remarks for select component
    */
   get label(): string {
-    return this._state.label;
+    return this.state.label;
   }
 
   get params(): ModelParameters {
@@ -181,6 +183,26 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
 
   get value(): string {
     return this.id;
+  }
+
+  /**
+   * Get variable name.
+   * @remarks for select component
+   */
+  get variableName(): string {
+    let name: string;
+    switch (this.elementType) {
+      case "neuron":
+        name = "n";
+        break;
+      case undefined:
+        name = "n";
+        break;
+      default:
+        name = this.abbreviation;
+    }
+
+    return name;
   }
 
   /**
