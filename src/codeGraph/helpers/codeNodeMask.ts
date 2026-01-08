@@ -25,4 +25,14 @@ export abstract class CodeNodeMask<T = unknown | null> extends BaseObj<T> {
     this.codeNode = codeNode;
     this.codeNode.mask = this;
   }
+
+  /**
+   * Unregister code node.
+   */
+  unregisterCodeNode(): void {
+    this.logger.trace("unregister code node");
+
+    this.codeNode.mask = undefined;
+    this.codeNode = undefined;
+  }
 }
