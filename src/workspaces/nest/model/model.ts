@@ -84,6 +84,33 @@ export class NESTModel extends BaseModel<INESTModelState> {
   }
 
   /**
+   * Get variable name.
+   */
+  override get variableName(): string {
+    let name: string;
+    switch (this.elementType) {
+      case "neuron":
+        name = "n";
+        break;
+      // case "stimulator":
+      //   name = this.id.slice(0, this.id.length - 10);
+      //   break;
+      case undefined:
+        name = "n";
+        break;
+      default:
+        name =
+          this.abbreviation ||
+          this.id
+            .split("_")
+            .map((d: string) => d[0])
+            .join("");
+    }
+
+    return name;
+  }
+
+  /**
    * Get parameter defaults of a model from NEST Simulator.
    */
   // async fetchDefaults(): Promise<AxiosResponse<any,any>> {

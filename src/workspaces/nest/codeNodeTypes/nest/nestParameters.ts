@@ -170,13 +170,13 @@ export const updateNESTParameterNode = (
   const graph = codeNode.code.graph;
   let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
 
-  if (!paramStates) {
-    if (paramsNode) graph.removeNode(paramsNode); // paramsNode.remove()
+  if (Object.keys(paramStates).length === 0 && paramsNode != undefined) {
+    graph.removeNode(paramsNode); // paramsNode.remove()
+    codeNode.inputs[paramInterfaceName].setHidden(true);
     return;
-  } else if (!paramsNode) {
+  } else if (paramStates && !paramsNode) {
     paramsNode = addNESTParameterNode(graph, getPositionBeforeNode(codeNode), paramStates);
   }
-
   paramsNode.updateInputInterfaces(createParameterInterfaces(paramStates), Object.keys(paramStates));
 
   if (!graph.hasConnection(paramsNode.outputs.out, codeNode.inputs[paramInterfaceName]))

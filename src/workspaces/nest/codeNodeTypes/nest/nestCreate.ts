@@ -176,7 +176,6 @@ export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INES
   codeNode.updateInputValues(codeNodeState);
 
   const defaultParamStates = getNESTModelParameterStates(nodeState.model);
-
   let paramStates: Record<string, IParamState>;
   if (nodeState.params) {
     const paramKeys = Object.keys(nodeState.params);
@@ -192,11 +191,11 @@ export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INES
         hidden: !paramKeys.includes(paramId),
       };
     });
-  } else {
-    paramStates = defaultParamStates;
-  }
 
-  updateNESTParameterNode(codeNode, "params", paramStates);
+    updateNESTParameterNode(codeNode, "params", paramStates);
+    // } else {
+    //   paramStates = defaultParamStates;
+  }
 };
 
 const updateNESTNode = (codeNode: AbstractCodeNode) => {
@@ -209,6 +208,8 @@ const updateNESTNode = (codeNode: AbstractCodeNode) => {
     });
     node.registerCodeNode(codeNode);
   }
+  codeNode.state.variableName = node.model.variableName;
+  // codeNode.title = node.model.label
 
   const paramsNode = codeNode.getConnectedNodeByInterface("params", "input");
   if (paramsNode) node.params.registerCodeNode(paramsNode);

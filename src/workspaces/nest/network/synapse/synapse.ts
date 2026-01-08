@@ -1,7 +1,7 @@
 // synapse.ts
 
 import type { Class } from "@/types";
-import type { TElementType } from "@/model";
+import type { TSynapseElementType } from "@/model";
 import { BaseSynapse, type ISynapseState } from "@/network";
 
 import type { NESTConnection } from "../connection";
@@ -30,8 +30,8 @@ export class NESTSynapse extends BaseSynapse<NESTConnection, INESTSynapseState> 
     return NESTSynapseParameters;
   }
 
-  get elementType(): TElementType {
-    return this.model?.elementType;
+  get elementType(): TSynapseElementType {
+    return "synapse";
   }
 
   get hasReceptorIndices(): boolean {
