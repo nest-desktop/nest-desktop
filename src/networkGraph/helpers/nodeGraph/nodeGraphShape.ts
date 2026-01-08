@@ -198,7 +198,7 @@ export class NodeGraphShape extends BaseObj {
       elem
         .select("text")
         .attr("dy", node.isGroup || node.isInhibitoryNeuron ? "0.4em" : "0.8em")
-        .text(node.view.label);
+        .text(node.codeNode?.variableName ?? node.view.label);
     });
   }
 }
