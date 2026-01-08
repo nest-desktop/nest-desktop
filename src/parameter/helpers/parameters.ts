@@ -59,7 +59,7 @@ export class BaseParameters<
   set visibleParamIds(values: string[]) {
     this.values.forEach((param: TParameter) => (param.hidden = !values.includes(param.id)));
 
-    this.codeNode.code.engine.runOnce();
+    this.codeNode?.code.engine.runOnce();
   }
 
   /**

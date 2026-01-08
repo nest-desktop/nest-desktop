@@ -131,11 +131,8 @@ export class BaseParameter<
     return this.codeNode?.inputs[this.id];
   }
 
-  /**
-   * Check if this parameter is constant.
-   */
   get isConstant(): boolean {
-    return this._type.id === "constant";
+    return this.type.id === "constant";
   }
 
   get items(): string[] | Record<string, string>[] {
@@ -156,7 +153,7 @@ export class BaseParameter<
 
   set hidden(value: boolean) {
     this.state.hidden = value;
-    if (this.intf) this.intf.setHidden(value);
+    this.intf?.setHidden(value);
   }
 
   get label(): string {
@@ -248,10 +245,10 @@ export class BaseParameter<
   }
 
   get specs(): IParamTypeSpec[] {
-    if (this._type.id === "constant") {
+    if (this.type.id === "constant") {
       return [{ label: this.label, value: this.value }];
     } else {
-      return this._type.specs || [];
+      return this.type.specs || [];
     }
   }
 
@@ -304,15 +301,12 @@ export class BaseParameter<
   }
 
   get value(): TParamValue {
-    return this.intf?.value ?? this._state.value;
+    return this.intf?.value ?? this.state.value;
   }
 
   set value(value: TParamValue) {
-    if (this.intf) {
-      this.intf.value = value;
-    } else {
-      this._state.value = value;
-    }
+    this.state.value = value;
+    if (this.intf) this.intf.value = value;
 
     if (this.props?.value?.handleOnUpdate) this.props.value.handleOnUpdate(this);
     // this.changes();
@@ -409,7 +403,7 @@ export class BaseParameter<
    */
   override save(): IParamState {
     const paramState: IParamState = {
-      id: this._id,
+      id: this.id,
       value: this.value,
       hidden: this.hidden,
     };
@@ -435,8 +429,8 @@ export class BaseParameter<
       id: this._type.id,
     };
 
-    if (this._type.specs)
-      paramType.specs = this._type.specs.map((spec: IParamTypeSpec) => ({
+    if (this.type.specs)
+      paramType.specs = this.type.specs.map((spec: IParamTypeSpec) => ({
         id: spec.id,
         value: Number(spec.value),
       }));
@@ -455,7 +449,7 @@ export class BaseParameter<
    * Toggle disabled state.
    */
   toggleDisabled(): void {
-    this._state.disabled = !this._state.disabled;
+    this.state.disabled = !this.state.disabled;
     // this.changes();
   }
 }
