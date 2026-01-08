@@ -1,22 +1,22 @@
 <template>
-  <StimulatorAvatar v-if="node.elementType === 'stimulator'" :color="node.view.color">
-    {{ node.view.label }}
-  </StimulatorAvatar>
-  <RecorderAvatar v-else-if="node.elementType === 'recorder'" :color="node.view.color">
-    {{ node.view.label }}
-  </RecorderAvatar>
-  <NeuronAvatar v-else-if="node.elementType === 'neuron'" :color="node.view.color" :weight="node.view.synWeights">
-    {{ node.view.label }}
-  </NeuronAvatar>
+  <component
+    :is="avatarComponents[node.elementType]"
+    v-if="node.elementType"
+    :color="node.view.color"
+    :weight="node.view.synWeights"
+  >
+    {{ node.codeNode?.variableName ?? node.view.label }}
+  </component>
   <v-avatar v-else :color="nodeGroup.view.color" class="node-avatar" variant="tonal">
-    {{ node.view.label }}
+    {{ node.codeNode?.variableName ?? node.view.label }}
   </v-avatar>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, type Component } from "vue";
 
 import type { TNode, TNodeGroup } from "@/types";
+import { TNodeElementType } from "@/model";
 
 import NeuronAvatar from "./NeuronAvatar.vue";
 import RecorderAvatar from "./RecorderAvatar.vue";
@@ -28,6 +28,12 @@ const props = defineProps<{
 
 const node = computed(() => props.node as TNode);
 const nodeGroup = computed(() => props.node as TNodeGroup);
+
+const avatarComponents: Record<TNodeElementType, Component> = {
+  stimulator: StimulatorAvatar,
+  recorder: RecorderAvatar,
+  neuron: NeuronAvatar,
+};
 </script>
 
 <style lang="scss">

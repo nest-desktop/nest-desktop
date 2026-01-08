@@ -89,40 +89,22 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
     if (this.state.label) return this.state.label;
 
     let nodes: TNode[];
-    let idx: number;
-    let label: string;
-    // let varname: string;
-
     switch (this.node.elementType) {
       case "neuron":
         nodes = this.node.nodes.neurons;
-        idx = nodes.indexOf(this._node);
-        label = "n" + (idx + 1);
         break;
       // case "stimulator":
       //   nodes = this.nodes.stimulators;
-      //   idx = nodes.indexOf(this._node);
-      //   varname = this._node.modelId.slice(0, this._node.modelId.length - 10);
-      //   label = varname + (idx + 1);
       //   break;
       case undefined:
         nodes = this.node.nodes.nodeItems;
-        idx = nodes.indexOf(this._node);
-        label = "n" + (idx + 1);
         break;
       default:
         nodes = this.node.nodes.filterByModelId(this.node.modelId);
-        idx = nodes.indexOf(this._node);
-        label =
-          this.node.model.abbreviation ||
-          this.node.modelId
-            .split("_")
-            .map((d: string) => d[0])
-            .join("");
-        label += idx + 1;
     }
 
-    return label;
+    const idx = nodes.indexOf(this.node);
+    return `${this.node.model.variableName}${idx + 1}`;
   }
 
   get node(): TNode {

@@ -7,10 +7,6 @@ import { BaseParameter, type IParamState } from "@/parameter";
 import type { NodeParameters } from "./nodeParameters";
 
 export class NodeParameter<TParent extends NodeParameters = NodeParameters> extends BaseParameter<TParent> {
-  constructor(parent: TParent) {
-    super(parent);
-  }
-
   get nodeParams(): TParent {
     return this.parent;
   }

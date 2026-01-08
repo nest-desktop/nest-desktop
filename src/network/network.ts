@@ -259,7 +259,6 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     this.connections.init();
 
     // this.updateHash();
-    // this.updateStyle();
 
     this.clean();
   }
@@ -295,7 +294,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
    */
   updateStyle(): void {
     this.logger.trace("update node style");
-    if (this.nodes.all.length === 0) return
+    if (this.nodes.all.length === 0) return;
 
     this.nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
   }

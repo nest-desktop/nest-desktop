@@ -117,10 +117,10 @@
             </v-list-item>
           </v-list>
 
-          <v-list class="py-0">
+          <v-list v-if="node.params.codeNode && node.params.hasSomeVisibleParams" class="py-0">
             <template v-for="(paramId, index) in node.params.visibleParamIds">
               <ParamListItem
-                v-if="node.params.hasSomeVisibleParams && node.params.get(paramId)"
+                v-if="node.params.get(paramId)"
                 :key="index"
                 v-model="node.params.codeNode.inputs[paramId].value"
                 :color="node.view.color"

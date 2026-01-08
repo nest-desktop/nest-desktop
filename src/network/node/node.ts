@@ -2,7 +2,7 @@
 
 import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 
-import type { BaseModel, IModelRecordState, TElementType } from "@/model";
+import type { BaseModel, IModelRecordState, TNodeElementType } from "@/model";
 import type { Class, TModel, TNetwork, TNode, TNodeGroup } from "@/types";
 import type { IActivityState } from "@/activity";
 import type { IParamState } from "@/parameter";
@@ -109,7 +109,7 @@ export class BaseNode<
     );
   }
 
-  get elementType(): TElementType {
+  get elementType(): TNodeElementType {
     return this.model?.elementType;
   }
 
@@ -176,7 +176,7 @@ export class BaseNode<
   }
 
   get label(): string {
-    return this._view.label;
+    return this.view.label;
   }
 
   get model(): BaseModel {
