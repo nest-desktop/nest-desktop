@@ -341,8 +341,8 @@ export class BaseNode<
       nodeState.view.color = undefined;
     }
 
-    // Add node.
-    const node = this.nodes.addNode({ ...nodeState });
+    // Create node.
+    const node = this.nodes.newNode({ ...nodeState });
 
     // Initialize node.
     node.init();
@@ -445,6 +445,9 @@ export class BaseNode<
 
     this._modelId = modelId;
     this._model = this.getModel(modelId);
+    if (this.codeNode && this.model.variableName.length > 0) this.codeNode.variableName = this.model.variableName;
+
+    // Load model params
     const modelParamState = this.model.params.save();
     this.params.load(modelParamState);
   }

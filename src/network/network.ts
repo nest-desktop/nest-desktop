@@ -169,7 +169,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
   createNode(model?: string, viewState?: INodeViewState): BaseNode {
     this.logger.trace("create node");
 
-    return this.nodes.addNode({
+    return this.nodes.newNode({
       model: model,
       view: viewState,
     });

@@ -184,31 +184,6 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
   // }
 
   /**
-   * Add node component.
-   */
-  addNode(nodeState?: INodeState): TNode {
-    this.logger.trace("add node");
-
-    const node = new this.Node(this);
-    if (nodeState) node.load(nodeState);
-    return node;
-  }
-
-  /**
-   * Add node group component.
-   * @param nodeGroupState node group state
-   */
-  addNodeGroup(nodeGroupState: INodeGroupState): TNodeGroup {
-    this.logger.trace("add node group");
-
-    const nodeGroup = new NodeGroup(this, nodeGroupState);
-    // this._nodes.push(nodeGroup);
-
-    // nodeGroup.updateHash();
-    return nodeGroup;
-  }
-
-  /**
    * Clean nodes and connection components.
    */
   clean(): void {
@@ -250,7 +225,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    */
   groupSelected(): void {
     const nodes = this._state.selectedNodes.map((node) => node.idx);
-    const nodeGroup = this.addNodeGroup({ nodes });
+    const nodeGroup = this.newNodeGroup({ nodes });
     this.selectNode(nodeGroup);
     this.network.changes({ preventSimulation: true });
   }
@@ -276,9 +251,9 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     if (nodeStates)
       nodeStates.forEach((nodeState: INodeState | INodeGroupState) => {
         if ("nodes" in nodeState) {
-          this.addNodeGroup(nodeState as INodeGroupState);
+          this.newNodeGroup(nodeState as INodeGroupState);
         } else {
-          this.addNode(nodeState as INodeState);
+          this.newNode(nodeState as INodeState);
         }
       });
 
@@ -287,12 +262,37 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
   }
 
   /**
+   * Create new node instance.
+   */
+  newNode(nodeState?: INodeState): TNode {
+    this.logger.trace("new node", nodeState);
+
+    const node = new this.Node(this);
+    if (nodeState) node.load(nodeState);
+    return node;
+  }
+
+  /**
+   * Create new node group instance.
+   * @param nodeGroupState node group state
+   */
+  newNodeGroup(nodeGroupState: INodeGroupState): TNodeGroup {
+    this.logger.trace("add node group");
+
+    const nodeGroup = new NodeGroup(this, nodeGroupState);
+    // this._nodes.push(nodeGroup);
+
+    // nodeGroup.updateHash();
+    return nodeGroup;
+  }
+
+  /**
    * Register code node.
    */
   registerCodeNode(codeNode: AbstractCodeNode, node?: TNode): void {
     this.logger.trace("register code node:", codeNode.shortId);
 
-    if (!node) node = this.addNode({ model: codeNode.inputs.model.value });
+    if (!node) node = this.newNode({ model: codeNode.inputs.model.value });
 
     node.registerCodeNode(codeNode);
     node.init();
