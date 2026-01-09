@@ -8,10 +8,6 @@ import { BasePositions } from "./basePositions";
 export class FreePositions extends BasePositions {
   public readonly name: string = "free";
 
-  // constructor(spatial: NESTNodeSpatial) {
-  //   super(spatial);
-  // }
-
   get min(): number {
     return -0.5;
   }

@@ -143,7 +143,7 @@ import { computed, nextTick, onMounted, reactive } from "vue";
 import { IParamState } from "@/parameter";
 import { ValueSlider } from "@/components";
 
-import { NESTNodeSpatial } from "../..";
+import { NESTNodeSpatial } from "../../node/nodeSpatial";
 
 const props = defineProps<{ nodeSpatial: NESTNodeSpatial }>();
 const nodeSpatial = computed(() => props.nodeSpatial);

@@ -18,23 +18,12 @@ export class GridPositions extends BasePositions {
   private _center: number[] = [0, 0];
   private _shape: number[] = [1, 1];
 
-  // constructor(spatial: NESTNodeSpatial) {
-  //   super(spatial);
-  // }
-
   override get center(): number[] {
     return this._center;
   }
 
   set center(value: number[]) {
     this._center = value;
-  }
-
-  /**
-   * Generate the Python code for grid positions, i.e. non-free positions.
-   */
-  override get code(): string {
-    return `nest.spatial.grid(${JSON.stringify(this._shape)})\n`;
   }
 
   get extent(): number[] {
@@ -46,7 +35,7 @@ export class GridPositions extends BasePositions {
   }
 
   override set numDimensions(value: number) {
-    this._numDimensions = value;
+    this.numDimensions = value;
     this.center = new Array(value).fill(0);
     this.extent = new Array(value).fill(1);
     this.shape = new Array(value).fill(1);
@@ -80,11 +69,12 @@ export class GridPositions extends BasePositions {
    * Load grid positions from state.
    * @param state grid positions state
    */
-  override load(state?: IGridPositionsState) {
-    if (state?.numDimensions) this.numDimensions = state.numDimensions;
-    if (state?.center) this.center = state.center;
-    if (state?.extent) this.extent = state.extent;
-    if (state?.shape) this.shape = state.shape;
+  override load(state: IGridPositionsState = {}) {
+    if (state.center) this.center = state.center;
+    if (state.edgeWrap) this.edgeWrap = state.edgeWrap;
+    if (state.extent) this.extent = state.extent;
+    if (state.numDimensions) this.numDimensions = state.numDimensions;
+    if (state.shape) this.shape = state.shape;
   }
 
   range(min: number, max: number, size: number): number[] {
@@ -99,11 +89,11 @@ export class GridPositions extends BasePositions {
    */
   override save(): IGridPositionsState {
     return {
-      center: this._center,
+      center: this.center,
       edgeWrap: this.edgeWrap,
       extent: this.extent,
       numDimensions: this.numDimensions,
-      shape: this._shape,
+      shape: this.shape,
     };
   }
 }

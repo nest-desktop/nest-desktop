@@ -8,7 +8,7 @@ import { BaseNode, NodeRecord, type INodeState, type INodeRecordState } from "@/
 import { BaseParameter } from "@/parameter";
 import { onlyUnique, sortString } from "@/utils";
 
-import { getNESTCreateNode, updateNESTCreateNode } from "../../codeNodeTypes/nest";
+import { getNESTCreateNode, loadNESTSpatialFree, updateNESTCreateNode } from "../../codeNodeTypes/nest";
 
 import type { NESTConnection } from "../connection";
 import type { NESTCopyModel } from "../copyModel";
@@ -188,7 +188,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
    * Sets all params to invisible.
    * @param emitChanges trigger emit changes.
    */
-  hideAllParams(emitChanges: boolean = true): void {
+  hideAllParams(emitChanges: boolean = false): void {
     this.params.hideAll();
 
     if (this.modelId === "cm_default") {
@@ -220,7 +220,6 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
     this.logger.trace("load nest model:", modelId);
 
     this._modelId = modelId;
-
     if (this.network.copyModels && this.network.copyModels.findByModelId(modelId)) {
       const copyModel = this.network.copyModels.getModel(modelId);
       this._copyModel = copyModel;
@@ -229,7 +228,9 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
       this._copyModel = undefined;
       this._model = this.getModel(modelId);
     }
+    if (this.codeNode && this.model.variableName.length > 0) this.codeNode.variableName = this.model.variableName;
 
+    // Load model params
     const modelParamState = this.model.params.save();
     this.params.load(modelParamState);
   }
@@ -313,7 +314,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
    * Reset value in parameter components.
    * @remarks It emits node changes.
    */
-  resetAllParams(emitChanges: boolean = true): void {
+  resetAllParams(emitChanges: boolean = false): void {
     this.logger.trace("reset parameters");
 
     this.params.reset();
@@ -361,7 +362,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
   /**
    * Sets all params to visible.
    */
-  override showAllParams(emitChanges: boolean = true): void {
+  override showAllParams(emitChanges: boolean = false): void {
     this.params.showAll(false);
 
     if (this.modelId === "cm_default") {
@@ -375,11 +376,13 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
   /**
    * Toggle spatial mode.
    */
-  toggleSpatial(emitChanges: boolean = true): void {
+  toggleSpatial(emitChanges: boolean = false): void {
     const term: string = this.size === 1 ? "grid" : "free";
-    this._spatial.load({
+    this.spatial.load({
       positions: this.spatial.hasPositions ? undefined : term,
     });
+
+    loadNESTSpatialFree(this.codeNode.graph, this.codeNode.idx, { positions: "free" });
 
     if (emitChanges) this.changes();
   }

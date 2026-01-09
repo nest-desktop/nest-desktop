@@ -172,7 +172,7 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
 
     // Load create node.
     const codeNode = loadNESTCreateNode(this.project.code.graph, {
-      model: model || defaultModels[viewState?.elementType || "neuron"],
+      model: model ?? defaultModels[viewState?.elementType ?? "neuron"],
       view: viewState,
     });
 

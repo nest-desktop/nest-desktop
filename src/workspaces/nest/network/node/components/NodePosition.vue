@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NESTNodeSpatial } from "../..";
+import type { NESTNodeSpatial } from "../../node/nodeSpatial";
 import NodePositionMenu from "./NodePositionMenu.vue";
 
 defineProps<{ nodeSpatial: NESTNodeSpatial }>();

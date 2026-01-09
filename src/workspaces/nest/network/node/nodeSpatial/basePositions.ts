@@ -1,5 +1,7 @@
 // basePositions.ts
 
+import { CodeNodeMask } from "@/codeGraph";
+
 import { NESTNodeSpatial } from "./nodeSpatial";
 
 export interface IBasePositionsState {
@@ -8,25 +10,20 @@ export interface IBasePositionsState {
   pos?: number[][];
 }
 
-export class BasePositions {
+export class BasePositions extends CodeNodeMask {
   private _edgeWrap: boolean = false;
   public _numDimensions: number = 2;
   private _pos: number[][] = [];
   private _spatial: NESTNodeSpatial;
 
   constructor(spatial: NESTNodeSpatial) {
+    super();
+
     this._spatial = spatial;
   }
 
   get center(): number[] {
     return [];
-  }
-
-  /**
-   * Get rendered Python code.
-   */
-  get code(): string {
-    return "";
   }
 
   get edgeWrap(): boolean {
@@ -57,10 +54,6 @@ export class BasePositions {
     this._pos = value;
   }
 
-  get posAsString(): string {
-    return "[" + this._pos.map((p: number[]) => "[" + p.map((pp: number) => pp.toFixed(2)).join(",") + "]") + "]";
-  }
-
   get posExisted(): boolean {
     return this._pos.length > 0;
   }
@@ -79,31 +72,24 @@ export class BasePositions {
   generate(): void {}
 
   /**
-   * Indent code.
-   */
-  _(n: number = 1): string {
-    return "\n" + "  ".repeat(n);
-  }
-
-  /**
    * Load positions from state
    * @param state positions state
    */
-  load(state?: IBasePositionsState) {
-    if (state?.pos) this._pos = state.pos;
-    if (state?.numDimensions) this._numDimensions = state.numDimensions;
-    if (state?.edgeWrap) this._edgeWrap = state.edgeWrap;
+  load(state: IBasePositionsState = {}) {
+    if (state.edgeWrap) this.edgeWrap = state.edgeWrap;
+    if (state.numDimensions) this.numDimensions = state.numDimensions;
+    if (state.pos) this.pos = state.pos;
   }
 
   /**
    * Save positions to state.
    * @return positions state
    */
-  save(): IBasePositionsState {
+  override save(): IBasePositionsState {
     return {
-      edgeWrap: this._edgeWrap,
-      numDimensions: this._numDimensions,
-      pos: this._pos,
+      edgeWrap: this.edgeWrap,
+      numDimensions: this.numDimensions,
+      pos: this.pos,
     };
   }
 }
