@@ -187,18 +187,8 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     );
 
     modelPanel.select(".menuItem").on("click", () => {
-      this.close();
       if (this.network == undefined) return;
-
-      this._workspace.animationOff();
-
-      this.network.createNode(model.id, {
-        elementType,
-        position: Object.assign({}, this.position),
-      });
-
-      this._workspace.networkGraph.update();
-      this._workspace.networkGraph.workspace.updateTransform();
+      this.selectModel(model.id, elementType);
     });
 
     return modelPanel;
@@ -303,11 +293,8 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
 
     this._workspace.animationOff();
 
-    const node = this.network.createNode(modelId, {
-      elementType,
-      position: { ...this.position },
-    });
-
+    const node = this.network.createNode(modelId, { elementType, position: { ...this.position } });
+    node.loadModel(modelId);
     node.view.updateStyle();
 
     this.updateModelMenu(elementType);
