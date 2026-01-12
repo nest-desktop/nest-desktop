@@ -98,7 +98,7 @@ export const loadNESTSpatialGrid = (
   idx: number = -1,
 ): AbstractCodeNode => {
   const codeNode = addNESTSpatialGrid(graph, idx);
-  if (spatialState) codeNode.updateInputValues(spatialState)
+  if (spatialState) codeNode.updateInputValues(spatialState);
   return codeNode;
 };
 

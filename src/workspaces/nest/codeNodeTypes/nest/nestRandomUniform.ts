@@ -11,8 +11,8 @@ import {
 } from "@babsey/code-graph";
 
 export interface INESTRandomUniformState {
-  min?: number
-  max?: number
+  min?: number;
+  max?: number;
 }
 
 export const nestRandomUniform = defineCodeNode({

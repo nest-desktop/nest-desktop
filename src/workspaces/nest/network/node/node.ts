@@ -8,7 +8,7 @@ import { BaseNode, NodeRecord, type INodeState, type INodeRecordState } from "@/
 import { BaseParameter } from "@/parameter";
 import { onlyUnique, sortString } from "@/utils";
 
-import { getNESTCreateNode, updateNESTCreateNode, updateNESTSpatialNode } from "../../codeNodeTypes/nest";
+import { getNESTCreateNode, updateNESTCreateNode } from "../../codeNodeTypes/nest";
 
 import type { NESTConnection } from "../connection";
 import type { NESTCopyModel } from "../copyModel";
