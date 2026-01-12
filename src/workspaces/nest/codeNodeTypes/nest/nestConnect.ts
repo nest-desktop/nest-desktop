@@ -222,7 +222,6 @@ export const updateNESTConnectSynapseNode = (codeNode: AbstractCodeNode, synapse
 };
 
 export const updateNESTNode = (codeNode: AbstractCodeNode) => {
-  // console.log("update nest node", codeNode);
   if (!codeNode.code.project) return;
 
   let connection = codeNode.mask;

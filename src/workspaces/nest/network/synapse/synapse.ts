@@ -158,8 +158,6 @@ export class NESTSynapse extends BaseSynapse<NESTConnection, INESTSynapseState> 
    * @remarks It emits synapse changes.
    */
   override modelChanges(): void {
-    console.log(this.save());
-
     if (this.codeNode) {
       const engine = this.codeNode.code.engine;
       engine.pause();

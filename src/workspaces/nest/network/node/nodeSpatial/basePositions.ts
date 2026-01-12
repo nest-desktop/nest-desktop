@@ -78,7 +78,6 @@ export class BasePositions extends CodeNodeMask {
    * @param state positions state
    */
   load(state: IBasePositionsState = {}) {
-    console.log(state)
     if (state.edgeWrap) this.edgeWrap = state.edgeWrap;
     if (state.numDimensions) this.numDimensions = state.numDimensions;
     if (state.pos) this.pos = state.pos;

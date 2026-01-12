@@ -51,8 +51,6 @@ export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
    * @param state spatial node state
    */
   load(state: INESTNodeSpatialState = {}): void {
-    console.log("load node spatial");
-
     const spatialNode = updateNESTSpatialNode(this.node.codeNode.graph, this.node.codeNode, state);
     if (!spatialNode) return;
 
