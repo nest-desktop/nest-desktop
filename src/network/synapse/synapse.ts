@@ -165,8 +165,6 @@ export class BaseSynapse<
     this.changes({ preventSimulation: true });
   }
 
-  registerCodeNode(): void {}
-
   /**
    * Reset synapse.
    */

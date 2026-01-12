@@ -478,17 +478,6 @@ export class BaseNode<
   }
 
   /**
-   * Register code node.
-   * @param codeNode code node
-   */
-  registerCodeNode(codeNode?: AbstractCodeNode): void {
-    this.logger.trace("register code node");
-
-    this.codeNode = codeNode;
-    this.codeNode.mask = this;
-  }
-
-  /**
    * Delete node.
    * @remarks It removes node component of the network.
    */
