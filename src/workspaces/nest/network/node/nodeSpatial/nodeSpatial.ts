@@ -6,6 +6,7 @@ import { FreePositions } from "./freePositions";
 import { GridPositions, type IGridPositionsState } from "./gridPositions";
 import type { IBasePositionsState } from "./basePositions";
 import type { NESTNode } from "../node";
+import { updateNESTSpatialNode } from "@/workspaces/nest/codeNodeTypes/nest";
 
 export interface INESTNodeSpatialState extends IBaseState {
   positions?: string;
@@ -14,7 +15,6 @@ export interface INESTNodeSpatialState extends IBaseState {
 
 export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
   private _node: NESTNode;
-  private _positions: FreePositions | GridPositions | undefined;
 
   constructor(node: NESTNode) {
     super({
@@ -37,20 +37,43 @@ export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
   }
 
   get positions(): FreePositions | GridPositions | undefined {
-    return this._positions;
+    const spatialNode = this.node.codeNode.getConnectedNodeByInterface("positions", "input");
+    if (!spatialNode) return;
+    return spatialNode.mask;
   }
 
-  changes(): void {
-    this._node.changes();
-  }
+  // changes(): void {
+  //   this._node.changes();
+  // }
 
   /**
    * Load spatial node from state.
    * @param state spatial node state
    */
-  load(state: INESTNodeSpatialState): void {
-    this.updatePositions(state.positions);
-    this.positions?.load(state.specs);
+  load(state: INESTNodeSpatialState = {}): void {
+    console.log("load node spatial");
+
+    const spatialNode = updateNESTSpatialNode(this.node.codeNode.graph, this.node.codeNode, state);
+    if (!spatialNode) return;
+
+    const positions = this.newPositions(state?.positions);
+    if (positions) {
+      positions.registerCodeNode(spatialNode);
+      positions?.load(state?.specs);
+    }
+  }
+
+  /**
+   * Create new positions instance.
+   * @param positions string
+   */
+  newPositions(positionsName: string | undefined): FreePositions | GridPositions | undefined {
+    switch (positionsName) {
+      case "free":
+        return new FreePositions(this);
+      case "grid":
+        return new GridPositions(this);
+    }
   }
 
   /**
@@ -67,20 +90,18 @@ export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
   }
 
   /**
-   * Update Positions instance.
-   * @param positions string
+   * Toggle positions.
    */
-  updatePositions(positions: string | undefined): void {
-    switch (positions) {
-      case "free":
-        this._positions = new FreePositions(this);
-        break;
-      case "grid":
-        this._positions = new GridPositions(this);
-        break;
-      default:
-        this._positions = undefined;
-        break;
+  togglePositions(): void {
+    let state: INESTNodeSpatialState = {};
+
+    if (!this.hasPositions) {
+      state = {
+        positions: this.node.size === 1 ? "grid" : "free",
+        specs: { numDimensions: 2 },
+      };
     }
+
+    this.load(state);
   }
 }

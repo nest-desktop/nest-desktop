@@ -1,14 +1,19 @@
 // nestRandomUniform.ts
 
-import { CodeNodeOutputInterface, NumberInterface, defineCodeNode } from "@babsey/code-graph";
+import {
+  CodeNodeOutputInterface,
+  NumberInterface,
+  defineCodeNode,
+  getPositionAtColumn,
+  getPositionBeforeNode,
+  type AbstractCodeNode,
+  type CodeGraph,
+} from "@babsey/code-graph";
 
-// import nestRandomUniform from "./nestRandomUniform";
-// import { NESTCodeGraph } from "../../codeGraph/codeGraph";
-
-// export interface INESTRandomUniformState {
-//   min?: number
-//   max?: number
-// }
+export interface INESTRandomUniformState {
+  min?: number
+  max?: number
+}
 
 export const nestRandomUniform = defineCodeNode({
   type: "nest.random.uniform",
@@ -39,29 +44,29 @@ export const nestRandomUniform = defineCodeNode({
   // },
 });
 
-// export const addNESTRandomUniform = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
-//   let position: { x: number; y: number };
+export const addNESTRandomUniform = (graph: CodeGraph, idx: number = -1): AbstractCodeNode => {
+  let position: { x: number; y: number };
 
-//   if (idx !== -1) {
-//     position = getPositionBeforeNode(graph.nodes[idx]);
-//   } else {
-//     const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.random.uniform").length;
-//     position = getPositionAtColumn(-2, 900 + 240 * typeIdx);
-//   }
+  if (idx !== -1) {
+    position = getPositionBeforeNode(graph.nodes[idx]);
+  } else {
+    const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.random.uniform").length;
+    position = getPositionAtColumn(-2, 900 + 240 * typeIdx);
+  }
 
-//   const codeNode = graph.addNodeAtCoordinates(nestRandomUniform, position);
-//   codeNode.state.integrated = true;
-//   return codeNode;
-// };
+  const codeNode = graph.addNodeAtCoordinates(new nestRandomUniform(), position);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
 
-// export const loadNESTRandomUniform = (
-//   graph: CodeGraph | NESTCodeGraph,
-//   randState?: INESTRandomUniformState,
-//   idx: number = -1,
-// ): AbstractCodeNode => {
-//   const codeNode = addNESTRandomUniform(graph, idx);
-//   codeNode.state.props = randState;
-//   if (randState) codeNode.updateValues(randState);
+export const loadNESTRandomUniform = (
+  graph: CodeGraph,
+  randState?: INESTRandomUniformState,
+  idx: number = -1,
+): AbstractCodeNode => {
+  const codeNode = addNESTRandomUniform(graph, idx);
+  codeNode.state.props = randState;
+  if (randState) codeNode.updateInputValues(randState);
 
-//   return codeNode;
-// };
+  return codeNode;
+};

@@ -1,9 +1,17 @@
 // nestSpatialGrid.ts
 
-import { CheckboxInterface, CodeNodeOutputInterface, ListInputInterface, defineCodeNode } from "@babsey/code-graph";
+import {
+  CheckboxInterface,
+  CodeNodeOutputInterface,
+  ListInputInterface,
+  defineCodeNode,
+  getPositionAtColumn,
+  getPositionBeforeNode,
+  type AbstractCodeNode,
+  type CodeGraph,
+} from "@babsey/code-graph";
 
-// import nestSpatialGrid from './nestSpatialGrid'
-// import { NESTCodeGraph } from '../../codeGraph/codeGraph'
+import { INESTNodeSpatialState } from "../../network/node/nodeSpatial";
 
 export const nestSpatialGrid = defineCodeNode({
   type: "nest.spatial.grid",
@@ -69,23 +77,34 @@ export const nestSpatialGrid = defineCodeNode({
   // },
 });
 
-// export const addNESTSpatialGrid = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
-//   let position: { x: number; y: number }
+export const addNESTSpatialGrid = (graph: CodeGraph, idx: number = -1): AbstractCodeNode => {
+  let position: { x: number; y: number };
 
-//   if (idx !== -1) {
-//     position = getPositionBeforeNode(graph.nodes[idx])
-//   } else {
-//     const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === 'nest.spatial.grid').length
-//     position = getPositionAtColumn(-1, 900 + 240 * typeIdx)
-//   }
+  if (idx !== -1) {
+    position = getPositionBeforeNode(graph.nodes[idx]);
+  } else {
+    const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.spatial.grid").length;
+    position = getPositionAtColumn(-1, 900 + 240 * typeIdx);
+  }
 
-//   const codeNode = graph.addNodeAtCoordinates(nestSpatialGrid, position)
-//   codeNode.state.integrated = true
-//   return codeNode
-// }
+  const codeNode = graph.addNodeAtCoordinates(new nestSpatialGrid(), position);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
 
-// export const loadNESTSpatialGrid = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
-//   const codeNode = addNESTSpatialGrid(graph, idx)
+export const loadNESTSpatialGrid = (
+  graph: CodeGraph,
+  spatialState: INESTNodeSpatialState = {},
+  idx: number = -1,
+): AbstractCodeNode => {
+  const codeNode = addNESTSpatialGrid(graph, idx);
+  if (spatialState) codeNode.updateInputValues(spatialState)
+  return codeNode;
+};
 
-//   return codeNode
-// }
+// export const updateNESTSpatialGrid = (codeNode: AbstractCodeNode, state: INESTNodeSpatialState) => {
+//   if (state.pos) codeNode.inputs.pos.value = state.pos;
+//   if (state.extent) codeNode.inputs.extent.value = state.extent;
+//   if (state.edge_wrap) codeNode.inputs.edge_wrap.value = state.edge_wrap;
+//   if (state.num_dimensions) codeNode.inputs.num_dimensions.value = state.num_dimensions;
+// };

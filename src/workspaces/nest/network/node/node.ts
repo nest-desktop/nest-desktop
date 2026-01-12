@@ -8,7 +8,7 @@ import { BaseNode, NodeRecord, type INodeState, type INodeRecordState } from "@/
 import { BaseParameter } from "@/parameter";
 import { onlyUnique, sortString } from "@/utils";
 
-import { getNESTCreateNode, loadNESTSpatialFree, updateNESTCreateNode } from "../../codeNodeTypes/nest";
+import { getNESTCreateNode, updateNESTCreateNode, updateNESTSpatialNode } from "../../codeNodeTypes/nest";
 
 import type { NESTConnection } from "../connection";
 import type { NESTCopyModel } from "../copyModel";
@@ -369,20 +369,6 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
       this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.showAll(false));
       this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.showAll(false));
     }
-
-    if (emitChanges) this.changes();
-  }
-
-  /**
-   * Toggle spatial mode.
-   */
-  toggleSpatial(emitChanges: boolean = false): void {
-    const term: string = this.size === 1 ? "grid" : "free";
-    this.spatial.load({
-      positions: this.spatial.hasPositions ? undefined : term,
-    });
-
-    loadNESTSpatialFree(this.codeNode.graph, this.codeNode.idx, { positions: "free" });
 
     if (emitChanges) this.changes();
   }

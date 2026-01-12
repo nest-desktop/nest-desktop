@@ -22,11 +22,11 @@
           step="1"
           true-icon="mdi:mdi-numeric-3"
           @update:model-value="
-            (value: boolean | null) =>
-              nextTick(() => {
-                nodeSpatial.updatePositionParams({ numDimensions: value ? 3 : 2 });
-                nodeSpatial.changes();
-              })
+            (value: boolean | null) => {
+              if (!nodeSpatial.positions) return;
+              nodeSpatial.positions.load({ numDimensions: value ? 3 : 2 });
+              // nodeSpatial.node.changes();
+            }
           "
         />
 
@@ -37,7 +37,7 @@
             :thumb-color="nodeSpatial.node.view.color"
             input-label="n"
             label="population size"
-            @update:model-value="nodeSpatial.changes()"
+            @update:model-value="nodeSpatial.node.changes()"
           />
         </span>
 
@@ -55,11 +55,10 @@
                 type="number"
                 @update:model-value="
                   (value: string) => {
-                    if (nodeSpatial.positions) {
-                      const shape: number[] = nodeSpatial.positions.shape;
-                      shape[idx] = parseInt(value);
-                      nodeSpatial.updatePositionParams({ shape });
-                    }
+                    if (!nodeSpatial.positions) return;
+                    const shape: number[] = nodeSpatial.positions.shape;
+                    shape[idx] = parseInt(value);
+                    nodeSpatial.positions.load({ shape });
                   }
                 "
               />
@@ -79,11 +78,10 @@
                 type="number"
                 @update:model-value="
                   (value: string) => {
-                    if (nodeSpatial.positions) {
-                      const center: number[] = nodeSpatial.positions.center;
-                      center[idx] = parseFloat(value);
-                      nodeSpatial.updatePositionParams({ center });
-                    }
+                    if (!nodeSpatial.positions) return;
+                    const center: number[] = nodeSpatial.positions.center;
+                    center[idx] = parseFloat(value);
+                    nodeSpatial.positions.load({ center });
                   }
                 "
               />
@@ -104,11 +102,10 @@
                 type="number"
                 @update:model-value="
                   (value: string) => {
-                    if (nodeSpatial.positions) {
-                      const extent: number[] = nodeSpatial.positions.extent;
-                      extent[idx] = parseFloat(value);
-                      nodeSpatial.updatePositionParams({ extent });
-                    }
+                    if (!nodeSpatial.positions) return;
+                    const extent: number[] = nodeSpatial.positions.extent;
+                    extent[idx] = parseFloat(value);
+                    nodeSpatial.positions.load({ extent });
                   }
                 "
               />
@@ -177,7 +174,7 @@ const state = reactive<{
 
 const initPositions = () => {
   nextTick(() => {
-    nodeSpatial.value.init({
+    nodeSpatial.value.load({
       positions: state.selectedPositions,
     });
   });
@@ -186,7 +183,7 @@ const initPositions = () => {
 const updatePositions = () => {
   state.menuOpen = false;
   // node.value.spatial.positions?.generate();
-  nodeSpatial.value.changes();
+  // nodeSpatial.value.changes();
 };
 
 onMounted(() => {

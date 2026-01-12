@@ -27,11 +27,12 @@ export class BasePositions extends CodeNodeMask {
   }
 
   get edgeWrap(): boolean {
-    return this._edgeWrap;
+    return this.intf?.edge_wrap ?? this._edgeWrap;
   }
 
   set edgeWrap(value: boolean) {
     this._edgeWrap = value;
+    if (this.intf) this.intf.edge_wrap.value = value;
   }
 
   get extent(): number[] {
@@ -39,11 +40,12 @@ export class BasePositions extends CodeNodeMask {
   }
 
   get numDimensions(): number {
-    return this._numDimensions;
+    return this.intf?.num_dimensions.value ?? this._numDimensions;
   }
 
   set numDimensions(value: number) {
     this._numDimensions = value;
+    if (this.intf && this.intf.num_dimensions) this.intf.num_dimensions.value = value;
   }
 
   get pos(): number[][] {
@@ -76,6 +78,7 @@ export class BasePositions extends CodeNodeMask {
    * @param state positions state
    */
   load(state: IBasePositionsState = {}) {
+    console.log(state)
     if (state.edgeWrap) this.edgeWrap = state.edgeWrap;
     if (state.numDimensions) this.numDimensions = state.numDimensions;
     if (state.pos) this.pos = state.pos;

@@ -7,7 +7,13 @@ import {
   IntegerInterface,
   ListInputInterface,
   defineCodeNode,
+  getPositionAtColumn,
+  getPositionBeforeNode,
+  type AbstractCodeNode,
+  type CodeGraph,
 } from "@babsey/code-graph";
+
+import { INESTNodeSpatialState } from "../../network/node/nodeSpatial";
 
 export const nestSpatialFree = defineCodeNode({
   type: "nest.spatial.free",
@@ -17,12 +23,15 @@ export const nestSpatialFree = defineCodeNode({
     pos: () => new CodeNodeInputInterface("pos"),
     extent: () => new ListInputInterface("extent", "-0.5, 0.5").setOptional(true),
     edge_wrap: () => new CheckboxInterface("edge_wrap", false).setOptional(true),
-    num_dimensions: () => new IntegerInterface("num dimensions", 2, 2, 3).setOptional(true),
+    num_dimensions: () => new IntegerInterface("num dimensions", 2, 2, 3),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface(),
   },
-  // onGraphUpdate() {
+  // afterGraphLoaded() {
+  //   if (!this.code.project) return;
+  //   updateNESTNode(this);
+  // },
   //   if (!this.node) return;
 
   //   if (!this.node.view) {
@@ -66,23 +75,41 @@ export const nestSpatialFree = defineCodeNode({
   //   },
 });
 
-// export const addNESTSpatialFree = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
-//   let position: { x: number; y: number };
+export const addNESTSpatialFree = (graph: CodeGraph, idx: number = -1): AbstractCodeNode => {
+  let position: { x: number; y: number };
 
-//   if (idx !== -1) {
-//     position = getPositionBeforeNode(graph.nodes[idx]);
-//   } else {
-//     const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.spatial.free").length;
-//     position = getPositionAtColumn(-1, 900 + 240 * typeIdx);
-//   }
+  if (idx !== -1) {
+    position = getPositionBeforeNode(graph.nodes[idx]);
+  } else {
+    const typeIdx = graph.nodes.filter((node: AbstractCodeNode) => node.type === "nest.spatial.free").length;
+    position = getPositionAtColumn(-1, 900 + 240 * typeIdx);
+  }
 
-//   const codeNode = graph.addNodeAtCoordinates(nestSpatialFree, position);
-//   codeNode.state.integrated = true;
-//   return codeNode;
+  const codeNode = graph.addNodeAtCoordinates(new nestSpatialFree(), position);
+  codeNode.state.integrated = true;
+  return codeNode;
+};
+
+export const loadNESTSpatialFree = (
+  graph: CodeGraph,
+  spatialState: INESTNodeSpatialState = {},
+  idx: number = -1,
+): AbstractCodeNode => {
+  const codeNode = addNESTSpatialFree(graph, idx);
+  codeNode.state.props = spatialState;
+  if (spatialState) codeNode.updateInputValues(spatialState);
+  return codeNode;
+};
+
+// const updateNESTNode = (codeNode: AbstractCodeNode) => {
+//   codeNode.mask.loadPositions(codeNode.state.props.positions);
+//   codeNode.mask.registerCodeNode(codeNode);
+//   codeNode.mask.positions.load(codeNode.state.props.specs);
 // };
 
-// export const loadNESTSpatialFree = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
-//   const codeNode = addNESTSpatialFree(graph, idx);
-
-//   return codeNode;
+// export const updateNESTSpatialFree = (codeNode: AbstractCodeNode, state: INESTNodeSpatialState) => {
+//   if (state.pos) codeNode.inputs.pos.value = state.pos;
+//   if (state.extent) codeNode.inputs.extent.value = state.extent;
+//   if (state.edge_wrap) codeNode.inputs.edge_wrap.value = state.edge_wrap;
+//   if (state.num_dimensions) codeNode.inputs.num_dimensions.value = state.num_dimensions;
 // };

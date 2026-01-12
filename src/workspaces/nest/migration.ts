@@ -16,12 +16,12 @@ export const loadGraphByNESTProject = (graph: CodeGraph, projectState: INESTProj
   loadNESTResetKernelNode(graph);
   if (projectState.simulation?.kernel) loadNESTSetKernelStatusNode(graph, projectState.simulation.kernel);
 
-  const createNodes = projectState.network?.nodes?.map((nodeState: INESTNodeState, idx: number) =>
-    loadNESTCreateNode(graph, nodeState, idx),
+  const createNodes = projectState.network?.nodes?.map((nodeState: INESTNodeState) =>
+    loadNESTCreateNode(graph, nodeState),
   );
 
-  const connectNodes = projectState.network?.connections?.map((connectionState: INESTConnectionState, idx: number) =>
-    loadNESTConnectNode(graph, connectionState, createNodes, idx),
+  const connectNodes = projectState.network?.connections?.map((connectionState: INESTConnectionState) =>
+    loadNESTConnectNode(graph, connectionState, createNodes),
   );
 
   const simulateNode = loadNESTSimulationNode(graph, projectState.simulation);

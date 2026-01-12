@@ -300,7 +300,7 @@ const getPopItems = (node: NESTNode) => [
     title: "Set default size",
   },
   {
-    onClick: () => node.toggleSpatial(),
+    onClick: () => node.spatial.togglePositions(),
     prependIcon: "mdi:mdi-axis-arrow",
     title: "Toggle spatial mode",
   },
@@ -308,13 +308,16 @@ const getPopItems = (node: NESTNode) => [
 
 onMounted(() => {
   mountProjectLayout({ route, router });
+  // if (!project.value || !project.value.viewModel) return;
 
-  if (project.value.viewModel?.subscribe) project.value.viewModel.subscribe();
-  project.value.viewModel?.engine?.start();
-  project.value.viewModel?.engine?.runOnce(null);
+  if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
+  project.value.viewModel.engine?.start();
+  project.value.viewModel.engine?.runOnce(null);
 });
 
 onBeforeUnmount(() => {
+  // if (!project.value || !project.value.viewModel) return;
+
   if (project.value.viewModel.unsubscribe) project.value.viewModel.unsubscribe();
   project.value.viewModel.engine?.stop();
 });

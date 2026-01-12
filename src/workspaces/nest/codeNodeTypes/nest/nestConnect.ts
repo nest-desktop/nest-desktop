@@ -20,6 +20,7 @@ import {
   nestNodeCollectionType,
 } from "./interfaceTypes";
 import { type IParamState, updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
+import { getNESTSimulateNode } from "./nestSimulate";
 
 const ruleItems = [
   "all_to_all",
@@ -167,11 +168,14 @@ export const loadNESTConnectNode = (
   updateNESTConnectNode(codeNode, connectionState);
 
   if (nodes) {
-    const sourceNode = nodes[connectionState.sourceIdx];
+    const sourceNode = nodes[connectionState.sourceIdx as number];
     if (sourceNode) graph.addConnection(codeNode.inputs.pre, sourceNode.outputs.out);
-    const targetNode = nodes[connectionState.targetIdx];
+    const targetNode = nodes[connectionState.targetIdx as number];
     if (targetNode) graph.addConnection(targetNode.outputs.out, codeNode.inputs.post);
   }
+
+  const simNode = getNESTSimulateNode(graph);
+  if (simNode) graph.addConnection(codeNode.outputs._code, simNode.inputs._code);
 
   return codeNode;
 };

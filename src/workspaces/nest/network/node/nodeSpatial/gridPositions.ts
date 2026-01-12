@@ -35,7 +35,7 @@ export class GridPositions extends BasePositions {
   }
 
   override set numDimensions(value: number) {
-    this.numDimensions = value;
+    super.numDimensions = value;
     this.center = new Array(value).fill(0);
     this.extent = new Array(value).fill(1);
     this.shape = new Array(value).fill(1);
@@ -70,10 +70,11 @@ export class GridPositions extends BasePositions {
    * @param state grid positions state
    */
   override load(state: IGridPositionsState = {}) {
+    if (state.numDimensions) this.numDimensions = state.numDimensions;
+
     if (state.center) this.center = state.center;
     if (state.edgeWrap) this.edgeWrap = state.edgeWrap;
     if (state.extent) this.extent = state.extent;
-    if (state.numDimensions) this.numDimensions = state.numDimensions;
     if (state.shape) this.shape = state.shape;
   }
 
