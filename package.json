@@ -26,7 +26,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@babsey/code-graph": "~0.8",
+    "@babsey/code-graph": "~0.9",
     "@codemirror/autocomplete": "~6.20",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.2",
@@ -98,7 +98,7 @@
     "sharp": "~0.34",
     "tslog": "~4.10",
     "typescript": "~5.9",
-    "typescript-eslint": "~8.52",
+    "typescript-eslint": "~8.53",
     "unplugin-fonts": "~1.4",
     "vite": "~7.3",
     "vite-plugin-electron": "~0.29",
