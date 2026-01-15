@@ -31,8 +31,8 @@ const projectUpgrades = [
 
 export function upgradeProject(projectState: any): any {
   if (Object.keys(projectState).length === 0) return {};
-
   if (!("version" in projectState)) return projectState;
+  if (!projectState.code) projectState.version = "4.2";
 
   const oldVersion = projectState.version;
 
