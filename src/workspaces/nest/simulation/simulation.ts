@@ -61,7 +61,8 @@ export class NESTSimulation extends BaseSimulation<INESTSimulationState> {
   generateSeed(): void {
     this.logger.trace("generate seed");
 
-    if (this.kernel.config?.localStorage.autoRNGSeed) this.kernel.rngSeed.value = Math.round(Math.random() * 1000);
+    if (this.kernel.rngSeed && this.kernel.config?.localStorage.autoRNGSeed)
+      this.kernel.rngSeed.value = Math.round(Math.random() * 1000);
   }
 
   /**
@@ -79,8 +80,9 @@ export class NESTSimulation extends BaseSimulation<INESTSimulationState> {
   override save(): INESTSimulationState {
     const simulationState: INESTSimulationState = {
       kernel: this.kernel.save(),
-      time: this.time?.value,
     };
+
+    if (this.time) simulationState.time = this.time.value as number;
 
     return simulationState;
   }

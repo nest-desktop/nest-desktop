@@ -63,10 +63,10 @@ export class NESTSimulationKernel extends CodeNodeMask {
    * @return simulation kernel state
    */
   override save(): INESTSimulationKernelState {
-    return {
-      localNumThreads: this.localNumThreads?.value,
-      resolution: this.resolution?.value,
-      rngSeed: this.rngSeed?.value,
-    };
+    const state: INESTSimulationKernelState = {};
+    if (this.localNumThreads) state.localNumThreads = this.localNumThreads.value as number;
+    if (this.resolution) state.resolution = this.resolution.value as number;
+    if (this.rngSeed) state.rngSeed = this.rngSeed.value as number;
+    return state;
   }
 }
