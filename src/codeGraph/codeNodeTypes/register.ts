@@ -23,7 +23,7 @@ const codeNodeModules: Ref<Record<string, TCodeNodeModules>> = ref({
   torch: registerTorchNodeTypes,
 });
 
-export const registerCodeNodeModule = (moduleName: string, nodeTypes: TNodeTypeModule) => {
+export const registerCodeNodeModule = (moduleName: string, nodeTypes: TCodeNodeModules) => {
   codeNodeModules.value[moduleName] = nodeTypes;
 };
 

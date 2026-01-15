@@ -1,6 +1,6 @@
 <template>
   <v-layout id="ProjectCodeGraphEditor" full-height>
-    <CodeGraphEditor :view-model="code.viewModel">
+    <CodeGraphEditor v-if="code.viewModel" :view-model="code.viewModel">
       <template #sidebarCodeEditor="{ node }">
         <CodeEditor
           v-model="node.script"

@@ -26,15 +26,17 @@ export class ProjectCode<TProject extends BaseProject = BaseProject> extends Pyt
    * Load project code  from state
    * @param state code state
    */
-  load(state: IProjectCodeState) {
-    this.viewModel.loadEditor(state.editor);
+  load(state: IProjectCodeState): void {
+    if (this.viewModel) this.viewModel.loadEditor(state.editor);
   }
 
   /**
    * Save project code to state.
    * @returns project code state.
    */
-  override save(): IProjectCodeState {
+  save(): IProjectCodeState | undefined {
+    if (!this.viewModel) return;
+
     return {
       editor: this.viewModel.editor.save(),
     };

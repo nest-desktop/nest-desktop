@@ -24,8 +24,6 @@ export const useCodeGraphStore = defineStore(
     registerNodeTypes(viewModel);
 
     const loadEditor = (editorId?: string) => {
-      // console.log('load editor', editorId?.slice(0,6))
-
       const editorIds = Object.keys(state.editorStates);
       if (!editorId || !editorIds.includes(editorId)) return newGraph();
 

@@ -10,14 +10,14 @@ import { computed, UnwrapRef } from "vue";
 import { components } from "@babsey/code-graph";
 const { CodeEditor } = components;
 
-import type { IErrorState } from "@/plugins/codeMirrorExtensions/codeError";
+import type { IAxiosErrorData } from "@/backends";
 import { autocompletion, codeError, languagePython, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/theme";
 
 import { useAppStore } from "@/app";
 const appStore = useAppStore();
 
-const props = defineProps<{ error?: UnwrapRef<IErrorState> }>();
+const props = defineProps<{ error?: UnwrapRef<IAxiosErrorData> }>();
 const error = computed(() => props.error);
 
 const extensions: Extension[] = [
