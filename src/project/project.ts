@@ -265,7 +265,7 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
       version: process.env.APP_VERSION as string,
     };
 
-    if (this.code.graph.nodes.length > 0) projectState.code = this.code.save();
+    if (this.code.graph && this.code.graph.nodes.length > 0) projectState.code = this.code.save();
 
     return projectState;
   }
