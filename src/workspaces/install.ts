@@ -86,6 +86,7 @@ function initEnabledWorkspace(app: App, workspaceId: string): void {
     async install() {
       logger.trace("install", workspaceId);
       const workspaceState = workspaces[workspaceId];
+      if (!workspaceState) return;
 
       // Load config files.
       workspaceState.configNames.forEach((name: string) => new Config({ name, workspace: workspaceState.id }));
