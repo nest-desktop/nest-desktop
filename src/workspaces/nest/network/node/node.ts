@@ -246,12 +246,13 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
     let recorderModelChanged = false;
 
     if (this.codeNode) {
-      const engine = this.codeNode.code.engine;
-      engine.pause();
-      //
-      updateNESTCreateNode(this.codeNode, this.save());
-      engine.resume();
-      engine.runOnce();
+      const engine = this.codeNode.code?.engine;
+      if (engine) {
+        engine.pause();
+        updateNESTCreateNode(this.codeNode, this.save());
+        engine.resume();
+        engine.runOnce(null);
+      }
     }
 
     if (this.model.isRecorder) {
@@ -275,7 +276,6 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
    */
   override registerCodeNode(codeNode?: AbstractCodeNode): void {
     if (!codeNode) codeNode = getNESTCreateNode(this.network.project.code.graph, this.idx);
-
     this.codeNode = codeNode;
     this.codeNode.mask = this;
   }

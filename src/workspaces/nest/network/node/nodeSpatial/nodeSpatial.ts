@@ -1,12 +1,12 @@
 // nodeSpatial.ts
 
 import { BaseObj, type IBaseState } from "@/core";
+import { updateNESTSpatialNode } from "@/workspaces/nest/codeNodeTypes/nest";
 
 import { FreePositions } from "./freePositions";
 import { GridPositions, type IGridPositionsState } from "./gridPositions";
 import type { IBasePositionsState } from "./basePositions";
 import type { NESTNode } from "../node";
-import { updateNESTSpatialNode } from "@/workspaces/nest/codeNodeTypes/nest";
 
 export interface INESTNodeSpatialState extends IBaseState {
   positions?: string;
@@ -37,7 +37,7 @@ export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
   }
 
   get positions(): FreePositions | GridPositions | undefined {
-    const spatialNode = this.node.codeNode.getConnectedNodeByInterface("positions", "input");
+    const spatialNode = this.node.codeNode.getConnectedNodeByInterface("positions", "inputs");
     if (!spatialNode) return;
     return spatialNode.mask;
   }
@@ -65,7 +65,7 @@ export class NESTNodeSpatial extends BaseObj<INESTNodeSpatialState> {
    * Create new positions instance.
    * @param positions string
    */
-  newPositions(positionsName: string | undefined): FreePositions | GridPositions | undefined {
+  newPositions(positionsName: "free" | "grid" | undefined = "free"): FreePositions | GridPositions | undefined {
     switch (positionsName) {
       case "free":
         return new FreePositions(this);

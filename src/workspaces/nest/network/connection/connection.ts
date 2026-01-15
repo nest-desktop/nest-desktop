@@ -111,7 +111,6 @@ export class NESTConnection extends BaseConnection<NESTConnections, INESTConnect
    */
   override registerCodeNode(codeNode?: AbstractCodeNode): void {
     if (!codeNode) codeNode = getNESTConnectNode(this.connections.network.project.code.graph, this.idx);
-
     this.codeNode = codeNode;
     this.codeNode.mask = this;
   }

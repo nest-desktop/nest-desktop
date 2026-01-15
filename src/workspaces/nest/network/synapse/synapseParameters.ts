@@ -1,10 +1,10 @@
 // synapseParameters.ts
 
-// import type { AbstractCodeNode } from "@babsey/code-graph";
+import type { AbstractCodeNode } from "@babsey/code-graph";
 
 import type { Class } from "@/types";
 import { SynapseParameters } from "@/network";
-// import { getNESTParameterNode } from "../../codeNodeTypes/nest";
+import { getNESTParameterNode } from "../../codeNodeTypes/nest";
 
 import type { NESTSynapse } from "./synapse";
 import { NESTSynapseParameter } from "./synapseParameter";
@@ -14,15 +14,11 @@ export class NESTSynapseParameters extends SynapseParameters<NESTSynapse> {
     return NESTSynapseParameter;
   }
 
-  // override registerCodeNode(codeNode?: AbstractCodeNode): void {
-  //   this.logger.trace("register code node");
+  override registerCodeNode(codeNode?: AbstractCodeNode): void {
+    this.logger.trace("register code node");
 
-  //   if (!codeNode)
-  //     codeNode = getNESTParameterNode(
-  //       this.synapse.connection.codeNode,
-  //       "syn_spec",
-  //     );
-  //   this.codeNode = codeNode;
-  //   this.codeNode.mask = this;
-  // }
+    if (!codeNode) codeNode = getNESTParameterNode(this.synapse.connection.codeNode, "syn_spec");
+    this.codeNode = codeNode;
+    this.codeNode.mask = this;
+  }
 }
