@@ -26,6 +26,10 @@ export const nestSpatialGrid = defineCodeNode({
   outputs: {
     out: () => new CodeNodeOutputInterface(),
   },
+  onConnected() {
+    if (!this.code.project) return;
+    updateNESTNode(this);
+  },
   // onGraphUpdate() {
   //   if (!this.node) return;
 
@@ -100,6 +104,13 @@ export const loadNESTSpatialGrid = (
   const codeNode = addNESTSpatialGrid(graph, idx);
   if (spatialState) codeNode.updateInputValues(spatialState);
   return codeNode;
+};
+
+const updateNESTNode = (spatialNode: AbstractCodeNode) => {
+  const codeNode = spatialNode.getConnectedNodeByInterface("out", "outputs");
+  if (!codeNode || !codeNode.mask) return;
+
+  codeNode.mask.load({ positions: "grid" });
 };
 
 // export const updateNESTSpatialGrid = (codeNode: AbstractCodeNode, state: INESTNodeSpatialState) => {

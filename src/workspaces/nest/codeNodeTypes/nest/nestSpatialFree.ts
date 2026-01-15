@@ -20,7 +20,7 @@ export const nestSpatialFree = defineCodeNode({
   title: "free position",
   variableName: "pos",
   inputs: {
-    pos: () => new CodeNodeInputInterface("pos"),
+    pos: () => new CodeNodeInputInterface("pos", "[[0,0]]"),
     extent: () => new ListInputInterface("extent", "-0.5, 0.5").setOptional(true),
     edge_wrap: () => new CheckboxInterface("edge_wrap", false).setOptional(true),
     num_dimensions: () => new IntegerInterface("num dimensions", 2, 2, 3),
@@ -28,10 +28,10 @@ export const nestSpatialFree = defineCodeNode({
   outputs: {
     out: () => new CodeNodeOutputInterface(),
   },
-  // afterGraphLoaded() {
-  //   if (!this.code.project) return;
-  //   updateNESTNode(this);
-  // },
+  onConnected() {
+    if (!this.code.project) return;
+    updateNESTNode(this);
+  },
   //   if (!this.node) return;
 
   //   if (!this.node.view) {
@@ -101,11 +101,12 @@ export const loadNESTSpatialFree = (
   return codeNode;
 };
 
-// const updateNESTNode = (codeNode: AbstractCodeNode) => {
-//   codeNode.mask.loadPositions(codeNode.state.props.positions);
-//   codeNode.mask.registerCodeNode(codeNode);
-//   codeNode.mask.positions.load(codeNode.state.props.specs);
-// };
+const updateNESTNode = (spatialNode: AbstractCodeNode) => {
+  const codeNode = spatialNode.getConnectedNodeByInterface("out", "outputs");
+  if (!codeNode || !codeNode.mask) return;
+
+  codeNode.mask.load({ positions: "free" });
+};
 
 // export const updateNESTSpatialFree = (codeNode: AbstractCodeNode, state: INESTNodeSpatialState) => {
 //   if (state.pos) codeNode.inputs.pos.value = state.pos;

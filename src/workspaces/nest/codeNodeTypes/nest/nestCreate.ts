@@ -41,7 +41,7 @@ export const nestCreate = defineCodeNode({
       new CodeNodeOutputInterface("positions", ".positions").use(displayInSidebar, true).setOptional(true),
   },
   onPlaced() {
-    if (this.graph.loading || !this.code.project) return;
+    if (this.graph?.loading || !this.code.project) return;
     updateNESTNode(this);
   },
   afterGraphLoaded() {
@@ -51,7 +51,7 @@ export const nestCreate = defineCodeNode({
   onConnected() {
     if (!this.code.project) return;
 
-    const paramsNode = this.getConnectedNodeByInterface("params", "input");
+    const paramsNode = this.getConnectedNodeByInterface("params", "inputs");
     if (paramsNode) {
       let paramStates: Record<string, IParamState>;
       if (this.mask) {

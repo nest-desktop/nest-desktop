@@ -154,7 +154,7 @@ export const updateParameterInterfaces = (
   states?: Record<string, IParamState>,
 ): AbstractCodeNode | undefined => {
   if (codeNode.inputs[inputKey].connectionCount === 0) return;
-  const paramsNode = codeNode.getConnectedNodeByInterface(inputKey, "input");
+  const paramsNode = codeNode.getConnectedNodeByInterface(inputKey, "inputs");
   paramsNode.state.integrated = true;
   const paramInterfaces = createParameterInterfaces(states);
   if (states) paramsNode.updateInputInterfaces(paramInterfaces);
