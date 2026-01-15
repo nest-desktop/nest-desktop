@@ -214,7 +214,7 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
   }
 
   changes(props?: Record<string, unknown>): void {
-    console.log(props);
+    // console.log("model changes:", props);
   }
 
   /**

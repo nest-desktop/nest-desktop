@@ -159,8 +159,6 @@ export class BaseSynapse<
    * @remarks It emits synapse changes.
    */
   modelChanges(): void {
-    console.log(this.save());
-
     this.connection.network.clean();
     this.changes({ preventSimulation: true });
   }
