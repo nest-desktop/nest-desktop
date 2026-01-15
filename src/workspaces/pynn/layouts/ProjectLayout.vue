@@ -86,6 +86,7 @@ const projectViewStore = computed(() => appStore.currentWorkspace.views.project)
 
 onMounted(() => {
   mountProjectLayout({ route, router });
+  // if (!project.value || !project.value.viewModel) return;
 
   if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
   project.value.viewModel.engine?.start();
@@ -93,6 +94,8 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  // if (!project.value || !project.value.viewModel) return;
+
   if (project.value.viewModel.unsubscribe) project.value.viewModel.unsubscribe();
   project.value.viewModel.engine?.stop();
 });
