@@ -852,9 +852,9 @@
     "@babel/helper-validator-identifier" "^7.28.5"
 
 "@babsey/code-graph@~0.9":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@babsey/code-graph/-/code-graph-0.9.0.tgz#d16d58bc33646c5b1211a56b8ad278dde75f758f"
-  integrity sha512-D9gcYbZ5/UqJ5k7X+SQE+AN/9oyCg8ZBHqn2swPKvT5kJIXufq+lWGptttqOx24uBodmR2HSdN4gRJu4569RbQ==
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@babsey/code-graph/-/code-graph-0.9.1.tgz#12a1a28981115245160884f02217fcb668475789"
+  integrity sha512-ioexh1aInN267gT5LKYg78LWIzPdtC/iEY2P7DemtJcx0oPqFYgtwkbCHby1BuL/Dgq/YVJUS7daJQdp/vcyWw==
   dependencies:
     "@codemirror/lang-python" "~6.2"
     "@codemirror/theme-one-dark" "~6.1"
@@ -6823,10 +6823,10 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@~3.7:
-  version "3.7.4"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.7.4.tgz#d2f8335d4b1cec47e1c8098645411b0c9dff9c0f"
-  integrity sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==
+prettier@~3.8:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.8.0.tgz#f72cf71505133f40cfa2ef77a2668cdc558fcd69"
+  integrity sha512-yEPsovQfpxYfgWNhCfECjG5AQaO+K3dp6XERmOepyPDVqcJm+bjyCVO3pmU+nAPe0N5dDvekfGezt/EIiRe1TA==
 
 pretty-bytes@^5.3.0:
   version "5.6.0"
