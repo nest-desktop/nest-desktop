@@ -1,11 +1,83 @@
-/.git
-/.github
-/build
-#/dist
-/dist_electron
-/docs
-/icon
-/images
-/nest_desktop.egg-info
-/node_modules
-/singularity
+# -------------------------------
+# Dependency directories
+# -------------------------------
+node_modules/
+
+# -------------------------------
+# Production and build outputs
+# -------------------------------
+dist/
+out/
+build/
+public/build/
+dist_electron/
+pydist/
+dev-dist/
+release/
+
+# -------------------------------
+# Vite, VuePress, and cache dirs
+# -------------------------------
+.vite/
+.vitepress/
+.cache/
+.tmp/
+
+# -------------------------------
+# Test output and coverage
+# -------------------------------
+coverage/
+reports/
+jest/
+cypress/
+cypress/screenshots/
+cypress/videos/
+
+# -------------------------------
+# Environment and config files
+# -------------------------------
+*.env*
+!.env.production    # Keep production env if needed
+*.local
+*.log
+
+# -------------------------------
+# TypeScript artifacts
+# -------------------------------
+*.tsbuildinfo
+
+# -------------------------------
+# Editor and IDE config
+# -------------------------------
+.vscode/
+.idea/
+*.swp
+
+# -------------------------------
+# System files
+# -------------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------------
+# Lockfiles (optional)
+# -------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -------------------------------
+# Git files
+# -------------------------------
+.git/
+.gitignore
+.github/
+
+# -------------------------------
+# Docker-related files
+# -------------------------------
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.override.yml
