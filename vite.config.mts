@@ -7,7 +7,7 @@ import { defineConfig } from "vite";
 // Vite plugins
 import ViteFonts from "unplugin-fonts/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-import electron from "vite-plugin-electron";
+// import electron from "vite-plugin-electron";
 import { VitePWA } from "vite-plugin-pwa";
 // import vueDevTools from "vite-plugin-vue-devtools";
 
@@ -18,8 +18,9 @@ import Vue from "@vitejs/plugin-vue";
 export default defineConfig(({ mode }) => ({
   build: {
     assetsInclude: ["**/*.nestml"],
-    // chunkSizeWarningLimit: 1000, // https://github.com/vitejs/vite/discussions/9440
+    chunkSizeWarningLimit: 1500, // https://github.com/vitejs/vite/discussions/9440
     outDir: "./nest_desktop/app",
+    // minify: false,
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
     rollupOptions: {
       output: {
@@ -129,32 +130,32 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
-        // maximumFileSizeToCacheInBytes: 2000000,
+        // maximumFileSizeToCacheInBytes: 2500000,
         // Don't fallback on document based (e.g. `/some-page`) requests
         // Even though this says `null` by default, I had to set this specifically to `null` to make it work
         navigateFallback: null,
       },
     }),
     // vueDevTools(),
-    electron([
-      {
-        entry: "electron/main.ts",
-        onstart(options) {
-          // Start Electron App
-          if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
-            options.startup([".", "--no-sandbox"]);
-          }
-        },
-      },
-      {
-        entry: "electron/preload.ts",
-        onstart(options) {
-          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
-          // instead of restarting the entire Electron App.
-          options.reload();
-        },
-      },
-    ]),
+    // electron([
+    //   {
+    //     entry: "electron/main.ts",
+    //     onstart(options) {
+    //       // Start Electron App
+    //       if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
+    //         options.startup([".", "--no-sandbox"]);
+    //       }
+    //     },
+    //   },
+    //   {
+    //     entry: "electron/preload.ts",
+    //     onstart(options) {
+    //       // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
+    //       // instead of restarting the entire Electron App.
+    //       options.reload();
+    //     },
+    //   },
+    // ]),
   ],
   resolve: {
     alias: {
