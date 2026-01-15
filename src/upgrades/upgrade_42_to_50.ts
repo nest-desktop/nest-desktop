@@ -64,7 +64,7 @@ export function upgradeProject_42_to_50(projectState: any): any {
     );
 
   if (appStore.currentWorkspace?.loadGraphByProject) {
-    const viewModel = new useCodeGraph({ code: new PythonCode() });
+    const viewModel = useCodeGraph({ code: new PythonCode() });
 
     registerNESTNodeTypes(viewModel);
 
