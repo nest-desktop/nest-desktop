@@ -2,8 +2,7 @@
 
 import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 
-import type { BaseParameters } from "./parameters";
-import { BaseParameter, type TParamValue, type IParamState } from "./parameter";
+import { BaseParameter, type BaseParameters, type TParamValue, type IParamState } from "@/parameter";
 
 export interface ICodeMaskParamState extends IParamState {
   codeNodeInterface?: string;

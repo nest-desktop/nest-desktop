@@ -1,6 +1,7 @@
 // synapseParameter.ts
 
-import { CodeMaskParameter, type IParamState, type IParamType } from "@/parameter";
+import { CodeMaskParameter } from "@/codeGraph";
+import { type IParamState, type IParamType } from "@/parameter";
 
 import { BaseSynapse } from "./synapse";
 import type { SynapseParameters } from "./synapseParameters";

@@ -1,6 +1,7 @@
 // connectionParameter.ts
 
-import { CodeMaskParameter, type IParamState, type IParamType } from "@/parameter";
+import { CodeMaskParameter } from "@/codeGraph";
+import { type IParamState, type IParamType } from "@/parameter";
 
 import type { IConnectionRuleConfig } from "./connectionRule";
 import type { ConnectionParameters } from "./connectionParameters";

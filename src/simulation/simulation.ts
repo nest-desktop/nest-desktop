@@ -87,9 +87,8 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
   // generateSeed(): void {
   //   this.logger.trace("generate seed");
 
-  //   if (this._kernel.config.autoRNGSeed) {
-  //     this._kernel.rngSeed = Math.round(Math.random() * 1000);
-  //     this.changes();
+  //   if (this.kernel.config.autoRNGSeed) {
+  //     this.kernel.rngSeed = Math.round(Math.random() * 1000);
   //   }
   // }
 
@@ -107,8 +106,8 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
   resetState(): void {
     this.logger.trace("reset state");
 
-    this._state.biologicalTime = 0;
-    this._state.timeInfo = {
+    this.state.biologicalTime = 0;
+    this.state.timeInfo = {
       begin: 0,
       current: 0,
       end: 0,
@@ -126,7 +125,7 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
     this.resetState();
     this.beforeSimulation();
 
-    this._state.running = true;
+    this.state.running = true;
     return this.handler
       .run(script)
       .then((response: AxiosResponse<IAxiosResponseData>) => {
@@ -145,7 +144,7 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
         return response;
       })
       .finally(() => {
-        this._state.running = false;
+        this.state.running = false;
       });
   }
 

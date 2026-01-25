@@ -2,7 +2,8 @@
 
 // import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import { CodeMaskParameter, type IParamState } from "@/parameter";
+import { CodeMaskParameter } from "@/codeGraph";
+import { type IParamState } from "@/parameter";
 
 import type { NodeParameters } from "./nodeParameters";
 
