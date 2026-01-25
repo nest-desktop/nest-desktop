@@ -10,7 +10,7 @@ import { debounce } from "@/utils";
 
 import { ConnectionGraph } from "../connectionGraph";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { NodeGraph, NodeGroupGraph } from "../nodeGraph";
+import { NodeGraph } from "../nodeGraph";
 
 interface IBaseNetworkGraphState {
   contextMenu: {
@@ -24,7 +24,7 @@ interface IBaseNetworkGraphState {
 }
 
 export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extends BaseObj {
-  private _nodeGroupGraph: NodeGroupGraph;
+  // private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: TSelection;
   private _state: UnwrapRef<IBaseNetworkGraphState> = reactive<IBaseNetworkGraphState>({
@@ -53,7 +53,7 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
     this._workspace = new NetworkGraphWorkspace(this);
     this._connectionGraph = new ConnectionGraph(this);
     this._nodeGraph = new NodeGraph(this);
-    this._nodeGroupGraph = new NodeGroupGraph(this);
+    // this._nodeGroupGraph = new NodeGroupGraph(this);
 
     this._resizeObserver = new ResizeObserver(debounce(() => this._workspace.updateTransform()));
   }
@@ -84,9 +84,9 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
     return this._nodeGraph;
   }
 
-  get nodeGroupGraph(): NodeGroupGraph {
-    return this._nodeGroupGraph;
-  }
+  // get nodeGroupGraph(): NodeGroupGraph {
+  //   return this._nodeGroupGraph;
+  // }
 
   get resizeObserver(): ResizeObserver {
     return this._resizeObserver;
@@ -171,7 +171,7 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
   }
 
   /**
-   * Open contect menu
+   * Open contect menu.
    * @param target position of mouse
    * @param props network props
    */
@@ -203,7 +203,7 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
 
     this.connectionGraph.render();
     this.nodeGraph.render();
-    this.nodeGroupGraph.render();
+    // this.nodeGroupGraph.render();
   }
 
   /**
@@ -225,6 +225,6 @@ export class BaseNetworkGraph<TNetwork extends BaseNetwork = BaseNetwork> extend
 
     this.connectionGraph.update();
     this.nodeGraph.update();
-    this.nodeGroupGraph.update();
+    // this.nodeGroupGraph.update();
   }
 }

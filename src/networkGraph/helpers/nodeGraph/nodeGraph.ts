@@ -41,24 +41,24 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
 
     if (this._networkGraph.workspace.state.dragLine) return;
 
-    if (node.isGroup) {
-      const nodeGroup = node as TNodeGroup;
+    // if (node.isGroup) {
+    //   const nodeGroup = node as TNodeGroup;
 
-      // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
-      const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
+    //   // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
+    //   const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
-      nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-        const nodePosition = node.view.position;
-        nodePosition.x += pos.x;
-        nodePosition.y += pos.y;
-      });
-      nodeGroup.view.updateCentroid();
-    } else {
-      node.view.position.x = event.x;
-      node.view.position.y = event.y;
+    //   nodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+    //     const nodePosition = node.view.position;
+    //     nodePosition.x += pos.x;
+    //     nodePosition.y += pos.y;
+    //   });
+    //   nodeGroup.view.updateCentroid();
+    // } else {
+    node.view.position.x = event.x;
+    node.view.position.y = event.y;
 
-      node.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
-    }
+    // node.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
+    // }
 
     nextTick(() => this._networkGraph.render());
   }
@@ -85,7 +85,7 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
       if (n.network.connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
         const selectedNode = n.network.connections.state.selectedNode;
         const sourcePos = selectedNode.view.position;
-        this._networkGraph.workspace.dragline.drawPath(sourcePos, n.view.position);
+        this.networkGraph.workspace.dragline.drawPath(sourcePos, n.view.position);
       }
     });
 
@@ -98,9 +98,9 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
      */
     elem.on("contextmenu", (event: MouseEvent, n: TNode | TNodeGroup) => {
       event.preventDefault();
-      this._networkGraph.workspace.reset();
+      this.networkGraph.workspace.reset();
 
-      this._networkGraph.openContextMenu(
+      this.networkGraph.openContextMenu(
         [event.clientX, event.clientY],
         n.isGroup
           ? {
@@ -128,14 +128,14 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
     nodes
       .transition(t)
       .style("opacity", 1)
-      .style("color", (n: TNode | TNodeGroup) => `var(--colorNode${n.idx})`)
+      .style("color", (n: TNode) => `var(--colorNode${n.idx})`)
       .style("background-color", "rgb(var(--v-theme-background))")
-      .attr("transform", (n: TNode | TNodeGroup) => `translate(${n.view.position.x},${n.view.position.y})`);
+      .attr("transform", (n: TNode) => `translate(${n.view.position.x},${n.view.position.y})`);
 
     nodes
       .selectAll(".core")
       .transition(t)
-      .attr("transform", (n: TNode | TNodeGroup) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
+      .attr("transform", (n: TNode) => `scale( ${n.view.isFocused ? 1.2 : 1})`);
   }
 
   /**
@@ -150,29 +150,28 @@ export class NodeGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetworkGraph
     const nodes: TSelection = this._networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
-      .data(this.network.nodes.all, (n: TNode | TNodeGroup) => n.uuid);
+      .data(this.network.nodes.all, (n: TNode) => n.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
-      .on("drag", (e: MouseEvent, n: TNode | TNodeGroup) => this.drag(e, n as TNode))
+      .on("drag", (e: MouseEvent, n: TNode) => this.drag(e, n as TNode))
       .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
 
     nodes
       .enter()
       .append("g")
       .attr("class", "node")
-      .classed("nodeGroup", (n: TNode | TNodeGroup) => n.isGroup)
-      .style("color", (n: TNode | TNodeGroup) => `var(--colorNode${n.idx})`)
-      .attr("idx", (n: TNode | TNodeGroup) => n.idx)
-      .attr("weight", (n: TNode | TNodeGroup) => n.view.synWeights as string)
+      .classed("nodeGroup", (n: TNode) => n.isGroup)
+      .style("color", (n: TNode) => `var(--colorNode${n.idx})`)
+      .attr("idx", (n: TNode) => n.idx)
+      .attr("weight", (n: TNode) => n.view.synWeights as string)
       .attr(
         "transform",
-        (n: TNode | TNodeGroup) =>
-          `translate(${n.view.position.x},${n.view.position.y}) scale( ${n.view.isFocused ? 1.2 : 1})`,
+        (n: TNode) => `translate(${n.view.position.x},${n.view.position.y}) scale( ${n.view.isFocused ? 1.2 : 1})`,
       )
       .style("opacity", 0)
       .call(dragging, null)
-      .each((n: TNode | TNodeGroup, i: number, e) => this.initNode(n, i, e));
+      .each((n: TNode, i: number, e) => this.initNode(n, i, e));
 
     nodes.exit().remove();
 

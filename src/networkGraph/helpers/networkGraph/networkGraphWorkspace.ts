@@ -135,7 +135,7 @@ export class NetworkGraphWorkspace extends BaseObj {
 
     const X: number[] = [];
     const Y: number[] = [];
-    this.network.nodes.nodeItems.forEach((node: TNode) => {
+    this.network.nodes.all.forEach((node: TNode) => {
       X.push(node.view.position.x);
       Y.push(node.view.position.y);
     });
@@ -178,7 +178,7 @@ export class NetworkGraphWorkspace extends BaseObj {
         this.network?.state.unselectAll();
 
         const position: number[] = pointer(event, this._selector.node());
-        this.updateCursorPosition({ x: position[0], y: position[1] });
+        this.updateCursorPosition({ x: position[0] ?? 0, y: position[1] ?? 0 });
         this._nodeAddPanel.open();
       })
       .call(this._zoom.handler);

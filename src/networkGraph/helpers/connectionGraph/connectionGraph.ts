@@ -3,7 +3,7 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import type { TConnection, TDragBehavior, TNode, TNodeGroup, TSelection } from "@/types";
+import type { TConnection, TDragBehavior, TNode, TSelection } from "@/types";
 import { BaseObj } from "@/core";
 
 import { BaseNetworkGraph, type INetworkGraphWorkspaceState } from "../networkGraph";
@@ -40,33 +40,33 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
     // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
-    if (connection.source.isNode) {
-      const sourceNodePosition = connection.sourceNode.view.position;
-      sourceNodePosition.x += pos.x;
-      sourceNodePosition.y += pos.y;
-    } else {
-      connection.sourceNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-        const nodePosition = node.view.position;
-        nodePosition.x += pos.x;
-        nodePosition.y += pos.y;
-      });
-    }
+    // if (connection.sourceNode?.isNode) {
+    const sourceNodePosition = connection.sourceNode?.view.position ?? { x: 0, y: 0 };
+    sourceNodePosition.x += pos.x;
+    sourceNodePosition.y += pos.y;
+    // } else {
+    //   connection.sourceNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+    //     const nodePosition = node.view.position;
+    //     nodePosition.x += pos.x;
+    //     nodePosition.y += pos.y;
+    //   });
+    // }
 
-    if (connection.target.isNode) {
-      const targetNodePosition = connection.target.view.position;
-      targetNodePosition.x += pos.x;
-      targetNodePosition.y += pos.y;
-    } else {
-      connection.targetNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
-        const nodePosition = node.view.position;
-        nodePosition.x += pos.x;
-        nodePosition.y += pos.y;
-      });
-    }
+    // if (connection.target.isNode) {
+    const targetNodePosition = connection.targetNode?.view.position ?? { x: 0, y: 0 };
+    targetNodePosition.x += pos.x;
+    targetNodePosition.y += pos.y;
+    // } else {
+    //   connection.targetNodeGroup.nodeItemsDeep.forEach((node: TNode) => {
+    //     const nodePosition = node.view.position;
+    //     nodePosition.x += pos.x;
+    //     nodePosition.y += pos.y;
+    //   });
+    // }
 
-    connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
+    // connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
 
-    nextTick(() => this._networkGraph.render());
+    nextTick(() => this.networkGraph.render());
   }
 
   /**
@@ -120,7 +120,7 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
       .on("click", () => {
         const network = this._networkGraph.network;
         const workspace = this._networkGraph.workspace;
-        connection.sourceNode.view.focus();
+        connection.sourceNode?.view.focus();
 
         if (network.connections.state.selectedNode && workspace.state.dragLine) {
           // Set cursor position of the focused connection.
@@ -166,14 +166,14 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
 
     connections
       .style("color", (c: TConnection) => {
-        if (!c.source) return;
-        return `var(--colorNode${c.source?.idx})`;
+        if (!c.sourceNode) return;
+        return `var(--colorNode${c.sourceNode?.idx})`;
       })
       .transition(t)
       .style("opacity", 1);
 
     connections.each((connection: TConnection, idx: number, elements: HTMLElement[]) => {
-      if (!connection.source) return;
+      if (!connection.sourceNode) return;
       const elem: TSelection = select(elements[idx]);
 
       elem
@@ -182,8 +182,8 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
         .attr(
           "d",
           drawPathNode(
-            connection.source.view.position,
-            connection.target.view.position,
+            connection.sourceNode?.view.position ?? { x: 0, y: 0 },
+            connection.targetNode?.view.position ?? { x: 0, y: 0 },
             connection.view.connectionGraphOptions,
           ),
         );
@@ -228,7 +228,7 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
     const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
-      .data(this.networkGraph.network.connections.all, (c: TConnection) => c.uuid);
+      .data(this.networkGraph.network.connections.all, (c) => c.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
@@ -239,9 +239,8 @@ export class ConnectionGraph<TNetworkGraph extends BaseNetworkGraph = BaseNetwor
       .enter()
       .append("g")
       .attr("class", "connection")
-      .attr("color", (c: TConnection) => c.sourceNode.view.color)
+      .attr("color", (c: TConnection) => c.sourceNode?.view.color ?? "black")
       .attr("idx", (c: TConnection) => c.idx)
-      // .attr("hash", (c: TConnection) => c.hash)
       .style("opacity", 0)
       .call(dragging, null)
       .each((c: TConnection, i: number, e) => this.init(c, i, e));
