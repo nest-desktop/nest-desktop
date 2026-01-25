@@ -21,7 +21,6 @@ export interface IBaseObjProps {
 
 export abstract class BaseObj<T = unknown | null> {
   private _config?: Config;
-  // private _hash: string = "";
   private _logger: Logger<ILogObj>;
   private _props: Ref<T | undefined> = ref();
   private _uuid: string;
@@ -44,14 +43,6 @@ export abstract class BaseObj<T = unknown | null> {
     return this._config;
   }
 
-  // get hash(): string {
-  //   return this._hash;
-  // }
-
-  // get hashObject(): IBaseState | IBaseState[] {
-  //   return this.save();
-  // }
-
   get logger(): Logger<ILogObj> {
     return this._logger;
   }
@@ -68,29 +59,7 @@ export abstract class BaseObj<T = unknown | null> {
     return this._uuid;
   }
 
-  /**
-   * Save to state.
-   * @returns state
-   */
   save(): IBaseState | IBaseState[] {
     return { uuid: this.uuid };
   }
-
-  // /**
-  //  * Update hash.
-  //  */
-  // updateHash(): void {
-  //   this._logger.trace("update hash");
-
-  //   // this._hash = truncate(sha1(this.hashObject));
-  //   this.updateLoggerName("#" + this.hash);
-  // }
-
-  // /**
-  //  * Update logger name suffix.
-  //  * @param text string
-  //  */
-  // updateLoggerName(text: string): void {
-  //   this.logger.settings.name = `[${truncate(this.uuid)}] ${this.constructor.name} ${text}`;
-  // }
 }
