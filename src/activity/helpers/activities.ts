@@ -22,20 +22,19 @@ interface IActivitiesRefState {
 
 export class Activities<TProject extends BaseProject = BaseProject> extends BaseObj {
   private _activities: Activity[] = [];
-  private _state: UnwrapRef<IActivitiesRefState>;
+  private _state: UnwrapRef<IActivitiesRefState> = reactive<IActivitiesRefState>({
+    activityStatsPanelId: 0,
+    hasSomeAnalogRecorders: false,
+    hasSomeEvents: false,
+    hasSomeSpatialActivities: false,
+    hasSomeSpikeRecorders: false,
+  });
   public _project: TProject;
 
   constructor(project: TProject) {
     super();
 
     this._project = project;
-    this._state = reactive<IActivitiesRefState>({
-      activityStatsPanelId: 0,
-      hasSomeAnalogRecorders: false,
-      hasSomeEvents: false,
-      hasSomeSpatialActivities: false,
-      hasSomeSpikeRecorders: false,
-    });
   }
 
   get activities(): Activity[] {
@@ -53,7 +52,7 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
    * Get a list of analog signal activities.
    */
   get analogSignals(): (AnalogSignalActivity | NodeAnalogSignalActivity)[] {
-    const activities: AnalogSignalActivity[] = this._activities.filter(
+    const activities: AnalogSignalActivity[] = this.activities.filter(
       (activity: Activity) => activity.isAnalogSignalActivity,
     ) as AnalogSignalActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
@@ -74,7 +73,7 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
    * Get a list of spike activities.
    */
   get spikes(): (SpikeActivity | NodeSpikeActivity)[] {
-    const activities: SpikeActivity[] = this._activities.filter(
+    const activities: SpikeActivity[] = this.activities.filter(
       (activity: Activity) => activity.isSpikeActivity,
     ) as SpikeActivity[];
     activities.forEach((activity: Activity, idx: number) => (activity.idx = idx));
@@ -102,23 +101,23 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
     // Update activity graph.
     // const activityGraphStore = useActivityGraphStore()
     // activityGraphStore.update();
-    this._project.activityGraph.update();
+    this.project.activityGraph.update();
   }
 
   /**
    * Check whether the project has some events in activities.
    */
   checkActivities(): void {
-    this.logger.trace("check");
+    this.logger.trace("check activities");
 
     const activities: Activity[] = this._project.activities.all;
 
     // Check if it has some activities.
-    this._state.hasSomeEvents =
+    this.state.hasSomeEvents =
       activities.length > 0 ? activities.some((activity: Activity) => activity.hasEvents) : false;
 
     // Check if it has spatial activities.
-    this._state.hasSomeSpatialActivities = this._state.hasSomeEvents
+    this.state.hasSomeSpatialActivities = this.state.hasSomeEvents
       ? activities.some((activity: Activity) => activity.hasEvents && activity.nodePositions.length > 0)
       : false;
   }
@@ -127,14 +126,14 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
    * Check whether the project has some recorders of each type.
    */
   checkRecorders(): void {
-    if (!("network" in this.project)) return;
+    if (!this.project.network) return;
     this.logger.trace("check recorders");
 
     // Check if the project contains some analog signal recorder.
-    this._state.hasSomeAnalogRecorders = this.project.network.nodes.recordersAnalog.length > 0;
+    this.state.hasSomeAnalogRecorders = this.project.network.nodes.hasSomeAnalogRecorders;
 
     // Check if the project contains some spike recorder.
-    this._state.hasSomeSpikeRecorders = this.project.network.nodes.recordersSpike.length > 0;
+    this.state.hasSomeSpikeRecorders = this.project.network.nodes.hasSomeSpikeRecorders;
   }
 
   // Initialize activities.
@@ -150,9 +149,6 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
 
     // Reset activities.
     this.all.forEach((activity: Activity) => activity.reset());
-
-    // Trigger activity changes.
-    // this.changes();
   }
 
   /**
@@ -169,19 +165,19 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
   update(state: IActivityState[] | IResponseData): void {
     this.logger.trace("update");
 
-    let activitiesState: IActivityState[] = [];
+    let activityStates: IActivityState[] = [];
 
     if ("events" in state) {
-      activitiesState = state.events.map((eventState: IEventState) => ({
+      activityStates = state.events.map((eventState: IEventState) => ({
         events: eventState,
       }));
     } else if ("activities" in state) {
-      activitiesState = state.activities as IActivityState[];
+      activityStates = state.activities as IActivityState[];
     } else {
-      activitiesState = state;
+      activityStates = state;
     }
 
-    activitiesState.forEach((activityState: IActivityState) => {
+    activityStates.forEach((activityState: IActivityState) => {
       if (!activityState.nodeIds) {
         if (activityState.events && activityState.events.ports) {
           activityState.nodeIds = activityState.events.ports.filter(
@@ -200,16 +196,17 @@ export class Activities<TProject extends BaseProject = BaseProject> extends Base
     if ("positions" in state) {
       const positions = state.positions as Record<string, number[]>;
 
-      activitiesState.forEach(
+      activityStates.forEach(
         (activityState: IActivityState) =>
           (activityState.nodePositions = activityState.nodeIds?.map((nodeId: number) => positions[nodeId] as number[])),
       );
     }
 
-    // Initialize recorded activities.
-    this.all.forEach((activity: Activity, idx: number) => activity.init(activitiesState[idx]));
+    // Load recorded activities.
+    this.all.forEach((activity: Activity, idx: number) => {
+      if (activityStates[idx]) activity.load(activityStates[idx]);
+    });
 
-    // Trigger activity changes.
-    this.changes();
+    this.project.activityGraph.activityChartGraph.update();
   }
 }

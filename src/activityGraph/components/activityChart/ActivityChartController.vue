@@ -50,7 +50,7 @@
             <template #chip="{ item }">
               <NodeRecordChip
                 v-if="panel.model.getNodeRecord(item.value)"
-                :node-record="panel.model.getNodeRecord(item.value)"
+                :node-record="panel.model.getNodeRecord(item.value) as NodeRecord"
               />
             </template>
 
@@ -65,7 +65,7 @@
                   <template #append>
                     <NodeRecordChip
                       v-if="panel.model.getNodeRecord(item.value)"
-                      :node-record="panel.model.getNodeRecord(item.value)"
+                      :node-record="panel.model.getNodeRecord(item.value) as NodeRecord"
                       class="my-auto"
                     />
                   </template>
@@ -139,6 +139,7 @@
 <script setup lang="ts">
 import { computed, nextTick } from "vue";
 
+import type { NodeRecord } from "@/network";
 import { NodeRecordChip } from "@/network/components";
 import { Card } from "@/components";
 import { ParamListItem } from "@/parameter/components";

@@ -17,7 +17,7 @@ export class SenderMeanISIPlotModel extends SpikeTimesPanelModel {
     this.label = "mean ISI in each sender";
     this.panel.xAxis = 4;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "select",
         id: "plotMode",

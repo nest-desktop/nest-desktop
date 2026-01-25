@@ -35,11 +35,15 @@
             </v-expansion-panel-title>
 
             <v-expansion-panel-text class="ma-0 pa-0">
-              <ActivityStatsSpike v-if="activity.recorder.model.isSpikeRecorder" :activity :height="state.height" />
+              <ActivityStatsSpike
+                v-if="activity.recorder.model.isSpikeRecorder"
+                :activity="activity as NodeSpikeActivity"
+                :height="state.height"
+              />
 
               <ActivityStatsAnalog
                 v-if="activity.recorder.model.isAnalogRecorder"
-                :activity
+                :activity="activity as NodeAnalogSignalActivity"
                 :height="state.height - (activity.recorder.model.isMultimeter ? 40 : 0)"
               />
             </v-expansion-panel-text>
@@ -55,7 +59,7 @@ import { computed, nextTick, reactive } from "vue";
 
 import { NodeAvatar } from "@/network/components";
 
-import type { NodeActivities } from "../../helpers/activity";
+import type { NodeActivities, NodeAnalogSignalActivity, NodeSpikeActivity } from "../../nodeActivity";
 import ActivityStatsAnalog from "./ActivityStatsAnalog.vue";
 import ActivityStatsSpike from "./ActivityStatsSpike.vue";
 

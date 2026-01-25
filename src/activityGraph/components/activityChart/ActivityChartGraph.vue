@@ -1,7 +1,5 @@
 <template>
-  <v-layout class="activityGraphLayout" full-height>
-    <div ref="activityChartGraph" class="activityChartGraph full-height" />
-  </v-layout>
+  <div ref="activityChartGraph" class="activityChartGraph" />
 </template>
 
 <script setup lang="ts">
@@ -52,9 +50,8 @@ watch(
 </script>
 
 <style lang="scss">
-.activityGraphLayout {
-  .activityChartGraph {
-    width: 100%;
-  }
+.activityChartGraph {
+  width: 100%;
+  height: calc(100vh - 48px - 24px);
 }
 </style>

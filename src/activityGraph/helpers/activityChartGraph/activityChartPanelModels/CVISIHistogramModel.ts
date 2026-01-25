@@ -15,7 +15,7 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
     this.label = "CV of ISI";
     this.panel.xAxis = 3;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "tickSlider",
         id: "binSize",

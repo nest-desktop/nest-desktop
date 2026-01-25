@@ -136,6 +136,7 @@ const update = () => {
       };
     });
   }
+
   state.activityHash = activity.value.hash;
   state.loading = false;
 };

@@ -18,7 +18,7 @@ export class SpikeCountPlotModel extends SpikeTimesPanelModel {
     this.label = "Spike count";
     this.panel.xAxis = 1;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "tickSlider",
         id: "binSize",

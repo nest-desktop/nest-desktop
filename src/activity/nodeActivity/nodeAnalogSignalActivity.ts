@@ -1,24 +1,18 @@
 // nodeAnalogSignalActivity.ts
 
-import type { TNode } from "@/types";
-
 // TODO: No imports from network graph!
 import { NodeRecord } from "@/network";
 
-import type { IActivityState } from "../helpers/activity";
 import { NodeActivity } from "./nodeActivity";
 
 export class NodeAnalogSignalActivity extends NodeActivity {
-  constructor(recorder: TNode, activityState: IActivityState = {}) {
-    super(recorder, activityState);
-  }
-
   /**
    * Get node record.
    * @param groupId string
    * @returns node record instance
    */
-  getNodeRecord(groupId: string): NodeRecord | undefined {
+  override getNodeRecord(groupId: string): NodeRecord | undefined {
+    console.log("get node record");
     if (this.recorder.records.length === 0) return;
 
     return this.recorder.records.find((record: NodeRecord) => record.groupId === groupId);

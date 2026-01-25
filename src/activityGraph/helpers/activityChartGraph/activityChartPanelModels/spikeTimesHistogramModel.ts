@@ -14,7 +14,7 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
     this.id = "spikeTimesHistogram";
     this.panel.xAxis = 1;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "tickSlider",
         id: "binSize",
@@ -35,10 +35,10 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
   override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const x: number[] = activity.events.times;
+    const x: number[] = activity.events.times as number[];
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
-    const size: number = this.params.binSize.value as number;
+    const size: number = this.params.binSize?.value as number;
 
     this.data.push(
       histogram({

@@ -160,7 +160,7 @@ export class ActivityChartPanel extends BaseObj {
    * @return activity chart panel state
    */
   override save(): IActivityChartPanelState {
-    return { model: this._model.save() };
+    return { model: this.model.save() };
   }
 
   /**
@@ -184,8 +184,8 @@ export class ActivityChartPanel extends BaseObj {
    * Toggle panel visibility.
    */
   toggleVisible(): void {
-    this._state.visible = !this._state.visible;
-    this._graph.update();
+    this.state.visible = !this.state.visible;
+    this.graph.update();
   }
 
   /**
@@ -202,7 +202,7 @@ export class ActivityChartPanel extends BaseObj {
           (sum += value)
       )(0),
     );
-    const steps = heightCumSum.map((h: number) => h / heightTotal);
+    const steps: number[] = heightCumSum.map((h: number) => h / heightTotal);
     steps.unshift(0);
     steps.reverse();
     const margin: number = this.xAxis === 1 ? 0.02 : 0.07;

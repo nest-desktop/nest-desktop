@@ -44,9 +44,13 @@ export class BaseActivityGraph extends BaseObj {
     // this.updateHash();
     this.logger.trace("init");
 
-    this._activityChartGraph.init();
+    this.activityChartGraph.init();
 
-    if (this._project.activities.state.hasSomeEvents) this.update();
+    if (this.project.activities.state.hasSomeEvents) this.update();
+  }
+
+  reset(): void {
+    this.activityChartGraph.update();
   }
 
   /**
@@ -55,8 +59,8 @@ export class BaseActivityGraph extends BaseObj {
    */
   override save(): IBaseActivityGraphState {
     return {
-      color: this._activityChartGraph.state.traceColor,
-      panels: this._activityChartGraph ? this._activityChartGraph.save() : [],
+      color: this.activityChartGraph.state.traceColor,
+      panels: this.activityChartGraph ? this.activityChartGraph.save() : [],
     };
   }
 
@@ -67,7 +71,7 @@ export class BaseActivityGraph extends BaseObj {
     // if (this.project.activities.hash === this.dataHash) return;
 
     openLoading("Activity visualizing...");
-    this._activityChartGraph.update();
+    this.activityChartGraph.update();
 
     // this.updateHash();
     this.logger.trace("update");

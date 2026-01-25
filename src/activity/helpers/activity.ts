@@ -1,6 +1,7 @@
 // activity.ts
 
 import { type UnwrapRef, reactive } from "vue";
+import objectHash from "object-hash";
 
 // TODO: No imports from activity graph!
 import type { ActivityChartGraph } from "@/activityGraph";
@@ -28,6 +29,7 @@ export interface IEventState {
 
 export class Activity extends BaseObj<IActivityState> {
   private _events: IEventState = {};
+  private _hash: string = "";
   private _idx: number = 0; // generative
   private _nodeIds: number[] = [];
   private _nodePositions: number[][] = []; // if spatial
@@ -35,7 +37,7 @@ export class Activity extends BaseObj<IActivityState> {
   private _recorderUnitId: number = -1;
   private _state: UnwrapRef<IActivityRefState>;
 
-  constructor(project: TProject, activityState: IActivityState = {}) {
+  constructor(project: TProject) {
     super({
       config: { name: "Activity" },
     });
@@ -47,8 +49,6 @@ export class Activity extends BaseObj<IActivityState> {
       // records: [] as NodeRecord[],
       selected: [],
     });
-
-    this.init(activityState);
   }
 
   get chartGraph(): ActivityChartGraph {
@@ -74,6 +74,10 @@ export class Activity extends BaseObj<IActivityState> {
     return this.nEvents > 0;
   }
 
+  get hash(): string {
+    return this._hash;
+  }
+
   get idx(): number {
     return this._idx;
   }
@@ -91,11 +95,11 @@ export class Activity extends BaseObj<IActivityState> {
   }
 
   get lastTime(): number {
-    return this._events.times && this._events.times.length > 0 ? this.events.times[this.events.times.length - 1] : 0;
+    return this.events.times && this.events.times.length > 0 ? this.events.times[this.events.times.length - 1] : 0;
   }
 
   get nEvents(): number {
-    return "times" in this._events ? this._events.times.length : 0;
+    return "times" in this.events ? this.events.times.length : 0;
   }
 
   get nodeIds(): number[] {
@@ -135,18 +139,17 @@ export class Activity extends BaseObj<IActivityState> {
   }
 
   get traceColor(): string {
-    return this.colors[this._idx] ?? "";
+    return this.colors[this.idx] ?? "";
   }
 
   get traceLabel(): string {
     return "tr";
   }
 
-  changes(): void {
-    this.logger.trace("changes");
-
-    this.project.changes();
-  }
+  /**
+   * Call after load.
+   */
+  afterLoad(): void {}
 
   /**
    * Export activity (node indices, positions and events).
@@ -163,7 +166,7 @@ export class Activity extends BaseObj<IActivityState> {
   exportEvents(): void {
     this.logger.trace("export events");
 
-    download(JSON.stringify(this._events), "events");
+    download(JSON.stringify(this.events), "events");
   }
 
   /**
@@ -173,13 +176,13 @@ export class Activity extends BaseObj<IActivityState> {
     this.logger.trace("export events to csv");
 
     const eventKeys = ["senders", "times"];
-    Object.keys(this._events).forEach((eventKey: string) => {
+    Object.keys(this.events).forEach((eventKey: string) => {
       if (!eventKeys.includes(eventKey)) eventKeys.push(eventKey);
     });
     let csv = eventKeys.join(",") + "\n";
-    if (this._events.times) {
-      csv += this._events.times
-        .map((_: number, idx: number) => eventKeys.map((key) => this._events[key][idx]).join(","))
+    if (this.events.times) {
+      csv += this.events.times
+        .map((_: number, idx: number) => eventKeys.map((key) => this.events[key][idx]).join(","))
         .join("\n");
     }
     download(csv, "events", "csv");
@@ -191,28 +194,23 @@ export class Activity extends BaseObj<IActivityState> {
   // getActivityInsite(): void {}
 
   /**
-   * Initialize activity.
+   * Load activity.
    * @param activityState activity state
    * @remarks Overwrites events.
    */
-  init(activityState: IActivityState = {}): void {
-    this.logger.trace("init");
+  load(activityState: IActivityState = {}): void {
+    this.logger.trace("load");
 
     this.reset();
     this.events = activityState.events || { senders: [], times: [] };
     this.nodeIds = activityState.nodeIds || [];
-    this._state.selected = this.nodeIds.slice(0, 11);
+    this.state.selected = this.nodeIds.slice(0, 11);
 
     this.nodePositions = activityState.nodePositions || [];
     this.recorderUnitId = activityState.recorderUnitId || -1;
-    // this.updateHash();
-    this.postInit();
+    this.updateHash();
+    this.afterLoad();
   }
-
-  /**
-   * Call after init call.
-   */
-  postInit(): void {}
 
   /**
    * Call after update call.
@@ -232,6 +230,7 @@ export class Activity extends BaseObj<IActivityState> {
     this._nodeIds = [];
     this._nodePositions = [];
     // this._state.records = [];
+    this.updateHash();
   }
 
   /**
@@ -240,9 +239,9 @@ export class Activity extends BaseObj<IActivityState> {
    */
   override save(): IActivityState {
     return {
-      events: this._events,
-      nodeIds: this._nodeIds,
-      nodePositions: this._nodePositions,
+      events: this.events,
+      nodeIds: this.nodeIds,
+      nodePositions: this.nodePositions,
     };
   }
 
@@ -267,19 +266,24 @@ export class Activity extends BaseObj<IActivityState> {
     this.logger.trace("update events");
 
     if (events == undefined) return;
-    // let updated = false;
+    let updated = false;
 
     const eventKeys: string[] = Object.keys(events);
     if (eventKeys == undefined || eventKeys.length === 0) return;
 
     eventKeys.forEach((eventKey: string) => {
       const newEvents = events[eventKey] as number[];
-      if (newEvents && this._events[eventKey]) {
-        this._events[eventKey] = this._events[eventKey].concat(newEvents);
-        // updated = true;
+      if (newEvents && this.events[eventKey]) {
+        this.events[eventKey] = this.events[eventKey].concat(newEvents);
+        updated = true;
       }
     });
 
-    // if (updated) this.updateHash();
+    if (updated) this.updateHash();
+  }
+
+  updateHash(): void {
+    this.logger.trace("update hash");
+    this._hash = objectHash(this.save());
   }
 }

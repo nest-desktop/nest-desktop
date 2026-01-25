@@ -1,19 +1,18 @@
 // nodeActivity.ts
 
-// import { NodeRecord } from "@/networkGraph";
+import type { NodeRecord } from "@/network";
 import type { TNetworkProject, TNode } from "@/types";
 import { sum } from "@/utils";
 
-import { Activity, type IActivityState } from "../helpers/activity";
+import { Activity } from "../helpers/activity";
 
 export class NodeActivity extends Activity {
   private _recorder: TNode; // parent
 
-  constructor(recorder: TNode, activityState: IActivityState = {}) {
-    super(recorder.network.project, activityState);
+  constructor(recorder: TNode) {
+    super(recorder.network.project);
 
     this._recorder = recorder;
-    this.init(activityState);
   }
 
   override get traceColor(): string {
@@ -21,16 +20,18 @@ export class NodeActivity extends Activity {
   }
 
   get elementTypes(): string[] {
-    return this.recorder.nodes.nodeItems.map((node: TNode) => node.model.elementType);
+    return this.recorder.nodes.all.map((node: TNode) => node.model.elementType);
   }
 
   get currentTime(): number {
     const simulationState = this.project.simulation.state;
-    return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
+    return simulationState.timeInfo && simulationState.timeInfo.current > 0
+      ? simulationState.timeInfo?.current
+      : (simulationState.biologicalTime as number);
   }
 
   get endTime(): number {
-    return this.project.simulation.state.biologicalTime;
+    return this.project.simulation.state.biologicalTime as number;
   }
 
   /**
@@ -48,11 +49,11 @@ export class NodeActivity extends Activity {
   }
 
   override get nodeSize(): number {
-    return sum(this.recorder.nodes.nodeItems.map((node: TNode) => node.size.value));
+    return sum(this.recorder.nodes.all.map((node: TNode) => node.size?.value ?? 1) as number[]);
   }
 
   override get project(): TNetworkProject {
-    return this._recorder.network.project as TNetworkProject;
+    return this.recorder.network.project as TNetworkProject;
   }
 
   get recorder(): TNode {
@@ -60,6 +61,13 @@ export class NodeActivity extends Activity {
   }
 
   get simulationTimeInfo(): number {
-    return this.project.simulation.state.timeInfo.value;
+    return this.project.simulation.state.timeInfo as number;
+  }
+
+  /**
+   * Get node record.
+   */
+  getNodeRecord(): NodeRecord | undefined {
+    return;
   }
 }

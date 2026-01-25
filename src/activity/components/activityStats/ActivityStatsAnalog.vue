@@ -30,7 +30,7 @@
           {{ item.title }}
           <NodeRecordChip
             v-if="item.raw.groupId"
-            :node-record="activity.getNodeRecord(item.raw.groupId)"
+            :node-record="activity.getNodeRecord(item.raw.groupId) as NodeRecord"
             style="position: absolute; right: 4px"
           />
         </template>
@@ -42,7 +42,7 @@
               <v-spacer />
               <NodeRecordChip
                 v-if="item.raw.groupId"
-                :node-record="activity.getNodeRecord(item.raw.groupId)"
+                :node-record="activity.getNodeRecord(item.raw.groupId) as NodeRecord"
                 class="my-auto"
               />
             </v-row>
@@ -71,7 +71,7 @@
       <v-menu transition="slide-y-transition">
         <template #activator="{ props: iconProps }">
           <v-icon
-            :color="record.state.traceColors[index]"
+            :color="record?.state.traceColors[index]"
             class="me-2"
             icon="mdi:mdi-format-color-fill"
             size="small"
@@ -126,6 +126,7 @@ import { NodeRecordChip } from "@/network/components";
 import { deviation, mean, toFixed } from "@/utils";
 
 import type { NodeAnalogSignalActivity } from "../../nodeActivity";
+import { NodeRecord } from "@/network";
 
 const props = defineProps<{ activity: NodeAnalogSignalActivity }>();
 const activity = computed(() => props.activity);
@@ -199,7 +200,7 @@ const update = () => {
     const activityData: number[] = activity.value.events[state.selectedRecord];
     const data: number[][] = Object.create(null);
     activity.value.nodeIds.forEach((id) => (data[id] = []));
-    activity.value.events.senders.forEach((sender: number, idx: number) => {
+    activity.value.events.senders?.forEach((sender: number, idx: number) => {
       data[sender].push(activityData[idx]);
     });
     state.items = activity.value.nodeIds.map((id: number) => {
@@ -211,6 +212,7 @@ const update = () => {
       };
     });
   }
+
   state.activityHash = activity.value.hash;
   state.loading = false;
 };

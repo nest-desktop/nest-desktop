@@ -22,7 +22,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
     this.id = "analogSignalPlot";
     this.panel.xAxis = 1;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "checkbox",
         id: "averageLine",

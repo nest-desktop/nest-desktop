@@ -17,7 +17,7 @@ export class SenderSpikeCountPlotModel extends SpikeTimesPanelModel {
     this.label = "spike count in each sender";
     this.panel.xAxis = 4;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "select",
         id: "plotMode",

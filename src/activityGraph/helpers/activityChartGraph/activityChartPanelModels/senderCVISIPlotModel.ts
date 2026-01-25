@@ -17,7 +17,7 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
     this.label = "CV of ISI in each sender";
     this.panel.xAxis = 4;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "select",
         id: "plotMode",

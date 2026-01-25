@@ -15,7 +15,7 @@ export class AnalogSignalHistogramModel extends AnalogSignalPanelModel {
     this.id = "analogSignalHistogram";
     this.panel.xAxis = 2;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "tickSlider",
         id: "bins",
