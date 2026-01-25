@@ -4,6 +4,7 @@ import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
 import { useAppStore } from "@/app";
 import { registerNESTNodeTypes } from "@/workspaces/nest/codeNodeTypes/nest";
+import { IParamOptions } from "@/parameter";
 
 const validateVersion = (version: string) => /^4\.2(\.\d+)?(\w+)?$/.test(version);
 
@@ -15,6 +16,10 @@ const renameKernelParam: Record<string, string> = {
 export function upgradeModel_42_to_50(modelState: any): any {
   // Model params
   if (modelState.params) modelState.params = Object.fromEntries(modelState.params.map((p: any) => [p.id, p]));
+
+  Object.values(modelState.params).forEach((param: IParamOptions) => {
+    if (param.component === "arrayInput") param.codeNodeInterface = "ListInputInterface";
+  });
 
   modelState.version = "5.0";
   return modelState;
