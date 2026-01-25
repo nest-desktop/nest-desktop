@@ -28,7 +28,7 @@ const synapse = computed(() => props.synapse);
 
 const update = (value: number) => {
   synapse.value.params.weight.value = value;
-  synapse.value.changes();
+  // synapse.value.changes();
 };
 
 const weightOptions = {
@@ -38,7 +38,6 @@ const weightOptions = {
   max: 10,
   min: -10,
   step: 0.01,
-  unit: "pA",
   value: 1,
 };
 
@@ -47,7 +46,7 @@ const items = [
     id: "paramsReset",
     onClick: () => {
       synapse.value.reset();
-      synapse.value.changes({ preventSimulation: true });
+      // synapse.value.changes({ preventSimulation: true });
     },
     prependIcon: "mdi:mdi-restart",
     title: "Reset synaptic weight",

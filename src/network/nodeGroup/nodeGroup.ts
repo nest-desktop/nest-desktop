@@ -20,8 +20,6 @@ export class NodeGroup extends BaseObj {
     nodeGroupState.nodes.forEach((idx: number) => this.addNode(idx));
 
     this._view = new NodeGroupView(this);
-
-    // this.updateHash();
   }
 
   get all(): (NodeGroup | TNode)[] {
@@ -207,18 +205,18 @@ export class NodeGroup extends BaseObj {
     this._nodes.push(this._parent.nodes[idx]);
   }
 
-  /**
-   * Observer for node group changes.
-   *
-   * @remarks
-   * It emits network changes.
-   */
-  changes(): void {
-    this.logger.trace("changes");
+  // /**
+  //  * Observer for node group changes.
+  //  *
+  //  * @remarks
+  //  * It emits network changes.
+  //  */
+  // changes(): void {
+  //   this.logger.trace("changes");
 
-    this.update();
-    this.parent.network.changes();
-  }
+  //   this.update();
+  //   this.parent.network.changes();
+  // }
 
   /**
    * Clean node group.
@@ -338,6 +336,5 @@ export class NodeGroup extends BaseObj {
    */
   update(): void {
     this.view.updateCentroid();
-    // this.updateHash();
   }
 }

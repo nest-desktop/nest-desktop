@@ -42,7 +42,7 @@
     <slot name="nodes">
       <div v-for="(node, index) in network.nodes.all" :key="index">
         <NodeEditor :node />
-        // <NodeGroupEditor v-if="node.isGroup" :node-group="node" />
+        <!-- <NodeGroupEditor v-if="node.isGroup" :node-group="node" /> -->
       </div>
     </slot>
   </div>
@@ -55,7 +55,8 @@ import { IconBtn } from "@/components";
 import type { TNetwork, TNode } from "@/types";
 import { range } from "@/utils";
 
-import { NodeEditor, NodeGroupEditor } from "../node/components";
+import { NodeEditor } from "../node/components";
+// import { NodeGroupEditor } from "../nodeGroup/components";
 
 const props = defineProps<{ network: TNetwork }>();
 const network = computed(() => props.network);
@@ -64,7 +65,7 @@ const items = [
   {
     id: "collapseAll",
     onClick: () => {
-      network.value.nodes.nodeItems.forEach((node: TNode) => (node.view.state.expansionPanels = []));
+      network.value.nodes.all.forEach((node: TNode) => (node.view.state.expansionPanels = []));
     },
     prependIcon: "mdi:mdi-collapse-all-outline",
     title: "collapse all",
@@ -72,7 +73,7 @@ const items = [
   {
     id: "expandAll",
     onClick: () => {
-      network.value.nodes.nodeItems.forEach(
+      network.value.nodes.all.forEach(
         (node: TNode) => (node.view.state.expansionPanels = range(node.connections.length + 1)),
       );
     },

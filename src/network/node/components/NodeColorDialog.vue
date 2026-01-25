@@ -22,9 +22,6 @@ import { computed, reactive, nextTick } from "vue";
 import { ColorPicker } from "@/components";
 import type { TNode, TNodeGroup } from "@/types";
 
-// import { useNetworkGraph } from "@/networkGraph";
-// const graph = useNetworkGraph();
-
 const props = defineProps<{ node?: TNode | TNodeGroup }>();
 const node = computed(() => props.node);
 
@@ -55,11 +52,8 @@ const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
  * Update colors of network and activity.
  */
 const nodeColorChange = () => {
-  node.value?.changes();
+  // node.value?.changes();
   if (node.value?.isNode) nextTick(() => node.value?.nodes.updateRecordsColor());
-
-  // Render network graph
-  // graph.value?.updateHash();
 };
 
 /**

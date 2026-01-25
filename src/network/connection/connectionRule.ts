@@ -38,19 +38,18 @@ export class ConnectionRule {
   set value(value: string) {
     this._value = value;
     this.connection.params.load();
-    this.connection.changes();
   }
 
   /**
    * Get all parameter of the rule.
    */
   getRuleConfig(): IConnectionRuleConfig {
-    return this.connection.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this._value);
+    return this.connection.config?.localStorage.rules.find((r: IConnectionRuleConfig) => r.value === this.value);
   }
 
-  load(value: Rule) {
-    this._value = value;
-  }
+  // load(value: Rule) {
+  //   this._value = value;
+  // }
 
   /**
    * Reset connection rule.

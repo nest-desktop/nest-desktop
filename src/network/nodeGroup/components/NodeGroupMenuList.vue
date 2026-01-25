@@ -20,7 +20,7 @@ import { Card } from "@/components";
 import type { TNodeGroup } from "@/types";
 import { confirmDialog } from "@/core";
 
-import NodeColorDialog from "./NodeColorDialog.vue";
+import { NodeColorDialog } from "@/network/components";
 
 import { useNetworkGraph } from "@/networkGraph";
 const networkGraph = useNetworkGraph();
@@ -57,9 +57,7 @@ const items: {
   {
     id: "nodeGroupClone",
     onClick: () => {
-      const clonedNodeGroup = nodeGroup.value.clone();
-      clonedNodeGroup.changes();
-
+      nodeGroup.value.clone();
       networkGraph.value?.closeContextMenu();
     },
     prependIcon: "mdi:mdi-content-copy",

@@ -57,9 +57,8 @@ import { toRef } from "vue";
 import type { TNodeGroup } from "@/types";
 import { Card, Menu } from "@/components";
 
-import { ConnectionEditor } from "../../connection/components";
+import { ConnectionEditor, NodeAvatar } from "@/network/components";
 
-import { NodeAvatar } from "./avatar";
 import NodeGroupMenuList from "./NodeGroupMenuList.vue";
 
 const props = defineProps<{ nodeGroup: TNodeGroup }>();

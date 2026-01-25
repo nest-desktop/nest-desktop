@@ -24,8 +24,8 @@ export class ConnectionView {
   }
 
   get centerPosition(): { x: number; y: number } {
-    const p0 = this._connection.source.view.position;
-    const p1 = this._connection.target.view.position;
+    const p0 = this._connection.sourceNode?.view.position ?? { x: 0, y: 0 };
+    const p1 = this._connection.targetNode?.view.position ?? { x: 0, y: 0 };
     return { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
   }
 
@@ -33,9 +33,13 @@ export class ConnectionView {
    * Get connection color based on synapse weight.
    */
   get colorWeight(): string {
-    const value: number = this._connection.synapse.weight;
+    const value: number = this.connection.synapse.params.weight.value as number;
     if (value === 0) return "black";
     return value > 0 ? this._colorExcitation : this._colorInhibition;
+  }
+
+  get connection(): TConnection {
+    return this._connection;
   }
 
   get connectionGraphOptions(): {
@@ -44,7 +48,8 @@ export class ConnectionView {
     xAxisRotation: number;
   } {
     return {
-      ellipticalArc: this._connection.source.isSelected && this._connection.source.connections.length > 1 ? 1 : 5,
+      ellipticalArc:
+        this.connection.sourceNode?.isSelected && this.connection.sourceNode?.connections.length > 1 ? 1 : 5,
       sweep: this._connection.idx % 2,
       xAxisRotation: this._state.xAxisRotation,
     };
@@ -54,37 +59,37 @@ export class ConnectionView {
    * Generates a string describing the end of this connections' marker.
    */
   get markerEndLabel(): string {
-    if (this.connectRecorder()) {
-      return "generic";
-    } else if (this._connection.synapse.weight > 0) {
-      return "exc";
-    } else if (this._connection.synapse.weight < 0) {
-      return "inh";
+    if (!this.connectRecorder() && this.connection.synapse.params.weight) {
+      if (this.connection.synapse.params.weight.value > 0) {
+        return "exc";
+      } else if (this.connection.synapse.params.weight.value < 0) {
+        return "inh";
+      }
     }
     return "generic";
   }
 
   get markerEndPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.position;
-    const target = this._connection.target.view.position;
+    const source = this.connection.sourceNode?.view.position ?? { x: 0, y: 0 };
+    const target = this.connection.targetNode?.view.position ?? { x: 0, y: 0 };
     const path = calcPathNode(source, target, this.connectionGraphOptions);
     return { x: path.x2, y: path.y2 };
   }
 
   get opacity(): boolean {
-    const focusedConnection = this._connection.connections.state.focusedConnection as TConnection;
+    const focusedConnection = this.connection.connections.state.focusedConnection as TConnection;
 
     return (
-      this._connection.sourceNode.connections.length === 1 ||
+      this.connection.sourceNode?.connections.length === 1 ||
       focusedConnection?.sourceNode !== this._connection.sourceNode ||
-      this._connection._connections.state.focusedConnection == null ||
-      this._connection.state.isFocused ||
-      this._connection.state.isSelected
+      this.connection.connections.state.focusedConnection == null ||
+      this.connection.state.isFocused ||
+      this.connection.state.isSelected
     );
   }
 
   get pathCentroidPosition(): { x: number; y: number } {
-    const source = this._connection.source.view.position;
+    const source = this._connection.sourceNode?.view.position ?? { x: 0, y: 0 };
     const target = this._connection.view.markerEndPosition;
     const path = calcPathNode(source, target, this.connectionGraphOptions);
     const x2 = path.x1 + Math.cos(0) * path.tr;
@@ -97,15 +102,17 @@ export class ConnectionView {
   }
 
   get toRight(): boolean {
-    return this._connection.source.view.position.x < this._connection.target.view.position.x;
+    if (!this.connection.sourceNode || !this.connection.targetNode) return false;
+    return this.connection.sourceNode.view.position.x < this.connection.targetNode.view.position.x;
   }
 
   /**
    * Check if it is connected by neurons only.
    */
   connectOnlyNeurons(): boolean {
-    const sourceNode = this._connection.sourceNode;
-    const targetNode = this._connection.targetNode;
+    if (!this.connection.sourceNode || !this.connection.targetNode) return false;
+    const sourceNode = this.connection.sourceNode;
+    const targetNode = this.connection.targetNode;
     return (
       (sourceNode.isNode ? sourceNode.model.isNeuron : false) && (targetNode.isNode ? targetNode.model.isNeuron : false)
     );
@@ -115,8 +122,9 @@ export class ConnectionView {
    * Check if it is connected to any recorder.
    */
   connectRecorder(): boolean {
-    const sourceNode = this._connection.sourceNode;
-    const targetNode = this._connection.targetNode;
+    if (!this.connection.sourceNode || !this.connection.targetNode) return false;
+    const sourceNode = this.connection.sourceNode;
+    const targetNode = this.connection.targetNode;
     return (
       (sourceNode.isNode ? sourceNode.model.isRecorder : false) ||
       (targetNode.isNode ? targetNode.model.isRecorder : false)
@@ -127,19 +135,19 @@ export class ConnectionView {
    * Check if it is connected to spike recorder.
    */
   connectSpikeRecorder(): boolean {
-    return this._connection.targetNode.isNode ? this._connection.targetNode.model.isSpikeRecorder : false;
+    if (!this.connection.sourceNode || !this.connection.targetNode) return false;
+    return this.connection.targetNode.isNode ? this.connection.targetNode.model.isSpikeRecorder : false;
   }
 
   /**
    * Calculate the distance of connected nodes.
    */
   distance(): number {
-    if (this._connection.sourceNode === this._connection.targetNode) {
-      return 0;
-    }
+    if (!this.connection.sourceNode || !this.connection.targetNode) return 0;
+    if (this.connection.sourceNode === this.connection.targetNode) return 0;
 
-    const source: { x: number; y: number } = this._connection.source.view.position;
-    const target: { x: number; y: number } = this._connection.target.view.position;
+    const source: { x: number; y: number } = this.connection.sourceNode.view.position;
+    const target: { x: number; y: number } = this.connection.targetNode.view.position;
     const x1: number = source.x;
     const y1: number = source.y;
     const x2: number = target.x;

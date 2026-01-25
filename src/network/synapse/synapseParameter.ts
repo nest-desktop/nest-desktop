@@ -1,13 +1,13 @@
 // synapseParameter.ts
 
-import { BaseParameter, type IParamState, type IParamType } from "@/parameter";
+import { CodeMaskParameter, type IParamState, type IParamType } from "@/parameter";
 
 import { BaseSynapse } from "./synapse";
 import type { SynapseParameters } from "./synapseParameters";
 
 export class BaseSynapseParameter<
   TParent extends SynapseParameters = SynapseParameters,
-> extends BaseParameter<TParent> {
+> extends CodeMaskParameter<TParent> {
   get synapse(): BaseSynapse {
     return this.synapseParams.synapse;
   }

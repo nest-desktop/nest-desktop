@@ -3,7 +3,7 @@
 import { type UnwrapRef, reactive } from "vue";
 import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import type { Class, TConnection, TNode, TNodeGroup } from "@/types";
+import type { Class, TConnection, TNode } from "@/types";
 import { BaseObj } from "@/core";
 
 import { BaseConnection, type IConnectionState } from "./connection";
@@ -12,7 +12,7 @@ import { BaseNetwork } from "../network";
 interface IConnectionsRefState {
   focusedConnection: TConnection | null;
   selectedConnection: TConnection | null;
-  selectedNode: TNode | TNodeGroup | null;
+  selectedNode: TNode | null;
 }
 
 export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends BaseObj {
@@ -44,7 +44,7 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
   get connections(): TConnection[] {
     return this.codeNodes
       .filter((codeNode: AbstractCodeNode) => codeNode.mask)
-      .map((codeNode: AbstractCodeNode) => codeNode.mask);
+      .map((codeNode: AbstractCodeNode) => codeNode.mask) as TConnection[];
   }
 
   /**
@@ -79,25 +79,6 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
     return this._state;
   }
 
-  // get visibleConnections(): TConnection[] {
-  //   return this._connections.filter(
-  //     (connection: TConnection) => connection.view.state.visible
-  //   );
-  // }
-
-  /**
-   * Add connection component to the network.
-   * @param connectionState connection state
-   * @returns connection instance
-   */
-  addConnection(connectionState: IConnectionState): TConnection {
-    this.logger.trace("add");
-
-    const connection = new this.Connection(this);
-    if (connectionState) connection.load(connectionState);
-    return connection;
-  }
-
   /**
    * Clean nodes and connection components.
    */
@@ -117,27 +98,16 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
   }
 
   /**
-   * Initialize connections.
-   * @remarks Do not use it in the constructor.
+   * Create new connection instance.
+   * @param connectionState connection state
+   * @returns connection instance
    */
-  init(): void {
-    this.logger.trace("init");
+  newConnection(connectionState: IConnectionState): TConnection {
+    this.logger.trace("add", connectionState);
 
-    this.connections.forEach((connection: TConnection) => connection.init());
-  }
-
-  /**
-   * Load connections from state.
-   * @param connectionStates connections states
-   */
-  load(connectionStates?: IConnectionState[]): void {
-    this.logger.trace("update");
-
-    if (connectionStates)
-      connectionStates.forEach((connectionState: IConnectionState) => this.addConnection(connectionState));
-
-    this.clean();
-    // this.updateHash();
+    const connection = new this.Connection(this);
+    if (connectionState) connection.load(connectionState);
+    return connection;
   }
 
   /**
@@ -158,11 +128,11 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
    * Remove connections by the node.
    * @param node node instance
    */
-  removeByNode(node: TNode | TNodeGroup): void {
+  removeByNode(node: TNode): void {
     this.resetState();
 
     this.connections
-      .filter((connection: TConnection) => connection.source === node && connection.target === node)
+      .filter((connection: TConnection) => connection.sourceNode === node && connection.targetNode === node)
       .forEach((connection: TConnection) => connection.remove());
 
     this.clean();

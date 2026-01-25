@@ -1,54 +1,72 @@
 // networkRevision.ts
 
 import { sha1 } from "object-hash";
-import type { TNode, TProject } from "@/types";
+import type { TNetwork, TNode } from "@/types";
 import { BaseObj } from "@/core";
 
 import type { INetworkState } from "../network";
 import type { INodeState } from "../node";
+import { getCurrentViewStore } from "@/app";
+import { nextTick } from "vue";
 
 interface INetworkRevisionState extends INetworkState {
-  codeHash?: string;
+  hash?: string;
 }
 
 export class NetworkRevision extends BaseObj<INetworkRevisionState> {
-  private _project: TProject;
-  private _revisions: INetworkRevisionState[] = [];
+  private _network: TNetwork;
+  private _states: INetworkRevisionState[] = [];
   private _revisionIdx = -1;
 
-  constructor(project: TProject) {
+  constructor(network: TNetwork) {
     super();
 
-    this._project = project;
+    this._network = network;
+  }
+
+  get network(): TNetwork {
+    return this._network;
   }
 
   get revisionIdx(): number {
     return this._revisionIdx;
   }
 
-  get revisions(): INetworkRevisionState[] {
-    return this._revisions;
+  get states(): INetworkRevisionState[] {
+    return this._states;
   }
 
   /**
-   * Load network from the history list.
-   * @remarks It generates code.
+   * Checkout network revision.
    */
-  load(): INetworkRevisionState | undefined {
+  checkout(): void {
     this.logger.trace("checkout network");
 
-    // Update revision idx.
-    if (this._revisionIdx >= this._revisions.length) this._revisionIdx = this._revisions.length - 1;
+    // const networkState = this.load();
+    // this.network.load(networkState);
+    this.network.clean();
 
-    // Update network.
-    return this._revisions[this._revisionIdx];
+    // Generate simulation code.
+    // this.generateCode();
+
+    const projectViewStore = getCurrentViewStore("project");
+    if (projectViewStore?.state.simulationEvents.onCheckout) {
+      // Run simulation.
+      nextTick(() => this.network.project.startSimulation());
+    } else {
+      // Update activities in activity graph.
+      this.network.project.activityGraph.activityChartGraph.updateActivities();
+
+      // Update activity graph.
+      this.network.project.activityGraph.update();
+    }
   }
 
   /**
    * Clear network history list.
    */
   clear(): void {
-    this._revisions = [];
+    this._states = [];
     this._revisionIdx = -1;
   }
 
@@ -57,44 +75,41 @@ export class NetworkRevision extends BaseObj<INetworkRevisionState> {
    */
   commit(withActivity: boolean = false): void {
     this.logger.trace("commit network");
-    if (!("network" in this._project)) return;
 
-    const codeHash = sha1(this._project.network.save());
-    if (codeHash == null || codeHash == undefined || codeHash.length == 0) return;
+    const hash = sha1(this.network.save());
+    if (hash == null || hash == undefined || hash.length == 0) return;
 
     // Remove networks after the current.
-    this._revisions = this._revisions.slice(0, this._revisionIdx + 1);
+    this._states = this.states.slice(0, this.revisionIdx + 1);
 
-    // Limit max amount of network revisions.
+    // Limit max amount of network states.
     const maxRevisions: number = 9;
-    if (this._revisions.length > maxRevisions)
-      this._revisions = this._revisions.slice(this._revisions.length - maxRevisions);
+    if (this.states.length > maxRevisions) this._states = this.states.slice(this.states.length - maxRevisions);
 
-    // Get last network of the revisions.
-    const lastNetwork: INetworkRevisionState =
-      this._revisions.length > 0 ? this._revisions[this._revisions.length - 1] : {};
+    // Get last network of the states.
+    const lastNetwork: INetworkRevisionState = this.states.length > 0 ? this._states[this.states.length - 1] : {};
 
     const currentNetwork: INetworkRevisionState =
-      this._revisions.length > 0 && lastNetwork.codeHash === codeHash
-        ? (this._revisions.pop() as INetworkRevisionState)
-        : this._project.network.save();
+      this.states.length > 0 && lastNetwork.hash === hash
+        ? (this.states.pop() as INetworkRevisionState)
+        : this.network.save();
 
     // Copy code hash to current network.
-    currentNetwork.codeHash = codeHash;
+    currentNetwork.hash = hash;
 
     if (withActivity && (currentNetwork.nodes != null || currentNetwork.nodes != undefined)) {
       // Add activity to recorder nodes only if hashes is matched.
-      this._project.network.nodes.recorders.forEach((node: TNode) => {
+      this.network.nodes.recorders.forEach((node: TNode) => {
         const nodes = currentNetwork.nodes as INodeState[];
         if (nodes) nodes[node.idx].activity = node.activity?.save();
       });
     }
 
-    // Push current network to the revisions.
-    this._revisions.push(currentNetwork);
+    // Push current network to the states.
+    this.states.push(currentNetwork);
 
     // Update idx of the latest network revision.
-    this._revisionIdx = this._revisions.length - 1;
+    this._revisionIdx = this._states.length - 1;
   }
 
   /**
@@ -106,38 +121,48 @@ export class NetworkRevision extends BaseObj<INetworkRevisionState> {
   }
 
   /**
+   * Load network from the history list.
+   * @remarks It generates code.
+   */
+  load(): INetworkRevisionState | undefined {
+    this.logger.trace("checkout network");
+
+    // Update revision idx.
+    if (this._revisionIdx >= this._states.length) this._revisionIdx = this._states.length - 1;
+
+    // Update network.
+    return this._states[this._revisionIdx];
+  }
+
+  /**
    * Go to the newer network.
    */
   newer(): void {
-    if (!("network" in this._project)) return;
-    if (this._revisionIdx < this._revisions.length) this._revisionIdx++;
-    this._project.checkoutNetwork();
+    if (this._revisionIdx < this._states.length) this._revisionIdx++;
+    this.checkout();
   }
 
   /**
    * Go to the newest network.
    */
   newest(): void {
-    if (!("network" in this._project)) return;
-    this._revisionIdx = this._revisions.length - 1;
-    this._project.checkoutNetwork();
+    this._revisionIdx = this._states.length - 1;
+    this.checkout();
   }
 
   /**
    * Go to the older network.
    */
   older(): void {
-    if (!("network" in this._project)) return;
     if (this._revisionIdx > 0) this._revisionIdx--;
-    this._project.checkoutNetwork();
+    this.checkout();
   }
 
   /**
    * Go to the oldest network.
    */
   oldest(): void {
-    if (!("network" in this._project)) return;
     this._revisionIdx = 0;
-    this._project.checkoutNetwork();
+    this.checkout();
   }
 }

@@ -86,18 +86,18 @@ export class BaseSynapse<
     return this._params;
   }
 
-  /**
-   * Observer for synapse changes.
-   *
-   * @remarks
-   * It emits connection changes.
-   */
-  changes(props = {}): void {
-    this.logger.trace("changes");
+  // /**
+  //  * Observer for synapse changes.
+  //  *
+  //  * @remarks
+  //  * It emits connection changes.
+  //  */
+  // changes(props = {}): void {
+  //   this.logger.trace("changes");
 
-    // this.updateHash();
-    this.connection.changes({ checkSynWeights: true, ...props });
-  }
+  //   // this.updateHash();
+  //   this.connection.changes({ checkSynWeights: true, ...props });
+  // }
 
   /**
    * Get model.
@@ -116,7 +116,7 @@ export class BaseSynapse<
     this.logger.trace("init");
 
     this.params.init();
-    this.update();
+    // this.update();
   }
 
   /**
@@ -129,7 +129,6 @@ export class BaseSynapse<
     if (typeof weightParam.value === "number") {
       weightParam.hidden = false;
       weightParam.value = -1 * weightParam.value;
-      this.changes({ preventSimulation: true });
     }
   }
 
@@ -156,11 +155,9 @@ export class BaseSynapse<
 
   /**
    * Observer for model changes.
-   * @remarks It emits synapse changes.
    */
   modelChanges(): void {
     this.connection.network.clean();
-    this.changes({ preventSimulation: true });
   }
 
   /**
@@ -183,10 +180,10 @@ export class BaseSynapse<
     return synapseState;
   }
 
-  /**
-   * Update synapse.
-   */
-  update(): void {
-    // this.updateHash();
-  }
+  // /**
+  //  * Update synapse.
+  //  */
+  // update(): void {
+  //  this.updateHash();
+  // }
 }

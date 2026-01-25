@@ -1,13 +1,12 @@
 // nodeParameters.ts
 
-import type { Class } from "@/types";
-import type { ModelParameter, ModelParameters } from "@/model";
-import { BaseParameters, type IParamState } from "@/parameter";
+import type { Class, TModel } from "@/types";
 
 import { NodeParameter } from "./nodeParameter";
 import type { BaseNode } from "./node";
+import { ModelParameters } from "../helpers/modelParameters";
 
-export class NodeParameters<TNode extends BaseNode = BaseNode> extends BaseParameters<NodeParameter> {
+export class NodeParameters<TNode extends BaseNode = BaseNode> extends ModelParameters<NodeParameter> {
   public _node: TNode;
 
   constructor(node: TNode) {
@@ -20,56 +19,11 @@ export class NodeParameters<TNode extends BaseNode = BaseNode> extends BaseParam
     return NodeParameter;
   }
 
-  get modelParams(): ModelParameters {
-    return this.node.model.params;
-  }
-
   get node(): TNode {
     return this._node;
   }
 
-  /**
-   * Observer for parameter changes.
-   * @remarks It emits network changes.
-   */
-  override changes(props = {}): void {
-    this.logger.trace("changes");
-
-    this.node.changes(props);
-  }
-
-  /**
-   * Load node parameters from state.
-   * @param paramStates node parameter states
-   */
-  override load(paramStates?: Record<string, IParamState>): void {
-    this.logger.trace("load parameters");
-
-    this.emptyParams();
-    if (this.node.model) {
-      this.node.model.params.entries.forEach(([modelId, modelParam]: [string, ModelParameter]) => {
-        if (paramStates && paramStates) {
-          const nodeParamState = paramStates[modelId];
-          if (nodeParamState) {
-            this.addParameter(
-              {
-                ...nodeParamState,
-                ...modelParam,
-                id: modelId,
-              },
-              true,
-            );
-          } else {
-            this.addParameter({ ...modelParam, id: modelId });
-          }
-        } else {
-          this.addParameter({ ...modelParam, id: modelId });
-        }
-      });
-    } else if (paramStates) {
-      Object.entries(paramStates).forEach(([paramKey, param]: [string, IParamState]) =>
-        this.addParameter({ ...param, id: paramKey }, true),
-      );
-    }
+  override get model(): TModel {
+    return this.node.model;
   }
 }

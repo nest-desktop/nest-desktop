@@ -4,10 +4,11 @@
     v-if="node.elementType"
     :color="node.view.color"
     :weight="node.view.synWeights"
+    class="node-avatar"
   >
     {{ node.codeNode?.variableName ?? node.view.label }}
   </component>
-  <v-avatar v-else :color="nodeGroup.view.color" class="node-avatar" variant="tonal">
+  <v-avatar v-else :color="nodeGroup.view.color" class="node-avatar">
     {{ node.codeNode?.variableName ?? node.view.label }}
   </v-avatar>
 </template>
@@ -38,8 +39,9 @@ const avatarComponents: Record<TNodeElementType, Component> = {
 
 <style lang="scss">
 .node-avatar {
-  font-weight: 800;
-  font-size: 0.85em;
-  z-index: 1;
+  background: transparent !important;
+  // font-weight: 800;
+  // font-size: 0.85em;
+  // z-index: 1;
 }
 </style>

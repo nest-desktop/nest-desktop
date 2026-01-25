@@ -26,16 +26,6 @@ export class ConnectionParameters<
   }
 
   /**
-   * Observer for parameter changes.
-   * @remarks It emits network changes.
-   */
-  override changes(props = {}): void {
-    this.logger.trace("changes");
-
-    this.connection.changes(props);
-  }
-
-  /**
    * Load parameters from state.
    * @param paramStates parameter states
    */

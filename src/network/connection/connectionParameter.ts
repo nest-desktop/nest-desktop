@@ -1,13 +1,13 @@
 // connectionParameter.ts
 
-import { BaseParameter, type IParamState, type IParamType } from "@/parameter";
+import { CodeMaskParameter, type IParamState, type IParamType } from "@/parameter";
 
 import type { IConnectionRuleConfig } from "./connectionRule";
 import type { ConnectionParameters } from "./connectionParameters";
 
 export class ConnectionParameter<
   TParent extends ConnectionParameters = ConnectionParameters,
-> extends BaseParameter<TParent> {
+> extends CodeMaskParameter<TParent> {
   get connectionParams(): TParent {
     return this.parent;
   }

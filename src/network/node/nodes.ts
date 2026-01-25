@@ -4,18 +4,18 @@ import { type UnwrapRef, reactive } from "vue";
 
 import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import type { Class, TActivityGraph, TNode, TNodeGroup } from "@/types";
+import type { Class, TActivityGraph, TNode } from "@/types";
 import { BaseObj } from "@/core";
 
 import { BaseNode, type INodeState } from "./node";
-import { type INodeGroupState, NodeGroup } from "./nodeGroup";
+// import { type INodeGroupState } from "../nodeGroup/nodeGroup";
 import { BaseNetwork } from "../network";
 
 interface INodesRefState {
   annotations: Record<string, string>[];
   contextMenu: boolean;
-  focusedNode: TNode | TNodeGroup | null;
-  selectedNodes: (TNode | TNodeGroup)[];
+  focusedNode: TNode | null;
+  selectedNodes: TNode[];
 }
 
 export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseObj {
@@ -24,8 +24,8 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     annotations: [],
     contextMenu: false,
     focusedNode: null,
-    selectedNodes: [] as (TNode | TNodeGroup)[],
-  }); //reactive state
+    selectedNodes: [] as TNode[],
+  });
 
   constructor(network: TNetwork) {
     super();
@@ -37,7 +37,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     return BaseNode;
   }
 
-  get all(): (TNodeGroup | BaseNode)[] {
+  get all(): BaseNode[] {
     return this.nodes;
   }
 
@@ -47,6 +47,14 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
 
   get codeNodes(): AbstractCodeNode[] {
     return [];
+  }
+
+  get codeNodeIds(): Record<string, AbstractCodeNode> {
+    return Object.fromEntries(this.codeNodes.map((codeNode: AbstractCodeNode) => [codeNode.id, codeNode]));
+  }
+
+  get codeNodeOutputIds(): Record<string, AbstractCodeNode> {
+    return Object.fromEntries(this.codeNodes.map((codeNode: AbstractCodeNode) => [codeNode.outputs.out?.id, codeNode]));
   }
 
   /**
@@ -59,22 +67,16 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
   /**
    * Check if it contains some recorders for analog signals.
    */
-  get hasSomeAnalogRecorder(): boolean {
-    return this.nodeItems.some((node: TNode) => node.model?.isAnalogRecorder);
+  get hasSomeAnalogRecorders(): boolean {
+    return this.nodes.some((node: TNode) => node.model?.isAnalogRecorder);
   }
 
   /**
    * Check if it contains some spike recorders.
    */
-  get hasSomeSpikeRecorder(): boolean {
-    return this.nodeItems.some((node: TNode) => node.model?.isSpikeRecorder);
+  get hasSomeSpikeRecorders(): boolean {
+    return this.nodes.some((node: TNode) => node.model?.isSpikeRecorder);
   }
-
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     nodes: this.nodeItems.map((node: TNode) => node.hash),
-  //   };
-  // }
 
   /**
    * Get length of nodes list.
@@ -91,59 +93,59 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Get neurons
    */
   get neurons(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model.isNeuron);
+    return this.nodes.filter((node: TNode) => node.model.isNeuron);
   }
 
-  get nodeGroups(): TNodeGroup[] {
-    return this.nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
-  }
+  // get nodeGroups(): TNodeGroup[] {
+  //   return this.nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+  // }
 
-  get nodeItems(): TNode[] {
-    return this.nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
-  }
+  // get nodeItems(): TNode[] {
+  //   return this.nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+  // }
 
-  get nodes(): (TNode | TNodeGroup)[] {
+  get nodes(): TNode[] {
     return this.codeNodes
       .filter((codeNode: AbstractCodeNode) => codeNode.mask)
-      .map((codeNode: AbstractCodeNode) => codeNode.mask);
+      .map((codeNode: AbstractCodeNode) => codeNode.mask) as TNode[];
   }
 
   /**
    * Get recorders.
    */
   get recorders(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model?.isRecorder);
+    return this.nodes.filter((node: TNode) => node.model?.isRecorder);
   }
 
   /**
    * Get recorders for analog signals.
    */
   get recordersAnalog(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model?.isAnalogRecorder);
+    return this.nodes.filter((node: TNode) => node.model?.isAnalogRecorder);
   }
 
   /**
    * Get spike recorders.
    */
   get recordersSpike(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model?.isSpikeRecorder);
+    return this.nodes.filter((node: TNode) => node.model?.isSpikeRecorder);
   }
 
-  /**
-   * Get selected node groups.
-   */
-  get selectedNodeGroups(): TNodeGroup[] {
-    const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
-    return selectedNodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
-  }
+  // /**
+  //  * Get selected node groups.
+  //  */
+  // get selectedNodeGroups(): TNodeGroup[] {
+  //   const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
+  //   return selectedNodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+  // }
 
-  /**
-   * Get selected nodes.
-   */
-  get selectedNodeItems(): TNode[] {
-    const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
-    return selectedNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
-  }
+  // /**
+  //  * Get selected nodes.
+  //  */
+  // get selectedNodeItems(): TNode[] {
+  //   const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
+  //   return selectedNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+  // }
 
   get state(): UnwrapRef<INodesRefState> {
     return this._state;
@@ -153,7 +155,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Get stimulators.
    */
   get stimulators(): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.model.isStimulator);
+    return this.nodes.filter((node: TNode) => node.model.isStimulator);
   }
 
   /**
@@ -161,7 +163,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    */
   get userDict(): Record<string, string[]> {
     const userDict: Record<string, string[]> = {};
-    this.nodeItems
+    this.nodes
       .filter((node: TNode) => node.annotations.length > 0)
       .forEach((node: TNode) => {
         const nodeLabel = node.view.label;
@@ -187,21 +189,22 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Clean nodes and connection components.
    */
   clean(): void {
-    this.nodes.forEach((node: TNode | TNodeGroup) => node.clean());
+    this.updateRecorders();
+    this.nodes.forEach((node: TNode) => node.clean());
   }
 
-  /**
-   * Remove node groups containing less than two items.
-   */
-  cleanNodeGroups(): void {
-    this.nodeGroups.forEach((nodeGroup: TNodeGroup) => {
-      if (nodeGroup.nodes.length < 2) {
-        nodeGroup.remove();
-      } else {
-        nodeGroup.update();
-      }
-    });
-  }
+  // /**
+  //  * Remove node groups containing less than two items.
+  //  */
+  // cleanNodeGroups(): void {
+  //   this.nodeGroups.forEach((nodeGroup: TNodeGroup) => {
+  //     if (nodeGroup.nodes.length < 2) {
+  //       nodeGroup.remove();
+  //     } else {
+  //       nodeGroup.update();
+  //     }
+  //   });
+  // }
 
   /**
    * Clear node list.
@@ -217,49 +220,18 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * @returns Array of Node
    */
   filterByModelId(modelId: string): TNode[] {
-    return this.nodeItems.filter((node: TNode) => node.modelId === modelId);
+    return this.nodes.filter((node: TNode) => node.modelId === modelId);
   }
 
-  /**
-   * Group selected nodes.
-   */
-  groupSelected(): void {
-    const nodes = this._state.selectedNodes.map((node) => node.idx);
-    const nodeGroup = this.newNodeGroup({ nodes });
-    this.selectNode(nodeGroup);
-    this.network.changes({ preventSimulation: true });
-  }
-
-  /**
-   * Initialize nodes.
-   * @remarks Do not use it in the constructor.
-   */
-  init(): void {
-    this.logger.trace("init");
-
-    this.nodeItems.forEach((node: TNode) => node.init());
-    this.updateRecords();
-  }
-
-  /**
-   * Load nodes from state.
-   * @param nodeStates node states
-   */
-  load(nodeStates?: INodeState[]): void {
-    this.logger.trace("update");
-
-    if (nodeStates)
-      nodeStates.forEach((nodeState: INodeState | INodeGroupState) => {
-        if ("nodes" in nodeState) {
-          this.newNodeGroup(nodeState as INodeGroupState);
-        } else {
-          this.newNode(nodeState as INodeState);
-        }
-      });
-
-    this.clean();
-    // this.updateHash();
-  }
+  // /**
+  //  * Group selected nodes.
+  //  */
+  // groupSelected(): void {
+  //   const nodes = this._state.selectedNodes.map((node) => node.idx);
+  //   const nodeGroup = this.newNodeGroup({ nodes });
+  //   this.selectNode(nodeGroup);
+  //   this.network.changes({ preventSimulation: true });
+  // }
 
   /**
    * Create new node instance.
@@ -272,19 +244,19 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     return node;
   }
 
-  /**
-   * Create new node group instance.
-   * @param nodeGroupState node group state
-   */
-  newNodeGroup(nodeGroupState: INodeGroupState): TNodeGroup {
-    this.logger.trace("add node group");
+  // /**
+  //  * Create new node group instance.
+  //  * @param nodeGroupState node group state
+  //  */
+  // newNodeGroup(nodeGroupState: INodeGroupState): TNodeGroup {
+  //   this.logger.trace("add node group");
 
-    const nodeGroup = new NodeGroup(this, nodeGroupState);
-    // this._nodes.push(nodeGroup);
+  //   const nodeGroup = new NodeGroup(this, nodeGroupState);
+  //   // this._nodes.push(nodeGroup);
 
-    // nodeGroup.updateHash();
-    return nodeGroup;
-  }
+  //   // nodeGroup.updateHash();
+  //   return nodeGroup;
+  // }
 
   /**
    * Register code node.
@@ -292,10 +264,10 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
   registerCodeNode(codeNode: AbstractCodeNode, node?: TNode): void {
     this.logger.trace("register code node:", codeNode.shortId);
 
-    if (!node) node = this.newNode({ model: codeNode.inputs.model.value });
+    if (!node) node = this.newNode({ model: codeNode.inputs.model?.value as string });
 
     node.registerCodeNode(codeNode);
-    node.init();
+    // node.init();
   }
 
   /**
@@ -316,7 +288,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Remove node component from the network.
    * @param node node instance
    */
-  remove(node: TNode | TNodeGroup): void {
+  remove(node: TNode): void {
     this.logger.trace("remove node");
 
     this.network.state.unselectAll();
@@ -327,15 +299,15 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     // this._nodes.splice(node.idx, 1);
   }
 
-  /**
-   * Remove node in the node groups.
-   * @param node node instance
-   */
-  removeNodeInNodeGroups(node: TNode | TNodeGroup): void {
-    this.resetState();
+  // /**
+  //  * Remove node in the node groups.
+  //  * @param node node instance
+  //  */
+  // removeNodeInNodeGroups(node: TNode | TNodeGroup): void {
+  //   this.resetState();
 
-    this.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.removeNode(node));
-  }
+  //   this.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.removeNode(node));
+  // }
 
   /*
    * Reset all states.
@@ -346,15 +318,15 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Save nodes to state.
    * @return node states
    */
-  override save(): (INodeState | INodeGroupState)[] {
-    return this.nodes.map((node: TNode | TNodeGroup) => node.save());
+  override save(): INodeState[] {
+    return this.nodes.map((node: TNode) => node.save());
   }
 
   /**
    * Select node.
    * @param node node or node group instance
    */
-  selectNode(node: TNode | TNodeGroup) {
+  selectNode(node: TNode) {
     this.state.selectedNodes.push(node);
     this.state.selectedNodes.sort();
   }
@@ -362,13 +334,13 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
   /**
    * Show node in list.
    */
-  showNode(node: TNode | TNodeGroup): boolean {
+  showNode(node: TNode): boolean {
     const elementTypeIdx = this.network.state.elementTypeIdx;
 
     if (this.state.selectedNodes.length > 0) {
       // selected node
       return (
-        this.selectedNodeGroups.some((nodeGrp: TNodeGroup) => nodeGrp.nodes.includes(node)) ||
+        // this.selectedNodeGroups.some((nodeGrp: TNodeGroup) => nodeGrp.nodes.includes(node)) ||
         this.state.selectedNodes.includes(node)
       );
     } else if (elementTypeIdx > 0) {
@@ -387,7 +359,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Toggle node selection
    * @param node node or node group instance
    */
-  toggleNodeSelection(node: TNode | TNodeGroup) {
+  toggleNodeSelection(node: TNode) {
     this.network.state.state.elementTypeIdx = 0;
 
     if (this.state.selectedNodes.includes(node)) {
@@ -408,7 +380,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * Unselect node.
    * @param node node or node group instance
    */
-  unselectNode(node: TNode | TNodeGroup) {
+  unselectNode(node: TNode) {
     const index = this.state.selectedNodes.indexOf(node);
     this.state.selectedNodes.splice(index, 1);
   }
@@ -427,7 +399,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
     this.state.annotations = [];
 
     const nodeAnnotationsDict: Record<string, string[]> = {};
-    this.nodeItems
+    this.nodes
       .filter((node: TNode) => node.annotations.length > 0)
       .forEach((node: TNode) => {
         const nodeLabel = node.view.label;
@@ -450,6 +422,16 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
         });
       });
     }
+  }
+
+  /**
+   * Update recorders.
+   * @remarks It should be called after network created.
+   */
+  updateRecorders(): void {
+    this.logger.trace("update records");
+
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.update());
   }
 
   /**
@@ -480,6 +462,5 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    */
   updateStates(): void {
     this.updateAnnotations();
-    // this.updateHash();
   }
 }

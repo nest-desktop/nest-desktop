@@ -1,12 +1,13 @@
 // network.ts
 
-import type { Class, TConnection, TConnections, TModel, TNode, TNodeGroup, TNodes, TProject } from "@/types";
+import type { Class, TConnection, TConnections, TModel, TNode, TNodes, TProject } from "@/types";
 import { BaseObj, type IBaseState } from "@/core";
 
 import { BaseConnections, type IConnectionState } from "./connection";
 import { BaseNode, BaseNodes, type INodeState, type INodeViewState } from "./node";
 
 import { NetworkState } from "./helpers/networkState";
+import { NetworkRevision } from "./helpers";
 
 export interface INetworkState extends IBaseState {
   nodes?: INodeState[];
@@ -27,12 +28,14 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
   public _connections: TConnections;
   public _nodes: TNodes;
   public _project: TProject; // parent
+  private _revision: NetworkRevision;
 
   constructor(project: TProject) {
     super({ config: { name: "Network" } });
 
     this._project = project;
     this._state = new NetworkState(this);
+    this._revision = new NetworkRevision(this);
 
     this._nodes = new this.Nodes(this);
     this._connections = new this.Connections(this);
@@ -64,17 +67,6 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     return elementTypes;
   }
 
-  // get graph(): TNetworkGraph {
-  //   return useNetworkGraph()
-  // }
-
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-  //     connections: this.connections.all.map((connection: TConnection) => connection.hash),
-  //   };
-  // }
-
   get isEmpty(): boolean {
     return this.nodes.all.length === 0 && this.connections.all.length === 0;
   }
@@ -87,25 +79,12 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     return this._project;
   }
 
-  get state(): NetworkState {
-    return this._state;
+  get revision(): NetworkRevision {
+    return this._revision;
   }
 
-  /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It commits the network in the network history.
-   * It emits project changes.
-   */
-  changes(props = {}): void {
-    this.logger.trace("changes");
-
-    // this.updateStyle();
-    // this.updateHash();
-
-    this.project.changes(props);
+  get state(): NetworkState {
+    return this._state;
   }
 
   /**
@@ -132,14 +111,13 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
    * Connect node components by user interaction.
    * @param sourceId ID of source node
    * @param targetId ID of target node
-   *
    * @remarks When it connects to a recorder, it initializes activity graph.
    */
-  connectNodes(sourceIdx: number, targetIdx: number): void {
-    this.logger.debug("connect nodes");
+  connectNodes(sourceIdx: number, targetIdx: number): TConnection | undefined {
+    this.logger.trace("connect nodes");
 
     // Add connection.
-    const connection: TConnection = this.connections.addConnection({
+    const connection: TConnection = this.connections.newConnection({
       sourceIdx,
       targetIdx,
     });
@@ -148,7 +126,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     connection.init();
 
     // Correct connections with recorder.
-    if (connection.view.connectRecorder()) connection.recorder.correctRecorderConnections();
+    if (connection.view.connectRecorder()) connection.recorder?.correctRecorderConnections();
 
     // // Update synaptic weight label.
     // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
@@ -157,8 +135,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     // // Update recorder and clean activity panels.
     // if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
-    // Trigger network change.
-    this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
+    return connection;
   }
 
   /**
@@ -166,7 +143,7 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
    * @param model model name of default models
    * @param view node view props
    */
-  createNode(model?: string, viewState?: INodeViewState): BaseNode {
+  createNode(model?: string, viewState?: INodeViewState): BaseNode | undefined {
     this.logger.trace("create node");
 
     return this.nodes.newNode({
@@ -178,55 +155,48 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
   /**
    * Delete connection component from the network.
    * @param connection connection instance
-   * @remarks It update recorder and emits network changes.
+   * @remarks It update recorder.
    */
   deleteConnection(connection: TConnection): void {
     this.logger.trace("delete connection");
 
-    const cleanPanels = connection.view.connectRecorder();
+    connection.view.connectRecorder();
 
     // Remove connection from the list.
     this.connections.remove(connection);
 
     // Update recorder.
-    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
-
-    // Trigger network change.
-    this.changes({ cleanPanels, preventSimulation: true });
+    if (connection.view.connectRecorder()) connection.recorder?.updateRecorder();
   }
 
   /**
    * Delete node component from the network.
-   * @param node node or node group instance
-   * @remarks It emits network changes.
+   * @param node node instance
    */
-  deleteNode(node: TNode | TNodeGroup): void {
+  deleteNode(node: TNode): void {
     this.logger.trace("delete node");
 
-    let cleanPanels = node.isRecorded;
-    if (node.isNode) {
-      const nodeItem = node as TNode;
-      cleanPanels = nodeItem.model.isRecorder || node.isRecorded;
-    }
+    // let cleanPanels = node.isRecorded;
+    // if (node.isNode) {
+    //   const nodeItem = node as TNode;
+    //   cleanPanels = nodeItem.model.isRecorder || node.isRecorded;
+    // }
     const recorders = node.connectedRecorders;
 
     // Remove connection from the list.
     this.connections.removeByNode(node);
 
     // Remove node in node groups
-    this.nodes.removeNodeInNodeGroups(node);
+    // this.nodes.removeNodeInNodeGroups(node);
 
     // Remove node from the list.
     this.nodes.remove(node);
 
     // Clean node groups.
-    this.nodes.cleanNodeGroups();
+    // this.nodes.cleanNodeGroups();
 
     // Update recorder.
     if (recorders.length > 0) recorders.forEach((recorder: TNode) => recorder.updateRecorder());
-
-    // Trigger network change.
-    this.changes({ cleanPanels, preventSimulation: true });
   }
 
   /**
@@ -248,35 +218,36 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     return colors[idx % colors.length] ?? "black";
   }
 
-  /**
-   * Initialize network.
-   * @remarks Do not use it in the constructor.
-   */
-  init(): void {
-    this.logger.trace("init");
+  // /**
+  //  * Initialize network.
+  //  * @remarks Do not use it in the constructor.
+  //  */
+  // init(): void {
+  //   this.logger.trace("init");
 
-    this.nodes.init();
-    this.connections.init();
+  //   this.nodes.init();
+  //   this.connections.init();
 
-    // this.updateHash();
+  //   // Initialize network history.
+  //   // this.revision.init();
 
-    this.clean();
-  }
+  //   this.clean();
+  // }
 
-  /**
-   * Load network from state.
-   * @param networkState network state
-   */
-  load(networkState: INetworkState): void {
-    this.logger.trace("load");
+  // /**
+  //  * Load network from state.
+  //  * @param networkState network state
+  //  */
+  // load(networkState: INetworkState): void {
+  //   this.logger.trace("load");
 
-    this.clear();
+  //   this.clear();
 
-    this.nodes.load(networkState.nodes);
-    this.connections.load(networkState.connections);
+  //   this.nodes.load(networkState.nodes);
+  //   this.connections.load(networkState.connections);
 
-    this.init();
-  }
+  //   // this.init();
+  // }
 
   /**
    * Save network to state.
@@ -296,6 +267,6 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
     this.logger.trace("update node style");
     if (this.nodes.all.length === 0) return;
 
-    this.nodes.all.forEach((node: TNode | TNodeGroup) => node.view.updateStyle());
+    this.nodes.all.forEach((node: TNode) => node.view.updateStyle());
   }
 }

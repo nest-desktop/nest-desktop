@@ -153,6 +153,8 @@ export class NodeRecord<TNode extends BaseNode = BaseNode> extends BaseObj<INode
    * @param state node record state
    */
   load(state: INodeRecordState): void {
+    this.logger.trace("load", state);
+
     if (state.id) this._id = state.id;
     this._recorderId = state.recorderId || this.node.view.label;
     if (state.label) this._label = state.label;

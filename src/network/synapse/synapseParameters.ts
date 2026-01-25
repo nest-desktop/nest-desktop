@@ -1,15 +1,14 @@
 // synapseParameters.ts
 
-import type { Class } from "@/types";
-import type { ModelParameter } from "@/model";
-import { BaseParameters, type IParamState } from "@/parameter";
+import type { Class, TModel } from "@/types";
 
 import type { BaseSynapse } from "./synapse";
 import { BaseSynapseParameter } from "./synapseParameter";
+import { ModelParameters } from "../helpers/modelParameters";
 
 export class SynapseParameters<
   TSynapse extends BaseSynapse = BaseSynapse,
-> extends BaseParameters<BaseSynapseParameter> {
+> extends ModelParameters<BaseSynapseParameter> {
   public _synapse: TSynapse;
 
   constructor(synapse: TSynapse) {
@@ -22,16 +21,20 @@ export class SynapseParameters<
     return BaseSynapseParameter;
   }
 
+  override get model(): TModel {
+    return this.synapse.model;
+  }
+
   get synapse(): TSynapse {
     return this._synapse;
   }
 
-  get weight(): BaseSynapseParameter {
+  get weight(): BaseSynapseParameter | undefined {
     return this.params.weight;
   }
 
   get weightValue(): number {
-    return this.params.weight?.value ?? 1;
+    return (this.params.weight?.value ?? 1) as number;
   }
 
   get weightColor(): string {
@@ -47,52 +50,6 @@ export class SynapseParameters<
   }
 
   set weightLabel(value: string) {
-    this.params.weight.value = (value === "inhibitory" ? -1 : 1) * Math.abs(this.weightValue);
-    // this.params.weight.visible = this.params.weight.value !== 1;
-  }
-
-  /**
-   * Observer for parameter changes.
-   * @remarks It emits network changes.
-   */
-  override changes(props = {}): void {
-    this.logger.trace("changes");
-
-    this.synapse.changes(props);
-  }
-
-  /**
-   * Load parameters from state.
-   * @param paramStates parameter states
-   */
-  override load(paramStates?: Record<string, IParamState>): void {
-    this.logger.trace("load parameters");
-
-    this.emptyParams();
-
-    if (this.synapse.model) {
-      this.synapse.model.params.entries.forEach(([modelId, modelParam]: [string, ModelParameter]) => {
-        if (paramStates && paramStates) {
-          const nodeParamState = paramStates[modelId];
-          if (nodeParamState) {
-            this.addParameter(
-              {
-                ...nodeParamState,
-                ...modelParam,
-                id: modelId,
-              },
-              true,
-            );
-          } else {
-            this.addParameter({ ...modelParam, id: modelId });
-          }
-        } else {
-          this.addParameter({ ...modelParam, id: modelId });
-        }
-      });
-    } else if (paramStates)
-      Object.entries(paramStates).forEach(([paramId, param]: [string, IParamState]) =>
-        this.addParameter({ ...param, id: paramId }),
-      );
+    if (this.params.weight) this.params.weight.value = (value === "inhibitory" ? -1 : 1) * Math.abs(this.weightValue);
   }
 }

@@ -28,7 +28,7 @@
             v-for="(param, index) in connection.params.values"
             :key="index"
             v-model="connection.params.visibleParamIds"
-            :color="connection.sourceNode.view.color"
+            :color="connection.sourceNode?.view.color ?? 'grey'"
             :label="param.label"
             :value="param.id"
             density="compact"
@@ -51,7 +51,7 @@
       v-for="(param, index) in connection.params.filteredParams"
       :key="index"
       v-model="param.value"
-      :color="connection.sourceNode.view.color"
+      :color="connection.sourceNode?.view.color ?? 'grey'"
       :param
     />
   </v-list>
@@ -80,7 +80,6 @@ const items = [
     id: "connectionReset",
     onClick: () => {
       connection.value.reset();
-      connection.value.changes({ checkSynWeights: true, preventSimulation: true });
     },
     prependIcon: "mdi:mdi-restart",
     title: "Reset connection",

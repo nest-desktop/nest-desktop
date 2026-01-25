@@ -1,6 +1,6 @@
 // connection.ts
 
-import type { Class, TNetwork, TNode, TNodeGroup, TSynapse } from "@/types";
+import type { Class, TNetwork, TNode, TSynapse } from "@/types";
 import type { IBaseState, IConfigState } from "@/core";
 import type { IParamState } from "@/parameter";
 import { CodeNodeMask } from "@/codeGraph";
@@ -11,6 +11,7 @@ import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
 import { ConnectionParameters } from "./connectionParameters";
 import type { BaseConnections } from "./connections";
+import { AbstractCodeNode } from "@babsey/code-graph";
 
 export interface IConnectionState extends IBaseState {
   params?: Record<string, IParamState>;
@@ -28,9 +29,9 @@ export class BaseConnection<
 > extends CodeNodeMask<TState> {
   private _params: ConnectionParameters;
   private _rule: ConnectionRule;
-  private _source: TNode | TNodeGroup | undefined;
+  private _sourceId: string | undefined;
   private _state: ConnectionState;
-  private _target: TNode | TNodeGroup | undefined;
+  private _targetId: string | undefined;
   private _view: ConnectionView;
 
   public _connections: TConnections; // parent
@@ -65,25 +66,6 @@ export class BaseConnection<
     return this._rule.value !== "all_to_all";
   }
 
-  // override get hashObject(): IBaseState {
-  //   const hashState: {
-  //     idx: number;
-  //     params: Record<string, IParamState>;
-  //     synapse: string;
-  //     sourceModelId?: string;
-  //     targetModelId?: string;
-  //   } = {
-  //     idx: this.idx,
-  //     params: this.params.save(),
-  //     synapse: this.synapse.hash,
-  //   };
-
-  //   if (this.source?.isNode) hashState.sourceModelId = this.sourceNode.modelId;
-  //   if (this.target?.isNode) hashState.targetModelId = this.targetNode.modelId;
-
-  //   return hashState;
-  // }
-
   get idx(): number {
     return this.connections.all.indexOf(this);
   }
@@ -92,16 +74,16 @@ export class BaseConnection<
   //   return this._name;
   // }
 
-  get nodeGroups(): TNodeGroup[] {
-    return this.network.nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => {
-      const nodes = nodeGroup.nodeItemsDeep;
-      return (
-        [this.sourceNodeGroup, this.targetNodeGroup].includes(nodeGroup) ||
-        nodes.includes(this.sourceNode) ||
-        nodes.includes(this.targetNode)
-      );
-    });
-  }
+  // get nodeGroups(): TNodeGroup[] {
+  //   return this.network.nodes.nodeGroups.filter((nodeGroup: TNodeGroup) => {
+  //     const nodes = nodeGroup.nodeItemsDeep;
+  //     return (
+  //       [this.sourceNodeGroup, this.targetNodeGroup].includes(nodeGroup) ||
+  //       nodes.includes(this.sourceNode) ||
+  //       nodes.includes(this.targetNode)
+  //     );
+  //   });
+  // }
 
   get network(): TNetwork {
     return this.connections.network;
@@ -115,28 +97,28 @@ export class BaseConnection<
     return this.connections;
   }
 
-  get recorder(): TNode {
-    return this.sourceNode.model.isRecorder ? this.sourceNode : this.targetNode;
+  get recorder(): TNode | undefined {
+    return this.sourceNode?.model.isRecorder ? this.sourceNode : this.targetNode;
   }
 
   get rule(): ConnectionRule {
     return this._rule;
   }
 
-  get source(): TNode | TNodeGroup | undefined {
-    return this._source;
+  get sourceCodeNode(): AbstractCodeNode | undefined {
+    return this.codeNode?.getConnectedNodeByInterface("pre", "inputs");
   }
 
-  // get sourceIdx(): number {
-  //   return this.source ? this.connections.network.nodes.all.indexOf(this.source) : -1;
-  // }
-
-  get sourceNode(): TNode {
-    return this.source as TNode;
+  get source(): TNode | undefined {
+    return this.sourceCodeNode?.mask as TNode;
   }
 
-  get sourceNodeGroup(): TNodeGroup {
-    return this.source as TNodeGroup;
+  get sourceId(): string | undefined {
+    return this.sourceCodeNode?.id ?? this._sourceId;
+  }
+
+  get sourceNode(): TNode | undefined {
+    return this.source;
   }
 
   get state(): ConnectionState {
@@ -147,47 +129,51 @@ export class BaseConnection<
     return this._synapse;
   }
 
-  get target(): TNode | TNodeGroup | undefined {
-    return this._target;
+  get target(): TNode | undefined {
+    return this.targetCodeNode?.mask as TNode;
   }
 
-  // get targetIdx(): number {
-  //   return this.target ? this.connections.network.nodes.all.indexOf(this.target) : -1;
-  // }
-
-  get targetNode(): TNode {
-    return this.target as TNode;
+  get targetCodeNode(): AbstractCodeNode | undefined {
+    return this.codeNode?.getConnectedNodeByInterface("post", "inputs");
   }
 
-  // set targetNode(node: TNode) {
-  //   this._targetIdx = node.idx;
-  // }
+  get targetId(): string | undefined {
+    return this.targetCodeNode?.id ?? this._targetId;
+  }
 
-  get targetNodeGroup(): TNodeGroup {
-    return this.target as TNodeGroup;
+  get targetNode(): TNode | undefined {
+    return this.target;
   }
 
   get view(): ConnectionView {
     return this._view;
   }
 
-  /**
-   * Observer for connection changes.
-   * @remarks It emits network changes.
-   */
-  changes(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
-    this.logger.trace("changes");
-    // this.updateHash();
+  // /**
+  //  * Observer for connection changes.
+  //  * @remarks It emits network changes.
+  //  */
+  // changes(props: { checkSynWeights?: boolean; preventSimulation?: boolean } = {}): void {
+  //   this.logger.trace("changes");
+  //   // this.updateHash();
 
-    if (props.checkSynWeights) this.sourceNode.view.checkSynWeights();
+  //   if (props.checkSynWeights) this.sourceNode?.view.checkSynWeights();
 
-    this.connections.network.changes(props);
-  }
+  //   // this.connections.network.changes(props);
+  // }
 
   /**
    * Clean this component.
    */
-  clean(): void {}
+  clean(): void {
+    // // Correct connections with recorder.
+    // if (this.view.connectRecorder()) this.recorder?.correctRecorderConnections();
+    // // Update synaptic weight label.
+    // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
+    //   connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
+    // // Update recorder and clean activity panels.
+    // if (this.view.connectRecorder()) this.recorder?.updateRecorder();
+  }
 
   /**
    * Initialize connection.
@@ -202,27 +188,18 @@ export class BaseConnection<
     this.update();
   }
 
+  getCodeNodeById(nodeId: string): AbstractCodeNode | undefined {
+    return this.connections.network.nodes.codeNodeIds[nodeId];
+  }
+
   /**
    * Load connection from state.
    * @param connectionState connection state
    */
   load(connectionState: IConnectionState): void {
-    let sourceNode;
-    if (connectionState.sourceId) {
-      sourceNode = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.sourceId);
-    } else if (connectionState.sourceIdx != undefined) {
-      sourceNode = this.connections.network.nodes.all[connectionState.sourceIdx];
-    }
-    if (sourceNode) this._source = sourceNode;
-
-    let targetNode;
-    if (connectionState.targetId) {
-      targetNode = this.connections.network.nodes.all.find((node) => node.codeNode.id === connectionState.targetId);
-    } else if (connectionState.targetIdx != undefined) {
-      targetNode = this.connections.network.nodes.all[connectionState.targetIdx];
-    }
-    if (targetNode) this._target = targetNode;
-
+    this.logger.trace("load:", connectionState);
+    if (connectionState.sourceId) this._sourceId = connectionState.sourceId;
+    if (connectionState.targetId) this._targetId = connectionState.targetId;
     if (connectionState.rule) this.rule.value = connectionState.rule;
     if (connectionState.params) this.params.load(connectionState.params);
     if (connectionState.synapse) this.synapse.load(connectionState.synapse);
@@ -230,7 +207,6 @@ export class BaseConnection<
 
   /**
    * Set defaults.
-   * @remarks It emits connection changes.
    */
   reset(): void {
     this.logger.trace("reset");
@@ -248,26 +224,25 @@ export class BaseConnection<
 
   /**
    * Reverse source and target indices.
-   * @remarks It emits connection changes.
    */
   reverse(): void {
     this.logger.trace("reverse");
+    if (!this.codeNode) return;
 
-    const target = this.target;
-    const source = this.source;
+    const source = this.sourceCodeNode;
+    const target = this.targetCodeNode;
 
-    this._source = target;
-    this._target = source;
+    this.codeNode.graph.addConnection(target?.outputs.out, this.codeNode.inputs.pre);
+    this.codeNode.graph.addConnection(source?.outputs.out, this.codeNode.inputs.post);
+
+    // this.clean();
 
     // Check syn weights.
-    this.sourceNode.view.checkSynWeights();
-    this.targetNode.view.checkSynWeights();
+    this.sourceNode?.view.checkSynWeights();
+    this.targetNode?.view.checkSynWeights();
 
     // Initialize activity graph.
-    if (this._view.connectRecorder()) this.recorder.createActivity();
-
-    // Trigger connection change.
-    this.changes({ preventSimulation: true });
+    if (this.view.connectRecorder()) this.recorder?.createActivity();
   }
 
   /**
@@ -276,8 +251,8 @@ export class BaseConnection<
    */
   override save(): IConnectionState {
     const connectionState: IConnectionState = {
-      source: this.source?.codeNode?.id ?? -1,
-      target: this.target?.codeNode?.id ?? -1,
+      sourceId: this.sourceId,
+      targetId: this.targetId,
     };
 
     if (this.params.hasSomeVisibleParams) connectionState.params = this.params.save();
@@ -291,6 +266,5 @@ export class BaseConnection<
    */
   update(): void {
     this.clean();
-    // this.updateHash();
   }
 }

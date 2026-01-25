@@ -71,13 +71,6 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
     this.node.network.clean();
   }
 
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     color: this.color,
-  //     position: this.state.position,
-  //   };
-  // }
-
   /**
    * Check if this node is focused.
    */
@@ -97,7 +90,7 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
       //   nodes = this.nodes.stimulators;
       //   break;
       case undefined:
-        nodes = this.node.nodes.nodeItems;
+        nodes = this.node.nodes.all;
         break;
       default:
         nodes = this.node.nodes.filterByModelId(this.node.modelId);
@@ -137,9 +130,9 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
 
   set showSize(value: boolean) {
     this.state.showSize = value;
-    this.node.codeNode.inputs.size.setHidden(!value);
-    this.node.codeNode.code.engine.runOnce(null);
-    this.node.changes({ preventSimulation: true });
+    this.node.size?.setHidden(!value);
+    // this.node.codeNode.code.engine.runOnce({});
+    // this.node.changes({ preventSimulation: true });
   }
 
   /**
@@ -203,7 +196,7 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
    * Initialize node view.
    */
   init(): void {
-    this.state.showSize = !this.node.codeNode?.inputs.size.hidden;
+    this.state.showSize = !this.node.codeNode?.inputs.size?.hidden;
   }
 
   /**

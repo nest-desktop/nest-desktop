@@ -2,11 +2,11 @@
 
 // import type { AbstractCodeNode } from "@babsey/code-graph";
 
-import { BaseParameter, type IParamState } from "@/parameter";
+import { CodeMaskParameter, type IParamState } from "@/parameter";
 
 import type { NodeParameters } from "./nodeParameters";
 
-export class NodeParameter<TParent extends NodeParameters = NodeParameters> extends BaseParameter<TParent> {
+export class NodeParameter<TParent extends NodeParameters = NodeParameters> extends CodeMaskParameter<TParent> {
   get nodeParams(): TParent {
     return this.parent;
   }
