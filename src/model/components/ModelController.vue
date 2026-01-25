@@ -208,7 +208,6 @@ const paramMenuItems = (param: TModelParameter) => [
     icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       param.value = param.props.value as TParamValue;
-      param.changes();
     },
     title: "Reset value",
   },
@@ -218,7 +217,6 @@ const resetAllParamValues = () => {
   modelParams.value.forEach((param: TModelParameter) => {
     param.value = param.props.value as TParamValue;
   });
-  modelStore.model.changes();
 };
 
 const updateCode = () => {
@@ -229,7 +227,6 @@ const updateCode = () => {
       neuron.params.params[paramId].state.value = modelParams.get(paramId).value;
     });
   });
-  project.value.changes();
 };
 
 //

@@ -4,11 +4,11 @@
       <v-label class="px-1" style="width: 100%">
         {{ param.label || param.options.label || param.id }}
         <v-spacer />
-        {{ param.id }}: {{ param.code }}
+        {{ param.id }}: {{ param.value }}
       </v-label>
     </template>
 
-    <ArrayInput v-else-if="param.options.component === 'arrayInput'" v-bind="param.options" v-model="model" />
+    <ArrayInput v-else-if="param.options.component === 'arrayInput'" v-bind="param.options" v-model="model as string" />
 
     <v-checkbox
       v-else-if="param.options.component === 'checkbox'"
@@ -22,7 +22,7 @@
     <RangeSlider
       v-else-if="param.options.component === 'rangeSlider'"
       v-bind="param.options"
-      v-model="model"
+      v-model="model as number[]"
       :thumb-color="color"
     />
 
@@ -39,14 +39,14 @@
     <TickSlider
       v-else-if="param.options.component === 'tickSlider'"
       v-bind="param.options"
-      v-model="model"
+      v-model="model as number"
       :thumb-color="color"
     />
 
     <ValueSlider
       v-else-if="param.options.component === 'valueSlider'"
       v-bind="param.options"
-      v-model="model"
+      v-model="model as number"
       :thumb-color="color"
     />
 
@@ -106,7 +106,6 @@ const items = [
   {
     onClick: () => {
       param.value.state.random = !param.value.state.random;
-      param.value.changes();
     },
     prependIcon: "custom:dice-multiple-outline",
     title: "Toggle view",
@@ -115,7 +114,6 @@ const items = [
     icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       param.value.reset();
-      param.value.changes();
     },
     title: "Set default value",
   },
@@ -123,7 +121,6 @@ const items = [
     onClick: () => {
       param.value.reset();
       param.value.hide();
-      param.value.changes();
     },
     prependIcon: "mdi:mdi-eye-off-outline",
     title: "Hide parameter",

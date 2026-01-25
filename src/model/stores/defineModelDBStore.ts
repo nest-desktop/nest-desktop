@@ -19,7 +19,7 @@ interface IModelDBStoreState<TModel extends BaseModel = BaseModel> {
 
 export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
   props: {
-    Model: Class<TModel | BaseModel>;
+    Model: Class<TModel>;
     ModelDB: Class<TModelDB>;
     modelAssets?: string[];
     workspace: string;
@@ -41,27 +41,31 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     });
 
     /**
-     * Add model to the list.
-     * @param model model instance
-     */
-    const _addToList = (model: TModel | BaseModel): void => {
-      state.models.unshift(model);
-    };
-
-    /**
      * Add this new model to the list.
      * @param modelState model state
      * @remarks It pushes new model to the first line of the list.
      */
-    const addModel = (modelState: TModelState): TModel => {
+    const addModel = (modelState?: TModelState): TModel => {
       logger.trace("add model:", modelState?.id);
 
-      // Upgrade model state.
-      modelState = upgradeModel(modelState);
+      const model = new props.Model();
 
-      const model = new props.Model(modelState) as TModel;
-      _addToList(model);
+      if (modelState) {
+        // Upgrade model state.
+        modelState = upgradeModel(modelState);
+        model.load(modelState);
+      }
+
+      addToList(model);
       return model;
+    };
+
+    /**
+     * Add model to the list.
+     * @param model model instance
+     */
+    const addToList = (model: TModel): void => {
+      state.models.unshift(model);
     };
 
     /**
@@ -69,7 +73,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * @param model model instance
      * @returns Promise from PouchDB
      */
-    const deleteModel = async (model: TModel | BaseModel): Promise<void> => {
+    const deleteModel = async (model: TModel): Promise<void> => {
       logger.trace("delete model:", model.id);
 
       return db.deleteModel(model).then(() => updateList());
@@ -80,13 +84,13 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * @param model model instance
      * @remarks It pushes new model to the first line of the list.
      */
-    const duplicateModel = (model: TModel | BaseModel): TModel => {
+    const duplicateModel = (model: TModel): TModel => {
       logger.trace("duplicate model", truncate(model.id));
 
       const modelState = model.save();
       modelState.id += "_duplicated";
       const modelCloned = addModel(modelState);
-      modelCloned.custom = true;
+      modelCloned.state.custom = true;
       return modelCloned as TModel;
     };
 
@@ -94,7 +98,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * Export model from the list.
      * @param model model instance
      */
-    const exportModel = (model: TModel | BaseModel | TModelState): void => {
+    const exportModel = (model: TModel | TModelState): void => {
       logger.trace("export model:", truncate(model.id));
 
       // if (model.doc && withActivities) model.activities = model.activities.save();
@@ -110,7 +114,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
     const findModel = (modelId: string): TModel | undefined => {
       logger.trace("find model:", modelId);
 
-      return state.models.find((model: UnwrapRef<TModel | BaseModel>) => model.id === modelId) as TModel;
+      return state.models.find((model: UnwrapRef<TModel>) => model.id === modelId) as TModel;
     };
 
     /**
@@ -118,10 +122,10 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * @param elementType  neuron, recorder, stimulator, device
      * @returns models of the requested element type
      */
-    const getModelsByElementType = (elementType: TElementType | "device"): UnwrapRef<(TModel | BaseModel)[]> => {
+    const getModelsByElementType = (elementType: TElementType | "device"): UnwrapRef<TModel[]> => {
       logger.trace("get model by element type:", elementType);
 
-      return state.models.filter((model: UnwrapRef<TModel | BaseModel>) => {
+      return state.models.filter((model: UnwrapRef<TModel>) => {
         if (elementType === "device") {
           return ["stimulator", "recorder"].includes(model.elementType);
         } else {
@@ -219,7 +223,7 @@ export function defineModelDBStore<TModel extends BaseModel = BaseModel>(
      * Save model instance to the database.
      * @param model model instance
      */
-    const saveModel = async (model: TModel | BaseModel): Promise<TModelState | void> => {
+    const saveModel = async (model: TModel): Promise<TModelState | void> => {
       logger.trace("save model:", truncate(model.id));
 
       return db.importModel(model).then(() => {

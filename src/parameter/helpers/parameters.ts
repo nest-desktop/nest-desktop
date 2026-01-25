@@ -24,7 +24,7 @@ export class BaseParameters<
   get filteredParams(): TParameter[] {
     return this.visibleParamIds
       .filter((paramId: string) => this.params[paramId])
-      .map((paramId: string) => this.params[paramId]);
+      .map((paramId: string) => this.params[paramId]) as TParameter[];
   }
 
   get hasSomeVisibleParams(): boolean {
@@ -58,30 +58,19 @@ export class BaseParameters<
 
   set visibleParamIds(values: string[]) {
     this.values.forEach((param: TParameter) => (param.hidden = !values.includes(param.id)));
-
-    this.codeNode?.code.engine.runOnce();
+    this.codeNode?.code?.engine?.runOnce({});
   }
 
   /**
    * Add parameter component.
    * @param paramState parameter state
-   * @param visible boolean
    */
-  addParameter(paramState: IParamState, visible: boolean = false): void {
-    this.logger.trace("add parameter", paramState.id);
+  addParameter(paramState?: IParamState): void {
+    this.logger.trace("add parameter", paramState?.id);
 
     const param = new this.Parameter(this) as TParameter;
-    param.load(paramState);
-    this.params[paramState.id] = param;
-
-    if (visible) this.visibleParamIds.push(paramState.id);
-  }
-
-  /**
-   * Observer for parameter changes.
-   */
-  changes(state = {}): void {
-    this.logger.trace("changes", state);
+    if (paramState) param.load(paramState);
+    this.params[param.id] = param;
   }
 
   /**
@@ -111,9 +100,8 @@ export class BaseParameters<
   /**
    * Sets all params to invisible.
    */
-  hideAll(emitChanges: boolean = true): void {
+  hideAll(): void {
     this.values.forEach((param: TParameter) => param.hide());
-    if (emitChanges) this.changes();
   }
 
   init(): void {}
@@ -128,7 +116,7 @@ export class BaseParameters<
     this.emptyParams();
     if (paramStates) {
       Object.entries(paramStates).forEach(([paramKey, param]: [string, IParamState]) =>
-        this.addParameter({ ...param, id: paramKey }, true),
+        this.addParameter({ ...param, id: paramKey }),
       );
     }
   }
@@ -148,7 +136,6 @@ export class BaseParameters<
 
   /**
    * Reset value in parameter components.
-   * @remarks It emits node changes.
    */
   reset(): void {
     this.logger.trace("reset parameters");
@@ -169,10 +156,8 @@ export class BaseParameters<
 
   /**
    * Sets all params to visible.
-   * @param emitChanges option to emit changes.
    */
-  showAll(emitChanges: boolean = true): void {
+  showAll(): void {
     this.values.forEach((param: TParameter) => param.show());
-    if (emitChanges) this.changes();
   }
 }

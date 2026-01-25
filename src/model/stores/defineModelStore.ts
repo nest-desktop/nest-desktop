@@ -5,7 +5,7 @@ import { computed, nextTick, reactive } from "vue";
 import type { RouteLocationNormalizedLoadedGeneric } from "vue-router";
 
 import router from "@/router";
-import type { Class, TNetwork, TSimulation, TStore } from "@/types";
+import type { Class, TNetwork, TNode, TSimulation, TStore } from "@/types";
 import type { TElementType } from "@/model";
 import { BaseProject, type IProjectState } from "@/project";
 import { loadJSON, logger as mainLogger, truncate } from "@/utils";
@@ -112,13 +112,14 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
       logger.trace("load project from assets:", state.projectId);
 
       loadJSON(`assets/workspaces/${props.workspace}/projects/${state.projectId}.json`).then(
-        (projectState: IProjectState) => {
-          // Upgrade project state.
-          projectState = upgradeProject(projectState);
-          projectState.filename = state.projectId;
-
+        (projectState: IProjectState = {}) => {
           const project = new props.Project();
-          project.load(projectState);
+          if (projectState) {
+            // Upgrade project state.
+            projectState = upgradeProject(projectState);
+            projectState.filename = state.projectId;
+            project.load(projectState);
+          }
           model.value.state.project = project;
 
           // updateProject();
@@ -213,8 +214,8 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
 
         if (project) {
           if ("network" in project) {
-            const network = project.network;
-            network.nodes.neurons.forEach((neuron) => {
+            const network = project.network as TNetwork;
+            network.nodes.neurons.forEach((neuron: TNode) => {
               neuron.modelId = state.modelId;
             });
           }

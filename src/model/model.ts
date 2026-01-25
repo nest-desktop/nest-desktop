@@ -37,46 +37,34 @@ export type TSynapseElementType = "synapse";
 export type TElementType = TNodeElementType | TSynapseElementType;
 
 export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
-  private _abbreviation: string;
-  private _doc: IModelState; // doc data of the database
-  private _elementType: TElementType; // element type of the model
+  private _abbreviation: string = "";
+  private _doc: IModelState | undefined; // doc data of the database
+  private _elementType: TElementType = "neuron"; // element type of the model
   private _favorite: boolean = false;
-  private _id: string; // model id
+  private _id: string = ""; // model id
   private _params: ModelParameters;
   private _project: TProject | undefined;
-  private _state: UnwrapRef<IBaseModelRefState>;
+  private _state: UnwrapRef<IBaseModelRefState> = reactive<IBaseModelRefState>({
+    custom: false,
+    label: "",
+  });
   private _states: IModelRecordState[] = [];
 
-  constructor(modelState: IModelState = {}, configState?: IConfigState) {
+  constructor(configState?: IConfigState) {
     super({ config: { name: "Model", ...configState } });
-
-    this._doc = modelState;
-    this._id = modelState.id || uuidv4().slice(0, 6);
-    this._elementType = modelState.elementType || "neuron";
-
-    this._abbreviation = modelState.abbreviation || "";
-    this._favorite = modelState.favorite || false;
-
-    this._state = reactive<IBaseModelRefState>({
-      custom: modelState.custom ?? false,
-      label: modelState.label || "",
-    });
-
     this._params = new ModelParameters(this);
-
-    this.load(modelState);
   }
 
   get abbreviation(): string {
     return this._abbreviation;
   }
 
-  get doc(): IModelState {
+  get doc(): IModelState | undefined {
     return this._doc;
   }
 
   get docId(): string | undefined {
-    return this._doc._id;
+    return this.doc?._id;
   }
 
   get elementType(): TElementType {
@@ -90,14 +78,6 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
   get favorite(): boolean {
     return this._favorite;
   }
-
-  // get hashObject(): IBaseState {
-  //   return {
-  //     label: this.state.label,
-  //     states: this.states,
-  //     params: this.params.hash,
-  //   };
-  // }
 
   get id(): string {
     return this._id;
@@ -118,35 +98,35 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
    * Check if the model is a multimeter.
    */
   get isMultimeter(): boolean {
-    return this._id === "multimeter";
+    return this.id === "multimeter";
   }
 
   /**
    * Check if the model is a neuron.
    */
   get isNeuron(): boolean {
-    return this._elementType === "neuron";
+    return this.elementType === "neuron";
   }
 
   /**
    * Check if the model is a recorder.
    */
   get isRecorder(): boolean {
-    return this._elementType === "recorder";
+    return this.elementType === "recorder";
   }
 
   /**
    * Check if the model is a spike recorder.
    */
   get isSpikeRecorder(): boolean {
-    return this._id === "spike_recorder";
+    return this.id === "spike_recorder";
   }
 
   /**
    * Check if the model is a stimulator.
    */
   get isStimulator(): boolean {
-    return this._elementType === "stimulator";
+    return this.elementType === "stimulator";
   }
 
   /**
@@ -170,7 +150,7 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
   }
 
   get recordables(): IModelRecordState[] {
-    return this._states;
+    return this.states;
   }
 
   get state(): UnwrapRef<IBaseModelRefState> {
@@ -206,38 +186,43 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
   }
 
   /**
-   * Clean the model.
-   */
-  clean(): void {
-    // this.params.clean()
-    // this._idx = this._modelDBStore.state.models.indexOf(this);
-  }
-
-  changes(props?: Record<string, unknown>): void {
-    // console.log("model changes:", props);
-  }
-
-  /**
    * Load model from state.
    * @param modelState model state
    */
   load(modelState: IModelState): void {
-    this.logger.trace("update:", modelState.id);
+    this.logger.trace("load:", modelState.id);
 
-    // Update the model ID.
-    this._id = modelState.id || uuidv4();
+    this._doc = modelState;
+    this._id = modelState.id || uuidv4().slice(0, 6);
+    this._elementType = modelState.elementType || "neuron";
+
+    this._abbreviation = modelState.abbreviation || "";
+    this._favorite = modelState.favorite || false;
+
+    if (modelState.custom) this.state.custom = modelState.custom;
+    if (modelState.label) this.state.label = modelState.label;
 
     // Update the model recordables or states.
     if (modelState.recordables) {
-      this.updateRecordStates(modelState.recordables);
+      this.loadRecordStates(modelState.recordables);
     } else if (modelState.states) {
-      this.updateRecordStates(modelState.states);
+      this.loadRecordStates(modelState.states);
     }
 
     // Update the model parameters.
     if (modelState.params) this.params.load(modelState.params);
+  }
 
-    // this.updateHash();
+  /**
+   * Load model record states.
+   * @param recordStates record states
+   */
+  loadRecordStates(recordStates: (IModelRecordState | string)[]): void {
+    this._states = recordStates.map((recordState: IModelRecordState | string) =>
+      recordState instanceof Object
+        ? recordState
+        : this.config?.localStorage.states.find((state: IModelRecordState) => state.id === recordState),
+    );
   }
 
   /**
@@ -246,31 +231,19 @@ export class BaseModel<T extends IModelState = IModelState> extends BaseObj<T> {
    */
   override save(): IModelState {
     const modelState: IModelState = {
-      abbreviation: this._abbreviation,
-      elementType: this._elementType,
+      abbreviation: this.abbreviation,
+      elementType: this.elementType,
       id: this._id,
       label: this.state.label,
       params: this.params.save(),
       version: process.env.APP_VERSION,
     };
 
-    if (this._favorite) modelState.favorite = true;
+    if (this.favorite) modelState.favorite = true;
 
     // Add model states if provided.
     if (this.states.length > 0) modelState.states = this.states.map((state: IModelRecordState | string) => state);
 
     return modelState;
-  }
-
-  /**
-   * Update model record states.
-   * @param recordStates record states
-   */
-  updateRecordStates(recordStates: (IModelRecordState | string)[]): void {
-    this._states = recordStates.map((recordState: IModelRecordState | string) =>
-      recordState instanceof Object
-        ? recordState
-        : this.config?.localStorage.states.find((state: IModelRecordState) => state.id === recordState),
-    );
   }
 }

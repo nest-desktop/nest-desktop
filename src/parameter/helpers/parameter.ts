@@ -1,9 +1,7 @@
 // parameter.ts
 
-import type { AbstractCodeNode, CodeNodeInterface } from "@babsey/code-graph";
 import { type UnwrapRef, reactive } from "vue";
 
-// import type { TParameter } from "@/types";
 import { truncate } from "@/utils";
 import { BaseObj, type IBaseState } from "@/core";
 
@@ -74,6 +72,7 @@ export class BaseParameter<
   TParent extends BaseParameters = BaseParameters,
   TState extends IParamState = IParamState,
 > extends BaseObj<TState> {
+  private _component: TParamComponent = "";
   private _factors: string[] = []; // not functional yet
   private _format: string = "";
   private _id: string = "";
@@ -89,7 +88,6 @@ export class BaseParameter<
   private _ticks: (number | string)[] = [];
   private _type: IParamType = { id: "constant" };
   private _unit: string = "";
-  private _component: TParamComponent = "";
 
   constructor(parent: TParent) {
     super({ config: { name: "Parameter" } });
@@ -101,10 +99,6 @@ export class BaseParameter<
       disabled: true,
       value: 0,
     });
-  }
-
-  get codeNode(): AbstractCodeNode | undefined {
-    return this.parent?.codeNode;
   }
 
   get component(): TParamComponent {
@@ -127,10 +121,6 @@ export class BaseParameter<
     return this._id;
   }
 
-  get intf(): Record<string, CodeNodeInterface> | undefined {
-    return this.codeNode?.inputs[this.id];
-  }
-
   get isConstant(): boolean {
     return this.type.id === "constant";
   }
@@ -148,12 +138,11 @@ export class BaseParameter<
   }
 
   get hidden(): boolean {
-    return this.intf?.hidden ?? this.state.hidden;
+    return this.state.hidden;
   }
 
   set hidden(value: boolean) {
     this.state.hidden = value;
-    this.intf?.setHidden(value);
   }
 
   get label(): string {
@@ -209,7 +198,7 @@ export class BaseParameter<
   get options(): IParamOptions {
     const param = this.modelParam;
 
-    if (!param) return {};
+    if (!param) return { id: this.id, label: this.label, defaultValue: this.value, unit: this.unit };
 
     const options: IParamOptions = {
       component: param.component || "",
@@ -277,7 +266,7 @@ export class BaseParameter<
   }
 
   get typeId(): string {
-    return this._type.id;
+    return this.type.id;
   }
 
   set typeId(value: string) {
@@ -301,53 +290,21 @@ export class BaseParameter<
   }
 
   get value(): TParamValue {
-    return this.intf?.value ?? this.state.value;
+    return this.state.value;
   }
 
   set value(value: TParamValue) {
     this.state.value = value;
-    if (this.intf) this.intf.value = value;
-
     if (this.props?.value?.handleOnUpdate) this.props.value.handleOnUpdate(this);
-    // this.changes();
-  }
-
-  // get valueFixed(): string {
-  //   if (Array.isArray(this.value)) {
-  //     return "[" + this.value.map((value) => this.toFixed(value)).join(",") + "]";
-  //   } else if (typeof this.value === "number") {
-  //     return this.toFixed(this.value);
-  //   } else {
-  //     return this.value.toString();
-  //   }
-  // }
-
-  // get valueAsString(): string {
-  //   if (Array.isArray(this.value)) {
-  //     return JSON.stringify(this.value.map((value) => value));
-  //   } else {
-  //     return JSON.stringify(this.value);
-  //   }
-  // }
-
-  get visible(): boolean {
-    return !this.hidden;
   }
 
   /**
-   * Copy parameter component
+   * Copy parameter instance.
    */
   copy(): BaseParameter<TParent> {
     const param = new BaseParameter<TParent>(this.parent);
     param.load(this.save());
     return param;
-  }
-
-  /**
-   * Updates when parameter is changed.
-   */
-  changes(): void {
-    // this.parent.changes();
   }
 
   /**
@@ -361,7 +318,10 @@ export class BaseParameter<
    * Load parameter from state.
    * @param paramState parameter state
    */
-  load(paramState: IParamState): void {
+  load(paramState: TState): void {
+    this.logger.trace("load:", paramState.id);
+
+    this.props.value = paramState;
     this._id = paramState.id;
 
     // optional param specifications
@@ -374,6 +334,7 @@ export class BaseParameter<
       if (type != null) this._type = { ...type, ...paramState.type };
     }
 
+    this._component = paramState.component || paramState.input || "";
     this._format = paramState.format || "";
     this._items = paramState.items || [];
     this._label = paramState.label || "";
@@ -386,7 +347,6 @@ export class BaseParameter<
     this._step = paramState.step || step || 1;
     this._ticks = paramState.ticks || [];
     this._unit = paramState.unit || "";
-    this._component = paramState.component || paramState.input || "";
   }
 
   /**
@@ -394,25 +354,25 @@ export class BaseParameter<
    */
   reset(): void {
     this.typeId = "constant";
-    if (this.options) this._state.value = this.options.defaultValue;
+    if (this.options) this.state.value = this.options.defaultValue;
   }
 
   /**
    * Save parameter to state.
    * @return parameter state
    */
-  override save(): IParamState {
-    const paramState: IParamState = {
+  override save(): TState {
+    const paramState: TState = {
       id: this.id,
       value: this.value,
       hidden: this.hidden,
     };
 
     // Add value factors if existed.
-    if (this._factors.length > 0) paramState.factors = this.factors;
+    if (this.factors.length > 0) paramState.factors = this.factors;
 
     // Add rules for validation if existed.
-    if (this._rules.length > 0) paramState.rules = this.rules;
+    if (this.rules.length > 0) paramState.rules = this.rules;
 
     // Add param type if not constant.
     if (!this.isConstant) paramState.type = this.saveType();
@@ -426,7 +386,7 @@ export class BaseParameter<
    */
   saveType(): IParamType {
     const paramType: IParamType = {
-      id: this._type.id,
+      id: this.type.id,
     };
 
     if (this.type.specs)
@@ -450,6 +410,5 @@ export class BaseParameter<
    */
   toggleDisabled(): void {
     this.state.disabled = !this.state.disabled;
-    // this.changes();
   }
 }
