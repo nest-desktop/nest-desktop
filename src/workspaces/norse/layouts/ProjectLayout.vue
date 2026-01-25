@@ -91,7 +91,7 @@ onMounted(() => {
 
   if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
   project.value.viewModel.engine?.start();
-  project.value.viewModel.engine?.runOnce(null);
+  // project.value.viewModel.engine?.runOnce({});
 });
 
 onBeforeUnmount(() => {
@@ -109,7 +109,7 @@ watch(
 
     newValue.viewModel.subscribe();
     newValue.viewModel.engine?.start();
-    setTimeout(() => newValue.viewModel.engine?.runOnce(null), 1);
+    // setTimeout(() => newValue.viewModel.engine?.runOnce({}), 1);
   },
 );
 
