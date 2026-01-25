@@ -30,7 +30,7 @@ export const nestSpatialFree = defineCodeNode({
   },
   onConnected() {
     if (!this.code.project) return;
-    updateNESTNode(this);
+    updateNodeMask(this);
   },
   //   if (!this.node) return;
 
@@ -101,7 +101,7 @@ export const loadNESTSpatialFree = (
   return codeNode;
 };
 
-const updateNESTNode = (spatialNode: AbstractCodeNode) => {
+const updateNodeMask = (spatialNode: AbstractCodeNode) => {
   const codeNode = spatialNode.getConnectedNodeByInterface("out", "outputs");
   if (!codeNode || !codeNode.mask) return;
 

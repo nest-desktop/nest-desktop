@@ -4,12 +4,32 @@ import { BaseSynapseParameter } from "@/network";
 import type { IParamType } from "@/parameter";
 
 import { NESTSynapseParameters } from "./synapseParameters";
+import { getNESTModelParameterStates } from "../../model";
+import { type IParamState, updateNESTParameterNode } from "../../codeNodeTypes/nest";
 // import type { NESTCopyModelParameter } from "../model/copyModelParameter";
 
 export class NESTSynapseParameter extends BaseSynapseParameter<NESTSynapseParameters> {
-  // override get modelParam(): ModelParameter | NESTCopyModelParameter | undefined {
-  //   return this.synapse.model.params.get(this.id);
-  // }
+  override get hidden(): boolean {
+    return this.intf?.hidden ?? this.state.hidden;
+  }
+
+  override set hidden(value: boolean) {
+    this.state.hidden = value;
+    const synapse = this.synapseParams.synapse;
+    if (!this.codeNode && this.synapseParams.hasSomeVisibleParams) {
+      const defaultParamStates = getNESTModelParameterStates(synapse.modelId);
+      updateNESTParameterNode(
+        synapse.connection.codeNode,
+        "syn_spec",
+        defaultParamStates as Record<string, IParamState>,
+      );
+    }
+    this.intf?.setHidden(value);
+    if (this.codeNode && !this.synapseParams.hasSomeVisibleParams) {
+      updateNESTParameterNode(synapse.connection.codeNode, "syn_spec");
+      this.synapseParams.unregisterCodeNode();
+    }
+  }
 
   override get types(): IParamType[] {
     const types: IParamType[] = this.config?.localStorage.types;

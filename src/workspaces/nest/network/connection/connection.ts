@@ -67,10 +67,6 @@ export class NESTConnection extends BaseConnection<NESTConnections, INESTConnect
     return this.connections.network;
   }
 
-  // override get source(): NESTNode | TNodeGroup {
-  //   return this.connections.network.nodes.all[this.source?.idx] as NESTNode | TNodeGroup;
-  // }
-
   get sourceNode(): NESTNode {
     return this.source as NESTNode;
   }
@@ -82,10 +78,6 @@ export class NESTConnection extends BaseConnection<NESTConnections, INESTConnect
   override get synapse(): NESTSynapse {
     return this._synapse as NESTSynapse;
   }
-
-  // override get target(): NESTNode | TNodeGroup {
-  //   return this.connections.network.nodes.all[this.target?.idx] as NESTNode | TNodeGroup;
-  // }
 
   override get targetNode(): NESTNode {
     return this.target as NESTNode;

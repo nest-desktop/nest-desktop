@@ -1,7 +1,5 @@
 // model.ts
 
-import { v4 as uuidv4 } from "uuid";
-
 import type { IParamState } from "@/parameter";
 import { BaseModel, type IModelState, type IModelRecordState, type TElementType, ModelParameters } from "@/model";
 // import { loadText } from "@/utils";
@@ -24,7 +22,7 @@ export class NESTModel extends BaseModel<INESTModelState> {
   private _templateName: string = "iaf_psc_alpha_neuron";
 
   constructor(modelState: INESTModelState = {}) {
-    super(modelState, { name: "NESTModel", workspace: "nest" });
+    super({ name: "NESTModel", workspace: "nest" });
 
     this._compartmentParams = new ModelParameters(this);
 
@@ -45,16 +43,10 @@ export class NESTModel extends BaseModel<INESTModelState> {
     return this.id;
   }
 
-  /**
-   * Check if the model is a synapse.
-   */
   get isSynapse(): boolean {
     return this.elementType === "synapse";
   }
 
-  /**
-   * Check if the model is a weight recorder.
-   */
   get isWeightRecorder(): boolean {
     return this.id === "weight_recorder";
   }
@@ -124,28 +116,15 @@ export class NESTModel extends BaseModel<INESTModelState> {
    * @param model NEST model state
    */
   override load(modelState: INESTModelState): void {
-    this.logger.trace("update", modelState.id);
+    this.logger.trace("load:", modelState.id);
 
-    // Update the model ID.
-    this.id = modelState.id || uuidv4();
-
-    // Update the model recordables or states.
-    if (modelState.recordables) {
-      this.updateRecordStates(modelState.recordables);
-    } else if (modelState.states) {
-      this.updateRecordStates(modelState.states);
-    }
-
-    // Update the model parameters.
-    if (modelState.params) this.params.load(modelState.params);
+    super.load(modelState);
 
     // Update the model compartment parameters.
     if (modelState.compartmentParams) this.compartmentParams.load(modelState.compartmentParams);
 
     // Update the model receptors.
     if (modelState.receptors) this.loadReceptors(modelState.receptors);
-
-    // this.updateHash();
   }
 
   /**

@@ -20,7 +20,6 @@ import {
   nestNodeCollectionType,
 } from "./interfaceTypes";
 import { type IParamState, updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
-import { getNESTSimulateNode } from "./nestSimulate";
 
 const ruleItems = [
   "all_to_all",
@@ -41,9 +40,9 @@ export const nestConnect = defineCodeNode({
     conn_spec: () => new SelectInterface("conn_spec", "all_to_all", ruleItems).setOptional(true),
     syn_spec: () => new TextInputInterface("syn_spec", "static_synapse").setOptional(true),
   },
-  afterGraphLoaded() {
+  beforeRun() {
     if (!this.code.project) return;
-    updateNESTNode(this);
+    updateNodeMask(this);
   },
   onConnected() {
     if (!this.code.project || !this.mask) return;
@@ -120,30 +119,6 @@ export const nestConnect = defineCodeNode({
   // },
 });
 
-// const getConnSpec = (rule: string) => {
-//   const connSpec: Record<string, IParamState> = { rule: { value: rule, items: ruleItems, type: "select" } };
-
-//   switch (rule) {
-//     case "fixed_indegree":
-//       connSpec["indegree"] = { value: 1, type: "integer", min: 1 };
-//       break;
-//     case "fixed_outdegree":
-//       connSpec["outdegree"] = { value: 1, type: "integer", min: 1 };
-//       break;
-//     case "fixed_total_number":
-//       connSpec["N"] = { value: 1, type: "integer", min: 1 };
-//       break;
-//     case "pairwise_bernoulli":
-//       connSpec["p"] = { value: 0.1, min: 0, max: 1 };
-//       break;
-//     case "symmetric_pairwise_bernoulli":
-//       connSpec["p"] = { value: 0.1, min: 0, max: 1 };
-//       break;
-//   }
-
-//   return connSpec;
-// };
-
 export const addNESTConnectNode = (graph: CodeGraph, idx: number = -1): AbstractCodeNode => {
   if (idx === -1) idx = graph.getNodesByType("nest.Connect").length;
   const codeNode = graph.addNodeAtCoordinates(new nestConnect(), getPositionAtColumn(3, 100 + 200 * idx));
@@ -173,9 +148,6 @@ export const loadNESTConnectNode = (
     const targetNode = nodes[connectionState.targetIdx as number];
     if (targetNode) graph.addConnection(targetNode.outputs.out, codeNode.inputs.post);
   }
-
-  const simNode = getNESTSimulateNode(graph);
-  if (simNode) graph.addConnection(codeNode.outputs._code, simNode.inputs._code);
 
   return codeNode;
 };
@@ -221,7 +193,7 @@ export const updateNESTConnectSynapseNode = (codeNode: AbstractCodeNode, synapse
   }
 };
 
-export const updateNESTNode = (codeNode: AbstractCodeNode) => {
+export const updateNodeMask = (codeNode: AbstractCodeNode) => {
   if (!codeNode.code.project) return;
 
   let connection = codeNode.mask;
@@ -232,7 +204,7 @@ export const updateNESTNode = (codeNode: AbstractCodeNode) => {
 
     if (!source || !target) return;
 
-    connection = codeNode.code.project.network.connections.addConnection(codeNode.state.props);
+    connection = codeNode.code.project.network.connections.newConnection(codeNode.state.props);
     connection.registerCodeNode(codeNode);
 
     const connSpecNode = codeNode.getConnectedNodeByInterface("conn_spec", "inputs");

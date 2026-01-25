@@ -37,7 +37,6 @@
             :thumb-color="nodeSpatial.node.view.color"
             input-label="n"
             label="population size"
-            @update:model-value="nodeSpatial.node.changes()"
           />
         </span>
 

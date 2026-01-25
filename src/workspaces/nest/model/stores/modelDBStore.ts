@@ -31,19 +31,35 @@ export const useNESTModelDBStore = defineModelDBStore<NESTModel>({
   workspace: "nest",
 });
 
+const interfaces = [
+  "CheckboxInterface",
+  "IntegerInterface",
+  "ListInputInterface",
+  "NumberInterface",
+  "SelectInterface",
+  "TupleInputInterface",
+];
+
 export const getNESTModelParameterStates = (modelId: string) => {
   const modelDBStore = useNESTModelDBStore();
   const model = modelDBStore.findModel(modelId);
 
   // default model params states
   const defaultParamStates: Record<string, IParamState> = {};
-  if (model) {
+  if (model && model.params.keys && model.params.keys.length > 0) {
     model.params.keys.forEach((modelParamKey: string) => {
-      defaultParamStates[modelParamKey] = {
-        id: modelParamKey,
-        hidden: true,
-        value: model.params.get(modelParamKey).value,
-      };
+      const param = model.params.get(modelParamKey);
+      if (param) {
+        const paramState: IParamState = {
+          id: modelParamKey,
+          hidden: true,
+          value: param.value,
+        };
+        if (param.props.codeNodeInterface && interfaces.includes(param.props.codeNodeInterface)) {
+          paramState.component = param.props.codeNodeInterface;
+        }
+        defaultParamStates[modelParamKey] = paramState;
+      }
     });
   }
 

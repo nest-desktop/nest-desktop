@@ -102,8 +102,8 @@ export class NESTConnectionMask extends BaseObj {
    * Draw mask.
    */
   draw(): void {
-    this._graph.layout.shapes = [];
-    if (this._masktype == undefined) return;
+    this.graph.layout.shapes = [];
+    if (this.masktype == undefined) return;
 
     switch (this._masktype) {
       case "rectangular":
@@ -130,10 +130,10 @@ export class NESTConnectionMask extends BaseObj {
         type: "circle",
         xref: "x",
         yref: "y",
-        x0: -1 * this._specs.radius,
-        y0: -1 * this._specs.radius,
-        x1: this._specs.radius,
-        y1: this._specs.radius,
+        x0: -1 * this.specs.radius,
+        y0: -1 * this.specs.radius,
+        x1: this.specs.radius,
+        y1: this.specs.radius,
         opacity: 0.2,
         fillcolor: "blue",
         line: {
@@ -152,10 +152,10 @@ export class NESTConnectionMask extends BaseObj {
         type: "circle",
         xref: "x",
         yref: "y",
-        x0: -1 * this._specs.outer_radius,
-        y0: -1 * this._specs.outer_radius,
-        x1: this._specs.outer_radius,
-        y1: this._specs.outer_radius,
+        x0: -1 * this.specs.outer_radius,
+        y0: -1 * this.specs.outer_radius,
+        x1: this.specs.outer_radius,
+        y1: this.specs.outer_radius,
         opacity: 0.2,
         fillcolor: "blue",
         line: {
@@ -166,10 +166,10 @@ export class NESTConnectionMask extends BaseObj {
         type: "circle",
         xref: "x",
         yref: "y",
-        x0: -1 * this._specs.inner_radius,
-        y0: -1 * this._specs.inner_radius,
-        x1: this._specs.inner_radius,
-        y1: this._specs.inner_radius,
+        x0: -1 * this.specs.inner_radius,
+        y0: -1 * this.specs.inner_radius,
+        x1: this.specs.inner_radius,
+        y1: this.specs.inner_radius,
         opacity: 1,
         fillcolor: "white",
         line: {
@@ -212,10 +212,10 @@ export class NESTConnectionMask extends BaseObj {
         type: "circle",
         xref: "x",
         yref: "y",
-        x0: (-1 * this._specs.major_axis) / 2,
-        y0: (-1 * this._specs.minor_axis) / 2,
-        x1: this._specs.major_axis / 2,
-        y1: this._specs.minor_axis / 2,
+        x0: (-1 * this.specs.major_axis) / 2,
+        y0: (-1 * this.specs.minor_axis) / 2,
+        x1: this.specs.major_axis / 2,
+        y1: this.specs.minor_axis / 2,
         opacity: 0.2,
         fillcolor: "blue",
         line: {
@@ -234,10 +234,10 @@ export class NESTConnectionMask extends BaseObj {
         type: "rect",
         xref: "x",
         yref: "y",
-        x0: this._specs.lower_left[0],
-        y0: this._specs.lower_left[1],
-        x1: this._specs.upper_right[0],
-        y1: this._specs.upper_right[1],
+        x0: this.specs.lower_left[0],
+        y0: this.specs.lower_left[1],
+        x1: this.specs.upper_right[0],
+        y1: this.specs.upper_right[1],
         opacity: 0.2,
         fillcolor: "blue",
         line: {
@@ -270,7 +270,7 @@ export class NESTConnectionMask extends BaseObj {
       this._masktype = value;
       this._specs = {} as ISpecs;
       this.config?.localStorage.data[value].specs.forEach((spec: { id: string; value: number | number[] }) => {
-        this._specs[spec.id] = spec.value;
+        this.specs[spec.id] = spec.value;
       });
     }
     this.draw();

@@ -83,13 +83,13 @@ export class NESTCopyModelParameters extends BaseParameters<NESTCopyModelParamet
     }
   }
 
-  /**
-   * Observer for parameter changes.
-   * @remarks It emits model changes.
-   */
-  override changes(props = {}): void {
-    this.logger.trace("changes");
+  // /**
+  //  * Observer for parameter changes.
+  //  * @remarks It emits model changes.
+  //  */
+  // override changes(props = {}): void {
+  //   this.logger.trace("changes");
 
-    this.copyModel.changes(props);
-  }
+  //   this.copyModel.changes(props);
+  // }
 }

@@ -22,7 +22,7 @@ export const doCopyModel = (modelId: string): void => {
   if (!projectStore.state.project) return;
   const project = projectStore.state.project;
   project.network.copyModels.copy(modelId);
-  project.network.changes();
+  // project.network.changes();
 };
 
 export const currentProject = computed(() => {

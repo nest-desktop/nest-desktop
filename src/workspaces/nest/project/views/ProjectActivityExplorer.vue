@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="currentProject">
+  <v-layout v-if="currentProject" full-height>
     <!-- <v-toolbar density="compact">
       <v-btn icon="mdi:mdi-plus" />
       <v-btn icon="mdi:mdi-minus" />
@@ -12,7 +12,7 @@
       v-else-if="projectViewStore.state.views.activity === 'spatial'"
       :graph="currentProject.activityGraph.activityAnimationGraph"
     />
-  </v-container>
+  </v-layout>
 </template>
 
 <script setup lang="ts">

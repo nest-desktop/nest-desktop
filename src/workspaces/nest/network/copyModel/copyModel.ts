@@ -81,7 +81,7 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
     this._existingModelId = value;
 
     this.params.init();
-    this.changes();
+    // this.changes();
   }
 
   get id(): string {
@@ -198,7 +198,7 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
   }
 
   get nodes(): NESTNode[] {
-    return this.network.nodes.nodeItems.filter((node: NESTNode) => node.modelId === this._newModelId);
+    return this.network.nodes.all.filter((node: NESTNode) => node.modelId === this._newModelId);
   }
 
   get params(): NESTCopyModelParameters {
@@ -239,16 +239,6 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
 
     // Return weight recorder node.
     return this.network.nodes.weightRecorders.find((node: NESTNode) => node.view.label === weightRecorderParam.value);
-  }
-
-  /**
-   * Observer for model changes.
-   * @remarks It emits network changes.
-   */
-  changes(): void {
-    this.logger.trace("changes");
-
-    this.network.changes();
   }
 
   /**
@@ -342,7 +332,7 @@ export class NESTCopyModel extends BaseObj<INESTCopyModelState> {
    * @remarks It removes model component of the network.
    */
   remove(): void {
-    this.network.nodes.nodeItems
+    this.network.nodes.all
       .filter((node: NESTNode) => node.modelId === this.newModelId)
       .forEach((node: NESTNode) => (node.modelId = this._existingModelId));
 

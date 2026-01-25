@@ -3,7 +3,7 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import type { TDragBehavior, TNodeGroup, TSelection } from "@/types";
+import type { TDragBehavior, TSelection } from "@/types";
 import { ConnectionGraph, drawPathNode } from "@/networkGraph";
 
 import type { NESTNetworkGraph } from "../networkGraph";
@@ -33,33 +33,33 @@ export class NESTConnectionGraph extends ConnectionGraph<NESTNetworkGraph> {
     // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
     const pos: { x: number; y: number } = { x: event.dx, y: event.dy };
 
-    if (connection.source.isNode) {
-      const sourceNodePosition = connection.sourceNode.view.position;
-      sourceNodePosition.x += pos.x;
-      sourceNodePosition.y += pos.y;
-    } else {
-      connection.sourceNodeGroup.nodeItemsDeep.forEach((node: NESTNode) => {
-        const nodePosition = node.view.position;
-        nodePosition.x += pos.x;
-        nodePosition.y += pos.y;
-      });
-    }
+    // if (connection.source.isNode) {
+    const sourceNodePosition = connection.sourceNode.view.position ?? { x: 0, y: 0 };
+    sourceNodePosition.x += pos.x;
+    sourceNodePosition.y += pos.y;
+    // } else {
+    //   connection.sourceNodeGroup.nodeItemsDeep.forEach((node: NESTNode) => {
+    //     const nodePosition = node.view.position;
+    //     nodePosition.x += pos.x;
+    //     nodePosition.y += pos.y;
+    //   });
+    // }
 
-    if (connection.target.isNode) {
-      const targetNodePosition = connection.target.view.position;
-      targetNodePosition.x += pos.x;
-      targetNodePosition.y += pos.y;
-    } else {
-      connection.targetNodeGroup.nodeItemsDeep.forEach((node: NESTNode) => {
-        const nodePosition = node.view.position;
-        nodePosition.x += pos.x;
-        nodePosition.y += pos.y;
-      });
-    }
+    // if (connection.target.isNode) {
+    const targetNodePosition = connection.targetNode?.view.position ?? { x: 0, y: 0 };
+    targetNodePosition.x += pos.x;
+    targetNodePosition.y += pos.y;
+    // } else {
+    //   connection.targetNodeGroup.nodeItemsDeep.forEach((node: NESTNode) => {
+    //     const nodePosition = node.view.position;
+    //     nodePosition.x += pos.x;
+    //     nodePosition.y += pos.y;
+    //   });
+    // }
 
-    connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
+    // connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
 
-    nextTick(() => this._networkGraph.render());
+    nextTick(() => this.networkGraph.render());
   }
 
   /**
@@ -204,8 +204,8 @@ export class NESTConnectionGraph extends ConnectionGraph<NESTNetworkGraph> {
         .attr(
           "d",
           drawPathNode(
-            connection.source.view.position,
-            connection.target.view.position,
+            connection.sourceNode?.view.position ?? { x: 0, y: 0 },
+            connection.targetNode?.view.position ?? { x: 0, y: 0 },
             connection.view.connectionGraphOptions,
           ),
         );
@@ -250,7 +250,7 @@ export class NESTConnectionGraph extends ConnectionGraph<NESTNetworkGraph> {
     const connections = this._networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
-      .data(this.network.connections.all, (c: NESTConnection) => c.uuid);
+      .data(this.network.connections.all, (c) => c.uuid);
 
     const dragging: TDragBehavior = drag()
       .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
@@ -261,9 +261,9 @@ export class NESTConnectionGraph extends ConnectionGraph<NESTNetworkGraph> {
       .enter()
       .append("g")
       .attr("class", "connection")
-      .attr("color", (c: NESTConnection) => c.sourceNode.view.color)
+      .attr("color", (c: NESTConnection) => c.sourceNode?.view.color ?? "white")
       .attr("idx", (c: NESTConnection) => c.idx)
-      .attr("hash", (c: NESTConnection) => c.hash)
+      // .attr("hash", (c: NESTConnection) => c.hash)
       .style("opacity", 0)
       .call(dragging, null)
       .each((c: NESTConnection, i: number, e) => this.init(c, i, e));

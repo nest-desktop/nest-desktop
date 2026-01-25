@@ -1,9 +1,9 @@
 <template>
-  <v-container v-if="currentProject">
-    <v-layout id="networkGraphLayout" class="networkGraphLayout" style="height: 300px">
-      <NetworkGraph :key="currentProject.id" :network="currentProject.network" />
-    </v-layout>
+  <v-layout style="height: 300px">
+    <NetworkGraph :key="currentProject.id" :network="currentProject.network" />
+  </v-layout>
 
+  <v-container>
     <v-row no-gutters>
       <v-col v-if="currentProject.network.models.all.length > 0" :sm="6" class="pa-1" cols="12">
         <div class="text-button">Copied models</div>

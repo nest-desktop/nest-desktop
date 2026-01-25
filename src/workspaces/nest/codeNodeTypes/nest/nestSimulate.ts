@@ -22,7 +22,7 @@ export const nestSimulate = defineCodeNode({
   inputs: {
     t: () => new IntegerInterface("time", 1000),
   },
-  afterGraphLoaded() {
+  beforeRun() {
     if (!this.code.project) return;
     this.code.project.simulation.registerCodeNode(this);
   },
@@ -44,10 +44,5 @@ export const loadNESTSimulationNode = (graph: CodeGraph, simulationState?: INEST
   const codeNode = getNESTSimulateNode(graph);
   codeNode.state.props = simulationState;
   if (simulationState) codeNode.updateInputValues(simulationState);
-
-  graph.nodes
-    .filter((node: AbstractCodeNode) => node.type === "nest.Connect")
-    .forEach((node: AbstractCodeNode) => graph.addConnection(node.outputs._node, codeNode.inputs._node));
-
   return codeNode;
 };

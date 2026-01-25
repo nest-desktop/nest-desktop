@@ -43,7 +43,6 @@ export class NESTNodeView extends NodeView<NESTNode> {
   /**
    * Set all synaptic weights.
    * @param term inhibitory (negative) or excitatory (positive)
-   * @remarks It emits node changes.
    */
   set synWeights(value: string) {
     this.state.synWeights = value;
@@ -53,7 +52,7 @@ export class NESTNodeView extends NodeView<NESTNode> {
     this.node.connectionsNeuronTargets.forEach((connection: NESTConnection) => {
       connection.synapse.params.weightLabel = value;
     });
-    this.node.changes();
+    // this.node.changes();
   }
 
   /**

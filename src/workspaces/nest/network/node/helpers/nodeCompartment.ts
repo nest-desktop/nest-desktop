@@ -85,7 +85,7 @@ export class NESTNodeCompartment extends BaseObj {
 
   set parentIdx(value: number) {
     this._parentIdx = value === this.idx ? -1 : value;
-    this.changes();
+    // this.changes();
   }
 
   get receptors(): NESTNodeReceptor[] {
@@ -112,14 +112,12 @@ export class NESTNodeCompartment extends BaseObj {
     this._node.addReceptor(receptorState);
   }
 
-  /**
-   * Observer for node compartment changes.
-   * @remarks It emits node changes.
-   */
-  changes(props?: Record<string, unknown>): void {
-    this.clean();
-    this.node.changes(props);
-  }
+  // /**
+  //  * Observer for node compartment changes.
+  //  */
+  // changes(): void {
+  //   this.clean();
+  // }
 
   /**
    * Clean the node compartment.
@@ -148,7 +146,7 @@ export class NESTNodeCompartment extends BaseObj {
   remove(): void {
     this.node.removeCompartment(this);
     this.node.compartments.forEach((comp: NESTNodeCompartment) => comp.clean());
-    this.changes();
+    // this.changes();
   }
 
   /**

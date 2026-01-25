@@ -3,7 +3,7 @@
 import { NodeParameter } from "@/network";
 
 import { getNESTModelParameterStates } from "../../model";
-import { IParamState, updateNESTParameterNode } from "../../codeNodeTypes/nest";
+import { type IParamState, updateNESTParameterNode } from "../../codeNodeTypes/nest";
 
 export class NESTNodeParameter extends NodeParameter {
   override get hidden(): boolean {

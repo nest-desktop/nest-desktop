@@ -32,17 +32,17 @@ export const registerNESTNodeTypes = (viewModel: ICodeGraphViewModel) => {
 
   category = "nest";
   editor.registerCategoryModule(category, "import nest");
-  editor.registerNodeType(nestConnect, { category });
-  editor.registerNodeType(nestCopyModel, { category });
-  editor.registerNodeType(nestCreate, { category });
-  editor.registerNodeType(nestDataResponse, { category });
+  editor.registerNodeType(nestResetKernel, { category, orderRank: 0 });
+  editor.registerNodeType(nestInstall, { category, orderRank: 1 });
+  editor.registerNodeType(nestSetKernelStatus, { category, orderRank: 2 });
+  editor.registerNodeType(nestCopyModel, { category, orderRank: 3 });
+  editor.registerNodeType(nestCreate, { category, orderRank: 4 });
+  editor.registerNodeType(nestConnect, { category, orderRank: 5 });
+  editor.registerNodeType(nestPrepare, { category, orderRank: 6 });
+  editor.registerNodeType(nestSimulate, { category, orderRank: 6 });
+  editor.registerNodeType(nestDataResponse, { category, orderRank: 7 });
   editor.registerNodeType(nestGetPosition, { category });
-  editor.registerNodeType(nestInstall, { category });
   editor.registerNodeType(nestParameters, { category });
-  editor.registerNodeType(nestPrepare, { category });
-  editor.registerNodeType(nestResetKernel, { category });
-  editor.registerNodeType(nestSetKernelStatus, { category });
-  editor.registerNodeType(nestSimulate, { category });
 
   category = "nest.random";
   editor.registerCategoryModule(category, "import nest");

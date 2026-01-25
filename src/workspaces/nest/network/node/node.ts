@@ -186,17 +186,14 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
 
   /**
    * Sets all params to invisible.
-   * @param emitChanges trigger emit changes.
    */
-  hideAllParams(emitChanges: boolean = false): void {
+  hideAllParams(): void {
     this.params.hideAll();
 
     if (this.modelId === "cm_default") {
       this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.hideAll());
       this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.hideAll());
     }
-
-    if (emitChanges) this.changes();
   }
 
   /**
@@ -242,8 +239,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
    * @remarks It updates as analog recorder or other connected analog recorders.
    */
   override modelChanges(): void {
-    this.logger.trace("model change");
-    let recorderModelChanged = false;
+    this.logger.trace("model changes");
 
     if (this.codeNode) {
       const engine = this.codeNode.code?.engine;
@@ -251,23 +247,11 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
         engine.pause();
         updateNESTCreateNode(this.codeNode, this.save());
         engine.resume();
-        engine.runOnce(null);
+        // engine.runOnce({});
       }
     }
 
-    if (this.model.isRecorder) {
-      this.correctRecorderConnections(); // Correct connection from/to recorder.
-      this.updateRecorder(); // Update records of this analog recorder.
-      recorderModelChanged = true;
-    } else if (!this.model.isSpikeRecorder) {
-      // Updates records of the connected analog recorder.
-      this.sourceNodes
-        .filter((node: NESTNode) => node.model.isAnalogRecorder)
-        .forEach((recorder: NESTNode) => recorder.updateAnalogRecorder());
-    }
-
-    this.update();
-    this.nodes.network.changes({ preventSimulation: true, cleanPanels: recorderModelChanged });
+    super.modelChanges();
   }
 
   /**
@@ -314,7 +298,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
    * Reset value in parameter components.
    * @remarks It emits node changes.
    */
-  resetAllParams(emitChanges: boolean = false): void {
+  resetAllParams(): void {
     this.logger.trace("reset parameters");
 
     this.params.reset();
@@ -323,8 +307,6 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
       this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.reset());
       this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.reset());
     }
-
-    if (emitChanges) this.changes();
   }
 
   /**
@@ -337,7 +319,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
       view: this.view.save(),
     };
 
-    if (this.size > 1) nodeState.size = this.size;
+    if (this.size && this.size?.value > 1) nodeState.size = this.size.value;
 
     if (this.params.hasSomeVisibleParams) nodeState.params = this.params.save();
 
@@ -362,15 +344,13 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
   /**
    * Sets all params to visible.
    */
-  override showAllParams(emitChanges: boolean = false): void {
-    this.params.showAll(false);
+  override showAllParams(): void {
+    this.params.showAll();
 
     if (this.modelId === "cm_default") {
-      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.showAll(false));
-      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.showAll(false));
+      this.compartments.forEach((comp: NESTNodeCompartment) => comp.params.showAll());
+      this.receptors.forEach((receptor: NESTNodeReceptor) => receptor.params.showAll());
     }
-
-    if (emitChanges) this.changes();
   }
 
   /**
@@ -414,7 +394,7 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
     }
 
     // Convert model states to node records.
-    this.recordables = modelRecordStates.map((modelRecordState: IModelRecordState) => {
+    this._recordables = modelRecordStates.map((modelRecordState: IModelRecordState) => {
       const nodeRecord = new NodeRecord<this>(this);
       nodeRecord.load(modelRecordState);
       return nodeRecord;

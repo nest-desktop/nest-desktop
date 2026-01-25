@@ -16,7 +16,7 @@ export interface INESTNodeReceptorState {
 
 export class NESTNodeReceptor {
   private _compartment?: NESTNodeCompartment;
-  private _hash: string = "";
+  // private _hash: string = "";
   private _id: string = "";
   private _node: NESTNode; // parent
   private _params: NodeParameters;
@@ -31,9 +31,9 @@ export class NESTNodeReceptor {
     return this._compartment;
   }
 
-  get hash(): string {
-    return this._hash;
-  }
+  // get hash(): string {
+  //   return this._hash;
+  // }
 
   get id(): string {
     return this._id;
@@ -71,17 +71,17 @@ export class NESTNodeReceptor {
   }
 
   get view(): NodeView {
-    return this._node.view;
+    return this.node.view;
   }
 
-  /**
-   * Observer for node receptor changes.
-   * @remarks It emits node changes.
-   */
-  changes(props?: Record<string, unknown>): void {
-    this.clean();
-    this.node.changes(props);
-  }
+  // /**
+  //  * Observer for node receptor changes.
+  //  * @remarks It emits node changes.
+  //  */
+  // changes(props?: Record<string, unknown>): void {
+  //   this.clean();
+  //   this.node.changes(props);
+  // }
 
   /**
    * Clean the node receptor.
@@ -95,8 +95,8 @@ export class NESTNodeReceptor {
   load(nodeReceptorState: INESTNodeReceptorState): void {
     this._id = nodeReceptorState.id;
 
-    if (-1 < nodeReceptorState.compIdx && nodeReceptorState.compIdx < this._node.compartments.length) {
-      this._compartment = this._node.compartments[nodeReceptorState.compIdx];
+    if (-1 < nodeReceptorState.compIdx && nodeReceptorState.compIdx < this.node.compartments.length) {
+      this._compartment = this.node.compartments[nodeReceptorState.compIdx];
     }
 
     if (nodeReceptorState.params) this.params.load(nodeReceptorState.params);
@@ -107,7 +107,7 @@ export class NESTNodeReceptor {
    */
   remove(): void {
     this.node.removeReceptor(this);
-    this.changes();
+    // this.changes();
   }
 
   /**
@@ -116,7 +116,7 @@ export class NESTNodeReceptor {
    */
   save(): INESTNodeReceptorState {
     const nodeReceptorState: INESTNodeReceptorState = {
-      compIdx: this._compartment ? this._compartment.idx : -1,
+      compIdx: this.compartment ? this.compartment.idx : -1,
       id: this.id,
     };
 

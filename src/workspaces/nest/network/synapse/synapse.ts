@@ -124,15 +124,15 @@ export class NESTSynapse extends BaseSynapse<NESTConnection, INESTSynapseState> 
     return this.connection.targetNode as NESTNode;
   }
 
-  /**
-   * Initialize synapse.
-   * @remarks Do not call it in the constructor.
-   */
-  init(): void {
-    this.logger.trace("init");
+  // /**
+  //  * Initialize synapse.
+  //  * @remarks Do not call it in the constructor.
+  //  */
+  // init(): void {
+  //   this.logger.trace("init");
 
-    this.update();
-  }
+  //   this.update();
+  // }
 
   /**
    * Load synapse model.
@@ -155,19 +155,21 @@ export class NESTSynapse extends BaseSynapse<NESTConnection, INESTSynapseState> 
 
   /**
    * Observer for model changes.
-   * @remarks It emits synapse changes.
    */
   override modelChanges(): void {
+    this.logger.trace("model changes");
+
     if (this.codeNode) {
-      const engine = this.codeNode.code.engine;
-      engine.pause();
-      updateNESTConnectSynapseNode(this.codeNode, this.save());
-      engine.resume();
-      engine.runOnce();
+      const engine = this.codeNode.code?.engine;
+      if (engine) {
+        engine.pause();
+        updateNESTConnectSynapseNode(this.codeNode, this.save());
+        engine.resume();
+        // engine.runOnce({});
+      }
     }
 
-    this.connection.network.clean();
-    this.changes({ preventSimulation: true });
+    super.modelChanges();
   }
 
   /**

@@ -75,14 +75,6 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
     return this._copyModels;
   }
 
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     models: this.copyModels.all.map((model: NESTCopyModel) => model.hash),
-  //     nodes: this.nodes.all.map((node: TNode | TNodeGroup) => node.hash),
-  //     connections: this.connections.all.map((connection: NESTConnection) => connection.hash),
-  //   };
-  // }
-
   override get project(): NESTProject {
     return this._project as NESTProject;
   }
@@ -130,8 +122,9 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
    *
    * @remarks When it connects to a recorder, it initializes activity graph.
    */
-  override connectNodes(sourceIdx: number, targetIdx: number): NESTConnection {
+  override connectNodes(sourceIdx: number, targetIdx: number): NESTConnection | undefined {
     this.logger.trace("connect nodes");
+    if (!this.project.code.graph) return;
 
     // Add connection.
     const codeNode = loadNESTConnectNode(
@@ -154,12 +147,9 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
     //   connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
 
     // // Update recorder and clean activity panels.
-    // if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
+    if (connection.view.connectRecorder()) connection.recorder.updateRecorder();
 
-    // Trigger network change.
-    // this.changes({ cleanPanels: connection.view.connectRecorder(), preventSimulation: true });
-
-    return codeNode.mask;
+    return codeNode.mask as NESTConnection;
   }
 
   /**
@@ -167,8 +157,9 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
    * @param model model name of default models
    * @param viewState node view props
    */
-  override createNode(model?: string, viewState?: INodeViewState): NESTNode {
+  override createNode(model?: string, viewState?: INodeViewState): NESTNode | undefined {
     this.logger.trace("create node");
+    if (!this.project.code.graph) return;
 
     // Load create node.
     const codeNode = loadNESTCreateNode(this.project.code.graph, {
@@ -176,27 +167,18 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
       view: viewState,
     });
 
-    // Trigger network change.
-    // this.changes({ preventSimulation: true });
-
-    return codeNode.mask;
+    return codeNode.mask as NESTNode;
   }
 
   /**
    * Delete model component from the network.
    * @param model NEST copy model
-   *
-   * @remarks
-   * It emits network changes.
    */
   deleteModel(model: NESTCopyModel): void {
     this.logger.trace("delete copy model");
 
     // Remove model from the list.
     this.copyModels.remove(model);
-
-    // Trigger network change.
-    this.changes();
 
     // Initialize activity graph.
     // this._project.initActivityGraph();
@@ -214,37 +196,35 @@ export class NESTNetwork extends BaseNetwork<INESTNetworkState> {
       : this.project.modelDBStore.getModelsByElementType(elementType);
   }
 
-  /**
-   * Initialize network.
-   * @remarks Do not use it in the constructor.
-   */
-  override init(): void {
-    this.logger.trace("init");
+  // /**
+  //  * Initialize network.
+  //  * @remarks Do not use it in the constructor.
+  //  */
+  // override init(): void {
+  //   this.logger.trace("init");
 
-    this.nodes.init();
-    this.connections.init();
-    this.copyModels.init();
+  //   this.nodes.init();
+  //   this.connections.init();
+  //   this.copyModels.init();
 
-    // this.updateHash();
+  //   this.clean();
+  // }
 
-    this.clean();
-  }
+  // /**
+  //  * Update network component.
+  //  * @param network network state
+  //  */
+  // override load(networkState: INESTNetworkState): void {
+  //   this.logger.trace("load");
 
-  /**
-   * Update network component.
-   * @param network network state
-   */
-  override load(networkState: INESTNetworkState): void {
-    this.logger.trace("update");
+  //   this.clear();
 
-    this.clear();
+  //   if (networkState.models) this.copyModels.load(networkState.models);
+  //   this.nodes.load(networkState.nodes);
+  //   this.connections.load(networkState.connections);
 
-    if (networkState.models) this.copyModels.load(networkState.models);
-    this.nodes.load(networkState.nodes);
-    this.connections.load(networkState.connections);
-
-    this.init();
-  }
+  //   // this.init();
+  // }
 
   /**
    * Save nest network to state.

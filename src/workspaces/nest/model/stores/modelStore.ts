@@ -38,7 +38,7 @@ export const updateProject = () => {
     const project = modelStore.state.project;
 
     if (project) {
-      updateSimulationModules(false);
+      updateSimulationModules();
 
       if ("network" in project) {
         const neurons = project.network.nodes.neurons;
@@ -64,7 +64,7 @@ export const updateProject = () => {
   }
 };
 
-export const updateSimulationModules = (emitChanges: boolean = true): void => {
+export const updateSimulationModules = (): void => {
   const modelStore = useNESTModelStore();
   if (!(modelStore.state.project && "simulation" in modelStore.state.project)) return;
 
@@ -74,6 +74,4 @@ export const updateSimulationModules = (emitChanges: boolean = true): void => {
   simulation.modules = moduleStore.state.modules
     .filter((module: IModule) => module.models.includes(modelStore.state.modelId))
     .map((module: IModule) => module.name);
-
-  if (emitChanges) modelStore.state.project?.simulation.changes();
 };

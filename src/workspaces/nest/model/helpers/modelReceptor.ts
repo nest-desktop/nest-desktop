@@ -50,15 +50,6 @@ export class NESTModelReceptor extends BaseObj {
   }
 
   /**
-   * Observer for model receptor changes.
-   * @remarks It emits model changes.
-   */
-  changes(): void {
-    this.clean();
-    this.model.changes();
-  }
-
-  /**
    * Clean model receptor.
    */
   clean(): void {}

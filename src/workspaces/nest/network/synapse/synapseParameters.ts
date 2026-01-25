@@ -17,8 +17,9 @@ export class NESTSynapseParameters extends SynapseParameters<NESTSynapse> {
   override registerCodeNode(codeNode?: AbstractCodeNode): void {
     this.logger.trace("register code node");
 
+    if (!this.synapse.connection.codeNode) return;
     if (!codeNode) codeNode = getNESTParameterNode(this.synapse.connection.codeNode, "syn_spec");
     this.codeNode = codeNode;
-    this.codeNode.mask = this;
+    if (this.codeNode) this.codeNode.mask = this;
   }
 }

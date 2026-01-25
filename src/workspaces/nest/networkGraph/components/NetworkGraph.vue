@@ -17,7 +17,6 @@
             >
               <marker
                 :id="'assigned-' + model.weightRecorder.idx"
-                :key="model.weightRecorder.hash"
                 class="assigned"
                 markerHeight="18"
                 markerWidth="18"

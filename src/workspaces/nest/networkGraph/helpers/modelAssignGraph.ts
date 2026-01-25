@@ -35,19 +35,17 @@ export class NESTModelAssignGraph extends BaseObj {
 
     if (!this._networkGraph.selector) return;
 
-    const models: TSelection = this._networkGraph.selector
-      .select("g#modelAssigned")
-      .selectAll("g.modelAssigned")
-      .data(this._networkGraph.network.connections.filterWithWeightRecorder, (c: NESTConnection | unknown) =>
-        c instanceof NESTConnection ? c.hash : "",
-      );
+    const models: TSelection = this._networkGraph.selector.select("g#modelAssigned").selectAll("g.modelAssigned").data(
+      this._networkGraph.network.connections.filterWithWeightRecorder,
+      // (c: NESTConnection | unknown) =>        c instanceof NESTConnection ? c.hash : "",
+    );
 
     models
       .enter()
       .append("g")
       .attr("class", "modelAssigned")
       .attr("idx", (c: NESTConnection) => c.idx)
-      .attr("hash", (c: NESTConnection) => c.hash)
+      // .attr("hash", (c: NESTConnection) => c.hash)
       .each((c: NESTConnection, i: number, e) => this.updateConnection(c, i, e));
 
     models.exit().remove();
