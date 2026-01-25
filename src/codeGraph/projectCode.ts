@@ -27,7 +27,7 @@ export class ProjectCode<TProject extends BaseProject = BaseProject> extends Pyt
    * @param state code state
    */
   load(state: IProjectCodeState): void {
-    if (this.viewModel) this.viewModel.loadEditor(state.editor);
+    if (this.viewModel?.loadEditor) this.viewModel.loadEditor(state.editor);
   }
 
   /**
