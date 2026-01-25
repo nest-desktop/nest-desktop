@@ -26,7 +26,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@babsey/code-graph": "~0.9",
+    "@babsey/code-graph": "~0.10",
     "@codemirror/autocomplete": "~6.20",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.2",
@@ -85,11 +85,11 @@
     "@vue/eslint-config-typescript": "~14.6",
     "@vue/test-utils": "~2.4",
     "@vue/tsconfig": "~0.8",
-    "electron": "~39.2",
+    "electron": "~40.0",
     "electron-builder": "~26.4",
     "electron-devtools-installer": "~4.0",
     "eslint": "~9.39",
-    "eslint-plugin-vue": "~10.6",
+    "eslint-plugin-vue": "~10.7",
     "js-yaml": "~4.1",
     "prettier": "~3.8",
     "register-service-worker": "~1.7",
