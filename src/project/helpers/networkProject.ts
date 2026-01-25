@@ -8,7 +8,7 @@ import type { IAxiosResponseData } from "@/backends";
 import { BaseSimulation, type ISimulationState } from "@/simulation";
 import { NodeActivities } from "@/activity";
 import { closeLoading, openLoading, getCurrentViewStore } from "@/app";
-import { type INetworkState, BaseNetwork, NetworkRevision } from "@/network";
+import { type INetworkState, BaseNetwork } from "@/network";
 
 import { BaseProject, type IProjectState } from "../project";
 
@@ -21,7 +21,6 @@ export interface INetworkProjectState extends IProjectState {
 export abstract class NetworkProject<
   TNetworkProjectState extends INetworkProjectState = INetworkProjectState,
 > extends BaseProject<TNetworkProjectState> {
-  private _networkRevision: NetworkRevision; // network history
   public _network: BaseNetwork; // network of neurons and devices
   public _simulation: TSimulation; // settings for the simulation
 
@@ -33,8 +32,6 @@ export abstract class NetworkProject<
 
     // Construct components.
     this._network = new this.Network(this);
-    this._networkRevision = new NetworkRevision(this);
-
     this._simulation = new this.Simulation(this);
   }
 
@@ -62,120 +59,65 @@ export abstract class NetworkProject<
     return this._simulation;
   }
 
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     description: this.description,
-  //     id: this.id,
-  //     name: this.name,
-  //     network: this._network.hash,
-  //     simulation: this._simulation.hash,
-  //   };
-  // }
-
   get network(): TNetwork {
     return this._network;
-  }
-
-  /**
-   * Get network revision.
-   */
-  get networkRevision(): NetworkRevision {
-    return this._networkRevision;
   }
 
   get simulation(): TSimulation {
     return this._simulation;
   }
 
-  /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It generates codes in the code editor.
-   * It commits the network in the network history.
-   */
-  override changes(props: { cleanPanels?: boolean; preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
-    // this.updateHash();
+  // /**
+  //  * Observer for network changes
+  //  *
+  //  * @remarks
+  //  * It generates codes in the code editor.
+  //  * It commits the network in the network history.
+  //  */
+  // override changes(props: { cleanPanels?: boolean; preventSimulation?: boolean; resetPanels?: boolean } = {}): void {
+  //   this.logger.trace("changes");
+  //   // this.updateHash();
 
-    this.state.checkChanges();
+  //   // this.state.checkChanges();
 
-    this.logger.trace("changes");
+  //   this.activities.checkRecorders();
 
-    this.activities.checkRecorders();
+  //   if (props.cleanPanels) this.activityGraph.activityChartGraph.cleanPanels();
+  //   if (props.resetPanels) this.activityGraph.activityChartGraph.resetPanels();
 
-    // this.generateCode();
+  //   if (!props.preventSimulation) this.startSimulationOnChange();
+  // }
 
-    this.networkRevision.commit();
+  // /**
+  //  * Initialize project.
+  //  */
+  // override init(): void {
+  //   this.logger.trace("init");
 
-    if (props.cleanPanels) this.activityGraph.activityChartGraph.cleanPanels();
-    if (props.resetPanels) this.activityGraph.activityChartGraph.resetPanels();
+  //   // Initialize network.
+  //   this.network.init();
 
-    if (!props.preventSimulation) this.startSimulationOnChange();
-  }
+  //   // // Initialize simulation.
+  //   // this.simulation.init();
 
-  /**
-   * Checkout network.
-   */
-  checkoutNetwork(): void {
-    this.logger.trace("checkout network");
+  //   // Initialize activities.
+  //   this.activities.init();
 
-    const networkState = this.networkRevision.load();
-    this.network.load(networkState);
-    this.network.clean();
+  //   // // Initialize activity graph.
+  //   this.activityGraph.init();
 
-    // Generate simulation code.
-    // this.generateCode();
+  //   this.clean();
+  // }
 
-    const projectViewStore = getCurrentViewStore("project");
-    if (projectViewStore?.state.simulationEvents.onCheckout) {
-      // Run simulation.
-      nextTick(() => this.startSimulation());
-    } else {
-      // Update activities in activity graph.
-      this._activityGraph.activityChartGraph.updateActivities();
+  // /**
+  //  * Load network project from state.
+  //  * @param projectState network project state
+  //  */
+  // override load(projectState: INetworkProjectState): void {
+  //   this.logger.trace("load");
 
-      // Update activity graph.
-      this._activityGraph.update();
-    }
-  }
-
-  /**
-   * Initialize project.
-   */
-  override init(): void {
-    this.logger.trace("init");
-
-    // Initialize network.
-    this.network.init();
-
-    // // Initialize network history.
-    // this.networkRevision.init();
-
-    // // Initialize simulation.
-    // this.simulation.init();
-
-    // Initialize activities.
-    this.activities.init();
-
-    // // Initialize activity graph.
-    this.activityGraph.init();
-
-    // this.updateHash();
-    // this.doc.hash = this.hash;
-
-    this.clean();
-  }
-
-  /**
-   * Load network project from state.
-   * @param projectState network project state
-   */
-  override load(projectState: INetworkProjectState): void {
-    this.logger.trace("load");
-
-    super.load(projectState);
-  }
+  //   super.load(projectState);
+  // }
 
   /**
    * Start simulation.
@@ -183,10 +125,14 @@ export abstract class NetworkProject<
   startSimulation(): void {
     this.logger.trace("start simulation");
 
-    this._network.clean();
+    this.network.clean();
 
     // Reset activities and activity graphs.
     this.activities.reset();
+    // this.activityGraph.reset()
+
+    this.activities.checkRecorders();
+    this.activityGraph.activityChartGraph.cleanPanels();
 
     const projectViewStore = getCurrentViewStore("project");
     if (!projectViewStore?.state.simulationEvents.onChange) openLoading("Simulating... Please wait");
@@ -200,12 +146,11 @@ export abstract class NetworkProject<
         if (response == null || response.status !== 200 || response.data == null || !response.data.data) return;
 
         const vistoc = Date.now();
-        // Update activities.
-        this.activities.update(response.data.data);
+        this.activities.update(response.data.data); // Update activities.
         this.state.state.stopwatch.visualization = Date.now() - vistoc;
 
         // Commit network for the history (with activity).
-        this.networkRevision.commit(true);
+        // this.network.revision.commit(true);
       })
       .finally(() => {
         closeLoading();

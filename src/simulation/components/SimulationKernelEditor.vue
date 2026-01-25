@@ -6,7 +6,7 @@
       <v-card-text class="py-0">
         <ValueSlider
           v-bind="options.simulationTimeSettings"
-          v-model="simulation.time"
+          v-model="simulation.time as number"
           :thumb-color="props.color"
           class="mx-1 py-2"
         />

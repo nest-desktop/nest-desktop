@@ -103,14 +103,6 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
     return this._filename;
   }
 
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     description: this._description,
-  //     id: this._id,
-  //     name: this._name,
-  //   };
-  // }
-
   get id(): string {
     return this._id;
   }
@@ -155,67 +147,57 @@ export class BaseProject<TProjectState extends IProjectState = IProjectState> ex
     return this._viewModel;
   }
 
-  /**
-   * Observer for network changes
-   *
-   * @remarks
-   * It updates hash of the network.
-   * It generates codes in the code editor.
-   * It commits the network in the network history.
-   */
-  changes(state: { resetPanels?: boolean } = {}): void {
-    // this.updateHash();
-
-    this.state.checkChanges();
-
-    this.logger.trace("changes");
-
-    this.activities.checkRecorders();
-
-    // this.generateCode();
-
-    // It resets panels of activity chart graph.
-    if (state.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
-  }
-
-  /**
-   * Clean project.
-   *
-   * @remarks
-   * Update hash of this project.
-   */
-  clean(): void {
-    this.logger.trace("clean");
-
-    // this.updateHash();
-
-    this._state.checkChanges();
-  }
-
   // /**
-  //  * Generate code.
+  //  * Observer for network changes
+  //  *
+  //  * @remarks
+  //  * It updates hash of the network.
+  //  * It generates codes in the code editor.
+  //  * It commits the network in the network history.
   //  */
-  // generateCode(): void {
-  //   this.code.generate();
+  // changes(state: { resetPanels?: boolean } = {}): void {
+  //   // this.updateHash();
+
+  //   this.state.checkChanges();
+
+  //   this.logger.trace("changes");
+
+  //   this.activities.checkRecorders();
+
+  //   // this.generateCode();
+
+  //   // It resets panels of activity chart graph.
+  //   if (state.resetPanels) this._activityGraph.activityChartGraph.resetPanels();
   // }
 
-  /**
-   * Initialize project.
-   */
-  init(): void {
-    this.logger.trace("init");
+  // /**
+  //  * Clean project.
+  //  *
+  //  * @remarks
+  //  * Update hash of this project.
+  //  */
+  // clean(): void {
+  //   this.logger.trace("clean");
 
-    // Initialize activities.
-    this.activities.init();
+  //   // this.updateHash();
 
-    // Initialize activity graph.
-    this.activityGraph.init();
+  //   this.state.checkChanges();
+  // }
 
-    // this.updateHash();
-    // this.doc.hash = this.hash;
+  // /**
+  //  * Initialize project.
+  //  */
+  // init(): void {
+  //   this.logger.trace("init");
 
-    this.clean();
-  }
+  //   // Initialize activities.
+  //   this.activities.init();
+
+  //   // Initialize activity graph.
+  //   this.activityGraph.init();
+
+  //   this.clean();
+  // }
 
   /**
    * Load project from state.

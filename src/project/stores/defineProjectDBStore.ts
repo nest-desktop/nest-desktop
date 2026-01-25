@@ -283,8 +283,9 @@ export function defineProjectDBStore<
       newProject.load(projectState);
       state.projects[projectIdx] = newProject;
 
-      newProject.init();
-      nextTick(() => newProject.code.engine.runOnce());
+      // newProject.init();
+
+      setTimeout(() => newProject.code.engine?.runOnce({}), 300);
     };
 
     /**

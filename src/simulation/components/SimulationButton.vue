@@ -35,7 +35,7 @@ import type { TSimulation } from "@/types";
 import { useAppStore } from "@/app";
 const appStore = useAppStore();
 
-const projectViewStore = appStore.currentWorkspace.views.project;
+const projectViewStore = appStore.currentWorkspace?.views.project;
 
 const props = defineProps<{
   simulation: TSimulation;
@@ -45,8 +45,13 @@ const props = defineProps<{
 const emit = defineEmits(["click:simulate"]);
 
 const simulation = computed(() => props.simulation);
-const disabled = computed(() => props.disabled || simulation.value.state.running || false);
-const loading = computed(() => simulation.value.state.running);
+const disabled = computed(
+  () =>
+    ((props.disabled ||
+      simulation.value.project.code.script.length === 0 ||
+      simulation.value.state.running) as boolean) || false,
+);
+const loading = computed(() => simulation.value.state.running as boolean);
 
 const menuItems = [
   { label: "simulate on change", value: "onChange" },

@@ -52,7 +52,7 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
   }
 
   get project(): TNetworkProject {
-    return this.codeNode?.code?.project ?? this._project;
+    return this._project;
   }
 
   get state(): UnwrapRef<ISimulationState> {
@@ -63,24 +63,10 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
     return this._time;
   }
 
-  get timeFixed(): string {
-    return this.time.toFixed(1);
-  }
-
   /**
    * before Simulation.
    */
   beforeSimulation(): void {}
-
-  /**
-   * Triggers on simulation changes.
-   */
-  changes(props = {}): void {
-    // this.updateHash();
-    this.logger.trace("changes");
-
-    this.project.changes(props);
-  }
 
   /**
    * Initialize simulation.
