@@ -22,7 +22,7 @@ export function upgradeModel_42_to_50(modelState: any): any {
         break;
       case "tickSlider":
         param.codeNodeInterface = "NumberInterface";
-        break
+        break;
       // default:
       //   param.codeNodeInterface = "IntegerInterface";
       //   break
