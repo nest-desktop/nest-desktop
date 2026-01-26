@@ -1,6 +1,7 @@
 // connectionParameters.ts
 
-import { BaseParameters, type IParamState } from "@/parameter";
+import type { ICodeMaskParamState } from "@/codeGraph";
+import { BaseParameters } from "@/parameter";
 
 import type { BaseConnection } from "./connection";
 import type { IConnectionRuleConfig } from "./connectionRule";
@@ -29,14 +30,14 @@ export class ConnectionParameters<
    * Load parameters from state.
    * @param paramStates parameter states
    */
-  override load(paramStates?: Record<string, IParamState>): void {
+  override load(paramStates?: Record<string, ICodeMaskParamState>): void {
     this.logger.trace("load parameters");
 
     this.emptyParams();
     const ruleConfig: IConnectionRuleConfig = this.connection.rule.getRuleConfig();
-    ruleConfig.params.forEach((param: IParamState) => {
+    ruleConfig.params.forEach((param: ICodeMaskParamState) => {
       if (paramStates != null) {
-        const paramState: IParamState | undefined = paramStates[param.id];
+        const paramState: ICodeMaskParamState | undefined = paramStates[param.id];
         if (paramState != null) {
           param.value = paramState.value;
           if (paramState.type != null) param.type = paramState.type;

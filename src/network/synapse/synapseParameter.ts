@@ -1,7 +1,7 @@
 // synapseParameter.ts
 
-import { CodeMaskParameter } from "@/codeGraph";
-import { type IParamState, type IParamType } from "@/parameter";
+import { CodeMaskParameter, type ICodeMaskParamState } from "@/codeGraph";
+import { type IParamType } from "@/parameter";
 
 import { BaseSynapse } from "./synapse";
 import type { SynapseParameters } from "./synapseParameters";
@@ -25,8 +25,8 @@ export class BaseSynapseParameter<
    * Save synapse parameter to state.
    * @return synapse parameter state
    */
-  override save(): IParamState {
-    const paramState: IParamState = {
+  override save(): ICodeMaskParamState {
+    const paramState: ICodeMaskParamState = {
       id: this.id,
       value: this.value,
     };

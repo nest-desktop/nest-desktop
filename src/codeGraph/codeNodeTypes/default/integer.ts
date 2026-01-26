@@ -1,4 +1,4 @@
-// number.ts
+// integer.ts
 
 import { setType } from "@baklavajs/interface-types";
 
@@ -8,7 +8,7 @@ export default defineCodeNode({
   type: "integer",
   variableName: "i",
   inputs: {
-    number: () => new IntegerInterface("number", 0).use(setType, numberType),
+    integer: () => new IntegerInterface("integer", 0),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface().use(setType, numberType),

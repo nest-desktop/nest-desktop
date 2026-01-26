@@ -1,7 +1,7 @@
 // connectionParameter.ts
 
-import { CodeMaskParameter } from "@/codeGraph";
-import { type IParamState, type IParamType } from "@/parameter";
+import { CodeMaskParameter, type ICodeMaskParamState } from "@/codeGraph";
+import { type IParamType } from "@/parameter";
 
 import type { IConnectionRuleConfig } from "./connectionRule";
 import type { ConnectionParameters } from "./connectionParameters";
@@ -25,7 +25,7 @@ export class ConnectionParameter<
     this.typeId = "constant";
 
     const ruleConfig: IConnectionRuleConfig = this.connectionParams.connection.rule.getRuleConfig();
-    const p = ruleConfig.params.find((p: IParamState) => p.id === this.id);
+    const p = ruleConfig.params.find((p: ICodeMaskParamState) => p.id === this.id);
 
     if (p?.value) {
       this.state.value = p.value;

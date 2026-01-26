@@ -8,7 +8,7 @@ export default defineCodeNode({
   type: "slider",
   variableName: "s",
   inputs: {
-    slider: () => new SliderInterface("slider", 0.5, 0, 1).use(setType, numberType),
+    slider: () => new SliderInterface("slider", 0.5, 0, 1),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface().use(setType, numberType),

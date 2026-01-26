@@ -68,14 +68,12 @@ export class BaseSimulation<T = ISimulationState> extends CodeNodeMask<T> {
    */
   beforeSimulation(): void {}
 
-  /**
-   * Initialize simulation.
-   */
-  init(): void {
-    this.logger.trace("init");
-
-    // this.updateHash();
-  }
+  // /**
+  //  * Initialize simulation.
+  //  */
+  // init(): void {
+  //   this.logger.trace("init");
+  // }
 
   // /**
   //  * Generate seed.

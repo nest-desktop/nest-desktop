@@ -4,15 +4,14 @@ import type { Class, TModel, TSynapseParameter } from "@/types";
 
 import type { BaseModel, ModelParameters } from "@/model";
 import type { IBaseState } from "@/core";
-import type { IParamState } from "@/parameter";
-import { CodeNodeMask } from "@/codeGraph";
+import { CodeNodeMask, ICodeMaskParamState } from "@/codeGraph";
 
 import { SynapseParameters } from "./synapseParameters";
 import { BaseConnection } from "../connection";
 
 export interface ISynapseState extends IBaseState {
   model?: string;
-  params?: Record<string, IParamState>;
+  params?: Record<string, ICodeMaskParamState>;
 }
 
 export class BaseSynapse<
@@ -85,19 +84,6 @@ export class BaseSynapse<
   get params(): SynapseParameters {
     return this._params;
   }
-
-  // /**
-  //  * Observer for synapse changes.
-  //  *
-  //  * @remarks
-  //  * It emits connection changes.
-  //  */
-  // changes(props = {}): void {
-  //   this.logger.trace("changes");
-
-  //   // this.updateHash();
-  //   this.connection.changes({ checkSynWeights: true, ...props });
-  // }
 
   /**
    * Get model.
@@ -179,11 +165,4 @@ export class BaseSynapse<
 
     return synapseState;
   }
-
-  // /**
-  //  * Update synapse.
-  //  */
-  // update(): void {
-  //  this.updateHash();
-  // }
 }

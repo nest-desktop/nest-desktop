@@ -1,9 +1,10 @@
 // connection.ts
 
+import type { AbstractCodeNode } from "@babsey/code-graph";
+
 import type { Class, TNetwork, TNode, TSynapse } from "@/types";
 import type { IBaseState, IConfigState } from "@/core";
-import type { IParamState } from "@/parameter";
-import { CodeNodeMask } from "@/codeGraph";
+import { CodeNodeMask, type ICodeMaskParamState } from "@/codeGraph";
 
 import { BaseSynapse, type ISynapseState } from "../synapse";
 import { ConnectionRule } from "./connectionRule";
@@ -11,10 +12,9 @@ import { ConnectionState } from "./connectionState";
 import { ConnectionView } from "./connectionView";
 import { ConnectionParameters } from "./connectionParameters";
 import type { BaseConnections } from "./connections";
-import { AbstractCodeNode } from "@babsey/code-graph";
 
 export interface IConnectionState extends IBaseState {
-  params?: Record<string, IParamState>;
+  params?: Record<string, ICodeMaskParamState>;
   rule?: string;
   sourceId?: string;
   sourceIdx?: number;

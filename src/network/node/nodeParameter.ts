@@ -1,9 +1,6 @@
 // nodeParameter.ts
 
-// import type { AbstractCodeNode } from "@babsey/code-graph";
-
-import { CodeMaskParameter } from "@/codeGraph";
-import { type IParamState } from "@/parameter";
+import { CodeMaskParameter, type ICodeMaskParamState } from "@/codeGraph";
 
 import type { NodeParameters } from "./nodeParameters";
 
@@ -16,7 +13,7 @@ export class NodeParameter<TParent extends NodeParameters = NodeParameters> exte
    * Save node parameter to state.
    * @return parameter state
    */
-  override save(): IParamState {
+  override save(): ICodeMaskParamState {
     const paramState = super.save();
 
     // Add label if existed.
