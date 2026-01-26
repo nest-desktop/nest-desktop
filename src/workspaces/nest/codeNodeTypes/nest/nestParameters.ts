@@ -1,22 +1,23 @@
 // nestParameters.ts
 
 import {
-  type AbstractCodeNode,
-  type CodeNodeInputInterface,
   CodeNodeOutputInterface,
+  IntegerInterface,
+  ListInputInterface,
+  NumberInterface,
   TextInputInterface,
   createInterface,
   defineDynamicCodeNode,
   getPositionBeforeNode,
+  type AbstractCodeNode,
   type CodeGraph,
-  ListInputInterface,
-  NumberInterface,
+  type CodeNodeInputInterface,
 } from "@babsey/code-graph";
 
 import { BaseParameters } from "@/parameter";
 import { IBaseState } from "@/core";
 
-export interface IParamState extends IBaseState {
+export interface ICodeNodeParamState extends IBaseState {
   component?: string;
   forceUpdate?: boolean;
   hidden?: boolean;
@@ -67,21 +68,25 @@ export const nestParameters = defineDynamicCodeNode({
 export const addNESTParameterNode = (
   graph: CodeGraph,
   position: { x: number; y: number } = { x: 0, y: 0 },
-  props: Record<string, IParamState> = {},
+  props: Record<string, ICodeNodeParamState> = {},
 ): AbstractCodeNode => {
   const codeNode = graph.addNodeAtCoordinates(new nestParameters(), position, props);
   codeNode.state.integrated = true;
   return codeNode;
 };
 
-export const createParameterInterface = (param: IParamState): CodeNodeInputInterface => {
+export const createParameterInterface = (param: ICodeNodeParamState): CodeNodeInputInterface => {
   let paramInterface: CodeNodeInputInterface;
   if (param.component) {
     paramInterface = createInterface(param.component, param);
   } else if (Array.isArray(param.value)) {
     paramInterface = new ListInputInterface(param.id, String(param.value));
   } else if (typeof param.value == "number") {
-    paramInterface = new NumberInterface(param.id, Number(param.value));
+    if (param.step && param.step < 1) {
+      paramInterface = new NumberInterface(param.id, Number(param.value));
+    } else {
+      paramInterface = new IntegerInterface(param.id, Number(param.value));
+    }
   } else {
     paramInterface = new TextInputInterface(param.id, String(param.value));
   }
@@ -92,11 +97,11 @@ export const createParameterInterface = (param: IParamState): CodeNodeInputInter
   return paramInterface;
 };
 
-export const createParameterInterfaces = (paramStates: Record<string, IParamState>) => {
+export const createParameterInterfaces = (paramStates: Record<string, ICodeNodeParamState>) => {
   const inputs: Record<string, () => CodeNodeInputInterface> = {};
 
   if (paramStates) {
-    Object.entries(paramStates).forEach(([paramKey, paramState]: [string, IParamState]) => {
+    Object.entries(paramStates).forEach(([paramKey, paramState]: [string, ICodeNodeParamState]) => {
       inputs[paramKey] = () => createParameterInterface(paramState);
     });
   }
@@ -107,7 +112,7 @@ export const createParameterInterfaces = (paramStates: Record<string, IParamStat
 export const getNESTParameterNode = (
   codeNode: AbstractCodeNode,
   paramInterfaceName: string = "params",
-  paramStates: Record<string, IParamState> = {},
+  paramStates: Record<string, ICodeNodeParamState> = {},
 ): AbstractCodeNode | undefined => {
   const graph = codeNode.code.graph;
   let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
@@ -126,7 +131,7 @@ export const getNESTParameterNode = (
 export const updateParameterInterfaces = (
   codeNode: AbstractCodeNode,
   inputKey: string,
-  states?: Record<string, IParamState>,
+  states?: Record<string, ICodeNodeParamState>,
 ): AbstractCodeNode | undefined => {
   if (codeNode.inputs[inputKey].connectionCount === 0) return;
   const paramsNode = codeNode.getConnectedNodeByInterface(inputKey, "inputs");
@@ -139,7 +144,7 @@ export const updateParameterInterfaces = (
 export const updateNESTParameterNode = (
   codeNode: AbstractCodeNode,
   paramInterfaceName: string = "params",
-  paramStates: Record<string, IParamState> = {},
+  paramStates: Record<string, ICodeNodeParamState> = {},
 ): AbstractCodeNode | undefined => {
   const graph = codeNode.code.graph;
   let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
@@ -152,7 +157,7 @@ export const updateNESTParameterNode = (
     paramsNode = addNESTParameterNode(graph, getPositionBeforeNode(codeNode), paramStates);
   }
 
-  paramsNode.updateInputInterfaces(createParameterInterfaces(paramStates));
+  paramsNode.updateInputInterfaces(createParameterInterfaces(paramStates), Object.keys(paramStates));
 
   if (!graph.hasConnection(paramsNode.outputs.out, codeNode.inputs[paramInterfaceName]))
     graph.addConnection(paramsNode.outputs.out, codeNode.inputs[paramInterfaceName]);

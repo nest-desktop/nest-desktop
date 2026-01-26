@@ -47,7 +47,6 @@ export class NESTSimulationKernel extends CodeNodeMask {
    */
   init(): void {
     this.registerCodeNode();
-    // this.updateHash();
   }
 
   /**

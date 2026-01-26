@@ -1,11 +1,12 @@
 // synapseParameter.ts
 
-import { BaseSynapseParameter } from "@/network";
+import type { ICodeMaskParamState } from "@/codeGraph";
 import type { IParamType } from "@/parameter";
+import { BaseSynapseParameter } from "@/network";
 
 import { NESTSynapseParameters } from "./synapseParameters";
 import { getNESTModelParameterStates } from "../../model";
-import { type IParamState, updateNESTParameterNode } from "../../codeNodeTypes/nest";
+import { updateNESTParameterNode } from "../../codeNodeTypes/nest";
 // import type { NESTCopyModelParameter } from "../model/copyModelParameter";
 
 export class NESTSynapseParameter extends BaseSynapseParameter<NESTSynapseParameters> {
@@ -21,7 +22,7 @@ export class NESTSynapseParameter extends BaseSynapseParameter<NESTSynapseParame
       updateNESTParameterNode(
         synapse.connection.codeNode,
         "syn_spec",
-        defaultParamStates as Record<string, IParamState>,
+        defaultParamStates as Record<string, ICodeMaskParamState>,
       );
     }
     this.intf?.setHidden(value);

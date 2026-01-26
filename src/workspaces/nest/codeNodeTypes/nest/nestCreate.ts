@@ -14,13 +14,14 @@ import {
   type CodeGraph,
 } from "@babsey/code-graph";
 
+import type { ICodeMaskParamState } from "@/codeGraph";
 import type { INESTNodeState } from "@/workspaces/nest/types";
 import { getNESTModelParameterStates } from "@/workspaces/nest/model";
 
 import type { INESTNodeSpatialState } from "../../network/node/nodeSpatial";
 import { loadNESTSpatialFree } from "./nestSpatialFree";
 import { nestNodeCollectionType } from "./interfaceTypes";
-import { type IParamState, updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
+import { updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
 import { loadNESTRandomUniform } from "./nestRandomUniform";
 import { loadNESTSpatialGrid } from "./nestSpatialGrid";
 import { connectToResponseNode } from "./nestDataResponse";
@@ -56,7 +57,7 @@ export const nestCreate = defineCodeNode({
 
     const paramsNode = this.getConnectedNodeByInterface("params", "inputs");
     if (paramsNode) {
-      let paramStates: Record<string, IParamState>;
+      let paramStates: Record<string, ICodeMaskParamState>;
       if (this.mask) {
         this.mask.params.registerCodeNode(paramsNode);
         paramStates = this.mask.params.save();
@@ -178,7 +179,7 @@ export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INES
 
   // Load params
   const defaultParamStates = getNESTModelParameterStates(nodeState.model);
-  let paramStates: Record<string, IParamState>;
+  let paramStates: Record<string, ICodeMaskParamState>;
   if (nodeState.params) {
     const paramKeys = Object.keys(nodeState.params);
     if (paramKeys.length === 0) return;

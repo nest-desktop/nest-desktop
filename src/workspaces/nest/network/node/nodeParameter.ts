@@ -1,9 +1,10 @@
 // nodeParameter.ts
 
+import type { ICodeMaskParamState } from "@/codeGraph";
 import { NodeParameter } from "@/network";
 
 import { getNESTModelParameterStates } from "../../model";
-import { type IParamState, updateNESTParameterNode } from "../../codeNodeTypes/nest";
+import { updateNESTParameterNode } from "../../codeNodeTypes/nest";
 
 export class NESTNodeParameter extends NodeParameter {
   override get hidden(): boolean {
@@ -15,7 +16,7 @@ export class NESTNodeParameter extends NodeParameter {
     const node = this.nodeParams.node;
     if (!this.codeNode && this.nodeParams.hasSomeVisibleParams) {
       const defaultParamStates = getNESTModelParameterStates(node.modelId);
-      updateNESTParameterNode(node.codeNode, "params", defaultParamStates as Record<string, IParamState>);
+      updateNESTParameterNode(node.codeNode, "params", defaultParamStates as Record<string, ICodeMaskParamState>);
     }
     this.intf?.setHidden(value);
     if (this.codeNode && !this.nodeParams.hasSomeVisibleParams) {

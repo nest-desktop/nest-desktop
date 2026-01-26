@@ -35,4 +35,6 @@ export const loadGraphByNESTProject = (graph: CodeGraph, projectState: INESTProj
 
   // response data
   loadNESTDataResponseNode(graph);
+
+  // graph.code?.engine?.runOnce({})
 };

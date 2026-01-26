@@ -1,6 +1,6 @@
 // modelDBStore.ts
 
-import type { IParamState } from "@/parameter";
+import type { ICodeMaskParamState } from "@/codeGraph";
 import { defineModelDBStore } from "@/model";
 
 import { NESTModel } from "../model";
@@ -45,12 +45,12 @@ export const getNESTModelParameterStates = (modelId: string) => {
   const model = modelDBStore.findModel(modelId);
 
   // default model params states
-  const defaultParamStates: Record<string, IParamState> = {};
+  const defaultParamStates: Record<string, ICodeMaskParamState> = {};
   if (model && model.params.keys && model.params.keys.length > 0) {
     model.params.keys.forEach((modelParamKey: string) => {
       const param = model.params.get(modelParamKey);
       if (param) {
-        const paramState: IParamState = {
+        const paramState: ICodeMaskParamState = {
           id: modelParamKey,
           hidden: true,
           value: param.value,
@@ -58,6 +58,7 @@ export const getNESTModelParameterStates = (modelId: string) => {
         if (param.props.codeNodeInterface && interfaces.includes(param.props.codeNodeInterface)) {
           paramState.component = param.props.codeNodeInterface;
         }
+        if (param.step !== 1) paramState.step = param.step;
         defaultParamStates[modelParamKey] = paramState;
       }
     });

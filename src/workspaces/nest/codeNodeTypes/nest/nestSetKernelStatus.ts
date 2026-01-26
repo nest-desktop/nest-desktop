@@ -10,7 +10,7 @@ import {
 
 import {
   getNESTParameterNode,
-  type IParamState,
+  type ICodeNodeParamState,
   updateNESTParameterNode,
   updateParameterInterfaces,
 } from "./nestParameters";
@@ -22,17 +22,24 @@ export interface INESTKernelState {
   rngSeed?: number;
 }
 
-const defaultKernelState: Record<string, IParamState> = {
+const defaultKernelState: Record<string, ICodeNodeParamState> = {
   local_num_threads: {
+    id: "local_num_threads",
+    component: "IntegerInterface",
     value: 1,
     min: 1,
   },
   resolution: {
+    id: "resolution",
     component: "NumberInterface",
     value: 0.1,
     min: 0.1,
+    max: 10,
+    step: 0.1,
   },
   rng_seed: {
+    id: "rng_seed",
+    component: "IntegerInterface",
     value: 1,
     min: 1,
   },
@@ -67,7 +74,7 @@ export const getNESTSetKernelStatusNode = (graph: CodeGraph): AbstractCodeNode =
 
 export const getNESTSetKernelStatusParameterNode = (
   graph: CodeGraph,
-  kernelState?: Record<string, IParamState>,
+  kernelState?: Record<string, ICodeNodeParamState>,
 ): AbstractCodeNode => {
   const codeNode = getNESTSetKernelStatusNode(graph);
 
@@ -76,14 +83,14 @@ export const getNESTSetKernelStatusParameterNode = (
 
 export const loadNESTSetKernelStatusNode = (
   graph: CodeGraph,
-  kernelState?: Record<string, IParamState>,
+  kernelState?: Record<string, ICodeNodeParamState>,
 ): AbstractCodeNode => {
   const codeNode = getNESTSetKernelStatusNode(graph);
 
   updateNESTParameterNode(
     codeNode,
     "params",
-    kernelState ? updateRecords<IParamState>(defaultKernelState, kernelState) : defaultKernelState,
+    kernelState ? updateRecords<ICodeNodeParamState>(defaultKernelState, kernelState) : defaultKernelState,
   );
 
   return codeNode;

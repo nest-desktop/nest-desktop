@@ -19,7 +19,7 @@ import {
   // type INESTSynapseCollection,
   nestNodeCollectionType,
 } from "./interfaceTypes";
-import { type IParamState, updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
+import { type ICodeNodeParamState, updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
 
 const ruleItems = [
   "all_to_all",
@@ -161,16 +161,16 @@ export const updateNESTConnectNode = (codeNode: AbstractCodeNode, connectionStat
 
 export const updateNESTConnectSynapseNode = (codeNode: AbstractCodeNode, synapseState: INESTSynapseState): void => {
   if (synapseState) {
-    const syn_spec: Record<string, IParamState> = {};
+    const syn_spec: Record<string, ICodeNodeParamState> = {};
     if (synapseState.model && synapseState.model !== "static_synapse") {
       syn_spec["synapse_model"] = {
         value: synapseState.model,
-      } as IParamState;
+      } as ICodeNodeParamState;
     }
 
     const defaultParamStates = getNESTModelParameterStates(synapseState.model ?? "static_synapse");
 
-    let paramStates: Record<string, IParamState>;
+    let paramStates: Record<string, ICodeNodeParamState>;
     if (synapseState.params) {
       const paramKeys = Object.keys(synapseState.params);
 
