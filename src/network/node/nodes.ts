@@ -190,7 +190,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    */
   clean(): void {
     this.updateRecorders();
-    this.nodes.forEach((node: TNode) => node.clean());
+    // this.nodes.forEach((node: TNode) => node.clean());
   }
 
   // /**
@@ -429,7 +429,7 @@ export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseO
    * @remarks It should be called after network created.
    */
   updateRecorders(): void {
-    this.logger.trace("update records");
+    this.logger.trace("update recorders");
 
     this.recordersAnalog.forEach((recorder: TNode) => recorder.update());
   }

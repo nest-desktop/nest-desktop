@@ -166,8 +166,8 @@ export class BaseConnection<
    * Clean this component.
    */
   clean(): void {
-    // // Correct connections with recorder.
-    // if (this.view.connectRecorder()) this.recorder?.correctRecorderConnections();
+    // Correct connections with recorder.
+    if (this.view.connectRecorder()) this.recorder?.correctRecorderConnections();
     // // Update synaptic weight label.
     // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)
     //   connection.synapse.weightLabel = connection.sourceNode.view.state.synWeights;
@@ -175,18 +175,18 @@ export class BaseConnection<
     // if (this.view.connectRecorder()) this.recorder?.updateRecorder();
   }
 
-  /**
-   * Initialize connection.
-   * @remarks Do not use it in the constructor.
-   */
-  init(): void {
-    this.logger.trace("init");
+  // /**
+  //  * Initialize connection.
+  //  * @remarks Do not use it in the constructor.
+  //  */
+  // init(): void {
+  //   this.logger.trace("init");
 
-    // this.params.init();
-    this.synapse.init();
+  //   // this.params.init();
+  //   // this.synapse.init();
 
-    this.update();
-  }
+  //   // this.update();
+  // }
 
   getCodeNodeById(nodeId: string): AbstractCodeNode | undefined {
     return this.connections.network.nodes.codeNodeIds[nodeId];
@@ -197,7 +197,7 @@ export class BaseConnection<
    * @param connectionState connection state
    */
   load(connectionState: IConnectionState): void {
-    this.logger.trace("load:", connectionState);
+    this.logger.trace("load");
     if (connectionState.sourceId) this._sourceId = connectionState.sourceId;
     if (connectionState.targetId) this._targetId = connectionState.targetId;
     if (connectionState.rule) this.rule.value = connectionState.rule;
@@ -261,10 +261,10 @@ export class BaseConnection<
     return connectionState;
   }
 
-  /**
-   * Update connection.
-   */
-  update(): void {
-    this.clean();
-  }
+  // /**
+  //  * Update connection.
+  //  */
+  // update(): void {
+  //   this.clean();
+  // }
 }

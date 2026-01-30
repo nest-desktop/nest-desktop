@@ -47,6 +47,12 @@ export const nestConnect = defineCodeNode({
   onConnected() {
     if (!this.code.project || !this.mask) return;
 
+    // const connParamNode = this.getConnectedNodeByInterface("conn_spec", "inputs");
+    // if (connParamNode) {
+    //   this.mask.params.registerCodeNode(connParamNode);
+    //   updateParameterInterfaces(this, "conn_spec", this.mask.params.save());
+    // }
+
     const synParamNode = this.getConnectedNodeByInterface("syn_spec", "inputs");
     if (synParamNode) {
       this.mask.synapse.params.registerCodeNode(synParamNode);
@@ -206,13 +212,11 @@ export const updateNodeMask = (codeNode: AbstractCodeNode) => {
 
     connection = codeNode.code.project.network.connections.newConnection(codeNode.state.props);
     connection.registerCodeNode(codeNode);
-
-    const connSpecNode = codeNode.getConnectedNodeByInterface("conn_spec", "inputs");
-    if (connSpecNode) connection.params.registerCodeNode(connSpecNode);
-
-    const synSpecNode = codeNode.getConnectedNodeByInterface("syn_spec", "inputs");
-    if (synSpecNode) connection.synapse.params.registerCodeNode(synSpecNode);
   }
 
-  connection.init();
+  const connSpecNode = codeNode.getConnectedNodeByInterface("conn_spec", "inputs");
+  if (connSpecNode) connection.params.registerCodeNode(connSpecNode);
+
+  const synSpecNode = codeNode.getConnectedNodeByInterface("syn_spec", "inputs");
+  if (synSpecNode) connection.synapse.params.registerCodeNode(synSpecNode);
 };

@@ -54,12 +54,6 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
     return this.connections.filter((connection: TConnection) => !connection.view.connectRecorder());
   }
 
-  // override get hashObject(): IBaseState {
-  //   return {
-  //     connections: this.connections.map((connection: TConnection) => connection.hash),
-  //   };
-  // }
-
   /**
    * Get length of connection list.
    */
@@ -80,7 +74,7 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
   }
 
   /**
-   * Clean nodes and connection components.
+   * Clean connection components.
    */
   clean(): void {
     this.logger.trace("clean");
@@ -120,8 +114,6 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
     this.resetState();
 
     connection.codeNode?.remove();
-
-    this.clean();
   }
 
   /**
@@ -135,7 +127,7 @@ export class BaseConnections<TNetwork extends BaseNetwork = BaseNetwork> extends
       .filter((connection: TConnection) => connection.sourceNode === node && connection.targetNode === node)
       .forEach((connection: TConnection) => connection.remove());
 
-    this.clean();
+    // this.clean();
   }
 
   /*

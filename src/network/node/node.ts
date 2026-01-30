@@ -283,21 +283,18 @@ export class BaseNode<
   /**
    * Add annotation to the list.
    * @param text string
-   * @param emitChanges boolean
    */
-  addAnnotation(text: string, emitChanges: boolean = true): void {
+  addAnnotation(text: string): void {
     if (this.annotations.indexOf(text) !== -1) return;
     this.annotations.push(text);
-
-    if (emitChanges) this.changes();
   }
 
-  /**
-   * Clean node component.
-   */
-  clean(): void {
-    this.view.clean();
-  }
+  // /**
+  //  * Clean node component.
+  //  */
+  // clean(): void {
+  //   this.update();
+  // }
 
   /**
    * Clone this node component.
@@ -464,7 +461,6 @@ export class BaseNode<
   removeAnnotation(text: string): void {
     if (this.annotations.indexOf(text) === -1) return;
     this.annotations.splice(this.annotations.indexOf(text), 1);
-    // if (emitChanges) this.changes();
   }
 
   /**
@@ -526,8 +522,6 @@ export class BaseNode<
 
   showAllParams(): void {
     this.params.showAll();
-
-    // if (emitChanges) this.changes();
   }
 
   /**
@@ -549,7 +543,6 @@ export class BaseNode<
    */
   update(): void {
     this.logger.trace("update");
-    // this.clean();
 
     // this.view.updateStyle();
     if (this.model.isRecorder) this.updateRecorder();

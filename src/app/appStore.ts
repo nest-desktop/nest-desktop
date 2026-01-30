@@ -2,7 +2,7 @@
 
 import { defineStore } from "pinia";
 import { computed, ComputedRef, reactive, UnwrapRef } from "vue";
-import type { ThemeInstance } from "vuetify";
+import type { Anchor, ThemeInstance } from "vuetify";
 
 import { type IWorkspaceProps, workspaces } from "@/workspaces/install";
 
@@ -15,10 +15,11 @@ interface IAppStoreState {
   loading: boolean;
   loadingText: string;
   logsOpen: boolean;
+  notificationLocation: Anchor;
   requestLogs: { date: string; htmlContent: string; level: string }[];
-  workspacesEnabled: string[];
   theme: string;
   themeIcon: string;
+  workspacesEnabled: string[];
 }
 
 interface IAppStore {
@@ -28,10 +29,10 @@ interface IAppStore {
   hasWorkspace: ComputedRef<boolean>;
   init: (theme: ThemeInstance) => void;
   resetWorkspace: () => void;
-  workspaceItems: ComputedRef<(IWorkspaceProps | undefined)[]>;
   state: UnwrapRef<IAppStoreState>;
   toggleTheme: () => void;
   updateTheme: () => void;
+  workspaceItems: ComputedRef<(IWorkspaceProps | undefined)[]>;
 }
 
 export const useAppStore = defineStore(
@@ -48,10 +49,11 @@ export const useAppStore = defineStore(
       loading: false,
       loadingText: "Loading... Please wait",
       logsOpen: false,
+      notificationLocation: "bottom right",
       requestLogs: [] as { date: string; htmlContent: string; level: string }[],
-      workspacesEnabled: ["nest"],
       theme: "auto", // auto, light, dark
       themeIcon: "mdi:mdi-system",
+      workspacesEnabled: ["nest"],
     });
 
     const clearLogs = () => {
@@ -124,9 +126,10 @@ export const useAppStore = defineStore(
       {
         pick: [
           "state.autoUpdate",
+          "state.currentWorkspace",
+          "state.notificationLocation",
           "state.theme",
           "state.themeIcon",
-          "state.currentWorkspace",
           "state.workspacesEnabled",
         ],
         storage: localStorage,

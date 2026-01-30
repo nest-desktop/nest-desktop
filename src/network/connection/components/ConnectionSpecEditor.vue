@@ -28,7 +28,7 @@
             v-for="(param, index) in connection.params.values"
             :key="index"
             v-model="connection.params.visibleParamIds"
-            :color="connection.sourceNode?.view.color ?? 'grey'"
+            :color="connection.sourceNode.view.color"
             :label="param.label"
             :value="param.id"
             density="compact"
@@ -51,7 +51,7 @@
       v-for="(param, index) in connection.params.filteredParams"
       :key="index"
       v-model="param.value"
-      :color="connection.sourceNode?.view.color ?? 'grey'"
+      :color="connection.sourceNode.view.color"
       :param
     />
   </v-list>

@@ -95,15 +95,15 @@ export class BaseSynapse<
     return this.modelDBStore.findModel(modelId);
   }
 
-  /**
-   * Initialize synapse.
-   */
-  init(): void {
-    this.logger.trace("init");
+  // /**
+  //  * Initialize synapse.
+  //  */
+  // init(): void {
+  //   this.logger.trace("init");
 
-    this.params.init();
-    // this.update();
-  }
+  //   this.params.init();
+  //   // this.update();
+  // }
 
   /**
    * Inverse synaptic weight.

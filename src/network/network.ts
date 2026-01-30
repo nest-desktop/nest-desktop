@@ -122,11 +122,11 @@ export class BaseNetwork<TState extends INetworkState = INetworkState> extends B
       targetIdx,
     });
 
-    // Initialize connection.
-    connection.init();
+    // Clean connection.
+    connection.clean();
 
     // Correct connections with recorder.
-    if (connection.view.connectRecorder()) connection.recorder?.correctRecorderConnections();
+    // if (connection.view.connectRecorder()) connection.recorder?.correctRecorderConnections();
 
     // // Update synaptic weight label.
     // if (connection.sourceNode.isNode && connection.sourceNode.view.state.synWeights)

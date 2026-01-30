@@ -16,6 +16,7 @@ import {
 
 import { BaseParameters } from "@/parameter";
 import { IBaseState } from "@/core";
+import { VCalendar } from "vuetify/lib/components";
 
 export interface ICodeNodeParamState extends IBaseState {
   component?: string;
@@ -56,7 +57,6 @@ export const nestParameters = defineDynamicCodeNode({
 
     const params = this.state.props?.components ? new this.state.props.components() : new BaseParameters();
     params.registerCodeNode(this);
-    params.init();
   },
   onUnconnected() {
     if (!this.code.project) return;
@@ -128,6 +128,24 @@ export const getNESTParameterNode = (
   return paramsNode;
 };
 
+export const removeNESTParameterNode = (
+  graph: CodeGraph,
+  codeNode: AbstractCodeNode,
+  paramInterfaceName: string = "params",
+): void => {
+  let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
+
+  // paramsNode.removeConnections();
+  paramsNode.remove();
+  graph.removeConnectionsByNodeId(paramsNode.id);
+  // console.log(
+  //   paramsNode.id,
+  //   graph.connections.map((c) => [c.from.nodeId, c.to.nodeId]),
+  //   graph,
+  // );
+  codeNode.inputs[paramInterfaceName].setHidden(true);
+};
+
 export const updateParameterInterfaces = (
   codeNode: AbstractCodeNode,
   inputKey: string,
@@ -147,15 +165,16 @@ export const updateNESTParameterNode = (
   paramStates: Record<string, ICodeNodeParamState> = {},
 ): AbstractCodeNode | undefined => {
   const graph = codeNode.code.graph;
-  let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
+  let paramsNode: AbstractCodeNode | undefined = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
 
   if (Object.keys(paramStates).length === 0 && paramsNode != undefined) {
-    graph.removeNode(paramsNode); // paramsNode.remove()
-    codeNode.inputs[paramInterfaceName].setHidden(true);
+    removeNESTParameterNode(graph, codeNode, paramInterfaceName);
     return;
-  } else if (paramStates && !paramsNode) {
+  } else if (Object.keys(paramStates).length > 0 && !paramsNode) {
     paramsNode = addNESTParameterNode(graph, getPositionBeforeNode(codeNode), paramStates);
   }
+
+  if (!paramsNode) return;
 
   paramsNode.updateInputInterfaces(createParameterInterfaces(paramStates), Object.keys(paramStates));
 

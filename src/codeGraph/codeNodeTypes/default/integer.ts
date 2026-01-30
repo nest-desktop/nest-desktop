@@ -13,5 +13,5 @@ export default defineCodeNode({
   outputs: {
     out: () => new CodeNodeOutputInterface().use(setType, numberType),
   },
-  codeTemplate: () => "{{ inputs.number }}",
+  codeTemplate: () => "{{ inputs.integer }}",
 });

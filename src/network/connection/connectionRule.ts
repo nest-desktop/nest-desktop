@@ -2,6 +2,8 @@
 
 import type { IParamState } from "@/parameter";
 import type { TConnection } from "@/types";
+import { ICodeNodeParamState, updateNESTParameterNode } from "@/workspaces/nest/codeNodeTypes/nest";
+import { nextTick } from "vue";
 
 enum Rule {
   AllToAll = "all_to_all",
@@ -37,7 +39,34 @@ export class ConnectionRule {
 
   set value(value: string) {
     this._value = value;
-    this.connection.params.load();
+
+    if (!this.connection.codeNode) return;
+    if (this.connection.codeNode.inputs.conn_spec) this.connection.codeNode.inputs.conn_spec.value = value;
+
+    const ruleConfig = this.getRuleConfig();
+
+    let conn_spec: Record<string, ICodeNodeParamState> = {};
+    if (!["all_to_all", "one_to_one"].includes(value)) conn_spec = { rule: { id: "rule", value: value } };
+    if (ruleConfig.params)
+      Object.entries(ruleConfig.params).forEach(([paramId, param]: [string, IParamState]) => {
+        const state: ICodeNodeParamState = {
+          id: param.id,
+          value: param.value,
+          hidden: param.hidden ?? true,
+        };
+        if (param.codeNodeInterface) state.component = param.codeNodeInterface;
+        if (param.min) state.min = param.min;
+        if (param.max) state.max = param.max;
+        if (param.step) state.step = param.step;
+        conn_spec[paramId] = state;
+      });
+
+    updateNESTParameterNode(this.connection.codeNode, "conn_spec", conn_spec);
+    this.connection.codeNode?.inputs.conn_spec?.setHidden(value === "all_to_all");
+
+    this.connection.params.load(ruleConfig.params);
+
+    nextTick(() => this.connection.codeNode.code.engine.runOnce({}));
   }
 
   /**

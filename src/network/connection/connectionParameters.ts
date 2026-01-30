@@ -26,24 +26,24 @@ export class ConnectionParameters<
     return this._connection;
   }
 
-  /**
-   * Load parameters from state.
-   * @param paramStates parameter states
-   */
-  override load(paramStates?: Record<string, ICodeMaskParamState>): void {
-    this.logger.trace("load parameters");
+  // /**
+  //  * Load parameters from state.
+  //  * @param paramStates parameter states
+  //  */
+  // override load(paramStates?: Record<string, ICodeMaskParamState>): void {
+  //   this.logger.trace("load parameters");
 
-    this.emptyParams();
-    const ruleConfig: IConnectionRuleConfig = this.connection.rule.getRuleConfig();
-    ruleConfig.params.forEach((param: ICodeMaskParamState) => {
-      if (paramStates != null) {
-        const paramState: ICodeMaskParamState | undefined = paramStates[param.id];
-        if (paramState != null) {
-          param.value = paramState.value;
-          if (paramState.type != null) param.type = paramState.type;
-        }
-      }
-      this.addParameter(param);
-    });
-  }
+  //   this.emptyParams();
+  //   const ruleConfig: IConnectionRuleConfig = this.connection.rule.getRuleConfig();
+  //   ruleConfig.params.forEach((param: ICodeMaskParamState) => {
+  //     if (paramStates != null) {
+  //       const paramState: ICodeMaskParamState | undefined = paramStates[param.id];
+  //       if (paramState != null) {
+  //         param.value = paramState.value;
+  //         if (paramState.type != null) param.type = paramState.type;
+  //       }
+  //     }
+  //     this.addParameter(param);
+  //   });
+  // }
 }

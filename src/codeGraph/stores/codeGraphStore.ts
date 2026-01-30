@@ -22,6 +22,7 @@ export const useCodeGraphStore = defineStore(
 
     const viewModel = useCodeGraph({ code: new PythonCode() });
     registerNodeTypes(viewModel);
+    viewModel.showNodeId = true;
 
     const loadEditor = (editorId?: string) => {
       const editorIds = Object.keys(state.editorStates);

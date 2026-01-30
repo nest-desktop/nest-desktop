@@ -172,11 +172,6 @@ export class NodeView<TNode extends BaseNode = BaseNode> extends BaseObj {
   }
 
   /**
-   * Clean node.
-   */
-  clean(): void {}
-
-  /**
    * Expand node panel.
    */
   expandNodePanel(): void {
