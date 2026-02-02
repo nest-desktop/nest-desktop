@@ -7,12 +7,16 @@ import { defineConfig } from "vite";
 // Vite plugins
 import ViteFonts from "unplugin-fonts/vite";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-// import electron from "vite-plugin-electron";
+import electron from "vite-plugin-electron";
 import { VitePWA } from "vite-plugin-pwa";
 // import vueDevTools from "vite-plugin-vue-devtools";
 
 // Plugins
 import Vue from "@vitejs/plugin-vue";
+
+const VITE_DEV_ELECTRON_STARTUP = process.env["VITE_DEV_ELECTRON_STARTUP"]
+  ? JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"])
+  : false;
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -137,25 +141,23 @@ export default defineConfig(({ mode }) => ({
       },
     }),
     // vueDevTools(),
-    // electron([
-    //   {
-    //     entry: "electron/main.ts",
-    //     onstart(options) {
-    //       // Start Electron App
-    //       if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
-    //         options.startup([".", "--no-sandbox"]);
-    //       }
-    //     },
-    //   },
-    //   {
-    //     entry: "electron/preload.ts",
-    //     onstart(options) {
-    //       // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
-    //       // instead of restarting the entire Electron App.
-    //       options.reload();
-    //     },
-    //   },
-    // ]),
+    electron([
+      {
+        entry: "electron/main.ts",
+        onstart(options) {
+          // Start Electron App
+          if (VITE_DEV_ELECTRON_STARTUP) options.startup([".", "--no-sandbox"]);
+        },
+      },
+      {
+        entry: "electron/preload.ts",
+        onstart(options) {
+          // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
+          // instead of restarting the entire Electron App.
+          options.reload();
+        },
+      },
+    ]),
   ],
   resolve: {
     alias: {
