@@ -168,7 +168,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 54286,
     warmup: {
-      clientFiles: ["./src/views/*.vue", "./src/simulators/*/views/*.vue"],
+      clientFiles: ["./src/views/*.vue", "./src/workspaces/*/views/*.vue"],
     },
     watch: {
       ignored: ["**/coverage/**", "**/release/**"],
