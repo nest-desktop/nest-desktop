@@ -25,39 +25,37 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1500, // https://github.com/vitejs/vite/discussions/9440
     outDir: "./nest_desktop/app",
     // minify: false,
-    // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        assetFileNames: ({ names }) => {
-          const name = names[0] ?? "";
-          let extType = name.split(".").at(1) ?? "";
-          if (/png|svg/.test(extType)) {
-            extType = "img";
-          } else if (/woff|woff2|eot|ttf|otf/.test(extType)) {
-            extType = "fonts";
-          }
-          // TODO: without these lines, icons of the materials design might be broken.
-          if (name.startsWith("vendors_")) {
-            return `assets/${extType}/vendors/${name.slice(8)}-[hash][extname]`;
-          }
-          return `assets/${extType}/[name]-[hash][extname]`;
-        },
-        chunkFileNames: ({ name }) => {
-          // https://github.com/vitejs/vite-plugin-vue/issues/19
-          if (name.startsWith("vendors_")) {
-            return `assets/js/vendors/${name.slice(8)}-[hash].js`;
-          }
-          return `assets/js/${name}-[hash].js`;
-        },
-        entryFileNames: "assets/js/[name]-[hash].js",
-        manualChunks: (id: string): string => {
-          // https://github.com/vitejs/vite/discussions/9440#discussioncomment-10131471
-          const path = id.toString().split("/");
-          if (path.includes("node_modules")) {
-            const vendor = path[path.indexOf("node_modules") + 1];
-            return "vendors_" + (vendor.startsWith("d3") ? "@d3" : vendor);
-          }
-          return "main";
+        codeSplitting: {
+          groups: [
+            {
+              name: 'vuetify-vendor',
+              test: /node_modules[\\/]vuetify/,
+              priority: 25,
+            },
+            {
+              name: 'threejs-vendor',
+              test: /node_modules[\\/]three/,
+              priority: 20,
+            },
+            {
+              name: 'plotlyjs-vendor',
+              test: /node_modules[\\/]plotly.js-cartesian-dist-min/,
+              priority: 15,
+            },
+            {
+              name: 'vendor',
+              test: /node_modules/,
+              priority: 10,
+            },
+            {
+              name: 'common',
+              minShareCount: 2,
+              minSize: 10000,
+              priority: 5,
+            },
+          ],
         },
       },
     },
