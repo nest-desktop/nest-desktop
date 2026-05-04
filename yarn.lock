@@ -3031,7 +3031,7 @@
   dependencies:
     "@vue/devtools-kit" "^8.1.1"
 
-"@vue/devtools-core@^8.0.7":
+"@vue/devtools-core@^8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@vue/devtools-core/-/devtools-core-8.1.1.tgz#f8a64f7d34bc545a3cd40b59efe7e665b6a9eeba"
   integrity sha512-bCCsSABp1/ot4j8xJEycM6Mtt2wbuucfByr6hMgjbYhrtlscOJypZKvy8f1FyWLYrLTchB5Qz216Lm92wfbq0A==
@@ -3052,7 +3052,7 @@
     speakingurl "^14.0.1"
     superjson "^2.2.2"
 
-"@vue/devtools-kit@^8.0.7", "@vue/devtools-kit@^8.1.1":
+"@vue/devtools-kit@^8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@vue/devtools-kit/-/devtools-kit-8.1.1.tgz#f205563eab389099d5181706b5b98e2d6fd2489d"
   integrity sha512-gVBaBv++i+adg4JpH71k9ppl4soyR7Y2McEqO5YNgv0BI1kMZ7BDX5gnwkZ5COYgiCyhejZG+yGNrBAjj6Coqg==
@@ -3069,7 +3069,7 @@
   dependencies:
     rfdc "^1.4.1"
 
-"@vue/devtools-shared@^8.0.7", "@vue/devtools-shared@^8.1.1":
+"@vue/devtools-shared@^8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@vue/devtools-shared/-/devtools-shared-8.1.1.tgz#daaa16243d2f5eaa50f7e34902d2bb9e98235b52"
   integrity sha512-+h4ttmJYl/txpxHKaoZcaKpC+pvckgLzIDiSQlaQ7kKthKh8KuwoLW2D8hPJEnqKzXOvu15UHEoGyngAXCz0EQ==
@@ -3092,10 +3092,10 @@
     typescript-eslint "^8.56.0"
     vue-eslint-parser "^10.4.0"
 
-"@vue/language-core@3.2.7":
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.2.7.tgz#06507ace715e0c22cf686ca2231f2a40f51befe2"
-  integrity sha512-Gn4q/tRxbpVGLEuARQ43p3YELlNAFgRUVCgW9U5Cr+5q4vfD2bWDWpl3ABbJMXUt5xlE1dF8dkigg2aUq7JYYw==
+"@vue/language-core@3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.2.8.tgz#3bd38c343b89976208b7996bc670df56313047de"
+  integrity sha512-9OiSPQFiAAWNVnXb0d2dcTmcKnFQamhuNES6ayyISrb/mwPWVgoGdAqSfCWqKhQpa3D5gDTcYD+w7ObiheZ81g==
   dependencies:
     "@volar/language-core" "2.4.28"
     "@vue/compiler-dom" "^3.5.0"
@@ -5378,7 +5378,7 @@ immediate@~3.0.5:
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
   integrity sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==
 
-immutable@^5.0.2:
+immutable@^5.1.5:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-5.1.5.tgz#93ee4db5c2a9ab42a4a783069f3c5d8847d40165"
   integrity sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==
@@ -7093,13 +7093,13 @@ sanitize-filename@^1.6.3:
   dependencies:
     truncate-utf8-bytes "^1.0.0"
 
-sass@~1.97:
-  version "1.97.3"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.97.3.tgz#9cb59339514fa7e2aec592b9700953ac6e331ab2"
-  integrity sha512-fDz1zJpd5GycprAbu4Q2PV/RprsRtKC/0z82z0JLgdytmcq0+ujJbJ/09bPGDxCLkKY3Np5cRAOcWiVkLXJURg==
+sass@~1.99:
+  version "1.99.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.99.0.tgz#ff9d1594da4886249dfaafabbeea2dea2dc74b26"
+  integrity sha512-kgW13M54DUB7IsIRM5LvJkNlpH+WhMpooUcaWGFARkF1Tc82v9mIWkCbCYf+MBvpIUBSeSOTilpZjEPr2VYE6Q==
   dependencies:
     chokidar "^4.0.0"
-    immutable "^5.0.2"
+    immutable "^5.1.5"
     source-map-js ">=0.6.2 <2.0.0"
   optionalDependencies:
     "@parcel/watcher" "^2.4.1"
@@ -8123,14 +8123,14 @@ vite-plugin-pwa@~1.2:
     workbox-build "^7.4.0"
     workbox-window "^7.4.0"
 
-vite-plugin-vue-devtools@~8.0:
-  version "8.0.7"
-  resolved "https://registry.yarnpkg.com/vite-plugin-vue-devtools/-/vite-plugin-vue-devtools-8.0.7.tgz#c70b578448bc90a2494a5ebcd854b96f63e25de8"
-  integrity sha512-BWj/ykGpqVAJVdPyHmSTUm44buz3jPv+6jnvuFdQSRH0kAgP1cEIE4doHiFyqHXOmuB5EQVR/nh2g9YRiRNs9g==
+vite-plugin-vue-devtools@~8.1:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-vue-devtools/-/vite-plugin-vue-devtools-8.1.1.tgz#bf2fb3cf6e4bfadc174c01936ddc8a5ccc561ee0"
+  integrity sha512-9qTpOmZ2vHpvlI9hdVXAQ1Ry4I8GcBArU7aPi0qfIaV7fQIXy0L1nb6X4mFY2Gw0dYshHuLbIl0Ulb572SCjsQ==
   dependencies:
-    "@vue/devtools-core" "^8.0.7"
-    "@vue/devtools-kit" "^8.0.7"
-    "@vue/devtools-shared" "^8.0.7"
+    "@vue/devtools-core" "^8.1.1"
+    "@vue/devtools-kit" "^8.1.1"
+    "@vue/devtools-shared" "^8.1.1"
     sirv "^3.0.2"
     vite-plugin-inspect "^11.3.3"
     vite-plugin-vue-inspector "^5.3.2"
@@ -8222,9 +8222,9 @@ vue-codemirror@~6.1:
     "@codemirror/view" "6.x"
 
 vue-component-type-helpers@^3.0.0:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/vue-component-type-helpers/-/vue-component-type-helpers-3.2.7.tgz#a85fd5ee4f5105883c267859c2d54a2d53e5da20"
-  integrity sha512-+gPp5YGmhfsj1IN+xUo7y0fb4clfnOiiUA39y07yW1VzCRjzVgwLbtmdWlghh7mXrPsEaYc7rrIir/HT6C8vYQ==
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/vue-component-type-helpers/-/vue-component-type-helpers-3.2.8.tgz#fb2f5722a51bc03638487d5cd43e0b527dcb8d1a"
+  integrity sha512-9689efAXhN/EV86plgkL/XFiJSXhGtWPG6JDboZ+QnjlUWUUQrQ0ILKQtw4iQsuwIwu5k6Aw+JnehDe7161e7A==
 
 vue-eslint-parser@^10.4.0, vue-eslint-parser@~10.4:
   version "10.4.0"
@@ -8262,12 +8262,12 @@ vue-router@~5.0:
     yaml "^2.8.2"
 
 vue-tsc@~3.2:
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.2.7.tgz#3e9a3a759f3e8fe4681ae628c3746aee00a5d1ff"
-  integrity sha512-zc1tL3HoQni1zGTGrwBVRQb7rGP5SWdu/m4rGB6JcnAC5MT5LFZIxF7Y+EJEnt4hGF23d60rXH7gRjHGb5KQQQ==
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.2.8.tgz#92e6190f198b460c92b35f4f66eb791e374f0c01"
+  integrity sha512-27vTLJ6Q2370obOd0PFYoYoKnmXJ521uUIedrs3Zhhhg/8YG10VOCMmwt+JQslatpAMTDbnWiitLnoD5VlIvog==
   dependencies:
     "@volar/typescript" "2.4.28"
-    "@vue/language-core" "3.2.7"
+    "@vue/language-core" "3.2.8"
 
 vue@~3.5:
   version "3.5.33"
