@@ -32,10 +32,8 @@ import { computed } from "vue";
 
 import type { TSimulation } from "@/types";
 
-import { useAppStore } from "@/app";
-const appStore = useAppStore();
-
-const projectViewStore = appStore.currentWorkspace?.views.project;
+import { getCurrentViewStore } from "@/app";
+const projectViewStore = getCurrentViewStore("project");
 
 const props = defineProps<{
   simulation: TSimulation;
