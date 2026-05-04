@@ -2,10 +2,10 @@
 
 import type { RouteLocationNormalizedGeneric, RouteLocationNormalizedLoadedGeneric, Router } from "vue-router";
 
-import { useAppStore } from "@/app";
 import type { TProject } from "@/types";
-import { logger as mainLogger, truncate } from "@/utils";
 import { confirmDialog } from "@/core";
+import { getCurrentViewStore, getCurrentWorkspace, useAppStore } from "@/app";
+import { logger as mainLogger, truncate } from "@/utils";
 
 const logger = mainLogger.getSubLogger({ name: "project route" });
 
@@ -16,11 +16,11 @@ const logger = mainLogger.getSubLogger({ name: "project route" });
 const loadProject = (projectId?: string): void => {
   logger.trace("load project:", truncate(projectId));
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
 
-  const projectStore = appStore.currentWorkspace.stores.projectStore;
-  const projectDBStore = appStore.currentWorkspace.stores.projectDBStore;
+  const projectStore = currentWorkspace.stores.projectStore;
+  const projectDBStore = currentWorkspace.stores.projectDBStore;
 
   if (projectDBStore.state.initialized) {
     projectStore.loadProject(projectId);
@@ -37,11 +37,11 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
   const projectId = props.route.params.projectId as string;
   logger.trace("mount project layout:", truncate(projectId));
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
 
-  const projectDBStore = appStore.currentWorkspace.stores.projectDBStore;
-  const projectStore = appStore.currentWorkspace.stores.projectStore;
+  const projectDBStore = currentWorkspace.stores.projectDBStore;
+  const projectStore = currentWorkspace.stores.projectStore;
 
   setTimeout(() => {
     if (projectStore.state.projectId === projectId) return;
@@ -75,15 +75,15 @@ export const newProjectRoute = (router: Router) => {
 /**
  * Before enter project route.
  * @param to project route
+ *
  * @remarks It loads project.
  */
 export const projectBeforeEnter = (to: RouteLocationNormalizedGeneric): void => {
   logger.trace("before enter project route:", to.path);
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return;
+  const projectViewStore = getCurrentViewStore("project");
+  if (!projectViewStore) return;
 
-  const projectViewStore = appStore.currentWorkspace.views.project;
   const path = to.path.split("/");
   projectViewStore.state.views.main = path[path.length - 1] || "edit";
 
@@ -100,10 +100,10 @@ export const projectBeforeEnter = (to: RouteLocationNormalizedGeneric): void => 
 export const projectNew = (): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("create a new project");
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
 
-  const projectStore = appStore.currentWorkspace.stores.projectStore;
+  const projectStore = currentWorkspace.stores.projectStore;
   projectStore.newProject();
 
   return projectStore.routeTo();
@@ -117,10 +117,10 @@ export const projectNew = (): RouteLocationNormalizedLoadedGeneric => {
 export const projectRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("redirect to project:", truncate(to.params.projectId as string));
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
 
-  const projectStore = appStore.currentWorkspace.stores.projectStore;
+  const projectStore = currentWorkspace.stores.projectStore;
 
   if (to.params.projectId) loadProject(to.params.projectId as string);
 

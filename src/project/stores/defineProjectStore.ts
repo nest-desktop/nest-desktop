@@ -8,7 +8,7 @@ import router from "@/router";
 import type { Class, TStore } from "@/types";
 import { BaseProject } from "@/project";
 import { logger as mainLogger, truncate } from "@/utils";
-import { useAppStore } from "@/app";
+import { getCurrentViewStore } from "@/app";
 
 import { useProjectDBStore } from "./projectDBStore";
 
@@ -103,8 +103,7 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
       // activityGraphStore.update();
       // const projectViewStore = useProjectViewStore();
 
-      const appStore = useAppStore();
-      const projectViewStore = appStore.currentWorkspace.views.project;
+      const projectViewStore = getCurrentViewStore("project");
       if (projectViewStore.state.simulationEvents.onLoad && projectViewStore.state.views.main === "explore")
         startSimulation();
     };
@@ -139,8 +138,7 @@ export function defineProjectStore<TProject extends BaseProject = BaseProject>(
      * @returns
      */
     const routeTo = (): RouteLocationNormalizedLoadedGeneric => {
-      const appStore = useAppStore();
-      const projectViewStore = appStore.currentWorkspace.views.project;
+      const projectViewStore = getCurrentViewStore("project");
 
       return {
         path: "/" + props.workspace + "/project/" + state.projectId + "/" + projectViewStore.state.views.main,
