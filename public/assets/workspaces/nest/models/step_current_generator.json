@@ -5,6 +5,7 @@
   "label": "step current generator",
   "params": [
     {
+      "codeNodeInterface": "ListInputInterface",
       "component": "arrayInput",
       "id": "amplitude_times",
       "label": "times at which current changes",
@@ -18,6 +19,7 @@
       "unit": "ms"
     },
     {
+      "codeNodeInterface": "ListInputInterface",
       "component": "arrayInput",
       "id": "amplitude_values",
       "label": "amplitudes of step current current",

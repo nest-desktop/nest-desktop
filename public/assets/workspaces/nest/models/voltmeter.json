@@ -6,6 +6,7 @@
   "label": "voltmeter",
   "params": [
     {
+      "codeNodeInterface": "NumberInterface",
       "component": "tickSlider",
       "id": "interval",
       "label": "time interval of recording",

@@ -4,6 +4,7 @@
   "label": "static synapse",
   "params": [
     {
+      "codeNodeInterface": "NumberInterface",
       "component": "valueSlider",
       "id": "weight",
       "label": "synaptic weight",
@@ -13,6 +14,7 @@
       "value": 1
     },
     {
+      "codeNodeInterface": "NumberInterface",
       "component": "valueSlider",
       "id": "delay",
       "label": "synaptic delay",

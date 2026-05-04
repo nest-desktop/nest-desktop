@@ -2,13 +2,11 @@
   "rules": [
     {
       "value": "all_to_all",
-      "label": "all to all",
-      "params": []
+      "label": "all to all"
     },
     {
       "value": "one_to_one",
-      "label": "one to one",
-      "params": []
+      "label": "one to one"
     }
   ]
 }

@@ -5,6 +5,7 @@
   "label": "spike generator",
   "params": [
     {
+      "codeNodeInterface": "ListInputInterface",
       "component": "arrayInput",
       "id": "spike_times",
       "label": "spike times",
@@ -18,6 +19,7 @@
       "unit": "ms"
     },
     {
+      "codeNodeInterface": "ListInputInterface",
       "component": "arrayInput",
       "id": "spike_weights",
       "label": "weights of spike",

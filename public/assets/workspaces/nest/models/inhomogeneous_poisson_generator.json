@@ -5,12 +5,14 @@
   "label": "inhomogeneous Poisson generator",
   "params": [
     {
+      "codeNodeInterface": "ListInputInterface",
       "component": "arrayInput",
       "id": "rate_times",
       "label": "times at which rate changes",
       "unit": "ms"
     },
     {
+      "codeNodeInterface": "ListInputInterface",
       "component": "arrayInput",
       "id": "rate_values",
       "label": "amplitudes of Poisson spike train",
