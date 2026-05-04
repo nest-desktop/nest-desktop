@@ -17,6 +17,7 @@
     </template>
 
     <v-list density="compact">
+      <!-- TODO: Fix type of workspaceItems -->
       <v-list-item
         v-for="(item, index) in appStore.workspaceItems"
         :key="index"
