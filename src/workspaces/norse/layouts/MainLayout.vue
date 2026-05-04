@@ -11,7 +11,7 @@ import { onMounted } from "vue";
 
 import type { TStore } from "@/types";
 import { AppNavigation } from "@/nav/components";
-import { useAppStore } from "@/app";
+import { getCurrentWorkspace, useAppStore } from "@/app";
 
 const appStore = useAppStore();
 
@@ -43,7 +43,9 @@ const navItems = [
 ];
 
 onMounted(() => {
-  const stores = appStore.currentWorkspace.stores;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
+  const stores = currentWorkspace.stores;
 
   // Update and check backend.
   if (norseSimulatorStore.state.response.status != 200) {

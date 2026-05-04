@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { ProjectBar, ProjectController, ProjectNav } from "@/project/components";
@@ -78,11 +78,12 @@ const router = useRouter();
 const route = useRoute();
 
 import { usePyNNProjectStore } from "../project/stores/projectStore";
-import { onBeforeUnmount } from "vue";
 const projectStore = usePyNNProjectStore();
 
+import { getCurrentViewStore } from "@/app";
+const projectViewStore = getCurrentViewStore("project");
+
 const project = computed(() => projectStore.state.project as PyNNProject);
-const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
 
 onMounted(() => {
   mountProjectLayout({ route, router });

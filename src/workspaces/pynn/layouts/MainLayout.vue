@@ -10,8 +10,8 @@
 import { onMounted } from "vue";
 
 import { AppNavigation } from "@/nav/components";
-import { useAppStore } from "@/app";
 import { TStore } from "@/types";
+import { getCurrentWorkspace, useAppStore } from "@/app";
 
 const appStore = useAppStore();
 
@@ -43,7 +43,9 @@ const navItems = [
 ];
 
 onMounted(() => {
-  const stores = appStore.currentWorkspace.stores;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
+  const stores = currentWorkspace.stores;
 
   // Update and check backend.
   if (pynnSimulatorStore.state.response.status != 200) {
