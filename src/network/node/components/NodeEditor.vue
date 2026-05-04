@@ -97,7 +97,7 @@
               <v-list-item class="param pl-0 pr-1">
                 <ValueSlider
                   id="n"
-                  v-model="node.size.value"
+                  v-model="node.size"
                   :thumb-color="node.view.color"
                   input-label="n"
                   label="population size"
@@ -121,7 +121,7 @@
               <ParamListItem
                 v-if="node.params.get(paramId)"
                 :key="index"
-                v-model="node.params.codeNode.inputs[paramId].value"
+                v-model="node.params.get(paramId).value"
                 :color="node.view.color"
                 :param="node.params.get(paramId)"
               />

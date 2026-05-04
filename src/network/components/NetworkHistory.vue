@@ -43,10 +43,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { useAppStore } from "@/app";
-const appStore = useAppStore();
+import { getCurrentStore } from "@/app";
+const projectStore = getCurrentStore("project");
 
-const project = computed(() => appStore.currentWorkspace?.stores.projectStore.state.project);
+const project = computed(() => projectStore.state.project);
 
 /**
  * Count networks before the current.

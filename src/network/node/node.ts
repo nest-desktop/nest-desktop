@@ -1,6 +1,6 @@
 // node.ts
 
-import type { CodeNodeInterface } from "@babsey/code-graph";
+// import type { CodeNodeInterface } from "@babsey/code-graph";
 
 import type { BaseModel, IModelRecordState, TNodeElementType } from "@/model";
 import type { Class, TModel, TNetwork, TNode } from "@/types";
@@ -199,10 +199,6 @@ export class BaseNode<
     return this.modelDBStore.getModelsByElementType(this.elementType);
   }
 
-  get n(): number {
-    return this._size;
-  }
-
   get network(): TNetwork {
     return this.nodes.network;
   }
@@ -256,8 +252,13 @@ export class BaseNode<
     return this.nodes.showNode(this);
   }
 
-  get size(): CodeNodeInterface | undefined {
-    return this.intf?.size;
+  get size(): number {
+    return Number(this.intf?.size?.value) ?? this._size;
+  }
+
+  set size(value: number) {
+    this._size = value;
+    if (this.intf?.size) this.intf.size.value = value;
   }
 
   get sizeVisible(): boolean {
@@ -417,7 +418,16 @@ export class BaseNode<
 
     this._modelId = modelId;
     this._model = this.getModel(modelId);
-    if (this.codeNode && this.model.variableName.length > 0) this.codeNode.variableName = this.model.variableName;
+
+    if (this.codeNode) {
+      if (!this.model) {
+        this.params.load();
+        this.codeNode.variableName = "n";
+        return;
+      }
+
+      if (this.model.variableName.length > 0) this.codeNode.variableName = this.model.variableName;
+    }
 
     // Load model params
     const modelParamState = this.model.params.save();
@@ -545,7 +555,7 @@ export class BaseNode<
     this.logger.trace("update");
 
     // this.view.updateStyle();
-    if (this.model.isRecorder) this.updateRecorder();
+    if (this.model?.isRecorder) this.updateRecorder();
   }
 
   /**
@@ -554,7 +564,7 @@ export class BaseNode<
   updateAnalogRecorder(): void {
     this.logger.trace("update analog recorder");
 
-    if (!this.model.isAnalogRecorder) return;
+    if (!this.model || !this.model.isAnalogRecorder) return;
 
     this.updateRecordables();
     this.updateRecords();
@@ -568,7 +578,7 @@ export class BaseNode<
     this.logger.trace("update recordables");
 
     let modelRecordStates: IModelRecordState[] = [];
-    if (!this.model.isAnalogRecorder || this.connections.length == 0) return;
+    if (!this.model || !this.model.isAnalogRecorder || this.connections.length == 0) return;
 
     // Get model states from target nodes.
     const targetsModelStates = this.targetNodes.map((node: TNode) => [...node.modelStates].flat());
@@ -594,7 +604,7 @@ export class BaseNode<
   updateRecorder(): void {
     this.logger.trace("update recorder");
 
-    if (!this.model.isRecorder) return;
+    if (!this.model || !this.model.isRecorder) return;
 
     // Create activity.
     if (!this.activity) this.createActivity();

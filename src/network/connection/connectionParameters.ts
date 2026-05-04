@@ -1,10 +1,10 @@
 // connectionParameters.ts
 
-import type { ICodeMaskParamState } from "@/codeGraph";
+// import type { ICodeMaskParamState } from "@/codeGraph";
 import { BaseParameters } from "@/parameter";
 
 import type { BaseConnection } from "./connection";
-import type { IConnectionRuleConfig } from "./connectionRule";
+// import type { IConnectionRuleConfig } from "./connectionRule";
 import { ConnectionParameter } from "./connectionParameter";
 
 export class ConnectionParameters<
