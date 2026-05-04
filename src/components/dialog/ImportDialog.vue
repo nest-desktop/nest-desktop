@@ -151,7 +151,7 @@
 
     <v-card-actions>
       <v-btn
-        v-if="currentWorkspace === 'nest'"
+        v-if="currentWorkspaceId === 'nest'"
         icon="mdi:mdi-database-arrow-up-outline"
         size="small"
         title="fetch from old database"
@@ -179,13 +179,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, reactive } from "vue";
+import { nextTick, reactive } from "vue";
 import axios, { AxiosResponse } from "axios";
 
 import { BaseModelDB } from "@/model";
 import { BaseProjectDB } from "@/project";
 
-// TODO: No imports from workspaces!
+// TODO: No imports from specific workspaces!
 import { isNESTNetworkState, type INESTCopyModelState } from "@/workspaces/nest/network";
 
 import type { INodeGroupState } from "@/network";
@@ -214,7 +214,7 @@ interface IGithubTree {
 const emit = defineEmits(["closeDialog"]);
 const closeDialog = (value?: string | boolean) => emit("closeDialog", value);
 
-const currentWorkspace = computed(() => appStore.state.currentWorkspace);
+const currentWorkspaceId = appStore.state.currentWorkspace;
 const modelDBStore = getCurrentDBStore("model");
 const projectDBStore = getCurrentDBStore("project");
 
@@ -482,6 +482,8 @@ const importSelected = () => {
  * Import selected models.
  */
 const importSelectedModels = () => {
+  if (!state.selected) return
+
   const modelsState: TModelState[] = state.selected
     .filter((data: IImportState) => data.group === "model")
     .map((data: IImportState) => data.props) as TModelState[];
@@ -492,6 +494,8 @@ const importSelectedModels = () => {
  * Import selected projects.
  */
 const importSelectedProjects = () => {
+  if (!state.selected) return
+
   const projectsState: TProjectState[] = state.selected
     .filter((data: IImportState) => data.group === "project")
     .map((data: IImportState) => data.props) as TProjectState[];
