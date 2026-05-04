@@ -26,6 +26,7 @@ const nestProjectBeforeEnter = (to: RouteLocationNormalizedGeneric): void => {
 
 const nestProjectRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("redirect to nest project:", truncate(to.params.projectId as string));
+
   projectRedirect(to);
 
   if (currentProject.value) {

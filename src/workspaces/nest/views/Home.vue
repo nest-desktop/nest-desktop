@@ -47,7 +47,7 @@
         </v-card>
       </v-col>
 
-      <v-col md="6">
+      <v-col v-if="currentWorkspace" md="6">
         <v-card title="Backend">
           <v-expansion-panels elevation="0" variant="accordion">
             <v-expansion-panel>
@@ -56,7 +56,7 @@
                 <v-spacer />
 
                 <BackendStatusIcon
-                  v-for="(backend, index) in appStore.currentWorkspace.backends"
+                  v-for="(backend, index) in currentWorkspace.backends"
                   :key="index"
                   :backend-store="backend"
                   :title="backend.state.name"
@@ -65,11 +65,7 @@
 
               <v-expansion-panel-text>
                 <v-tabs v-model="state.backendTab" density="compact">
-                  <v-tab
-                    v-for="(backend, index) in appStore.currentWorkspace.backends"
-                    :key="index"
-                    :value="backend.state.name"
-                  >
+                  <v-tab v-for="(backend, index) in currentWorkspace.backends" :key="index" :value="backend.state.name">
                     {{ backend.state.name }}
                     <template #append>
                       <BackendStatusIcon :backend-store="backend" :title="backend.state.name" />
@@ -79,7 +75,7 @@
 
                 <v-window v-model="state.backendTab" class="mx-2">
                   <v-window-item
-                    v-for="(backend, index) in appStore.currentWorkspace.backends"
+                    v-for="(backend, index) in currentWorkspace.backends"
                     :key="index"
                     :value="backend.state.name"
                   >
@@ -89,7 +85,10 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel :disabled="appStore.currentWorkspace.stores.modelStore.state.models.length === 0">
+            <v-expansion-panel
+              v-if="currentWorkspace.stores.modelStore"
+              :disabled="currentWorkspace.stores.modelStore.state.models.length === 0"
+            >
               <v-expansion-panel-title>
                 Models from NEST backend
                 <v-spacer />
@@ -113,7 +112,9 @@
                       :hide-details="false"
                       clearable
                       return-object
-                      @update:model-value="(item) => (item ? nestSimulator.installModule(item.name) : resetKernel())"
+                      @update:model-value="
+                        (item) => (item ? nestSimulator.installModule(item.name) : nestSimulator.resetKernel())
+                      "
                     >
                       <template #details>
                         <span
@@ -181,13 +182,13 @@ import nestLogo from "@/assets/img/logo/nest-logo.svg";
 import type { IModelState } from "@/model";
 import { BackendSettings, BackendStatusIcon } from "@/backends";
 import { StoreList } from "@/components";
-import { useAppStore } from "@/app";
+import { getCurrentWorkspace } from "@/app";
 
 import nestSimulator from "../backends/nestSimulator";
 import { IModule, openNESTModuleDialog } from "../module";
 import { NESTModuleSelect } from "../module/components";
 
-const appStore = useAppStore();
+const currentWorkspace = getCurrentWorkspace();
 
 const state = reactive<{
   backendTab: string;
@@ -202,7 +203,9 @@ const state = reactive<{
 const customModels = computed(() => state.selectedModule?.models);
 
 const models = computed(() => {
-  const modelStates = appStore.currentWorkspace.stores.modelStore.state.models;
+  if (!currentWorkspace) return [];
+  const modelStates = currentWorkspace.stores.modelStore.state.models;
+
   return state.modelSearch
     ? modelStates.filter((modelState: IModelState) => modelState.id.includes(state.modelSearch))
     : modelStates;
@@ -235,8 +238,4 @@ const refItems = [
     title: "https://www.ebrains.eu/tools/nest",
   },
 ];
-
-const resetKernel = () => {
-  nestSimulator.resetKernel();
-};
 </script>

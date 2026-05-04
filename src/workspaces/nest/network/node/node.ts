@@ -225,7 +225,16 @@ export class NESTNode extends BaseNode<NESTNodes, INESTNodeState, NESTConnection
       this._copyModel = undefined;
       this._model = this.getModel(modelId);
     }
-    if (this.codeNode && this.model.variableName.length > 0) this.codeNode.variableName = this.model.variableName;
+
+    if (this.codeNode) {
+      if (!this.model) {
+        this.params.load();
+        this.codeNode.variableName = "n";
+        return;
+      }
+
+      if (this.model.variableName.length > 0) this.codeNode.variableName = this.model.variableName;
+    }
 
     // Load model params
     const modelParamState = this.model.params.save();

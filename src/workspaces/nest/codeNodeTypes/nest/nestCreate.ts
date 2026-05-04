@@ -43,7 +43,7 @@ export const nestCreate = defineCodeNode({
       new CodeNodeOutputInterface("positions", ".positions").use(displayInSidebar, true).setOptional(true),
   },
   beforeRun() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
     updateNodeMask(this);
 
     // Connect recorder events to response node.
@@ -53,7 +53,7 @@ export const nestCreate = defineCodeNode({
     }
   },
   onConnected() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
 
     const paramsNode = this.getConnectedNodeByInterface("params", "inputs");
     if (paramsNode) {
@@ -68,6 +68,10 @@ export const nestCreate = defineCodeNode({
     }
 
     // if (isRecorderNode(this)) connectToResponseNode(this, "events");
+  },
+  onUnconnected() {
+    const paramsNode = this.getConnectedNodeByInterface("params", "inputs");
+    if (!paramsNode) this.inputs.params.setHidden(true);
   },
   // update() {
   //   let nestNode: NESTNode | undefined = this.view as NESTNode;
@@ -123,6 +127,8 @@ export const isRecorderNode = (codeNode: AbstractCodeNode) =>
 
 export const loadNESTCreateNode = (graph: CodeGraph, nodeState: INESTNodeState, idx: number = -1): AbstractCodeNode => {
   const codeNode = getNESTCreateNode(graph, idx);
+
+  // Update node params
   updateNESTCreateNode(codeNode, nodeState);
 
   // Update spatial node.
@@ -201,7 +207,7 @@ export const updateNESTCreateNode = (codeNode: AbstractCodeNode, nodeState: INES
 };
 
 const updateNodeMask = (codeNode: AbstractCodeNode) => {
-  if (!codeNode.code.project) return;
+  if (!codeNode.code || !codeNode.code.project) return;
   let node = codeNode.mask;
 
   if (!node) {
@@ -216,8 +222,8 @@ const updateNodeMask = (codeNode: AbstractCodeNode) => {
   const paramsNode = codeNode.getConnectedNodeByInterface("params", "inputs");
   if (paramsNode) {
     node.params.registerCodeNode(paramsNode);
-  } else {
-    codeNode.inputs.params.setHidden(true);
+    // } else {
+    //   codeNode.inputs.params.setHidden(true);
   }
 
   // spatial node

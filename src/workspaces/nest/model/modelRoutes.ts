@@ -3,26 +3,22 @@
 import type { RouteLocationNormalizedGeneric, RouteLocationNormalizedLoadedGeneric } from "vue-router";
 
 import { modelBeforeEnter, modelRedirect } from "@/model";
-import { getCurrentViewStore, useAppStore } from "@/app";
+import { getCurrentViewStore } from "@/app";
 
 import { useNESTModelStore } from "./stores";
 
 const nestModelRedirect = (to: RouteLocationNormalizedGeneric): RouteLocationNormalizedLoadedGeneric => {
   modelRedirect(to);
 
-  const appStore = useAppStore();
   const modelStore = useNESTModelStore();
+  const modelViewStore = getCurrentViewStore("model");
 
-  if (appStore.currentWorkspace) {
-    const modelViewStore = getCurrentViewStore("model");
-
-    if (modelStore.model && !modelStore.model.isNeuron) {
-      if (modelViewStore.state.views.main === "explore") {
-        modelViewStore.state.views.main = "doc";
-      }
-      if (modelViewStore.state.views.controller === "code") {
-        modelViewStore.state.views.controller = "defaults";
-      }
+  if (modelStore.model && !modelStore.model.isNeuron) {
+    if (modelViewStore.state.views.main === "explore") {
+      modelViewStore.state.views.main = "doc";
+    }
+    if (modelViewStore.state.views.controller === "code") {
+      modelViewStore.state.views.controller = "defaults";
     }
   }
 

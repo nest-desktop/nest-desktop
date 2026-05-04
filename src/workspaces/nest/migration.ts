@@ -21,9 +21,11 @@ export const loadGraphByNESTProject = (graph: CodeGraph, projectState: INESTProj
   if (projectState.simulation?.kernel) loadNESTSetKernelStatusNode(graph, projectState.simulation.kernel);
 
   // nest.Create
-  const createNodes = projectState.network?.nodes?.map((nodeState: INESTNodeState) =>
-    loadNESTCreateNode(graph, nodeState),
-  );
+  const createNodes = projectState.network?.nodes?.map((nodeState: INESTNodeState) => {
+    const codeNode = loadNESTCreateNode(graph, nodeState);
+    if (nodeState.params) codeNode.inputs.params.setHidden(Object.keys(nodeState.params).length === 0);
+    return codeNode;
+  });
 
   // nest.Connect
   projectState.network?.connections?.map((connectionState: INESTConnectionState) =>

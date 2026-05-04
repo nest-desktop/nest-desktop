@@ -23,7 +23,7 @@ export const nestSimulate = defineCodeNode({
     t: () => new IntegerInterface("time", 1000),
   },
   beforeRun() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
     this.code.project.simulation.registerCodeNode(this);
   },
 });

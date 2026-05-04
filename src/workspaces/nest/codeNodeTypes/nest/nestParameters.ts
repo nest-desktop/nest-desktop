@@ -16,7 +16,6 @@ import {
 
 import { BaseParameters } from "@/parameter";
 import { IBaseState } from "@/core";
-import { VCalendar } from "vuetify/lib/components";
 
 export interface ICodeNodeParamState extends IBaseState {
   component?: string;
@@ -53,13 +52,16 @@ export const nestParameters = defineDynamicCodeNode({
     return args.length > 0 ? `{\n\t${args.join(",\n\t")}\n}` : "{}";
   },
   beforeRun() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
 
     const params = this.state.props?.components ? new this.state.props.components() : new BaseParameters();
     params.registerCodeNode(this);
   },
+  // onDestroy() {
+  //   this.mask?.unregisterCodeNode()
+  // },
   onUnconnected() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
 
     this.updateInputInterfaces();
   },
@@ -133,7 +135,7 @@ export const removeNESTParameterNode = (
   codeNode: AbstractCodeNode,
   paramInterfaceName: string = "params",
 ): void => {
-  let paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
+  const paramsNode: AbstractCodeNode | null = codeNode.getConnectedNodeByInterface(paramInterfaceName, "inputs");
 
   // paramsNode.removeConnections();
   paramsNode.remove();

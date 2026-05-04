@@ -119,7 +119,7 @@
 
       <template #prependBtn>
         <v-btn
-          v-if="appStore.currentWorkspace.backends.nestml.state.enabled"
+          v-if="currentWorkspace?.backends.nestml.state.enabled"
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
@@ -194,7 +194,7 @@
                 <ValueSlider
                   v-else
                   id="n"
-                  v-model="node.size.value"
+                  v-model="node.size"
                   :thumb-color="node.view.color"
                   input-label="n"
                   label="population size"
@@ -260,7 +260,7 @@ import { ConnectionEditor, NodeEditor, NodeGroupEditor, NodeModelSelect } from "
 import { Menu, ValueSlider } from "@/components";
 import { ProjectBar, ProjectController, ProjectNav } from "@/project/components";
 import { mountProjectLayout } from "@/project";
-import { useAppStore } from "@/app";
+import { getCurrentViewStore, getCurrentWorkspace } from "@/app";
 
 import type { NESTNode } from "../types";
 import { ActivityAnimationController, ActivityAnimationControllerLayer } from "../activityGraph/components";
@@ -272,13 +272,13 @@ import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
-const appStore = useAppStore();
-
 import { doCopyModel, useNESTProjectStore } from "../project/stores/projectStore";
 const projectStore = useNESTProjectStore();
 
 const project = computed(() => projectStore.state.project);
-const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
+const projectViewStore = getCurrentViewStore("project");
+
+const currentWorkspace = getCurrentWorkspace();
 
 const model = ref("");
 
@@ -295,7 +295,7 @@ const getPopItems = (node: NESTNode) => [
       icon: "mdi:mdi-reload",
       class: "mdi-flip-h",
     },
-    onClick: () => (node.size.value = 1),
+    onClick: () => (node.size = 1),
     title: "Set default size",
   },
   {
@@ -337,7 +337,7 @@ watch(
   () => route.query?.graphView,
   (graphView) => {
     if (!["code", "network"].includes(graphView as string)) return;
-    projectViewStore.value.state.views.graph = graphView;
+    projectViewStore.state.views.graph = graphView;
   },
 );
 
@@ -345,7 +345,7 @@ watch(
   () => route.query?.activityView,
   (activityView) => {
     if (!["abstract", "spatial"].includes(activityView as string)) return;
-    projectViewStore.value.state.views.activity = activityView;
+    projectViewStore.state.views.activity = activityView;
   },
 );
 </script>

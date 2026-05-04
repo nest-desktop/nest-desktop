@@ -22,7 +22,7 @@ export interface INESTKernelState {
   rngSeed?: number;
 }
 
-const defaultKernelState: Record<string, ICodeNodeParamState> = {
+const defaultKernelParamState: Record<string, ICodeNodeParamState> = {
   local_num_threads: {
     id: "local_num_threads",
     component: "IntegerInterface",
@@ -52,11 +52,11 @@ export const nestSetKernelStatus = defineCodeNode({
     params: () => new CodeNodeInputInterface("params", ""),
   },
   beforeRun() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
     this.code.project.simulation.kernel.registerCodeNode(this);
   },
   onConnected() {
-    updateParameterInterfaces(this, "params", defaultKernelState);
+    updateParameterInterfaces(this, "params", defaultKernelParamState);
   },
 });
 
@@ -90,7 +90,7 @@ export const loadNESTSetKernelStatusNode = (
   updateNESTParameterNode(
     codeNode,
     "params",
-    kernelState ? updateRecords<ICodeNodeParamState>(defaultKernelState, kernelState) : defaultKernelState,
+    kernelState ? updateRecords<ICodeNodeParamState>(defaultKernelParamState, kernelState) : defaultKernelParamState,
   );
 
   return codeNode;

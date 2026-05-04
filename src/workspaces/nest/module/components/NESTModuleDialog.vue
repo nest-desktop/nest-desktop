@@ -43,7 +43,7 @@
 
       <v-spacer />
       <v-btn
-        :disabled="appStore.currentWorkspace.backends.nestml.state.response.status != 200"
+        :disabled="currentWorkspace.backends.nestml.state.response.status != 200"
         text="Generate module"
         @click="closeDialog(state.selectedModule)"
       />
@@ -55,17 +55,16 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive } from "vue";
 
-import { useAppStore } from "@/app";
-
 import NESTModuleSelect from "./NESTModuleSelect.vue";
 import type { NESTModel } from "../../types";
-import { IModule, useNESTModuleStore } from "../moduleStore";
+
+import { getCurrentWorkspace } from "@/app";
+const currentWorkspace = getCurrentWorkspace();
+
 import { useNESTModelDBStore } from "../../model";
-
-const appStore = useAppStore();
-
 const modelDBStore = useNESTModelDBStore();
 
+import { IModule, useNESTModuleStore } from "../moduleStore";
 const moduleStore = useNESTModuleStore();
 
 const state = reactive<{ selectedModule: IModule }>({

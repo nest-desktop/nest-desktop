@@ -1,31 +1,33 @@
 <template>
-  <v-layout style="height: 300px">
-    <NetworkGraph :key="currentProject.id" :network="currentProject.network" />
-  </v-layout>
+  <div>
+    <v-layout style="height: 300px">
+      <NetworkGraph :key="currentProject.id" :network="currentProject.network" />
+    </v-layout>
 
-  <v-container>
-    <v-row no-gutters>
-      <v-col v-if="currentProject.network.models.all.length > 0" :sm="6" class="pa-1" cols="12">
-        <div class="text-button">Copied models</div>
-        <CopyModelViewer v-for="(model, index) in currentProject.network.models.all" :key="index" :model />
-      </v-col>
+    <v-container>
+      <v-row no-gutters>
+        <v-col v-if="currentProject.network.models.all.length > 0" :sm="6" class="pa-1" cols="12">
+          <div class="text-button">Copied models</div>
+          <CopyModelViewer v-for="(model, index) in currentProject.network.models.all" :key="index" :model />
+        </v-col>
 
-      <v-col :sm="ncols" class="pa-1" cols="12">
-        <div class="text-button">Stimulator</div>
-        <NodeViewer v-for="(node, index) in currentProject.network.nodes.stimulators" :key="index" :node />
-      </v-col>
+        <v-col :sm="ncols" class="pa-1" cols="12">
+          <div class="text-button">Stimulator</div>
+          <NodeViewer v-for="(node, index) in currentProject.network.nodes.stimulators" :key="index" :node />
+        </v-col>
 
-      <v-col :sm="ncols" class="pa-1" cols="12">
-        <div class="text-button">Neuron</div>
-        <NodeViewer v-for="(node, index) in currentProject.network.nodes.neurons" :key="index" :node />
-      </v-col>
+        <v-col :sm="ncols" class="pa-1" cols="12">
+          <div class="text-button">Neuron</div>
+          <NodeViewer v-for="(node, index) in currentProject.network.nodes.neurons" :key="index" :node />
+        </v-col>
 
-      <v-col :sm="ncols" class="pa-1" cols="12">
-        <div class="text-button">Recorder</div>
-        <NodeViewer v-for="(node, index) in currentProject.network.nodes.recorders" :key="index" :node />
-      </v-col>
-    </v-row>
-  </v-container>
+        <v-col :sm="ncols" class="pa-1" cols="12">
+          <div class="text-button">Recorder</div>
+          <NodeViewer v-for="(node, index) in currentProject.network.nodes.recorders" :key="index" :node />
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

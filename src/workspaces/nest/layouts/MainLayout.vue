@@ -13,7 +13,7 @@ import { useRoute } from "vue-router";
 import type { TStore } from "@/types";
 import { AppNavigation } from "@/nav/components";
 import { getParamFromURL } from "@/utils";
-import { useAppStore } from "@/app";
+import { getCurrentWorkspace, useAppStore } from "@/app";
 
 import nestSimulator from "../backends/nestSimulator";
 import { useNESTModuleStore } from "../module";
@@ -47,8 +47,11 @@ const navItems = [
 ];
 
 onMounted(() => {
-  const backends = appStore.currentWorkspace.backends;
-  const stores = appStore.currentWorkspace.stores;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
+
+  const backends = currentWorkspace.backends;
+  const stores = currentWorkspace.stores;
 
   // Store URL of NEST Server from the query.
   const nestServerURL = getParamFromURL(route, "nest_server_url");

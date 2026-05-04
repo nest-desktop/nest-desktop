@@ -41,11 +41,11 @@ export const nestConnect = defineCodeNode({
     syn_spec: () => new TextInputInterface("syn_spec", "static_synapse").setOptional(true),
   },
   beforeRun() {
-    if (!this.code.project) return;
+    if (!this.code || !this.code.project) return;
     updateNodeMask(this);
   },
   onConnected() {
-    if (!this.code.project || !this.mask) return;
+    if (!this.code || !this.code.project || !this.mask) return;
 
     // const connParamNode = this.getConnectedNodeByInterface("conn_spec", "inputs");
     // if (connParamNode) {
@@ -59,6 +59,14 @@ export const nestConnect = defineCodeNode({
       updateParameterInterfaces(this, "syn_spec", this.mask.synapse.params.save());
     }
   },
+  onUnconnected() {
+    const connSpecNode = this.getConnectedNodeByInterface("conn_spec", "inputs");
+    if (!connSpecNode) this.inputs.conn_spec.setHidden(true);
+
+    const synSpecNode = this.getConnectedNodeByInterface("syn_spec", "inputs");
+    if (!synSpecNode) this.inputs.syn_spec.setHidden(true);
+  },
+
   // optional, add/remove parameter node when select specific rule.
   // update() {
   //   let connSpecNode = this.getConnectedNodeByInterface('conn_spec')
@@ -200,7 +208,7 @@ export const updateNESTConnectSynapseNode = (codeNode: AbstractCodeNode, synapse
 };
 
 export const updateNodeMask = (codeNode: AbstractCodeNode) => {
-  if (!codeNode.code.project) return;
+  if (!codeNode.code || !codeNode.code.project) return;
 
   let connection = codeNode.mask;
 

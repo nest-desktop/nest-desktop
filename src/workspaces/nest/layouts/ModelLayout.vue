@@ -1,8 +1,8 @@
 <template>
   <ModelNav color="nest-model">
-    <template #newModel>
+    <template v-if="currentWorkspace?.backends.nestml" #newModel>
       <v-fab
-        v-show="appStore.currentWorkspace.backends.nestml.state.enabled"
+        v-show="currentWorkspace.backends.nestml.state.enabled"
         class="ms-4"
         color="primary"
         icon="mdi:mdi-plus"
@@ -44,9 +44,9 @@
         <v-divider vertical />
       </template>
 
-      <template #prependBtn>
+      <template v-if="currentWorkspace?.backends.nestml" #prependBtn>
         <v-btn
-          v-if="appStore.currentWorkspace.backends.nestml.state.enabled"
+          v-if="currentWorkspace.backends.nestml.state.enabled"
           prepend-icon="mdi:mdi-memory"
           text="module"
           title="Generate module"
@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, watch } from "vue";
+import { nextTick, onMounted, watch } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import { BottomNav } from "@/nav/components";
@@ -104,15 +104,13 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-import { useAppStore } from "@/app";
-const appStore = useAppStore();
+import { getCurrentDBStore, getCurrentViewStore, getCurrentWorkspace } from "@/app";
+const currentWorkspace = getCurrentWorkspace();
+const modelDBStore = getCurrentDBStore("model");
+const modelViewStore = getCurrentViewStore("model");
 
 const modelStore = useNESTModelStore();
-
 const moduleStore = useNESTModuleStore();
-
-const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
-const modelViewStore = computed(() => appStore.currentWorkspace.views.model);
 
 const projects: { id: string; name: string; icon: string }[] = [
   {
@@ -185,7 +183,7 @@ const dialogNewModel = () => {
       }
 
       router.push({
-        name: appStore.state.currentWorkspace + "ModelEditor",
+        name: currentWorkspace.id + "ModelEditor",
         params: {
           modelId: model.id,
         },

@@ -5,12 +5,16 @@ import {
   CodeNodeInterface,
   TextInputInterface,
   defineDynamicCodeNode,
+  getPositionAtColumn,
+  type AbstractCodeNode,
+  type CodeGraph,
 } from "@babsey/code-graph";
 
-// import nestCopyModel from './nestCopyModel'
-// import { INESTCopyModelState, NESTCopyModel } from '../../model/copyModel'
-// import { NESTCodeGraph } from '../../codeGraph/codeGraph'
-// import { updateNESTParameterNode } from './nestParameters'
+import type { ICodeMaskParamState } from "@/codeGraph";
+
+import type { INESTCopyModelState } from "../../network/copyModel";
+import { updateNESTParameterNode, updateParameterInterfaces } from "./nestParameters";
+import { getNESTModelParameterStates } from "../../model";
 
 export const nestCopyModel = defineDynamicCodeNode({
   type: "nest.CopyModel",
@@ -39,30 +43,42 @@ export const nestCopyModel = defineDynamicCodeNode({
 
     return { inputs };
   },
+  onConnected() {
+    if (!this.code || !this.code.project) return;
+
+    const paramsNode = this.getConnectedNodeByInterface("params", "inputs");
+    if (paramsNode) {
+      let paramStates: Record<string, ICodeMaskParamState>;
+      if (this.mask) {
+        this.mask.params.registerCodeNode(paramsNode);
+        paramStates = this.mask.params.save();
+      } else {
+        paramStates = getNESTModelParameterStates(this.inputs?.existing.value);
+      }
+      updateParameterInterfaces(this, "params", paramStates);
+    }
+  },
+  onUnconnected() {
+    const paramsNode = this.getConnectedNodeByInterface("params", "inputs");
+    if (!paramsNode) this.inputs.params.setHidden(true);
+  },
 });
 
-// export const addNESTCopyModelNode = (graph: CodeGraph | NESTCodeGraph, idx: number = -1): AbstractCodeNode => {
-//   if (idx === -1) idx = graph.nodes.filter((node: AbstractCodeNode) => node.type === 'nest.CopyModel').length
-//   return graph.addNodeAtCoordinates(nestCopyModel, getPositionAtColumn(-1, 100 + 250 * idx))
-// }
+export const addNESTCopyModelNode = (graph: CodeGraph, idx: number = -1): AbstractCodeNode => {
+  if (idx === -1) idx = graph.getNodesByType("nest.CopyModel").length;
+  return graph.addNodeAtCoordinates(new nestCopyModel(), getPositionAtColumn(-1, 100 + 250 * idx));
+};
 
-// export const loadNESTCopyModelNode = (
-//   graph: CodeGraph | NESTCodeGraph,
-//   modelState: INESTCopyModelState,
-//   idx: number = -1,
-// ): AbstractCodeNode => {
-//   const codeNode = addNESTCopyModelNode(graph, idx)
-//   codeNode.state.props = modelState
+export const loadNESTCopyModelNode = (
+  graph: CodeGraph,
+  modelState: INESTCopyModelState,
+  idx: number = -1,
+): AbstractCodeNode => {
+  const codeNode = addNESTCopyModelNode(graph, idx);
+  updateNESTCopyModel(codeNode, modelState);
 
-//   codeNode.inputs.existing.value = modelState.existing
-//   codeNode.inputs.new.value = modelState.new
-
-//   // params
-//   const params = modelState.params?.filter((param: IParamState) => ('visible' in param ? param.visible : true))
-//   if (params && params.length > 0) updateNESTParameterNode(graph, codeNode, 'params', params)
-
-//   return codeNode
-// }
+  return codeNode;
+};
 
 // export const loadNESTCopySynapseModelNode = (
 //   graph: CodeGraph | NESTCodeGraph,
@@ -84,3 +100,29 @@ export const nestCopyModel = defineDynamicCodeNode({
 
 //   return codeNode
 // }
+
+export const updateNESTCopyModel = (codeNode: AbstractCodeNode, modelState: INESTCopyModelState): void => {
+  codeNode.updateInputValues(modelState);
+
+  // Load params
+  const defaultParamStates = getNESTModelParameterStates(modelState.model);
+  let paramStates: Record<string, ICodeMaskParamState>;
+  if (modelState.params) {
+    const paramKeys = Object.keys(modelState.params);
+    if (paramKeys.length === 0) return;
+
+    paramStates = {};
+    // all param states
+    Object.keys(defaultParamStates).forEach((paramId) => {
+      const paramState = modelState.params[paramId] ?? {};
+
+      paramStates[paramId] = {
+        ...defaultParamStates[paramId],
+        ...paramState,
+        hidden: !paramKeys.includes(paramId),
+      };
+    });
+
+    updateNESTParameterNode(codeNode, "params", paramStates);
+  }
+};
