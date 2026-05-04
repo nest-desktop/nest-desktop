@@ -50,12 +50,11 @@ import CodeEditor from "../components/CodeEditor.vue";
 
 import { initCodeGraph, useCodeGraphStore } from "../stores/codeGraphStore";
 const codeGraphStore = useCodeGraphStore();
+
 const viewModel = computed(() => codeGraphStore.viewModel);
 
-import { useAppStore } from "@/app";
-const appStore = useAppStore();
-
-const currentWorkspace = computed(() => appStore.state.currentWorkspace);
+import { getCurrentWorkspace } from "@/app";
+const currentWorkspace = getCurrentWorkspace();
 
 const routes = { edit: currentWorkspace.value + "CodeGraphEdit", new: currentWorkspace.value + "CodeGraphNew" };
 

@@ -7,8 +7,8 @@ import { defineStore } from "pinia";
 
 import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
+import { getCurrentWorkspace } from "@/app";
 import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
-import { useAppStore } from "@/app";
 
 export const useCodeGraphStore = defineStore(
   "code-graph",
@@ -43,10 +43,10 @@ export const useCodeGraphStore = defineStore(
       const editorId = saveEditor();
       state.currentEditorId = editorId;
 
-      const appStore = useAppStore();
-      const workspace = appStore.currentWorkspace?.id ?? "nest";
+      const currentWorkspace = getCurrentWorkspace();
+      const workspaceId = currentWorkspace?.id ?? "nest";
 
-      return { name: workspace + "CodeGraphEdit", params: { editorId } };
+      return { name: workspaceId + "CodeGraphEdit", params: { editorId } };
     };
 
     const removeEditorState = (editorId: string) => delete state.editorStates[editorId];

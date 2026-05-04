@@ -14,17 +14,16 @@ import type { IAxiosErrorData } from "@/backends";
 import { autocompletion, codeError, languagePython, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/theme";
 
-import { useAppStore } from "@/app";
-const appStore = useAppStore();
+import { getCurrentWorkspace } from "@/app";
+const currentWorkspace = getCurrentWorkspace();
 
 const props = defineProps<{ error?: UnwrapRef<IAxiosErrorData> }>();
 const error = computed(() => props.error);
 
-const extensions: Extension[] = [
-  basicSetup,
-  languagePython(),
-  autocompletion({ override: appStore.currentWorkspace.completionSources }),
-];
+const extensions: Extension[] = [basicSetup, languagePython()];
+
+if (currentWorkspace && currentWorkspace.completionSources)
+  extensions.push(autocompletion({ override: currentWorkspace.completionSources }));
 
 if (darkMode()) extensions.push(oneDark);
 
