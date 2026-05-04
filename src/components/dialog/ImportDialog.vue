@@ -482,7 +482,7 @@ const importSelected = () => {
  * Import selected models.
  */
 const importSelectedModels = () => {
-  if (!state.selected) return
+  if (!state.selected) return;
 
   const modelsState: TModelState[] = state.selected
     .filter((data: IImportState) => data.group === "model")
@@ -494,7 +494,7 @@ const importSelectedModels = () => {
  * Import selected projects.
  */
 const importSelectedProjects = () => {
-  if (!state.selected) return
+  if (!state.selected) return;
 
   const projectsState: TProjectState[] = state.selected
     .filter((data: IImportState) => data.group === "project")
