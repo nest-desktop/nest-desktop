@@ -36,8 +36,8 @@ export function upgradeProject(projectState: any): any {
 
   const oldVersion = projectState.version;
 
-  for (const upgrade of projectUpgrades) {
-    projectState = upgrade(projectState);
+  for (const projectUpgrade of projectUpgrades) {
+    projectState = projectUpgrade(projectState);
 
     if (currentVersion.startsWith(projectState.version)) break;
   }
