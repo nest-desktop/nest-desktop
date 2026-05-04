@@ -2,17 +2,17 @@
   <v-btn class="mx-2" flat icon="mdi:mdi-home" size="x-small" to="/" variant="text" />
 
   <v-menu>
-    <template #activator="{ props }">
+    <template v-if="currentWorkspace" #activator="{ props }">
       <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="x-small" v-bind="props" variant="text">
         <template #prepend>
           <v-icon
-            :color="appStore.currentWorkspace.id"
-            :icon="appStore.currentWorkspace.id + ':logo'"
+            :color="currentWorkspace.id"
+            :icon="currentWorkspace.id + ':logo'"
             size="large"
             style="background-color: white; border-radius: 4px; opacity: 1"
           />
         </template>
-        {{ appStore.currentWorkspace.title }}
+        {{ currentWorkspace.title }}
       </v-btn>
     </template>
 
@@ -64,18 +64,20 @@
 
   <v-divider class="mx-1" vertical />
 
-  <v-btn
-    v-for="(backend, index) in appStore.currentWorkspace.backends"
-    :key="index"
-    :disabled="!backend.state.enabled"
-    :title="backend.state.url"
-    size="x-small"
-    variant="text"
-    @click="backend.update()"
-  >
-    {{ backend.state.name }}
-    <BackendStatusIcon :backend-store="backend" size="small" />
-  </v-btn>
+  <template v-if="currentWorkspace">
+    <v-btn
+      v-for="(backend, index) in currentWorkspace.backends"
+      :key="index"
+      :disabled="!backend.state.enabled"
+      :title="backend.state.url"
+      size="x-small"
+      variant="text"
+      @click="backend.update()"
+    >
+      {{ backend.state.name }}
+      <BackendStatusIcon :backend-store="backend" size="small" />
+    </v-btn>
+  </template>
 
   <v-divider class="mx-1" vertical />
 
@@ -97,8 +99,9 @@ import AboutDialog from "./dialog/AboutDialog.vue";
 import SettingsDialog from "./dialog/SettingsDialog.vue";
 import StoresDialog from "./dialog/StoresDialog.vue";
 
-import { useAppStore } from "@/app";
+import { getCurrentWorkspace, useAppStore } from "@/app";
 const appStore = useAppStore();
+const currentWorkspace = getCurrentWorkspace();
 
 const settingsItems = [
   {

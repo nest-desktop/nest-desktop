@@ -34,20 +34,16 @@
             EXC 1086).
           </v-card-text>
 
-          <v-card-footer>
-            <v-row class="mb-2" justify="center" no-gutters>
-              <v-col v-for="reference in references" :key="reference.title" class="pa-1" cols="12" sm="4">
-                <v-img :src="reference.iconSrc" alt="reference-icon" contain height="40px" />
-              </v-col>
-            </v-row>
-          </v-card-footer>
+          <v-row class="mb-2" justify="center" no-gutters>
+            <v-col v-for="reference in references" :key="reference.title" class="pa-1" cols="12" sm="4">
+              <v-img :src="reference.iconSrc" alt="reference-icon" contain height="40px" />
+            </v-col>
+          </v-row>
         </v-card>
       </v-window-item>
     </v-window>
 
-    <v-card-footer>
-      <AppFooter />
-    </v-card-footer>
+    <AppFooter />
   </v-card>
 </template>
 
