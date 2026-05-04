@@ -5,6 +5,7 @@ import { computed, ComputedRef, reactive, UnwrapRef } from "vue";
 import type { Anchor, ThemeInstance } from "vuetify";
 
 import { type IWorkspaceProps, workspaces } from "@/workspaces/install";
+import type { TStore } from "@/types";
 
 interface IAppStoreState {
   autoUpdate: boolean;
@@ -60,7 +61,11 @@ export const useAppStore = defineStore(
       state.requestLogs = [];
     };
 
-    const currentWorkspace = computed(() => workspaces[state.currentWorkspace]);
+    const currentWorkspace = computed(() => {
+      const workspaceIds = Object.keys(workspaces);
+      if (!workspaceIds.includes(state.currentWorkspace)) state.currentWorkspace = workspaceIds[0] ?? "nest";
+      return workspaces[state.currentWorkspace];
+    });
 
     const darkMode = computed((): boolean => {
       const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -85,9 +90,12 @@ export const useAppStore = defineStore(
       state.currentWorkspace = Object.keys(workspaces)[0] as string;
     };
 
-    const workspaceItems = computed(() =>
-      state.workspacesEnabled.map((workspaceId: string) => workspaces[workspaceId]),
-    );
+    const workspaceItems = computed(() => {
+      const workspaceIds = Object.keys(workspaces);
+      return state.workspacesEnabled
+        .filter((workspaceId: string) => workspaceIds.includes(workspaceId))
+        .map((workspaceId: string) => workspaces[workspaceId]);
+    });
 
     const toggleTheme = (): void => {
       const themes = ["light", "dark", "auto"];
@@ -145,7 +153,7 @@ export const useAppStore = defineStore(
 /**
  * Close loading.
  */
-export const closeLoading = () => {
+export const closeLoading = (): void => {
   const appStore = useAppStore();
 
   appStore.state.loading = false;
@@ -154,31 +162,35 @@ export const closeLoading = () => {
   }, 500);
 };
 
-export const getCurrentDBStore = (name: string) => {
-  const appStore = useAppStore();
-  return appStore.currentWorkspace?.stores[name + "DBStore"];
+export const getCurrentDBStore = (name: string): TStore | undefined => {
+  const currentWorkspace = getCurrentWorkspace();
+  return currentWorkspace ? currentWorkspace.stores[name + "DBStore"] : undefined;
 };
 
-export const getCurrentStore = (name: string) => {
-  const appStore = useAppStore();
-  return appStore.currentWorkspace?.stores[name + "Store"];
+export const getCurrentStore = (name: string): TStore | undefined => {
+  const currentWorkspace = getCurrentWorkspace();
+  return currentWorkspace ? currentWorkspace.stores[name + "Store"] : undefined;
 };
 
-export const getCurrentViewStore = (name: string) => {
-  const appStore = useAppStore();
-  return appStore.currentWorkspace?.views[name];
+export const getCurrentViewStore = (name: string): TStore | undefined => {
+  const currentWorkspace = getCurrentWorkspace();
+  return currentWorkspace ? currentWorkspace.views[name] : undefined;
 };
 
-export const isDevMode = () => {
+export const getCurrentWorkspace = (): IWorkspaceProps | undefined => {
   const appStore = useAppStore();
+  return appStore.currentWorkspace;
+};
 
+export const isDevMode = (): boolean => {
+  const appStore = useAppStore();
   return appStore.state.devMode;
 };
 
 /**
  * Open loading.
  */
-export const openLoading = (text: string) => {
+export const openLoading = (text: string): void => {
   const appStore = useAppStore();
 
   appStore.state.loadingText = text;
@@ -189,7 +201,7 @@ export const openLoading = (text: string) => {
  * Set current workspace.
  * @param name string
  */
-export const setCurrentWorkspace = (name: string) => {
+export const setCurrentWorkspace = (name: string): void => {
   const appStore = useAppStore();
 
   appStore.state.currentWorkspace = name;
