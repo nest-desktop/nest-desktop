@@ -10,7 +10,7 @@ import { errorDialog } from "vuetify3-dialog";
 
 import type { TModel } from "@/types";
 import { logger as mainLogger } from "@/utils";
-import { useAppStore } from "@/app";
+import { getCurrentViewStore, getCurrentWorkspace } from "@/app";
 
 const logger = mainLogger.getSubLogger({ name: "model route" });
 
@@ -21,10 +21,10 @@ const logger = mainLogger.getSubLogger({ name: "model route" });
 const loadModel = (modelId: string): void => {
   logger.trace("load model:", modelId);
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return;
-  const modelStore = appStore.currentWorkspace.stores.modelStore;
-  const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
+  const modelStore = currentWorkspace.stores.modelStore;
+  const modelDBStore = currentWorkspace.stores.modelDBStore;
 
   if (modelDBStore.state.initialized) {
     modelStore.state.modelId = modelId;
@@ -36,15 +36,14 @@ const loadModel = (modelId: string): void => {
 /**
  * Before enter model route.
  * @param to model route
+ *
  * @remarks It loads model.
  */
 export const modelBeforeEnter = (to: RouteLocationNormalizedGeneric): void => {
   logger.trace("before enter:", to.path);
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return;
-
-  const modelViewStore = appStore.currentWorkspace.views.model;
+  const modelViewStore = getCurrentViewStore("model");
+  if (!modelViewStore) return;
 
   let modelId: string = "";
   if (to.params.modelId) modelId = to.params.modelId as string;
@@ -66,14 +65,14 @@ export const modelRedirect = (
 ): RouteLocationNormalizedLoadedGeneric => {
   logger.trace("redirect to model:", to.params.modelId);
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return { path: "/" } as RouteLocationNormalizedLoadedGeneric;
 
-  const modelStore = appStore.currentWorkspace.stores.modelStore;
+  const modelStore = currentWorkspace.stores.modelStore;
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
 
-  if (!modelStore.state.modelId && appStore.currentWorkspace.stores.modelDBStore.state.models.length > 0)
-    modelStore.state.modelId = appStore.currentWorkspace.stores.modelDBStore.getRecentModelId();
+  if (!modelStore.state.modelId && currentWorkspace.stores.modelDBStore.state.models.length > 0)
+    modelStore.state.modelId = currentWorkspace.stores.modelDBStore.getRecentModelId();
 
   return modelStore.routeTo();
 };
@@ -86,11 +85,11 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
   const modelId = props.route.params.modelId;
   logger.trace("mount model layout");
 
-  const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
 
-  const modelDBStore = appStore.currentWorkspace.stores.modelDBStore;
-  const modelStore = appStore.currentWorkspace.stores.modelStore;
+  const modelDBStore = currentWorkspace.stores.modelDBStore;
+  const modelStore = currentWorkspace.stores.modelStore;
 
   setTimeout(() => {
     if (modelStore.state.modelId === modelId) return;

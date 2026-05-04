@@ -9,7 +9,7 @@ import type { Class, TNetwork, TNode, TSimulation, TStore } from "@/types";
 import type { TElementType } from "@/model";
 import { BaseProject, type IProjectState } from "@/project";
 import { loadJSON, logger as mainLogger, truncate } from "@/utils";
-import { useAppStore } from "@/app";
+import { getCurrentViewStore } from "@/app";
 
 import { useModelDBStore } from "./modelDBStore";
 import { upgradeProject } from "@/upgrades";
@@ -145,13 +145,8 @@ export function defineModelStore<TProject extends BaseProject = BaseProject>(
      * @returns route
      */
     const routeTo = (): RouteLocationNormalizedLoadedGeneric => {
-      const appStore = useAppStore();
-
-      let routerMainView = "edit";
-      if (appStore.currentWorkspace) {
-        const modelViewStore = appStore.currentWorkspace.views.model;
-        routerMainView = modelViewStore.state.views.main;
-      }
+      const modelViewStore = getCurrentViewStore("model");
+      const routerMainView = modelViewStore?.state.views.main ?? "edit";
 
       return {
         path: "/" + props.workspace + "/model/" + state.modelId + "/" + routerMainView,

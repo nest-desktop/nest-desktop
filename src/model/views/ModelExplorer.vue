@@ -1,12 +1,14 @@
 <template>
-  <v-chip class="ma-2" density="compact" style="position: absolute; top: 72px; z-index: 1000">
-    {{ modelStore.state.projectId }}
-  </v-chip>
+  <div>
+    <v-chip class="ma-2" density="compact" style="position: absolute; top: 72px; z-index: 1000">
+      {{ modelStore.state.projectId }}
+    </v-chip>
 
-  <ActivityChartGraph
-    v-if="modelStore.state.project?.activityGraph && modelStore.state.model.isNeuron"
-    :graph="modelStore.state.project.activityGraph.activityChartGraph"
-  />
+    <ActivityChartGraph
+      v-if="modelStore.state.project?.activityGraph && modelStore.state.model.isNeuron"
+      :graph="modelStore.state.project.activityGraph.activityChartGraph"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

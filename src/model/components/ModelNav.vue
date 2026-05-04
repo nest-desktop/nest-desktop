@@ -91,7 +91,7 @@
               :subtitle="item.elementType"
               :title="item.state ? item.state.label : item.id"
               :to="{
-                name: appStore.state.currentWorkspace + 'Model',
+                name: currentWorkspace.id + 'Model',
                 params: { modelId: item.id },
               }"
               v-bind="props"
@@ -118,7 +118,7 @@ import { createDialog } from "vuetify3-dialog";
 import type { TModel } from "@/types";
 import { DeleteDialog, ExportDialog, ImportDialog, Menu } from "@/components";
 import { sortString } from "@/utils";
-import { useAppStore } from "@/app";
+import { getCurrentWorkspace } from "@/app";
 import { useNavStore } from "@/nav";
 
 import ModelMenu from "./ModelMenu.vue";
@@ -127,19 +127,19 @@ import type { TElementType } from "../model";
 // import { useRouter } from "vue-router";
 // const router = useRouter();
 
-const appStore = useAppStore();
-
 const navStore = useNavStore();
 
 defineProps<{ color: string }>();
 
-const modelStore = computed(() => appStore.currentWorkspace.stores.modelStore);
-const modelDBStore = computed(() => appStore.currentWorkspace.stores.modelDBStore);
+const currentWorkspace = getCurrentWorkspace();
+
+const modelStore = computed(() => currentWorkspace.stores.modelStore);
+const modelDBStore = computed(() => currentWorkspace.stores.modelDBStore);
 
 const models = computed(() => {
   let models: TModel[] = [];
 
-  if (state.source == appStore.currentWorkspace.id) {
+  if (state.source == currentWorkspace.id) {
     models = modelStore.value.state.models;
   } else {
     models = modelDBStore.value.state.models;
@@ -177,7 +177,7 @@ const state = reactive<{
   source: "installed",
 });
 
-const sources = ["installed", "custom", appStore.currentWorkspace.id];
+const sources = ["installed", "custom", currentWorkspace.id];
 const elementTypes: TElementType[] = ["neuron", "recorder", "stimulator", "synapse"];
 
 const items = [
