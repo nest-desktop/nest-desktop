@@ -146,7 +146,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     const radiusText: number = (radius * 2 + 18) / 2;
     panel
       .append("text")
-      .attr("class", "label text-button textcolor")
+      .attr("class", "label text-label-large textcolor")
       .attr("dominant-baseline", "middle")
       .attr("dx", Math.sin(Math.PI * f) * radiusText)
       .attr("dy", -1 * Math.cos(Math.PI * f) * radiusText)

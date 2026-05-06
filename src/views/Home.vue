@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height d-flex">
     <v-responsive class="align-center text-center">
       <div>
         <v-img
@@ -16,7 +16,7 @@
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-        <h2 class="text-h2">NEST Desktop</h2>
+        <div class="text-display-large">NEST Desktop</div>
       </div>
 
       <div style="height: 60px" />

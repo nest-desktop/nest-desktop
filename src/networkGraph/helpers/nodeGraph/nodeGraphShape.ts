@@ -121,7 +121,7 @@ export class NodeGraphShape extends BaseObj {
 
     elem
       .append("text")
-      .attr("class", "text-button")
+      .attr("class", "text-label-large")
       .style("font-family", "Roboto, sans-serif", "important")
       .style("font-size", "0.7rem", "important")
       .style("font-weight", "900")

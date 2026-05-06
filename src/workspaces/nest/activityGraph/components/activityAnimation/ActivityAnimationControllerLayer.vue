@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel density="compact" flat>
     <v-expansion-panel-title>
-      <v-row class="text-button">
+      <v-row class="text-label-large">
         <NodeAvatar :node="layer.activity.recorder" />
         <v-spacer />
         {{ layer.activity.recorder.model.state.label }}

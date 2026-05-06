@@ -1,7 +1,11 @@
 @use "vuetify" with (
-  $utilities: false,
-  $color-pack: false
+  $color-pack: false,
+  $utilities: false
 );
+
+html {
+  --v-font-body: Roboto, sans-serif;
+}
 
 // Fix number input field in Firefox
 input[type="number"] {

@@ -52,7 +52,14 @@ export const vuetify = createVuetify({
     // global: {
     //   ripple: false,
     // },
-    VBtn: { variant: "outlined" },
+    VAvatar: {
+      class: "text-uppercase",
+    },
+    VBtn: {
+      class: "text-uppercase",
+      style: "font-weight:500; font-size: var(--v-btn-size)",
+      variant: "outlined",
+    },
     VBtnGroup: { variant: "outlined" },
     VBtnToggle: { variant: "outlined" },
     VCard: {

@@ -50,7 +50,7 @@
             <v-icon :color="log.level" :icon="icons[log.level]" />
           </template>
 
-          <v-toolbar-title :text="log.date" color="primary" class="text-subtitle-1" />
+          <v-toolbar-title :text="log.date" color="primary" class="text-body-large" />
 
           <template #append>
             <v-btn icon="mdi:mdi-close" size="x-small" @click="appStore.state.requestLogs.splice(index, 1)" />

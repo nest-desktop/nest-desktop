@@ -4,10 +4,10 @@
       <NetworkGraph :key="projectStore.state.project.id" :network="projectStore.state.project.network" />
     </v-layout>
 
-    <v-container v-if="projectStore.state.project">
+    <v-container v-if="projectStore.state.project" fluid max-width="1280">
       <v-row no-gutters>
         <v-col class="pa-1" cols="12" md="4" sm="6">
-          <div class="text-button">Stimulator</div>
+          <div class="text-label-large">Stimulator</div>
           <NodeViewer
             v-for="(node, index) in projectStore.state.project.network.nodes.stimulators"
             :key="index"
@@ -16,12 +16,12 @@
         </v-col>
 
         <v-col class="pa-1" cols="12" md="4" sm="6">
-          <div class="text-button">Neuron</div>
+          <div class="text-label-large">Neuron</div>
           <NodeViewer v-for="(node, index) in projectStore.state.project.network.nodes.neurons" :key="index" :node />
         </v-col>
 
         <v-col class="pa-1" cols="12" md="4" sm="6">
-          <div class="text-button">Recorder</div>
+          <div class="text-label-large">Recorder</div>
           <NodeViewer v-for="(node, index) in projectStore.state.project.network.nodes.recorders" :key="index" :node />
         </v-col>
       </v-row>

@@ -63,7 +63,7 @@
       </v-card-text>
     </v-card>
 
-    <div class="d-flex ma-auto text-caption">Current version: {{ appVersion }}</div>
+    <div class="d-flex ma-auto text-label-small">Current version: {{ appVersion }}</div>
   </v-card>
 </template>
 

@@ -12,7 +12,7 @@
       <v-card>
         <v-card-text>
           <v-row align-content="center" class="fill-height" justify="center">
-            <v-col class="text-subtitle-1 text-center" cols="12">
+            <v-col class="text-body-large text-center" cols="12">
               {{ appStore.state.loadingText }}
             </v-col>
             <v-col cols="6">

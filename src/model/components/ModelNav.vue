@@ -60,7 +60,7 @@
 
           <v-spacer />
 
-          <span class="text-subtitle-2">
+          <span class="text-body-small">
             {{ models.length }}
             model<span v-show="models.length > 1" text="s" />
           </span>

@@ -33,7 +33,7 @@
         v-show="item.workspace === appStore.state.currentWorkspace"
       >
         <v-icon :icon="item.icon" size="large" />
-        <span class="text-button" style="font-size: 9px !important">
+        <span class="text-label-large" style="font-size: 9px !important">
           {{ item.title }}
         </span>
       </v-list-item>

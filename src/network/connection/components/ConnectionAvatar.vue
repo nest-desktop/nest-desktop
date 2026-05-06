@@ -4,6 +4,7 @@
       class="rounded-circle"
       icon
       size="small"
+      style="font-size: 12px"
       variant="text"
       @click="connection.source.toggleSelection()"
       @click.right.prevent="connection.source.unselect()"
@@ -17,6 +18,7 @@
       class="rounded-circle"
       icon
       size="small"
+      style="font-size: 12px"
       variant="text"
       @click="connection.target.toggleSelection()"
       @click.right.prevent="connection.target.unselect()"

@@ -1,7 +1,7 @@
 <template>
   <Card v-if="model" class="node my-1" rounded="1">
     <v-card-title>
-      <v-row class="ma-0 text-button">
+      <v-row class="ma-0 text-label-large">
         <v-avatar>
           <v-icon
             :icon="

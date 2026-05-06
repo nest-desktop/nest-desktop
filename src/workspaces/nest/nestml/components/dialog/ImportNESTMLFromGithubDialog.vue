@@ -51,7 +51,7 @@
         <v-btn :disabled="!state.script" text="load" title="Load NESTML script" @click="loadNESTMLScript()" />
       </v-row>
 
-      <v-row class="text-h6" no-gutters> Preview </v-row>
+      <v-row class="text-title-large" no-gutters>Preview</v-row>
       <v-window style="max-height: 500px; overflow: auto">
         <codemirror v-model="state.script" disabled />
       </v-window>

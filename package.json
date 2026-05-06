@@ -1,7 +1,7 @@
 {
   "name": "nest-desktop",
   "desktopName": "io.github.nest_desktop.nest-desktop",
-  "version": "5.0.0-dev0",
+  "version": "5.0.0-dev1",
   "private": false,
   "description": "NEST Desktop is a web-based GUI for the simulation of spiking neuronal networks.",
   "author": {
@@ -58,7 +58,7 @@
     "vue-clipboard3": "~2.0",
     "vue-codemirror": "~6.1",
     "vue-router": "~5.0",
-    "vuetify": "~3.11",
+    "vuetify": "~4.0",
     "vuetify3-dialog": "~1.6",
     "webfontloader": "~1.6"
   },
@@ -85,7 +85,7 @@
     "@vue/eslint-config-typescript": "~14.7",
     "@vue/test-utils": "~2.4",
     "@vue/tsconfig": "~0.9",
-    "electron": "~41.5",
+    "electron": "~42.0",
     "electron-builder": "~26.8",
     "electron-devtools-installer": "~4.0",
     "eslint": "~10.3",
@@ -102,7 +102,7 @@
     "unplugin-fonts": "~2.0",
     "vite": "~8.0",
     "vite-plugin-electron": "~0.29",
-    "vite-plugin-pwa": "~1.2",
+    "vite-plugin-pwa": "~1.3",
     "vite-plugin-vue-devtools": "~8.1",
     "vite-plugin-vuetify": "~2.1",
     "vitest": "~4.1",
@@ -112,8 +112,7 @@
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
     "node: Use node LTS version (v24)",
-    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.",
-    "vuetify: ~4.0 has different style. See https://vuetifyjs.com/en/getting-started/upgrade-guide/"
+    "vite: The CJS build of Vite's Node API is deprecated. See https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details."
   ],
   "bugs": {
     "url": "https://github.com/nest-desktop/nest-desktop/issues"

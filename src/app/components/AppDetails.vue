@@ -30,7 +30,7 @@
           <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
           Contact
         </v-col>
-        <v-col class="text-caption text-right" cols="8">
+        <v-col class="text-label-small text-right" cols="8">
           {{ contactName }}
         </v-col>
       </v-row>
@@ -43,7 +43,7 @@
             <v-icon class="mx-2" icon="mdi:mdi-magnify" />
             Client info
           </v-col>
-          <v-col class="text-caption text-right" cols="8">
+          <v-col class="text-label-small text-right" cols="8">
             <v-chip
               :text="state.browserName + ' ' + state.browserVersion"
               prepend-icon="mdi:mdi-application-outline"

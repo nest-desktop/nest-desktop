@@ -14,7 +14,13 @@
       </template> -->
 
       <template #append>
-        <v-btn-toggle v-model="network.state.state.elementTypeIdx" class="ma-2" mandatory variant="text">
+        <v-btn-toggle
+          v-model="network.state.state.elementTypeIdx"
+          class="ma-2"
+          mandatory
+          style="font-size: 11px"
+          variant="text"
+        >
           <IconBtn
             v-for="(item, index) in network.elementTypes"
             :key="index"

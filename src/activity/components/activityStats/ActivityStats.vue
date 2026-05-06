@@ -26,7 +26,7 @@
         <template v-for="(activity, index) in activities.all" :key="index">
           <v-expansion-panel v-if="activity">
             <v-expansion-panel-title class="py-0">
-              <v-row class="text-button">
+              <v-row class="text-label-large">
                 <NodeAvatar :node="activity.recorder" />
                 <v-spacer />
                 {{ activity.recorder.model.state.label }}

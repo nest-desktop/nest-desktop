@@ -34,7 +34,7 @@
           @click="newProjectRoute(router)"
         />
 
-        <v-row class="mx-4 text-subtitle-2" no-gutters>
+        <v-row class="mx-4 text-body-small" no-gutters>
           <v-spacer />
 
           {{ projects.length }} project

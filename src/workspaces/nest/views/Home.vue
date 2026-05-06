@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid max-width="1280">
     <v-row>
-      <v-col md="6">
+      <v-col cols="12" md="6">
         <v-card>
           <v-img :src="nestLogo" alt="nest-logo" class="ma-2 mx-10" />
 
@@ -47,7 +47,7 @@
         </v-card>
       </v-col>
 
-      <v-col v-if="currentWorkspace" md="6">
+      <v-col v-if="currentWorkspace" cols="12" md="6">
         <v-card title="Backend">
           <v-expansion-panels elevation="0" variant="accordion">
             <v-expansion-panel>
@@ -155,7 +155,7 @@
                         <!-- @vue-ignore item is unknown -->
                         {{ item.id }}
                         <template #append>
-                          <span class="text-caption">
+                          <span class="text-label-small">
                             <!-- @vue-ignore item is unknown -->
                             {{ item.elementType }}
                           </span>
