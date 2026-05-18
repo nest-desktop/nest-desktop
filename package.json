@@ -88,7 +88,7 @@
     "electron": "~42.1",
     "electron-builder": "~26.8",
     "electron-devtools-installer": "~4.0",
-    "eslint": "~10.3",
+    "eslint": "~10.4",
     "eslint-plugin-vue": "~10.9",
     "js-yaml": "~4.1",
     "prettier": "~3.8",
