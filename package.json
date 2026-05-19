@@ -68,7 +68,7 @@
     "@types/d3": "~7.4",
     "@types/js-yaml": "~4.0",
     "@types/mustache": "~4.2",
-    "@types/node": "~25.8",
+    "@types/node": "~25.9",
     "@types/object-hash": "~3.0",
     "@types/pouchdb": "~6.4",
     "@types/pouchdb-upsert": "~2.2",
@@ -107,7 +107,7 @@
     "vite-plugin-vuetify": "~2.1",
     "vitest": "~4.1",
     "vue-eslint-parser": "~10.4",
-    "vue-tsc": "~3.2"
+    "vue-tsc": "~3.3"
   },
   "//": [
     "# this section reserved for comments, c.f. https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ -> notes on update problems with packages, etc.",
