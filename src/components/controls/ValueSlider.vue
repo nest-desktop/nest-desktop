@@ -10,10 +10,10 @@
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    @click:append="increment()"
-    @click:prepend="decrement()"
   >
     <template #append>
+      <v-btn density="compact" icon="mdi:mdi-plus" variant="text" @click="increment()" />
+
       <v-text-field
         :model-value="model"
         :label="props.id"
@@ -27,11 +27,15 @@
         @update:model-value="(value: string) => (model = Number(value))"
       />
     </template>
+
+    <template #prepend>
+      <v-btn density="compact" icon="mdi:mdi-minus" variant="text" @click="decrement()" />
+    </template>
   </v-slider>
 </template>
 
 <script setup lang="ts">
-const model = defineModel({ required: true, type: Number });
+const model = defineModel<number>({ required: true });
 const props = defineProps({
   id: { default: "", type: String },
   step: { default: 1, type: Number },
@@ -51,9 +55,12 @@ const increment = () => (model.value += props.step);
     opacity: 0 !important;
   }
 
-  .mdi-plus {
-    height: inherit;
-    margin-right: 4px;
+  .v-input__prepend {
+    margin-inline-end: 8px;
+  }
+
+  .v-input__append {
+    margin-inline-start: 8px;
   }
 
   .v-input__append,
@@ -82,7 +89,7 @@ const increment = () => (model.value += props.step);
     color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity));
     display: inline;
     opacity: 1;
-    padding-left: 8px;
+    padding-left: 4px;
     width: 100%;
     z-index: 1000;
   }

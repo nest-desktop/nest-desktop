@@ -1,15 +1,15 @@
 // activityGraph.ts
 
-import { BaseActivityGraph, type IBaseActivityGraphProps } from "@/activityGraph/helpers/activityGraph";
+import { BaseActivityGraph, type IBaseActivityGraphState } from "@/activityGraph";
 
-import { ActivityAnimationGraph } from "./activityAnimationGraph/activityAnimationGraph";
-import type { NESTProject } from "../../helpers/project/project";
+import { ActivityAnimationGraph } from "./activityAnimationGraph";
+import type { NESTProject } from "../../project";
 
 export class NESTActivityGraph extends BaseActivityGraph {
   private _activityAnimationGraph: ActivityAnimationGraph;
 
-  constructor(project: NESTProject, activityGraphProps?: IBaseActivityGraphProps) {
-    super(project, activityGraphProps);
+  constructor(project: NESTProject, activityGraphState?: IBaseActivityGraphState) {
+    super(project, activityGraphState);
 
     this._activityAnimationGraph = new ActivityAnimationGraph(project);
   }
@@ -22,7 +22,7 @@ export class NESTActivityGraph extends BaseActivityGraph {
    * Initialize activity graph.
    */
   override init(): void {
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("init");
 
     this.activityChartGraph.init();
@@ -40,7 +40,7 @@ export class NESTActivityGraph extends BaseActivityGraph {
     this.activityChartGraph.update();
     this.activityAnimationGraph.update();
 
-    this.updateHash();
+    // this.updateHash();
     this.logger.trace("update");
   }
 }

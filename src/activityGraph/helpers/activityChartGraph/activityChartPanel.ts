@@ -2,18 +2,18 @@
 
 import { type UnwrapRef, reactive } from "vue";
 
-import { sum } from "@/utils/array";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
+import { sum } from "@/utils";
 
 import type { ActivityChartGraph } from "./activityChartGraph";
-import type { ActivityChartPanelModel, IActivityChartPanelModelProps } from "./activityChartPanelModel";
+import type { ActivityChartPanelModel, IActivityChartPanelModelState } from "./activityChartPanelModel";
 import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimesRasterPlotModel";
 
-export interface IActivityChartPanelProps {
-  model?: IActivityChartPanelModelProps;
+export interface IActivityChartPanelState {
+  model?: IActivityChartPanelModelState;
 }
 
-interface IActivityChartPanelLayoutProps {
+interface IActivityChartPanelLayoutState {
   shapes: {
     label?: {
       font: { size: number };
@@ -42,7 +42,7 @@ interface IActivityChartPanelLayoutProps {
   };
 }
 
-interface IActivityChartPanelState {
+interface IActivityChartPanelRefState {
   visible: boolean;
 }
 
@@ -50,7 +50,7 @@ export class ActivityChartPanel extends BaseObj {
   // private static readonly _name = 'ActivityGraphPanel';
   // private _activities: Activity[] = [];
   private _graph: ActivityChartGraph; // parent
-  private _layout: IActivityChartPanelLayoutProps = {
+  private _layout: IActivityChartPanelLayoutState = {
     shapes: [],
     xaxis: {
       showgrid: true,
@@ -67,20 +67,20 @@ export class ActivityChartPanel extends BaseObj {
     },
   };
   private _model: ActivityChartPanelModel;
-  private _state: UnwrapRef<IActivityChartPanelState>;
+  private _state: UnwrapRef<IActivityChartPanelRefState>;
   private _xAxis = 1;
 
-  constructor(graph: ActivityChartGraph, panelProps: IActivityChartPanelProps = {}) {
+  constructor(graph: ActivityChartGraph, panelState: IActivityChartPanelState = {}) {
     super();
 
     this._graph = graph;
     this._model = new SpikeTimesRasterPlotModel(this);
 
-    this._state = reactive<IActivityChartPanelState>({
+    this._state = reactive<IActivityChartPanelRefState>({
       visible: true,
     });
 
-    this.selectModel(panelProps.model ? panelProps.model.id : "spikeTimesRasterPlot", panelProps.model);
+    this.selectModel(panelState.model ? panelState.model.id : "spikeTimesRasterPlot", panelState.model);
   }
 
   get graph(): ActivityChartGraph {
@@ -99,7 +99,7 @@ export class ActivityChartPanel extends BaseObj {
     return this.graph.panels.indexOf(this);
   }
 
-  get layout(): IActivityChartPanelLayoutProps {
+  get layout(): IActivityChartPanelLayoutState {
     return this._layout;
   }
 
@@ -107,7 +107,7 @@ export class ActivityChartPanel extends BaseObj {
     return this._model;
   }
 
-  get state(): UnwrapRef<IActivityChartPanelState> {
+  get state(): UnwrapRef<IActivityChartPanelRefState> {
     return this._state;
   }
 
@@ -156,18 +156,26 @@ export class ActivityChartPanel extends BaseObj {
   }
 
   /**
+   * Save activity chart panel to state.
+   * @return activity chart panel state
+   */
+  override save(): IActivityChartPanelState {
+    return { model: this.model.save() };
+  }
+
+  /**
    * Select panel model.
    * @param modelId
-   * @param modelProps
+   * @param modelState
    */
-  selectModel(modelId: string = "spikeTimesRasterPlot", modelProps: IActivityChartPanelModelProps = {}): void {
+  selectModel(modelId: string = "spikeTimesRasterPlot", modelState: IActivityChartPanelModelState = {}): void {
     if (modelId) {
-      const model: IActivityChartPanelModelProps | undefined = this._graph.models.find(
-        (modelProps: IActivityChartPanelModelProps) => modelProps.id === modelId,
+      const model: IActivityChartPanelModelState | undefined = this._graph.models.find(
+        (modelState: IActivityChartPanelModelState) => modelState.id === modelId,
       );
       if (model) {
-        // @ts-expect-error Property 'component' does not exist on type 'IActivityChartPanelModelProps'.
-        this._model = new model.component(this, modelProps);
+        // @ts-expect-error Property 'component' does not exist on type 'IActivityChartPanelModelState'.
+        this._model = new model.component(this, modelState);
       }
     }
   }
@@ -176,16 +184,8 @@ export class ActivityChartPanel extends BaseObj {
    * Toggle panel visibility.
    */
   toggleVisible(): void {
-    this._state.visible = !this._state.visible;
-    this._graph.update();
-  }
-
-  /**
-   * Serialize for JSON.
-   * @return activity chart panel object
-   */
-  toJSON(): IActivityChartPanelProps {
-    return { model: this._model.toJSON() };
+    this.state.visible = !this.state.visible;
+    this.graph.update();
   }
 
   /**
@@ -202,7 +202,7 @@ export class ActivityChartPanel extends BaseObj {
           (sum += value)
       )(0),
     );
-    const steps = heightCumSum.map((h: number) => h / heightTotal);
+    const steps: number[] = heightCumSum.map((h: number) => h / heightTotal);
     steps.unshift(0);
     steps.reverse();
     const margin: number = this.xAxis === 1 ? 0.02 : 0.07;

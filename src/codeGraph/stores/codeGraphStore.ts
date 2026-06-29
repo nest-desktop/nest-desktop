@@ -7,6 +7,7 @@ import { defineStore } from "pinia";
 
 import { PythonCode, useCodeGraph } from "@babsey/code-graph";
 
+import { getCurrentWorkspace } from "@/app";
 import { registerNodeTypes } from "@/codeGraph/codeNodeTypes";
 
 export const useCodeGraphStore = defineStore(
@@ -14,22 +15,21 @@ export const useCodeGraphStore = defineStore(
   () => {
     const state: UnwrapRef<{
       editorStates: Record<string, IEditorState>;
-    }> = reactive({
-      editorStates: {},
-    });
+      currentEditorId: string;
+    }> = reactive({ editorStates: {}, currentEditorId: "" });
 
     const token = Symbol("CodeGraphStore");
 
     const viewModel = useCodeGraph({ code: new PythonCode() });
     registerNodeTypes(viewModel);
+    viewModel.showNodeId = true;
 
     const loadEditor = (editorId?: string) => {
-      // console.log('load editor', editorId?.slice(0,6))
-
       const editorIds = Object.keys(state.editorStates);
       if (!editorId || !editorIds.includes(editorId)) return newGraph();
 
       const editorState = state.editorStates[editorId];
+      state.currentEditorId = editorId;
 
       // load editor from editor state
       if (editorState) viewModel.loadEditor(editorState);
@@ -38,51 +38,48 @@ export const useCodeGraphStore = defineStore(
     };
 
     const newGraph = () => {
-      // console.log("create new graph")
       viewModel.newGraph();
 
       const editorId = saveEditor();
-      return { name: "edit", params: { editorId } };
+      state.currentEditorId = editorId;
+
+      const currentWorkspace = getCurrentWorkspace();
+      const workspaceId = currentWorkspace?.id ?? "nest";
+
+      return { name: workspaceId + "CodeGraphEdit", params: { editorId } };
     };
 
-    const removeEditorState = (editorId: string) => {
-      delete state.editorStates[editorId];
-    };
+    const removeEditorState = (editorId: string) => delete state.editorStates[editorId];
 
     const saveEditor = () => {
-      // console.log('save editor', viewModel.editor.graph.shortId)
       state.editorStates[viewModel.editor.graph.id] = viewModel.editor.save();
       return viewModel.editor.graph.id;
     };
 
-    const subscribe = () => {
-      viewModel.engine?.events.afterRun.subscribe(token, saveEditor);
-    };
+    const subscribe = () => viewModel.engine?.events.afterRun.subscribe(token, saveEditor);
 
-    const unsubscribe = () => {
-      viewModel.engine?.events.afterRun.unsubscribe(token);
-    };
+    const unsubscribe = () => viewModel.engine?.events.afterRun.unsubscribe(token);
 
     return { loadEditor, newGraph, removeEditorState, state, subscribe, unsubscribe, viewModel };
   },
   {
     persist: {
-      storage: sessionStorage, // localStorage
+      storage: localStorage, // localStorage, sessionStorage
       pick: ["state.editorStates"],
     },
   },
 );
 
 export const initCodeGraph = (to: RouteLocationNormalizedGeneric): boolean => {
-  if (!["new", "edit"].includes(to.name as string)) return true;
+  const routeName = to.name as string;
+  if (!routeName.includes("CodeGraphNew") && !routeName.includes("CodeGraphEdit")) return true;
 
   const codeGraphStore = useCodeGraphStore();
 
-  switch (to.name) {
-    case "new":
-      return codeGraphStore.newGraph();
-    case "edit":
-      return codeGraphStore.loadEditor(to.params.editorId as string);
+  if (routeName.includes("CodeGraphNew")) {
+    return codeGraphStore.newGraph();
+  } else if (routeName.includes("CodeGraphEdit")) {
+    return codeGraphStore.loadEditor(to.params.editorId as string);
   }
 
   return true;

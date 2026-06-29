@@ -1,21 +1,21 @@
 // CVISIHistogramModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { histogram } from "../graphObjects/histogram";
+import { histogram } from "../graphObjects";
 
 export class CVISIHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "CVISIHistogram";
     this.label = "CV of ISI";
     this.panel.xAxis = 3;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "tickSlider",
         id: "binSize",
@@ -25,12 +25,12 @@ export class CVISIHistogramModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add data of CV of ISI for histogram panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

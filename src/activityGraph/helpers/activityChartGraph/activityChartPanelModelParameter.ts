@@ -1,36 +1,22 @@
 // activityChartPanelModelParameter.ts
 
-import { BaseParameter, type IParamProps } from "@/helpers/common/parameter";
+import { BaseParameter, type IParamState } from "@/parameter";
 
-import { ActivityChartPanelModel } from "./activityChartPanelModel";
-
-export class ActivityChartPanelModelParameter extends BaseParameter {
-  public _activityChartPanelModel: ActivityChartPanelModel;
-
-  constructor(activityChartPanelModel: ActivityChartPanelModel, paramProps: IParamProps) {
-    super(paramProps);
-
-    this._activityChartPanelModel = activityChartPanelModel;
-  }
-
-  get activityChartPanelModel(): ActivityChartPanelModel {
-    return this._activityChartPanelModel;
-  }
-
-  override get parent(): ActivityChartPanelModel {
-    return this.activityChartPanelModel;
+export class ActivityChartPanelModelParameter<TParent = unknown> extends BaseParameter<TParent> {
+  get activityChartPanelModel(): TParent {
+    return this.parent;
   }
 
   /**
-   * Serialize for JSON.
-   * @return parameter props
+   * Save parameter of activity chart panel model to state.
+   * @return parameter state
    */
-  override toJSON(): IParamProps {
-    const paramProps: IParamProps = {
+  override save(): IParamState {
+    const paramState: IParamState = {
       id: this.id,
       value: this.value,
     };
 
-    return paramProps;
+    return paramState;
   }
 }

@@ -1,21 +1,20 @@
 // spikeTimesHistogramModel.ts
 
-import type { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { NodeSpikeActivity, SpikeActivity } from "@/activity";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { histogram } from "../graphObjects/histogram";
 
 export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bar";
     this.id = "spikeTimesHistogram";
     this.panel.xAxis = 1;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "tickSlider",
         id: "binSize",
@@ -26,20 +25,20 @@ export class SpikeTimesHistogramModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add data of spike times for histogram panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;
 
-    const x: number[] = activity.events.times;
+    const x: number[] = activity.events.times as number[];
     const start: number = this.state.time.start;
     const end: number = this.state.time.end;
-    const size: number = this.params.binSize.value as number;
+    const size: number = this.params.binSize?.value as number;
 
     this.data.push(
       histogram({

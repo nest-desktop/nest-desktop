@@ -1,10 +1,10 @@
 // codeError.ts
 
 import { type UnwrapRef } from "vue";
-
-import { IAxiosErrorData } from "@/stores/defineBackendStore";
 import type { Extension } from "@codemirror/state";
 import { type DecorationSet, EditorView, type Panel, ViewPlugin, ViewUpdate, showPanel } from "@codemirror/view";
+
+import { IAxiosErrorData } from "@/backends";
 
 import { highlightLineDeco } from "./highlightLine";
 

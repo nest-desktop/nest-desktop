@@ -4,7 +4,7 @@ import { type UnwrapRef, nextTick, reactive } from "vue";
 import { max, min, pointer, select, zoomIdentity } from "d3";
 
 import type { TNetwork, TNetworkGraph, TNode, TSelection } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
 
 import { NetworkGraphDragline } from "./networkGraphDragline";
 import { NetworkGraphGrid } from "./networkGraphGrid";
@@ -48,9 +48,7 @@ export class NetworkGraphWorkspace extends BaseObj {
   private _zoom: NetworkGraphZoom;
 
   constructor(networkGraph: TNetworkGraph) {
-    super({
-      config: { name: "NetworkGraphWorkspace" },
-    });
+    super({ config: { name: "NetworkGraphWorkspace" } });
 
     this._selector = select("g#networkWorkspace");
     this._handler = select("rect#workspaceHandler");
@@ -137,7 +135,7 @@ export class NetworkGraphWorkspace extends BaseObj {
 
     const X: number[] = [];
     const Y: number[] = [];
-    this.network.nodes.nodeItems.forEach((node: TNode) => {
+    this.network.nodes.all.forEach((node: TNode) => {
       X.push(node.view.position.x);
       Y.push(node.view.position.y);
     });
@@ -180,7 +178,7 @@ export class NetworkGraphWorkspace extends BaseObj {
         this.network?.state.unselectAll();
 
         const position: number[] = pointer(event, this._selector.node());
-        this.updateCursorPosition({ x: position[0], y: position[1] });
+        this.updateCursorPosition({ x: position[0] ?? 0, y: position[1] ?? 0 });
         this._nodeAddPanel.open();
       })
       .call(this._zoom.handler);

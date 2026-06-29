@@ -1,16 +1,15 @@
 // spikeTimesRasterPlotModel.ts
 
-import type { NodeSpikeActivity } from "@/helpers/nodeActivity/nodeSpikeActivity";
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { NodeSpikeActivity, SpikeActivity } from "@/activity";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { scatterSpikes } from "../graphObjects/scatter";
 
 export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-scatter-plot";
     this.id = "spikeTimesRasterPlot";
     this.panel.height = 30;
@@ -42,7 +41,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
 
   /**
    * Add data of spike times for raster plot.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: NodeSpikeActivity | SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

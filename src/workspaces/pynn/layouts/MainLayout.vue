@@ -9,13 +9,13 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import AppNavigation from "@/components/app/AppNavigation.vue";
+import { AppNavigation } from "@/nav/components";
 import { TStore } from "@/types";
+import { getCurrentWorkspace, useAppStore } from "@/app";
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
 
-import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
+import { usePyNNSimulatorStore } from "../backends/pynnSimulator";
 const pynnSimulatorStore: TStore = usePyNNSimulatorStore();
 
 const navItems = [
@@ -43,7 +43,9 @@ const navItems = [
 ];
 
 onMounted(() => {
-  const stores = appStore.currentWorkspace.stores;
+  const currentWorkspace = getCurrentWorkspace();
+  if (!currentWorkspace) return;
+  const stores = currentWorkspace.stores;
 
   // Update and check backend.
   if (pynnSimulatorStore.state.response.status != 200) {

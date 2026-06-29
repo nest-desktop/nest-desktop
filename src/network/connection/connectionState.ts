@@ -1,0 +1,57 @@
+// connectionState.ts
+
+import { type UnwrapRef, reactive } from "vue";
+
+import type { TConnection } from "@/types";
+
+interface IConnectionState {
+  showRule: boolean;
+}
+
+export class ConnectionState {
+  private _connection: TConnection; // parent
+  private _state: UnwrapRef<IConnectionState> = reactive<IConnectionState>({
+    showRule: false,
+  });
+
+  constructor(connection: TConnection) {
+    this._connection = connection;
+  }
+
+  get connection(): TConnection {
+    return this._connection as TConnection;
+  }
+
+  /**
+   * Check if this connection is focused.
+   */
+  get isFocused(): boolean {
+    return this.connection.connections.state.focusedConnection === this.connection;
+  }
+
+  /**
+   * Check if this connection is selected.
+   */
+  get isSelected(): boolean {
+    return this.connection.connections.state.selectedConnection === this.connection;
+  }
+
+  get state(): UnwrapRef<IConnectionState> {
+    return this._state;
+  }
+
+  /**
+   * Focus this connection.
+   */
+  focus(): void {
+    this.connection.connections.state.focusedConnection = this.connection;
+  }
+
+  /**
+   * Select this connection.
+   */
+  select(): void {
+    const connections = this.connection.connections;
+    connections.state.selectedConnection = this.isSelected ? null : this.connection;
+  }
+}

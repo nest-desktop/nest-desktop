@@ -4,22 +4,22 @@ import { arc } from "d3";
 import { type UnwrapRef, reactive } from "vue";
 
 import type { TArc, TModel, TNetwork, TSelection } from "@/types";
-import type { TElementType } from "@/helpers/model/model";
-import { BaseObj } from "@/helpers/common/base";
-import { darkMode } from "@/helpers/common/theme";
-import { useAppStore } from "@/stores/appStore";
+import type { TNodeElementType } from "@/model";
+import { BaseObj } from "@/core";
+import { darkMode } from "@/theme";
+import { getCurrentStore } from "@/app";
 
 import type { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 
 export interface INetworkGraphAddPanelState {
-  elementType: TElementType | null;
+  elementType: TNodeElementType | null;
   menuItems: { onClick: () => void; title: string; value: string }[];
   modelValue: boolean;
   target: [number, number];
 }
 
 export class NetworkGraphNodeAddPanel extends BaseObj {
-  private _elementTypes: TElementType[] = ["recorder", "neuron", "stimulator"];
+  private _elementTypes: TNodeElementType[] = ["recorder", "neuron", "stimulator"];
   private _selector: TSelection;
   private _state: UnwrapRef<INetworkGraphAddPanelState> = reactive({
     elementType: null,
@@ -146,7 +146,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     const radiusText: number = (radius * 2 + 18) / 2;
     panel
       .append("text")
-      .attr("class", "label text-button textcolor")
+      .attr("class", "label text-label-large textcolor")
       .attr("dominant-baseline", "middle")
       .attr("dx", Math.sin(Math.PI * f) * radiusText)
       .attr("dy", -1 * Math.cos(Math.PI * f) * radiusText)
@@ -169,7 +169,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * @param model
    * @returns selection
    */
-  drawModelMenuItem(panel: TSelection, idx: number, elementType: TElementType, model: TModel) {
+  drawModelMenuItem(panel: TSelection, idx: number, elementType: TNodeElementType, model: TModel) {
     const layer = Math.floor(idx / 3);
     const idxOffset = this._elementTypes.indexOf(elementType) * 3 + layer * 6;
 
@@ -187,18 +187,8 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     );
 
     modelPanel.select(".menuItem").on("click", () => {
-      this.close();
       if (this.network == undefined) return;
-
-      this._workspace.animationOff();
-
-      this.network.createNode(model.id, {
-        elementType,
-        position: Object.assign({}, this.position),
-      });
-
-      this._workspace.networkGraph.update();
-      this._workspace.networkGraph.workspace.updateTransform();
+      this.selectModel(model.id, elementType);
     });
 
     return modelPanel;
@@ -226,7 +216,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
         this._workspace.reset();
       });
 
-    this._elementTypes.forEach((elementType: TElementType, idx: number) => {
+    this._elementTypes.forEach((elementType: TNodeElementType, idx: number) => {
       this.drawArcFrame(
         this._selector,
         this.nodeRadius,
@@ -256,7 +246,13 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this.updateColor();
   }
 
-  openModelMenu(event: MouseEvent, elementType: TElementType): void {
+  /**
+   * Open model menu.
+   * @param event
+   * @param elementType
+   * @returns
+   */
+  openModelMenu(event: MouseEvent, elementType: TNodeElementType): void {
     if (!this.network) return;
 
     if (this._state.modelValue) {
@@ -281,25 +277,31 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     this._state.modelValue = true;
   }
 
-  selectModel(modelId: string, elementType: TElementType): void {
+  /**
+   * Select model.
+   * @param modelId
+   * @param elementType
+   * @returns
+   */
+  selectModel(modelId: string, elementType: TNodeElementType): void {
     this.close();
 
-    const appStore = useAppStore();
-    const modelStore = appStore.currentWorkspace.stores.modelStore;
+    const modelStore = getCurrentStore("model");
 
     if (!this.network) return;
     modelStore.updateRecentAddedModels(modelId, elementType);
 
     this._workspace.animationOff();
 
-    this.network.createNode(modelId, {
-      elementType,
-      position: Object.assign({}, this.position),
-    });
+    const node = this.network.createNode(modelId, { elementType, position: { ...this.position } });
+    node.loadModel(modelId);
+    node.view.updateStyle();
 
     this.updateModelMenu(elementType);
     this._workspace.networkGraph.update();
     this._workspace.networkGraph.workspace.updateTransform();
+
+    this._workspace.networkGraph.render();
   }
 
   /**
@@ -324,7 +326,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * Update model menu.
    * @param elementType neuron, recorder, stimulator
    */
-  updateModelMenu(elementType: TElementType): void {
+  updateModelMenu(elementType: TNodeElementType): void {
     this.logger.trace("update model menu");
 
     const panel = this._selector.select("." + elementType);
@@ -333,9 +335,7 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
     const modelsPanel = panel.append("g").attr("class", "models").style("display", "none");
 
     if (this.network) {
-      const appStore = useAppStore();
-      const modelStore = appStore.currentWorkspace.stores.modelStore;
-
+      const modelStore = getCurrentStore("model");
       modelStore.state.recentAddedModels[elementType].forEach((modelId: string, modelIdx: number) => {
         const model = modelStore.getModel(modelId);
         if (model) this.drawModelMenuItem(modelsPanel, modelIdx, elementType, model);

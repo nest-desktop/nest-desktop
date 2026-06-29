@@ -6,7 +6,7 @@
       <v-btn class="mx-2" prepend-icon="mdi:mdi-plus" size="small">
         Add panel
         <v-menu :close-on-content-click="false" activator="parent">
-          <ActivityChartPanelMenuPopover :graph="graph as ActivityChartGraph" @changed="addPanel" />
+          <ActivityChartPanelMenuPopover :graph @changed="addPanel" />
         </v-menu>
       </v-btn>
 
@@ -28,7 +28,7 @@
     <!-- <draggable handle=".handle" v-model="graph.panels"> -->
     <div v-for="(panel, panelIdx) in graph.panels" :key="'panel' + panelIdx">
       <Card class="mx-1" color="primary">
-        <ActivityChartPanelToolbar :panel="panel as ActivityChartPanel" />
+        <ActivityChartPanelToolbar :panel />
 
         <v-card-text v-if="panel.state.visible" class="pa-0">
           <v-select
@@ -74,7 +74,7 @@
             </template>
 
             <template #prepend-item>
-              <v-list-item title="Select All" @click="selectAllNodeRecords(panel as ActivityChartPanel)" />
+              <v-list-item title="Select All" @click="selectAllNodeRecords(panel)" />
               <v-divider />
             </template>
 
@@ -123,7 +123,7 @@
               v-for="(param, paramIdx) of panel.model.filteredParams"
               :key="paramIdx"
               :model-value="param.value"
-              :param="param as ActivityChartPanelModelParameter"
+              :param
               @update:model-value="graph.update()"
             >
               <template #append />
@@ -139,14 +139,12 @@
 <script setup lang="ts">
 import { computed, nextTick } from "vue";
 
-import NodeRecordChip from "@/networkGraph/components/node/NodeRecordChip.vue";
-import Card from "@/components/common/Card.vue";
-import ParamListItem from "@/components/parameter/ParamListItem.vue";
-import type { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
+import type { NodeRecord } from "@/network";
+import { NodeRecordChip } from "@/network/components";
+import { Card } from "@/components";
+import { ParamListItem } from "@/parameter/components";
 
-import type { ActivityChartGraph } from "../../helpers/activityChartGraph/activityChartGraph";
-import type { ActivityChartPanel } from "../../helpers/activityChartGraph/activityChartPanel";
-import type { ActivityChartPanelModelParameter } from "../../helpers/activityChartGraph/activityChartPanelModelParameter";
+import type { ActivityChartGraph, ActivityChartPanel } from "../../helpers/activityChartGraph";
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 

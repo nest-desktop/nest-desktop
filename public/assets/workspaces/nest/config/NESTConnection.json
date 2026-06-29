@@ -2,221 +2,233 @@
   "rules": [
     {
       "value": "all_to_all",
-      "label": "all to all",
-      "params": []
+      "label": "all to all"
     },
     {
       "value": "fixed_indegree",
       "label": "fixed indegree",
-      "params": [
-        {
+      "params": {
+        "indegree": {
           "component": "valueSlider",
+          "codeNodeInterface": "IntegerInterface",
           "format": "integer",
           "id": "indegree",
           "label": "indegree",
           "max": 100,
           "min": 1,
-          "rules": [["value > 0", "The value must be strictly positive.", "error"]],
           "step": 1,
           "value": 1,
-          "visible": true
+          "hidden": false
         },
-        {
+        "allow_autapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
-          "visible": false
+          "hidden": true
         },
-        {
+        "allow_multapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
-          "visible": false
+          "hidden": true
         }
-      ]
+      }
     },
     {
       "value": "fixed_outdegree",
       "label": "fixed outdegree",
-      "params": [
-        {
+      "params": {
+        "outdegree": {
           "component": "valueSlider",
+          "codeNodeInterface": "IntegerInterface",
           "format": "integer",
           "id": "outdegree",
           "label": "outdegree",
           "max": 100,
           "min": 1,
-          "rules": [["value > 0", "The value must be strictly positive.", "error"]],
           "step": 1,
           "value": 1,
-          "visible": true
+          "hidden": false
         },
-        {
+        "allow_autapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
-          "visible": false
+          "hidden": true
         },
-        {
+        "allow_multapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
-          "visible": false
+          "hidden": true
         }
-      ]
+      }
     },
     {
       "value": "fixed_total_number",
       "label": "fixed total number",
-      "params": [
-        {
+      "params": {
+        "N": {
           "component": "valueSlider",
+          "codeNodeInterface": "IntegerInterface",
           "format": "integer",
           "id": "N",
           "label": "N",
           "max": 1000,
           "min": 1,
-          "rules": [["value > 0", "The value must be strictly positive.", "error"]],
           "step": 1,
           "value": 1,
-          "visible": true
+          "hidden": false
         },
-        {
+        "allow_autapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
-          "visible": false
+          "hidden": true
         },
-        {
+        "allow_multapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
-          "visible": false
+          "hidden": true
         }
-      ]
+      }
     },
     {
       "value": "one_to_one",
-      "label": "one to one",
-      "params": []
+      "label": "one to one"
     },
     {
       "value": "pairwise_bernoulli",
       "label": "pairwise Bernoulli",
-      "params": [
-        {
+      "params": {
+        "p": {
           "component": "valueSlider",
+          "codeNodeInterface": "NumberInterface",
           "format": "float",
           "id": "p",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
-          "rules": [["0 < value && value <= 1", "The value must be between 0.01 and 1.", "error"]],
           "step": 0.01,
           "value": 0.1,
-          "visible": true
+          "hidden": false
         },
-        {
+        "allow_autapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_autapses",
           "label": "allow autapses",
-          "value": true,
-          "visible": false
+          "readonly": true,
+          "value": false,
+          "hidden": true
         },
-        {
+        "allow_multapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_multapses",
           "label": "allow multapses",
           "value": true,
-          "visible": false
+          "hidden": true
         },
-        {
+        "use_on_source": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "use_on_source",
           "label": "use on source",
           "value": false,
-          "visible": false
+          "hidden": true
         }
-      ]
+      }
     },
     {
       "value": "pairwise_poisson",
       "label": "pairwise Poisson",
-      "params": [
-        {
+      "params": {
+        "pairwise_avg_num_conns": {
           "component": "valueSlider",
           "format": "float",
           "id": "pairwise_avg_num_conns",
           "label": "pairwise_avg_num_conns",
           "max": 1.0,
           "min": 0.01,
-          "rules": [["0 < value", "The value must be positive", "error"]],
           "step": 0.01,
           "value": 0.1,
-          "visible": true
+          "hidden": false
         },
-        {
+        "allow_autapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_autapses",
           "label": "allow autapses",
           "value": true,
-          "visible": false
+          "hidden": true
         },
-        {
+        "use_on_source": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "use_on_source",
           "label": "use on source",
           "value": false,
-          "visible": false
+          "hidden": true
         }
-      ]
+      }
     },
     {
       "value": "symmetric_pairwise_bernoulli",
       "label": "symmetric pairwise Bernoulli",
-      "params": [
-        {
+      "params": {
+        "p": {
           "component": "valueSlider",
+          "codeNodeInterface": "NumberInterface",
           "format": "float",
           "id": "p",
           "label": "p",
           "max": 1.0,
           "min": 0.01,
-          "rules": [["value > 0 && value <= 1", "The value must be between 0.01 and 1.", "error"]],
           "step": 0.01,
           "value": 0.1,
-          "visible": true
+          "hidden": false
         },
-        {
+        "allow_autapses": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "allow_autapses",
           "label": "allow autapses",
           "readonly": true,
           "value": false,
-          "visible": true
+          "hidden": true
         },
-        {
+        "make_symmetric": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "make_symmetric",
           "label": "make symmetric",
           "readonly": true,
           "value": true,
-          "visible": true
+          "hidden": true
         },
-        {
+        "use_on_source": {
           "component": "checkbox",
+          "codeNodeInterface": "CheckboxInterface",
           "id": "use_on_source",
           "label": "use on source",
           "value": false,
-          "visible": false
+          "hidden": true
         }
-      ]
+      }
     }
   ]
 }

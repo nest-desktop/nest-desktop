@@ -1,10 +1,13 @@
-// text.ts
+// myFunction.ts
+
+import { allowMultipleConnections } from "@baklavajs/engine";
 
 import {
   CheckboxInterface,
   CodeNodeOutputInterface,
   CodeNodeInputInterface,
   IntegerInterface,
+  ListInputInterface,
   NumberInterface,
   SelectInterface,
   SliderInterface,
@@ -18,17 +21,19 @@ export default defineCodeNode({
   title: "my function",
   variableName: "f",
   inputs: {
-    checkbox: () => new CheckboxInterface("checkbox", true).setOptional(true),
-    integer: () => new IntegerInterface("integer", 1).setOptional(true),
-    number: () => new NumberInterface("number", 1).setOptional(true),
-    select: () => new SelectInterface("select", "a", ["a", "b", "c"]).setOptional(true),
-    slider: () => new SliderInterface("slider", 0.5, 0, 1).setOptional(true),
-    text_input: () => new TextInputInterface("text input", "a").setOptional(true),
-    textarea_input: () => new TextareaInputInterface("textarea input", "a").setOptional(true),
-    code_node_input: () => new CodeNodeInputInterface("code node input").setOptional(true),
+    optional: () => new CodeNodeInputInterface("optional").setOptional(true),
+    checkbox: () => new CheckboxInterface("checkbox", true),
+    integer: () => new IntegerInterface("integer", 1),
+    number: () => new NumberInterface("number", 1),
+    select: () => new SelectInterface("select", "a", ["a", "b", "c"]),
+    slider: () => new SliderInterface("slider", 0.5, 0, 1),
+    text_input: () => new TextInputInterface("text input", "a"),
+    textarea_input: () => new TextareaInputInterface("textarea input", "a"),
+    list: () => new ListInputInterface("list"),
+    multiple: () => new CodeNodeInputInterface<string[]>("multiple", []).use(allowMultipleConnections),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface(),
-    custom: () => new CodeNodeOutputInterface(".custom", ".custom").setOptional(true),
+    custom: () => new CodeNodeOutputInterface(".custom", ".custom"),
   },
 });

@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panel density="compact" flat>
     <v-expansion-panel-title>
-      <v-row class="text-button">
+      <v-row class="text-label-large">
         <NodeAvatar :node="layer.activity.recorder" />
         <v-spacer />
         {{ layer.activity.recorder.model.state.label }}
@@ -207,10 +207,10 @@
 <script setup lang="ts">
 import { computed, nextTick } from "vue";
 
-import NodeAvatar from "@/networkGraph/components/node/avatar/NodeAvatar.vue";
-import ValueSlider from "@/components/controls/ValueSlider.vue";
+import { NodeAvatar } from "@/network/components";
+import { ValueSlider } from "@/components";
 
-import type { ActivityAnimationLayer } from "../../helpers/activityAnimationGraph/activityAnimationLayer";
+import type { ActivityAnimationLayer } from "../../helpers/activityAnimationGraph";
 
 const props = defineProps<{ layer: ActivityAnimationLayer }>();
 const layer = computed(() => props.layer);

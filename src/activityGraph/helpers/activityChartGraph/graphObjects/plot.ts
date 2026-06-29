@@ -2,7 +2,7 @@
 
 import type { IActivityChartPanelModelData } from "../activityChartPanelModel";
 import { bar } from "./bar";
-import { currentBackgroundColor } from "@/helpers/common/theme";
+import { currentBackgroundColor } from "@/theme";
 import { histogram } from "./histogram";
 import { line } from "./line";
 import { scatter } from "./scatter";

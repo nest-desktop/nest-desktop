@@ -36,9 +36,9 @@
       <v-window-item value="project">
         <v-card-subtitle v-if="appStore.state.devMode" :key="stores.projectStore.state.projectId">
           Current project:
-          {{ truncate(appStore.currentWorkspace.stores.projectStore.state.projectId) }}
+          {{ truncate(stores.projectStore?.state.projectId) }}
         </v-card-subtitle>
-        <v-list :key="stores.projectDBStore.state.projects.length" density="compact" lines="two" nav>
+        <v-list :key="stores.projectDBStore?.state.projects.length" density="compact" lines="two" nav>
           <v-list-item :to="{ name: appStore.state.currentWorkspace + 'ProjectNew' }">
             <template #prepend>
               <v-icon icon="mdi:mdi-plus" />
@@ -86,17 +86,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
 import ExportDialog from "./dialog/ExportDialog.vue";
 import ImportDialog from "./dialog/ImportDialog.vue";
 import { truncate } from "@/utils/truncate";
 
-import { useAppStore } from "@/stores/appStore";
+import { useAppStore, getCurrentWorkspace } from "@/app";
 const appStore = useAppStore();
+const currentWorkspace = getCurrentWorkspace();
 
-const stores = computed(() => appStore.currentWorkspace.stores);
+const stores = currentWorkspace ? currentWorkspace.stores : {};
 
 const databaseTab = ref("project");
 

@@ -15,9 +15,5 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 
-const state = reactive<{
-  buttonToggle: boolean | null;
-}>({
-  buttonToggle: null,
-});
+const state = reactive<{ buttonToggle: boolean | null }>({ buttonToggle: null });
 </script>

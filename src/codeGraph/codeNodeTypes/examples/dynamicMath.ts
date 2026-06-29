@@ -13,7 +13,7 @@ import {
 export default defineDynamicCodeNode({
   type: "dynamicMath",
   title: "dynamic math",
-  variableName: "result",
+  variableName: "r",
   inputs: {
     operation: () => new SelectInterface("Operation", "Addition", ["Addition", "Subtraction", "Sine"]).setPort(false),
   },

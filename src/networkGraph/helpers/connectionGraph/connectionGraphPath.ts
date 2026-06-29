@@ -1,6 +1,6 @@
 // connectionGraphPath.ts
 
-import { degToRad } from "@/utils/converter";
+import { degToRad } from "@/utils";
 
 /**
  * Calc SVG path to Node.

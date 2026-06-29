@@ -12,7 +12,7 @@ import {
 
 export default defineCodeNode({
   type: "math",
-  variableName: "result",
+  variableName: "r",
   inputs: {
     operation: () => new SelectInterface("Operation", "Add", ["Add", "Subtract"]).setPort(false),
     number1: () => new NumberInterface("Number", 1),

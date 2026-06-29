@@ -1,14 +1,14 @@
 // inputAnalogSignalPlotModel.ts
 
-import type { NodeActivities } from "@/helpers/nodeActivity/nodeActivities";
+import type { NodeActivities } from "@/activity";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import { AnalogSignalPlotModel } from "./analogSignalPlotModel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 
 export class InputAnalogSignalPlotModel extends AnalogSignalPlotModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "inputAnalogSignalPlot";
     this.label = "input analog signals";

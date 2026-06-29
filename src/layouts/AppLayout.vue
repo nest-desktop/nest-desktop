@@ -12,7 +12,7 @@
       <v-card>
         <v-card-text>
           <v-row align-content="center" class="fill-height" justify="center">
-            <v-col class="text-subtitle-1 text-center" cols="12">
+            <v-col class="text-body-large text-center" cols="12">
               {{ appStore.state.loadingText }}
             </v-col>
             <v-col cols="6">
@@ -26,14 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import AppBar from "@/components/app/AppBar.vue";
-import AppRequestLogs from "@/components/app/AppRequestLogs.vue";
-
 import { useTheme } from "vuetify";
+
+import { AppBar, AppRequestLogs } from "@/app/components";
+import { useAppStore } from "@/app";
+
 const theme = useTheme();
 
-import { useAppStore } from "@/stores/appStore";
 const appStore = useAppStore();
-
 appStore.init(theme);
 </script>

@@ -18,9 +18,7 @@
 import { type Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import type { TNetwork } from "@/types";
-
-import { BaseNetworkGraph } from "@/networkGraph/helpers/networkGraph/networkGraph";
-import { mountNetworkGraph, unmountNetworkGraph } from "@/networkGraph/useNetworkGraph";
+import { BaseNetworkGraph, mountNetworkGraph, unmountNetworkGraph } from "@/networkGraph";
 
 import NetworkGraphContent from "./NetworkGraphContent.vue";
 

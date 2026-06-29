@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid max-width="1280">
     <v-row>
-      <v-col md="6">
+      <v-col cols="12" md="6">
         <v-card>
           <v-img :src="nestLogo" alt="nest-logo" class="ma-2 mx-10" />
 
@@ -47,7 +47,7 @@
         </v-card>
       </v-col>
 
-      <v-col md="6">
+      <v-col v-if="currentWorkspace" cols="12" md="6">
         <v-card title="Backend">
           <v-expansion-panels elevation="0" variant="accordion">
             <v-expansion-panel>
@@ -56,7 +56,7 @@
                 <v-spacer />
 
                 <BackendStatusIcon
-                  v-for="(backend, index) in appStore.currentWorkspace.backends"
+                  v-for="(backend, index) in currentWorkspace.backends"
                   :key="index"
                   :backend-store="backend"
                   :title="backend.state.name"
@@ -65,11 +65,7 @@
 
               <v-expansion-panel-text>
                 <v-tabs v-model="state.backendTab" density="compact">
-                  <v-tab
-                    v-for="(backend, index) in appStore.currentWorkspace.backends"
-                    :key="index"
-                    :value="backend.state.name"
-                  >
+                  <v-tab v-for="(backend, index) in currentWorkspace.backends" :key="index" :value="backend.state.name">
                     {{ backend.state.name }}
                     <template #append>
                       <BackendStatusIcon :backend-store="backend" :title="backend.state.name" />
@@ -79,7 +75,7 @@
 
                 <v-window v-model="state.backendTab" class="mx-2">
                   <v-window-item
-                    v-for="(backend, index) in appStore.currentWorkspace.backends"
+                    v-for="(backend, index) in currentWorkspace.backends"
                     :key="index"
                     :value="backend.state.name"
                   >
@@ -89,7 +85,10 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <v-expansion-panel :disabled="appStore.currentWorkspace.stores.modelStore.state.models.length === 0">
+            <v-expansion-panel
+              v-if="currentWorkspace.stores.modelStore"
+              :disabled="currentWorkspace.stores.modelStore.state.models.length === 0"
+            >
               <v-expansion-panel-title>
                 Models from NEST backend
                 <v-spacer />
@@ -113,7 +112,9 @@
                       :hide-details="false"
                       clearable
                       return-object
-                      @update:model-value="(item) => (item ? nestSimulator.installModule(item.name) : resetKernel())"
+                      @update:model-value="
+                        (item) => (item ? nestSimulator.installModule(item.name) : nestSimulator.resetKernel())
+                      "
                     >
                       <template #details>
                         <span
@@ -154,7 +155,7 @@
                         <!-- @vue-ignore item is unknown -->
                         {{ item.id }}
                         <template #append>
-                          <span class="text-caption">
+                          <span class="text-label-small">
                             <!-- @vue-ignore item is unknown -->
                             {{ item.elementType }}
                           </span>
@@ -177,18 +178,17 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue";
 
-import BackendSettings from "@/components/BackendSettings.vue";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
-import StoreList from "@/components/StoreList.vue";
 import nestLogo from "@/assets/img/logo/nest-logo.svg";
-import { IModelProps } from "@/stores/model/defineModelStore";
+import type { IModelState } from "@/model";
+import { BackendSettings, BackendStatusIcon } from "@/backends";
+import { StoreList } from "@/components";
+import { getCurrentWorkspace } from "@/app";
 
-import NESTModuleSelect from "../components/module/NESTModuleSelect.vue";
-import nestSimulator from "../stores/backends/nestSimulatorStore";
-import { IModule, openNESTModuleDialog } from "../stores/moduleStore";
+import nestSimulator from "../backends/nestSimulator";
+import { IModule, openNESTModuleDialog } from "../module";
+import { NESTModuleSelect } from "../module/components";
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+const currentWorkspace = getCurrentWorkspace();
 
 const state = reactive<{
   backendTab: string;
@@ -203,8 +203,12 @@ const state = reactive<{
 const customModels = computed(() => state.selectedModule?.models);
 
 const models = computed(() => {
-  const models = appStore.currentWorkspace.stores.modelStore.state.models;
-  return state.modelSearch ? models.filter((model: IModelProps) => model.id.includes(state.modelSearch)) : models;
+  if (!currentWorkspace) return [];
+  const modelStates = currentWorkspace.stores.modelStore.state.models;
+
+  return state.modelSearch
+    ? modelStates.filter((modelState: IModelState) => modelState.id.includes(state.modelSearch))
+    : modelStates;
 });
 
 const refItems = [
@@ -234,8 +238,4 @@ const refItems = [
     title: "https://www.ebrains.eu/tools/nest",
   },
 ];
-
-const resetKernel = () => {
-  nestSimulator.resetKernel();
-};
 </script>

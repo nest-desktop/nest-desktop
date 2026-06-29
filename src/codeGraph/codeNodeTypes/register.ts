@@ -1,27 +1,36 @@
 // codeNodeTypes/register.ts
 
+import { type Ref, ref } from "vue";
 import { type ICodeGraphViewModel } from "@babsey/code-graph";
 
 import { registerDefaultNodeTypes } from "./default";
 import { registerElephantNodeTypes } from "./elephant";
-// import { registerExampleNodeTypes } from "./examples";
+import { registerExampleNodeTypes } from "./examples";
 import { registerHumamNodeTypes } from "./humam";
-import { registerNESTNodeTypes } from "./nest";
 import { registerNeoNodeTypes } from "./neo";
-import { registerNorseNodeTypes } from "./norse";
 import { registerNumpyNodeTypes } from "./numpy";
-import { registerPandasNodeTypes } from "./pandas";
 import { registerTorchNodeTypes } from "./torch";
 
-export function registerNodeTypes(viewModel: ICodeGraphViewModel) {
-  registerDefaultNodeTypes(viewModel);
-  registerElephantNodeTypes(viewModel);
-  // registerExampleNodeTypes(viewModel);
-  registerHumamNodeTypes(viewModel);
-  registerNESTNodeTypes(viewModel);
-  registerNeoNodeTypes(viewModel);
-  registerNorseNodeTypes(viewModel);
-  registerNumpyNodeTypes(viewModel);
-  registerPandasNodeTypes(viewModel);
-  registerTorchNodeTypes(viewModel);
-}
+type TCodeNodeModules = (viewModel: ICodeGraphViewModel) => void;
+
+const codeNodeModules: Ref<Record<string, TCodeNodeModules>> = ref({
+  default: registerDefaultNodeTypes,
+  elephant: registerElephantNodeTypes,
+  example: registerExampleNodeTypes,
+  humam: registerHumamNodeTypes,
+  neo: registerNeoNodeTypes,
+  numpy: registerNumpyNodeTypes,
+  torch: registerTorchNodeTypes,
+});
+
+export const registerCodeNodeModule = (moduleName: string, nodeTypes: TCodeNodeModules) => {
+  codeNodeModules.value[moduleName] = nodeTypes;
+};
+
+export const registerNodeTypes = (viewModel: ICodeGraphViewModel, modules?: string[]) => {
+  if (!modules) modules = Object.keys(codeNodeModules.value);
+  modules.forEach((module: string) => {
+    const nodeTypeModule = codeNodeModules.value[module];
+    if (nodeTypeModule) nodeTypeModule(viewModel);
+  });
+};

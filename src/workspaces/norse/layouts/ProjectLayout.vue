@@ -69,47 +69,47 @@
 import { computed, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import ProjectBar from "@/components/project/ProjectBar.vue";
-import ProjectController from "@/components/project/ProjectController.vue";
-import ProjectNav from "@/components/project/ProjectNav.vue";
-import { mountProjectLayout } from "@/helpers/routes";
+import { ProjectBar, ProjectController, ProjectNav } from "@/project/components";
+import { mountProjectLayout } from "@/project";
 
-import type { NorseProject } from "../types";
+import type { NorseProject } from "../project";
 
 const router = useRouter();
 const route = useRoute();
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+import { getCurrentViewStore } from "@/app/appStore";
 
-import { useNorseProjectStore } from "../stores/project/projectStore";
+import { useNorseProjectStore } from "../project/stores/projectStore";
 const projectStore = useNorseProjectStore();
 
 const project = computed(() => projectStore.state.project as NorseProject);
-const projectViewStore = computed(() => appStore.currentWorkspace.views.project);
+const projectViewStore = getCurrentViewStore("project");
 
 onMounted(() => {
   mountProjectLayout({ route, router });
+  // if (!project.value || !project.value.viewModel) return;
 
   if (project.value.viewModel.subscribe) project.value.viewModel.subscribe();
   project.value.viewModel.engine?.start();
-  project.value.viewModel.engine?.runOnce(null);
+  // project.value.viewModel.engine?.runOnce({});
 });
 
 onBeforeUnmount(() => {
+  // if (!project.value || !project.value.viewModel) return;
+
   if (project.value.viewModel.unsubscribe) project.value.viewModel.unsubscribe();
   project.value.viewModel.engine?.stop();
 });
 
 watch(
   () => project.value,
-  (newValue, oldValue) => {
+  (newValue: NorseProject, oldValue: NorseProject) => {
     oldValue.viewModel.unsubscribe();
     oldValue.viewModel.engine?.stop();
 
     newValue.viewModel.subscribe();
     newValue.viewModel.engine?.start();
-    setTimeout(() => newValue.viewModel.engine?.runOnce(null), 1);
+    // setTimeout(() => newValue.viewModel.engine?.runOnce({}), 1);
   },
 );
 

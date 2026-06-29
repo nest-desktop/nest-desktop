@@ -3,7 +3,7 @@
 import { select } from "d3";
 
 import type { TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
 
 function anglePoint(deg: number, radius: number, y0: number = 0): number[] {
   const radian: number = (deg / 180) * Math.PI;
@@ -91,7 +91,7 @@ export class NodeGraphShape extends BaseObj {
   /**
    * Draw node shape.
    * @param selector
-   * @param node node object
+   * @param node node instance
    */
   drawShape(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.trace("draw shape");
@@ -121,7 +121,7 @@ export class NodeGraphShape extends BaseObj {
 
     elem
       .append("text")
-      .attr("class", "text-button")
+      .attr("class", "text-label-large")
       .style("font-family", "Roboto, sans-serif", "important")
       .style("font-size", "0.7rem", "important")
       .style("font-weight", "900")
@@ -134,7 +134,7 @@ export class NodeGraphShape extends BaseObj {
   /**
    * Initialize a node shape.
    * @param selector
-   * @param node node object
+   * @param node node instance
    */
   init(selector: TSelection, node: TNode | TNodeGroup): void {
     this.logger.silly("init");
@@ -192,13 +192,13 @@ export class NodeGraphShape extends BaseObj {
 
       elem
         .select(".shape")
-        .style("stroke-width", (node.size > 1 ? 1.5 : 1) * this._networkGraph.config?.localStorage.strokeWidth)
+        .style("stroke-width", (node.size.value > 1 ? 1.5 : 1) * this._networkGraph.config?.localStorage.strokeWidth)
         .style("opacity", node.isGroup ? 0.12 : node.view.opacity ? 1 : 0.6);
 
       elem
         .select("text")
         .attr("dy", node.isGroup || node.isInhibitoryNeuron ? "0.4em" : "0.8em")
-        .text(node.view.label);
+        .text(node.codeNode?.variableName ?? node.view.label);
     });
   }
 }

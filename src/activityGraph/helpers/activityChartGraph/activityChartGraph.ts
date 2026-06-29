@@ -5,17 +5,17 @@ import moment from "moment";
 import { type UnwrapRef, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
 
-import DownloadPlotDialog from "@/components/dialog/DownloadPlotDialog.vue";
-import type { TProject } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
-import { currentBackgroundColor, currentColor } from "@/helpers/common/theme";
+import type { NetworkProject } from "@/project";
+import { BaseObj, type IBaseState } from "@/core";
+import { DownloadPlotDialog } from "@/activityGraph/components";
+import { currentBackgroundColor, currentColor } from "@/theme";
 
-import { ActivityChartPanel, type IActivityChartPanelProps } from "./activityChartPanel";
+import { ActivityChartPanel, type IActivityChartPanelState } from "./activityChartPanel";
 import { AnalogSignalHistogramModel } from "./activityChartPanelModels/analogSignalHistogramModel";
 import { AnalogSignalPlotModel } from "./activityChartPanelModels/analogSignalPlotModel";
 import { CVISIHistogramModel } from "./activityChartPanelModels/CVISIHistogramModel";
 import type { IActivityChartPanelModelData } from "./activityChartPanelModel";
-import type { IBaseActivityGraphProps } from "../activityGraph";
+import type { IBaseActivityGraphState } from "../activityGraph";
 import { InterSpikeIntervalHistogramModel } from "./activityChartPanelModels/interSpikeIntervalHistogramModel";
 import { SenderCVISIPlotModel } from "./activityChartPanelModels/senderCVISIPlotModel";
 import { SenderMeanISIPlotModel } from "./activityChartPanelModels/senderMeanISIPlotModel";
@@ -27,7 +27,7 @@ import { SpikeTimesRasterPlotModel } from "./activityChartPanelModels/spikeTimes
 // import { SpikeActivity } from "../activity/spikeActivity";
 // import { sum } from "../common/array";
 
-export interface IActivityChartPanelModelProps {
+interface IActivityChartPanelModelState extends IBaseState {
   activityType: string;
   component: object;
   id: string;
@@ -41,7 +41,7 @@ interface IActivityChartGraphState {
   traceColor: string;
 }
 
-const models: IActivityChartPanelModelProps[] = [
+const models: IActivityChartPanelModelState[] = [
   {
     activityType: "analog",
     component: AnalogSignalPlotModel,
@@ -118,15 +118,14 @@ export class ActivityChartGraph extends BaseObj {
   private _plotConfig: PlotlyBasic.Partial<PlotlyBasic.Config> = {};
   private _plotData: PlotlyBasic.Data[] = [];
   private _plotLayout: PlotlyBasic.Partial<PlotlyBasic.Layout> = {};
-  private _models: IActivityChartPanelModelProps[] = models;
+  private _models: IActivityChartPanelModelState[] = models;
   private _panels: ActivityChartPanel[] = [];
-  private _project: TProject;
-  private _props: IBaseActivityGraphProps | undefined;
+  private _project: NetworkProject;
   private _state: UnwrapRef<IActivityChartGraphState>;
 
-  constructor(project: TProject, activityGraphProps?: IBaseActivityGraphProps) {
+  constructor(project: NetworkProject, activityGraphState?: IBaseActivityGraphState) {
     super();
-    this._props = activityGraphProps;
+    this.props.value = activityGraphState;
 
     this._project = project;
     this._plotConfig = {
@@ -183,29 +182,29 @@ export class ActivityChartGraph extends BaseObj {
 
     this._state = reactive<IActivityChartGraphState>({
       initialized: false,
-      traceColor: activityGraphProps?.color || "record",
+      traceColor: activityGraphState?.color || "record",
     });
   }
 
   get currentTime(): number {
-    const simulationState = this._project.simulation.state;
+    const simulationState = this.project.simulation.state;
     return simulationState.timeInfo.current > 0 ? simulationState.timeInfo.current : simulationState.biologicalTime;
   }
 
   get endTime(): number {
-    return this._project.simulation.state.biologicalTime;
+    return this.project.simulation.state.biologicalTime;
   }
 
-  get models(): IActivityChartPanelModelProps[] {
+  get models(): IActivityChartPanelModelState[] {
     return this._models;
   }
 
-  get modelsAnalog(): IActivityChartPanelModelProps[] {
-    return this._models.filter((model: IActivityChartPanelModelProps) => model.activityType === "analog");
+  get modelsAnalog(): IActivityChartPanelModelState[] {
+    return this.models.filter((model: IActivityChartPanelModelState) => model.activityType === "analog");
   }
 
-  get modelsSpike(): IActivityChartPanelModelProps[] {
-    return this._models.filter((model: IActivityChartPanelModelProps) => model.activityType === "spike");
+  get modelsSpike(): IActivityChartPanelModelState[] {
+    return this.models.filter((model: IActivityChartPanelModelState) => model.activityType === "spike");
   }
 
   get panels(): ActivityChartPanel[] {
@@ -218,13 +217,17 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   get panelsVisible(): ActivityChartPanel[] {
-    return this._panels.filter((panel: ActivityChartPanel) => panel.state.visible);
+    return this.panels.filter((panel: ActivityChartPanel) => panel.state.visible);
   }
 
   get panelsAnalogVisible(): ActivityChartPanel[] {
-    return this._panels.filter(
+    return this.panels.filter(
       (panel: ActivityChartPanel) => panel.state.visible && panel.model.activityType === "analog",
     );
+  }
+
+  get plotConfig(): PlotlyBasic.Partial<PlotlyBasic.Config> {
+    return this._plotConfig;
   }
 
   get plotData(): PlotlyBasic.Data[] {
@@ -235,12 +238,8 @@ export class ActivityChartGraph extends BaseObj {
     return this._plotLayout;
   }
 
-  get project(): TProject {
+  get project(): NetworkProject {
     return this._project;
-  }
-
-  get props(): IBaseActivityGraphProps | undefined {
-    return this._props;
   }
 
   get state(): UnwrapRef<IActivityChartGraphState> {
@@ -249,26 +248,26 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Add panel.
-   * @param panelProps panel props
+   * @param panelState panel state
    */
   addPanel(
-    panelProps: IActivityChartPanelProps = {
+    panelState: IActivityChartPanelState = {
       model: { id: "spikeTimesRasterPlot" },
     },
   ): void {
-    this.logger.trace("add panel:", panelProps.model?.id);
+    this.logger.trace("add panel:", panelState.model?.id);
 
-    this._panels.push(new ActivityChartPanel(this, panelProps));
+    this._panels.push(new ActivityChartPanel(this, panelState));
   }
 
   /**
    * Add panels.
    */
-  addPanels(panelsProps: IActivityChartPanelProps[]): void {
+  addPanels(panelStates: IActivityChartPanelState[]): void {
     this.logger.trace("add panels");
 
-    if (panelsProps.length > 0) {
-      panelsProps.forEach((panelProps: IActivityChartPanelProps) => this.addPanel(panelProps));
+    if (panelStates.length > 0) {
+      panelStates.forEach((panelState: IActivityChartPanelState) => this.addPanel(panelState));
     }
   }
 
@@ -287,6 +286,7 @@ export class ActivityChartGraph extends BaseObj {
    * @remarks It removes panels if the activity is not existed.
    */
   cleanPanels(): void {
+    this.logger.trace("clean panels");
     const panels = [...this.panels];
     panels.forEach((panel: ActivityChartPanel) => {
       if (
@@ -297,17 +297,18 @@ export class ActivityChartGraph extends BaseObj {
     });
 
     const activityPanelModels = this.panels.map((panel) => panel.model.id);
-    if (this._project.activities.state.hasSomeAnalogRecorders) {
+
+    if (this.project.activities.state.hasSomeAnalogRecorders) {
       if (!activityPanelModels.includes("analogSignalPlot")) this.addPanel({ model: { id: "analogSignalPlot" } });
     }
-    if (this._project.activities.state.hasSomeSpikeRecorders) {
+    if (this.project.activities.state.hasSomeSpikeRecorders) {
       if (!activityPanelModels.includes("spikeTimesRasterPlot"))
         this.addPanel({ model: { id: "spikeTimesRasterPlot" } });
       if (!activityPanelModels.includes("spikeTimesHistogram")) this.addPanel({ model: { id: "spikeTimesHistogram" } });
     }
 
-    this._project.activityGraph.activityChartGraph.initPanelModels();
-    this._project.activityGraph.activityChartGraph.panelsAnalogVisible.forEach((panel: ActivityChartPanel) => {
+    this.project.activityGraph.activityChartGraph.initPanelModels();
+    this.project.activityGraph.activityChartGraph.panelsAnalogVisible.forEach((panel: ActivityChartPanel) => {
       panel.model.selectAllNodeRecords();
     });
   }
@@ -323,7 +324,7 @@ export class ActivityChartGraph extends BaseObj {
    * Clear shapes.
    */
   clearShapes(): void {
-    this._plotLayout["shapes"] = [];
+    this.plotLayout["shapes"] = [];
   }
 
   /**
@@ -331,7 +332,7 @@ export class ActivityChartGraph extends BaseObj {
    */
   deleteTraces(): void {
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.deleteTraces(this._state.ref as Root, 0);
+    Plotly.deleteTraces(this.state.ref as Root, 0);
   }
 
   /**
@@ -339,11 +340,11 @@ export class ActivityChartGraph extends BaseObj {
    * @param options plotly download image options
    */
   downloadImage(options: PlotlyBasic.DownloadImgopts): void {
-    if (!this._state.ref) return;
+    if (!this.state.ref) return;
     this.logger.trace("download Image:", options);
 
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.downloadImage(this._state.ref, options);
+    Plotly.downloadImage(this.state.ref, options);
   }
 
   /**
@@ -356,7 +357,7 @@ export class ActivityChartGraph extends BaseObj {
 
   /**
    * Gather data for the chart graph.
-   * @param panel panel object
+   * @param panel panel instance
    */
   gatherData(panel: ActivityChartPanel): void {
     panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
@@ -365,7 +366,7 @@ export class ActivityChartGraph extends BaseObj {
       data.xaxis = "x" + panel.xAxis;
       data.yaxis = "y" + panel.yAxis;
       // data.yaxis = "y" + index;
-      this._plotData.push(data);
+      this.plotData.push(data);
     });
   }
 
@@ -392,10 +393,10 @@ export class ActivityChartGraph extends BaseObj {
    * Initialize Plotly events.
    */
   initEvents(): void {
-    if (!this._state.ref) return;
+    if (!this.state.ref) return;
     this.logger.trace("init events");
 
-    this._state.ref.on("plotly_legendclick", (plot: PlotlyBasic.Root) => {
+    this.state.ref.on("plotly_legendclick", (plot: PlotlyBasic.Root) => {
       nextTick(() => {
         if (plot && plot.data) {
           plot.data.forEach((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
@@ -411,7 +412,7 @@ export class ActivityChartGraph extends BaseObj {
    * Initialize panel models.
    */
   initPanelModels(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.init());
+    this.panels.forEach((panel: ActivityChartPanel) => panel.model.init());
   }
 
   /**
@@ -421,41 +422,41 @@ export class ActivityChartGraph extends BaseObj {
   newPlot(ref: PlotlyBasic.Root): void {
     this.logger.trace("new plot");
 
-    this._state.ref = ref;
+    this.state.ref = ref;
 
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.newPlot(this._state.ref, this._plotData, this._plotLayout, this._plotConfig).then(() => this.initEvents());
+    Plotly.newPlot(this.state.ref, this.plotData, this.plotLayout, this.plotConfig).then(() => this.initEvents());
   }
 
   /**
    * React plots to new updates.
    */
   react(): void {
-    if (!this._state.ref) return;
+    if (!this.state.ref) return;
     this.logger.trace("react");
 
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.react(this._state.ref, this._plotData, this._plotLayout);
+    Plotly.react(this.state.ref, this.plotData, this.plotLayout);
   }
 
   /**
    * Relayout plots to new theme.
    */
   relayout(): void {
-    if (!this._state.ref) return;
+    if (!this.state.ref) return;
     this.logger.trace("relayout");
 
     this.updateThemeColor();
     // @ts-expect-error Cannot find name 'Plotly'.
-    Plotly.relayout(this._state.ref, this._plotLayout);
+    Plotly.relayout(this.state.ref, this.plotLayout);
   }
 
   /**
    * Remove panel.
-   * @param panel panel object
+   * @param panel panel instance
    */
   removePanel(panel: ActivityChartPanel): void {
-    this._panels = this._panels.filter((p: ActivityChartPanel) => p !== panel);
+    this.panels = this.panels.filter((p: ActivityChartPanel) => p !== panel);
     this.update();
   }
 
@@ -472,14 +473,14 @@ export class ActivityChartGraph extends BaseObj {
    * Restyle plots with new updates.
    */
   restyle(): void {
-    if (!this._state.ref) return;
+    if (!this.state.ref) return;
     this.logger.trace("restyle");
 
     if (this.project.activities.state.hasSomeSpikeRecorders) {
       const restyleRaster = this.restyleMarkerHeightSpikeTimesRasterPlot();
 
       // @ts-expect-error Cannot find name 'Plotly'.
-      Plotly.restyle(this._state.ref, restyleRaster.update, restyleRaster.traceIndices);
+      Plotly.restyle(this.state.ref, restyleRaster.update, restyleRaster.traceIndices);
     }
   }
 
@@ -490,14 +491,14 @@ export class ActivityChartGraph extends BaseObj {
     update: Record<string, string | number | number[]>;
     traceIndices: number[];
   } {
-    if (!this._state.ref) return { update: {}, traceIndices: [] };
+    if (!this.state.ref) return { update: {}, traceIndices: [] };
 
-    const dataSpikeTimeRasterPlot = this._plotData.filter(
+    const dataSpikeTimeRasterPlot = this.plotData.filter(
       (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.modelId === "spikeTimesRasterPlot",
     );
 
     const markerSizes = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
-      const model = this._panels[d.panelIdx].model as SpikeTimesRasterPlotModel;
+      const model = this.panels[d.panelIdx].model as SpikeTimesRasterPlotModel;
       return model.markerSize;
     });
 
@@ -511,11 +512,11 @@ export class ActivityChartGraph extends BaseObj {
   }
 
   /**
-   * Serialize for JSON.
-   * @return list of activity chart panel props
+   * Save activity chart graph to state
+   * @return activity chart graph state
    */
-  toJSON(): IActivityChartPanelProps[] {
-    return this._panels.map((panel: ActivityChartPanel) => panel.toJSON());
+  override save(): IActivityChartPanelState[] {
+    return this.panels.map((panel: ActivityChartPanel) => panel.save());
   }
 
   /**
@@ -523,12 +524,12 @@ export class ActivityChartGraph extends BaseObj {
    * @remarks It required activities.
    */
   update(): void {
-    if (!this._state.ref) return;
+    if (!this.state.ref) return;
     this.logger.trace("update");
 
     this.empty();
 
-    this._project.activities.checkActivities();
+    this.project.activities.checkActivities();
 
     this.updateVisiblePanelsLayout();
     this.updatePanelModels();
@@ -560,10 +561,10 @@ export class ActivityChartGraph extends BaseObj {
       shape.yref = "y" + (panel.yAxis > 1 ? panel.yAxis : "");
     });
 
-    this._plotLayout.shapes = [...this._plotLayout.shapes, ...panel.layout.shapes];
+    this.plotLayout.shapes = [...this.plotLayout.shapes, ...panel.layout.shapes];
 
-    this._plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] = panel.layout.yaxis;
-    this._plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] = panel.layout.xaxis;
+    this.plotLayout["yaxis" + (panel.yAxis > 1 ? panel.yAxis : "")] = panel.layout.yaxis;
+    this.plotLayout["xaxis" + (panel.xAxis > 1 ? panel.xAxis : "")] = panel.layout.xaxis;
   }
 
   /**
@@ -572,7 +573,7 @@ export class ActivityChartGraph extends BaseObj {
   updatePanelModels(): void {
     this.logger.trace("update panel models");
 
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.update());
+    this.panels.forEach((panel: ActivityChartPanel) => panel.model.update());
   }
 
   /**
@@ -580,7 +581,7 @@ export class ActivityChartGraph extends BaseObj {
    * @remarks It renders new updates in activity plots.
    */
   updateRecordsColor(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateRecordsColor());
+    this.panels.forEach((panel: ActivityChartPanel) => panel.model.updateRecordsColor());
     this.react();
   }
 
@@ -588,11 +589,11 @@ export class ActivityChartGraph extends BaseObj {
    * Update the theme color of the chart graph.
    */
   updateThemeColor(): void {
-    this._panels.forEach((panel: ActivityChartPanel) => panel.model.updateBackgroundColor());
+    this.panels.forEach((panel: ActivityChartPanel) => panel.model.updateBackgroundColor());
 
-    this._plotLayout.font.color = currentColor();
-    this._plotLayout.paper_bgcolor = currentBackgroundColor();
-    this._plotLayout.plot_bgcolor = currentBackgroundColor();
+    this.plotLayout.font.color = currentColor();
+    this.plotLayout.paper_bgcolor = currentBackgroundColor();
+    this.plotLayout.plot_bgcolor = currentBackgroundColor();
   }
 
   /**

@@ -3,10 +3,9 @@
 import { GridHelper, Group, type Object3DEventMap, Vector3 } from "three";
 import { type UnwrapRef, reactive } from "vue";
 
-import type { IEventProps } from "@/helpers/activity/activity";
-import { NodeActivity } from "@/helpers/nodeActivity";
-import { NodeRecord } from "@/networkGraph/helpers/node/nodeRecord";
-import { range } from "@/utils/array";
+import { type IEventState, NodeActivity } from "@/activity";
+import { NodeRecord } from "@/network";
+import { range } from "@/utils";
 
 import { ActivityAnimationGraph } from "./activityAnimationGraph";
 import { ActivityAnimationLayerModel } from "./activityAnimationLayerModel";
@@ -286,7 +285,7 @@ export class ActivityAnimationLayer {
    * @remarks It requires activity events.
    */
   updateFrames(): void {
-    const events: IEventProps = Object.assign({}, this._activity.events);
+    const events: IEventState = Object.assign({}, this._activity.events);
     if (events.senders == null) return;
 
     // Update records of analog signals.

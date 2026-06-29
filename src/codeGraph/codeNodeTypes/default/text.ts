@@ -8,7 +8,7 @@ export default defineCodeNode({
   type: "text",
   variableName: "t",
   inputs: {
-    text: () => new TextInputInterface("text", "").use(setType, stringType),
+    text: () => new TextInputInterface("text", ""),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface().use(setType, stringType),

@@ -3,10 +3,10 @@
 import { pointer } from "d3";
 
 import type { TNetwork } from "@/types";
-import { BaseObj } from "@/helpers/common/base";
+import { BaseObj } from "@/core";
 
 import type { NetworkGraphWorkspace } from "./networkGraphWorkspace";
-import { drawPathMouse, drawPathNode } from "../connectionGraph/connectionGraphPath";
+import { drawPathMouse, drawPathNode } from "../connectionGraph";
 
 export class NetworkGraphDragline extends BaseObj {
   private _workspace: NetworkGraphWorkspace;
@@ -46,8 +46,8 @@ export class NetworkGraphDragline extends BaseObj {
       const sourcePosition: { x: number; y: number } = selectedNode.view.position;
       const position: number[] = pointer(event, this._workspace.selector.node());
       const targetPosition: { x: number; y: number } = {
-        x: position[0],
-        y: position[1],
+        x: position[0] ?? 0,
+        y: position[1] ?? 0,
       };
 
       this._workspace.selector

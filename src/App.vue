@@ -5,10 +5,10 @@
 <script setup lang="ts">
 import { nextTick, onMounted, reactive } from "vue";
 
-import { confirmDialog } from "./helpers/common/confirmDialog";
-import { logger as mainLogger } from "./utils/logger";
+import { confirmDialog } from "./core";
+import { logger as mainLogger } from "./utils";
 
-import { useAppStore } from "./stores/appStore";
+import { useAppStore } from "./app";
 const appStore = useAppStore();
 
 const logger = mainLogger.getSubLogger({ name: "app component" });
@@ -18,9 +18,7 @@ const logger = mainLogger.getSubLogger({ name: "app component" });
 // https://dev.to/drbragg/handling-service-worker-updates-in-your-vue-pwa-1pip (2020)
 // https://devpress.csdn.net/vue/62f40393c6770329307f8fcf.html (2022)
 
-const state = reactive<{ refreshing: boolean }>({
-  refreshing: false,
-});
+const state = reactive<{ refreshing: boolean }>({ refreshing: false });
 
 /**
  * Register if an update is available.

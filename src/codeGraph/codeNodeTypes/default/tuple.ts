@@ -8,7 +8,7 @@ export default defineCodeNode({
   type: "tuple",
   variableName: "t",
   inputs: {
-    items: () => new TupleInputInterface("tuple", 0).use(setType, tupleType),
+    items: () => new TupleInputInterface("tuple"),
   },
   outputs: {
     out: () => new CodeNodeOutputInterface().use(setType, tupleType),

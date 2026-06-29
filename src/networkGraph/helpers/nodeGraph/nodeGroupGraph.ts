@@ -52,7 +52,7 @@ export class NodeGroupGraph {
   /**
    * Drag connection graph by moving its node graphs.
    * @param event mouse event
-   * @param nodeGroup node group object
+   * @param nodeGroup node group instance
    */
   drag(event: MouseEvent, nodeGroup: TNodeGroup): void {
     // @ts-expect-error Property 'dx'/'dy' does not exist on type 'MouseEvent'.
@@ -117,8 +117,8 @@ export class NodeGroupGraph {
     const g = elem.enter().append("g").style("cursor-events", "none").attr("class", "nodeGroupArea");
 
     g.append("path")
-      .style("fill", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
-      .style("stroke", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
+      .style("fill", (n: TNodeGroup) => `var(--colorNode${n.idx})`)
+      .style("stroke", (n: TNodeGroup) => `var(--colorNode"${n.idx})`)
       .style("stroke-linejoin", "round")
       .attr("stroke-width", 64)
       .style("opacity", 0.12);
@@ -134,7 +134,7 @@ export class NodeGroupGraph {
     //   .style("pointer-events", "none")
     //   .style("text-anchor", "middle")
     //   .style("text-transform", "uppercase", "important")
-    //   .style("fill", (n: TNodeGroup) => "var(--colorNode" + n.idx + ")")
+    //   .style("fill", (n: TNodeGroup) => `var(--colorNode${n.idx})`)
     //   .text((n: TNodeGroup) => n.view.label);
 
     elem.on("mouseover", (_: MouseEvent, n: TNodeGroup) => {

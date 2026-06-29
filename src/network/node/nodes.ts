@@ -1,0 +1,466 @@
+// nodes.ts
+
+import { type UnwrapRef, reactive } from "vue";
+
+import type { AbstractCodeNode } from "@babsey/code-graph";
+
+import type { Class, TActivityGraph, TNode } from "@/types";
+import { BaseObj } from "@/core";
+
+import { BaseNode, type INodeState } from "./node";
+// import { type INodeGroupState } from "../nodeGroup/nodeGroup";
+import { BaseNetwork } from "../network";
+
+interface INodesRefState {
+  annotations: Record<string, string>[];
+  contextMenu: boolean;
+  focusedNode: TNode | null;
+  selectedNodes: TNode[];
+}
+
+export class BaseNodes<TNetwork extends BaseNetwork = BaseNetwork> extends BaseObj {
+  private _network: TNetwork; // parent
+  private _state: UnwrapRef<INodesRefState> = reactive<INodesRefState>({
+    annotations: [],
+    contextMenu: false,
+    focusedNode: null,
+    selectedNodes: [] as TNode[],
+  });
+
+  constructor(network: TNetwork) {
+    super();
+
+    this._network = network;
+  }
+
+  get Node(): Class<BaseNode> {
+    return BaseNode;
+  }
+
+  get all(): BaseNode[] {
+    return this.nodes;
+  }
+
+  get annotations(): Record<string, string>[] {
+    return this.state.annotations;
+  }
+
+  get codeNodes(): AbstractCodeNode[] {
+    return [];
+  }
+
+  get codeNodeIds(): Record<string, AbstractCodeNode> {
+    return Object.fromEntries(this.codeNodes.map((codeNode: AbstractCodeNode) => [codeNode.id, codeNode]));
+  }
+
+  get codeNodeOutputIds(): Record<string, AbstractCodeNode> {
+    return Object.fromEntries(this.codeNodes.map((codeNode: AbstractCodeNode) => [codeNode.outputs.out?.id, codeNode]));
+  }
+
+  /**
+   * Check if it has any selected nodes (n > 1).
+   */
+  get hasAnySelectedNodes(): boolean {
+    return this.state.selectedNodes.length > 1;
+  }
+
+  /**
+   * Check if it contains some recorders for analog signals.
+   */
+  get hasSomeAnalogRecorders(): boolean {
+    return this.nodes.some((node: TNode) => node.model?.isAnalogRecorder);
+  }
+
+  /**
+   * Check if it contains some spike recorders.
+   */
+  get hasSomeSpikeRecorders(): boolean {
+    return this.nodes.some((node: TNode) => node.model?.isSpikeRecorder);
+  }
+
+  /**
+   * Get length of nodes list.
+   */
+  get length(): number {
+    return this.nodes.length;
+  }
+
+  get network(): TNetwork {
+    return this._network;
+  }
+
+  /**
+   * Get neurons
+   */
+  get neurons(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isNeuron);
+  }
+
+  // get nodeGroups(): TNodeGroup[] {
+  //   return this.nodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+  // }
+
+  // get nodeItems(): TNode[] {
+  //   return this.nodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+  // }
+
+  get nodes(): TNode[] {
+    return this.codeNodes
+      .filter((codeNode: AbstractCodeNode) => codeNode.mask)
+      .map((codeNode: AbstractCodeNode) => codeNode.mask) as TNode[];
+  }
+
+  /**
+   * Get recorders.
+   */
+  get recorders(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model?.isRecorder);
+  }
+
+  /**
+   * Get recorders for analog signals.
+   */
+  get recordersAnalog(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model?.isAnalogRecorder);
+  }
+
+  /**
+   * Get spike recorders.
+   */
+  get recordersSpike(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model?.isSpikeRecorder);
+  }
+
+  // /**
+  //  * Get selected node groups.
+  //  */
+  // get selectedNodeGroups(): TNodeGroup[] {
+  //   const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
+  //   return selectedNodes.filter((node: TNode | TNodeGroup) => node.isGroup) as TNodeGroup[];
+  // }
+
+  // /**
+  //  * Get selected nodes.
+  //  */
+  // get selectedNodeItems(): TNode[] {
+  //   const selectedNodes = this.state.selectedNodes as (TNode | TNodeGroup)[];
+  //   return selectedNodes.filter((node: TNode | TNodeGroup) => node.isNode) as TNode[];
+  // }
+
+  get state(): UnwrapRef<INodesRefState> {
+    return this._state;
+  }
+
+  /**
+   * Get stimulators.
+   */
+  get stimulators(): TNode[] {
+    return this.nodes.filter((node: TNode) => node.model.isStimulator);
+  }
+
+  /**
+   * Get user dict from node annotations.
+   */
+  get userDict(): Record<string, string[]> {
+    const userDict: Record<string, string[]> = {};
+    this.nodes
+      .filter((node: TNode) => node.annotations.length > 0)
+      .forEach((node: TNode) => {
+        const nodeLabel = node.view.label;
+        node.annotations.forEach((annotation: string) => {
+          if (annotation in userDict) {
+            userDict[annotation].push(nodeLabel);
+          } else {
+            userDict[annotation] = [nodeLabel];
+          }
+        });
+      });
+    return userDict;
+  }
+
+  // /**
+  //  * Get visible nodes.
+  //  */
+  // get visibleNodes(): TNode[] {
+  //   return this.nodeItems.filter((node: TNode) => node.view.state.visible);
+  // }
+
+  /**
+   * Clean nodes and connection components.
+   */
+  clean(): void {
+    this.updateRecorders();
+    // this.nodes.forEach((node: TNode) => node.clean());
+  }
+
+  // /**
+  //  * Remove node groups containing less than two items.
+  //  */
+  // cleanNodeGroups(): void {
+  //   this.nodeGroups.forEach((nodeGroup: TNodeGroup) => {
+  //     if (nodeGroup.nodes.length < 2) {
+  //       nodeGroup.remove();
+  //     } else {
+  //       nodeGroup.update();
+  //     }
+  //   });
+  // }
+
+  /**
+   * Clear node list.
+   */
+  clear(): void {
+    this.resetState();
+    // this._nodes = [];
+  }
+
+  /**
+   * Filter nodes by model ID.
+   * @param modelId string
+   * @returns Array of Node
+   */
+  filterByModelId(modelId: string): TNode[] {
+    return this.nodes.filter((node: TNode) => node.modelId === modelId);
+  }
+
+  // /**
+  //  * Group selected nodes.
+  //  */
+  // groupSelected(): void {
+  //   const nodes = this._state.selectedNodes.map((node) => node.idx);
+  //   const nodeGroup = this.newNodeGroup({ nodes });
+  //   this.selectNode(nodeGroup);
+  //   this.network.changes({ preventSimulation: true });
+  // }
+
+  /**
+   * Create new node instance.
+   */
+  newNode(nodeState?: INodeState): TNode {
+    this.logger.trace("new node", nodeState);
+
+    const node = new this.Node(this);
+    if (nodeState) node.load(nodeState);
+    return node;
+  }
+
+  // /**
+  //  * Create new node group instance.
+  //  * @param nodeGroupState node group state
+  //  */
+  // newNodeGroup(nodeGroupState: INodeGroupState): TNodeGroup {
+  //   this.logger.trace("add node group");
+
+  //   const nodeGroup = new NodeGroup(this, nodeGroupState);
+  //   // this._nodes.push(nodeGroup);
+
+  //   // nodeGroup.updateHash();
+  //   return nodeGroup;
+  // }
+
+  /**
+   * Register code node.
+   */
+  registerCodeNode(codeNode: AbstractCodeNode, node?: TNode): void {
+    this.logger.trace("register code node:", codeNode.shortId);
+
+    if (!node) node = this.newNode({ model: codeNode.inputs.model?.value as string });
+
+    node.registerCodeNode(codeNode);
+    // node.init();
+  }
+
+  /**
+   * Register code nodes.
+   * @param type code node type
+   */
+  registerCodeNodes(type: string): void {
+    this.logger.trace("register code nodes: ", type);
+
+    const graph = this.network.project.viewModel?.editor.graph;
+    if (!graph) return;
+
+    const codeNodes = graph.getNodesByType(type);
+    codeNodes.forEach((codeNode: AbstractCodeNode) => this.registerCodeNode(codeNode));
+  }
+
+  /**
+   * Remove node component from the network.
+   * @param node node instance
+   */
+  remove(node: TNode): void {
+    this.logger.trace("remove node");
+
+    this.network.state.unselectAll();
+
+    node.codeNode?.remove();
+
+    // Remove node from the node list.
+    // this._nodes.splice(node.idx, 1);
+  }
+
+  // /**
+  //  * Remove node in the node groups.
+  //  * @param node node instance
+  //  */
+  // removeNodeInNodeGroups(node: TNode | TNodeGroup): void {
+  //   this.resetState();
+
+  //   this.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.removeNode(node));
+  // }
+
+  /*
+   * Reset all states.
+   */
+  resetState(): void {}
+
+  /**
+   * Save nodes to state.
+   * @return node states
+   */
+  override save(): INodeState[] {
+    return this.nodes.map((node: TNode) => node.save());
+  }
+
+  /**
+   * Select node.
+   * @param node node or node group instance
+   */
+  selectNode(node: TNode) {
+    this.state.selectedNodes.push(node);
+    this.state.selectedNodes.sort();
+  }
+
+  /**
+   * Show node in list.
+   */
+  showNode(node: TNode): boolean {
+    const elementTypeIdx = this.network.state.elementTypeIdx;
+
+    if (this.state.selectedNodes.length > 0) {
+      // selected node
+      return (
+        // this.selectedNodeGroups.some((nodeGrp: TNodeGroup) => nodeGrp.nodes.includes(node)) ||
+        this.state.selectedNodes.includes(node)
+      );
+    } else if (elementTypeIdx > 0) {
+      // element type
+      return this.network.elementTypes[elementTypeIdx].id === node.elementType;
+    } else if (this.network.state.state.displayIdx.nodes.length > 0) {
+      // custom
+      return this.network.state.state.displayIdx.nodes.includes(node.idx);
+    } else {
+      // all
+      return true;
+    }
+  }
+
+  /**
+   * Toggle node selection
+   * @param node node or node group instance
+   */
+  toggleNodeSelection(node: TNode) {
+    this.network.state.state.elementTypeIdx = 0;
+
+    if (this.state.selectedNodes.includes(node)) {
+      this.unselectNode(node);
+    } else {
+      this.selectNode(node);
+    }
+  }
+
+  /**
+   * Unfocus node.
+   */
+  unfocusNode(): void {
+    this.state.focusedNode = null;
+  }
+
+  /**
+   * Unselect node.
+   * @param node node or node group instance
+   */
+  unselectNode(node: TNode) {
+    const index = this.state.selectedNodes.indexOf(node);
+    this.state.selectedNodes.splice(index, 1);
+  }
+
+  /**
+   * Unselect node.
+   */
+  unselectNodes(): void {
+    this.state.selectedNodes = [];
+  }
+
+  /**
+   * Update annotations.
+   */
+  updateAnnotations(): void {
+    this.state.annotations = [];
+
+    const nodeAnnotationsDict: Record<string, string[]> = {};
+    this.nodes
+      .filter((node: TNode) => node.annotations.length > 0)
+      .forEach((node: TNode) => {
+        const nodeLabel = node.view.label;
+        node.annotations.forEach((annotation: string) => {
+          if (annotation in nodeAnnotationsDict) {
+            nodeAnnotationsDict[annotation].push(nodeLabel);
+          } else {
+            nodeAnnotationsDict[annotation] = [nodeLabel];
+          }
+        });
+      });
+
+    if (nodeAnnotationsDict) {
+      Object.keys(nodeAnnotationsDict).forEach((userDictKey: string) => {
+        const nodes = nodeAnnotationsDict[userDictKey];
+        const nodesStr = nodes.length === 1 ? nodes[0] : "(" + nodes.join("+") + ")";
+        this.state.annotations.push({
+          key: userDictKey,
+          value: nodesStr,
+        });
+      });
+    }
+  }
+
+  /**
+   * Update recorders.
+   * @remarks It should be called after network created.
+   */
+  updateRecorders(): void {
+    this.logger.trace("update recorders");
+
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.update());
+  }
+
+  /**
+   * Update records of recorders.
+   * @remarks It should be called after network created.
+   */
+  updateRecords(): void {
+    this.logger.trace("update records");
+
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.updateRecords());
+  }
+
+  /**
+   * Update records color of recorders.
+   * @remarks It updates colors in activity chart graph.
+   */
+  updateRecordsColor(): void {
+    this.logger.trace("update records color");
+
+    this.recordersAnalog.forEach((recorder: TNode) => recorder.updateRecordsColor());
+
+    const activityGraph = this.network.project.activityGraph as TActivityGraph;
+    if (activityGraph.activityChartGraph) activityGraph.activityChartGraph.updateRecordsColor();
+  }
+
+  /**
+   * Update states.
+   */
+  updateStates(): void {
+    this.updateAnnotations();
+  }
+}

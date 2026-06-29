@@ -6,7 +6,7 @@ import { CodeNodeInputInterface, CodeNodeOutputInterface, defineCodeNode, number
 
 export default defineCodeNode({
   type: "sum",
-  variableName: "result",
+  variableName: "r",
   inputs: {
     arg1: () => new CodeNodeInputInterface("arg1"),
     arg2: () => new CodeNodeInputInterface("arg2"),

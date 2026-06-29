@@ -7,23 +7,23 @@ import { Extension } from "@codemirror/state";
 import { basicSetup } from "codemirror";
 import { computed, UnwrapRef } from "vue";
 
-import { CodeEditor } from "@babsey/code-graph";
+import { components } from "@babsey/code-graph";
+const { CodeEditor } = components;
 
-import type { IErrorState } from "@/plugins/codeMirrorExtensions/codeError";
+import type { IAxiosErrorData } from "@/backends";
 import { autocompletion, codeError, languagePython, oneDark } from "@/plugins/codemirror";
-import { darkMode } from "@/helpers/common/theme";
+import { darkMode } from "@/theme";
 
-import { useAppStore } from "@/stores/appStore";
-const appStore = useAppStore();
+import { getCurrentWorkspace } from "@/app";
+const currentWorkspace = getCurrentWorkspace();
 
-const props = defineProps<{ error?: UnwrapRef<IErrorState> }>();
+const props = defineProps<{ error?: UnwrapRef<IAxiosErrorData> }>();
 const error = computed(() => props.error);
 
-const extensions: Extension[] = [
-  basicSetup,
-  languagePython(),
-  autocompletion({ override: appStore.currentWorkspace.completionSources }),
-];
+const extensions: Extension[] = [basicSetup, languagePython()];
+
+if (currentWorkspace && currentWorkspace.completionSources)
+  extensions.push(autocompletion({ override: currentWorkspace.completionSources }));
 
 if (darkMode()) extensions.push(oneDark);
 

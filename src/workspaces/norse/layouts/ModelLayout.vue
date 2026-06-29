@@ -39,17 +39,14 @@
 <script setup lang="ts">
 import { nextTick, onMounted, watch } from "vue";
 
-import ModelBar from "@/components/model/ModelBar.vue";
-import ModelController from "@/components/model/ModelController.vue";
-import ModelNav from "@/components/model/ModelNav.vue";
-import ModelSelectProjectMenu from "@/components/model/ModelSelectProjectMenu.vue";
-import { mountModelLayout } from "@/helpers/routes";
+import { ModelBar, ModelController, ModelNav, ModelSelectProjectMenu } from "@/model/components";
+import { mountModelLayout } from "@/model";
 
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-import { useNorseModelStore } from "../stores/model/modelStore";
+import { useNorseModelStore } from "../model";
 const modelStore = useNorseModelStore();
 
 const projects: { id: string; name: string; icon: string }[] = [

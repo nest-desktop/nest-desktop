@@ -3,13 +3,13 @@
 import type { IEditorState } from "@baklavajs/core";
 import { PythonCode } from "@babsey/code-graph";
 
-import type { TProject } from "@/types";
+import type { BaseProject } from "@/project";
 
-export interface ICodeProps {
+export interface IProjectCodeState {
   editor: IEditorState;
 }
 
-export class ProjectCode extends PythonCode {
+export class ProjectCode<TProject extends BaseProject = BaseProject> extends PythonCode {
   private _project: TProject;
 
   constructor(project: TProject) {
@@ -22,11 +22,21 @@ export class ProjectCode extends PythonCode {
     return this._project;
   }
 
-  init(): void {
-    if (this.project.doc.code?.editor) this.viewModel.loadEditor(this.project.doc.code.editor);
+  /**
+   * Load project code  from state
+   * @param state code state
+   */
+  load(state: IProjectCodeState): void {
+    if (this.viewModel?.loadEditor) this.viewModel.loadEditor(state.editor);
   }
 
-  toJSON(): ICodeProps {
+  /**
+   * Save project code to state.
+   * @returns project code state.
+   */
+  save(): IProjectCodeState | undefined {
+    if (!this.viewModel) return;
+
     return {
       editor: this.viewModel.editor.save(),
     };

@@ -14,13 +14,17 @@
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    @click:append="increment()"
-    @click:prepend="decrement()"
   >
     <template #append>
+      <v-btn density="compact" icon="mdi:mdi-plus" variant="text" @click="increment()" />
+
       <div class="unit">
         {{ props.unit }}
       </div>
+    </template>
+
+    <template #prepend>
+      <v-btn density="compact" icon="mdi:mdi-minus" variant="text" @click="decrement()" />
     </template>
 
     <template #tick-label="{ index }">

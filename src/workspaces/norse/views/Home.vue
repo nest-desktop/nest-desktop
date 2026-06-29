@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid max-width="1280">
     <v-row>
-      <v-col md="6">
+      <v-col cols="12" md="6">
         <v-card>
           <v-img :src="norseLogo" alt="norse-logo" class="ma-2 mx-10" />
 
@@ -30,7 +30,7 @@
         </v-card>
       </v-col>
 
-      <v-col md="6">
+      <v-col cols="12" md="6">
         <v-card title="Backend">
           <v-expansion-panels elevation="0" variant="accordion">
             <v-expansion-panel>
@@ -56,13 +56,12 @@
 </template>
 
 <script setup lang="ts">
-import BackendSettings from "@/components/BackendSettings.vue";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
+import { BackendSettings, BackendStatusIcon } from "@/backends";
 import StoreList from "@/components/StoreList.vue";
 import norseLogo from "@/assets/img/logo/norse-logo.png";
 import type { TStore } from "@/types";
 
-import { useNorseSimulatorStore } from "../stores/backends/norseSimulatorStore";
+import { useNorseSimulatorStore } from "../backends/norseSimulator";
 const norseSimulatorStore: TStore = useNorseSimulatorStore();
 
 const refItems = [

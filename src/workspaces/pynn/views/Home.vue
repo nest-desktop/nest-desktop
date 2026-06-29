@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid max-width="1280">
     <v-row>
-      <v-col md="6">
+      <v-col cols="12" md="6">
         <v-card>
           <v-img :src="pynnLogo" alt="pynn-logo" class="ma-2 mx-10" max-height="400" />
 
@@ -43,7 +43,7 @@
         </v-card>
       </v-col>
 
-      <v-col md="6">
+      <v-col cols="12" md="6">
         <v-card title="Backend">
           <v-expansion-panels elevation="0" title variant="accordion">
             <v-expansion-panel>
@@ -69,12 +69,11 @@
 </template>
 
 <script setup lang="ts">
-import BackendSettings from "@/components/BackendSettings.vue";
-import StoreList from "@/components/StoreList.vue";
+import { BackendSettings, BackendStatusIcon } from "@/backends";
+import { StoreList } from "@/components";
 import pynnLogo from "@/assets/img/logo/pynn-logo.png";
-import BackendStatusIcon from "@/components/iconsets/BackendStatusIcon.vue";
 
-import { usePyNNSimulatorStore } from "../stores/backends/pynnSimulatorStore";
+import { usePyNNSimulatorStore } from "../backends/pynnSimulator";
 const pynnSimulatorStore = usePyNNSimulatorStore();
 
 const refItems = [

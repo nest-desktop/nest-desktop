@@ -13,7 +13,7 @@
     <template #prepend>
       <v-text-field
         v-model="lower"
-        :label="props.inputLabel[0] as string"
+        :label="props.inputLabel[0]"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -28,7 +28,7 @@
     <template #append>
       <v-text-field
         v-model="upper"
-        :label="props.inputLabel[1] as string"
+        :label="props.inputLabel[1]"
         :step="props.step"
         :suffix="props.unit"
         density="compact"

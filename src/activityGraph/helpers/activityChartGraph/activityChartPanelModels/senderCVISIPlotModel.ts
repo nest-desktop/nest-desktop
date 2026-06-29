@@ -1,23 +1,23 @@
 // senderCVISIPlotModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 import type { TParameter } from "@/types";
 
 import type { ActivityChartPanel } from "../activityChartPanel";
 import type { ActivityChartPanelModelParameter } from "../activityChartPanelModelParameter";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
 import { plot } from "../graphObjects/plot";
 
 export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "senderCVISIPlot";
     this.label = "CV of ISI in each sender";
     this.panel.xAxis = 4;
 
-    this.initParams([
+    this.loadParams([
       {
         component: "select",
         id: "plotMode",
@@ -47,12 +47,12 @@ export class SenderCVISIPlotModel extends SpikeTimesPanelModel {
       },
     ]);
 
-    this.updateParams(modelProps.params);
+    this.updateParams(modelState.params);
   }
 
   /**
    * Add data of CV of ISI in each sender for histogram panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

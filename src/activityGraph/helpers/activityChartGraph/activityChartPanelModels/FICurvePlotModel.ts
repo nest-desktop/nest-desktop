@@ -1,15 +1,15 @@
 // FICurvePlotModel.ts
 
-import type { SpikeActivity } from "@/helpers/activity/spikeActivity";
+import type { SpikeActivity } from "@/activity";
 
 import { ActivityChartPanel } from "../activityChartPanel";
-import type { IActivityChartPanelModelProps } from "../activityChartPanelModel";
+import type { IActivityChartPanelModelState } from "../activityChartPanelModel";
 import { SpikeTimesPanelModel } from "./spikeTimesPanelModel";
-import { line } from "../graphObjects/line";
+import { line } from "../graphObjects";
 
-export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
-  constructor(panel: ActivityChartPanel, modelProps: IActivityChartPanelModelProps = {}) {
-    super(panel, modelProps);
+export class FICurvePlotModel extends SpikeTimesPanelModel {
+  constructor(panel: ActivityChartPanel, modelState: IActivityChartPanelModelState = {}) {
+    super(panel, modelState);
     this.icon = "mdi:mdi-chart-bell-curve-cumulative";
     this.id = "FICurvePlot";
     this.label = "F-I curve";
@@ -19,7 +19,7 @@ export class SpikeTimesRasterPlotModel extends SpikeTimesPanelModel {
 
   /**
    * Add data of FI curve for trace panel.
-   * @param activity spike activity object
+   * @param activity spike activity instance
    */
   override addData(activity: SpikeActivity): void {
     if (activity.nodeIds.length === 0) return;

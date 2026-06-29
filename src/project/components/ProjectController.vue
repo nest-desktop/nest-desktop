@@ -1,0 +1,204 @@
+<template>
+  <v-navigation-drawer v-if="project" class="d-print-none full-height" location="right" permanent rail>
+    <v-tabs
+      :mandatory="false"
+      :model-value="projectViewStore.state.views.controller"
+      color="primary"
+      direction="vertical"
+      stacked
+    >
+      <v-tab
+        v-for="(item, index) in controllerItems"
+        v-show="item.show !== 'dev' || (item.show === 'dev' && isDevMode())"
+        :key="index"
+        :ripple="false"
+        :value="item.id"
+        class="justify-center"
+        height="76"
+        min-width="0"
+        @click.stop="projectViewStore.toggleController(item)"
+      >
+        <v-icon class="ma-1" size="large" v-bind="item.icon" />
+        <span style="font-size: 9px">{{ item.id }}</span>
+      </v-tab>
+    </v-tabs>
+
+    <template #append>
+      <v-row align="center" class="my-1" justify="center" no-gutters>
+        <v-btn
+          :icon="projectViewStore.state.bottomNav.active ? 'mdi:mdi-arrow-expand-down' : 'mdi:mdi-arrow-expand-up'"
+          value="code"
+          variant="plain"
+          @click.stop="projectViewStore.toggleBottomNav()"
+        />
+      </v-row>
+    </template>
+  </v-navigation-drawer>
+
+  <v-navigation-drawer
+    :model-value="projectViewStore.state.controller.open"
+    :style="{ transition: navStore.state.resizing ? 'initial' : '' }"
+    :width="projectViewStore.state.controller.width"
+    class="d-print-none"
+    location="right"
+    permanent
+    @transitionend="projectViewStore.dispatchWindowResize()"
+  >
+    <div class="resize-handle left" @mousedown="projectViewStore.resizeRightNav()" />
+
+    <div :key="projectStore.state.projectId" style="height: 100%">
+      <template v-if="projectViewStore.state.views.controller === 'network'">
+        <slot name="network">
+          <NetworkSpecEditor :network="project.network">
+            <template #model>
+              <slot name="model" />
+            </template>
+            <template #nodes>
+              <slot name="nodes" />
+            </template>
+          </NetworkSpecEditor>
+        </slot>
+      </template>
+
+      <template v-else-if="projectViewStore.state.views.controller === 'kernel'">
+        <slot name="simulationKernel">
+          <SimulationKernelEditor :simulation="project.simulation" />
+        </slot>
+      </template>
+
+      <template v-else-if="isDevMode() && projectViewStore.state.views.controller === 'data'">
+        <v-tabs v-model="tab" density="compact">
+          <v-tab value="doc"> DB doc </v-tab>
+          <v-tab value="json"> json </v-tab>
+        </v-tabs>
+
+        <v-window v-model="tab">
+          <v-window-item reverse-transition="no-transition" transition="no-transition" value="doc">
+            <Codemirror :extensions :model-value="projectDoc" disabled style="font-size: 0.75rem; width: 100%" />
+          </v-window-item>
+
+          <v-window-item reverse-transition="no-transition" transition="no-transition" value="json">
+            <Codemirror :extensions :model-value="projectState" disabled style="font-size: 0.75rem; width: 100%" />
+          </v-window-item>
+        </v-window>
+      </template>
+
+      <template v-else-if="projectViewStore.state.views.controller === 'code'">
+        <slot name="codeEditor">
+          <CodeEditor
+            v-if="project.code"
+            v-model="project.code.script"
+            :error="project.simulation.handler.error"
+            :locked="project.code.lockCode"
+            @update:locked="(v: boolean) => (project.code.lockCode = v)"
+          />
+        </slot>
+      </template>
+
+      <template v-else-if="projectViewStore.state.views.controller === 'activity'">
+        <slot name="activityController">
+          <ActivityChartController :graph="project.activityGraph.activityChartGraph" />
+        </slot>
+      </template>
+
+      <template v-else-if="projectViewStore.state.views.controller === 'stats'">
+        <ActivityStats :activities="project.activities" />
+      </template>
+    </div>
+  </v-navigation-drawer>
+</template>
+
+<script setup lang="ts">
+import { Codemirror } from "vue-codemirror";
+import { Extension } from "@codemirror/state";
+import { computed, ref } from "vue";
+
+import { ActivityChartController } from "@/activityGraph/components";
+import { ActivityStats } from "@/activity/components";
+import { CodeEditor } from "@/codeGraph/components";
+import { NetworkSpecEditor } from "@/network/components";
+import { SimulationKernelEditor } from "@/simulation/components";
+import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
+import { darkMode } from "@/theme";
+import { getCurrentStore, getCurrentViewStore, isDevMode } from "@/app";
+import { useNavStore } from "@/nav";
+
+const navStore = useNavStore();
+
+const projectStore = getCurrentStore("project");
+const project = computed(() => projectStore.state.project);
+const projectViewStore = getCurrentViewStore("project");
+
+const projectDoc = computed(() => JSON.stringify(project.value.doc, null, 2));
+const projectState = computed(() => JSON.stringify(project.value.save(), null, 2));
+
+const tab = ref("doc");
+
+interface IControllerItem {
+  id: string;
+  icon: {
+    class?: string;
+    icon: string;
+  };
+  show?: string;
+  title: string;
+}
+
+const controllerItems: IControllerItem[] = [
+  {
+    id: "network",
+    icon: {
+      icon: "graph:network",
+    },
+    title: "Edit network",
+  },
+  {
+    id: "kernel",
+    icon: {
+      icon: "mdi:mdi-engine-outline",
+    },
+    title: "Edit kernel",
+  },
+  {
+    id: "data",
+    icon: {
+      icon: "mdi:mdi-code-json",
+    },
+    show: "dev",
+    title: "View data",
+  },
+  { id: "code", icon: { icon: "mdi:mdi-xml" }, title: "Edit code" },
+  {
+    id: "activity",
+    icon: {
+      class: "mdi-flip-v",
+      icon: "mdi:mdi-border-style",
+    },
+    title: "Configure activity",
+  },
+  {
+    id: "stats",
+    icon: {
+      icon: "mdi:mdi-table-large",
+    },
+    title: "View statistics",
+  },
+];
+
+//
+// Code editor
+//
+
+const extensions: Extension[] = [basicSetup, languageJSON()];
+
+if (darkMode()) extensions.push(oneDark);
+</script>
+
+<style scoped>
+.left {
+  cursor: ew-resize;
+  height: 100%;
+  width: 4px;
+  left: 0;
+}
+</style>
