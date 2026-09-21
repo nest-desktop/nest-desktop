@@ -26,13 +26,13 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "~6.19",
+    "@codemirror/autocomplete": "~6.20",
     "@codemirror/lang-json": "~6.0",
     "@codemirror/lang-python": "~6.2",
     "@codemirror/lang-yaml": "~6.1",
-    "@codemirror/state": "~6.5",
+    "@codemirror/state": "~6.7",
     "@codemirror/theme-one-dark": "~6.1",
-    "@codemirror/view": "~6.38",
+    "@codemirror/view": "~6.43",
     "@mdi/font": "~7.4",
     "axios": "~1.13",
     "codemirror": "~6.0",
