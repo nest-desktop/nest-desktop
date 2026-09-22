@@ -1,6 +1,6 @@
 // serialize
 
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 
 export const parseJSON = (text: string): unknown => JSON.parse(text);
 export const parseYAML = (text: string): unknown => yaml.load(text);
