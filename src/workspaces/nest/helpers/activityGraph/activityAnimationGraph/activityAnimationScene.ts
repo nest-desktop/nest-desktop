@@ -4,7 +4,6 @@ import Stats from "stats.js";
 import {
   AmbientLight,
   AxesHelper,
-  Clock,
   Color,
   DirectionalLight,
   Group,
@@ -13,6 +12,7 @@ import {
   Plane,
   PlaneHelper,
   Scene,
+  Timer,
   Vector3,
   WebGLRenderer,
 } from "three";
@@ -42,7 +42,6 @@ export class ActivityAnimationScene {
   private _animationFrameId: number;
   private _camera: PerspectiveCamera;
   private _clippingPlanes: Plane[] = [];
-  private _clock: Clock;
   private _controls: OrbitControls;
   private _delta: number = 0;
   private _graph: ActivityAnimationGraph; // parent
@@ -52,6 +51,7 @@ export class ActivityAnimationScene {
   private _scene: Scene;
   private _state: UnwrapRef<IActivityAnimationSceneState>;
   private _stats: Stats;
+  private _timer: Timer;
   private _useStats = false;
 
   constructor(graph: ActivityAnimationGraph, ref: HTMLElement) {
@@ -76,8 +76,9 @@ export class ActivityAnimationScene {
       antialias: true,
     });
     this._controls = new OrbitControls(this._camera, this._renderer.domElement);
-    this._clock = new Clock();
     this._scene = new Scene();
+    this._timer = new Timer();
+    this._timer.connect( document ); // use Page Visibility API
     this.updateSceneBackground();
 
     this._stats = new Stats();
@@ -111,7 +112,8 @@ export class ActivityAnimationScene {
     this._animationFrameId = requestAnimationFrame(() => this.animate());
 
     // Cumulate interval for frame rate.
-    this._delta += this._clock.getDelta();
+    this._timer.update()
+    this._delta += this._timer.getDelta();
     const interval: number = 1 / this._graph.state.frames.rate;
 
     // Render only in fixed frame rate or lower.
