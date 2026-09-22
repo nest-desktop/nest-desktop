@@ -9,10 +9,8 @@ deb:
   #   - libxtst6
 directories:
   # buildResources: "assets"
-  output: "release"
+  output: "out"
 files:
-  # - assets
-  - dist
   - dist-electron
 # extraResources:
 #   from: public/assets

@@ -21,7 +21,6 @@ export default [
       "**/coverage/**",
       "**/dev-dist/**",
       "**/dist-electron/**",
-      "**/dist/**",
       "**/nest_desktop/**",
       "**/node_modules/**",
       "**/release/**",

@@ -2,9 +2,6 @@
 // https://vuejsexamples.com/vite-vue3-electron-typescript-template/
 // https://github.com/electron-vite/vite-plugin-electron/blob/main/examples/quick-start/electron/main.ts
 
-process.env.DIST = join(__dirname, "../dist");
-process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST, "../public");
-
 import { BrowserWindow, app } from "electron";
 // import { installExtension, REDUX_DEVTOOLS, VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { join } from "path";
@@ -13,19 +10,18 @@ import { join } from "path";
 app.disableHardwareAcceleration();
 
 let win: BrowserWindow | null;
-const preload = join(__dirname, "./preload.js");
-const url = process.env["VITE_DEV_SERVER_URL"];
 
+// NOTE: source files are generated with vite and can be found in `dist-electron` folder!
 async function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    icon: join(process.env.PUBLIC, "nest-desktop-icon.svg"),
+    icon: join(__dirname, "logo.svg"),
     frame: true,
     height: 750,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      preload,
+      preload: join(__dirname, "preload.js"),
     },
     width: 1200,
   });
@@ -35,11 +31,11 @@ async function createWindow() {
     win?.webContents.send("main-process-message", new Date().toLocaleString());
   });
 
+  const url = process.env["VITE_DEV_SERVER_URL"];
   if (url) {
     win.loadURL(url);
   } else {
-    // win.loadFile('dist/index.html')
-    win.loadFile(join(process.env.DIST, "index.html"));
+    win.loadFile(join(__dirname, "index.html"));
   }
 }
 
