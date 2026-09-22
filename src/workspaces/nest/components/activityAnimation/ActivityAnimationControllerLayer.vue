@@ -100,7 +100,7 @@
                   <template #append>
                     <img
                       :class="{ 'flip-h': layer.state.record.state.colorMap.reverse }"
-                      :src="imageUrl(item.value)"
+                      :src="imageUrl(item)"
                       alt="img"
                       height="12"
                       width="72"
