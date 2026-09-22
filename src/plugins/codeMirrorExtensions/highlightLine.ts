@@ -6,7 +6,7 @@ import { Decoration, type DecorationSet, EditorView, ViewPlugin, ViewUpdate } fr
 export function highlightLineDeco(view: EditorView, lineNumber: number, className: string): DecorationSet {
   const builder = new RangeSetBuilder();
   for (const { from, to } of view.visibleRanges) {
-    for (let pos = from; pos <= to; ) {
+    for (let pos = from; pos <= to;) {
       const line = view.state.doc.lineAt(pos);
       if (line.number == lineNumber)
         builder.add(

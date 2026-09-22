@@ -78,7 +78,7 @@ export class ActivityAnimationScene {
     this._controls = new OrbitControls(this._camera, this._renderer.domElement);
     this._scene = new Scene();
     this._timer = new Timer();
-    this._timer.connect( document ); // use Page Visibility API
+    this._timer.connect(document); // use Page Visibility API
     this.updateSceneBackground();
 
     this._stats = new Stats();
@@ -112,7 +112,7 @@ export class ActivityAnimationScene {
     this._animationFrameId = requestAnimationFrame(() => this.animate());
 
     // Cumulate interval for frame rate.
-    this._timer.update()
+    this._timer.update();
     this._delta += this._timer.getDelta();
     const interval: number = 1 / this._graph.state.frames.rate;
 
