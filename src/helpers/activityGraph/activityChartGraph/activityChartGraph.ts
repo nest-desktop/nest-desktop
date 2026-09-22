@@ -1,6 +1,6 @@
 // activityChartGraph.ts
 
-import * as PlotlyBasic from "plotly.js-cartesian-dist-min";
+import * as Plotly from "plotly.js-cartesian-dist-min";
 import moment from "moment";
 import { type UnwrapRef, nextTick, reactive } from "vue";
 import { createDialog } from "vuetify3-dialog";
@@ -37,7 +37,7 @@ export interface IActivityChartPanelModelProps {
 
 interface IActivityChartGraphState {
   initialized: boolean;
-  ref?: PlotlyBasic.Root;
+  ref?: Plotly.Root;
   traceColor: string;
 }
 
@@ -115,9 +115,9 @@ const models: IActivityChartPanelModelProps[] = [
 ];
 
 export class ActivityChartGraph extends BaseObj {
-  private _plotConfig: PlotlyBasic.Partial<PlotlyBasic.Config> = {};
-  private _plotData: PlotlyBasic.Data[] = [];
-  private _plotLayout: PlotlyBasic.Partial<PlotlyBasic.Layout> = {};
+  private _plotConfig: Plotly.Partial<Plotly.Config> = {};
+  private _plotData: Plotly.Data[] = [];
+  private _plotLayout: Plotly.Partial<Plotly.Layout> = {};
   private _models: IActivityChartPanelModelProps[] = models;
   private _panels: ActivityChartPanel[] = [];
   private _project: TProject;
@@ -138,7 +138,7 @@ export class ActivityChartGraph extends BaseObj {
         [
           {
             name: "Download plot",
-            icon: PlotlyBasic.Icons.camera,
+            icon: Plotly.Icons.camera,
             click: () => {
               let filename = this._project.name;
               filename = filename.replaceAll(" ", "_");
@@ -150,7 +150,7 @@ export class ActivityChartGraph extends BaseObj {
                   component: DownloadPlotDialog,
                   props: { filename: `nest_desktop-${timestamp}-${filename}` },
                 },
-              }).then((response: PlotlyBasic.DownloadImgopts | undefined) =>
+              }).then((response: Plotly.DownloadImgopts | undefined) =>
                 response ? this.downloadImage(response) : null,
               );
             },
@@ -227,11 +227,11 @@ export class ActivityChartGraph extends BaseObj {
     );
   }
 
-  get plotData(): PlotlyBasic.Data[] {
+  get plotData(): Plotly.Data[] {
     return this._plotData;
   }
 
-  get plotLayout(): PlotlyBasic.Partial<PlotlyBasic.Layout> {
+  get plotLayout(): Plotly.Partial<Plotly.Layout> {
     return this._plotLayout;
   }
 
@@ -338,7 +338,7 @@ export class ActivityChartGraph extends BaseObj {
    * Download image of the activity chart graph.
    * @param options plotly download image options
    */
-  downloadImage(options: PlotlyBasic.DownloadImgopts): void {
+  downloadImage(options: Plotly.DownloadImgopts): void {
     if (!this._state.ref) return;
     this.logger.trace("download Image:", options);
 
@@ -359,7 +359,7 @@ export class ActivityChartGraph extends BaseObj {
    * @param panel panel object
    */
   gatherData(panel: ActivityChartPanel): void {
-    panel.model.data.forEach((data: PlotlyBasic.Partial<IActivityChartPanelModelData>) => {
+    panel.model.data.forEach((data: Plotly.Partial<IActivityChartPanelModelData>) => {
       data.dataIdx = this._plotData.length;
       data.panelIdx = panel.idx;
       data.xaxis = "x" + panel.xAxis;
@@ -395,10 +395,10 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return;
     this.logger.trace("init events");
 
-    this._state.ref.on("plotly_legendclick", (plot: PlotlyBasic.Root) => {
+    this._state.ref.on("plotly_legendclick", (plot: Plotly.Root) => {
       nextTick(() => {
         if (plot && plot.data) {
-          plot.data.forEach((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
+          plot.data.forEach((d: Plotly.Partial<Plotly.Data>) => {
             const panel = this._panels[d.panelIdx];
             panel.model.state.visible = d.visible;
           });
@@ -418,7 +418,7 @@ export class ActivityChartGraph extends BaseObj {
    * Create new Plot of the DOM reference.
    * @param ref reference for plotting
    */
-  newPlot(ref: PlotlyBasic.Root): void {
+  newPlot(ref: Plotly.Root): void {
     this.logger.trace("new plot");
 
     this._state.ref = ref;
@@ -493,10 +493,10 @@ export class ActivityChartGraph extends BaseObj {
     if (!this._state.ref) return { update: {}, traceIndices: [] };
 
     const dataSpikeTimeRasterPlot = this._plotData.filter(
-      (d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.modelId === "spikeTimesRasterPlot",
+      (d: Plotly.Partial<Plotly.Data>) => d.modelId === "spikeTimesRasterPlot",
     );
 
-    const markerSizes = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => {
+    const markerSizes = dataSpikeTimeRasterPlot.map((d: Plotly.Partial<Plotly.Data>) => {
       const model = this._panels[d.panelIdx].model as SpikeTimesRasterPlotModel;
       return model.markerSize;
     });
@@ -505,7 +505,7 @@ export class ActivityChartGraph extends BaseObj {
       "marker.size": markerSizes,
     };
 
-    const traceIndices = dataSpikeTimeRasterPlot.map((d: PlotlyBasic.Partial<PlotlyBasic.Data>) => d.dataIdx);
+    const traceIndices = dataSpikeTimeRasterPlot.map((d: Plotly.Partial<Plotly.Data>) => d.dataIdx);
 
     return { update, traceIndices };
   }
