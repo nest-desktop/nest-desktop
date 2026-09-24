@@ -133,7 +133,7 @@ __pycache__
 *.egg-info
 
 # Electron-builder output
-/release
+/out
 /dist-electron
 
 # PWA

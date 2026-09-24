@@ -15,48 +15,48 @@ import { VitePWA } from "vite-plugin-pwa";
 import Vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   build: {
     assetsInclude: ["**/*.nestml"],
     // chunkSizeWarningLimit: 1000, // https://github.com/vitejs/vite/discussions/9440
     outDir: "./nest_desktop/app",
     // https://stackoverflow.com/questions/71180561/vite-change-ouput-directory-of-assets
-    rollupOptions: {
-      output: {
-        assetFileNames: ({ names }) => {
-          const name = names[0] ?? "";
-          let extType = name.split(".").at(1) ?? "";
-          if (/png|svg/.test(extType)) {
-            extType = "img";
-          } else if (/woff|woff2|eot|ttf|otf/.test(extType)) {
-            extType = "fonts";
-          }
-          // TODO: without these lines, icons of the materials design might be broken.
-          if (name.startsWith("vendors_")) {
-            return `assets/${extType}/vendors/${name.slice(8)}-[hash][extname]`;
-          }
-          return `assets/${extType}/[name]-[hash][extname]`;
-        },
-        chunkFileNames: ({ name }) => {
-          // https://github.com/vitejs/vite-plugin-vue/issues/19
-          if (name.startsWith("vendors_")) {
-            return `assets/js/vendors/${name.slice(8)}-[hash].js`;
-          }
-          return `assets/js/${name}-[hash].js`;
-        },
-        entryFileNames: "assets/js/[name]-[hash].js",
-        manualChunks: (id: string): string => {
-          // https://github.com/vitejs/vite/discussions/9440#discussioncomment-10131471
-          const path = id.toString().split("/");
-          if (path.includes("node_modules")) {
-            const vendor = path[path.indexOf("node_modules") + 1];
-            return "vendors_" + (vendor.startsWith("d3") ? "@d3" : vendor);
-          }
-          return "main";
-        },
-      },
-    },
-    sourcemap: mode === "development",
+  //   rollupOptions: {
+  //     output: {
+  //       assetFileNames: ({ names }) => {
+  //         const name = names[0] ?? "";
+  //         let extType = name.split(".").at(1) ?? "";
+  //         if (/png|svg/.test(extType)) {
+  //           extType = "img";
+  //         } else if (/woff|woff2|eot|ttf|otf/.test(extType)) {
+  //           extType = "fonts";
+  //         }
+  //         // TODO: without these lines, icons of the materials design might be broken.
+  //         if (name.startsWith("vendors_")) {
+  //           return `assets/${extType}/vendors/${name.slice(8)}-[hash][extname]`;
+  //         }
+  //         return `assets/${extType}/[name]-[hash][extname]`;
+  //       },
+  //       chunkFileNames: ({ name }) => {
+  //         // https://github.com/vitejs/vite-plugin-vue/issues/19
+  //         if (name.startsWith("vendors_")) {
+  //           return `assets/js/vendors/${name.slice(8)}-[hash].js`;
+  //         }
+  //         return `assets/js/${name}-[hash].js`;
+  //       },
+  //       entryFileNames: "assets/js/[name]-[hash].js",
+  //       manualChunks: (id: string): string => {
+  //         // https://github.com/vitejs/vite/discussions/9440#discussioncomment-10131471
+  //         const path = id.toString().split("/");
+  //         if (path.includes("node_modules")) {
+  //           const vendor = path[path.indexOf("node_modules") + 1];
+  //           return "vendors_" + (vendor.startsWith("d3") ? "@d3" : vendor);
+  //         }
+  //         return "main";
+  //       },
+  //     },
+  //   },
+  //   sourcemap: mode === "development",
   },
   define: {
     "global": "window",
@@ -130,6 +130,7 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         globPatterns: ["**/*.{eot,woff,tff,woff2,js,css,ico,png,svg}"],
         // maximumFileSizeToCacheInBytes: 2000000,
+        maximumFileSizeToCacheInBytes: 10 * 1024 ** 2, // 5 MB or set to something else
         // Don't fallback on document based (e.g. `/some-page`) requests
         // Even though this says `null` by default, I had to set this specifically to `null` to make it work
         navigateFallback: null,
@@ -142,7 +143,7 @@ export default defineConfig(({ mode }) => ({
         onstart(options) {
           // Start Electron App
           if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
-            options.startup([".", "--no-sandbox"]);
+            options.startup([".", "--no-sandbox", "--enable-unsafe-swiftshader"]);
           }
         },
       },
@@ -151,7 +152,9 @@ export default defineConfig(({ mode }) => ({
         onstart(options) {
           // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
           // instead of restarting the entire Electron App.
-          options.reload();
+          if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
+            options.reload();
+          }
         },
       },
     ]),

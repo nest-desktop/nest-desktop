@@ -153,9 +153,7 @@ export function defineProjectDBStore<
       logger.trace("find project:", truncate(projectId));
 
       return state.projects.find((project: TProject | TProjectProps) => project.id === projectId) as
-        | TProject
-        | TProjectProps
-        | undefined;
+        TProject | TProjectProps | undefined;
     };
 
     /**

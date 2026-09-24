@@ -18,16 +18,9 @@ export type TNetworkProject = nest.NESTProject | norse.NorseProject | pynn.PyNNP
 export type TNetworkProps = nest.INESTNetworkProps | norse.INorseNetworkProps;
 export type TNode = nest.NESTNode | norse.NorseNode;
 export type TNodeParameterParent =
-  | nest.NESTNode
-  | nest.NESTCopyModel
-  | nest.NESTNodeCompartment
-  | nest.NESTNodeReceptor
-  | norse.NorseNode;
+  nest.NESTNode | nest.NESTCopyModel | nest.NESTNodeCompartment | nest.NESTNodeReceptor | norse.NorseNode;
 export type TNodeParameterComponentProps =
-  | nest.INESTNodeProps
-  | nest.INESTCopyModelProps
-  | nest.INESTNodeCompartmentProps
-  | nest.INESTNodeReceptorProps;
+  nest.INESTNodeProps | nest.INESTCopyModelProps | nest.INESTNodeCompartmentProps | nest.INESTNodeReceptorProps;
 export type TNodeProps = nest.INESTNodeProps;
 export type TNodes = nest.NESTNodes | norse.NorseNodes;
 export type TProjectDB = nest.NESTProjectDB | norse.NorseProjectDB | pynn.PyNNProjectDB;

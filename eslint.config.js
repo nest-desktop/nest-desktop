@@ -18,16 +18,17 @@ export default [
     name: "app/files-to-ignore",
     ignores: [
       "**/*.d.ts",
+      "**/.venv/**",
+      "**/.vscode/**",
       "**/coverage/**",
       "**/dev-dist/**",
       "**/dist-electron/**",
-      "**/dist/**",
       "**/nest_desktop/**",
       "**/node_modules/**",
-      "**/release/**",
-      "**/types.ts",
+      "**/out/**",
       "**/upgrades/**",
       "**/vendors/**",
+      "**/types.ts"
     ],
   },
 
