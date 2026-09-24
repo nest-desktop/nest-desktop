@@ -55,7 +55,7 @@
           multiple
         >
           <template #chip="{ item }">
-            <v-chip :prepend-icon="item.value + ':logo'" color="grey" label>
+            <v-chip :prepend-icon="item.id + ':logo'" color="grey" label>
               {{ item.title }}
             </v-chip>
           </template>

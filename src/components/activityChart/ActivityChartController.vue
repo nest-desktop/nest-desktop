@@ -1,12 +1,12 @@
 <template>
   <div class="activityChartController">
     <v-toolbar color="transparent" density="compact">
-      <v-btn icon="mdi:mdi-reload" size="x-small" @click="graph.resetPanels()" />
+      <v-icon-btn icon="mdi:mdi-reload" size="small" @click="graph.resetPanels()" />
 
       <v-btn class="mx-2" prepend-icon="mdi:mdi-plus" size="small">
         Add panel
         <v-menu :close-on-content-click="false" activator="parent">
-          <ActivityChartPanelMenuPopover :graph="graph as ActivityChartGraph" @changed="addPanel" />
+          <ActivityChartPanelMenuPopover :graph="graph" @changed="addPanel" />
         </v-menu>
       </v-btn>
 
@@ -25,10 +25,9 @@
       </v-btn-toggle>
     </v-toolbar>
 
-    <!-- <draggable handle=".handle" v-model="graph.panels"> -->
     <div v-for="(panel, panelIdx) in graph.panels" :key="'panel' + panelIdx">
       <Card class="mx-1" color="primary">
-        <ActivityChartPanelToolbar :panel="panel as ActivityChartPanel" />
+        <ActivityChartPanelToolbar :panel />
 
         <v-card-text v-if="panel.state.visible" class="pa-0">
           <v-select
@@ -47,13 +46,13 @@
             persistent-hint
             @update:model-value="update()"
           >
-            <template #chip="{ item }">
+            <!-- <template #chip="{ item }">
               <NodeRecordChip
                 v-if="panel.model.getNodeRecord(item.value)"
-                :node-record="panel.model.getNodeRecord(item.value) as NodeRecord"
+                :node-record="panel.model.getNodeRecord(item.value)"
               />
-            </template>
-
+            </template> -->
+            <!--
             <template #item="{ item, props: itemProps }">
               <v-list-item v-bind="itemProps" density="compact" title="">
                 <v-checkbox
@@ -65,16 +64,16 @@
                   <template #append>
                     <NodeRecordChip
                       v-if="panel.model.getNodeRecord(item.value)"
-                      :node-record="panel.model.getNodeRecord(item.value) as NodeRecord"
+                      :node-record="panel.model.getNodeRecord(item.value)"
                       class="my-auto"
                     />
                   </template>
                 </v-checkbox>
               </v-list-item>
-            </template>
+            </template> -->
 
             <template #prepend-item>
-              <v-list-item title="Select All" @click="selectAllNodeRecords(panel as ActivityChartPanel)" />
+              <v-list-item title="Select All" @click="selectAllNodeRecords(panel)" />
               <v-divider />
             </template>
 
@@ -123,7 +122,7 @@
               v-for="(param, paramIdx) of panel.model.filteredParams"
               :key="paramIdx"
               :model-value="param.value"
-              :param="param as ActivityChartPanelModelParameter"
+              :param="param"
               @update:model-value="graph.update()"
             >
               <template #append />
@@ -132,7 +131,6 @@
         </v-card-text>
       </Card>
     </div>
-    <!-- </draggable> -->
   </div>
 </template>
 
@@ -142,12 +140,9 @@ import { computed, nextTick } from "vue";
 import ActivityChartPanelMenuPopover from "./ActivityChartPanelMenuPopover.vue";
 import ActivityChartPanelToolbar from "./ActivityChartPanelToolbar.vue";
 import Card from "../common/Card.vue";
-import NodeRecordChip from "../node/NodeRecordChip.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
 import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
 import { ActivityChartPanel } from "@/helpers/activityGraph/activityChartGraph/activityChartPanel";
-import { ActivityChartPanelModelParameter } from "@/helpers/activityGraph/activityChartGraph/activityChartPanelModelParameter";
-import { NodeRecord } from "@/helpers/node/nodeRecord";
 
 const props = defineProps<{ graph: ActivityChartGraph }>();
 const graph = computed(() => props.graph);

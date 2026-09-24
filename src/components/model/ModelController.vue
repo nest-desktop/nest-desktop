@@ -55,12 +55,12 @@
 
       <v-list>
         <v-list-subheader>States</v-list-subheader>
-        <ParamViewer v-for="(state, index) in modelStore.model.states" :key="index" :param="state as TModelParameter" />
+        <ParamViewer v-for="(state, index) in modelStore.model.states" :key="index" :param="state" />
       </v-list>
 
       <v-list>
         <v-list-subheader>Parameters</v-list-subheader>
-        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param="param as TModelParameter" />
+        <ParamViewer v-for="(param, index) in modelParams" :key="index" :param />
       </v-list>
     </template>
 
@@ -85,7 +85,7 @@
               v-for="(paramId, index) in neuron.paramsVisible"
             >
               <template #append>
-                <Menu :items="paramMenuItems(param)" size="x-small" />
+                <Menu :items="paramMenuItems(param)" size="small" />
               </template>
             </ParamListItem>
           </v-list>
@@ -101,14 +101,9 @@
       </v-toolbar>
 
       <v-list>
-        <ParamListItem
-          v-for="(param, index) in modelParams"
-          :key="index"
-          :param="param as TModelParameter"
-          @update:param-value="updateCode()"
-        >
+        <ParamListItem v-for="(param, index) in modelParams" :key="index" :param @update:param-value="updateCode()">
           <template #append>
-            <Menu :items="paramMenuItems(param as TModelParameter)" size="x-small" />
+            <Menu :items="paramMenuItems(param)" size="small" />
           </template>
         </ParamListItem>
       </v-list>
@@ -209,7 +204,7 @@ const controllerItems: IControllerItem[] = [
 
 const paramMenuItems = (param: TModelParameter) => [
   {
-    icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
+    iconProps: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       param.value = param.props.value as TParamValue;
       param.changes();

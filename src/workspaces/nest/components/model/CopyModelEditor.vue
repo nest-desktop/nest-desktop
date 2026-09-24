@@ -31,11 +31,9 @@
                   {{ itemProps.title }}
 
                   <template #append>
-                    <v-btn
+                    <v-icon-btn
                       v-if="state.elementType"
-                      class="icon"
                       icon="mdi:mdi-menu-right"
-                      size="x-small"
                       variant="text"
                       @click.stop="select(itemProps, () => (state.menu = true))"
                     />

@@ -166,8 +166,10 @@ export class Activities extends BaseObj {
         events: eventProps,
       }));
     } else if ("activities" in data) {
+      // IResponseData
       activitiesProps = data.activities as IActivityProps[];
     } else {
+      // IActivityProps[]
       activitiesProps = data;
     }
 

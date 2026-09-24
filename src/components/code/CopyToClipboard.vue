@@ -21,7 +21,7 @@ const copied = ref(false);
 
 const copy = async () => {
   try {
-    await toClipboard(text.value as string);
+    await toClipboard(text.value);
     copied.value = true;
     setTimeout(() => (copied.value = false), 2000);
   } catch (e) {

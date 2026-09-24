@@ -2,19 +2,20 @@
   <v-slider
     v-model="value"
     :step="props.step"
-    append-icon="mdi:mdi-plus"
     class="mx-1 py-1 value-slider"
     color="grey"
     hide-details="auto"
-    prepend-icon="mdi:mdi-minus"
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    @click:append="increment()"
-    @click:prepend="decrement()"
     @update:model-value="emitUpdate()"
   >
+    <template #prepend>
+      <v-icon-btn icon="mdi:mdi-minus" size="small" @click="decrement()" />
+    </template>
+
     <template #append>
+      <v-icon-btn icon="mdi:mdi-plus" size="small" @click="increment()" />
       <v-text-field
         :model-value="value"
         :label="props.id"
@@ -75,6 +76,7 @@ const onUpdate = (val: string) => {
     opacity: 0 !important;
   }
 
+  .mdi-minus,
   .mdi-plus {
     height: inherit;
     margin-right: 4px;
@@ -92,7 +94,7 @@ const onUpdate = (val: string) => {
     pointer-events: none;
     position: absolute;
     top: -4px;
-    z-index: 0;
+    z-index: 10;
   }
 
   .v-input {

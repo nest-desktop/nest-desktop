@@ -46,47 +46,41 @@
       </div>
     </div>
 
-    <v-btn
+    <v-icon-btn
       :icon="state.collapse ? 'mdi:mdi-chevron-right' : 'mdi:mdi-chevron-left'"
-      class="icon"
-      size="x-small"
+      size="small"
       @click="state.collapse = !state.collapse"
     />
 
-    <v-btn
+    <v-icon-btn
       :disabled="graph?.network.isEmpty"
-      class="icon"
       icon="mdi:mdi-trash-can-outline"
-      size="x-small"
+      size="small"
       title="Delete all network elements"
       @click="emptyNetwork()"
     />
 
-    <v-btn
+    <v-icon-btn
       :disabled="!graph?.network.nodes.hasAnySelectedNodes"
-      class="icon"
       icon="mdi:mdi-select-group"
-      size="x-small"
+      size="small"
       @click="groupSelectedNodes()"
     />
 
     <template v-if="!state.collapse">
-      <!-- <v-btn
+      <!-- <v-icon-btn
         @click="downloadNetworkGraph()"
         icon="mdi:mdi-camera"
         size="small"
         title="Export network graph"
       /> -->
 
-      <v-btn
+      <NodeAvatar
         v-for="(node, index) in graph?.network.nodes.state.selectedNodes"
         :key="index"
-        icon
-        size="x-small"
+        :node="node as TNode"
         @click.stop="node.unselect()"
-      >
-        <NodeAvatar :node="node as TNode" :size="32" />
-      </v-btn>
+      />
 
       <v-spacer />
 
@@ -103,33 +97,30 @@
         v-model="projectStore.state.project.name"
       /> -->
 
-      <v-btn
+      <v-icon-btn
         :class="{ active: graph?.workspace.state.centerSelected }"
         :icon="
           graph?.workspace.state.centerSelected
             ? 'mdi:mdi-image-filter-center-focus'
             : 'mdi:mdi-image-filter-center-focus-strong-outline'
         "
-        class="icon"
-        size="x-small"
+        size="small"
         title="Auto-center currently selected element"
         @click="() => graph?.workspace.toggleCenterSelected()"
       />
 
-      <v-btn
+      <v-icon-btn
         :class="{ active: graph?.workspace.state.centerNetwork }"
-        class="icon"
         icon="mdi:mdi-focus-field"
-        size="x-small"
+        size="small"
         title="Auto-center whole network graph"
         @click="() => graph?.workspace.toggleCenterNetwork()"
       />
 
-      <v-btn
+      <v-icon-btn
         :class="{ active: graph?.workspace.state.showGrid }"
         :icon="graph?.workspace.state.showGrid ? 'mdi:mdi-grid' : 'mdi:mdi-grid-off'"
-        class="icon"
-        size="x-small"
+        size="small"
         title="Show background grid"
         @click="() => graph?.workspace.toggleGrid()"
       />

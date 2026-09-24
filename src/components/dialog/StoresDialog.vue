@@ -13,8 +13,8 @@
         <v-expansion-panel-title>
           App configs
           <v-spacer />
-          <v-btn size="x-small" icon="mdi:mdi-refresh" variant="text" @click.stop />
-          <v-btn size="x-small" icon="mdi:mdi-trash-can-outline" variant="text" @click.stop="clearLocalStorage()" />
+          <v-icon-btn size="small" icon="mdi:mdi-refresh" variant="text" @click.stop />
+          <v-icon-btn size="small" icon="mdi:mdi-trash-can-outline" variant="text" @click.stop="clearLocalStorage()" />
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
@@ -22,8 +22,8 @@
             <v-list-item v-for="(config, index) in configs" :key="index">
               {{ config }}
               <template #append>
-                <v-btn size="x-small" icon="mdi:mdi-refresh" variant="text" />
-                <v-btn size="x-small" icon="mdi:mdi-trash-can-outline" variant="text" />
+                <v-icon-btn size="small" icon="mdi:mdi-refresh" variant="text" />
+                <v-icon-btn size="small" icon="mdi:mdi-trash-can-outline" variant="text" />
               </template>
             </v-list-item>
           </v-list>
@@ -34,8 +34,8 @@
         <v-expansion-panel-title>
           Database
           <v-spacer />
-          <v-btn size="x-small" icon="mdi:mdi-refresh" variant="text" @click.stop />
-          <v-btn size="x-small" icon="mdi:mdi-trash-can-outline" variant="text" @click.stop />
+          <v-icon-btn size="small" icon="mdi:mdi-refresh" variant="text" @click.stop />
+          <v-icon-btn size="small" icon="mdi:mdi-trash-can-outline" variant="text" @click.stop />
         </v-expansion-panel-title>
 
         <v-expansion-panel-text>
@@ -54,9 +54,9 @@
                 <v-list-item v-for="(database, index) in workspaces[workspace].databases" :key="index">
                   {{ database }}
                   <template #append>
-                    <v-btn
+                    <v-icon-btn
                       icon="mdi:mdi-trash-can-outline"
-                      size="x-small"
+                      size="small"
                       variant="text"
                       @click.stop="destroyDatabase(database)"
                     />

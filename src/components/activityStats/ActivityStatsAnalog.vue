@@ -29,8 +29,8 @@
         <template #chip="{ item }">
           {{ item.title }}
           <NodeRecordChip
-            v-if="item.raw.groupId"
-            :node-record="activity.getNodeRecord(item.raw.groupId) as NodeRecord"
+            v-if="item.groupId"
+            :node-record="activity.getNodeRecord(item.groupId) as NodeRecord"
             style="position: absolute; right: 4px"
           />
         </template>
@@ -41,8 +41,8 @@
               {{ item.title }}
               <v-spacer />
               <NodeRecordChip
-                v-if="item.raw.groupId"
-                :node-record="activity.getNodeRecord(item.raw.groupId) as NodeRecord"
+                v-if="item.groupId"
+                :node-record="activity.getNodeRecord(item.groupId) as NodeRecord"
                 class="my-auto"
               />
             </v-row>
@@ -94,10 +94,10 @@
           <tbody>
             <tr>
               <td style="width: 48px">
-                <v-btn
+                <v-icon-btn
                   icon="mdi:mdi-checkbox-blank-outline"
                   class="ma-0 pa-0"
-                  size="x-small"
+                  size="small"
                   variant="text"
                   @click="unselectAll()"
                 />
@@ -144,7 +144,14 @@ const state = reactive<{
   selectedRecord: "",
 });
 
-const headers = [
+interface IHeader {
+  title: string;
+  align?: "start" | "end" | "center" | undefined;
+  key: string;
+  sortable?: boolean;
+}
+
+const headers: IHeader[] = [
   {
     title: "ID",
     key: "id",
@@ -168,7 +175,7 @@ const colMean = (key: string) => {
 };
 
 // const colorRowItem = (item: Record<string, number | string>) => {
-//   const color = record.value.getColor(item.internalItem.index as number);
+//   const color = record.value.getColor(item.internalItem.index);
 //   return { style: { color } };
 // };
 

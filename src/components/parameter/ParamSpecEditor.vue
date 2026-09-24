@@ -19,7 +19,7 @@
             {{ data.item.label }}
           </template> -->
       <template #item="{ item, props: itemProps }">
-        <v-list-item v-bind="itemProps" :prepend-icon="item.raw.icon" />
+        <v-list-item v-bind="itemProps" :prepend-icon="item.icon" />
       </template>
     </v-select>
 

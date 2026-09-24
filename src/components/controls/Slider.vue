@@ -1,15 +1,7 @@
 <template>
-  <RangeSlider
-    v-if="props.options.component === 'rangeSlider'"
-    v-bind="props.options"
-    v-model="modelValue as number[]"
-  />
-  <TickSlider
-    v-else-if="props.options.component === 'tickSlider'"
-    v-bind="props.options"
-    v-model="modelValue as string | number"
-  />
-  <ValueSlider v-else v-bind="props.options" v-model="modelValue as number" />
+  <RangeSlider v-if="props.options.component === 'rangeSlider'" v-bind="props.options" v-model="modelValue" />
+  <TickSlider v-else-if="props.options.component === 'tickSlider'" v-bind="props.options" v-model="modelValue" />
+  <ValueSlider v-else v-bind="props.options" v-model="modelValue" />
 </template>
 
 <script setup lang="ts">

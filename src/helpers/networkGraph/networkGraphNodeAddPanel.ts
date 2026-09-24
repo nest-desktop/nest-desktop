@@ -82,11 +82,11 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
    * Close models menu.
    */
   closeModelsMenu(): void {
-    this._state.modelValue = false;
-    this._state.target = [0, 0];
+    this.state.modelValue = false;
+    this.state.target = [0, 0];
     setTimeout(() => {
-      this._state.elementType = null;
-      this._state.menuItems = [];
+      this.state.elementType = null;
+      this.state.menuItems = [];
     }, 200);
   }
 
@@ -259,14 +259,14 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
   openModelMenu(event: MouseEvent, elementType: TElementType): void {
     if (!this.network) return;
 
-    if (this._state.modelValue) {
-      const currentElementType = this._state.elementType;
+    if (this.state.modelValue) {
+      const currentElementType = this.state.elementType;
       this.closeModelsMenu();
       if (currentElementType != elementType) setTimeout(() => this.openModelMenu(event, elementType), 200);
       return;
     }
 
-    this._state.elementType = elementType;
+    this.state.elementType = elementType;
 
     const models: TModel[] = this.network.project.modelDBStore.getModelsByElementType(elementType);
 
@@ -276,9 +276,9 @@ export class NetworkGraphNodeAddPanel extends BaseObj {
       onClick: () => this.selectModel(model.id, elementType),
     }));
 
-    this._state.menuItems = items;
-    this._state.target = [event.clientX, event.clientY];
-    this._state.modelValue = true;
+    this.state.menuItems = items;
+    this.state.target = [event.clientX, event.clientY];
+    this.state.modelValue = true;
   }
 
   selectModel(modelId: string, elementType: TElementType): void {

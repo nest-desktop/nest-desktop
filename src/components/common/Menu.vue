@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="menu-btn" icon size="small" rounded="pill" variant="text" @click.prevent @click.stop>
+  <v-icon-btn class="ma-auto menu-btn" icon="mdi:mdi-dots-vertical" variant="text" @click.prevent @click.stop>
     <slot name="icon">
       <v-icon icon="mdi:mdi-dots-vertical" />
     </slot>
@@ -9,9 +9,9 @@
         <v-list density="compact">
           <slot name="prependItem" />
 
-          <v-list-item v-for="(item, index) in items" :key="index" v-bind="item">
+          <v-list-item v-for="(item, index) in items" :key="index" :prepend-icon="item.prependIcon" v-bind="item">
             <template #prepend>
-              <v-icon size="small" v-bind="item.icon" />
+              <v-icon :icon="item.icon" size="small" v-bind="item.iconProps" />
             </template>
           </v-list-item>
 
@@ -19,12 +19,13 @@
         </v-list>
       </slot>
     </v-menu>
-  </v-btn>
+  </v-icon-btn>
 </template>
 
 <script setup lang="ts">
 interface IItem {
-  icon?: { class?: string; icon: string };
+  iconProps?: { class?: string; icon: string };
+  icon?: string;
   onClick: () => void;
   prependIcon?: string;
   title: string;

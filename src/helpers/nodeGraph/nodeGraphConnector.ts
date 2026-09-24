@@ -2,13 +2,13 @@
 
 import { drag, select, transition } from "d3";
 
-import type { TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
+import type { TDragBehavior, TNodeGroup, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { darkMode } from "../common/theme";
 import { drawPathMouse } from "../connectionGraph/connectionGraphPath";
 
-export class NodeGraphConnector extends BaseObj {
+export class NodeGraphConnector<TNode> extends BaseObj {
   private _connectorRadius: number = 6;
   private _networkGraph: TNetworkGraph;
 

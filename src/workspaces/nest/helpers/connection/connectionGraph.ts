@@ -4,8 +4,8 @@ import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
 import { ConnectionGraph } from "@/helpers/connectionGraph/connectionGraph";
-import type { TDragBehavior, TNodeGroup, TSelection } from "@/types";
 import { drawPathNode } from "@/helpers/connectionGraph/connectionGraphPath";
+import type { TDragBehavior, TNodeGroup, TSelection } from "@/types";
 
 import { NESTNetworkGraph } from "../network/networkGraph";
 import { NESTNetwork } from "../network/network";
@@ -13,7 +13,7 @@ import { NESTCopyModel } from "../model/copyModel";
 import { NESTConnection } from "./connection";
 import { NESTNode } from "../node/node";
 
-export class NESTConnectionGraph extends ConnectionGraph {
+export class NESTConnectionGraph extends ConnectionGraph<NESTNode, NESTConnection> {
   constructor(networkGraph: NESTNetworkGraph) {
     super(networkGraph);
   }

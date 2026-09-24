@@ -91,11 +91,10 @@
           >
             <template v-if="!project.state?.editMode" #append>
               <template v-if="project.doc">
-                <v-btn
+                <v-icon-btn
                   :disabled="!project.state?.changes"
                   :color="project.state?.changes ? 'orange' : 'primary'"
                   :icon="project.state?.changes ? 'mdi:mdi-content-save-outline' : 'mdi:mdi-check'"
-                  size="x-small"
                   variant="text"
                   @click.prevent="saveProject(project)"
                 />

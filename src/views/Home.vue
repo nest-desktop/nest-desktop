@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height d-flex align-center flex-wrap">
     <v-responsive class="align-center text-center">
       <div>
         <v-img
@@ -16,13 +16,13 @@
                   : require('@/assets/img/logo/nest-desktop-logo-light.svg')
               " -->
 
-        <h2 class="text-h2">NEST Desktop</h2>
+        <div class="text-title">NEST Desktop</div>
       </div>
 
-      <div style="height: 60px" />
+      <div style="height: 40px" />
 
       <div>
-        <h5>Select a workspace</h5>
+        <div>Select a workspace</div>
         <v-row>
           <v-col>
             <v-btn
@@ -53,18 +53,13 @@ const appStore = useAppStore();
 import AppFooter from "@/components/app/AppFooter.vue";
 </script>
 
-<!-- <style lang="scss">
-.logo {
-  overflow: hidden;
-
-  .v-img {
-    transition: all 0.5s ease-in-out;
-    transform: scale(1);
-  }
+<style lang="scss">
+.text-title {
+  font-size: 3.75rem !important;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.0083333333em !important;
+  font-family: Roboto, sans-serif;
+  text-transform: none !important;
 }
-
-.logo:hover .v-img {
-  transition: all 0.5s ease-in-out;
-  transform: scale(1.2);
-}
-</style> -->
+</style>

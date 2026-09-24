@@ -417,7 +417,9 @@ export abstract class ActivityChartPanelModel extends BaseObj {
    */
   updateRecordsColor(): void {
     this._data.forEach((data: IActivityChartPanelModelData) => {
+      if (!data) return;
       if (data.class === "background") return;
+
       const activity = this.activities[data.activityIdx];
 
       let color: string;
@@ -439,12 +441,12 @@ export abstract class ActivityChartPanelModel extends BaseObj {
         }
       }
 
-      if (data.type.includes("scatter")) {
-        if (data.marker && data.marker.line && data.mode.includes("markers")) {
+      if (data.type?.includes("scatter")) {
+        if (data.marker && data.marker.line && data.mode?.includes("markers")) {
           data.marker.color = color;
           data.marker.line.color = color;
         }
-        if (data.line && data.mode.includes("lines")) {
+        if (data.line && data.mode?.includes("lines")) {
           data.line.color = color;
         }
       } else if (data.marker && (data.mode == "bar" || data.type == "histogram")) {
