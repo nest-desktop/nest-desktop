@@ -143,7 +143,7 @@ export default defineConfig(() => ({
         onstart(options) {
           // Start Electron App
           if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
-            options.startup([".", "--no-sandbox"]);
+            options.startup([".", "--no-sandbox", "--enable-unsafe-swiftshader"]);
           }
         },
       },
@@ -152,7 +152,9 @@ export default defineConfig(() => ({
         onstart(options) {
           // Notify the Renderer-Process to reload the page when the Preload-Scripts build is complete,
           // instead of restarting the entire Electron App.
-          options.reload();
+          if (JSON.parse(process.env["VITE_DEV_ELECTRON_STARTUP"] || "false")) {
+            options.reload();
+          }
         },
       },
     ]),
