@@ -135,7 +135,7 @@
                 />
 
                 <template #append>
-                  <Menu :items="getPopItems(node as NESTNode)" size="x-small" />
+                  <Menu :items="getPopItems(node as NESTNode)" size="small" />
                 </template>
               </v-list-item>
             </template>
@@ -229,7 +229,7 @@ const elementTypes = [
 
 const getPopItems = (node: NESTNode) => [
   {
-    icon: {
+    iconProps: {
       icon: "mdi:mdi-reload",
       class: "mdi-flip-h",
     },

@@ -4,20 +4,21 @@
     :max
     :min="0"
     :ticks
-    append-icon="mdi:mdi-plus"
     class="mx-1 py-3 tick-slider"
     color="grey"
     hide-details
-    prepend-icon="mdi:mdi-minus"
     show-ticks="always"
     step="1"
     style="position: relative"
     thumb-size="16"
     track-size="2"
-    @click:append="increment()"
-    @click:prepend="decrement()"
   >
+    <template #prepend>
+      <v-icon-btn icon="mdi:mdi-minus" size="small" @click="decrement()" />
+    </template>
+
     <template #append>
+      <v-icon-btn icon="mdi:mdi-plus" size="small" @click="increment()" />
       <div class="unit">
         {{ props.unit }}
       </div>
@@ -125,6 +126,7 @@ onMounted(init);
     pointer-events: none;
     position: absolute;
     top: -4px;
+    z-index: 10;
   }
 
   &:hover {

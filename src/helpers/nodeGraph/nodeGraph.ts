@@ -3,14 +3,15 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import type { TDragBehavior, TNetwork, TNetworkGraph, TNode, TNodeGroup, TSelection, TTransition } from "@/types";
+import type { TDragBehavior, TNetwork, TNetworkGraph, TNodeGroup, TSelection, TTransition } from "@/types";
 
 import { BaseObj } from "../common/base";
 import { NodeGraphConnector } from "./nodeGraphConnector";
 import { NodeGraphShape } from "./nodeGraphShape";
+import type { BaseNode } from "../node/node";
 
-export class NodeGraph extends BaseObj {
-  private _nodeGraphConnector: NodeGraphConnector;
+export class NodeGraph<TNode extends BaseNode = BaseNode> extends BaseObj {
+  private _nodeGraphConnector: NodeGraphConnector<TNode>;
   private _nodeGraphShape: NodeGraphShape;
   public _networkGraph: TNetworkGraph;
 
@@ -27,7 +28,7 @@ export class NodeGraph extends BaseObj {
   }
 
   get network(): TNetwork {
-    return this._networkGraph.network;
+    return this.networkGraph.network;
   }
 
   /**
@@ -38,7 +39,7 @@ export class NodeGraph extends BaseObj {
   drag(event: MouseEvent, node: TNode | TNodeGroup): void {
     this.logger.silly("drag");
 
-    if (this._networkGraph.workspace.state.dragLine) return;
+    if (this.networkGraph.workspace.state.dragLine) return;
 
     if (node.isGroup) {
       const nodeGroup = node as TNodeGroup;
@@ -81,7 +82,7 @@ export class NodeGraph extends BaseObj {
       n.view.focus();
 
       // Draw line between selected node and focused node.
-      if (n.network.connections.state.selectedNode && this._networkGraph.workspace.state.dragLine) {
+      if (n.network.connections.state.selectedNode && this.networkGraph.workspace.state.dragLine) {
         const selectedNode = n.network.connections.state.selectedNode;
         const sourcePos = selectedNode.view.position;
         this._networkGraph.workspace.dragline.drawPath(sourcePos, n.view.position);
@@ -97,9 +98,9 @@ export class NodeGraph extends BaseObj {
      */
     elem.on("contextmenu", (event: MouseEvent, n: TNode | TNodeGroup) => {
       event.preventDefault();
-      this._networkGraph.workspace.reset();
+      this.networkGraph.workspace.reset();
 
-      this._networkGraph.openContextMenu(
+      this.networkGraph.openContextMenu(
         [event.clientX, event.clientY],
         n.isGroup
           ? {
@@ -121,7 +122,7 @@ export class NodeGraph extends BaseObj {
     this._nodeGraphConnector.render();
     this._nodeGraphShape.render();
 
-    const duration: number = this._networkGraph.workspace.state.dragging ? 0 : 250;
+    const duration: number = this.networkGraph.workspace.state.dragging ? 0 : 250;
     const t: TTransition = transition().duration(duration);
 
     const nodes = select("g#nodes").selectAll("g.node");
@@ -146,17 +147,17 @@ export class NodeGraph extends BaseObj {
   update(): void {
     this.logger.trace("update");
 
-    if (!this._networkGraph.selector) return;
+    if (!this.networkGraph.selector) return;
 
-    const nodes: TSelection = this._networkGraph.selector
+    const nodes: TSelection = this.networkGraph.selector
       .select("g#nodes")
       .selectAll("g.node")
       .data(this.network.nodes.all, (n: TNode | TNodeGroup) => n.uuid);
 
     const dragging: TDragBehavior = drag()
-      .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
+      .on("start", (e: MouseEvent) => this.networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, n: TNode | TNodeGroup) => this.drag(e, n as TNode))
-      .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
+      .on("end", (e: MouseEvent) => this.networkGraph.dragEnd(e));
 
     nodes
       .enter()

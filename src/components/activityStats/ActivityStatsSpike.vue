@@ -1,7 +1,7 @@
 <template>
   <v-data-table-virtual
     :key="state.activityHash"
-    :headers="headers as IHeader[]"
+    :headers
     :height="props.height"
     :items="state.items"
     :loading="state.loading"
@@ -73,11 +73,11 @@ const state = reactive<{
 
 interface IHeader {
   title: string;
-  align: "start" | "end" | "center" | undefined;
+  align?: "start" | "end" | "center" | undefined;
   key: string;
 }
 
-const headers = [
+const headers: IHeader[] = [
   {
     title: "ID",
     align: "start",

@@ -13,7 +13,7 @@
     <template #prepend>
       <v-text-field
         v-model="lower"
-        :label="props.inputLabel[0] as string"
+        :label="props.inputLabel[0]"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -25,10 +25,11 @@
         @keyup.enter="emitUpdate()"
       />
     </template>
+
     <template #append>
       <v-text-field
         v-model="upper"
-        :label="props.inputLabel[1] as string"
+        :label="props.inputLabel[1]"
         :step="props.step"
         :suffix="props.unit"
         density="compact"
@@ -92,8 +93,8 @@ const value = computed({
 watch(
   () => [props.modelValue],
   () => {
-    modelRef.lower = props.modelValue[0] as number;
-    modelRef.upper = props.modelValue[1] as number;
+    modelRef.lower = props.modelValue[0];
+    modelRef.upper = props.modelValue[1];
   },
 );
 </script>
@@ -111,6 +112,7 @@ watch(
     pointer-events: none;
     position: absolute;
     top: -4px;
+    z-index: 10;
   }
 }
 </style>

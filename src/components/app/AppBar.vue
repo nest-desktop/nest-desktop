@@ -1,9 +1,9 @@
 <template>
-  <v-btn class="mx-2" flat icon="mdi:mdi-home" size="x-small" to="/" variant="text" />
+  <v-icon-btn class="mx-2" flat icon="mdi:mdi-home" to="/" variant="text" />
 
   <v-menu>
     <template #activator="{ props }">
-      <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="x-small" v-bind="props" variant="text">
+      <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="small" v-bind="props" variant="text">
         <template #prepend>
           <v-icon
             :color="appStore.currentWorkspace.id"
@@ -28,13 +28,13 @@
     </v-list>
   </v-menu>
 
-  <v-btn size="x-small" text="about" variant="text" @click="openAboutDialog()" />
+  <v-btn size="small" text="about" variant="text" @click="openAboutDialog()" />
 
   <v-btn
     append-icon="mdi:mdi-open-in-new"
     class="mx-1px"
     href="https://nest-desktop.readthedocs.io"
-    size="x-small"
+    size="small"
     target="_blank"
     text="help"
     variant="text"
@@ -42,7 +42,7 @@
 
   <v-menu>
     <template #activator="{ props }">
-      <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="x-small" text="more" v-bind="props" variant="text" />
+      <v-btn append-icon="mdi:mdi-menu-down" class="mx-1px" size="small" text="more" v-bind="props" variant="text" />
     </template>
 
     <v-list density="compact">
@@ -54,7 +54,7 @@
 
   <v-btn
     :icon="appStore.state.themeIcon"
-    size="x-small"
+    size="small"
     title="Toggle theme"
     variant="text"
     @click="appStore.toggleTheme()"
@@ -69,7 +69,7 @@
     :key="index"
     :disabled="!backend.state.enabled"
     :title="backend.state.url"
-    size="x-small"
+    size="small"
     variant="text"
     @click="backend.update()"
   >
@@ -81,7 +81,7 @@
 
   <v-btn
     icon="mdi:mdi-menu-open"
-    size="x-small"
+    size="small"
     title="View request logs"
     variant="text"
     @click="appStore.state.logsOpen = !appStore.state.logsOpen"

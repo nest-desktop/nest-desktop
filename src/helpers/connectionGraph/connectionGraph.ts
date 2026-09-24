@@ -3,14 +3,18 @@
 import { drag, select, transition } from "d3";
 import { nextTick } from "vue";
 
-import type { TConnection, TDragBehavior, TNetworkGraph, TNode, TNodeGroup, TSelection } from "@/types";
+import type { TDragBehavior, TNetworkGraph, TNodeGroup, TSelection } from "@/types";
 
-import { BaseNetworkGraph } from "../networkGraph/networkGraph";
 import { BaseObj } from "../common/base";
-import type { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
 import { drawPathNode } from "./connectionGraphPath";
+import type { BaseNode } from "../node/node";
+import type { BaseConnection } from "../connection/connection";
+import type { INetworkGraphWorkspaceState } from "../networkGraph/networkGraphWorkspace";
 
-export class ConnectionGraph extends BaseObj {
+export class ConnectionGraph<
+  TNode extends BaseNode = BaseNode,
+  TConnection extends BaseConnection = BaseConnection,
+> extends BaseObj {
   public _networkGraph: TNetworkGraph;
 
   constructor(networkGraph: TNetworkGraph) {
@@ -18,16 +22,16 @@ export class ConnectionGraph extends BaseObj {
     this._networkGraph = networkGraph;
   }
 
-  get networkGraph(): BaseNetworkGraph {
-    return this._networkGraph as BaseNetworkGraph;
+  get networkGraph(): TNetworkGraph {
+    return this._networkGraph as TNetworkGraph;
   }
 
   get state(): INetworkGraphWorkspaceState {
-    return this._networkGraph.workspace.state;
+    return this.networkGraph.workspace.state;
   }
 
   get strokeWidth(): number {
-    return this._networkGraph.config?.localStorage.strokeWidth;
+    return this.networkGraph.config?.localStorage.strokeWidth;
   }
 
   /**
@@ -67,7 +71,7 @@ export class ConnectionGraph extends BaseObj {
 
     connection.nodeGroups.forEach((nodeGroup: TNodeGroup) => nodeGroup.view.updateCentroid());
 
-    nextTick(() => this._networkGraph.render());
+    nextTick(() => this.networkGraph.render());
   }
 
   /**
@@ -107,20 +111,20 @@ export class ConnectionGraph extends BaseObj {
 
         // Draw line between selected node and focused connection.
         if (c.network.connections.state.selectedNode && this.state.dragLine)
-          this._networkGraph.workspace.dragline.drawPath(
+          this.networkGraph.workspace.dragline.drawPath(
             c.network.connections.state.selectedNode.view.position,
             c.view.markerEndPosition,
           );
 
-        this._networkGraph.update();
+        this.networkGraph.update();
       })
       .on("mouseout", () => {
-        this._networkGraph.network.connections.unfocusConnection();
-        this._networkGraph.update();
+        this.networkGraph.network.connections.unfocusConnection();
+        this.networkGraph.update();
       })
       .on("click", () => {
-        const network = this._networkGraph.network;
-        const workspace = this._networkGraph.workspace;
+        const network = this.networkGraph.network;
+        const workspace = this.networkGraph.workspace;
         connection.sourceNode.view.focus();
 
         if (network.connections.state.selectedNode && workspace.state.dragLine) {
@@ -145,9 +149,9 @@ export class ConnectionGraph extends BaseObj {
       })
       .on("contextmenu", (event: MouseEvent, c: TConnection) => {
         event.preventDefault();
-        this._networkGraph.workspace.reset();
+        this.networkGraph.workspace.reset();
 
-        this._networkGraph.openContextMenu([event.clientX, event.clientY], {
+        this.networkGraph.openContextMenu([event.clientX, event.clientY], {
           connection: c as TConnection,
         });
       });
@@ -159,10 +163,10 @@ export class ConnectionGraph extends BaseObj {
   render(): void {
     this.logger.trace("render");
 
-    select("g#connections").style("pointer-events", () => (this._networkGraph.workspace.state.dragLine ? "none" : ""));
+    select("g#connections").style("pointer-events", () => (this.networkGraph.workspace.state.dragLine ? "none" : ""));
     const connections = select("g#connections").selectAll("g.connection");
 
-    const duration: number = this._networkGraph.workspace.state.dragging ? 0 : 250;
+    const duration: number = this.networkGraph.workspace.state.dragging ? 0 : 250;
     const t = transition().duration(duration);
 
     connections
@@ -201,7 +205,7 @@ export class ConnectionGraph extends BaseObj {
 
       // const pos = connection.view.markerEndPosition;
 
-      this._networkGraph.selector
+      this.networkGraph.selector
         ?.selectAll(`#syn-${connection.idx}`)
         .select("text")
         .attr("dx", connection.view.toRight ? 8 : -8)
@@ -224,17 +228,17 @@ export class ConnectionGraph extends BaseObj {
    * @remarks This function should be called when connections are changed.
    */
   update(): void {
-    if (!this._networkGraph.selector) return;
+    if (!this.networkGraph.selector) return;
 
-    const connections = this._networkGraph.selector
+    const connections = this.networkGraph.selector
       .select("g#connections")
       .selectAll("g.connection")
       .data(this.networkGraph.network.connections.all, (c: TConnection) => c.uuid);
 
     const dragging: TDragBehavior = drag()
-      .on("start", (e: MouseEvent) => this._networkGraph.dragStart(e))
+      .on("start", (e: MouseEvent) => this.networkGraph.dragStart(e))
       .on("drag", (e: MouseEvent, c: TConnection | unknown) => this.drag(e, c as TConnection))
-      .on("end", (e: MouseEvent) => this._networkGraph.dragEnd(e));
+      .on("end", (e: MouseEvent) => this.networkGraph.dragEnd(e));
 
     connections
       .enter()

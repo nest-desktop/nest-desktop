@@ -16,11 +16,10 @@
         {{ itemProps.title }}
 
         <template #append>
-          <v-btn
+          <v-icon-btn
             v-if="state.elementType"
-            class="icon"
             icon="mdi:mdi-menu-right"
-            size="x-small"
+            size="small"
             variant="text"
             @click="select(itemProps, true)"
           />
@@ -40,11 +39,9 @@
           {{ itemProps.id }}
 
           <template #append>
-            <v-btn
+            <v-icon-btn
               v-if="state.elementType"
-              class="icon"
               icon="mdi:mdi-menu-right"
-              size="x-small"
               variant="text"
               @click="select(itemProps, true)"
             />

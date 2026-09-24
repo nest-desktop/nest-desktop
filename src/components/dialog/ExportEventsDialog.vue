@@ -28,7 +28,7 @@ import { computed } from "vue";
 import { TNode } from "@/types";
 
 const props = defineProps<{ node?: TNode }>();
-const node = computed(() => props.node as TNode);
+const node = computed(() => props.node);
 
 const emit = defineEmits(["closeDialog"]);
 const closeDialog = (value?: string | boolean) => emit("closeDialog", value);

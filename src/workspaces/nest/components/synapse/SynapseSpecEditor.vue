@@ -4,13 +4,7 @@
 
     <v-menu v-model="state.menu" :close-on-content-click="false">
       <template #activator="{ props: btnProps }">
-        <v-btn
-          class="rounded-circle"
-          color="primary"
-          icon="mdi:mdi-order-bool-ascending-variant"
-          size="small"
-          v-bind="btnProps"
-        />
+        <v-icon-btn class="ma-auto" icon="mdi:mdi-order-bool-ascending-variant" size="small" v-bind="btnProps" />
       </template>
 
       <v-card>
@@ -34,20 +28,7 @@
       </v-card>
     </v-menu>
 
-    <v-menu>
-      <template #activator="{ props: btnProps }">
-        <v-btn class="rounded-circle" color="primary" icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
-      </template>
-
-      <v-list density="compact">
-        <v-list-item v-for="(item, index) in items" :key="index" @click="item.onClick">
-          <template #prepend>
-            <v-icon :icon="item.icon" />
-          </template>
-          {{ item.title }}
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <Menu :items="items" size="small" />
   </v-btn-group>
 
   <v-list v-if="synapse.paramsVisible.length > 0" density="compact">
@@ -66,6 +47,7 @@ import { computed, reactive } from "vue";
 import ParamListItem from "@/components/parameter/ParamListItem.vue";
 import { TModel } from "@/types";
 
+import Menu from "@/components/common/Menu.vue";
 import SynapseModelSelect from "./SynapseModelSelect.vue";
 import { NESTSynapse } from "../../helpers/synapse/synapse";
 import { NESTSynapseParameter } from "../../helpers/synapse/synapseParameter";
@@ -86,7 +68,7 @@ const state = reactive<{
 const items = [
   {
     id: "paramsReset",
-    icon: "mdi:mdi-restart",
+    prependIcon: "mdi:mdi-restart",
     title: "Reset synapse params",
     onClick: () => {
       synapse.value.reset();
@@ -96,7 +78,7 @@ const items = [
   },
   {
     id: "weightInverse",
-    icon: "mdi:mdi-contrast",
+    prependIcon: "mdi:mdi-contrast",
     title: "Inverse synaptic weight",
     onClick: () => {
       synapse.value.inverseWeight();

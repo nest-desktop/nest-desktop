@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+import { TSynapse } from "@/types.ts";
 import Menu from "../common/Menu.vue";
 import ValueSlider from "../controls/ValueSlider.vue";
 

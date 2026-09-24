@@ -48,24 +48,24 @@
             @update:model-value="update"
           >
             <template #selection="{ item }">
-              <v-chip :color="item.raw.state.color" class="mx-2" disable-lookup label size="small">
-                {{ item.raw.id }}
+              <v-chip :color="item.state.color" class="mx-2" disable-lookup label size="small">
+                {{ item.id }}
               </v-chip>
               <div style="font-size: 12px">
-                {{ item.raw.label }}
-                <span v-if="item.raw.unit"> ({{ item.raw.unit }})</span>
+                {{ item.label }}
+                <span v-if="item.unit"> ({{ item.unit }})</span>
               </div>
             </template>
 
             <template #item="{ item }">
               <v-list-item>
                 <template #prepend>
-                  <v-chip :color="item.raw.state.color" class="mx-2" label size="small">
-                    {{ item.raw.id }}
+                  <v-chip :color="item.state.color" class="mx-2" label size="small">
+                    {{ item.id }}
                   </v-chip>
                 </template>
-                {{ item.raw.label }}
-                <span v-if="item.raw.unit"> ({{ item.raw.unit }})</span>
+                {{ item.label }}
+                <span v-if="item.unit"> ({{ item.unit }})</span>
               </v-list-item>
             </template>
           </v-select>

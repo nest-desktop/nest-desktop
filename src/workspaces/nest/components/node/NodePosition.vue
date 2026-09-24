@@ -3,27 +3,27 @@
     Positions
     <v-spacer />
 
-    <v-chip :title="nodeSpatial.positions.name + ' positions'" class="mx-1" label size="x-small">
+    <v-chip :title="nodeSpatial.positions.name + ' positions'" class="mx-1" label size="small">
       <v-icon :icon="nodeSpatial.positions?.name === 'grid' ? 'custom:dots-grid' : 'custom:dice-multiple-outline'" />
     </v-chip>
 
-    <v-chip v-if="nodeSpatial.positions.name === 'free'" class="mx-1" label size="x-small" title="dimensions">
+    <v-chip v-if="nodeSpatial.positions.name === 'free'" class="mx-1" label size="small" title="dimensions">
       {{ nodeSpatial.positions.numDimensions }}D
     </v-chip>
 
-    <v-chip v-if="nodeSpatial.positions.name === 'grid'" class="mx-1" label size="x-small" title="shape">
+    <v-chip v-if="nodeSpatial.positions.name === 'grid'" class="mx-1" label size="small" title="shape">
       {{ nodeSpatial.positions.shape }}
     </v-chip>
 
-    <v-chip v-if="nodeSpatial.positions.name === 'free'" class="mx-1" label size="x-small" title="size">
+    <v-chip v-if="nodeSpatial.positions.name === 'free'" class="mx-1" label size="small" title="size">
       {{ nodeSpatial.node.size }}
     </v-chip>
 
-    <v-chip v-if="nodeSpatial.positions.edgeWrap" class="mx-1" label size="x-small" title="edge wrap">
+    <v-chip v-if="nodeSpatial.positions.edgeWrap" class="mx-1" label size="small" title="edge wrap">
       <v-icon icon="mdi:mdi-format-text-wrapping-wrap" size="small" />
     </v-chip>
 
-    <v-btn icon size="x-small" variant="text">
+    <v-btn icon size="small" variant="text">
       <v-icon icon="mdi:mdi-pencil" />
       <NodePositionMenu :node-spatial />
     </v-btn>

@@ -130,7 +130,7 @@
       <!-- <template #item.actions>
         <v-btn
           icon="mdi:mdi-code-json"
-          size="x-small"
+          size="small"
           variant="text"
         />
       </template> -->
