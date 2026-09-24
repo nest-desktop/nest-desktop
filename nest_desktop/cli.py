@@ -21,7 +21,7 @@ def main() -> None:
     parser.add_argument(
         "-h", "--host", type=str, help="use hostname/IP address <HOST> for the server [default: 127.0.0.1]"
     )
-    parser.add_argument("-p", "--port", type=int, help="use port <PORT> for opening the socket [default: 4286]")
+    parser.add_argument("-p", "--port", type=int, help="use port <PORT> for opening the socket [default: 54286]")
 
     if len(sys.argv) == 1:
         parser.print_help()
