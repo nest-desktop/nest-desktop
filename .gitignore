@@ -220,8 +220,14 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# VSCode
+/.vscode
+
+# Modules for node
+/node_modules
+
 # Output for pypi
-./nest_desktop/app
+/nest_desktop/app
 
 # Electron-builder output
 /out
