@@ -24,7 +24,7 @@
       </v-row>
     </v-list-item>
 
-    <v-list-item :href="mailText" target="_blank">
+    <!-- <v-list-item :href="mailText" target="_blank">
       <v-row>
         <v-col class="font-weight-bold text-left" cols="4">
           <v-icon class="mx-2" icon="mdi:mdi-email-outline" />
@@ -34,7 +34,7 @@
           {{ contactName }}
         </v-col>
       </v-row>
-    </v-list-item>
+    </v-list-item> -->
 
     <template v-if="appStore.state.devMode">
       <v-list-item>
@@ -47,10 +47,10 @@
             <v-chip
               :text="state.browserName + ' ' + state.browserVersion"
               prepend-icon="mdi:mdi-application-outline"
-              size="x-small"
+              size="small"
               variant="text"
             />
-            <v-chip :text="state.osType" prepend-icon="mdi:mdi-desktop-tower-monitor" size="x-small" variant="text" />
+            <v-chip :text="state.osType" prepend-icon="mdi:mdi-desktop-tower-monitor" size="small" variant="text" />
           </v-col>
         </v-row>
       </v-list-item>
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from "vue";
+import { reactive } from "vue";
 import { detect } from "detect-browser";
 
 import { useAppStore } from "@/stores/appStore";
@@ -67,9 +67,9 @@ const appStore = useAppStore();
 
 const appVersion = process.env.APP_VERSION;
 const license = "MIT License";
-const contactName = "Sebastian Spreizer";
-const mailto = "spreizer@web.de";
-const mailSubject = `[NEST Desktop ${appVersion}]`;
+// const contactName = "Sebastian Spreizer";
+// const mailto = "spreizer@web.de";
+// const mailSubject = `[NEST Desktop ${appVersion}]`;
 
 const state = reactive<{
   browserName: string;
@@ -83,20 +83,20 @@ const state = reactive<{
   osType: "",
 });
 
-const mailBody = () => [
-  "(your message text...)",
-  "",
-  "%2D%2D%2D%2D",
-  "Please do not delete the following lines!",
-  "",
-  `Client type: ${state.clientType}`,
-  `Browser name: ${state.browserName}`,
-  `Browser version: ${state.browserVersion}`,
-  `NEST Desktop version: ${appVersion}`,
-  `OS type: ${state.osType}`,
-];
+// const mailBody = () => [
+//   "(your message text...)",
+//   "",
+//   "%2D%2D%2D%2D",
+//   "Please do not delete the following lines!",
+//   "",
+//   `Client type: ${state.clientType}`,
+//   `Browser name: ${state.browserName}`,
+//   `Browser version: ${state.browserVersion}`,
+//   `NEST Desktop version: ${appVersion}`,
+//   `OS type: ${state.osType}`,
+// ];
 
-const mailText = computed(() => `mailto:${mailto}?subject=${mailSubject}&body=${mailBody().join("%0D%0A")}`);
+// const mailText = computed(() => `mailto:${mailto}?subject=${mailSubject}&body=${mailBody().join("%0D%0A")}`);
 
 const info = detect();
 if (info) {

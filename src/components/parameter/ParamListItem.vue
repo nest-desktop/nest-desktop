@@ -1,5 +1,5 @@
 <template>
-  <v-list-item v-if="param" :key="param.value" class="param my-1 pa-1" style="line-height: 32px">
+  <v-list-item v-if="param" class="param my-1 pa-1" style="line-height: 32px">
     <template v-if="param.state.random">
       <v-label class="px-1" style="width: 100%">
         {{ param.label || param.options.label || param.id }}
@@ -86,10 +86,10 @@
     <template #append>
       <slot :param name="append">
         <template v-if="param.state.random">
-          <ParamPopover :param size="x-small" />
+          <ParamPopover :param size="small" />
         </template>
 
-        <Menu v-show="showMenu" :items size="x-small" />
+        <Menu v-show="showMenu" :items size="small" />
       </slot>
     </template>
   </v-list-item>
@@ -130,7 +130,7 @@ const items = [
     title: "Toggle view",
   },
   {
-    icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
+    iconProps: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       param.value.reset();
       param.value.changes();

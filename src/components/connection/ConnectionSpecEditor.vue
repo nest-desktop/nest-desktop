@@ -12,10 +12,9 @@
 
     <v-menu :close-on-content-click="false">
       <template #activator="{ props: btnProps }">
-        <v-btn
+        <v-icon-btn
           :disabled="Object.keys(connection.params).length === 0"
-          class="rounded-circle"
-          color="primary"
+          class="ma-auto"
           icon="mdi:mdi-order-bool-ascending-variant"
           size="small"
           v-bind="btnProps"
@@ -43,7 +42,7 @@
       </v-card>
     </v-menu>
 
-    <Menu :items class="rounded-circle" />
+    <Menu :items size="small" />
   </v-btn-group>
 
   <v-list v-if="connection.paramsVisible.length > 0" density="compact">
@@ -51,7 +50,7 @@
       v-for="(param, index) in connection.filteredParams"
       :key="index"
       :color="connection.sourceNode.view.color"
-      :param="param as ConnectionParameter"
+      :param
     />
   </v-list>
 </template>
@@ -61,7 +60,6 @@ import { computed } from "vue";
 
 import Menu from "../common/Menu.vue";
 import ParamListItem from "../parameter/ParamListItem.vue";
-import { ConnectionParameter } from "@/helpers/connection/connectionParameter";
 import { TConnection } from "@/types";
 
 const props = defineProps<{ connection: TConnection }>();

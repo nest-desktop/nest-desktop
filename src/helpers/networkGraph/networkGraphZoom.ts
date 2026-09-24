@@ -42,7 +42,7 @@ export class NetworkGraphZoom {
    * Initialize zoom handler.
    */
   init(): void {
-    this._handler
+    this.handler
       .extent([
         [0, 0],
         [this.width, this.height],

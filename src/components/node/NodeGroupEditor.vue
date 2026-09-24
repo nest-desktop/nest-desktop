@@ -8,25 +8,21 @@
   >
     <v-card-title class="node-group-title">
       <v-row no-gutters>
-        <v-btn class="mx-1" flat icon variant="tonal" @click.stop="nodeGroup.toggleSelection()">
-          <NodeAvatar :node="nodeGroup" size="48" />
-        </v-btn>
+        <NodeAvatar :node="nodeGroup" class="ma-2" @click.stop="nodeGroup.toggleSelection()" />
 
         <v-btn-group class="mx-4" multiple rounded="xl">
-          <v-btn
+          <NodeAvatar
             v-for="(node, index) in nodeGroup.nodes"
             :key="index"
-            class="btn-avatar px-0"
-            size="small"
+            :node
+            class="px-0"
             @click.stop="
               () => {
                 node.parentNodes.unselectNodes();
                 node.toggleSelection();
               }
             "
-          >
-            <NodeAvatar :node="node as TNode" size="32" />
-          </v-btn>
+          />
         </v-btn-group>
 
         <v-spacer />
@@ -47,7 +43,7 @@
           <ConnectionEditor
             v-for="(connection, index) in nodeGroup.connections"
             :key="index"
-            :connection="connection as TConnection"
+            :connection="connection"
           />
         </v-expansion-panels>
       </v-row>
@@ -58,7 +54,7 @@
 <script setup lang="ts">
 import { toRef } from "vue";
 
-import { TConnection, TNode, TNodeGroup } from "@/types";
+import { TNodeGroup } from "@/types";
 
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";

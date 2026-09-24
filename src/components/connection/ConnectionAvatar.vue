@@ -1,28 +1,18 @@
 <template>
   <div>
-    <v-btn
-      class="rounded-circle"
-      icon
-      size="small"
-      variant="text"
+    <NodeAvatar
+      :node="connection.source"
       @click="connection.source.toggleSelection()"
       @click.right.prevent="connection.source.unselect()"
-    >
-      <NodeAvatar :node="connection.source" />
-    </v-btn>
+    />
 
-    <v-btn :color="connection.sourceNode.view.color" :icon="connection.synapse.icon" size="small" variant="text" />
+    <v-icon :color="connection.sourceNode.view.color" :icon="connection.synapse.icon" class="mx-2" />
 
-    <v-btn
-      class="rounded-circle"
-      icon
-      size="small"
-      variant="text"
+    <NodeAvatar
+      :node="connection.target"
       @click="connection.target.toggleSelection()"
       @click.right.prevent="connection.target.unselect()"
-    >
-      <NodeAvatar :node="connection.target" />
-    </v-btn>
+    />
   </div>
 </template>
 

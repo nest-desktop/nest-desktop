@@ -20,7 +20,7 @@
     </Card>
 
     <Card :color="props.color" class="ma-1" title="Simulation kernel">
-      <v-card-text>
+      <v-card-text class="mx-2">
         <TickSlider
           v-bind="options.threadSettings"
           v-model="simulation.kernel.localNumThreads"
@@ -56,7 +56,7 @@
     </Card>
 
     <Card :color="props.color" class="ma-1" title="Simulation">
-      <v-card-text class="py-0">
+      <v-card-text class="py-0 mx-2">
         <ValueSlider
           v-bind="options.simulationTimeSettings"
           v-model="simulation.time"

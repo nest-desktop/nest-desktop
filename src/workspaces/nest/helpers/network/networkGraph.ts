@@ -4,12 +4,14 @@ import type { Ref } from "vue";
 
 import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 
+import { NESTConnection } from "../connection/connection";
+import { NESTConnectionGraph } from "../connection/connectionGraph";
 import { NESTModelAssignGraph } from "../model/modelAssignGraph";
 import { NESTNetwork } from "./network";
-import { NESTConnectionGraph } from "../connection/connectionGraph";
+import { NESTNode } from "../node/node";
 import { NESTNodeGraph } from "../node/nodeGraph";
 
-export class NESTNetworkGraph extends BaseNetworkGraph {
+export class NESTNetworkGraph extends BaseNetworkGraph<NESTNode, NESTConnection> {
   private _modelAssignGraph: NESTModelAssignGraph;
 
   constructor(ref: Ref<null>, network: NESTNetwork) {
@@ -20,7 +22,7 @@ export class NESTNetworkGraph extends BaseNetworkGraph {
     this._nodeGraph = new NESTNodeGraph(this);
   }
 
-  get connectionGraph(): NESTConnectionGraph {
+  override get connectionGraph(): NESTConnectionGraph {
     return this._connectionGraph as NESTConnectionGraph;
   }
 
@@ -30,6 +32,10 @@ export class NESTNetworkGraph extends BaseNetworkGraph {
 
   override get network(): NESTNetwork {
     return this._network as NESTNetwork;
+  }
+
+  override get nodeGraph(): NESTNodeGraph {
+    return this._nodeGraph as NESTNodeGraph;
   }
 
   /**

@@ -304,7 +304,7 @@ export class AnalogSignalPlotModel extends AnalogSignalPanelModel {
 
     plotData.x = data.x;
     plotData.y = data.y;
-    plotData.line.color = currentColor();
+    if (plotData.line) plotData.line.color = currentColor();
     plotData.visible = true;
   }
 

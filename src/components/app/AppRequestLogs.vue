@@ -53,7 +53,7 @@
           <v-toolbar-title :text="log.date" color="primary" class="text-subtitle-1" />
 
           <template #append>
-            <v-btn icon="mdi:mdi-close" size="x-small" @click="appStore.state.requestLogs.splice(index, 1)" />
+            <v-icon-btn icon="mdi:mdi-close" size="small" @click="appStore.state.requestLogs.splice(index, 1)" />
           </template>
         </v-toolbar>
 

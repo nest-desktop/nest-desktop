@@ -92,7 +92,7 @@ export const modelRedirect = (to: TModelRoute): TRoute => {
   logger.trace("redirect to model:", to.params.modelId);
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" };
 
   const modelStore = appStore.currentWorkspace.stores.modelStore;
   if (to.params.modelId) modelStore.state.modelId = to.params.modelId;
@@ -108,7 +108,7 @@ export const modelRedirect = (to: TModelRoute): TRoute => {
  * @param props
  */
 export const mountModelLayout = (props: { router: Router; route: RouteLocationNormalizedLoadedGeneric }): void => {
-  const modelId = props.route.params.modelId as string;
+  const modelId = props.route.params.modelId;
   logger.trace("mount model layout");
 
   const appStore = useAppStore();
@@ -133,8 +133,9 @@ export const mountModelLayout = (props: { router: Router; route: RouteLocationNo
  * @param props
  */
 export const mountProjectLayout = (props: { router: Router; route: RouteLocationNormalizedLoadedGeneric }): void => {
-  const projectId = props.route.params.projectId as string;
-  logger.trace("mount project layout:", truncate(projectId));
+  const projectId = props.route.params.projectId;
+  const projectShortId = truncate(projectId as string);
+  logger.trace("mount project layout:", projectShortId);
 
   const appStore = useAppStore();
   if (!appStore.currentWorkspace) return;
@@ -149,7 +150,7 @@ export const mountProjectLayout = (props: { router: Router; route: RouteLocation
     if (!projectIds.includes(projectId)) {
       confirmDialog({
         text: "Do you want to create a new project?",
-        title: `Project (ID: ${truncate(projectId)}) not found.`,
+        title: `Project (ID: ${projectShortId}) not found.`,
       }).then((answer: boolean) => {
         if (answer) newProjectRoute(props.router);
       });
@@ -196,7 +197,7 @@ export const projectNew = (): TRoute => {
   logger.trace("create a new project");
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" };
 
   const projectStore = appStore.currentWorkspace.stores.projectStore;
   projectStore.newProject();
@@ -214,7 +215,7 @@ export const projectRedirect = (to: TProjectRoute): TRoute => {
   logger.trace("redirect to project:", to);
 
   const appStore = useAppStore();
-  if (!appStore.currentWorkspace) return { path: "/" } as TRoute;
+  if (!appStore.currentWorkspace) return { path: "/" };
 
   const projectStore = appStore.currentWorkspace.stores.projectStore;
 

@@ -40,7 +40,7 @@
             class="icon"
             flat
             icon="mdi:mdi-close"
-            size="x-small"
+            size="small"
             @click.stop="moduleStore.removeModule(item.title)"
           />
         </template>

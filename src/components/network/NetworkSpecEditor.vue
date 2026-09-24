@@ -13,28 +13,32 @@
         />
       </template> -->
 
-      <template #append>
-        <v-btn-toggle v-model="network.state.state.elementTypeIdx" class="ma-2" mandatory variant="text">
-          <IconBtn
-            v-for="(item, index) in network.elementTypes"
-            :key="index"
-            :icon="item.icon"
-            :title="item.title"
-            size="x-small"
-            @click="network.nodes.unselectNodes()"
-          />
-        </v-btn-toggle>
-
-        <v-menu>
-          <template #activator="{ props: btnProps }">
-            <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
+      <v-btn-toggle v-model="network.state.state.elementTypeIdx" class="pt-1 mx-1 text-label-medium" mandatory>
+        <v-btn
+          v-for="(item, index) in network.elementTypes"
+          :key="index"
+          stacked
+          size="tiny"
+          @click="network.nodes.unselectNodes()"
+        >
+          <template #prepend>
+            <v-icon :icon="item.icon" size="small" />
           </template>
+          {{ item.title }}
+        </v-btn>
+      </v-btn-toggle>
 
-          <v-list density="compact">
-            <v-list-item v-for="(item, index) in items" :key="index" v-bind="item" />
-          </v-list>
-        </v-menu>
-      </template>
+      <v-spacer />
+
+      <v-menu>
+        <template #activator="{ props: btnProps }">
+          <v-btn icon="mdi:mdi-dots-vertical" size="small" v-bind="btnProps" />
+        </template>
+
+        <v-list density="compact">
+          <v-list-item v-for="(item, index) in items" :key="index" v-bind="item" />
+        </v-list>
+      </v-menu>
     </v-toolbar>
 
     <slot name="model" />
@@ -51,7 +55,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import IconBtn from "../common/IconBtn.vue";
 import NodeEditor from "../node/NodeEditor.vue";
 import NodeGroupEditor from "../node/NodeGroupEditor.vue";
 import { TNetwork, TNode, TNodeGroup } from "@/types";

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid max-width="1280">
     <v-row>
       <v-col md="6">
         <v-card>
@@ -94,11 +94,11 @@
                 Models from NEST backend
                 <v-spacer />
 
-                <v-btn
+                <v-icon-btn
                   class="mx-1"
                   flat
                   icon="nest:build-models"
-                  size="x-small"
+                  size="small"
                   title="Generate NESTML models"
                   variant="text"
                   @click.stop="openNESTModuleDialog()"

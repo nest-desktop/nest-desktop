@@ -4,7 +4,7 @@
     :title="backendStore.state.name"
     class="mx-1"
     icon="mdi:mdi-circle"
-    size="x-small"
+    size="small"
   />
 </template>
 

@@ -49,7 +49,7 @@
     <div :key="projectStore.state.projectId" style="height: 100%">
       <template v-if="projectViewStore.state.views.controller === 'network'">
         <slot name="network">
-          <NetworkSpecEditor :network="project.network as BaseNetwork">
+          <NetworkSpecEditor :network="project.network">
             <template #model>
               <slot name="model" />
             </template>
@@ -62,7 +62,7 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'kernel'">
         <slot name="simulationKernel">
-          <SimulationKernelEditor :simulation="project.simulation as BaseSimulation" />
+          <SimulationKernelEditor :simulation="project.simulation" />
         </slot>
       </template>
 
@@ -101,12 +101,12 @@
 
       <template v-else-if="projectViewStore.state.views.controller === 'activity'">
         <slot name="activityController">
-          <ActivityChartController :graph="project.activityGraph.activityChartGraph as ActivityChartGraph" />
+          <ActivityChartController :graph="project.activityGraph.activityChartGraph" />
         </slot>
       </template>
 
       <template v-else-if="projectViewStore.state.views.controller === 'stats'">
-        <ActivityStats :activities="project.activities as Activities" />
+        <ActivityStats :activities="project.activities" />
       </template>
     </div>
   </v-navigation-drawer>
@@ -122,10 +122,6 @@ import ActivityStats from "../activityStats/ActivityStats.vue";
 import CodeEditor from "../code/CodeEditor.vue";
 import NetworkSpecEditor from "../network/NetworkSpecEditor.vue";
 import SimulationKernelEditor from "../simulation/SimulationKernelEditor.vue";
-import { Activities } from "@/helpers/activity/activities";
-import { ActivityChartGraph } from "@/helpers/activityGraph/activityChartGraph/activityChartGraph";
-import { BaseNetwork } from "@/helpers/network/network";
-import { BaseSimulation } from "@/helpers/simulation/simulation";
 import { basicSetup, languageJSON, oneDark } from "@/plugins/codemirror";
 import { darkMode } from "@/helpers/common/theme";
 

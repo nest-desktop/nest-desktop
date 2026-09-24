@@ -16,11 +16,10 @@
         {{ itemProps.title }}
 
         <template #append>
-          <v-btn
+          <v-icon-btn
             v-if="state.elementType"
-            class="icon"
             icon="mdi:mdi-menu-right"
-            size="x-small"
+            size="small"
             variant="text"
             @click="select(itemProps, true)"
           />
@@ -50,12 +49,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive } from "vue";
 
-import { BaseNetworkGraph } from "@/helpers/networkGraph/networkGraph";
 import { TModel, TNode } from "@/types";
 
 import { useNetworkGraphStore } from "@/stores/graph/networkGraphStore";
 const networkGraphStore = useNetworkGraphStore();
-const graph = computed(() => networkGraphStore.state.graph as BaseNetworkGraph);
+const graph = computed(() => networkGraphStore.state.graph);
 
 const props = defineProps<{
   elementTypes?: { title: string; value: string }[];

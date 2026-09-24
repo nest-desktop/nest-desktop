@@ -27,11 +27,6 @@
       :text="projectStore.state.project.name || 'undefined project ' + truncate(projectStore.state.project.id)"
       style="min-width: auto"
     />
-    <!-- <v-btn
-      @click="() => (projectStore.state.project.state.state.editMode = true)"
-      icon="mdi:mdi-pencil"
-      size="x-small"
-    /> -->
     <v-spacer />
 
     <v-card v-if="appStore.state.devMode && !appStore.state.loading" class="mx-1" variant="outlined">

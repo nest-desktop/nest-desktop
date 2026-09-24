@@ -272,7 +272,7 @@ export class Activity extends BaseObj {
     if (eventKeys == undefined || eventKeys.length === 0) return;
 
     eventKeys.forEach((eventKey: string) => {
-      const newEvents = events[eventKey] as number[];
+      const newEvents = events[eventKey];
       if (newEvents && this._events[eventKey]) {
         this._events[eventKey] = this._events[eventKey].concat(newEvents);
         updated = true;

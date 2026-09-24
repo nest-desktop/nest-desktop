@@ -3,17 +3,18 @@
 import { select } from "d3";
 import { type Ref, type UnwrapRef, nextTick, reactive, watch } from "vue";
 
-import type { TConnection, TNetwork, TNode, TNodeGroup, TSelection } from "@/types";
+import type { TNetwork, TNodeGroup, TSelection } from "@/types";
 import { debounce } from "@/utils/events";
 
-import { BaseNode } from "../node/node";
 import { BaseObj } from "../common/base";
 import { ConnectionGraph } from "../connectionGraph/connectionGraph";
 import { NetworkGraphWorkspace } from "./networkGraphWorkspace";
 import { NodeGraph } from "../nodeGraph/nodeGraph";
 import { NodeGroupGraph } from "../nodeGraph/nodeGroupGraph";
+import type { BaseNode } from "../node/node";
+import type { BaseConnection } from "../connection/connection";
 
-interface IBaseNetworkGraphState {
+interface IBaseNetworkGraphState<TNode, TConnection> {
   contextMenu: {
     connection: TConnection | null;
     modelValue: boolean;
@@ -24,14 +25,18 @@ interface IBaseNetworkGraphState {
   hash: string;
 }
 
-export class BaseNetworkGraph extends BaseObj {
+export class BaseNetworkGraph<
+  TNode extends BaseNode = BaseNode,
+  TConnection extends BaseConnection = BaseConnection,
+> extends BaseObj {
   private _nodeGroupGraph: NodeGroupGraph;
   private _resizeObserver: ResizeObserver;
   private _selector: TSelection;
-  private _state: UnwrapRef<IBaseNetworkGraphState>;
+  private _state: UnwrapRef<IBaseNetworkGraphState<TNode, TConnection>>;
   private _workspace: NetworkGraphWorkspace;
-  public _connectionGraph: ConnectionGraph;
-  public _nodeGraph: NodeGraph;
+
+  public _connectionGraph: ConnectionGraph<TNode, TConnection>;
+  public _nodeGraph: NodeGraph<TNode>;
   public _network: TNetwork;
 
   constructor(ref: Ref<HTMLElement | null>, network: TNetwork) {
@@ -47,7 +52,7 @@ export class BaseNetworkGraph extends BaseObj {
     this._nodeGraph = new NodeGraph(this);
     this._nodeGroupGraph = new NodeGroupGraph(this);
 
-    this._state = reactive<IBaseNetworkGraphState>({
+    this._state = reactive<IBaseNetworkGraphState<TNode, TConnection>>({
       contextMenu: {
         connection: null,
         modelValue: false,
@@ -61,7 +66,7 @@ export class BaseNetworkGraph extends BaseObj {
     this._resizeObserver = new ResizeObserver(debounce(() => this._workspace.updateTransform()));
   }
 
-  get connectionGraph(): ConnectionGraph {
+  get connectionGraph(): ConnectionGraph<TNode, TConnection> {
     return this._connectionGraph;
   }
 
@@ -71,7 +76,7 @@ export class BaseNetworkGraph extends BaseObj {
     // return projectStore.state.project.network;
   }
 
-  get nodeGraph(): NodeGraph {
+  get nodeGraph(): NodeGraph<TNode> {
     return this._nodeGraph;
   }
 
@@ -87,7 +92,7 @@ export class BaseNetworkGraph extends BaseObj {
     return this._selector;
   }
 
-  get state(): UnwrapRef<IBaseNetworkGraphState> {
+  get state(): UnwrapRef<IBaseNetworkGraphState<TNode, TConnection>> {
     return this._state;
   }
 
@@ -99,7 +104,7 @@ export class BaseNetworkGraph extends BaseObj {
    * Close context menu.
    */
   closeContextMenu(): void {
-    this._state.contextMenu = {
+    this.state.contextMenu = {
       modelValue: false,
       connection: null,
       node: null,
@@ -113,11 +118,11 @@ export class BaseNetworkGraph extends BaseObj {
    * @param event mouse event
    */
   dragStart(event: MouseEvent): void {
-    this._workspace.state.dragging = true;
-    if (event.sourceEvent.srcElement.parentNode instanceof BaseNode) {
-      select(event.sourceEvent.srcElement.parentNode).classed("active", true);
-      select(event.sourceEvent.srcElement).style("cursor", "grabbing");
-    }
+    this.workspace.state.dragging = true;
+    // if (event.sourceEvent.srcElement.parentNode instanceof BaseNode) {
+    select(event.sourceEvent.srcElement.parentNode).classed("active", true);
+    select(event.sourceEvent.srcElement).style("cursor", "grabbing");
+    // }
   }
 
   /**
@@ -125,16 +130,16 @@ export class BaseNetworkGraph extends BaseObj {
    * @param event mouse event
    */
   dragEnd(event: MouseEvent): void {
-    this._workspace.state.dragging = false;
+    this.workspace.state.dragging = false;
     // If-clause to prevent the error message
     // when mouseup happens outside the window.
-    if (event.sourceEvent.srcElement.parentNode instanceof BaseNode) {
-      select(event.sourceEvent.srcElement.parentNode).classed("active", false);
-      select(event.sourceEvent.srcElement).style("cursor", "pointer");
-    }
+    // if (event.sourceEvent.srcElement.parentNode instanceof BaseNode) {
+    select(event.sourceEvent.srcElement.parentNode).classed("active", false);
+    select(event.sourceEvent.srcElement).style("cursor", "pointer");
+    // }
     if (this.network) this.network.clean();
 
-    this._workspace?.updateTransform();
+    this.workspace?.updateTransform();
   }
 
   /**
@@ -143,7 +148,7 @@ export class BaseNetworkGraph extends BaseObj {
   init(): void {
     this.logger.trace("init");
 
-    this._workspace?.init();
+    this.workspace?.init();
     nextTick(() => this.update());
 
     watch(
@@ -173,18 +178,18 @@ export class BaseNetworkGraph extends BaseObj {
   ): void {
     this.logger.trace("open context menu");
 
-    if (this._state.contextMenu.modelValue) {
-      this._state.contextMenu.modelValue = false;
+    if (this.state.contextMenu.modelValue) {
+      this.state.contextMenu.modelValue = false;
       setTimeout(() => this.openContextMenu(target, props), 200);
       return;
     }
 
-    this._state.contextMenu.connection = (props.connection as TConnection) || null;
-    this._state.contextMenu.node = (props.node as TNode) || null;
-    this._state.contextMenu.nodeGroup = (props.nodeGroup as TNodeGroup) || null;
+    this.state.contextMenu.connection = (props.connection as TConnection) || null;
+    this.state.contextMenu.node = (props.node as TNode) || null;
+    this.state.contextMenu.nodeGroup = (props.nodeGroup as TNodeGroup) || null;
 
-    this._state.contextMenu.target = target;
-    this._state.contextMenu.modelValue = true;
+    this.state.contextMenu.target = target;
+    this.state.contextMenu.modelValue = true;
   }
 
   /**
@@ -202,7 +207,7 @@ export class BaseNetworkGraph extends BaseObj {
    * Reset state of network graph.
    */
   resetState(): void {
-    this._state.contextMenu.modelValue = false;
+    this.state.contextMenu.modelValue = false;
   }
 
   /**
@@ -212,11 +217,11 @@ export class BaseNetworkGraph extends BaseObj {
   update(): void {
     this.logger.trace("update");
 
-    this._workspace.update();
+    this.workspace.update();
 
-    this._connectionGraph.update();
-    this._nodeGraph.update();
-    this._nodeGroupGraph.update();
+    this.connectionGraph.update();
+    this.nodeGraph.update();
+    this.nodeGroupGraph.update();
   }
 
   /**

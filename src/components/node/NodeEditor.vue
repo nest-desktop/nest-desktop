@@ -15,15 +15,12 @@
       <v-expansion-panel>
         <v-expansion-panel-title class="ma-0 pa-0 pr-3 pt-1">
           <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
-            <v-btn
-              icon
-              class="mx-4 rounded-circle"
-              size="medium"
+            <NodeAvatar
+              :node
+              class="mx-4"
               @click.stop="node.toggleSelection()"
               @click.right.prevent="node.unselect()"
-            >
-              <NodeAvatar :node />
-            </v-btn>
+            />
 
             <slot name="nodeModelSelect" :select-state="state">
               <NodeModelSelect :node @open-menu="() => (state.menu = true)" />
@@ -31,12 +28,7 @@
 
             <v-menu v-model="state.menu" :close-on-content-click="false">
               <template #activator="{ props: btnProps }">
-                <v-btn
-                  class="rounded-circle"
-                  icon="mdi:mdi-order-bool-ascending-variant"
-                  size="small"
-                  v-bind="btnProps"
-                />
+                <v-icon-btn icon="mdi:mdi-order-bool-ascending-variant" v-bind="btnProps" />
               </template>
 
               <v-card>
@@ -102,7 +94,7 @@
                 />
 
                 <template #append>
-                  <Menu :items="popItems" size="x-small" />
+                  <Menu :items="popItems" size="small" />
                 </template>
               </v-list-item>
             </slot>
@@ -128,11 +120,7 @@
       </v-expansion-panel>
 
       <slot name="connectionEditor">
-        <ConnectionEditor
-          v-for="(connection, index) in node.connections"
-          :key="index"
-          :connection="connection as TConnection"
-        />
+        <ConnectionEditor v-for="(connection, index) in node.connections" :key="index" :connection="connection" />
       </slot>
     </v-expansion-panels>
   </Card>
@@ -141,7 +129,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive } from "vue";
 
-import { TConnection, TModel, TNode } from "@/types";
+import { TModel, TNode } from "@/types";
 
 import Card from "../common/Card.vue";
 import ConnectionEditor from "../connection/ConnectionEditor.vue";
@@ -168,7 +156,7 @@ const state = reactive<{
 
 const popItems = [
   {
-    icon: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
+    iconProps: { class: "mdi-flip-h", icon: "mdi:mdi-reload" },
     onClick: () => {
       node.value.size = 1;
     },
