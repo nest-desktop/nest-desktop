@@ -11,7 +11,7 @@
   "scripts": {
     "app:build": "vue-tsc && vite build --outDir ./dist-electron && electron-builder",
     "app:dev": "vite",
-    "app:preview:AppImage": "./release/nest-desktop-*.AppImage",
+    "app:preview:AppImage": "./out/nest-desktop-*.AppImage --no-sandbox --enable-unsafe-swiftshader",
     "build": "vue-tsc --noEmit && vite build",
     "clean": "rm -rf build coverage dist-electron nest_desktop.egg-info pydist release yarn-error.log",
     "coverage": "vitest run --coverage",
@@ -90,7 +90,7 @@
     "js-yaml": "5.4",
     "prettier": "~3.9",
     "register-service-worker": "~1.7",
-    "sass": "~1.104",
+    "sass": "~1.105",
     "semver": "~7.8",
     "sharp": "~0.35",
     "tslog": "~5.2",
