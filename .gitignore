@@ -238,3 +238,5 @@ __marimo__/
 
 # Python Package output
 /pydist
+
+/outdated
