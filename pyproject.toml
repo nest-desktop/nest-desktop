@@ -1,10 +1,6 @@
-[build-system]
-requires = ["setuptools >= 77.0.3"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "nest-desktop"
-version = "4.2.0"
+version = "4.3.0b2"
 description = "A web-based GUI application for spiking neuronal networks"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -36,18 +32,65 @@ classifiers = [
   "Operating System :: OS Independent",
 
   # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
-dependencies = []
+dependencies = [
+  "nest-server==3.0.0b5"
+]
+
+[project.scripts]
+nest-desktop = "nest_desktop.cli:main"
 
 [project.urls]
 homepage = "https://nest-desktop.github.io"
 repository = "https://github.com/nest-desktop/nest-desktop"
 documentation = "https://nest-desktop.readthedocs.io"
 
-[tool.setuptools]
-package-dir = {"nest_desktop" = "nest_desktop"}
-script-files = ["scripts/nest-desktop"]
+[dependency-groups]
+dev = [
+  "pre-commit>=4.6",
+  "pytest>=9.1",
+  "ruff>=0.16",
+  "ty>=0.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.7,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "nest_desktop"
+module-root = ""
+
+[tool.ruff]
+# Same as Black.
+line-length = 120
+indent-width = 4
+
+# Assume Python 3.14
+target-version = "py314"
+
+[tool.ruff.lint]
+extend-select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+[tool.ty.environment]
+python-version = "3.14"
+
+[tool.ty.rules]
+unresolved-attribute = "ignore"
+unresolved-import = "ignore"

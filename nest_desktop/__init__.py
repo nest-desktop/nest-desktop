@@ -1,6 +1,11 @@
 # https://www.python.org/dev/peps/pep-0440
 
-from importlib import metadata as _metadata  # noqa
+import contextlib
+from importlib import metadata
 
-__version__ = _metadata.version("nest-desktop")
-del _metadata
+try:
+    __version__ = metadata.version("nest-desktop")
+except metadata.PackageNotFoundError:
+    contextlib.suppress(metadata.PackageNotFoundError)
+
+del metadata
