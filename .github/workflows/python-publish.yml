@@ -23,6 +23,16 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+          cache-dependency-path: yarn.lock
+          # package-manager-cache: false # Disable automatic npm caching if not required
+
+      - name: Deploy app for production
+        run: yarn build
+
       - uses: actions/setup-python@v7
         with:
           python-version: "3.x"
@@ -60,7 +70,7 @@ jobs:
 
     steps:
       - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: release-dists
           path: dist/
