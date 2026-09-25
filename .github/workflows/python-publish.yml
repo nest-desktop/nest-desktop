@@ -30,6 +30,9 @@ jobs:
           cache-dependency-path: yarn.lock
           # package-manager-cache: false # Disable automatic npm caching if not required
 
+      - name: Install node modules
+        run: yarn install
+
       - name: Deploy app for production
         run: yarn build
 
