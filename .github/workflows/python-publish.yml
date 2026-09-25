@@ -27,7 +27,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
-          # cache-dependency-path: yarn.lock
+          cache-dependency-path: yarn.lock
           # package-manager-cache: false # Disable automatic npm caching if not required
 
       - name: Deploy app for production
