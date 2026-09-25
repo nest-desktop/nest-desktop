@@ -31,7 +31,7 @@ jobs:
           # package-manager-cache: false # Disable automatic npm caching if not required
 
       - name: Install node modules
-        run: yarn install
+        run: yarn install --ignore-scripts
 
       - name: Deploy app for production
         run: yarn build
