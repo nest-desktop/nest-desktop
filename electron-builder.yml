@@ -17,7 +17,7 @@ files:
 #   to: assets
 icon: icons/icon-256x256.png
 linux:
-  category: Education;Science
+  category: Education
   desktop:
     entry: nest-desktop
   synopsis: NEST Desktop
