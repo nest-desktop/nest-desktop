@@ -22,7 +22,7 @@ nest-server start
 # fi
 
 # Start NEST Desktop
-nest-desktop --no-sandbox --enable-unsafe-swiftshader
+nest-desktop start --no-sandbox --enable-unsafe-swiftshader
 
 # Stop NEST Server
 nest-server stop
