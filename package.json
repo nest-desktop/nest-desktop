@@ -56,7 +56,7 @@
     "vue-codemirror": "~6.1",
     "vue-router": "~5.3",
     "vuetify": "~4.2",
-    "vuetify3-dialog": "~1.6",
+    "vuetify3-dialog": "~1.7",
     "webfontloader": "~1.6"
   },
   "devDependencies": {
@@ -95,7 +95,7 @@
     "sharp": "~0.35",
     "tslog": "~5.2",
     "typescript": "~6.0",
-    "typescript-eslint": "~8.70",
+    "typescript-eslint": "~8.71",
     "unplugin-fonts": "~2.0",
     "vite": "~8.3",
     "vite-plugin-electron": "~1.1",
