@@ -22,19 +22,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-
+      - run: corepack enable
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
-          cache: yarn
-          cache-dependency-path: yarn.lock
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
           # package-manager-cache: false # Disable automatic npm caching if not required
 
-      - name: Install node modules
-        run: yarn install --ignore-scripts
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Deploy app for production
-        run: yarn build
+      - name: Install node modules
+        run: pnpm install --ignore-scripts
+
+      - name: Build app for production
+        run: pnpm build
 
       - uses: actions/setup-python@v7
         with:
