@@ -107,4 +107,4 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: Type check
-        run: pnpx vue-tsc --noEmit
+        run: pnpn type-check
