@@ -13,9 +13,12 @@
     "app:dev": "vite",
     "app:preview:AppImage": "./out/nest-desktop-*.AppImage --no-sandbox --enable-unsafe-swiftshader",
     "build": "vue-tsc --noEmit && vite build",
+    "build:types": "vue-tsc --declaration --emitDeclarationOnly",
     "clean": "rm -rf build coverage dist-electron nest_desktop.egg-info pydist release yarn-error.log",
     "coverage": "vitest run --coverage",
     "dev": "vite",
+    "format:check": "prettier --check src/",
+    "format:write": "prettier --write src/",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -24,8 +27,7 @@
     "preview:test": "vite preview --outDir ./coverage",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "format:check": "prettier --check src/",
-    "format:write": "prettier --write src/"
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@codemirror/autocomplete": "~6.20.3",
