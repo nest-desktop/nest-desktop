@@ -6,105 +6,41 @@ on:
     branches: [main, dev]
 
 jobs:
-  install-node-modules:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - run: corepack enable
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-          # package-manager-cache: false # Disable automatic npm caching if not required
-
-      - name: Cache node_modules
-        id: cache
-        uses: actions/cache@v6
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install node modules
-        run: pnpm install --ignore-scripts
-
   lint:
     runs-on: ubuntu-latest
-    needs: [install-node-modules]
+
     steps:
       - uses: actions/checkout@v7
-      - run: corepack enable
-      - uses: actions/setup-node@v7
+      - uses: pnpm/setup@v3
         with:
-          node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Cache node_modules
-        id: cache
-        uses: actions/cache@v6
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install node modules
-        run: pnpm install --ignore-scripts
+          version: 12
+          cache: true
 
       - name: Run lint check
         run: pnpm lint
 
-      # - name: Run linters
-      #   uses: wearerequired/lint-action@v3
-      #   with:
-      #     eslint: true
-      #     prettier: true
-
   format:
     runs-on: ubuntu-latest
-    needs: [install-node-modules]
+ 
     steps:
       - uses: actions/checkout@v7
-      - run: corepack enable
-      - uses: actions/setup-node@v7
+      - uses: pnpm/setup@v3
         with:
-          node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Cache node_modules
-        id: cache
-        uses: actions/cache@v6
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install node modules
-        run: pnpm install --ignore-scripts
+          version: 12
+          cache: true
 
       - name: Run format check
-        run: pnpm format:check
+        run: pnpm format
 
   type-checking:
     runs-on: ubuntu-latest
-    needs: [install-node-modules]
+
     steps:
       - uses: actions/checkout@v7
-      - run: corepack enable
-      - uses: actions/setup-node@v7
+      - uses: pnpm/setup@v3
         with:
-          node-version-file: .nvmrc
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          version: 12
+          cache: true
 
-      - name: Cache node_modules
-        id: cache
-        uses: actions/cache@v6
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install node modules
-        run: pnpm install --ignore-scripts
-
-      - name: Type check
+      - name: Run type check
         run: pnpm type-check
