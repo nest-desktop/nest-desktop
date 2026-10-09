@@ -29,7 +29,7 @@
       </v-list-item>
     </template>
 
-    <template #item="{ index, item, props }">
+    <!-- <template #item="{ index, item, props }">
       <v-list-item :key="index" class="module-item" v-bind="props" title="">
         <template #prepend>
           <v-avatar :text="item.title.slice(0, 2)" class="text-uppercase" size="small" start />
@@ -47,7 +47,7 @@
 
         {{ item.title }}
       </v-list-item>
-    </template>
+    </template> -->
   </v-combobox>
 </template>
 
