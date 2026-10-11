@@ -1047,7 +1047,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "nest-server", specifier = "==3.0.0b5" }]
+requires-dist = [{ name = "nest-server", specifier = "==3.0.0b6" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -1059,7 +1059,7 @@ dev = [
 
 [[package]]
 name = "nest-server"
-version = "3.0.0b5"
+version = "3.0.0b6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "flask" },
@@ -1068,9 +1068,9 @@ dependencies = [
     { name = "nest-simulator" },
     { name = "restrictedpython" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d0/12/7976522e68f425d12464b7880011989749c572d5a66a1ff10ae194304d34/nest_server-3.0.0b5.tar.gz", hash = "sha256:eeaa2e9fe6e967bff5f5f099b8d60e3ddb3c3bfaa3d504fc6566b55a4740a5b3", size = 20492, upload-time = "2026-09-15T10:35:37.554Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/04/242cc17e6f5fa2ab2709efb91e615dea4df8ecdc77f54abb141c125442bb/nest_server-3.0.0b6.tar.gz", hash = "sha256:d1454f0bb863323954f99248562b55d0b7727e22975951eebab4244976af2f04", size = 20775, upload-time = "2026-09-25T05:43:59.981Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d0/a4/108201e48fdb20cad16cd200d730b1a494202c37a4bc10ac4af03a006c9b/nest_server-3.0.0b5-py3-none-any.whl", hash = "sha256:2f25dc4835a1afe8e26cfb4538eed6f1390c92d7b740c067fe7c0c838b7a7d98", size = 30383, upload-time = "2026-09-15T10:35:36.36Z" },
+    { url = "https://files.pythonhosted.org/packages/50/25/0773a159454f4461d13b849e8ab55d427b8d8ef77eecf4ed853d8799a66e/nest_server-3.0.0b6-py3-none-any.whl", hash = "sha256:2cf60b0fb060cb23113ea927970e0118364a0d28c5e1fa72f504cf95a1043df8", size = 30404, upload-time = "2026-09-25T05:43:58.566Z" },
 ]
 
 [[package]]
