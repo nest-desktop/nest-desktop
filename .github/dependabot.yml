@@ -5,21 +5,33 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    # Location of `.github/workflows` in the `root` directory
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
 
   # Node dependencies
   - package-ecosystem: "npm"
+    # Lock for `pnpm-lock.yaml` in the `root` directory
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
 
-  # GitHub Actions
-  - package-ecosystem: "github-actions"
+  # Python dependencies
+  - package-ecosystem: "pip"
+    # Look for "pyproject.toml" in the `root` directory
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+
+  # UV dependencies
+  - package-ecosystem: "uv"
+    # Look for "uv.lock" in the `root` directory
     directory: "/"
     schedule:
       interval: "weekly"
