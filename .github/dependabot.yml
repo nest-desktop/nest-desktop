@@ -15,7 +15,7 @@ updates:
 
   # Node dependencies
   - package-ecosystem: "npm"
-    # Lock for `pnpm-lock.yaml` in the `root` directory
+    # Lock for `package.json` and `pnpm-lock.yaml` in the `root` directory
     directory: "/"
     schedule:
       interval: "weekly"
