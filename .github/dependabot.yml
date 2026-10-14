@@ -23,6 +23,16 @@ updates:
     cooldown:
       default-days: 8
 
+  # Pre-commit repos
+  - package-ecosystem: "pre-commit"
+    # Lock for `.pre-commit-config.yaml` in the `root` directory
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 8
+
   # Python dependencies
   - package-ecosystem: "pip"
     # Look for "pyproject.toml" in the `root` directory
