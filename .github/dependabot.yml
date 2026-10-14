@@ -23,7 +23,7 @@ updates:
     cooldown:
       default-days: 8
 
-  # Pre-commit repos
+  # Pre-commit hooks
   - package-ecosystem: "pre-commit"
     # Lock for `.pre-commit-config.yaml` in the `root` directory
     directory: "/"
