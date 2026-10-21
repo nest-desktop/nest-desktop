@@ -5,8 +5,8 @@ import os
 import socketserver
 import sys
 
-HOST = os.environ.get("NEST_DESKTOP_HOST", "127.0.0.1")
-PORT = int(os.environ.get("NEST_DESKTOP_PORT", "54286"))
+HOST = os.getenv("NEST_DESKTOP_HOST", "127.0.0.1")
+PORT = int(os.getenv("NEST_DESKTOP_PORT", "54286"))
 
 
 def create_app(host: str = HOST, port: int = PORT):

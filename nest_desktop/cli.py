@@ -8,8 +8,8 @@ import click
 from nest_desktop import __version__
 from nest_desktop.main import create_app
 
-HOST = os.environ.get("NEST_DESKTOP_HOST", "127.0.0.1")
-PORT = int(os.environ.get("NEST_DESKTOP_PORT", "54286"))
+HOST = os.getenv("NEST_DESKTOP_HOST", "127.0.0.1")
+PORT = int(os.getenv("NEST_DESKTOP_PORT", "54286"))
 
 
 @click.group()
