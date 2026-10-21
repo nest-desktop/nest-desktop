@@ -77,7 +77,7 @@
     "@types/three": "~0.186.0",
     "@types/webfontloader": "~1.6.38",
     "@vite-pwa/assets-generator": "~2.0.0",
-    "@vitejs/plugin-vue": "~6.0.9",
+    "@vitejs/plugin-vue": "~6.0.10",
     "@vitest/coverage-istanbul": "~5.0.3",
     "@vitest/coverage-v8": "~5.0.3",
     "@vitest/eslint-plugin": "~1.6.27",
