@@ -40,7 +40,8 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "nest-server==3.0.0b7"
+  "click>=8.5.0",
+  "nest-server==3.0.0b7",
 ]
 
 [project.scripts]

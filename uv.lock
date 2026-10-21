@@ -1036,9 +1036,10 @@ wheels = [
 
 [[package]]
 name = "nest-desktop"
-version = "4.3.0b4"
+version = "4.3.0b5"
 source = { editable = "." }
 dependencies = [
+    { name = "click" },
     { name = "nest-server" },
 ]
 
@@ -1051,7 +1052,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "nest-server", specifier = "==3.0.0b7" }]
+requires-dist = [
+    { name = "click", specifier = ">=8.5.0" },
+    { name = "nest-server", specifier = "==3.0.0b7" },
+]
 
 [package.metadata.requires-dev]
 dev = [
