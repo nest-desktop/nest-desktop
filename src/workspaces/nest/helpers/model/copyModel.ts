@@ -24,6 +24,7 @@ export interface INESTCopyModelProps {
 
 interface INESTCopyModelState {
   visible: boolean;
+  panels: number[];
 }
 
 export class NESTCopyModel extends BaseObj {
@@ -44,6 +45,7 @@ export class NESTCopyModel extends BaseObj {
 
     this._state = reactive<INESTCopyModelState>({
       visible: true,
+      panels: [0],
     });
 
     this._props = modelProps;
