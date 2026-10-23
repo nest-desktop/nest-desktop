@@ -68,6 +68,7 @@ const items = [
     id: "collapseAll",
     onClick: () => {
       network.value.nodes.nodeItems.forEach((node: TNode) => (node.view.state.expansionPanels = []));
+      if ("copyModels" in network.value) network.value.copyModels.all.forEach((model) => (model.state.panels = []));
     },
     prependIcon: "mdi:mdi-collapse-all-outline",
     title: "collapse all",
@@ -78,6 +79,7 @@ const items = [
       network.value.nodes.nodeItems.forEach(
         (node: TNode) => (node.view.state.expansionPanels = range(node.connections.length + 1)),
       );
+      if ("copyModels" in network.value) network.value.copyModels.all.forEach((model) => (model.state.panels = [0]));
     },
     prependIcon: "mdi:mdi-expand-all-outline",
     title: "expand all",

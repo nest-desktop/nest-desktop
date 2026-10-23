@@ -1,10 +1,10 @@
 <template>
   <Card v-if="model.show" class="ma-1">
-    <v-expansion-panels variant="accordion">
+    <v-expansion-panels v-model="model.state.panels" variant="accordion">
       <v-expansion-panel>
         <v-expansion-panel-title class="ma-0 pa-0 pr-3 pl-1 pt-1">
           <v-btn-group class="py-1 pr-2" style="width: 100%" variant="text">
-            <v-avatar>
+            <v-avatar class="node-avatar mx-4">
               <v-icon
                 :icon="
                   state.elementType == 'synapse'
