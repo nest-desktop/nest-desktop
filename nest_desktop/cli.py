@@ -26,8 +26,8 @@ def pid():
 
 
 @main.command()
-@click.option("--host", "-h", default=HOST, help=f"use hostname/IP address for the server [default: {HOST}]")
-@click.option("--port", "-p", default=PORT, help=f"use port for opening the socket [default: {PORT}]")
+@click.option("--host", "-h", default=HOST, help=f"Use hostname/IP address for the server [default: {HOST}]")
+@click.option("--port", "-p", default=PORT, help=f"Use port for opening the socket [default: {PORT}]")
 def start(host: str, port: int):
     msg = f"NEST Desktop is now running at http://{host}:{port}."
     click.echo(msg)
@@ -38,8 +38,8 @@ def start(host: str, port: int):
 
 
 @main.command()
-@click.option("--host", "-h", default=HOST, help=f"use hostname/IP address for the server [default: {HOST}]")
-@click.option("--port", "-p", default=PORT, help=f"use port for opening the socket [default: {PORT}]")
+@click.option("--host", "-h", default=HOST, help=f"Use hostname/IP address for the server [default: {HOST}]")
+@click.option("--port", "-p", default=PORT, help=f"Use port for opening the socket [default: {PORT}]")
 def stop(host: str, port: int):
     try:
         subprocess.run("pgrep -fo 'nest-desktop start' | xargs kill", shell=True, executable="/bin/bash", check=True)
