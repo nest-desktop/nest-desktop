@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -1054,7 +1054,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.5.0" },
-    { name = "nest-server", specifier = "==3.0.0b8" },
+    { name = "nest-server", specifier = "==3.0.0b9" },
 ]
 
 [package.metadata.requires-dev]
@@ -1067,18 +1067,19 @@ dev = [
 
 [[package]]
 name = "nest-server"
-version = "3.0.0b8"
+version = "3.0.0b9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "click" },
     { name = "flask" },
     { name = "flask-cors" },
     { name = "gunicorn" },
     { name = "nest-simulator" },
     { name = "restrictedpython" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d1/69/d9e007f5b7acf9d5cbe0c6aa3302239af8123651cdfc24cef98609535b88/nest_server-3.0.0b8.tar.gz", hash = "sha256:5f1a3a445515f4a3d5a5c959679fe5d2c2f2a3f315ac2dbf6b4aadc02037d8f4", size = 20770, upload-time = "2026-10-15T10:23:44.239Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/9e/b92a97f93dc3dbb0f76881d7cecb579b9387dd032c5d49f11093f28fbb77/nest_server-3.0.0b9.tar.gz", hash = "sha256:c56200fd4c01ede035efae6f2f7cf654a752ac9cdb7a5f301dd661a49772b24e", size = 20461, upload-time = "2026-10-21T10:18:20.89Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/50/68/2f9f03e1379ff55fb20831fe564511a82b707ff4674de3305b5cce53331f/nest_server-3.0.0b8-py3-none-any.whl", hash = "sha256:6b925ba5e9e5fc35bcfcb2c7455d96e6f2132109c76553bf07671ee503708a49", size = 30371, upload-time = "2026-10-15T10:23:42.99Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/5b/0ce7d0953dd0177f2dd0d82cd3bd8229fe3dcffe87ed7e6f7e181d4494f8/nest_server-3.0.0b9-py3-none-any.whl", hash = "sha256:d21644d449fe6aeb1772e3459ef32d9a450d37c3cb412ce15b5f8808dd9e9e82", size = 29926, upload-time = "2026-10-21T10:18:19.744Z" },
 ]
 
 [[package]]
