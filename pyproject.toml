@@ -41,7 +41,7 @@ classifiers = [
 ]
 dependencies = [
   "click>=8.5.0",
-  "nest-server==3.0.0b8",
+  "nest-server==3.0.0b9",
 ]
 
 [project.scripts]
