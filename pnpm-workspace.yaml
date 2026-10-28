@@ -2,3 +2,5 @@ allowBuilds:
   '@parcel/watcher': true
   electron-winstaller: true
   leveldown: true
+overrides:
+  uuid@<11.1.1: ^11.1.1

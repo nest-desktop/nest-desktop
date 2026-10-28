@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  uuid@<11.1.1: ^11.1.1
+
 importers:
 
   .:
@@ -2173,8 +2176,8 @@ packages:
       vue: ^3.0.0
       vuetify: '>=3'
 
-  '@vuetify/v0@1.3.0':
-    resolution: {integrity: sha512-Tvknc64ciwaOdKzifg3maMOiczbEenWxYINoZIotfKQ8VWBs/yeHbvHffW4w1j+xYnNyYi0S9LK5UCzyQrYg9A==}
+  '@vuetify/v0@1.3.1':
+    resolution: {integrity: sha512-NilBnDvGotaP9CGIC+bK7YAcsaCvww9nOEWcPehAYqGqlOIp5xPXbDZUihK9FkoE+Jhz9ZIWUbd5plkMd43JDA==}
     peerDependencies:
       '@adobe/leonardo-contrast-colors': '>=1.0.0'
       '@ant-design/colors': '>=7.0.0'
@@ -2372,8 +2375,8 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  baseline-browser-mapping@2.11.33:
-    resolution: {integrity: sha512-yiVKDX+qCMRKBE084lXvq9EcwFUhKZ2nU8TK1EQQuOgPNR/lmbGxXOeDdlGUqC2Zz11Cs9rk1d/8NfgBmlkt0w==}
+  baseline-browser-mapping@2.11.34:
+    resolution: {integrity: sha512-Aqr8mA1kIvyJ3UY5YAY7ib8LSo1DmDMbMnVqGPtsKW1LxaFQFwn9Eb3yvq2fUKJsRvaXjnAV7R5osqETapzNiA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -2871,8 +2874,8 @@ packages:
   electron-publish@26.18.0:
     resolution: {integrity: sha512-MagnqaZSALSWjcdKu5HEVhYUZD/2BDL3q7XzrqWwub6gf/UfD3ItMgmthVDv9w5y9E0gH1C3JWqKaXwf6f4ROg==}
 
-  electron-to-chromium@1.5.465:
-    resolution: {integrity: sha512-zg4iUpbeGw7YNZsswc2xKr2uiBex2d8dELAXo92Icw3but1ULbrvK8USe6wVLaWjgJnKBARv0pchx9Owktx6wQ==}
+  electron-to-chromium@1.5.466:
+    resolution: {integrity: sha512-WkgFvScwZjvCPupYGfQr5qlKCv/Tu+GYELGMCGcoBOQbNb6nx/TqGwJyLMwcNAAy2kKJF2agjM7KZKest538JA==}
 
   electron-winstaller@5.4.0:
     resolution: {integrity: sha512-bO3y10YikuUwUuDUQRM4KfwNkKhnpVO7IPdbsrejwN9/AABJzzTQ4GeHwyzNSrVO+tEH3/Np255a3sVZpZDjvg==}
@@ -4836,8 +4839,8 @@ packages:
     resolution: {integrity: sha512-xVToRh2CTmLk2HnEG7ac4rl1MJTT3RFkpS8B++/SnB0kXvuaavD+n3m/vrzyWQOdJNSZQACnbz01pnppbwV5BA==}
     engines: {node: '>=20.19.0'}
 
-  unplugin@3.5.0:
-    resolution: {integrity: sha512-s9qc6Y8ChhQE9RZ9Se+znEtZA0oK31LmEBO9y97ixR3ErA8UwlzA4XNybg/41od8rQ8EKScVQM857NWnI+EWkQ==}
+  unplugin@3.6.0:
+    resolution: {integrity: sha512-btGFb33KNAaqsu3/jFenhevLmaP9ZjYbkiVKd7OBAtsbdqG7oSJsA8RlHa7NY5kt765PnB37mlAI8a15iQAm+w==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       '@farmfe/core': '*'
@@ -4904,13 +4907,12 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@14.0.3:
-    resolution: {integrity: sha512-Sc5u1VVln93y1Xnz4R+CunOZc7R9LUcTmhj7Rc7Eg3HVcf7rVn2FOoa812fe0W8p3jD7xeoGSYbfqCGGH2B6xw==}
+  uuid@11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
 
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+  uuid@14.0.3:
+    resolution: {integrity: sha512-Sc5u1VVln93y1Xnz4R+CunOZc7R9LUcTmhj7Rc7Eg3HVcf7rVn2FOoa812fe0W8p3jD7xeoGSYbfqCGGH2B6xw==}
     hasBin: true
 
   verkit@0.5.0:
@@ -7498,7 +7500,7 @@ snapshots:
       vue: 3.5.44(typescript@6.0.3)
       vuetify: 4.3.1(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vite-plugin-vuetify@2.1.3)(vue@3.5.44(typescript@6.0.3))
 
-  '@vuetify/v0@1.3.0(@vue/devtools-api@8.2.1)(vue@3.5.44(typescript@6.0.3))':
+  '@vuetify/v0@1.3.1(@vue/devtools-api@8.2.1)(vue@3.5.44(typescript@6.0.3))':
     dependencies:
       vue: 3.5.44(typescript@6.0.3)
     optionalDependencies:
@@ -7727,7 +7729,7 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  baseline-browser-mapping@2.11.33: {}
+  baseline-browser-mapping@2.11.34: {}
 
   birpc@2.9.0: {}
 
@@ -7759,9 +7761,9 @@ snapshots:
 
   browserslist@4.29.5:
     dependencies:
-      baseline-browser-mapping: 2.11.33
+      baseline-browser-mapping: 2.11.34
       caniuse-lite: 1.0.30001819
-      electron-to-chromium: 1.5.465
+      electron-to-chromium: 1.5.466
       node-releases: 2.0.60
       update-browserslist-db: 1.3.4(browserslist@4.29.5)
 
@@ -8296,7 +8298,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron-to-chromium@1.5.465: {}
+  electron-to-chromium@1.5.466: {}
 
   electron-winstaller@5.4.0(supports-color@7.2.0):
     dependencies:
@@ -8625,7 +8627,7 @@ snapshots:
       '@capsizecss/unpack': 4.0.1
       css-tree: 3.2.1
       magic-string: 1.4.5
-      unplugin: 3.5.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2))
+      unplugin: 3.6.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2))
     optionalDependencies:
       postcss: 8.5.32
     transitivePeerDependencies:
@@ -9646,7 +9648,7 @@ snapshots:
       readable-stream: 1.1.14
       spark-md5: 3.0.2
       through2: 3.0.2
-      uuid: 8.3.2
+      uuid: 11.1.1
       vuvuzela: 1.0.3
     transitivePeerDependencies:
       - encoding
@@ -10401,7 +10403,7 @@ snapshots:
       magic-string: 1.4.5
       pathe: 2.0.3
       tinyglobby: 0.2.17
-      unplugin: 3.5.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2))
+      unplugin: 3.6.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2))
       vite: 8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2)
     transitivePeerDependencies:
       - '@farmfe/core'
@@ -10420,7 +10422,7 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.7
 
-  unplugin@3.5.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2)):
+  unplugin@3.6.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       picomatch: 4.0.7
@@ -10467,9 +10469,9 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  uuid@14.0.3: {}
+  uuid@11.1.1: {}
 
-  uuid@8.3.2: {}
+  uuid@14.0.3: {}
 
   verkit@0.5.0: {}
 
@@ -10637,7 +10639,7 @@ snapshots:
       picomatch: 4.0.7
       scule: 1.3.0
       tinyglobby: 0.2.17
-      unplugin: 3.5.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2))
+      unplugin: 3.6.0(rolldown@1.2.15)(rollup@4.65.1)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(sass@1.106.1)(terser@5.51.2))
       unplugin-utils: 0.3.2
       vue: 3.5.44(typescript@6.0.3)
     optionalDependencies:
@@ -10679,7 +10681,7 @@ snapshots:
 
   vuetify@4.3.1(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vite-plugin-vuetify@2.1.3)(vue@3.5.44(typescript@6.0.3)):
     dependencies:
-      '@vuetify/v0': 1.3.0(@vue/devtools-api@8.2.1)(vue@3.5.44(typescript@6.0.3))
+      '@vuetify/v0': 1.3.1(@vue/devtools-api@8.2.1)(vue@3.5.44(typescript@6.0.3))
       vue: 3.5.44(typescript@6.0.3)
     optionalDependencies:
       typescript: 6.0.3
