@@ -20,8 +20,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
-    cooldown:
-      default-days: 8
 
   # Pre-commit hooks
   - package-ecosystem: "pre-commit"
@@ -30,8 +28,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
-    cooldown:
-      default-days: 8
 
   # Python dependencies
   - package-ecosystem: "pip"
@@ -40,8 +36,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
-    cooldown:
-      default-days: 8
 
   # UV dependencies
   - package-ecosystem: "uv"
@@ -50,5 +44,3 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
-    cooldown:
-      default-days: 8
