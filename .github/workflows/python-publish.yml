@@ -25,7 +25,7 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version-file: .nvmrc
+          node-version-file: .node-version  # Read node version from a file .node-version
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
           # package-manager-cache: false # Disable automatic npm caching if not required
@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.x"
+          python-version-file: .python-version # Read python version from a file .python-version
 
       - name: Build release distributions
         run: |
