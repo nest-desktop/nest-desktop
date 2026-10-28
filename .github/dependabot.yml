@@ -16,9 +16,9 @@ updates:
     # codeql-action/init without codeql-action/analyze.
     # Grouping ensures all actions are upgraded together, in a single PR.
     groups:
-      codeql-actions:
+      actions-deps:
         patterns:
-          - "codeql-action/*"
+          - "*"
 
   # Node dependencies
   - package-ecosystem: "npm"
@@ -26,6 +26,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      patch:
+        update-types: "patch"
 
   # Pre-commit hooks
   - package-ecosystem: "pre-commit"
