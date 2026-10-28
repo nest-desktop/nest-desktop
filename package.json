@@ -59,7 +59,7 @@
     "vue-clipboard3": "~2.0.0",
     "vue-codemirror": "~6.1.1",
     "vue-router": "~5.4.0",
-    "vuetify": "~4.2.4",
+    "vuetify": "~4.3.0",
     "vuetify3-dialog": "~1.7.0",
     "webfontloader": "~1.6.28"
   },
