@@ -29,7 +29,7 @@ updates:
     open-pull-requests-limit: 3
     groups:
       patch:
-        update-types: "patch"
+        update-types: ["patch"]
 
   # Pre-commit hooks
   - package-ecosystem: "pre-commit"
