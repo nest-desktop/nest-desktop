@@ -17,8 +17,7 @@ updates:
     # Grouping ensures all actions are upgraded together, in a single PR.
     groups:
       actions-deps:
-        patterns:
-          - "*"
+        patterns: ["*"]
 
   # Node dependencies
   - package-ecosystem: "npm"
@@ -52,5 +51,5 @@ updates:
     # Look for "uv.lock" in the `root` directory
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     open-pull-requests-limit: 3
