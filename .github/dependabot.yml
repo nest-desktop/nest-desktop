@@ -28,7 +28,7 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 3
     groups:
-      patch:
+      patch-npm-deps:
         update-types: ["patch"]
 
   # Pre-commit hooks
