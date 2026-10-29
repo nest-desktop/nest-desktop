@@ -40,7 +40,7 @@ classifiers = [
   "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
-  "click>=8.5.0",
+  "click>=8.5",
   "nest-server==3.0.0b9",
 ]
 
@@ -63,9 +63,6 @@ dev = [
 [build-system]
 requires = ["uv_build>=0.13.6,<0.14.0"]
 build-backend = "uv_build"
-
-[tool.uv]
-exclude-newer = "7 days"
 
 [tool.uv.build-backend]
 module-name = "nest_desktop"
