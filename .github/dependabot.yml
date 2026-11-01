@@ -9,7 +9,6 @@ multi-ecosystem-groups:
   python:
     schedule:
       interval: "weekly"
-  open-pull-requests-limit: 3
 
 updates:
   # GitHub Actions
@@ -72,14 +71,6 @@ updates:
     # Look for "pyproject.toml" in the `root` directory
     directory: "/"
     patterns: ["*"]
-    groups:
-      # Low risk - merge without much review
-      minor-and-patch-actions:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
 
   # UV dependencies
   - package-ecosystem: "uv"
@@ -87,11 +78,3 @@ updates:
     # Look for "uv.lock" in the `root` directory
     directory: "/"
     patterns: ["*"]
-    groups:
-      # Low risk - merge without much review
-      minor-and-patch-actions:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
