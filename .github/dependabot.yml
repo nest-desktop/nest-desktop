@@ -20,7 +20,7 @@ updates:
     open-pull-requests-limit: 3
     groups:
       # Low risk - merge without much review
-      minor-and-patch-actions:
+      actions-minor-patch:
         patterns:
           - "*"
         update-types:
@@ -42,7 +42,7 @@ updates:
     open-pull-requests-limit: 3
     groups:
       # Low risk - merge without much review
-      minor-and-patch-npm:
+      npm-minor-patch:
         patterns:
           - "*"
         update-types:
@@ -58,7 +58,7 @@ updates:
     open-pull-requests-limit: 3
     groups:
       # Low risk - merge without much review
-      minor-and-patch-pre-commit:
+      pre-commit-hooks-minor-patch:
         patterns:
           - "*"
         update-types:
