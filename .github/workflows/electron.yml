@@ -24,6 +24,9 @@ jobs:
       - name: Install node modules
         run: pnpm install --frozen-lockfile
 
+      - name: Install Electron app dependencies
+        run: pnpm postinstall:electron
+
       - name: Build Electron app
         run: pnpm app:build --publish never
 
