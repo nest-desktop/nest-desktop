@@ -14,10 +14,14 @@ export default defineConfig({
     },
     projects: [
       {
+        resolve: {
+          alias: {
+            "@": fileURLToPath(new URL("./src", import.meta.url)),
+          },
+        },
         test: {
           name: "unit",
-          include: ["./src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-          exclude: ["**/nest_desktop/**", "**/node_modules/**", "**/dist-electron/**", "**/dev-dist/**"],
+          include: ["./tests/unit/**/*.{test,spec}.ts"],
         },
       },
       {

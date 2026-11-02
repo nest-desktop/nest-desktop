@@ -2,7 +2,7 @@
 
 import { expect, test } from "vitest";
 
-import { combineURLs, isURL } from "./urls";
+import { combineURLs, isURL } from "@/utils/urls";
 
 test("Combine URLs.", () => {
   expect(combineURLs("http://localhost:52425", "api")).toBe("http://localhost:52425/api");

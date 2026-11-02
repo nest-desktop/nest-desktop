@@ -2,7 +2,7 @@
 
 import { expect, test } from "vitest";
 
-import { degToRad, radToDeg, round, toFixed } from "./converter";
+import { degToRad, radToDeg, round, toFixed } from "@/utils/converter";
 
 test("Convert degree to radian.", () => {
   expect(degToRad(0)).toBe(0);

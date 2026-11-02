@@ -10,7 +10,7 @@ import {
   randomUniformFloatArray,
   randomUniformInt,
   randomUniformIntArray,
-} from "./random";
+} from "@/utils/random";
 
 afterEach(() => {
   vi.restoreAllMocks();

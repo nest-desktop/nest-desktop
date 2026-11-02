@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
-import { load, loadJSON, loadText, loadYAML } from "./fetch";
+import { load, loadJSON, loadText, loadYAML } from "@/utils/fetch";
 
 const files: Record<string, string> = {
   "config.json": '{"name":"NEST Simulator","port":52425}',

@@ -2,7 +2,7 @@
 
 import { expect, test } from "vitest";
 
-import { deviation, diff, extent, fill, linSpace, max, mean, min, onlyUnique, range, sortString, sum } from "./array";
+import { deviation, diff, extent, fill, linSpace, max, mean, min, onlyUnique, range, sortString, sum } from "@/utils/array";
 
 test("Get statistics of values.", () => {
   const values = [2, 4, 4, 4, 5, 5, 7, 9];

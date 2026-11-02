@@ -2,7 +2,7 @@
 
 import { expect, test } from "vitest";
 
-import { getBoolean } from "./boolean";
+import { getBoolean } from "@/utils/boolean";
 
 test("Get true as boolean value.", () => {
   expect(getBoolean("1")).toBe(true);

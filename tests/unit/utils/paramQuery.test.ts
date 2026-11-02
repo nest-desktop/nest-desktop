@@ -3,7 +3,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
-import { getParamFromURL } from "./paramQuery";
+import { getParamFromURL } from "@/utils/paramQuery";
 
 const route = (query = {}, params = {}) => ({ params, query }) as RouteLocationNormalizedLoaded;
 
