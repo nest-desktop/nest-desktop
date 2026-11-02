@@ -13,6 +13,10 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   timeout: 60_000,
+  expect: {
+    // The dev server compiles modules on first request, which slows down the first page loads.
+    timeout: 15_000,
+  },
   use: {
     baseURL: `http://localhost:${port}`,
     trace: "on-first-retry",

@@ -1,6 +1,6 @@
 // fixtures.ts
 
-import { type Page, expect, test as base } from "@playwright/test";
+import { type Locator, type Page, expect, test as base } from "@playwright/test";
 
 /**
  * Test fixture which keeps the tests hermetic by blocking requests to external hosts
@@ -21,8 +21,45 @@ export { expect };
  */
 export const gotoNESTHome = async (page: Page): Promise<void> => {
   await page.goto("/");
-  await page.getByRole("link", { name: "NEST", exact: true }).click();
-  await expect(page).toHaveURL(/#\/nest\/$/);
+
+  // The workspace link is rendered before the router is ready, thus retry until the click navigates.
+  await clickUntilURL(page, page.getByRole("link", { name: "NEST", exact: true }), /#\/nest\/$/);
+};
+
+/**
+ * Click a locator until the page has the expected URL.
+ * @param page Page
+ * @param locator element to click
+ * @param url expected URL
+ */
+export const clickUntilURL = async (page: Page, locator: Locator, url: RegExp): Promise<void> => {
+  await expect(async () => {
+    // Do not click again if a previous click already navigated (e.g. with a slow redirect).
+    if (!url.test(page.url())) await locator.click({ timeout: 2_000 });
+    await expect(page).toHaveURL(url, { timeout: 5_000 });
+  }).toPass({ timeout: 30_000 });
+};
+
+/**
+ * Open the side navigation of the current view (e.g. project or model list) and return it.
+ * @param page Page
+ * @param tab name of the tab in the navigation rail
+ * @param search placeholder of the search field
+ */
+export const openSideNav = async (page: Page, tab: "Sandbox" | "Model", search: string): Promise<Locator> => {
+  const nav = page
+    .getByRole("main")
+    .getByRole("navigation")
+    .filter({ has: page.getByRole("textbox", { name: search }) });
+  const searchField = nav.getByRole("textbox", { name: search });
+
+  // Off-screen elements count as visible, thus check whether the drawer is slid into the viewport.
+  if (!(await searchField.evaluate((el) => el.getBoundingClientRect().left >= 0))) {
+    await railTab(page, tab).click();
+  }
+  await expect(searchField).toBeInViewport({ ratio: 1 });
+
+  return nav;
 };
 
 /**
@@ -36,10 +73,7 @@ export const openProject = async (page: Page, name: string): Promise<void> => {
   // The project link is rendered before the project database is initialized,
   // thus retry until the click leads to the project editor.
   const link = page.getByRole("link", { name: new RegExp(`^${name} \\d+ nodes`) });
-  await expect(async () => {
-    await link.click({ timeout: 2_000 });
-    await expect(page).toHaveURL(/#\/nest\/project\/[\w-]+\/edit$/, { timeout: 2_000 });
-  }).toPass({ timeout: 30_000 });
+  await clickUntilURL(page, link, /#\/nest\/project\/[\w-]+\/edit$/);
 
   await expect(projectTitle(page)).toHaveText(name);
 };
@@ -57,3 +91,11 @@ export const defaultProjects = [
   "spike response",
   "step current response",
 ];
+
+/**
+ * Get a tab of the navigation rail on the left side.
+ * @param page Page
+ * @param name tab name
+ */
+export const railTab = (page: Page, name: "Sandbox" | "Model") =>
+  page.locator(".v-navigation-drawer--rail").getByRole("tab", { name, exact: true });

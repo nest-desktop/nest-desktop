@@ -1,6 +1,6 @@
 // app.spec.ts
 
-import { expect, gotoNESTHome, test } from "./fixtures";
+import { expect, gotoNESTHome, railTab, test } from "./fixtures";
 
 test.describe("app home", () => {
   test("shows the title and the workspace selection", async ({ page }) => {
@@ -15,9 +15,9 @@ test.describe("app home", () => {
   test("navigates to the NEST workspace", async ({ page }) => {
     await gotoNESTHome(page);
 
-    await expect(page.getByText("Simulator for spiking neural network models")).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Sandbox" })).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Model" })).toBeVisible();
+    await expect(page.getByText("Simulator for spiking neural network models").first()).toBeVisible();
+    await expect(railTab(page, "Sandbox")).toBeVisible();
+    await expect(railTab(page, "Model")).toBeVisible();
   });
 
   test("cycles the theme with the theme toggle", async ({ page }) => {

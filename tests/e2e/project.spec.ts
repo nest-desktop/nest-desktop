@@ -1,6 +1,6 @@
 // project.spec.ts
 
-import { defaultProjects, expect, openProject, projectTitle, test } from "./fixtures";
+import { defaultProjects, expect, openProject, openSideNav, projectTitle, test } from "./fixtures";
 
 test.describe("project", () => {
   test.beforeEach(async ({ page }) => {
@@ -16,7 +16,7 @@ test.describe("project", () => {
   });
 
   test("lists all projects in the navigation", async ({ page }) => {
-    const nav = page.getByRole("main").getByRole("navigation").first();
+    const nav = await openSideNav(page, "Sandbox", "Search project");
 
     await expect(nav.getByText(`${defaultProjects.length} project`)).toBeVisible();
     for (const name of defaultProjects) {
@@ -25,7 +25,7 @@ test.describe("project", () => {
   });
 
   test("filters projects in the navigation", async ({ page }) => {
-    const nav = page.getByRole("main").getByRole("navigation").first();
+    const nav = await openSideNav(page, "Sandbox", "Search project");
 
     await nav.getByRole("textbox", { name: "Search project" }).fill("spatial");
 
@@ -36,7 +36,7 @@ test.describe("project", () => {
   });
 
   test("switches to another project from the navigation", async ({ page }) => {
-    const nav = page.getByRole("main").getByRole("navigation").first();
+    const nav = await openSideNav(page, "Sandbox", "Search project");
 
     await nav.getByRole("link", { name: /^spike response / }).click();
 
@@ -94,14 +94,23 @@ test.describe("project", () => {
     ).toBeVisible();
   });
 
-  test("creates a new project", async ({ page }) => {
-    const nav = page.getByRole("main").getByRole("navigation").first();
+  test("creates and saves a new project", async ({ page }) => {
+    const nav = await openSideNav(page, "Sandbox", "Search project");
     const projectURL = page.url();
 
-    await page.getByTitle("Create a new project").click();
+    await nav.getByTitle("Create a new project").getByRole("button").click();
 
     await expect(page).not.toHaveURL(projectURL);
     await expect(page).toHaveURL(/#\/nest\/project\/[\w-]+\/edit$/);
+    await expect(projectTitle(page)).toHaveText(/^undefined project /);
+
+    // A new project is not stored until it is named and saved.
+    await expect(nav.getByText(`${defaultProjects.length} project`)).toBeVisible();
+    await nav.getByRole("textbox", { name: "Project name" }).fill("e2e project");
+    await nav.getByRole("button", { name: "Project name appended action" }).click();
+
     await expect(nav.getByText(`${defaultProjects.length + 1} project`)).toBeVisible();
+    await expect(nav.getByRole("link", { name: /^e2e project / })).toBeVisible();
+    await expect(projectTitle(page)).toHaveText("e2e project");
   });
 });
