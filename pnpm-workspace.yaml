@@ -3,4 +3,5 @@ allowBuilds:
   electron-winstaller: true
   leveldown: true
 overrides:
+  glob@>=9.0.0 <14.0.2: ^14.0.2
   uuid@<11.1.1: ^11.1.1
