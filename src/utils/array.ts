@@ -27,7 +27,7 @@ export function diff(values: number[]): number[] {
  * Get extension of array, return [min, max].
  */
 export function extent(values: number[]): number[] {
-  return extent(values) as number[];
+  return d3.extent(values) as number[];
 }
 
 /**
@@ -42,7 +42,7 @@ export function fill(value: number, size: number): number[] {
  */
 export function linSpace(start: number, end: number, size: number): number[] {
   const step: number = (end - start) / (size - 1);
-  return range(start, end + step, step);
+  return Array.from({ length: size }, (_, index: number) => start + index * step);
 }
 
 /**

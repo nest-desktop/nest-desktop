@@ -1,6 +1,6 @@
 // fetch.ts
 
-import { dumpYAML } from "./serialize";
+import { parseYAML } from "./serialize";
 
 /**
  * Load data from file.
@@ -42,4 +42,5 @@ export const loadText = async (path: string): Promise<string> =>
  * @param path
  * @returns string
  */
-export const loadYAML = async (path: string): Promise<string> => loadText(path).then((text: string) => dumpYAML(text));
+export const loadYAML = async (path: string): Promise<string> =>
+  loadText(path).then((text: string) => parseYAML(text) as string);

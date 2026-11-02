@@ -20,3 +20,15 @@ test("Get true as boolean value.", () => {
   expect(getBoolean(1)).toBe(true);
   expect(getBoolean(true)).toBe(true);
 });
+
+test("Get false as boolean value.", () => {
+  expect(getBoolean("0")).toBe(false);
+  expect(getBoolean("OFF")).toBe(false);
+  expect(getBoolean("false")).toBe(false);
+  expect(getBoolean("n")).toBe(false);
+  expect(getBoolean("no")).toBe(false);
+  expect(getBoolean("")).toBe(false);
+  expect(getBoolean(0)).toBe(false);
+  expect(getBoolean(2)).toBe(false);
+  expect(getBoolean(false)).toBe(false);
+});

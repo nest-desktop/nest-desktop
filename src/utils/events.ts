@@ -11,7 +11,7 @@ export function throttle(callback: () => unknown, interval: number = 300) {
 
     enableCall = false;
     // @ts-expect-error Property 'this' implicitly has type 'any' because it does not have a type annotation.
-    setTimeout(() => callback.apply(this, props), delay);
+    setTimeout(() => callback.apply(this, props), 0);
     setTimeout(() => (enableCall = true), interval);
   };
 }

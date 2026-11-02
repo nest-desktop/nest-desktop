@@ -26,3 +26,7 @@ test("Convert number to string.", () => {
   expect(toFixed(3.14)).toBe("3.1");
   expect(toFixed(6.28)).toBe("6.3");
 });
+
+test("Convert NaN to string.", () => {
+  expect(toFixed(NaN)).toBeNaN();
+});
