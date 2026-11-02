@@ -26,6 +26,7 @@
     "preview": "vite preview",
     "preview:test": "vite preview --outDir ./coverage",
     "test": "vitest",
+    "test:e2e": "playwright test",
     "test:ui": "vitest --ui",
     "type-check": "vue-tsc --noEmit"
   },
@@ -65,6 +66,7 @@
   },
   "devDependencies": {
     "@babel/types": "~8.0.8",
+    "@playwright/test": "~1.64.1",
     "@tsconfig/node-lts": "~24.0.1",
     "@types/d3": "~7.4.3",
     "@types/js-yaml": "~4.0.9",
