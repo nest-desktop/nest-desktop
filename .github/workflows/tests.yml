@@ -1,4 +1,4 @@
-name: Component Tests
+name: Tests
 
 on:
   push:
@@ -10,9 +10,14 @@ permissions:
   contents: read
 
 jobs:
-  component:
+  test:
+    name: ${{ matrix.project }} tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [unit, component]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
@@ -23,5 +28,5 @@ jobs:
       - name: Install node modules
         run: pnpm install --frozen-lockfile
 
-      - name: Run component tests
-        run: pnpm test:component --run
+      - name: Run ${{ matrix.project }} tests
+        run: pnpm test:${{ matrix.project }} --run

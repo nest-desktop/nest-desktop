@@ -29,6 +29,7 @@
     "test:component": "vitest --project component",
     "test:e2e": "playwright test",
     "test:ui": "vitest --ui",
+    "test:unit": "vitest --project unit",
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
