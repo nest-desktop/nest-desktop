@@ -54,6 +54,7 @@ documentation = "https://nest-desktop.readthedocs.io"
 
 [dependency-groups]
 dev = [
+  "coverage>=7.17",
   "pre-commit>=4.7",
   "pytest>=9.1",
   "ruff>=0.17",
