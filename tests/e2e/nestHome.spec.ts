@@ -26,6 +26,6 @@ test.describe("NEST workspace home", () => {
 
   test("reports the unreachable simulator backend", async ({ page }) => {
     await page.getByRole("button", { name: "View request logs" }).click();
-    await expect(page.getByText(/\(nest backend\): Network Error/)).toBeVisible();
+    await expect(page.getByText(/\(nest backend\): Network Error/).first()).toBeVisible();
   });
 });
