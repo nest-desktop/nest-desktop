@@ -246,3 +246,6 @@ __marimo__/
 /playwright-report
 /blob-report
 /playwright/.cache
+
+# PouchDB stores created by tests
+/*_STORE/
