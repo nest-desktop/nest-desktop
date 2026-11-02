@@ -38,7 +38,7 @@ updates:
     # Lock for `package.json` and `pnpm-lock.yaml` in the `root` directory
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     open-pull-requests-limit: 3
     groups:
       # Low risk - merge without much review
