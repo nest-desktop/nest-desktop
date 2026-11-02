@@ -36,7 +36,9 @@ const emitUpdate = (k?: KeyboardEvent) => {
     case "string":
       valueEmit =
         // @ts-expect-error Property 'startsWith' does not exist on type 'never'.
-        value.value.startsWith("[") && value.value.endsWith("]") ? JSON.parse(value) : JSON.parse(`[${value.value}]`);
+        value.value.startsWith("[") && value.value.endsWith("]")
+          ? JSON.parse(value.value)
+          : JSON.parse(`[${value.value}]`);
       break;
   }
 
