@@ -14,7 +14,7 @@
     "app:preview:AppImage": "./out/nest-desktop-*.AppImage --no-sandbox --enable-unsafe-swiftshader",
     "build": "vue-tsc --noEmit && vite build",
     "build:types": "vue-tsc --declaration --emitDeclarationOnly",
-    "clean": "rm -rf build coverage dist-electron nest_desktop.egg-info pydist release yarn-error.log",
+    "clean": "rm -rf *_STORE build coverage dist-electron nest_desktop.egg-info pydist release test-results",
     "coverage": "vitest run --coverage",
     "dev": "vite",
     "format": "prettier --check src/",
