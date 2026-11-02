@@ -71,6 +71,9 @@ exclude-newer = "3 days" # It should be at least 3 days (default cooldown in dep
 module-name = "nest_desktop"
 module-root = ""
 
+[tool.pytest.ini_options]
+testpaths = ["tests/pytest"]
+
 [tool.ruff]
 # Same as Black.
 line-length = 120
