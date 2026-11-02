@@ -1,3 +1,5 @@
+import importlib
+import runpy
 import subprocess
 
 import pytest
@@ -36,6 +38,40 @@ def mock_create_app(monkeypatch):
     calls = []
     monkeypatch.setattr(cli, "create_app", lambda host, port: calls.append((host, port)))
     return calls
+
+
+@pytest.fixture
+def reload_cli(monkeypatch):
+    yield lambda: importlib.reload(cli)
+    monkeypatch.undo()
+    importlib.reload(cli)
+
+
+def test_defaults(monkeypatch, reload_cli):
+    monkeypatch.delenv("NEST_DESKTOP_HOST", raising=False)
+    monkeypatch.delenv("NEST_DESKTOP_PORT", raising=False)
+    module = reload_cli()
+    assert module.HOST == "127.0.0.1"
+    assert module.PORT == 54286
+
+
+def test_env_overrides(runner, monkeypatch, reload_cli):
+    monkeypatch.setenv("NEST_DESKTOP_HOST", "0.0.0.0")
+    monkeypatch.setenv("NEST_DESKTOP_PORT", "8000")
+    module = reload_cli()
+    assert module.HOST == "0.0.0.0"
+    assert module.PORT == 8000
+    result = runner.invoke(module.main, ["start", "--help"])
+    assert "[default: 0.0.0.0]" in result.output
+    assert "[default: 8000]" in result.output
+
+
+def test_run_as_script(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["cli.py", "version"])
+    with pytest.raises(SystemExit) as exc_info:
+        runpy.run_path(cli.__file__, run_name="__main__")
+    assert exc_info.value.code == 0
+    assert capsys.readouterr().out == f"{__version__}\n"
 
 
 def test_help_lists_commands(runner):
