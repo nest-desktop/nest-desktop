@@ -2,7 +2,7 @@
 
 import { expect, test } from "vitest";
 
-import { dumpJSON, dumpYAML, parseJSON, parseYAML } from "./serialize";
+import { dumpJSON, dumpYAML, parseJSON, parseYAML } from "@/utils/serialize";
 
 const data = { name: "iaf_psc_alpha", params: { C_m: 250, V_th: -55 }, recordables: ["V_m"] };
 

@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 
-import { debounce, throttle } from "./events";
+import { debounce, throttle } from "@/utils/events";
 
 beforeEach(() => {
   vi.useFakeTimers();

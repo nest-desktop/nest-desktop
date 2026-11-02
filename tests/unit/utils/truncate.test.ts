@@ -2,7 +2,7 @@
 
 import { expect, test } from "vitest";
 
-import { truncate } from "./truncate";
+import { truncate } from "@/utils/truncate";
 
 test("Truncate long text.", () => {
   expect(truncate("Lorem ipsum")).toBe("Lorem ");
